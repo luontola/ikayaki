@@ -2,13 +2,15 @@
 
 This document describes client requirements and system 
 requirements for a SQUID magnetometer program that will be designed and 
-implemeted as a software engineering student project at University of 
+implemented as a software engineering student project at University of 
 Helsinki at the Computer Science Department. The client is the Department 
 of Geophysics.
 
-This document serves as a contract between client and us..
+This document serves as a contract between client and us about the implemented functions of the program. Particulary the 
+requirements part of this document describes them.
 
 Expected readership of this document here..
+
 
 \subsection{Glossary}
 
@@ -18,9 +20,25 @@ Technical terms here..
 
 \section{Overview}
 
-A brief overview of the problem domain..
+Department of Geophysics uses a magnetometer that works in SQUID (superconducting quantum interference device) 
+principle to measure magnetization of minerals and rocks. Magnetometer is controlled by a computer software 
+that controls and reads electric components that control the device itself.
 
+The use of the present magnetometer software is complicated and unnecessarily burdens the users work memory 
+with complicated work phases and divergent operation in different use cases. The device is now controlled with 
+two various program. Functions of those two program can be combined to one. Now the programs are hard to learn and 
+teach which restricts the group of users.
 
+User of the device must know clearly what is the state of it and which operation is being performed at the 
+moment. The device is delicate and expensive, so a misfunction of it must be noticed early to prevent damage. 
+For example faulty state of demagnetizer can damage the device if it's not shut down manually in time.
+ 
+Device and program are used to carry out long, several stages involving measurement sequeances. It's 
+important that these sequences can be performed flexibly and fast. User must be able to follow the 
+measuring procedure and to stop and modify sequence if there is unexpected changes in results.
+
+Further process and analyze of the results occurs in various other programs which use a standard file format. 
+So the new program has to export these formats.
 
 \section{Use cases}
 
