@@ -2,7 +2,8 @@
 \classComment{Allows creating, editing and removing measurement
 sequences. Shows measurement data. Right-click brings popup menu for hiding columns, and saving
 sequence. Left-click selects a row. Multiple rows can be selected by
-painting or ctrl-clicking. Allows dragging rows to different order. Has three
+ctrl-clicking or shift-clicking. Allows dragging rows to different order
+if multiple rows are selected multiple rows are dragged. Has three
 textfields for inserting new sequences, first field for start value,
 second for step and third for stop value. Clicking Add sequence-button
 appends sequence into table. Saved sequences can be loaded from dropdown menu.}
@@ -24,6 +25,8 @@ projects state.}
 \classEvent{On Measurement event}{If measurement step is finished, add
 measurement data to appropriate row and if row being measured was
 selected select next row unless measurement sequence ended.}
+\classEvent{On Drag event}{Tell MeasurementSequenceTableModel to update
+itself to correspond new row order.}
 \closeClass
 
 \beginField{addSequence}
