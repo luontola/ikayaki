@@ -30,7 +30,7 @@ import java.awt.*;
  *
  * @author Aki Korpua
  */
-public class SettingsPanel extends JFrame {
+public class SettingsPanel extends JDialog {
 /*
 Event A: On Save Clicked - saves current configuration to Settings-singleton and closes
 window
@@ -144,8 +144,6 @@ Event B: On Cancel Clicked - closes window (discarding changes)
     private JCheckBox zAxis;
     private JCheckBox yAxis;
     private JCheckBox xAxis;
-    private JButton button1;
-    private JButton button2;
 
     /**
      * Creates all components and puts them in right places. Labels are created only here (no global fields). Creates
@@ -156,8 +154,10 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         add(contentPane, BorderLayout.CENTER);
 
         setTitle("SQUID Configuration");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLocationByPlatform(true);
+
+
         pack();
     }
 
@@ -165,7 +165,7 @@ Event B: On Cancel Clicked - closes window (discarding changes)
      * Closes window, no changes saved.
      */
     public void closeWindow() {
-        return; // TODO
+        // TODO
     }
 
     /**
