@@ -26,6 +26,9 @@ import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.plastic.theme.DesertBluer;
+import com.jgoodies.looks.plastic.theme.DesertBlue;
+import com.jgoodies.looks.plastic.theme.SkyBlue;
+import com.jgoodies.looks.plastic.theme.SkyBluer;
 import ikayaki.gui.MainViewPanel;
 
 import javax.swing.*;
@@ -61,7 +64,7 @@ be closed.
     public Ikayaki(Project project) throws HeadlessException {
         super(APP_NAME + " " + APP_VERSION);
 
-        PlasticLookAndFeel.setMyCurrentTheme(new DesertBluer());
+        PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
         try {
             UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
         } catch (Exception e) {

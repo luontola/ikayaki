@@ -36,7 +36,7 @@ import java.awt.event.ActionListener;
  * Creates the main view panels (split panels) and Squid and Project components. It also tells everybody if the current
  * project is changed.
  *
- * @author Esko Luontola (lisäksi joku muu?)
+ * @author Esko Luontola
  */
 public class MainViewPanel extends ProjectComponent {
 
@@ -77,10 +77,10 @@ public class MainViewPanel extends ProjectComponent {
      */
     public MainViewPanel(Project project) {
 
-        /* init SQUID interface */
+        /* Init SQUID interface */
         squid = Squid.instance();
 
-        /* init GUI components */
+        /* Init GUI components */
         menuBar = new MainMenuBar();
         statusBar = new MainStatusBar();
 
@@ -94,39 +94,56 @@ public class MainViewPanel extends ProjectComponent {
         measurementDetails = new MeasurementDetailsPanel();
         measurementGraphs = new MeasurementGraphsPanel();
 
-        setProject(project);
-
-        /* lay out GUI components */
+        /* Lay out GUI components */
         JPanel left = new JPanel(new GridBagLayout());
         JPanel right = new JPanel(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
         gc.fill = GridBagConstraints.BOTH;
-        gc.weightx = 1.0;
-        gc.weighty = 1.0;
 
         // build left tab
         gc.gridx = 0;
         gc.gridy = 0;
+        gc.weightx = 1.0;
+        gc.weighty = 0.0;
+        calibration.setBorder(BorderFactory.createTitledBorder("Calibration"));
         left.add(calibration, gc);
         gc.gridx = 0;
         gc.gridy = 1;
+        gc.weightx = 1.0;
+        gc.weighty = 1.0;
+        projectExplorer.setBorder(BorderFactory.createTitledBorder("Project Explorer"));
         left.add(projectExplorer, gc);
         gc.gridx = 0;
         gc.gridy = 2;
+        gc.weightx = 1.0;
+        gc.weighty = 0.0;
+        projectInformation.setBorder(BorderFactory.createTitledBorder("Project Information"));
         left.add(projectInformation, gc);
 
         // build right tab
         gc.gridx = 0;
         gc.gridy = 0;
+        gc.weightx = 1.0;
+        gc.weighty = 1.0;
+        measurementSequence.setBorder(BorderFactory.createTitledBorder("Sequence"));
         right.add(measurementSequence, gc);
         gc.gridx = 1;
         gc.gridy = 0;
+        gc.weightx = 0.0;
+        gc.weighty = 1.0;
+        measurementControls.setBorder(BorderFactory.createTitledBorder("Controls"));
         right.add(measurementControls, gc);
         gc.gridx = 0;
         gc.gridy = 1;
+        gc.weightx = 1.0;
+        gc.weighty = 0.0;
+        measurementDetails.setBorder(BorderFactory.createTitledBorder("Details"));
         right.add(measurementDetails, gc);
         gc.gridx = 1;
         gc.gridy = 1;
+        gc.weightx = 0.0;
+        gc.weighty = 0.0;
+        measurementGraphs.setBorder(BorderFactory.createTitledBorder("Graphs"));
         right.add(measurementGraphs, gc);
 
         // configure tabs
@@ -147,6 +164,7 @@ public class MainViewPanel extends ProjectComponent {
         final JButton tabButton = new JButton(tabButtonDown);
         tabButton.setContentAreaFilled(false);
         tabButton.setBorder(null);
+        tabButton.setFocusable(false);
         tabButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (splitPane.getDividerLocation() == 0) {
@@ -168,7 +186,8 @@ public class MainViewPanel extends ProjectComponent {
         add(tabControls, "West");
         setBackground(new Color(247, 243, 239));
 
-        return;
+        /* Finalize */
+        setProject(project);
     }
 
     public MainMenuBar getMenuBar() {
