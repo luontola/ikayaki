@@ -512,42 +512,42 @@ G Motor is indexing and no other notice pending.
 \beginMethod{moveToHome()}
 \methodDeclaration{public void moveToHome()}
 \methodComment{
-    Commands the holder to move to home position.
+    Commands the holder to move to home position. Only starts movement, needs to poll with join() when movement is finished.
 }
 \closeMethod
 
 \beginMethod{moveToDegausserY()}
 \methodDeclaration{public void moveToDegausser()}
 \methodComment{
-    Commands the holder to move to degauss position.
+    Commands the holder to move to degauss position. Only starts movement, needs to poll with join() when movement is finished.
 }
 \closeMethod
 
 \beginMethod{moveToDegausserZ()}
 \methodDeclaration{public void moveToDegausser()}
 \methodComment{
-    Commands the holder to move to degauss position.
+    Commands the holder to move to degauss position. Only starts movement, needs to poll with join() when movement is finished.
 }
 \closeMethod
 
 \beginMethod{moveToMeasurement()}
 \methodDeclaration{public void moveToMeasurement()}
 \methodComment{
-   Commands the holder to move to measure position.
+   Commands the holder to move to measure position. Only starts movement, needs to poll with join() when movement is finished.
 }
 \closeMethod
 
 \beginMethod{moveToBackground()}
 \methodDeclaration{public void moveToBackground()}
 \methodComment{
-   Commands the holder to move to background position.
+   Commands the holder to move to background position. Only starts movement, needs to poll with join() when movement is finished.
 }
 \closeMethod
 
 \beginMethod{moveToPos(int)}
 \methodDeclaration{public boolean moveToPos(int pos)}
 \methodComment{
-    Commands the holder to move to the specified position. Value must be between 1 and 16,777,215. Return true if good pos-value and moves handler there.
+    Commands the holder to move to the specified position. Value must be between 1 and 16,777,215. Return true if good pos-value and moves handler there. Only starts movement, needs to poll with join() when movement is finished.
 }
 \methodParam{pos}{the position where the handler will move to.}
 \methodReturn{true if given position was ok, otherwise false.}
@@ -563,7 +563,7 @@ G Motor is indexing and no other notice pending.
 \beginMethod{rotateTo(int)}
 \methodDeclaration{public void rotateTo(int angle)}
 \methodComment{
-    Rotates the handler to the specified angle. If angle is over than 360 or lower than 0, it is divided by 360 and value is remainder.
+    Rotates the handler to the specified angle. If angle is over than 360 or lower than 0, it is divided by 360 and value is remainder. Only starts movement, needs to poll with join() when movement is finished.
 }
 \methodParam{angle}{the angle in degrees to rotate the handler to.}
 \closeMethod
