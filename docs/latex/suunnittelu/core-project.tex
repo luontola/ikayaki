@@ -251,50 +251,45 @@
 \beginMethod{getType()}
 \methodDeclaration{public synchronized Type getType()}
 \methodComment{
+	Returns the type of this project.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getState()}
 \methodDeclaration{public synchronized State getState()}
 \methodComment{
+	Returns the current measurement state of this project.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getName()}
 \methodDeclaration{public synchronized String getName()}
 \methodComment{
+	Returns the name of this project. The name is equal to the name of the project file without the file extension.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getTimestamp()}
 \methodDeclaration{public synchronized Date getTimestamp()}
 \methodComment{
+	Returns the timestamp of the last completed measurement. This is usually less than the last modified date of the file, because this is not affected by changing the project's properties.
 }
-\methodParam{}{}
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getSquid()}
 \methodDeclaration{private synchronized Squid getSquid()}
 \methodComment{
+	Returns the Squid if this project is its owner, otherwise returns null.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{setSquid(Squid)}
-\methodDeclaration{public synchronized void setSquid(Squid squid)}
+\methodDeclaration{public synchronized boolean setSquid(Squid squid)}
 \methodComment{
+	Sets this project the owner of the Squid. Only one project may own the Squid at a time. The Squid must be first detached with "setSquid(null)" from its owner before it can be given to another project. 
 }
-\methodParam{squid}{}
-\methodThrows{}{}
+\methodParam{squid}{pointer to the SQUID interface, or null to detach this project from it.}
+\methodReturn{true if the operation was completed, otherwise false (in which case nothing was done).}
 \closeMethod
 
 \beginMethod{getProperty(String)}
