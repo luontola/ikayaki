@@ -23,6 +23,7 @@
 package ikayaki.squid;
 
 import ikayaki.Project;
+
 import javax.comm.NoSuchPortException;
 import javax.comm.PortInUseException;
 import java.io.IOException;
@@ -63,8 +64,8 @@ public class Squid {
     /**
      * Returns a reference to the Squid. If it has not yet been created, will create one.
      */
-    public static synchronized Squid instance() throws IOException  {
-        if(instance == null)
+    public static synchronized Squid instance() throws IOException {
+        if (instance == null) {
             try {
                 instance = new Squid();
             } catch (PortInUseException ex) {
@@ -74,6 +75,7 @@ public class Squid {
                 System.err.println(ex);
                 throw new IOException();
             }
+        }
         return instance;
     }
 
@@ -132,9 +134,11 @@ public class Squid {
      * @return true if everything is correct, otherwise false.
      */
     public synchronized boolean isOK() {
-        if(degausser != null && handler != null && magnetometer != null)
-            if(degausser.isOK() && handler.isOK() && magnetometer.isOK())
+        if (degausser != null && handler != null && magnetometer != null) {
+            if (degausser.isOK() && handler.isOK() && magnetometer.isOK()) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -142,27 +146,16 @@ public class Squid {
      * Sets the owner of the Squid. Only one project may have access to the Squid at a time. This method may be called
      * only from the Project class.
      *
-     * @param owner the project that will have exclusive access to the Squid.
+     * @param owner the project that will have exclusive access to the Squid. May be null.
      * @return true if successful, false if the existing owner had a running measurement.
      */
     public synchronized boolean setOwner(Project owner) {
-        // is it first time?
-        if(this.owner == null) {
+        if (this.owner == null || this.owner.getState() == Project.State.IDLE) {
             this.owner = owner;
             return true;
+        } else {
+            return false;
         }
-        // checks that handler,magnetometer and degausser status is not busy
-        if(this.degausser != null)
-            if(this.degausser.getRampStatus() != 'Z')
-                return false;
-        // no good way for handler.. yet.
-        /*
-        if(this.handler != null)
-            if(this.handler.getStatus() !=
-        */
-       // no good way for magnetometer either
-        this.owner = owner;
-            return true;
     }
 
     /**
