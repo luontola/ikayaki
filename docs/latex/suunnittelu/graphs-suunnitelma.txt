@@ -1,0 +1,33 @@
+
+Ehdotus graafienpiirtoluokkien arkkitehtuuriksi. Luokkien ja metodien nimi‰ voi vaihtaa sopivampiin ja lis‰‰ tarpeellisia metodeja lis‰t‰.
+
+
+public interface Plot
+   public void add(MeasurementStep)
+   public void remove(int)
+   public int size()
+
+public abstract class AbstractPlot extends JPanel implements Plot
+   protected abstract double getX(MeasurementStep)
+   protected abstract double getY(MeasurementStep)
+   + Toiminnallisuus viivojen piirt‰miseksi - kutsuu getX ja getY -metodeja. Skaalaa kuvat oikeaan kokoon.
+
+public abstract class StereographicPlot extends AbstractPlot
+   protected final double getX(MeasurementStep)
+   protected final double getY(MeasurementStep)
+   protected abstract double getDeclination(MeasurementStep)
+   protected abstract double getInclination(MeasurementStep)
+   + Piirt‰‰ ympyr‰mallisia kaavioita
+
+public abstract class LinearPlot extends AbstractPlot
+   + Piirt‰‰ perinteisi‰ kaavioita XY-akseleille
+
+...
+
+public class StereoPlot extends StereographicPlot
+   protected double getDeclination(MeasurementStep)
+   protected double getInclination(MeasurementStep)
+
+public class IntensityPlot extends LinearPlot
+   protected double getX(MeasurementStep)
+   protected double getY(MeasurementStep)
