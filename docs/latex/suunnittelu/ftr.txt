@@ -1,0 +1,60 @@
+Squid-projekti				TARKASTUSPÖYTÄKIRJA
+					22.3.2005
+
+
+
+Tarkastuksen aika ja paikka
+	22.3.2005 klo 10:15
+	Exactum, sali A219
+	Alkoi klo 10:xx ja päättyi klo 11:xx
+
+Osallistujat
+	Juha Taina (vastuuhenkilö)
+	Jenni Valorinta (ohjaaja)
+	Esko Luontola (projektipäälikkö)
+	Mikko Jormalainen
+	Samuli Kaipiainen
+	Aki Korpua
+	Aki Sysmäläinen
+
+Poissa
+	Ei poissaolijoita.
+
+Tarkastettu tuotos
+	Suunnitteludokumentti 0.x, luvut:
+	1   Introduction			1 sivu
+	3   Overview of the system [?]		1 sivu
+	4   Architecture description		2-4 sivua
+	5.1 Project data [vain osa?]		20+ sivua
+	5.2 Squid interface			8 sivua
+	5.3 Squid emulator			2-4 sivua
+	5.4 Serial communication		1-4 sivua
+	6.6 Project Explorer [?]		3 sivua
+	6.9 Sequence and measurement data	3 sivua
+	Yhteensä 21-28 sivua ilman 5.1, +20 sen kanssa
+
+Tarkistuslista
+	S1  Viittaukset ovat oikein, ei puuttuvia viittauksia "(??)"
+	S2  Suunnittelu on yhtenäistä (~samalla abstraktiotasolla?)
+	S3  Vaatimukset vastaavat suunnittelua
+	S4  Kaikki käyttötapaukset voidaan suorittaa
+	S5  Kaikki suunnitelman osat ovat toteutettavissa
+	S6  Kaikki suunnitelman osat ovat testattavissa
+	SL1 Luokkakaaviot ovat oikein ja muun suunnitelman mukaisia
+	SL2 Jokaisella luokalla on kuvaus ja tarpeelliset lisätiedot
+	SL3 Luokkien kaikki ei-triviaalit tapahtumat (eventit) on kuvattu
+	SL4 Luokan ei-triviaaleilla kentillä on kuvaus
+	SL5 Jokaisella metodilla on kuvaus
+	SL6 Ei-triviaaleilla metodin parametreilla on kuvaus
+	SL7 Ei-triviaali virheenkäsittely on kuvattu
+
+Tyyppimerkinnät
+	V	selvä vakava virhe (asia ilmaistu väärin)
+	T	tulkinnanvarainen virhe (epäselvää tekstiä)
+	P	puute (jotain puuttuu)
+
+Todetut puutteet...
+
+Nro	Luku	Sivu	Mom.	Tyyppi	Tunnus	Kuvaus
+1	x.x	x	?	VTP	Sx	xxx-xxx
+...
