@@ -28,6 +28,52 @@ Requirements by client..
 
 \subsection{Use cases}
 
+Squid Use Cases, preliminary list with no explanations nor scenarios.
+
+\subsubsection{General measuring}
+
+\begin{itemize}
+\item Do single step measuring without demagnetization
+\item Do single step measuring with demagnetization
+\item Do automatic demagnetization-measuring sequence
+\item Do thellier measuring
+\item Do thermal measuring
+\item Measure magnetometer ground noise
+\item Measure empty sample holder noise
+\item Fully manual measuring
+  \begin{itemize}
+  \item Move sample handler to desired position
+  \item Rotate sample handler to desired angle
+  \item Measure in current position
+  \item Demagnetize in current position
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{File formats}
+
+\begin{itemize}
+\item Automatically save all measurement cycles in .dat? file
+\item Save standard sample measurement results in .std file
+\item Export (thellier) results into .tdt file
+\item Export single measurement details into .srm file
+\item Print measurement results
+\item Print graph sheet (with 7 different graphs; described elsewhere x)
+\end{itemize}
+
+\subsubsection{Functionality}
+
+\begin{itemize}
+\item Load .dat? file
+\item Append measurement results to .dat? file
+\item Create new .dat? file (project?)
+\item Insert AF sequence with start-step-stop values
+\item Load AF sequence
+\item Save AF sequence
+\item Edit AF sequence on-the-fly
+\item Pause AF sequence
+\item Panic abort operation instantly
+\end{itemize}
+
 \subsection{Restrictions}
 
 Restrictions set by client..
