@@ -398,7 +398,7 @@ public class MainViewPanel extends ProjectComponent {
 
     public ProjectExplorerPanel getProjectExplorerPanel() {
         if (projectExplorerPanel == null) {
-            projectExplorerPanel = new ProjectExplorerPanel(this, getProject());
+            projectExplorerPanel = new ProjectExplorerPanel(this);
             projectExplorerPanel.setBorder(BorderFactory.createTitledBorder("Project Explorer"));
         }
         return projectExplorerPanel;

@@ -117,23 +117,15 @@ whose measuring ended.
      * @param parent the component whose setProject() method will be called on opening a new project file.
      */
     public ProjectExplorerPanel(ProjectComponent parent) {
-        this(parent, null);
-    }
-
-    /**
-     * Creates all components, sets directory to that of the specified project, initializes files with files from that
-     * directory. Will NOT send an event to MainViewPanel to open the project.
-     *
-     * @param parent  the parent component whose setProject() method will be called on opening a new project file.
-     * @param project the project whose directory is to be opened and which project is then selected, or null to use
-     *                the last known directory.
-     */
-    public ProjectExplorerPanel(ProjectComponent parent, Project project) {
         this.parent = parent;
 
-        // set current directory to project directory, or latest directory history dir
-        if (project != null) setProject(project);
-        else setDirectory(getDirectoryHistory()[0]);
+        // set current directory to latest directory history dir
+        File[] dirHistory = getDirectoryHistory();
+        if (dirHistory.length > 0) {
+            setDirectory(dirHistory[0]);
+        } else {
+            setDirectory(new File(""));
+        }
 
         // combo box / text field
         browserField = new JComboBox(getDirectoryHistory());
