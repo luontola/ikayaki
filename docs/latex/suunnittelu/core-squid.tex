@@ -56,6 +56,7 @@
 \methodComment{
     Returns an interface for controlling the degausser.
 }
+\methodReturn{Handler for Degausser if available}
 \closeMethod
 
 \beginMethod{getHandler()}
@@ -63,6 +64,7 @@
 \methodComment{
     Returns an interface for controlling the handler.
 }
+\methodReturn{Handler for Handler if available}
 \closeMethod
 
 \beginMethod{getMagnetometer()}
@@ -70,6 +72,7 @@
 \methodComment{
     Returns an interface for controlling the magnetometer.
 }
+\methodReturn{Handler for Magnetometer if available}
 \closeMethod
 
 \beginMethod{updateSettings()}
@@ -211,7 +214,7 @@
 \beginMethod{demagnetize(int amplitude)}
 \methodDeclaration{public boolean demagnetize(int amplitude)}
 \methodComment{
-    Performs full sequence to demagnetize with given amplitude.
+    Performs full sequence to demagnetize with given amplitude. Blocking method.
 }
 \methodParam{amplitude}{amplitude to demag.}
 \methodReturn{true if process was sended succesfully, otherwise false.}
@@ -410,6 +413,171 @@ factory for half stepping.}
 \methodParam{angle}{the angle in degrees to rotate the handler to.}
 \closeMethod
 
+\beginMethod{setOnline()}
+\methodDeclaration{private void setOnline()}
+\methodComment{
+    Sends message to handler go online (@0).
+}
+\closeMethod
+
+\beginMethod{setAcceleration(int a)}
+\methodDeclaration{private void setAcceleration(int a)}
+\methodComment{
+    Sends message to handler to set acceleration (Aa).
+}
+\methodParam{a}{Acceleration is a number from 0 to 127}
+\closeMethod
+
+\beginMethod{setDeceleration(int d)}
+\methodDeclaration{private void setDeceleration(int d)}
+\methodComment{
+    Sends message to handler to set deceleration (Dd).
+}
+\methodParam{a}{Deceleration is a number from 0 to 127}
+\closeMethod
+
+\beginMethod{setBaseSpeed(int b)}
+\methodDeclaration{private void setBaseSpeed(int b)}
+\methodComment{
+    Sends message to handler to set base speed. Base rate is the speed at which the motor motion starts and stops. (Bb).
+}
+\methodParam{b}{Base Speed is pulses per second and has a range of 50 to 5000.}
+\closeMethod
+
+\beginMethod{setVelocity(int v)}
+\methodDeclaration{private void setVelocity(int v)}
+\methodComment{
+    Sends message to handler to set maximum velocity (Mv).
+}
+\methodParam{v}{Velocity range is 50 to 20,000}
+\closeMethod
+
+\beginMethod{setHoldTime(int h)}
+\methodDeclaration{private void setHoldTime(int h)}
+\methodComment{
+    This command causes the POWER pin to be pulled low within a specified number of ticks after a move of the motor is completed and it will stay low until just prior to the start of the next move command. This command allows the holding torque of the motor to be turned off automatically after a delay for the mechanical system stabilize thus reducing power consumption and allowing the motor to be turned by hand if this feature is required. If the value is zero then the power is left on forever. (CH h).
+}
+\methodParam{h}{value from 0 to 127 representing the number of clock ticks to leave power on the motor after a move.}
+\closeMethod
+
+\beginMethod{setCrystalFrequence(int cf)}
+\methodDeclaration{private void setCrystalFrequence(int cf)}
+\methodComment{
+    numbers. The crystal frequency is used by the chip for setting the base speed and maximum speed and for controlling the time for the wait command. (CX cf).
+}
+\methodParam{cf}{frequence range is 4,000,000 to 8,000.000}
+\closeMethod
+
+\beginMethod{stopExecution()}
+\methodDeclaration{private void stopExecution()}
+\methodComment{
+    This command stops execution of the internal program if it is used in the program. If the motor is indexing it will ramp down and then stop. Use this command to stop the motor after issuing a slew command. (Q).
+}
+\closeMethod
+
+\beginMethod{performSlew()}
+\methodDeclaration{private void performSlew()}
+\methodComment{
+   Slew the motor up to maximum speed and continue until reaching a hard limit switch or receiving a quit (Q) command. (S).
+}
+\closeMethod
+
+\beginMethod{setMotorPositive()}
+\methodDeclaration{private void setMotorPositive()}
+\methodComment{
+   Set the motor direction of movement to positive. (+).
+}
+\closeMethod
+
+\beginMethod{setMotorNegative()}
+\methodDeclaration{private void setMotorNegative()}
+\methodComment{
+   Set the motor direction of movement to negative. (-).
+}
+\closeMethod
+
+\beginMethod{setSteps(int s)}
+\methodDeclaration{private void setSteps(int s)}
+\methodComment{
+   Set the number of steps to move for the G command. (N s).
+}
+\methodParam{s}{steps range is 0 to 16,777,215}
+\closeMethod
+
+\beginMethod{setPosition(int p)}
+\methodDeclaration{private void setPosition(int p)}
+\methodComment{
+   Set absolut position to move for the G command. (P p).
+}
+\methodParam{p}{position range is 0 to 16,777,215}
+\closeMethod
+
+\beginMethod{go()}
+\methodDeclaration{private void go()}
+\methodComment{
+   Send handler on move (G).
+}
+\closeMethod
+
+\beginMethod{wait()}
+\methodDeclaration{private void wait()}
+\methodComment{
+   Wait for handler to be idle. Blocking (F). Without the F command the SMC25 will continue to accept commands while the motor is moving. This may be desirable, as when changing speed during a move or working with the inputs or outputs. Or it may be undesirable, such as when you wish to make a series of indexes. Without the F command any subsequent G commands received while the motor is indexing would set the "Not allowed while moving" message. Caution: If this command is used while the motor is executing a Slew command the only way to stop is with a reset or a hard limit switch input.
+}
+\closeMethod
+
+\beginMethod{verify(char v)}
+\methodDeclaration{private String verify(char v)}
+\methodComment{
+   Gives result for wanted registery. (V v).
+}
+\methodParam{v}{A Acceleration
+B Base speed
+D Deceleration
+E Internal program
+G Steps remaining in current move. Zero if not indexing.
+H Hold time
+I Input pins
+J Slow jog speed
+M Maximum speed
+N Number of steps to index
+O Output pins
+P Position. If motor is indexing this returns the position at
+the end of the index.
+R Internal program pointer used by trace (T) or continue (X)
+commands. Also updated by enter (E) command.
+W Ticks remaining on wait counter
+X Crystal frequency
+}
+\methodReturn{returns registery as string}
+\closeMethod
+
+\beginMethod{setPositionRegister(int r)}
+\methodDeclaration{private void setPositionRegister(int r)}
+\methodComment{
+   Set the position register. This command sets the internal absolute position counter to the value of r. (Z r).
+}
+\methodParam{r}{position range is 0 to 16,777,215}
+\closeMethod
+
+\beginMethod{pollMessage()}
+\methodDeclaration{private char pollMessage}
+\methodComment{
+   Poll the device for any waiting messages such as errors or end of move. (%).
+}
+\methodReturn{0 Normal, no service required
+1 Command error, illegal command sent
+2 Range error, an out of range numeric parameter was sent
+3 Command invalid while moving (e.g. G, S, H)
+4 Command only valid in program (e.g. I, U, L)
+5 End of move notice, a previous G command is complete
+6 End of wait notice, a previous W command is complete
+7 Hard limit stop, the move was stopped by the hard limit
+8 End of program notice, internal program has completed
+G Motor is indexing and no other notice pending
+}
+\closeMethod
+
 
 \beginClass{Magnetometer}
 \classComment{
@@ -456,7 +624,7 @@ factory for half stepping.}
 \closeMethod
 
 \beginMethod{reset(char)}
-\methodDeclaration{public String reset(char axis)}
+\methodDeclaration{private String reset(char axis)}
 \methodComment{
    Reset settings on axis
 }
@@ -464,7 +632,7 @@ factory for half stepping.}
 \closeMethod
 
 \beginMethod{resetCounter(char)}
-\methodDeclaration{public String resetCounter(char axis)}
+\methodDeclaration{private void resetCounter(char axis)}
 \methodComment{
    Reset counter for axis.
 }
@@ -472,7 +640,7 @@ factory for half stepping.}
 \closeMethod
 
 \beginMethod{configure(char,char,char)}
-\methodDeclaration{public String configure(char axis, char subcommand, char option)}
+\methodDeclaration{private void configure(char axis, char subcommand, char option)}
 \methodComment{
 }
 \methodParam{axis}{x,y,x or a (all)}
@@ -481,7 +649,7 @@ factory for half stepping.}
 \closeMethod
 
 \beginMethod{latchAnalog(char)}
-\methodDeclaration{public void latchAnalog(char axis)}
+\methodDeclaration{private void latchAnalog(char axis)}
 \methodComment{
     axis is x,y,x or a (all).
 }
@@ -489,29 +657,30 @@ factory for half stepping.}
 \closeMethod
 
 \beginMethod{latchCounter(char)}
-\methodDeclaration{public void latchCounter(char axis)}
+\methodDeclaration{private void latchCounter(char axis)}
 \methodComment{
     axis is x,y,x or a (all).
 }
 \methodParam{axis}{x,y,x or a (all)}
 \closeMethod
 
-\beginMethod{measure(char)}
-\methodDeclaration{public void measure(char axis)}
-\methodComment{
-    Performs full sequence to measure axis.
-}
-\methodParam{axis}{x,y,x.}
-\closeMethod
-
 \beginMethod{getData(char,char,String)}
-\methodDeclaration{public String getData(char axis, char command, String datavalues)}
+\methodDeclaration{private String getData(char axis, char command, String datavalues)}
 \methodComment{
-	Generic send message sender, use with cautios and knowledge. Check if commands are good.
+	Generic send message sender, use with cautios and knowledge. Checks if commands are good.
 }
 \methodParam{axis}{x,y,x}
 \methodParam{command}{"D" Send back the analog data last captured with the LATCH command. The <data> field is not required. "C" Send back the counter value last captured with the LATCH command. The <data> field is not required. "S" Send back status. Various pieces of status can be sent by the magnetometer electronics.}
 \methodParam{axis}{Datavalues one or more: "A" Send back all status. "F" Send back all filter status. "R" Send back all range status. "S" Send back slew status. "L" Send back SQUID feedback loop status. Return feedback, waiting time?}
+\closeMethod
+
+\beginMethod{measure(char)}
+\methodDeclaration{public String measure(char axis)}
+\methodComment{
+    Performs full sequence to measure axis.
+}
+\methodParam{axis}{x,y,x.}
+\methodReturn{Returns results for measuring.}
 \closeMethod
 
 \beginMethod{getStatus()}
