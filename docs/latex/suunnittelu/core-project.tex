@@ -485,7 +485,7 @@
 \methodParam{type}{type of the event.}
 \closeMethod
 
-\beginMethod{addMeasurementListener}
+\beginMethod{addMeasurementListener(MeasurementListener)}
 \methodDeclaration{public synchronized void addMeasurementListener(MeasurementListener l)}
 \methodComment{
 	Adds a MeasurementListener to the project.
@@ -493,7 +493,7 @@
 \methodParam{l}{the listener to be added.}
 \closeMethod
 
-\beginMethod{removeMeasurementListener}
+\beginMethod{removeMeasurementListener(MeasurementListener)}
 \methodDeclaration{public synchronized void removeMeasurementListener(MeasurementListener l)}
 \methodComment{
 	Removes a MeasurementListener from the project.
@@ -510,7 +510,7 @@
 \methodParam{type}{the type of the event.}
 \closeMethod
 
-\beginMethod{addSequence(MeasurementSequence}
+\beginMethod{addSequence(MeasurementSequence)}
 \methodDeclaration{public synchronized void addSequence(MeasurementSequence sequence)}
 \methodComment{
 	Appends a sequence to this project's sequence. Only the stepValues will be copied from the specified sequence and added as new steps to this project.
@@ -711,6 +711,50 @@
 	This method will notify the measurement thread to abort, but will not wait for it to finish.
 }
 \methodReturn{true if the measurement will abort, otherwise false.}
+\closeMethod
+
+\beginMethod{doManualMove(int)}
+\methodDeclaration{public boolean doManualMove(int position)}
+\methodComment{
+	Moves the sample handler to the specified position. This method will wait until the operation completes. Will do nothing if isManualControlEnabled() is false.
+}
+\methodParam{position}{the position to move the handler to.}
+\methodReturn{true if the operation was completed, otherwise false.}
+\closeMethod
+
+\beginMethod{doManualRotate(int)}
+\methodDeclaration{public boolean doManualRotate(int angle)}
+\methodComment{
+	Rotates the sample handler to the specified angle. This method will wait until the operation completes. Will do nothing if isManualControlEnabled() is false.
+}
+\methodParam{angle}{the angle to rotate the handler to.}
+\methodReturn{true if the operation was completed, otherwise false.}
+\closeMethod
+
+\beginMethod{doManualMeasure()}
+\methodDeclaration{public boolean doManualMeasure()}
+\methodComment{
+	Measures the X, Y and Z of the sample. Adds the results as a new measurement step to the project. This method will wait until the operation completes. Will do nothing if isManualControlEnabled() is false.
+}
+\methodReturn{true if the operation was completed, otherwise false.}
+\closeMethod
+
+\beginMethod{doManualDemagZ(double)}
+\methodDeclaration{public boolean doManualDemagZ(double amplitude)}
+\methodComment{
+	Demagnetizes the sample in Z direction with the specified amplitude. This method will wait until the operation completes. Will do nothing if isManualControlEnabled() is false.
+}
+\methodParam{amplitude}{the amplitude to demagnetize in mT.}
+\methodReturn{true if the operation was completed, otherwise false.}
+\closeMethod
+
+\beginMethod{doManualDemagY(double)}
+\methodDeclaration{public boolean doManualDemagY(double amplitude)}
+\methodComment{
+	Demagnetizes the sample in Y direction with the specified amplitude. This method will wait until the operation completes. Will do nothing if isManualControlEnabled() is false.
+}
+\methodParam{amplitude}{the amplitude to demagnetize in mT.}
+\methodReturn{true if the operation was completed, otherwise false.}
 \closeMethod
 
 
