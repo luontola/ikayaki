@@ -23,6 +23,7 @@
 package ikayaki.gui;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 /**
  * Creates Menu items for Menubar and makes action listeners for them
@@ -81,6 +82,26 @@ Event I: On exit Clicked - closes program
      */
     public MainMenuBar() {
         add(new JMenu("Menu bar"));
+        options = new JMenu("Options");
+        add(options);
+        configuration = new ItemAction("Configuration");
+        options.add(configuration);
+
         return; // TODO
     }
+
+    private class ItemAction extends AbstractAction {
+        private String s;
+
+        public ItemAction(String s) {
+            this.s = s;
+            putValue(Action.NAME, "" + s);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            SettingsPanel c = new SettingsPanel();
+            c.setVisible(true);
+        }
+    }
+
 }
