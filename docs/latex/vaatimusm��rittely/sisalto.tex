@@ -374,6 +374,7 @@ Use case format:
 \newcommand{\ReqName}[1]{\textbf{Name:} #1\\}
 \newcommand{\ReqDesc}[1]{\textbf{Description:} #1\\}
 \newcommand{\ReqPrio}[1]{\textbf{Priority:} #1\\}
+\newcommand{\ReqUc}[1]{\textbf{Use Cases:} #1\\}
 
 Goals of the software set by client, project team and environment.
 Requirements were collected from 1) powerpoint slides received from
@@ -398,23 +399,27 @@ Define the services which the software offers and how the software behaves, incl
 \ReqName{SQUID control and usage}
 \ReqDesc{Able to control Squid-magnetometer and make measurements with it.}
 \ReqPrio{1}
+\ReqUc{UC1, UC2, UC3, UC4, UC5, UC6, UC7, UC8, UC9, UC10, UC11}
 
 \ReqId{R2}
 \ReqName{Manual control}
 \ReqDesc{Able to operate the magnetometer manually. User can move and
 rotate sample handler and measure and demagnetize sample.}
 \ReqPrio{3}
+\ReqUc{UC11, UC12}
 
 \ReqId{R3}
 \ReqName{Calibration reminder}
 \ReqDesc{Magnetometer must be calibrated every 24 hours. The program will remind the user when it would be time to do calibration.}
 \ReqPrio{2}
+\ReqUc{UC8, UC9, UC10}
 
 \ReqId{R4}
 \ReqName{Warning signal}
 \ReqDesc{Program should warn user with alarm signal if magnetic field
 remains on for too long.}
 \ReqPrio{1}
+\ReqUc{UC2, UC3}
 
 
 \subsubsection{Project files}
@@ -423,36 +428,44 @@ remains on for too long.}
 \ReqName{Create project}
 \ReqDesc{Create a new project file which will include the measurement sequence, measurement results and information about the sample. The file format will be custom made for this program.}
 \ReqPrio{1}
+\ReqUc{UC19}
 
 \ReqId{R6}
 \ReqName{Autosave project}
 \ReqDesc{Program will save measurement data and project information after every measurement step and modification.}
 \ReqPrio{1}
+\ReqUc{UC1, UC2, UC3, UC6, UC7, UC8, UC9, UC10, UC11, UC18, UC22, UC23,
+UC24, UC25, UC26}
 
 \ReqId{R7}
 \ReqName{Load project}
 \ReqDesc{Saved projects can be loaded into program.}
 \ReqPrio{1}
+\ReqUc{UC20}
 
 \ReqId{R8}
 \ReqName{Edit project}
 \ReqDesc{Ability edit project information and measurement data afterwards. (TODO: which data fields?)}
 \ReqPrio{2}
+\ReqUc{UC22}
 
 \ReqId{R9}
 \ReqName{Recalculate derived measurement data}
 \ReqDesc{When the measurement data or the mass/volume of the specimen is changed, recalculate all numbers that have been derived from the modified data.}
 \ReqPrio{2}
+\ReqUc{UC22}
 
 \ReqId{R10}
 \ReqName{Append project}
 \ReqDesc{New measurements can be added to existing projects.}
 \ReqPrio{2}
+\ReqUc{UC1, UC2, UC3, UC6, UC7, UC11, UC18, UC20}
 
 \ReqId{R11}
 \ReqName{Export to other file formats}
 \ReqDesc{Measurements can be saved in .dat, .tdt and .srm files.}
 \ReqPrio{1}
+\ReqUc{UC13, UC14, UC15}
 
 
 \subsubsection{Measurements}
@@ -461,36 +474,43 @@ remains on for too long.}
 \ReqName{Create a measurement sequence}
 \ReqDesc{Able to create AF and Thellier measurement sequences with several different sized steps.}
 \ReqPrio{2}
+\ReqUc{UC23, UC24}
 
 \ReqId{R13}
 \ReqName{Automatic sequence}
 \ReqDesc{Do all the measurement steps automatically.}
 \ReqPrio{2}
+\ReqUc{UC3}
 
 \ReqId{R14}
 \ReqName{Single step sequence}
 \ReqDesc{Do only one measurement step at a time.}
 \ReqPrio{2}
+\ReqUc{UC1, UC2, UC6, UC7}
 
 \ReqId{R15}
 \ReqName{Pause automatic sequence}
 \ReqDesc{Able to stop the measurement sequence after current step. After being stopped, the user can make modifications to the sequence and continue from where the sequence was left.}
 \ReqPrio{2}
+\ReqUc{UC4}
 
 \ReqId{R16}
 \ReqName{Panic abort}
 \ReqDesc{Able to stop any measurement immediately. The demagnetizer will be turned off and the sample holder will stop where it is. The current measurement data will be discarded.}
 \ReqPrio{1}
+\ReqUc{UC5}
 
 \ReqId{R17}
 \ReqName{Numeric presentation of measurements}
 \ReqDesc{Program shows measurement data in numbers. Measurement data will be displayed using scientic notation (1.23e4).}
 \ReqPrio{1}
+\ReqUc{UC1, UC2, UC3, UC6, UC7, UC8, UC9, UC10, UC11, UC16}
 
 \ReqId{R18}
 \ReqName{Graphic presentation of measurements}
 \ReqDesc{Program draws graphs from measurement data. Available graph types are: Stereo Plot, Intensity, Zijderveld, Difference Vectors, Susteptibility, O63, Great Circles. (TODO: what are the definitions of these graphs? priorities per graph?)}
 \ReqPrio{4}
+\ReqUc{UC1, UC2, UC3, UC6, UC7, UC8, UC9, UC10, UC11, UC17}
 
 
 \subsubsection{Others}
