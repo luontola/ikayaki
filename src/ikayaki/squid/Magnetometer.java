@@ -63,8 +63,12 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
 
 
     /**
-     * Creates a new magnetometer interface. Opens connection to Magnetometer COM port (if its not open already) and
-     * reads settings from the Setting class.
+     * Creates a new magnetometer interface. Opens connection to Magnetometer
+     * COM port (if its not open already) and reads settings from the Setting
+     * class.
+     *
+     * @throws PortInUseException
+     * @throws NoSuchPortException
      */
     public Magnetometer() throws PortInUseException, NoSuchPortException {
         this.serialIO = new SerialIO(new SerialParameters(Settings.instance().getMagnetometerPort(),1200,0,0,8,1,0));
