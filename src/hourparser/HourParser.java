@@ -186,7 +186,7 @@ public class HourParser {
 
     private static void printVersion() {
         System.out.println(APP_NAME + " " + APP_VERSION + " <" + APP_HOME_PAGE + ">");
-        System.out.println("Written by Esko Luontola, http://www.orfjackal.net/");
+        System.out.println("Written by Esko Luontola <http://www.orfjackal.net/>");
     }
 
     public static File getHeaderFile() {
