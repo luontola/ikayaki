@@ -1,0 +1,78 @@
+\beginClass{MainViewPanel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class MainViewPanel}
+\classExtends{JPanel}
+\classCreatedBy{Ikayaki}
+\classUses{ProjectExplorerPanel}
+\classUses{CalibrationPanel}
+\classUses{Squid}
+\classUses{MainMenuBar}
+\classUses{MainStatusBar}
+\classUses{ProjectInformationPanel}
+\classUses{MeasurementSequencePanel}
+\classUses{MeasurementDetailsPanel}
+\classUses{MeasurementControlsPanel}
+\classUses{MeasurementGraphsPanel}
+\classComment{
+    Creates the main view panels (split panels) and Squid and Project components. It also tells everybody if project is changed. 
+}
+\closeClass
+
+\beginField{projectExplorer}
+\fieldDeclaration{private ProjectExplorerPanel projectExplorer}
+\closeField
+
+\beginField{calibration}
+\fieldDeclaration{private CalibrationPanel calibration}
+\closeField
+
+\beginField{squid}
+\fieldDeclaration{private Squid squid}
+\closeField
+
+\beginField{project}
+\fieldDeclaration{private ProjectComponent project}
+\fieldComment{currently active project}
+\closeField
+
+\beginField{menuBar}
+\fieldDeclaration{private MainMenuBar menuBar}
+\closeField
+
+\beginField{statusBar}
+\fieldDeclaration{private MainStatusBar statusBar}
+\closeField
+
+\beginField{projectInformation}
+\fieldDeclaration{private ProjectInformationPanel projectInformation}
+\closeField
+
+\beginField{measurementSequence}
+\fieldDeclaration{private MeasurementSequencePanel measurementSequence}
+\closeField
+
+\beginField{measurementControls}
+\fieldDeclaration{private MeasurementControlsPanel measurementControls}
+\closeField
+
+\beginField{measurementDetails}
+\fieldDeclaration{private MeasurementDetailsPanel measurementDetails}
+\closeField
+
+\beginField{measurementGraphs}
+\fieldDeclaration{private MeasurementGraphsPanel measurementGraphs}
+\closeField
+
+\beginMethod{MainViewPanel()}
+\methodDeclaration{public MainViewPanel()}
+\methodComment{
+    Loads default view and creates all components and panels. Splitpanel between Calibration,Explorer,Information and rest.
+}
+\closeMethod
+
+\beginMethod{changeProject(Project project)}
+\methodDeclaration{public bool changeProject(Project project)}
+\methodComment{
+    Looks for file with filename, if not exist creates new other wise opens it. Then updates current project and tells Panels new project is opened.
+}
+\closeMethod

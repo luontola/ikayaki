@@ -1,0 +1,50 @@
+\beginClass{MainStatusBar}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class MainStatusBar}
+\classExtends{ProjectComponent}
+\classCreatedBy{MainViewPanel}
+\classComment{Creates its components and listens project events on status change and calculates estimated time for measurement}
+
+\classEvent{On Measurement Event}{recalculates progress and updates status for current measurement}
+\closeClass
+
+\beginField{measurementStatus}
+\fieldDeclaration{private JLabel measurementStatus}
+\fieldComment{text comment of current status(moving,measurement,demagnetization)}
+\closeField
+
+\beginField{measurementProgress}
+\fieldDeclaration{private JProgressBar measurementProgress}
+\fieldComment{progress of sequence/measurement as per cent of whole process}
+\closeField
+
+\beginField{currentSequence}
+\fieldDeclaration{private int[] currentSequence}
+\fieldComment{current projects sequence}
+\closeField
+
+\beginField{projectType}
+\fieldDeclaration{private int projectType}
+\fieldComment{current projects type (we know if we are doing demagnetization or not)}
+\closeField
+
+\beginMethod{MainStatusBar()}
+\methodDeclaration{public MainStatusBar()}
+\methodComment{
+    Creates all components with default settings and sets Listener for MeasurementEvent.
+}
+\closeMethod
+
+\beginMethod{calculateStatus(int sequenceStep,int currentStep)}
+\methodDeclaration{private void calculateStatus(String phase,int sequenceStep,int currentStep)}
+\methodComment{
+    Recalculates current progress and updates status.
+}
+\closeMethod
+
+\beginMethod{setMeasurement(int projectType,int[] sequence)}
+\methodDeclaration{{private void setMeasurement(int projectType,int[] sequence)}
+\methodComment{
+    Formats status and creates new measurement status values.
+}
+\closeMethod

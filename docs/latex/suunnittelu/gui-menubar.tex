@@ -1,0 +1,77 @@
+\beginClass{MainMenuBar}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class MainMenuBar}
+\classExtends{JMenuBar}
+\classCreatedBy{MainViewPanel}
+\classComment{Creates Menu items for Menubar and makes action listeners for them}
+
+\classEvent{On newProject Clicked}{Opens File chooser and opens new file in selected folder}
+\classEvent{On openProject Clicked}{Opens File chooser and opens selected file}
+\classEvent{On exportToDAT Clicked}{Opens File chooser and tells Project to export in selected file}
+\classEvent{On exportToDTDT Clicked}{Opens File chooser and tells Project to export in selected file}
+\classEvent{On exportToSRM Clicked}{Opens File chooser and tells Project to export in selected file}
+\classEvent{On configuration Clicked}{Opens SettingsPanel (frame)}
+\classEvent{On helpItem Clicked}{Opens Help dialog (own frame?)}
+\classEvent{On about Clicked}{Opens dialog with credits and version number}
+\classEvent{On exit Clicked}{closes program}
+
+\closeClass
+
+\beginField{file}
+\fieldDeclaration{private JMenu file}
+\closeField
+
+\beginField{options}
+\fieldDeclaration{private JMenu options}
+\closeField
+
+\beginField{help}
+\fieldDeclaration{private JMenu help}
+\closeField
+
+\beginField{newProject}
+\fieldDeclaration{private JMenuItem newProject}
+\closeField
+
+\beginField{openProject}
+\fieldDeclaration{private JMenuItem openProject}
+\closeField
+
+\beginField{exportProject}
+\fieldDeclaration{private JMenu exportProject}
+\closeField
+
+\beginField{exportProjectToDAT}
+\fieldDeclaration{private JMenuItem exportProjectToDAT}
+\closeField
+
+\beginField{exportProjectToTDT}
+\fieldDeclaration{private JMenuItem exportProjectToDTD}
+\closeField
+
+\beginField{exportProjectToSRM}
+\fieldDeclaration{private JMenuItem exportProjectToSRM}
+\closeField
+
+\beginField{exit}
+\fieldDeclaration{private JMenuItem exit}
+\closeField
+
+\beginField{configuration}
+\fieldDeclaration{private JMenuItem configuration}
+\closeField
+
+\beginField{helpItem}
+\fieldDeclaration{private JMenuItem helpItem}
+\closeField
+
+\beginField{about}
+\fieldDeclaration{private JMenuItem about}
+\closeField
+
+\beginMethod{MainMenuBar()}
+\methodDeclaration{public MainMenuBar()}
+\methodComment{
+    Creates all components and makes menu and sets ActionListeners.
+}
+\closeMethod

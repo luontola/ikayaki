@@ -1,0 +1,125 @@
+\beginClass{SquidEmulator}
+\classPackage{ikayaki.squid}
+\classDeclaration{public class SquidEmulation}
+\classExtends{Thread}
+\classCreatedBy{}
+\classUses{SerialIO}
+\classComment{This class tries to emulate behavior of real squid-system. It generates random data values as results and generates random error situations to see that program using real squid system does survive those. Uses 2-3 COM ports. Usage SquidEmulator x z.. where x is 0 or 1 and indicates if Magnetometer and Demagnetizer are on same COM port. z... values are COM ports. Commands are at most five characters in length including a carriage return <CR>. The syntax is as follows: "<device><command><subcommand><data><CR>"}
+
+\classEvent{On New IO Message }{reads message and puts it in Buffer}
+
+\closeClass
+
+\beginField{messageBuffer}
+\fieldDeclaration{private Stack messageBuffer}
+\fieldComment{buffer for incoming messages}
+\closeField
+
+\beginField{online}
+\fieldDeclaration{private bool online}
+\fieldComment{indicates if system have been started}
+\closeField
+
+\beginField{acceleration}
+\fieldDeclaration{private int acceleration}
+\fieldComment{value between 0 and 127 default 5. Settings in the
+20-50 range are usually employed.}
+\closeField
+
+\beginField{deceleration}
+\fieldDeclaration{private int deceleration}
+\fieldComment{value between 0 and 127 default 10. Settings in the
+20-50 range are usually employed.}
+\closeField
+
+\beginField{velocity}
+\fieldDeclaration{private int velocity}
+\fieldComment{value between 50 and 12 000. The
+decimal number issued is 10 times the actual pulse rate to the motor. Since the
+motor requires 200 pulses (full step) or 400 pulses (half step) per revolution,
+a speed setting of M10000 sets the motor to revolve at 5 revolutions per second
+in full step or 2.5 revolutions in half step. This rate is one-half the sample
+rate rotation due to the pulley ratios. The sample handler is set up at the
+factory for half stepping.}
+\closeField
+
+\beginField{handlerStatus}
+\fieldDeclaration{private String handlerStatus}
+\fieldComment{5 end of move, previous G command complete, 7 hard limit stop, G motor is currently indexing}
+\closeField
+
+\beginField{commandedDistance}
+\fieldDeclaration{private int commandedDistance}
+\fieldComment{value between 1 and 16,777,215}
+\closeField
+
+\beginField{currentPosition}
+\fieldDeclaration{private int currentPosition}
+\fieldComment{value between 1 and 16,777,215}
+\closeField
+
+\beginField{homePosition}
+\fieldDeclaration{private int homePosition}
+\fieldComment{value between 1 and 16,777,215}
+\closeField
+
+\beginField{commandedRotation}
+\fieldDeclaration{private int commandedRotation}
+\fieldComment{angles are between 0 (0) and 2000 (360)}
+\closeField
+
+\beginField{currentRotation}
+\fieldDeclaration{private int currentRotation}
+\fieldComment{angles are between 0 (0) and 2000 (360)}
+\closeField
+
+\beginField{degausserCoil}
+\fieldDeclaration{private int degausserCoil}
+\fieldComment{(X, Y, Z) = (0,1,2) default axis Z}
+\closeField
+
+\beginField{degausserAmplitude}
+\fieldDeclaration{private int degausserAmplitude}
+\fieldComment{0->3000 default amp 0}
+\closeField
+
+\beginField{degausserDelay}
+\fieldDeclaration{private int degausserDelay}
+\fieldComment{1-9 seconds default delay 1 second}
+\closeField
+
+\beginField{degausserRamp}
+\fieldDeclaration{private int degausserRamp}
+\fieldComment{(3, 5, 7, 9) default 3}
+\closeField
+
+\beginField{degausserStatus}
+\fieldDeclaration{private char degausserRamp}
+\fieldComment{Z=Zero, T=Tracking, ?=Unknown}
+\closeField
+
+\beginField{messageReader}
+\fieldDeclaration{private SerialIO[] messageReader}
+\fieldComment{starts Threads which reads messages from selected COM port}
+\closeField
+
+\beginMethod{readMessageFromBuffer()}
+\methodDeclaration{public void getSequences()}
+\methodComment{
+    reads message and commits it.
+}
+
+\beginMethod{writeMessage(String message,int port)}
+\methodDeclaration{public void writeMessage(String message,int port))}
+\methodComment{
+    send message to SerialIO to be sented.
+}
+
+\beginMethod{run()}
+\methodDeclaration{public void run())}
+\methodComment{
+    runs sequence where read data from buffer and run cheduled actions (move, rotate, demag, measure) and send feedback to COM ports.
+}
+
+
+\closeMethod

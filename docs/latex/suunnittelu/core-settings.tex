@@ -1,0 +1,102 @@
+\beginClass{Settings}
+\classPackage{ikayaki}
+\classDeclaration{public class Settings}
+\classExtends{}
+\classCreatedBy{Ikayaki}
+\classComment{This singleton class has all necessary settings for Squid and program run. It also holds sequences.}
+
+\closeClass
+
+\beginField{properties}
+\fieldDeclaration{private Properties properties}
+\fieldComment{All properties in Map: ...}
+\closeField
+
+\beginField{propertiesFile}
+\fieldDeclaration{private File propertiesFile}
+\fieldComment{filename for properties (xml)}
+\closeField
+
+\beginField{sequences}
+\fieldDeclaration{private List sequences}
+\fieldComment{all saved sequences}
+\closeField
+
+\beginField{sequencesModified}
+\fieldDeclaration{private bool sequencesModified}
+\fieldComment{we save them only if they have been modified}
+\closeField
+
+\beginField{sequencesFile}
+\fieldDeclaration{private File sequencesFile}
+\fieldComment{filename for properties (xml)}
+\closeField
+
+\beginField{autoSaveQueue}
+\fieldDeclaration{private RunQueue autoSaveQueue}
+\fieldComment{autosave once a while}
+\closeField
+
+\beginMethod{Settings()}
+\methodDeclaration{private Settings()}
+\methodComment{
+    loads settings from config-file.
+}
+\closeMethod
+
+\beginMethod{instance()}
+\methodDeclaration{public Settings instance()}
+\methodComment{
+    creates Settings, if not yet created, and return it.
+}
+\closeMethod
+
+\beginMethod{getProperty(String)}
+\methodDeclaration{public String getProperty(String key)}
+\methodComment{
+    returns value with key, or null if not exists.
+}
+\closeMethod
+
+\beginMethod{setProperty(String,String)}
+\methodDeclaration{public void setProperty(String key, String value)}
+\methodComment{
+    adds pair to properties.
+}
+\closeMethod
+
+\beginMethod{getSequences()}
+\methodDeclaration{public MeasurementSequence[] getSequences()}
+\methodComment{
+    returns all Sequences.
+}
+\closeMethod
+
+\beginMethod{addSequence(MeasurementSequence sequence)}
+\methodDeclaration{public bool addSequence(MeasurementSequence sequence)}
+\methodComment{
+    add sequence to sequence list, return true on success.
+}
+\closeMethod
+
+\beginMethod{removeSequence(MeasurementSequence sequence)}
+\methodDeclaration{public void removeSequence(MeasurementSequence sequence)}
+\methodComment{
+    add sequence to sequence list, return true on success.
+}
+\closeMethod
+
+\beginMethod{save()}
+\methodDeclaration{public void save()}
+\methodComment{
+    saves after a while when no changes have come.
+}
+\closeMethod
+
+\beginMethod{saveNow()}
+\methodDeclaration{public void saveNow()}
+\methodComment{
+    saves and keeps waiting until its done.
+}
+\closeMethod
+
