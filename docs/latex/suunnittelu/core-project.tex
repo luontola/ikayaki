@@ -23,6 +23,7 @@
 \classEvent{On measurement started/ended/paused/aborted}{ProjectEvent about the state change will be fired to all project listeners.}
 \classEvent{On measurement subphase started/completed}{MeasurementEvent will be fired to all measurement listeners.}
 \classEvent{On strike/dip/volume etc. changed}{The updated transformation matrix will be applied to all measurements and a ProjectEvent about the data change will be fired to all project listeners.}
+\classEvent{On project file saved}{ProjectEvent about the file saving will be fired to all project listeners.}
 \closeClass
 
 \beginToc
@@ -612,13 +613,14 @@
 \closeMethod
 
 \beginMethod{addSequence(MeasurementSequence)}
-\methodDeclaration{public synchronized void addSequence(MeasurementSequence sequence)}
+\methodDeclaration{public synchronized boolean addSequence(MeasurementSequence sequence)}
 \methodComment{
 	Appends a sequence to this project's sequence. Only the stepValues will be copied from the specified sequence and added as new steps to this project.
 	
 	If isSequenceEditEnabled() is false, nothing will be done.
 }
 \methodParam{sequence}{the measurement sequence to be added.}
+\methodReturn{true if the steps were added, or false if isSequenceEditEnabled() was false.}
 \methodThrows{NullPointerException}{if sequence is null.}
 \closeMethod
 
@@ -634,18 +636,19 @@
 \closeMethod
 
 \beginMethod{addStep(MeasurementStep)}
-\methodDeclaration{public synchronized void addStep(MeasurementStep step)}
+\methodDeclaration{public synchronized boolean addStep(MeasurementStep step)}
 \methodComment{
 	Appends a step to this project's sequence. Only the stepValue will be copied from the specified step and added as a new step to this project.
 	
 	If isSequenceEditEnabled() is false, nothing will be done.
 }
 \methodParam{step}{the measurement step to be added.}
+\methodReturn{true if the step was added, or false if isSequenceEditEnabled() was false.}
 \methodThrows{NullPointerException}{if step is null.}
 \closeMethod
 
 \beginMethod{addStep(int,MeasurementStep)}
-\methodDeclaration{public synchronized void addStep(int index, MeasurementStep step)}
+\methodDeclaration{public synchronized boolean addStep(int index, MeasurementStep step)}
 \methodComment{
 	Adds a step to the specified index of this project's sequence. Only the stepValue will be copied from the specified step and added as a new step to this project.
 	
@@ -655,23 +658,25 @@
 }
 \methodParam{index}{the index to which the step will be added.}
 \methodParam{step}{the measurement step to be added.}
+\methodReturn{true if the step was added, or false if isSequenceEditEnabled() was false.}
 \methodThrows{IndexOutOfBoundsException}{if the index is out of range (index < getCompletedSteps() || index > getSteps()).}
 \methodThrows{NullPointerException}{if step is null.}
 \closeMethod
 
 \beginMethod{removeStep(int)}
-\methodDeclaration{public synchronized void removeStep(int index)}
+\methodDeclaration{public synchronized boolean removeStep(int index)}
 \methodComment{
 	Removes a step from this project's sequence. Completed measurements can not be removed.
 	
 	If isSequenceEditEnabled() is false, nothing will be done.
 }
 \methodParam{index}{the index of the step to be removed.}
+\methodReturn{true if the step was removed, or false if isSequenceEditEnabled() was false.}
 \methodThrows{IndexOutOfBoundsException}{if the index is out of range (index < getCompletedSteps() || index >= getSteps()).}
 \closeMethod
 
 \beginMethod{removeStep(int,int)}
-\methodDeclaration{public synchronized void removeStep(int start, int end)}
+\methodDeclaration{public synchronized boolean removeStep(int start, int end)}
 \methodComment{
 	Removes a series of steps from this project's sequence. Completed measurements can not be removed.
 	
@@ -679,6 +684,7 @@
 }
 \methodParam{start}{the first index to be removed.}
 \methodParam{end}{the last index to be removed. If end < start, no steps will be removed.}
+\methodReturn{true if the steps were removed, or false if isSequenceEditEnabled() was false.}
 \methodThrows{IndexOutOfBoundsException}{if the index is out of range (start < getCompletedSteps() || end >= getSteps()).}
 \closeMethod
 
@@ -807,7 +813,7 @@
 \beginMethod{doAbort()}
 \methodDeclaration{public synchronized boolean doAbort()}
 \methodComment{
-	Aborts the currently running measurement. An aborted measurement will halt immediately, leave the handler where it was and enable manual control. Will do nothing if isAbortEnabled() is false.
+	Aborts the currently running measurement. An aborted measurement will halt immediately and leave the handler where it was (enables manual control). Will do nothing if isAbortEnabled() is false.
 	
 	This method will notify the measurement thread to abort, but will not wait for it to finish.
 }
@@ -822,7 +828,7 @@
 	The operation will run in its own thread, and this method will not wait for it to finish.
 }
 \methodParam{position}{the position to move the handler to.}
-\methodReturn{true if the operation was completed, otherwise false.}
+\methodReturn{true if the operation was started, otherwise false.}
 \closeMethod
 
 \beginMethod{doManualRotate(int)}
@@ -833,7 +839,7 @@
 	The operation will run in its own thread, and this method will not wait for it to finish.
 }
 \methodParam{angle}{the angle to rotate the handler to.}
-\methodReturn{true if the operation was completed, otherwise false.}
+\methodReturn{true if the operation was started, otherwise false.}
 \closeMethod
 
 \beginMethod{doManualMeasure()}
@@ -843,7 +849,7 @@
 	
 	The operation will run in its own thread, and this method will not wait for it to finish.
 }
-\methodReturn{true if the operation was completed, otherwise false.}
+\methodReturn{true if the operation was started, otherwise false.}
 \closeMethod
 
 \beginMethod{doManualDemagZ(double)}
@@ -854,7 +860,7 @@
 	The operation will run in its own thread, and this method will not wait for it to finish.
 }
 \methodParam{amplitude}{the amplitude to demagnetize in mT.}
-\methodReturn{true if the operation was completed, otherwise false.}
+\methodReturn{true if the operation was started, otherwise false.}
 \closeMethod
 
 \beginMethod{doManualDemagY(double)}
@@ -865,7 +871,7 @@
 	The operation will run in its own thread, and this method will not wait for it to finish.
 }
 \methodParam{amplitude}{the amplitude to demagnetize in mT.}
-\methodReturn{true if the operation was completed, otherwise false.}
+\methodReturn{true if the operation was started, otherwise false.}
 \closeMethod
 
 
@@ -1670,7 +1676,7 @@
 
 \beginClass{ProjectEvent.Type}
 \classComment{
-	The type of a project event. Options are STATE\_CHANGED, DATA\_CHANGED.
+	The type of a project event. Options are STATE\_CHANGED, DATA\_CHANGED, FILE\_SAVED.
 }
 \classPackage{ikayaki}
 \classDeclaration{public enum Type}

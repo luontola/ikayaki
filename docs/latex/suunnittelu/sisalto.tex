@@ -64,6 +64,8 @@ It is recommendable for everybody to have a quick glance at Design Patterns. Her
 \section{Overview of the system}
 \label{sec:over}
 
+\insertdia{overview} % Tämä on nyt sama kuin vaatimusdokumentissa. Tarvitaan parempi.
+
 This system has two different separete project, Ikayaki-program and Squid Emulator which is subproject. Ikayaki, as main project, has graphical user interface (see requirements-document) and interface for communicating with SQUID magnetometer (Superconducting Quantum Interference Device) to measusure magnetization of minerals and rocks. Squid Emulator is vital for testing Ikayaki and it will be simple command-line program which emulates only data flow with random data and communication.
 
 Software is split in two main parts in this document. Data section includes files needed for project-management, data flow in software and interface to control SQUID-system. There is also Settings for whole system and a subproject squid emulator. User Interface section documents all graphical interface classes, nothing more. There will be no graphical user interface for squid emulator.
@@ -102,7 +104,7 @@ The classes Project, MeasurementSequence, MeasurementStep, MeasurementResult and
 \subsubsection{Squid interface}
 \insertdia{core-squid}
 
-Squid Interface offers the Project class an interface to safely control the SQUID magnetometer. It holds three subclasses that handle communication to to three separate parts of the SQUID (Handler, Degausser and Magnetometer).
+Squid Interface offers the Project class an interface to safely control the SQUID magnetometer. It holds three classes that handle communication to to three separate parts of the SQUID (Handler, Degausser and Magnetometer).
 
 Classes are Squid, Handler, Magnetometer, Degausser.
 
@@ -125,7 +127,7 @@ The class Settings is shown in Figure~\ref{fig:core} and details of all the prop
 \subsubsection{Utilities}
 \label{sec:utilities}
 
-Miscellaneous classes that are used nowhere in particular.
+Utility classes that are used in the program, but do not fit any of the other packages. At the moment includes only the LastExecutor class for thread management, but more classes can be added as necessary.
 
 
 \subsection{GUI classes and methods}
@@ -144,7 +146,7 @@ All gui classes are in package ikayaki.gui.
 
 \subsubsection{Generic GUI components}
 
-ProjectComponent, a generic gui base class which handles registering Project- and MeasurementListeners to new projects, and which every project-dependant gui component subclasses. See Figure~\ref{fig:core} and Figure~\ref{fig:gui}.
+ProjectComponent, a generic gui base class which handles registering Project- and MeasurementListeners to new projects, and which every project-dependant gui component subclasses. See Figure~\ref{fig:gui}.
 
 \subsubsection{Main window}
 \insertdia{gui-main}
