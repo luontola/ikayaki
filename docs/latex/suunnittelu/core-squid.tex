@@ -239,12 +239,13 @@
 }
 \closeMethod
 
-\beginMethod{demagnetize(int)}
-\methodDeclaration{public boolean demagnetize(int amplitude)}
+\beginMethod{demagnetize(int,char)}
+\methodDeclaration{public boolean demagnetize(int amplitude,char coil)}
 \methodComment{
-    Performs full sequence to demagnetize all axels with the given amplitude. Blocking method.
+    Performs full sequence to demagnetize selected coil with the given amplitude. Blocking method.
 }
 \methodParam{amplitude}{amplitude to demag.}
+\methodParam{coil}{coil to demagnetize. x,y or z}
 \methodReturn{true if process was sended succesfully, otherwise false.}
 \closeMethod
 
@@ -433,7 +434,7 @@ factory for half stepping.}
 \methodComment{
     Commands the holder to move to degauss position.
 }
-methodParam{position}{tells which position to translate handler (x,y,z)}
+\methodParam{position}{tells which position to translate handler (x,y,z)}
 \closeMethod
 
 \beginMethod{moveToMeasurement()}
