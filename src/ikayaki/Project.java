@@ -1493,7 +1493,17 @@ project listeners.
      * The type of the project.
      */
     public enum Type {
-        CALIBRATION, AF, THELLIER, THERMAL
+        CALIBRATION("Calibration"), AF("AF"), THELLIER("Thellier"), THERMAL("Thermal");
+
+        private String name;
+
+        private Type(String name) {
+            this.name = name;
+        }
+
+        @Override public String toString() {
+            return name;
+        }
     }
 
     /**

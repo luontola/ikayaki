@@ -32,6 +32,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.InvalidPropertiesFormatException;
@@ -417,6 +418,47 @@ public class Settings {
 
     public synchronized boolean setHandlerRotation(int value) {
         setProperty("squid.handler.rotation", Integer.toString(value));
+        return true;
+    }
+
+    public synchronized int getWindowWidth() {
+        int i = Integer.parseInt(getProperty("gui.window.width", "800"));
+        Rectangle maxBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+        if (i < 400) {
+            i = 400;
+        } else if (i > (int) maxBounds.getWidth()) {
+            i = (int) maxBounds.getWidth();
+        }
+        return i;
+    }
+
+    public synchronized boolean setWindowWidth(int value) {
+        setProperty("gui.window.width", Integer.toString(value));
+        return true;
+    }
+
+    public synchronized int getWindowHeight() {
+        int i = Integer.parseInt(getProperty("gui.window.height", "600"));
+        Rectangle maxBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+        if (i < 300) {
+            i = 300;
+        } else if (i > (int) maxBounds.getHeight()) {
+            i = (int) maxBounds.getHeight();
+        }
+        return i;
+    }
+
+    public synchronized boolean setWindowHeight(int value) {
+        setProperty("gui.window.height", Integer.toString(value));
+        return true;
+    }
+
+    public synchronized boolean getWindowMaximized() {
+        return Boolean.parseBoolean(getProperty("gui.window.maximized", "false"));
+    }
+
+    public synchronized boolean setWindowMaximized(boolean value) {
+        setProperty("gui.window.maximized", Boolean.toString(value));
         return true;
     }
 

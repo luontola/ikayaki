@@ -83,6 +83,7 @@ be closed.
 
         // restore size and position
         setSize(Settings.instance().getWindowWidth(), Settings.instance().getWindowHeight());
+        setLocationByPlatform(true);
         setVisible(true);
 
         if (Settings.instance().getWindowMaximized() && System.getProperty("os.name").startsWith("Windows")) {
@@ -93,8 +94,6 @@ be closed.
             } catch (Throwable t) {
                 t.printStackTrace();
             }
-        } else {
-            setLocationByPlatform(true);
         }
 
         addComponentListener(new ComponentAdapter() {

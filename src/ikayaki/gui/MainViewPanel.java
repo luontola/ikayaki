@@ -40,6 +40,8 @@ import java.awt.event.ActionListener;
  */
 public class MainViewPanel extends ProjectComponent {
 
+    private static final int DIVIDER_DEFAULT_LOCATION = 250;
+
     /**
      * Front-end for controlling the SQUID. Only one project at a time may have access to the SQUID.
      */
@@ -147,13 +149,13 @@ public class MainViewPanel extends ProjectComponent {
         right.add(measurementGraphs, gc);
 
         // configure tabs
-        splitPane.setOneTouchExpandable(true);
-        splitPane.setContinuousLayout(true);
-        splitPane.setDividerLocation(200);
-        splitPane.setResizeWeight(0.0);
         splitPane.setLeftComponent(left);
         splitPane.setRightComponent(right);
-        splitPane.setEnabled(false);
+        //splitPane.setOneTouchExpandable(true);
+        splitPane.setContinuousLayout(true);
+        splitPane.setDividerLocation(DIVIDER_DEFAULT_LOCATION);
+        splitPane.setResizeWeight(0.0);
+        //splitPane.setEnabled(false);
         splitPane.setBorder(null);
         splitPane.setDividerSize(0);
 
@@ -182,6 +184,7 @@ public class MainViewPanel extends ProjectComponent {
         tabControls.add(tabButton);
         tabControls.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
+        // master layout
         setLayout(new BorderLayout());
         add(splitPane, "Center");
         add(tabControls, "West");
@@ -223,6 +226,10 @@ public class MainViewPanel extends ProjectComponent {
         if (project != null) {
             project.addProjectListener(this);
             project.setSquid(squid);        // will do nothing if another project has a measurement running
+            projectInformation.setBorder(
+                    BorderFactory.createTitledBorder(project.getName() + " (" + project.getType() + " Project)"));
+        } else {
+            projectInformation.setBorder(BorderFactory.createTitledBorder("Project Information"));
         }
         this.project = project;
         projectExplorer.setProject(project);
