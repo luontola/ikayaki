@@ -120,90 +120,53 @@
 \beginClass{MeasurementValue}
 \classPackage{ikayaki}
 \classDeclaration{public class MeasurementValue<T>}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
+\classUses{MeasurementStep}
 \classComment{
+	Algorithms for calculating values from the measurements. A MeasurementValue object will be passed to the getValue method of a project to retrieve the desired value.
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
+\classPatterns{Strategy}
 \closeClass
 
 
 \beginClass{ProjectEvent}
 \classPackage{ikayaki}
-\classDeclaration{}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
+\classDeclaration{public class ProjectEvent}
+\classExtends{EventObject}
+\classCreatedBy{Project}
 \classComment{
+	ProjectEvent is used to notify others about the state change of a project.
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
 \closeClass
 
 
 \beginClass{ProjectListener}
 \classPackage{ikayaki}
-\classDeclaration{}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
+\classDeclaration{public interface ProjectListener}
+\classExtends{EventListener}
 \classComment{
+	Defines a listener for project events.
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
 \closeClass
 
 
 \beginClass{MeasurementEvent}
 \classPackage{ikayaki}
-\classDeclaration{}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
+\classDeclaration{public class MeasurementEvent}
+\classExtends{EventObject}
+\classCreatedBy{Project}
 \classComment{
+	MeasurementEvent is used to notify listeners about the stages of an ongoing measurement.
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
 \closeClass
 
 
 \beginClass{MeasurementListener}
 \classPackage{ikayaki}
-\classDeclaration{}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
+\classDeclaration{public interface MeasurementListener}
+\classExtends{EventListener}
 \classComment{
+	Defines a listener for measurement events.
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
 \closeClass
 
 
