@@ -1,4 +1,8 @@
 \beginClass{MeasurementControlsPanel}
+\classComment{
+	Has "Measure"/"Pause", "Single step" and "Stop now!" buttons for controlling measurements; "+z/-z" radiobuttons for changing sample orientation, help picture for inserting sample, picture of current magnetometer status, and, manual controls.
+	Listens MeasurementEvents and ProjectEvents, and updates buttons and magnetometer status accordingly.
+}
 \classPackage{ikayaki.gui}
 \classDeclaration{public class MeasurementControlsPanel}
 \classExtends{ProjectComponent}
@@ -6,10 +10,6 @@
 \classUses{Project}
 \classUses{MagnetometerStatusPanel}
 \classUses{ManualControlsPanel}
-\classComment{
-	Has "Measure"/"Pause", "Single step" and "Stop now!" buttons for controlling measurements; "+z/-z" radiobuttons for changing sample orientation, help picture for inserting sample, picture of current magnetometer status, and, manual controls.
-	Listens MeasurementEvents and ProjectEvents, and updates buttons and magnetometer status accordingly.
-}
 \classEvent{On measureButton click}{call project.doAutoStep() or project.doPause(), depending on current button status. Show error message if false is returned.}
 \classEvent{On singlestepButton click}{call project.doSingleStep(); show error message if false is returned.}
 \classEvent{On stopButton click}{call project.doAbort(); show critical error message if false is returned.}
@@ -53,11 +53,11 @@
 
 
 \beginClass{MagnetometerStatusPanel}
+\classComment{Picture of current magnetometer status, with sample holder position and rotation.}
 \classPackage{ikayaki.gui}
 \classDeclaration{public class MagnetometerStatusPanel}
 \classExtends{JPanel}
 \classCreatedBy{MeasurementControlsPanel}
-\classComment{Picture of current magnetometer status, with sample holder position and rotation.}
 \closeClass
 
 \beginMethod{MagnetometerStatusPanel()}
@@ -74,11 +74,11 @@
 
 
 \beginClass{ManualControlsPanel}
+\classComment{Magnetometer manual control radiobuttons.}
 \classPackage{ikayaki.gui}
 \classDeclaration{public class ManualControlsPanel}
 \classExtends{JPanel}
 \classCreatedBy{MeasurementControlsPanel}
-\classComment{Magnetometer manual control radiobuttons.}
 \classUses{Project}
 \classEvent{On xxxN click}{call project.xxxN(). Or something like that. I shouldn't care.}
 \closeClass

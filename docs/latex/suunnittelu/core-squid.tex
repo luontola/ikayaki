@@ -1,4 +1,7 @@
 \beginClass{Squid}
+\classComment{
+	offers Squid interface for project-class that controls SQUID-system. It reads Settings-class for settings and creates classes degausser, handler and magnetometer and offers handlers for them.
+}
 \classPackage{ikayaki.squid}
 \classDeclaration{public class Squid}
 \classExtends{}
@@ -8,8 +11,6 @@
 \classSubclass{Degausser}
 \classSubclass{Handler}
 \classSubclass{Magnetometer}
-\classComment{offers Squid interface for project-class that controls SQUID-system. It reads Settings-class for settings and creates classes degausser, handler and magnetometer and offers handlers for them.
-}
 \classPatterns{This class is singleton, there will be always only one instance of it and its created when class is needed first time.}
 \closeClass
 
@@ -104,15 +105,15 @@
 \closeMethod
 
 \beginClass{Degausser}
+\classComment{
+    Controls Degausser (demagnetizer). Sets it up and offers Interface to control it. Because the data link is implemented in the degausser by a single board computer running a small basic program, the response time of the degausser to commands is slow. Suitable wait loops will have to be used in the external computer code to prevent unreliable communications.
+}
 \classPackage{ikayaki.squid}
 \classDeclaration{public class Degausser}
 \classImplements{SerialIOListener}
 \classCreatedBy{Squid}
 \classUses{Settings}
 \classUses{SerialIO}
-\classComment{
-    Controls Degausser (demagnetizer). Sets it up and offers Interface to control it. Because the data link is implemented in the degausser by a single board computer running a small basic program, the response time of the degausser to commands is slow. Suitable wait loops will have to be used in the external computer code to prevent unreliable communications.
-}
 \classEvent{On New IO Message }{reads message and puts it in Buffer}
 \closeClass
 
@@ -233,15 +234,15 @@
 
 
 \beginClass{Handler}
+\classComment{
+    Controls Sample Handler and sets it up, offering interface for it.
+}
 \classPackage{ikayaki.squid}
 \classDeclaration{public class Handler}
 \classImplements{SerialIOListener}
 \classCreatedBy{Squid}
 \classUses{Settings}
 \classUses{SerialIO}
-\classComment{
-    Controls Sample Handler and sets it up, offering interface for it.
-}
 \classEvent{On New IO Message }{reads message and puts it in Buffer}
 \closeClass
 
@@ -411,14 +412,15 @@ factory for half stepping.}
 
 
 \beginClass{Magnetometer}
+\classComment{
+	Controls Magnetometer and sets it up, offering interface for it. Commands are at most five characters in length including a carriage return <CR>. The syntax is as follows: "<device><command><subcommand><data><CR>"
+}
 \classPackage{ikayaki.squid}
 \classDeclaration{public class Magnetometer}
 \classImplements{SerialIOListener}
 \classCreatedBy{Squid}
 \classUses{Settings}
 \classUses{SerialIO}
-\classComment{ Controls Magnetometer and sets it up, offering interface for it. Commands are at most five characters in length including a carriage return <CR>. The syntax is as follows: "<device><command><subcommand><data><CR>"
-}
 \classEvent{On New IO Message }{reads message and puts it in Buffer}
 \closeClass
 

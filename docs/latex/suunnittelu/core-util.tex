@@ -1,14 +1,14 @@
 
 \beginClass{RunQueue}
-\classPackage{ikayaki.util}
-\classDeclaration{public class RunQueue}
-\classUses{RunQueue.RunQueueThread}
-\classUses{RunQueue.RunDelayed}
 \classComment{
 	Executes Runnable objects in a private worker thread after a pre-defined delay. The worker thread will terminate automatically when there are no runnables to be executed. Optionally executes only the last inserted runnable. All operations are thread-safe.
 
 	This class can be used for example in connection with a "continuous search" invoked by a series of GUI events (such as a DocumentListener), but it is necessary to react to only the last event after a short period of user inactivity.
 }
+\classPackage{ikayaki.util}
+\classDeclaration{public class RunQueue}
+\classUses{RunQueue.RunQueueThread}
+\classUses{RunQueue.RunDelayed}
 \classPatterns{Command}
 \closeClass
 
@@ -116,13 +116,13 @@
 
 
 \beginClass{RunQueue.RunQueueThread}
+\classComment{
+	Keeps on checking the RunQueue.queue to see if there are Runnables to be executed. If there is one, execute it and proceed to the next one. If an uncaught Throwable is thrown during the execution, prints an error message and stack trace to stderr. If the queue is empty, this thread will set RunDelayed.workerThread to null and terminate itself.
+}
 \classPackage{ikayaki.util}
 \classDeclaration{private class RunQueueThread}
 \classExtends{Thread}
 \classCreatedBy{RunQueue}
-\classComment{
-	Keeps on checking the RunQueue.queue to see if there are Runnables to be executed. If there is one, execute it and proceed to the next one. If an uncaught Throwable is thrown during the execution, prints an error message and stack trace to stderr. If the queue is empty, this thread will set RunDelayed.workerThread to null and terminate itself.
-}
 \closeClass
 
 \beginMethod{run()}
@@ -131,13 +131,13 @@
 
 
 \beginClass{RunQueue.RunDelayed}
+\classComment{
+	Wraps a Runnable object and sets the delay after which it should be executed by a worker thread.
+}
 \classPackage{ikayaki.util}
 \classDeclaration{private class RunDelayed}
 \classImplements{Delayed}
 \classCreatedBy{RunQueue}
-\classComment{
-	Wraps a Runnable object and sets the delay after which it should be executed by a worker thread.
-}
 \closeClass
 
 \beginField{expires}

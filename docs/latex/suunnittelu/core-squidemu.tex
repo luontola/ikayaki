@@ -1,13 +1,13 @@
 \beginClass{SquidEmulator}
+\classComment{
+	This class tries to emulate behavior of real squid-system. It generates random data values as results and generates random error situations to see that program using real squid system does survive those. Uses 2-3 COM ports. Usage SquidEmulator x z.. where x is 0 or 1 and indicates if Magnetometer and Demagnetizer are on same COM port. z... values are COM ports.
+}
 \classPackage{ikayaki.squid}
 \classDeclaration{public class SquidEmulation}
 \classExtends{Thread}
 \classImplements{SerialIOListener}
 \classCreatedBy{}
 \classUses{SerialIO}
-\classComment{
-	This class tries to emulate behavior of real squid-system. It generates random data values as results and generates random error situations to see that program using real squid system does survive those. Uses 2-3 COM ports. Usage SquidEmulator x z.. where x is 0 or 1 and indicates if Magnetometer and Demagnetizer are on same COM port. z... values are COM ports.
-}
 \classEvent{On New IO Message}{reads message and puts it in Buffer}
 \closeClass
 

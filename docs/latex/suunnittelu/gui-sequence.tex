@@ -1,10 +1,4 @@
 \beginClass{MeasurementSequencePanel}
-\classPackage{ikayaki.gui}
-\classDeclaration{public class MeasurementSequencePanel}
-\classExtends{ProjectComponent}
-\classCreatedBy{MainViewPanel}
-\classUses{MeasurementSequenceTableModel}
-\classUses{MeasurementSequencePopupMenu}
 \classComment{Allows creating, editing and removing measurement
 sequences. Shows measurement data. Right-click brings popup menu for hiding columns, and saving
 sequence. Left-click selects a row. Multiple rows can be selected by
@@ -12,6 +6,12 @@ painting or ctrl-clicking. Allows dragging rows to different order. Has three
 textfields for inserting new sequences, first field for start value,
 second for step and third for stop value. Clicking Add sequence-button
 appends sequence into table. Saved sequences can be loaded from dropdown menu.}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class MeasurementSequencePanel}
+\classExtends{ProjectComponent}
+\classCreatedBy{MainViewPanel}
+\classUses{MeasurementSequenceTableModel}
+\classUses{MeasurementSequencePopupMenu}
 \classEvent{On SequenceTable mouse right-click}{Create a MeasurementSequencePopupMenu.}
 \classEvent{On addSequence mouseclick}{Add measurement sequence to end
 of table and tell MeasurementSequenceTableModel to update itself.}
@@ -77,11 +77,11 @@ data from project's measurement data. Higlights right row.}
 \closeMethod
 
 \beginClass{MeasurementSequenceTableModel}
+\classComment{Handles data in table.}
 \classPackage{ikayaki.gui}
 \classDeclaration{public class MeasurementSequenceTableModel}
 \classExtends{AbstractTableModel}
 \classCreatedBy{MeasurementSequencePanel}
-\classComment{Handles data in table.}
 \closeClass
 
 \beginField{shownColumns}
@@ -113,11 +113,11 @@ data from project's measurement data. Higlights right row.}
 
 
 \beginClass{MeasurementSequencePopupMenu}
+\classComment{Allows selection if volume is shown in table and saving sequence.}
 \classPackage{ikayaki.gui}
 \classDeclaration{public class MeasurementSequencePopupMenu}
 \classExtends{JPopupMenu}
 \classCreatedBy{MeasurementSequencePanel}
-\classComment{Allows selection if volume is shown in table and saving sequence.}
 \closeClass
 
 \beginField{volume}

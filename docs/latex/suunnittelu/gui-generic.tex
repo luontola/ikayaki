@@ -1,4 +1,7 @@
 \beginClass{ProjectComponent}
+\classComment{
+	Generic gui component which uses Project and listens MeasurementEvents and ProjectEvents.
+}
 \classPackage{ikayaki.gui}
 \classDeclaration{public class ProjectComponent}
 \classExtends{JPanel}
@@ -11,9 +14,6 @@
 \classSubclass{MeasurementGraphsPanel}
 \classSubclass{ProjectExplorerPanel}
 \classSubclass{CalibrationPanel}
-\classComment{
-	Generic gui component which uses Project and listens MeasurementEvents and ProjectEvents.
-}
 \classEvent{On ProjectEvent}{does nothing; subclasses may override this.}
 \classEvent{On MeasurementEvent}{does nothing; subclasses may override this.}
 \closeClass
