@@ -152,12 +152,13 @@ whose measuring ended.
         explorerTableModel = new ProjectExplorerTableModel();
         explorerTable = new JTable(explorerTableModel);
         explorerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        explorerTable.setShowGrid(false); // TODO: the grid still shows up when selecting rows. must make a custom cell renderer to change that
         explorerTableScrollPane = new JScrollPane(explorerTable);
         explorerTableScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         explorerTableScrollPane.getViewport().setBackground(Color.WHITE);
         // TODO: set column sizes somehow automatically, according to table contents?
-        explorerTable.getColumnModel().getColumn(0).setPreferredWidth(140);
-        explorerTable.getColumnModel().getColumn(1).setPreferredWidth(40);
+        explorerTable.getColumnModel().getColumn(0).setPreferredWidth(130);
+        explorerTable.getColumnModel().getColumn(1).setPreferredWidth(50);
         explorerTable.getColumnModel().getColumn(2).setPreferredWidth(80);
         explorerTable.setPreferredScrollableViewportSize(new Dimension(280, 400));
 

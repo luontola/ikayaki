@@ -89,6 +89,12 @@ public class MeasurementControlsPanel extends ProjectComponent {
         measureButton = new JButton(getAutoStepAction());
         stepButton = new JButton(getSingleStepAction());
         abortButton = new JButton(getAbortAction());
+
+        // prevent the measure button from being resized on action change
+        Dimension measureSize = measureButton.getPreferredSize();
+        measureButton.setAction(getPauseAction());
+        measureSize.width = Math.max(measureSize.width, measureButton.getPreferredSize().width);
+        measureButton.setPreferredSize(measureSize);
         updateActions();
 
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
