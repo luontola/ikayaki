@@ -99,7 +99,7 @@ public class Report {
             weekEnd.add(Calendar.DATE, 7);
             processWeek(weekStart.getTime(), weekEnd.getTime());
             weekStart.add(Calendar.DATE, 7);
-        } while (weekEnd.getTime().before(end));
+        } while (weekEnd.getTime().before(end) || weekEnd.getTime().equals(end));
     }
 
     /**
