@@ -34,10 +34,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.InvalidPropertiesFormatException;
+import java.util.*;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Singleton class for holding all global settings. All changes are automatically written to file after a short delay.
@@ -45,6 +43,10 @@ import java.util.Properties;
  * @author Esko Luontola
  */
 public class Settings {
+
+    public static final int DIRECTORY_HISTORY_SIZE = 30;
+
+    public static final int PROJECT_HISTORY_SIZE = 10;
 
     /**
      * Singleton instance of the Settings object.
@@ -143,6 +145,10 @@ public class Settings {
                 sequences.add(new MeasurementSequence((Element) sequenceList.item(i)));
             }
         }
+
+        // load custom properties
+        loadDirectoryHistory();
+        loadProjectHistory();
     }
 
     /**
@@ -250,6 +256,8 @@ public class Settings {
         return false;
     }
 
+    /* Serial ports */
+
     public synchronized String getMagnetometerPort() {
         return getProperty("squid.magnetometer.port", "");
     }
@@ -276,6 +284,8 @@ public class Settings {
         setProperty("squid.degausser.port", value);
         return true;
     }
+
+    /* Magnetometer */
 
     public synchronized double getMagnetometerXAxisCalibration() {
         return Double.parseDouble(getProperty("squid.magnetometer.xaxiscalibration", "0.0"));
@@ -304,6 +314,8 @@ public class Settings {
         return true;
     }
 
+    /* Degausser */
+
     public synchronized int getDegausserRamp() {
         return Integer.parseInt(getProperty("squid.degausser.ramp", "0"));
     }
@@ -321,6 +333,8 @@ public class Settings {
         setProperty("squid.degausser.delay", Integer.toString(value));
         return true;
     }
+
+    /* Sample handler */
 
     public synchronized int getHandlerAcceleration() {
         return Integer.parseInt(getProperty("squid.handler.acceleration", "0"));
@@ -421,6 +435,8 @@ public class Settings {
         return true;
     }
 
+    /* Program window */
+
     public synchronized int getWindowWidth() {
         int i = Integer.parseInt(getProperty("gui.window.width", "800"));
         Rectangle maxBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
@@ -460,6 +476,86 @@ public class Settings {
     public synchronized boolean setWindowMaximized(boolean value) {
         setProperty("gui.window.maximized", Boolean.toString(value));
         return true;
+    }
+
+    /* Directory history */
+
+    private List<File> directoryHistory = new LinkedList<File>();
+
+    public synchronized File[] getDirectoryHistory() {
+        return directoryHistory.toArray(new File[directoryHistory.size()]);
+    }
+
+    public synchronized boolean updateDirectoryHistory(File visited) {
+        // update history list
+        directoryHistory.remove(visited);
+        directoryHistory.add(0, visited);
+        while (directoryHistory.size() > DIRECTORY_HISTORY_SIZE) {
+            directoryHistory.remove(directoryHistory.size() - 1);
+        }
+
+        // save as properties
+        for (int i = 0; i < directoryHistory.size(); i++) {
+            setProperty("history.dir." + i, directoryHistory.get(i).getAbsolutePath());
+        }
+        return true;
+    }
+
+    private synchronized void loadDirectoryHistory() {
+        // reset history list
+        directoryHistory.clear();
+
+        // load from properties
+        int i = 0;
+        while (true) {
+            String s = getProperty("history.dir." + i);
+            if (s == null) {
+                break;
+            } else {
+                directoryHistory.add(new File(s));
+            }
+            i++;
+        }
+    }
+
+    /* Project history */
+
+    private List<File> projectHistory = new LinkedList<File>();
+
+    public synchronized File[] getProjectHistory() {
+        return projectHistory.toArray(new File[projectHistory.size()]);
+    }
+
+    public synchronized boolean updateProjectHistory(File visited) {
+        // update history list
+        projectHistory.remove(visited);
+        projectHistory.add(0, visited);
+        while (projectHistory.size() > PROJECT_HISTORY_SIZE) {
+            projectHistory.remove(projectHistory.size() - 1);
+        }
+
+        // save as properties
+        for (int i = 0; i < projectHistory.size(); i++) {
+            setProperty("history.project." + i, projectHistory.get(i).getAbsolutePath());
+        }
+        return true;
+    }
+
+    private synchronized void loadProjectHistory() {
+        // reset history list
+        projectHistory.clear();
+
+        // load from properties
+        int i = 0;
+        while (true) {
+            String s = getProperty("history.project." + i);
+            if (s == null) {
+                break;
+            } else {
+                projectHistory.add(new File(s));
+            }
+            i++;
+        }
     }
 
     /**
