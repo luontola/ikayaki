@@ -227,7 +227,7 @@ public class RunQueue {
                     System.out.println("A " + j);
                 }
             });
-            Thread.sleep(30 * i);
+            //Thread.sleep(30 * i);
         }
 
         Thread.sleep(1000);
