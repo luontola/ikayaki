@@ -88,7 +88,14 @@ Package ikayaki holds generic data classes, ikayaki.squid holds classes loosely 
 
 \subsubsection{Squid interface}
 
+Squid Interface offers Project class interface to safely control SQUID magnetometer. It holds three subclasses that 
+handle communication to to three separate parts of SQUID (Handler,Degausser,Magnetometer).
+
+Classes are Squid, Handler, Magnetometer, Degausser.
+
 \subsubsection{Squid emulator}
+
+This is separate from other and is used only for testing Squid Interface that it works correctly.
 
 \subsubsection{Serial communication}
 
@@ -120,7 +127,12 @@ ProjectComponent, a generic gui base class which handles registering Project- an
 
 \subsubsection{Main window}
 
+Creates Menubar and Statusbar and generically creates gui parts and makes panels and splitpanels for them. Also it 
+handles communication to all its gui components when project is changed.
+
 \subsubsection{Configuration window}
+
+Separate window for configuring SQUID equipment and communication.
 
 \subsubsection{Project Explorer}
 
