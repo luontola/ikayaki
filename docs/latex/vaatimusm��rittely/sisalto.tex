@@ -26,54 +26,6 @@ Goals of the software set by client..
 
 Requirements by client..
 
-\subsection{Use cases}
-
-Squid Use Cases, preliminary list with no explanations nor scenarios.
-
-\subsubsection{General measuring}
-
-\begin{itemize}
-\item Do single step measuring without demagnetization
-\item Do single step measuring with demagnetization
-\item Do automatic demagnetization-measuring sequence
-\item Do thellier measuring
-\item Do thermal measuring
-\item Measure magnetometer ground noise
-\item Measure empty sample holder noise
-\item Fully manual measuring
-  \begin{itemize}
-  \item Move sample handler to desired position
-  \item Rotate sample handler to desired angle
-  \item Measure in current position
-  \item Demagnetize in current position
-  \end{itemize}
-\end{itemize}
-
-\subsubsection{File formats}
-
-\begin{itemize}
-\item Automatically save all measurement cycles in .dat? file
-\item Save standard sample measurement results in .std file
-\item Export (thellier) results into .tdt file
-\item Export single measurement details into .srm file
-\item Print measurement results
-\item Print graph sheet (with 7 different graphs; described elsewhere x)
-\end{itemize}
-
-\subsubsection{Functionality}
-
-\begin{itemize}
-\item Load .dat? file
-\item Append measurement results to .dat? file
-\item Create new .dat? file (project?)
-\item Insert AF sequence with start-step-stop values
-\item Load AF sequence
-\item Save AF sequence
-\item Edit AF sequence on-the-fly
-\item Pause AF sequence
-\item Panic abort operation instantly
-\end{itemize}
-
 \subsection{Restrictions}
 
 Restrictions set by client..
@@ -102,6 +54,66 @@ software..
 Interface to existing software and use of it described here..
 
 \subsection{System restrictions}
+
+\section{Use cases}
+
+Describes planned use cases for the program. Derived from user interface prototype and requiremets. All use cases are made by "the user" in program main screen, unless otherwise noted.
+
+\subsection{Measuring}
+
+\subsubsection{Do single step measuring without demagnetization}
+
+With any open project, insert as next step "0" or empty (default for new projects), meaning no demagnetization, and click "Single step".
+
+Precondition: Sample in sample holder.\\
+Postcondition: Sample measured, results on screen.\\
+Error condition: The program shall let the user know if something went wrong.\\
+
+\subsubsection{Do single step measuring with demagnetization}
+\subsubsection{Do automatic demagnetization-measuring sequence}
+  \begin{itemize}
+  \item Pause automatic measuring sequence
+  \item Cancel automatic measuring sequence
+  \end{itemize}
+\subsubsection{Do thellier measuring}
+\subsubsection{Do thermal measuring}
+\subsubsection{Measure magnetometer ground noise}
+\subsubsection{Measure empty sample holder noise}
+\subsubsection{Fully manual measuring}
+  \begin{itemize}
+  \item Move sample handler to desired position
+  \item Rotate sample handler to desired angle
+  \item Measure in current position
+  \item Demagnetize in current position
+  \end{itemize}
+
+\subsection{File formats}
+
+\subsubsection{Automatically save all measurement cycles in project (.dat?) file}
+\subsubsection{Save standard sample measurement results in .std file}
+\subsubsection{Export (thellier) results into .tdt file}
+\subsubsection{Export single measurement details into .srm file}
+\subsubsection{Print measurement results}
+\subsubsection{Print graph sheet (with 7 different graphs; described elsewhere)}
+
+\subsection{Functionality}
+
+\subsubsection{Create new project (.dat file?)}
+\subsubsection{Load project (.dat file?)}
+\subsubsection{Append measurement results to project (.dat file?)}
+\subsubsection{Panic abort operation instantly}
+
+\subsection{AF sequences}
+
+{\it As in automatic demagnetization-measuring sequences, or Alternating Field sequences}
+
+\subsubsection{Insert AF sequence with start-step-stop values}
+\subsubsection{Load AF sequence}
+\subsubsection{Save AF sequence}
+\subsubsection{Edit AF sequence on-the-fly}
+\subsubsection{Edit stored AF sequences}
+\subsubsection{Rename stored AF sequence}
+\subsubsection{Delete stored AF sequence}
 
 \section{User interface}
 
