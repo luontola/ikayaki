@@ -39,6 +39,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static java.lang.Math.sin;
+import static java.lang.Math.cos;
 import static ikayaki.ProjectEvent.Type.DATA_CHANGED;
 import static ikayaki.ProjectEvent.Type.STATE_CHANGED;
 import static ikayaki.ProjectEvent.Type.FILE_SAVED;
@@ -312,9 +314,6 @@ project listeners.
         }
 
         synchronized (project) {
-            // clear any delaying autosave operations
-            project.autosaveQueue.clear();
-
             // save the project to file and remove it from cache
             if (project.getState() != IDLE) {
                 return false;
@@ -509,7 +508,8 @@ project listeners.
     }
 
     /**
-     * Writes this project to its project file and waits for the operation to complete.
+     * Writes this project to its project file and waits for the operation to complete. Clears any delaying autosave
+     * operations.
      *
      * @return true if the file was successfully written, otherwise false.
      */
@@ -517,6 +517,7 @@ project listeners.
         File file;
         Document document;
         synchronized (this) {
+            this.autosaveQueue.clear();     // clear any delaying autosave operations
             file = this.getFile();
             document = this.getDocument();
         }
@@ -786,7 +787,29 @@ project listeners.
      * setStrike(), setDip() and setSampleType() methods.
      */
     private synchronized void updateTransforms() {
-        return; // TODO
+        double d = getDip();
+        double s = getStrike();
+        if (sampleType == CORE) {
+            // core sample: sample -> geographic
+            transform.setRow(0, sin(d) * cos(s), sin(s), cos(s) * cos(d));
+            transform.setRow(1, sin(s) * sin(d), cos(s), cos(d) * sin(s));
+            transform.setRow(2, -cos(d), 0, sin(d));
+        } else if (sampleType == HAND) {
+            // hand sample: sample -> geographic
+            transform.setRow(0, cos(s), -sin(s) * cos(d), sin(s) * sin(d));
+            transform.setRow(1, sin(s), cos(s) * cos(d), -sin(d) * cos(s));
+            transform.setRow(2, 0, sin(d), cos(d));
+        } else {
+            assert false;
+        }
+        if (!orientation) {
+            // -Z position -> +Z position
+            transform.setColumn(1, -transform.m01, -transform.m11, -transform.m21);
+            transform.setColumn(2, -transform.m02, -transform.m12, -transform.m22);
+        }
+        for (int i = 0; i < sequence.getSteps(); i++) {
+            sequence.getStep(i).updateTransforms();
+        }
     }
 
     /**
