@@ -224,16 +224,30 @@ whose measuring ended.
             public void keyTyped(KeyEvent e) {
                 if (e.getKeyChar() == KeyEvent.VK_ESCAPE || e.getKeyChar() == KeyEvent.VK_ENTER) {
                     return;
+
+                } else if (e.getModifiers() == KeyEvent.CTRL_MASK && e.getKeyChar() == KeyEvent.VK_DELETE) {
+                    // delete one directory name at a time
+                    int pos = browserFieldEditor.getCaretPosition();
+                    String text = browserFieldEditor.getText();
+                    String textA = text.substring(0, pos);
+                    String textB = text.substring(pos);
+                    textA = textA.substring(0, Math.max(0, textA.lastIndexOf(System.getProperty("file.separator"))));
+                    browserFieldEditor.setText(textA + textB);
+                    browserFieldEditor.setCaretPosition(textA.length());
+                    return;
+
                 } else if ((e.getModifiers() & KeyEvent.ALT_MASK) != 0 || (e.getModifiers() & KeyEvent.CTRL_MASK) != 0) {
                     // avoid the popup menu from showing, when the Project Explorer tab is hidden with ALT+P
                     browserField.hidePopup();
                     return;
+                    
                 } else {
                     autocompleteExecutor.execute(new Runnable() {
                         public void run() {
                             doAutoComplete();
                         }
                     });
+                    return;
                 }
             }
         });
