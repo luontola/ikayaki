@@ -1,7 +1,6 @@
 package hourparser;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Vector;
 import java.util.Locale;
 
@@ -11,8 +10,8 @@ import java.util.Locale;
  */
 public class HourParser {
 
-    private static String headerFile = null;
-    private static String footerFile = null;
+    private static File headerFile = null;
+    private static File footerFile = null;
     private static String namePrefix = "hours";
     private static String nameSuffix = ".html";
     private static String dateFormat = "d.M.yyyy";
@@ -58,8 +57,7 @@ public class HourParser {
             try {
                 persons.add(new Person(new File(args[arg])));
             } catch (IOException e) {
-                System.err.println("Error reading file " + args[arg]);
-                e.printStackTrace();
+                System.err.println("Unable to read file " + args[arg]);
                 System.exit(1);
             }
         }
@@ -70,10 +68,59 @@ public class HourParser {
             return;
         }
 
+        // read header and footer
+        String header = "";
+        String footer = "";
+        try {
+            BufferedReader reader;
+
+            if (getHeaderFile() != null) {
+                reader = new BufferedReader(new FileReader(getHeaderFile()));
+                StringBuffer sb = new StringBuffer();
+                String s;
+                while ((s = reader.readLine()) != null) {
+                    sb.append(s).append("\n");
+                }
+                reader.close();
+                header = sb.toString();
+            }
+
+            if (getFooterFile() != null) {
+                reader = new BufferedReader(new FileReader(getFooterFile()));
+                StringBuffer sb = new StringBuffer();
+                String s;
+                while ((s = reader.readLine()) != null) {
+                    sb.append(s).append("\n");
+                }
+                reader.close();
+                footer = sb.toString();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
         // make reports
         Report report = new Report(persons);
-        
-        // TODO
+        for (int i = 0; i < report.getPages(); i++) {
+            String page = report.getPage(i);
+            String pageName = report.getPageName(i);
+
+            // write reports to file
+            File file = new File(pageName);
+            try {
+                file.createNewFile();
+                FileWriter writer = new FileWriter(file, false);
+                writer.write(header);
+                writer.write(page);
+                writer.write(footer);
+                writer.close();
+            } catch (IOException e) {
+                System.err.println("Unable to write file " + file);
+                System.exit(1);
+            }
+        }
     }
 
     private static void printHelp() {
@@ -95,20 +142,32 @@ public class HourParser {
         System.out.println("Written by Esko Luontola.");
     }
 
-    public static String getHeaderFile() {
+    public static File getHeaderFile() {
         return headerFile;
     }
 
     public static void setHeaderFile(String headerFile) {
-        HourParser.headerFile = headerFile;
+        File file = new File(headerFile);
+        if (file.exists() && file.canRead()) {
+            HourParser.headerFile = file;
+        } else {
+            System.err.println("Unable to read header file " + file);
+            System.exit(1);
+        }
     }
 
-    public static String getFooterFile() {
+    public static File getFooterFile() {
         return footerFile;
     }
 
     public static void setFooterFile(String footerFile) {
-        HourParser.footerFile = footerFile;
+        File file = new File(footerFile);
+        if (file.exists() && file.canRead()) {
+            HourParser.footerFile = file;
+        } else {
+            System.err.println("Unable to read footer file " + file);
+            System.exit(1);
+        }
     }
 
     public static String getNamePrefix() {
@@ -148,7 +207,7 @@ public class HourParser {
         } else if (s.length == 3) {
             HourParser.locale = new Locale(s[0], s[1], s[2]);
         } else {
-            System.err.println("Invalid locale: " + code);
+            System.err.println("Invalid locale " + code);
             System.exit(1);
         }
         Locale.setDefault(HourParser.locale);

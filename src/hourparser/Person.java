@@ -45,6 +45,7 @@ public class Person {
                 name = e.getName();
             }
         }
+        reader.close();
     }
 
     /**

@@ -3,11 +3,20 @@ package hourparser;
 import java.util.Vector;
 import java.util.Date;
 import java.util.Calendar;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * Formats the data of persons to HTML format.
  */
 public class Report {
+
+    /**
+     * Index of the index page for getPage() and getPageName()
+     */
+    public static final int INDEX_PAGE = 0;
 
     /**
      * The Persons who are included in this report.
@@ -89,10 +98,6 @@ public class Report {
             processWeek(weekStart.getTime(), weekEnd.getTime());
             weekStart.add(Calendar.DATE, 7);
         } while (weekEnd.getTime().before(end));
-
-        System.out.println("persons = " + persons[0]);
-        System.out.println("weeks = " + weeks);
-        System.out.println("hours = " + hours[0]);
     }
 
     /**
@@ -126,7 +131,7 @@ public class Report {
      * @return HTML code for the page. Does not include headers or footers
      */
     public String getPage(int page) {
-        if (page == 0) {
+        if (page == INDEX_PAGE) {
             return getIndexPage();
         } else {
             return getPersonPage(page - 1);
@@ -140,7 +145,7 @@ public class Report {
      * @return File name for the page
      */
     public String getPageName(int page) {
-        if (page == 0) {
+        if (page == INDEX_PAGE) {
             return HourParser.getNamePrefix() + HourParser.getNameSuffix();
         } else {
             return HourParser.getNamePrefix() + "-" + page + HourParser.getNameSuffix();
@@ -153,7 +158,41 @@ public class Report {
      * @return HTML code for the page. Does not include headers or footers
      */
     private String getIndexPage() {
-        return null;
+        StringBuffer html = new StringBuffer();
+        Calendar cal = Calendar.getInstance();
+
+        // formatters
+        NumberFormat nf = NumberFormat.getInstance();
+        if (nf instanceof DecimalFormat) {
+            ((DecimalFormat) nf).setDecimalSeparatorAlwaysShown(false);
+        }
+
+        // table header
+        html.append("<table border=\"1\">\n");
+        html.append("<tr>\n");
+        html.append("   <th>Name / Week</th>\n");
+        for (Date week : weeks) {
+            cal.setTime(week);
+            html.append("   <th width=\"30\">" + cal.get(Calendar.WEEK_OF_YEAR) + "</th>\n");
+        }
+        html.append("   <th>Total</th>\n");
+        html.append("</tr>\n");
+
+        // each person's total hours for every week
+        for (int i = 0; i < persons.length; i++) {
+            html.append("<tr>\n");
+            html.append("   <td>" + persons[i].getName() + "</td>\n");
+            double sum = 0.0;
+            for (int j = 0; j < hours[i].size(); j++) {
+                html.append("   <td align=\"center\"><a href=\"" + getPageName(i + 1) + "#" + j + "\">" + nf.format(hours[i].get(j)) + "</a></td>\n");
+                sum += hours[i].get(j);
+            }
+            html.append("   <td align=\"center\">" + nf.format(sum) + "</td>\n");
+            html.append("</tr>\n");
+        }
+
+        html.append("</table>\n");
+        return html.toString();
     }
 
     /**
@@ -163,7 +202,49 @@ public class Report {
      * @return HTML code for the page. Does not include headers or footers
      */
     private String getPersonPage(int person) {
-        return null;
+        StringBuffer html = new StringBuffer();
+        Calendar cal = Calendar.getInstance();
+
+        // formatters
+        NumberFormat nf = NumberFormat.getInstance();
+        if (nf instanceof DecimalFormat) {
+            ((DecimalFormat) nf).setDecimalSeparatorAlwaysShown(false);
+        }
+        DateFormat df = new SimpleDateFormat(HourParser.getDateFormat());
+
+        html.append("<h1>" + persons[person].getName() + "</h1>\n\n");
+        html.append("<p><a href=\"" + getPageName(INDEX_PAGE) + "\">Return to index</a></p>\n\n");
+
+        // print entries for each week
+        for (int i = 0; i < weeks.size(); i++) {
+            cal.setTime(weeks.get(i));
+            html.append("<h2><a name=\"" + i + "\"></a>Week " + cal.get(Calendar.WEEK_OF_YEAR) + "</h2>\n\n");
+
+            cal.add(Calendar.DATE, 7);
+            Date start = weeks.get(i);
+            Date end = cal.getTime();
+            Entry[] entries = persons[person].getEntries(start, end);
+
+            html.append("<table border=\"0\">\n");
+            html.append("<tr>\n");
+            html.append("   <th align=\"left\" style=\"padding-right: 7ex;\">Date</th>\n");
+            html.append("   <th align=\"left\" style=\"padding-right: 2ex;\">Code</th>\n");
+            html.append("   <th align=\"left\" style=\"padding-right: 2ex;\">Hours</th>\n");
+            html.append("   <th align=\"left\">Comment</th>\n");
+            html.append("</tr>\n");
+            for (Entry entry : entries) {
+                html.append("<tr>\n");
+                html.append("   <td>" + df.format(entry.getDate()) + "</td>\n");
+                html.append("   <td>" + entry.getCode() + "</td>\n");
+                html.append("   <td>" + nf.format(entry.getHours()) + "</td>\n");
+                html.append("   <td>" + entry.getComment() + "</td>\n");
+                html.append("</tr>\n");
+            }
+            html.append("</table>\n\n");
+        }
+        html.append("<p><a href=\"" + getPageName(INDEX_PAGE) + "\">Return to index</a></p>\n");
+
+        return html.toString();
     }
 
 

@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Created-By: Esko Luontola
+Main-Class: hourparser.HourParser
