@@ -5,9 +5,17 @@ Java (rajapinta vanhaan koodiin JNI:llä)
 + ...jonka jälkeen vanha koodi on paremmin paketoitu ja suojattu väärältä käytöltä
 - Härpätin, kahta eri koodia. Tuleeko ongelmia?
 
+- "Javamainen" käyttöliittymä; ei kai haittaa asiakasta?
+- Käyttöliittymän tekeminen javalla ei myöskään ole kovin mukavaa (edes 
+  esim. Jbuilderin kälikehittimellä -- verrattuna johonkin Visual C:n 
+  kälieditoriin). Vai onko jollain toista näkemystä?
+
 C++
 + Vain yhtä kieltä ja samassa kasassa kaikki
 + Rajapinta valmiina käytettävissä (kunhan se ensin löydetään)
 - C++ käyttöliittymän koodauksen opettelu (koskee kaikkia)
 - C++:n opettelu (koskee useimpia)
 - Koodin korjaaminen Meille sopivaksi
+
++/- Kälin tekeminen olisi helppoa (ja helpompaa kuin javalla) jollain
+  sovelluskehittimellä, mutta sellaista ei liene hyvää ilmaista?
