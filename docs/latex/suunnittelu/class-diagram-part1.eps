@@ -1,0 +1,1266 @@
+%!PS-Adobe-2.0 EPSF-2.0
+%%Title: E:\DOCUMENTS\ORFJackal\PROGRAMS\OMAT\SQUID\dev\docs\latex\suunnittelu\class-diagram-part1.dia
+%%Creator: Dia v0.94
+%%CreationDate: Fri Mar 11 00:35:40 2005
+%%For: ORFJackal
+%%Orientation: Portrait
+%%Magnification: 1.0000
+%%BoundingBox: 0 0 683 403
+%%BeginSetup
+%%EndSetup
+%%EndComments
+%%BeginProlog
+[ /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/.notdef /.notdef /space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright
+/parenleft /parenright /asterisk /plus /comma /hyphen /period /slash /zero /one
+/two /three /four /five /six /seven /eight /nine /colon /semicolon
+/less /equal /greater /question /at /A /B /C /D /E
+/F /G /H /I /J /K /L /M /N /O
+/P /Q /R /S /T /U /V /W /X /Y
+/Z /bracketleft /backslash /bracketright /asciicircum /underscore /quoteleft /a /b /c
+/d /e /f /g /h /i /j /k /l /m
+/n /o /p /q /r /s /t /u /v /w
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef /.notdef /.notdef
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section /dieresis /copyright
+/ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron /degree /plusminus /twosuperior /threesuperior
+/acute /mu /paragraph /periodcentered /cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf
+/threequarters /questiondown /Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis /Eth /Ntilde
+/Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply /Oslash /Ugrave /Uacute /Ucircumflex
+/Udieresis /Yacute /Thorn /germandbls /agrave /aacute /acircumflex /atilde /adieresis /aring
+/ae /ccedilla /egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide /oslash /ugrave
+/uacute /ucircumflex /udieresis /yacute /thorn /ydieresis] /isolatin1encoding exch def
+/cp {closepath} bind def
+/c {curveto} bind def
+/f {fill} bind def
+/a {arc} bind def
+/ef {eofill} bind def
+/ex {exch} bind def
+/gr {grestore} bind def
+/gs {gsave} bind def
+/sa {save} bind def
+/rs {restore} bind def
+/l {lineto} bind def
+/m {moveto} bind def
+/rm {rmoveto} bind def
+/n {newpath} bind def
+/s {stroke} bind def
+/sh {show} bind def
+/slc {setlinecap} bind def
+/slj {setlinejoin} bind def
+/slw {setlinewidth} bind def
+/srgb {setrgbcolor} bind def
+/rot {rotate} bind def
+/sc {scale} bind def
+/sd {setdash} bind def
+/ff {findfont} bind def
+/sf {setfont} bind def
+/scf {scalefont} bind def
+/sw {stringwidth pop} bind def
+/tr {translate} bind def
+
+/ellipsedict 8 dict def
+ellipsedict /mtrx matrix put
+/ellipse
+{ ellipsedict begin
+   /endangle exch def
+   /startangle exch def
+   /yrad exch def
+   /xrad exch def
+   /y exch def
+   /x exch def   /savematrix mtrx currentmatrix def
+   x y tr xrad yrad sc
+   0 0 1 startangle endangle arc
+   savematrix setmatrix
+   end
+} def
+
+/mergeprocs {
+dup length
+3 -1 roll
+dup
+length
+dup
+5 1 roll
+3 -1 roll
+add
+array cvx
+dup
+3 -1 roll
+0 exch
+putinterval
+dup
+4 2 roll
+putinterval
+} bind def
+/Times-Roman-latin1
+    /Times-Roman findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Times-Italic-latin1
+    /Times-Italic findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Times-Bold-latin1
+    /Times-Bold findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Times-BoldItalic-latin1
+    /Times-BoldItalic findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/AvantGarde-Book-latin1
+    /AvantGarde-Book findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/AvantGarde-BookOblique-latin1
+    /AvantGarde-BookOblique findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/AvantGarde-Demi-latin1
+    /AvantGarde-Demi findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/AvantGarde-DemiOblique-latin1
+    /AvantGarde-DemiOblique findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Bookman-Light-latin1
+    /Bookman-Light findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Bookman-LightItalic-latin1
+    /Bookman-LightItalic findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Bookman-Demi-latin1
+    /Bookman-Demi findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Bookman-DemiItalic-latin1
+    /Bookman-DemiItalic findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Courier-latin1
+    /Courier findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Courier-Oblique-latin1
+    /Courier-Oblique findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Courier-Bold-latin1
+    /Courier-Bold findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Courier-BoldOblique-latin1
+    /Courier-BoldOblique findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Helvetica-latin1
+    /Helvetica findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Helvetica-Oblique-latin1
+    /Helvetica-Oblique findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Helvetica-Bold-latin1
+    /Helvetica-Bold findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Helvetica-BoldOblique-latin1
+    /Helvetica-BoldOblique findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Helvetica-Narrow-latin1
+    /Helvetica-Narrow findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Helvetica-Narrow-Oblique-latin1
+    /Helvetica-Narrow-Oblique findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Helvetica-Narrow-Bold-latin1
+    /Helvetica-Narrow-Bold findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Helvetica-Narrow-BoldOblique-latin1
+    /Helvetica-Narrow-BoldOblique findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/NewCenturySchoolbook-Roman-latin1
+    /NewCenturySchoolbook-Roman findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/NewCenturySchoolbook-Italic-latin1
+    /NewCenturySchoolbook-Italic findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/NewCenturySchoolbook-Bold-latin1
+    /NewCenturySchoolbook-Bold findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/NewCenturySchoolbook-BoldItalic-latin1
+    /NewCenturySchoolbook-BoldItalic findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Palatino-Roman-latin1
+    /Palatino-Roman findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Palatino-Italic-latin1
+    /Palatino-Italic findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Palatino-Bold-latin1
+    /Palatino-Bold findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Palatino-BoldItalic-latin1
+    /Palatino-BoldItalic findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/Symbol-latin1
+    /Symbol findfont
+definefont pop
+/ZapfChancery-MediumItalic-latin1
+    /ZapfChancery-MediumItalic findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+/ZapfDingbats-latin1
+    /ZapfDingbats findfont
+    dup length dict begin
+	{1 index /FID ne {def} {pop pop} ifelse} forall
+	/Encoding isolatin1encoding def
+    currentdict end
+definefont pop
+7.298071 -7.298071 scale
+7.050000 -26.250000 translate
+%%EndProlog
+
+
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 28.000000 20.000000 m 28.000000 21.400000 l 36.600000 21.400000 l 36.600000 20.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 28.000000 20.000000 m 28.000000 21.400000 l 36.600000 21.400000 l 36.600000 20.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(CalibrationProject) dup sw 2 div 32.300000 ex sub 21.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 28.000000 21.400000 m 28.000000 21.800000 l 36.600000 21.800000 l 36.600000 21.400000 l f
+0.000000 0.000000 0.000000 srgb
+n 28.000000 21.400000 m 28.000000 21.800000 l 36.600000 21.800000 l 36.600000 21.400000 l cp s
+1.000000 1.000000 1.000000 srgb
+n 28.000000 21.800000 m 28.000000 22.800000 l 36.600000 22.800000 l 36.600000 21.800000 l f
+0.000000 0.000000 0.000000 srgb
+n 28.000000 21.800000 m 28.000000 22.800000 l 36.600000 22.800000 l 36.600000 21.800000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(+getTimeElapsed\(\): long) 28.150000 22.550000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 17.000000 -16.000000 m 17.000000 -14.600000 l 27.000000 -14.600000 l 27.000000 -16.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 17.000000 -16.000000 m 17.000000 -14.600000 l 27.000000 -14.600000 l 27.000000 -16.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(MeasurementEvent) dup sw 2 div 22.000000 ex sub -15.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 17.000000 -14.600000 m 17.000000 -14.200000 l 27.000000 -14.200000 l 27.000000 -14.600000 l f
+0.000000 0.000000 0.000000 srgb
+n 17.000000 -14.600000 m 17.000000 -14.200000 l 27.000000 -14.200000 l 27.000000 -14.600000 l cp s
+1.000000 1.000000 1.000000 srgb
+n 17.000000 -14.200000 m 17.000000 -12.400000 l 27.000000 -12.400000 l 27.000000 -14.200000 l f
+0.000000 0.000000 0.000000 srgb
+n 17.000000 -14.200000 m 17.000000 -12.400000 l 27.000000 -12.400000 l 27.000000 -14.200000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(+getProject\(\): Project) 17.150000 -13.450000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getStep\(\): MeasurementStep) 17.150000 -12.650000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 38.000000 20.000000 m 38.000000 21.400000 l 42.550000 21.400000 l 42.550000 20.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 38.000000 20.000000 m 38.000000 21.400000 l 42.550000 21.400000 l 42.550000 20.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(AFProject) dup sw 2 div 40.275000 ex sub 21.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 38.000000 21.400000 m 38.000000 21.800000 l 42.550000 21.800000 l 42.550000 21.400000 l f
+0.000000 0.000000 0.000000 srgb
+n 38.000000 21.400000 m 38.000000 21.800000 l 42.550000 21.800000 l 42.550000 21.400000 l cp s
+1.000000 1.000000 1.000000 srgb
+n 38.000000 21.800000 m 38.000000 22.200000 l 42.550000 22.200000 l 42.550000 21.800000 l f
+0.000000 0.000000 0.000000 srgb
+n 38.000000 21.800000 m 38.000000 22.200000 l 42.550000 22.200000 l 42.550000 21.800000 l cp s
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 54.000000 -11.000000 m 54.000000 -9.600000 l 68.550000 -9.600000 l 68.550000 -11.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 54.000000 -11.000000 m 54.000000 -9.600000 l 68.550000 -9.600000 l 68.550000 -11.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(MeasurementStep) dup sw 2 div 61.275000 ex sub -10.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 54.000000 -9.600000 m 54.000000 -5.400000 l 68.550000 -5.400000 l 68.550000 -9.600000 l f
+0.000000 0.000000 0.000000 srgb
+n 54.000000 -9.600000 m 54.000000 -5.400000 l 68.550000 -5.400000 l 68.550000 -9.600000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(-project: Project) 54.150000 -8.850000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-timestamp: Date) 54.150000 -8.050000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-stepValue: double = -1.0) 54.150000 -7.250000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-mass: double = -1.0) 54.150000 -6.450000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-volume: double = -1.0) 54.150000 -5.650000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 54.000000 -5.400000 m 54.000000 6.000000 l 68.550000 6.000000 l 68.550000 -5.400000 l f
+0.000000 0.000000 0.000000 srgb
+n 54.000000 -5.400000 m 54.000000 6.000000 l 68.550000 6.000000 l 68.550000 -5.400000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(+<<constructor>> \(\)) 54.150000 -4.650000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+<<constructor>> \(project:Project\)) 54.150000 -3.850000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getProject\(\): Project) 54.150000 -3.050000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getTimestamp\(\): Date) 54.150000 -2.250000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+setTimestamp\(timestamp:Date\)) 54.150000 -1.450000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getStepValue\(\): double) 54.150000 -0.650000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+setStepValue\(stepValue:double\)) 54.150000 0.150000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getMass\(\): double) 54.150000 0.950000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+setMass\(mass:double\)) 54.150000 1.750000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getVolume\(\): double) 54.150000 2.550000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+setVolume\(volume:double\)) 54.150000 3.350000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getResults\(\): int) 54.150000 4.150000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getResult\(index:int\): MeasurementResult) 54.150000 4.950000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+addResult\(result:MeasurementResult\)) 54.150000 5.750000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 54.000000 -24.000000 m 54.000000 -22.600000 l 73.100000 -22.600000 l 73.100000 -24.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 54.000000 -24.000000 m 54.000000 -22.600000 l 73.100000 -22.600000 l 73.100000 -24.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(MeasurementSequence) dup sw 2 div 63.550000 ex sub -23.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 54.000000 -22.600000 m 54.000000 -21.600000 l 73.100000 -21.600000 l 73.100000 -22.600000 l f
+0.000000 0.000000 0.000000 srgb
+n 54.000000 -22.600000 m 54.000000 -21.600000 l 73.100000 -21.600000 l 73.100000 -22.600000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(-name: String) 54.150000 -21.850000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 54.000000 -21.600000 m 54.000000 -15.000000 l 73.100000 -15.000000 l 73.100000 -21.600000 l f
+0.000000 0.000000 0.000000 srgb
+n 54.000000 -21.600000 m 54.000000 -15.000000 l 73.100000 -15.000000 l 73.100000 -21.600000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(+getName\(\): String) 54.150000 -20.850000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+setName\(name:String\)) 54.150000 -20.050000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getSteps\(\): int) 54.150000 -19.250000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getStep\(index:int\): MeasurementStep) 54.150000 -18.450000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+addStep\(step:MeasurementStep\)) 54.150000 -17.650000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+addStep\(index:int,step:MeasurementStep\)) 54.150000 -16.850000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+removeStep\(index:int\)) 54.150000 -16.050000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+copySequence\(start:int,end:int\): MeasurementSequence) 54.150000 -15.250000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 56.000000 10.000000 m 56.000000 11.400000 l 72.350000 11.400000 l 72.350000 10.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 56.000000 10.000000 m 56.000000 11.400000 l 72.350000 11.400000 l 72.350000 10.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(MeasurementResult) dup sw 2 div 64.175000 ex sub 11.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 56.000000 11.400000 m 56.000000 14.800000 l 72.350000 14.800000 l 72.350000 11.400000 l f
+0.000000 0.000000 0.000000 srgb
+n 56.000000 11.400000 m 56.000000 14.800000 l 72.350000 14.800000 l 72.350000 11.400000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(-step: MeasurementStep) 56.150000 12.150000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-rotation: SampleRotation) 56.150000 12.950000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-rawTuple: javax.vecmath.Tuple3d) 56.150000 13.750000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-tuple: javax.vecmath.Tuple3d = null) 56.150000 14.550000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 56.000000 14.800000 m 56.000000 23.800000 l 72.350000 23.800000 l 72.350000 14.800000 l f
+0.000000 0.000000 0.000000 srgb
+n 56.000000 14.800000 m 56.000000 23.800000 l 72.350000 23.800000 l 72.350000 14.800000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(+<<constructor>> \(rotation:SampleRotation,) 56.150000 15.550000 m gs 1 -1 sc sh gr
+(                  x:double,y:double,z:double\)) 56.150000 16.200000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+( getStep\(\): MeasurementStep) 56.150000 17.000000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+( setStep\(step:MeasurementStep\)) 56.150000 17.800000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getRotation\(\): SampleRotation) 56.150000 18.600000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getX\(\): double) 56.150000 19.400000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getY\(\): double) 56.150000 20.200000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getZ\(\): double) 56.150000 21.000000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getRawX\(\): double) 56.150000 21.800000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getRawY\(\): double) 56.150000 22.600000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getRawZ\(\): double) 56.150000 23.400000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 33.000000 -27.000000 m 33.000000 -25.600000 l 52.100000 -25.600000 l 52.100000 -27.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 33.000000 -27.000000 m 33.000000 -25.600000 l 52.100000 -25.600000 l 52.100000 -27.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(Project) dup sw 2 div 42.550000 ex sub -26.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 33.000000 -25.600000 m 33.000000 -16.600000 l 52.100000 -16.600000 l 52.100000 -25.600000 l f
+0.000000 0.000000 0.000000 srgb
+n 33.000000 -25.600000 m 33.000000 -16.600000 l 52.100000 -16.600000 l 52.100000 -25.600000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(-file: File) 33.150000 -24.850000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-type: String) 33.150000 -24.050000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-squid: Squid) 33.150000 -23.250000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-properties: Properties) 33.150000 -22.450000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-strike: double = 0.0) 33.150000 -21.650000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-dip: double = 0.0) 33.150000 -20.850000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-transform: javax.vecmath.Matrix3d) 33.150000 -20.050000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-mass: double = -1.0) 33.150000 -19.250000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-volume: double = -1.0) 33.150000 -18.450000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-projectListeners) 33.150000 -17.650000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-measurementListeners) 33.150000 -16.850000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 33.000000 -16.600000 m 33.000000 13.200000 l 52.100000 13.200000 l 52.100000 -16.600000 l f
+0.000000 0.000000 0.000000 srgb
+n 33.000000 -16.600000 m 33.000000 13.200000 l 52.100000 13.200000 l 52.100000 -16.600000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(+getFile\(\): File) 33.150000 -15.850000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getType\(\): String) 33.150000 -15.050000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getSquid\(\): Squid) 33.150000 -14.250000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+setSquid\(squid:Squid\)) 33.150000 -13.450000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getProperty\(key:String\): String) 33.150000 -12.650000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+setProperty\(key:String,value:String\)) 33.150000 -11.850000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getStrike\(\): double) 33.150000 -11.050000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+setStrike\(strike:double\)) 33.150000 -10.250000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getDip\(\): double) 33.150000 -9.450000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+setDip\(dip:double\)) 33.150000 -8.650000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+( getTransform\(\): javax.vecmath.Matrix3d) 33.150000 -7.850000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getMass\(\): double) 33.150000 -7.050000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+setMass\(mass:double\)) 33.150000 -6.250000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getVolume\(\): double) 33.150000 -5.450000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+setVolume\(volume:double\)) 33.150000 -4.650000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+addProjectListener\(listener:ProjectListener\)) 33.150000 -3.850000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+addMeasurementListener\(listener:MeasurementListener\)) 33.150000 -3.050000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+addSequence\(sequence:MeasurementSequence\)) 33.150000 -2.250000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+copySequence\(start:int,end:int\): MeasurementSequence) 33.150000 -1.450000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+addStep\(step:MeasurementStep\)) 33.150000 -0.650000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+addStep\(index:int,step:MeasurementStep\)) 33.150000 0.150000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+removeStep\(index:int\)) 33.150000 0.950000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+removeStep\(start:int,end:int\)) 33.150000 1.750000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getSteps\(\): int) 33.150000 2.550000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getStep\(index:int\): MeasurementStep) 33.150000 3.350000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+<A>getValue\(step:int,type:MeasurementValue<A>\): A) 33.150000 4.150000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+isDegaussingEnabled\(\): boolean) 33.150000 4.950000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+isSequenceEditEnabled\(\): boolean) 33.150000 5.750000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+isManualControlEnabled\(\): boolean) 33.150000 6.550000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+isAutoStepEnabled\(\): boolean) 33.150000 7.350000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+isSingleStepEnabled\(\): boolean) 33.150000 8.150000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+isPauseEnabled\(\): boolean) 33.150000 8.950000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+isAbortEnabled\(\): boolean) 33.150000 9.750000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+doAutoStep\(\): boolean) 33.150000 10.550000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+doSingleStep\(\): boolean) 33.150000 11.350000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+doPause\(\): boolean) 33.150000 12.150000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+doAbort\(\): boolean) 33.150000 12.950000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 20.000000 -27.000000 m 20.000000 -25.600000 l 29.350000 -25.600000 l 29.350000 -27.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 20.000000 -27.000000 m 20.000000 -25.600000 l 29.350000 -25.600000 l 29.350000 -27.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(ProjectFactory) dup sw 2 div 24.675000 ex sub -26.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 20.000000 -25.600000 m 20.000000 -25.200000 l 29.350000 -25.200000 l 29.350000 -25.600000 l f
+0.000000 0.000000 0.000000 srgb
+n 20.000000 -25.600000 m 20.000000 -25.200000 l 29.350000 -25.200000 l 29.350000 -25.600000 l cp s
+1.000000 1.000000 1.000000 srgb
+n 20.000000 -25.200000 m 20.000000 -24.200000 l 29.350000 -24.200000 l 29.350000 -25.200000 l f
+0.000000 0.000000 0.000000 srgb
+n 20.000000 -25.200000 m 20.000000 -24.200000 l 29.350000 -24.200000 l 29.350000 -25.200000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(+load\(file:File\): Project) 20.150000 -24.450000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 18.000000 -20.000000 m 18.000000 -18.600000 l 26.300000 -18.600000 l 26.300000 -20.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 18.000000 -20.000000 m 18.000000 -18.600000 l 26.300000 -18.600000 l 26.300000 -20.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(ProjectEvent) dup sw 2 div 22.150000 ex sub -19.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 18.000000 -18.600000 m 18.000000 -18.200000 l 26.300000 -18.200000 l 26.300000 -18.600000 l f
+0.000000 0.000000 0.000000 srgb
+n 18.000000 -18.600000 m 18.000000 -18.200000 l 26.300000 -18.200000 l 26.300000 -18.600000 l cp s
+1.000000 1.000000 1.000000 srgb
+n 18.000000 -18.200000 m 18.000000 -17.200000 l 26.300000 -17.200000 l 26.300000 -18.200000 l f
+0.000000 0.000000 0.000000 srgb
+n 18.000000 -18.200000 m 18.000000 -17.200000 l 26.300000 -17.200000 l 26.300000 -18.200000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(+getProject\(\): Project) 18.150000 -17.450000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n -6.000000 -15.000000 m -6.000000 -13.600000 l 10.250000 -13.600000 l 10.250000 -15.000000 l f
+0.000000 0.000000 0.000000 srgb
+n -6.000000 -15.000000 m -6.000000 -13.600000 l 10.250000 -13.600000 l 10.250000 -15.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(Settings) dup sw 2 div 2.125000 ex sub -14.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n -6.000000 -13.600000 m -6.000000 -13.200000 l 10.250000 -13.200000 l 10.250000 -13.600000 l f
+0.000000 0.000000 0.000000 srgb
+n -6.000000 -13.600000 m -6.000000 -13.200000 l 10.250000 -13.200000 l 10.250000 -13.600000 l cp s
+1.000000 1.000000 1.000000 srgb
+n -6.000000 -13.200000 m -6.000000 -9.800000 l 10.250000 -9.800000 l 10.250000 -13.200000 l f
+0.000000 0.000000 0.000000 srgb
+n -6.000000 -13.200000 m -6.000000 -9.800000 l 10.250000 -9.800000 l 10.250000 -13.200000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(+instance\(\): Settings) -5.850000 -12.450000 m gs 1 -1 sc sh gr
+0.050000 slw
+n -5.850000 -12.370000 m 1.500000 -12.370000 l s
+0.100000 slw
+/Courier-latin1 ff 0.560000 scf sf
+(+getSequences\(\): MeasurementSequence[]) -5.850000 -11.650000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+addSequence\(sequence:MeasurementSequence\)) -5.850000 -10.850000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+removeSequence\(sequence:MeasurementSequence\)) -5.850000 -10.050000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 46.000000 24.000000 m 46.000000 25.400000 l 52.850000 25.400000 l 52.850000 24.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 46.000000 24.000000 m 46.000000 25.400000 l 52.850000 25.400000 l 52.850000 24.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(ThermalProject) dup sw 2 div 49.425000 ex sub 25.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 46.000000 25.400000 m 46.000000 25.800000 l 52.850000 25.800000 l 52.850000 25.400000 l f
+0.000000 0.000000 0.000000 srgb
+n 46.000000 25.400000 m 46.000000 25.800000 l 52.850000 25.800000 l 52.850000 25.400000 l cp s
+1.000000 1.000000 1.000000 srgb
+n 46.000000 25.800000 m 46.000000 26.200000 l 52.850000 26.200000 l 52.850000 25.800000 l f
+0.000000 0.000000 0.000000 srgb
+n 46.000000 25.800000 m 46.000000 26.200000 l 52.850000 26.200000 l 52.850000 25.800000 l cp s
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 46.000000 20.000000 m 46.000000 21.400000 l 52.450000 21.400000 l 52.450000 20.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 46.000000 20.000000 m 46.000000 21.400000 l 52.450000 21.400000 l 52.450000 20.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(ThellierProject) dup sw 2 div 49.225000 ex sub 21.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 46.000000 21.400000 m 46.000000 21.800000 l 52.450000 21.800000 l 52.450000 21.400000 l f
+0.000000 0.000000 0.000000 srgb
+n 46.000000 21.400000 m 46.000000 21.800000 l 52.450000 21.800000 l 52.450000 21.400000 l cp s
+1.000000 1.000000 1.000000 srgb
+n 46.000000 21.800000 m 46.000000 22.200000 l 52.450000 22.200000 l 52.450000 21.800000 l f
+0.000000 0.000000 0.000000 srgb
+n 46.000000 21.800000 m 46.000000 22.200000 l 52.450000 22.200000 l 52.450000 21.800000 l cp s
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 16.000000 -6.000000 m 16.000000 -4.600000 l 27.700000 -4.600000 l 27.700000 -6.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 16.000000 -6.000000 m 16.000000 -4.600000 l 27.700000 -4.600000 l 27.700000 -6.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(Squid) dup sw 2 div 21.850000 ex sub -5.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 16.000000 -4.600000 m 16.000000 -4.200000 l 27.700000 -4.200000 l 27.700000 -4.600000 l f
+0.000000 0.000000 0.000000 srgb
+n 16.000000 -4.600000 m 16.000000 -4.200000 l 27.700000 -4.200000 l 27.700000 -4.600000 l cp s
+1.000000 1.000000 1.000000 srgb
+n 16.000000 -4.200000 m 16.000000 -0.800000 l 27.700000 -0.800000 l 27.700000 -4.200000 l f
+0.000000 0.000000 0.000000 srgb
+n 16.000000 -4.200000 m 16.000000 -0.800000 l 27.700000 -0.800000 l 27.700000 -4.200000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(+instance\(\): Squid) 16.150000 -3.450000 m gs 1 -1 sc sh gr
+0.050000 slw
+n 16.150000 -3.370000 m 22.450000 -3.370000 l s
+0.100000 slw
+/Courier-latin1 ff 0.560000 scf sf
+(+getDegausser\(\): Degausser) 16.150000 -2.650000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getHandler\(\): Handler) 16.150000 -1.850000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getMagnetometer\(\): Magnetometer) 16.150000 -1.050000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n -7.000000 -27.000000 m -7.000000 -25.600000 l 15.650000 -25.600000 l 15.650000 -27.000000 l f
+0.000000 0.000000 0.000000 srgb
+n -7.000000 -27.000000 m -7.000000 -25.600000 l 15.650000 -25.600000 l 15.650000 -27.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(RunQueue) dup sw 2 div 4.325000 ex sub -26.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n -7.000000 -25.600000 m -7.000000 -22.200000 l 15.650000 -22.200000 l 15.650000 -25.600000 l f
+0.000000 0.000000 0.000000 srgb
+n -7.000000 -25.600000 m -7.000000 -22.200000 l 15.650000 -22.200000 l 15.650000 -25.600000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(-delayMillis: int) -6.850000 -24.850000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-execOnlyLast: boolean) -6.850000 -24.050000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-queue: DelayQueue<RunDelayed>) -6.850000 -23.250000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-workerThread: Thread) -6.850000 -22.450000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n -7.000000 -22.200000 m -7.000000 -17.200000 l 15.650000 -17.200000 l 15.650000 -22.200000 l f
+0.000000 0.000000 0.000000 srgb
+n -7.000000 -22.200000 m -7.000000 -17.200000 l 15.650000 -17.200000 l 15.650000 -22.200000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(+<<constructor>> \(delayMillis:int=0,execOnlyLast:boolean=false\)) -6.850000 -21.450000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+isExecOnlyLast\(\): boolean) -6.850000 -20.650000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+setExecOnlyLast\(execOnlyLast:boolean\)) -6.850000 -19.850000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getDelayMillis\(\): int) -6.850000 -19.050000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+setDelayMillis\(delayMillis:int\)) -6.850000 -18.250000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+offer\(runnable:Runnable\): boolean) -6.850000 -17.450000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 42.550000 14.111803 m 42.550000 16.600000 l 49.225000 16.600000 l 49.225000 20.000000 l s
+0 slj
+1.000000 1.000000 1.000000 srgb
+n 42.950000 14.111803 m 42.550000 13.311803 l 42.150000 14.111803 l ef
+0.100000 slw
+[] 0 sd
+0 slj
+0.000000 0.000000 0.000000 srgb
+n 42.950000 14.111803 m 42.550000 13.311803 l 42.150000 14.111803 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 49.225000 23.111803 m 49.225000 23.100000 l 49.425000 23.100000 l 49.425000 24.000000 l s
+0 slj
+1.000000 1.000000 1.000000 srgb
+n 49.625000 23.111803 m 49.225000 22.311803 l 48.825000 23.111803 l ef
+0.100000 slw
+[] 0 sd
+0 slj
+0.000000 0.000000 0.000000 srgb
+n 49.625000 23.111803 m 49.225000 22.311803 l 48.825000 23.111803 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 42.550000 14.111803 m 42.550000 16.600000 l 40.275000 16.600000 l 40.275000 20.000000 l s
+0 slj
+1.000000 1.000000 1.000000 srgb
+n 42.950000 14.111803 m 42.550000 13.311803 l 42.150000 14.111803 l ef
+0.100000 slw
+[] 0 sd
+0 slj
+0.000000 0.000000 0.000000 srgb
+n 42.950000 14.111803 m 42.550000 13.311803 l 42.150000 14.111803 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 42.550000 14.111803 m 42.550000 16.600000 l 32.300000 16.600000 l 32.300000 20.000000 l s
+0 slj
+1.000000 1.000000 1.000000 srgb
+n 42.950000 14.111803 m 42.550000 13.311803 l 42.150000 14.111803 l ef
+0.100000 slw
+[] 0 sd
+0 slj
+0.000000 0.000000 0.000000 srgb
+n 42.950000 14.111803 m 42.550000 13.311803 l 42.150000 14.111803 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+0.100000 slw
+[1.000000] 0 sd
+[0.400000] 0 sd
+0 slj
+0 slc
+n 33.000000 -26.300000 m 33.000000 -26.300000 l 29.685261 -26.300000 l s
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 30.317631 -26.550000 m 29.517631 -26.300000 l 30.317631 -26.050000 l s
+/Courier-latin1 ff 0.560000 scf sf
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 63.550000 -24.223607 m 63.550000 -26.300000 l 52.100000 -26.300000 l s
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 63.150000 -24.911803 m 63.550000 -24.111803 l 63.950000 -24.911803 l s
+/Courier-latin1 ff 0.560000 scf sf
+(sequence) 63.900000 -24.950000 m gs 1 -1 sc sh gr
+(1) 63.900000 -24.150000 m gs 1 -1 sc sh gr
+(0..1) 52.100000 -26.500000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 61.275000 -11.000000 m 61.275000 -13.000000 l 63.550000 -13.000000 l 63.550000 -15.000000 l s
+[] 0 sd
+0 slj
+0 slc
+1.000000 1.000000 1.000000 srgb
+n 63.550000 -15.000000 m 63.790000 -14.300000 l 63.550000 -13.600000 l 63.310000 -14.300000 l ef
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+0.000000 0.000000 0.000000 srgb
+n 63.550000 -15.000000 m 63.790000 -14.300000 l 63.550000 -13.600000 l 63.310000 -14.300000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(steps) 61.625000 -11.150000 m gs 1 -1 sc sh gr
+(0..*) 61.625000 -10.350000 m gs 1 -1 sc sh gr
+(1) 63.900000 -12.150000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 64.175000 10.000000 m 64.175000 8.000000 l 61.275000 8.000000 l 61.275000 6.000000 l s
+[] 0 sd
+0 slj
+0 slc
+n 61.275000 6.000000 m 61.515000 6.700000 l 61.275000 7.400000 l 61.035000 6.700000 l ef
+/Courier-latin1 ff 0.560000 scf sf
+(results) 64.525000 9.850000 m gs 1 -1 sc sh gr
+(0..*) 64.525000 10.650000 m gs 1 -1 sc sh gr
+(1) 61.625000 8.850000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+[0.400000] 0 sd
+0 slc
+n 33.000000 -17.900000 m 26.628173 -19.231426 l s
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 27.298308 -19.346798 m 26.464087 -19.265713 l 27.196039 -18.857368 l s
+/Courier-latin1 ff 0.560000 scf sf
+({sends}) 29.650000 -18.600000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+[0.400000] 0 sd
+0 slc
+n 33.000000 -17.100000 m 27.321122 -15.396337 l s
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 27.854985 -15.817503 m 27.160561 -15.348168 l 27.998659 -15.338590 l s
+/Courier-latin1 ff 0.560000 scf sf
+({sends}) 30.000000 -16.200000 m gs 1 -1 sc sh gr
+0.100000 slw
+[0.400000] 0 sd
+[0.400000] 0 sd
+0 slj
+0 slc
+n 42.550000 -27.000000 m 42.550000 -28.000000 l 4.325000 -28.000000 l 4.325000 -27.335261 l s
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 4.075000 -27.967631 m 4.325000 -27.167631 l 4.575000 -27.967631 l s
+/Courier-latin1 ff 0.560000 scf sf
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 13.000000 17.000000 m 13.000000 18.400000 l 23.400000 18.400000 l 23.400000 17.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 13.000000 17.000000 m 13.000000 18.400000 l 23.400000 18.400000 l 23.400000 17.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(ProjectComponent) dup sw 2 div 18.200000 ex sub 18.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 13.000000 18.400000 m 13.000000 19.400000 l 23.400000 19.400000 l 23.400000 18.400000 l f
+0.000000 0.000000 0.000000 srgb
+n 13.000000 18.400000 m 13.000000 19.400000 l 23.400000 19.400000 l 23.400000 18.400000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(-project: Project) 13.150000 19.150000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 13.000000 19.400000 m 13.000000 21.200000 l 23.400000 21.200000 l 23.400000 19.400000 l f
+0.000000 0.000000 0.000000 srgb
+n 13.000000 19.400000 m 13.000000 21.200000 l 23.400000 21.200000 l 23.400000 19.400000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(+getProject\(\): Project) 13.150000 20.150000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+setProject\(project:Project\)) 13.150000 20.950000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n -6.000000 19.000000 m -6.000000 20.400000 l 6.850000 20.400000 l 6.850000 19.000000 l f
+0.000000 0.000000 0.000000 srgb
+n -6.000000 19.000000 m -6.000000 20.400000 l 6.850000 20.400000 l 6.850000 19.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(ProjectListener) dup sw 2 div 0.425000 ex sub 20.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n -6.000000 20.400000 m -6.000000 20.800000 l 6.850000 20.800000 l 6.850000 20.400000 l f
+0.000000 0.000000 0.000000 srgb
+n -6.000000 20.400000 m -6.000000 20.800000 l 6.850000 20.800000 l 6.850000 20.400000 l cp s
+1.000000 1.000000 1.000000 srgb
+n -6.000000 20.800000 m -6.000000 21.800000 l 6.850000 21.800000 l 6.850000 20.800000 l f
+0.000000 0.000000 0.000000 srgb
+n -6.000000 20.800000 m -6.000000 21.800000 l 6.850000 21.800000 l 6.850000 20.800000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(+projectUpdated\(event:ProjectEvent\)) -5.850000 21.550000 m gs 1 -1 sc sh gr
+0.100000 slw
+[0.400000] 0 sd
+[0.400000] 0 sd
+0 slj
+0 slc
+n 7.761803 19.700000 m 9.925000 19.700000 l 9.925000 18.900000 l 13.000000 18.900000 l s
+0 slj
+1.000000 1.000000 1.000000 srgb
+n 7.761803 19.300000 m 6.961803 19.700000 l 7.761803 20.100000 l ef
+0.100000 slw
+[] 0 sd
+0 slj
+0.000000 0.000000 0.000000 srgb
+n 7.761803 19.300000 m 6.961803 19.700000 l 7.761803 20.100000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n -7.000000 14.000000 m -7.000000 15.400000 l 8.500000 15.400000 l 8.500000 14.000000 l f
+0.000000 0.000000 0.000000 srgb
+n -7.000000 14.000000 m -7.000000 15.400000 l 8.500000 15.400000 l 8.500000 14.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(MeasurementListener) dup sw 2 div 0.750000 ex sub 15.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n -7.000000 15.400000 m -7.000000 15.800000 l 8.500000 15.800000 l 8.500000 15.400000 l f
+0.000000 0.000000 0.000000 srgb
+n -7.000000 15.400000 m -7.000000 15.800000 l 8.500000 15.800000 l 8.500000 15.400000 l cp s
+1.000000 1.000000 1.000000 srgb
+n -7.000000 15.800000 m -7.000000 16.800000 l 8.500000 16.800000 l 8.500000 15.800000 l f
+0.000000 0.000000 0.000000 srgb
+n -7.000000 15.800000 m -7.000000 16.800000 l 8.500000 16.800000 l 8.500000 15.800000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(+measurementUpdated\(event:MeasurementEvent\)) -6.850000 16.550000 m gs 1 -1 sc sh gr
+0.100000 slw
+[0.400000] 0 sd
+[0.400000] 0 sd
+0 slj
+0 slc
+n 9.411803 14.700000 m 10.750000 14.700000 l 10.750000 17.700000 l 13.000000 17.700000 l s
+0 slj
+1.000000 1.000000 1.000000 srgb
+n 9.411803 14.300000 m 8.611803 14.700000 l 9.411803 15.100000 l ef
+0.100000 slw
+[] 0 sd
+0 slj
+0.000000 0.000000 0.000000 srgb
+n 9.411803 14.300000 m 8.611803 14.700000 l 9.411803 15.100000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 32.776393 13.200000 m 28.200000 13.200000 l 28.200000 18.900000 l 23.400000 18.900000 l s
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 32.088197 13.600000 m 32.888197 13.200000 l 32.088197 12.800000 l s
+/Courier-latin1 ff 0.560000 scf sf
+(project) dup sw 32.200000 ex sub 13.000000 m gs 1 -1 sc sh gr
+(0..1) dup sw 32.200000 ex sub 13.800000 m gs 1 -1 sc sh gr
+(0..*) 23.400000 18.700000 m gs 1 -1 sc sh gr
+0.100000 slw
+[0.400000] 0 sd
+[0.400000] 0 sd
+0 slj
+0 slc
+n 2.125000 -15.000000 m 2.125000 -16.100000 l 4.325000 -16.100000 l 4.325000 -16.864739 l s
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 4.575000 -16.232369 m 4.325000 -17.032369 l 4.075000 -16.232369 l s
+/Courier-latin1 ff 0.560000 scf sf
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 33.000000 -23.500000 m 30.350000 -23.500000 l 30.350000 -5.300000 l 27.700000 -5.300000 l s
+[] 0 sd
+0 slj
+0 slc
+1.000000 1.000000 1.000000 srgb
+n 33.000000 -23.500000 m 32.300000 -23.260000 l 31.600000 -23.500000 l 32.300000 -23.740000 l ef
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+0.000000 0.000000 0.000000 srgb
+n 33.000000 -23.500000 m 32.300000 -23.260000 l 31.600000 -23.500000 l 32.300000 -23.740000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(owner) dup sw 31.600000 ex sub -23.700000 m gs 1 -1 sc sh gr
+(0..1) dup sw 31.600000 ex sub -22.900000 m gs 1 -1 sc sh gr
+(0..1) 27.700000 -5.500000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 0.000000 3.000000 m 0.000000 4.400000 l 4.950000 4.400000 l 4.950000 3.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 0.000000 3.000000 m 0.000000 4.400000 l 4.950000 4.400000 l 4.950000 3.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(Degausser) dup sw 2 div 2.475000 ex sub 4.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 0.000000 4.400000 m 0.000000 4.800000 l 4.950000 4.800000 l 4.950000 4.400000 l f
+0.000000 0.000000 0.000000 srgb
+n 0.000000 4.400000 m 0.000000 4.800000 l 4.950000 4.800000 l 4.950000 4.400000 l cp s
+1.000000 1.000000 1.000000 srgb
+n 0.000000 4.800000 m 0.000000 5.200000 l 4.950000 5.200000 l 4.950000 4.800000 l f
+0.000000 0.000000 0.000000 srgb
+n 0.000000 4.800000 m 0.000000 5.200000 l 4.950000 5.200000 l 4.950000 4.800000 l cp s
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 10.000000 3.000000 m 10.000000 4.400000 l 13.750000 4.400000 l 13.750000 3.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 10.000000 3.000000 m 10.000000 4.400000 l 13.750000 4.400000 l 13.750000 3.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(Handler) dup sw 2 div 11.875000 ex sub 4.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 10.000000 4.400000 m 10.000000 4.800000 l 13.750000 4.800000 l 13.750000 4.400000 l f
+0.000000 0.000000 0.000000 srgb
+n 10.000000 4.400000 m 10.000000 4.800000 l 13.750000 4.800000 l 13.750000 4.400000 l cp s
+1.000000 1.000000 1.000000 srgb
+n 10.000000 4.800000 m 10.000000 5.200000 l 13.750000 5.200000 l 13.750000 4.800000 l f
+0.000000 0.000000 0.000000 srgb
+n 10.000000 4.800000 m 10.000000 5.200000 l 13.750000 5.200000 l 13.750000 4.800000 l cp s
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 17.000000 3.000000 m 17.000000 4.400000 l 23.650000 4.400000 l 23.650000 3.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 17.000000 3.000000 m 17.000000 4.400000 l 23.650000 4.400000 l 23.650000 3.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(Magnetometer) dup sw 2 div 20.325000 ex sub 4.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 17.000000 4.400000 m 17.000000 4.800000 l 23.650000 4.800000 l 23.650000 4.400000 l f
+0.000000 0.000000 0.000000 srgb
+n 17.000000 4.400000 m 17.000000 4.800000 l 23.650000 4.800000 l 23.650000 4.400000 l cp s
+1.000000 1.000000 1.000000 srgb
+n 17.000000 4.800000 m 17.000000 5.200000 l 23.650000 5.200000 l 23.650000 4.800000 l f
+0.000000 0.000000 0.000000 srgb
+n 17.000000 4.800000 m 17.000000 5.200000 l 23.650000 5.200000 l 23.650000 4.800000 l cp s
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 2.475000 3.000000 m 2.475000 1.100000 l 21.850000 1.100000 l 21.850000 -0.800000 l s
+[] 0 sd
+0 slj
+0 slc
+n 21.850000 -0.800000 m 22.090000 -0.100000 l 21.850000 0.600000 l 21.610000 -0.100000 l ef
+/Courier-latin1 ff 0.560000 scf sf
+(1) 2.825000 3.650000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 11.875000 3.000000 m 11.875000 1.100000 l 21.850000 1.100000 l 21.850000 -0.800000 l s
+[] 0 sd
+0 slj
+0 slc
+n 21.850000 -0.800000 m 22.090000 -0.100000 l 21.850000 0.600000 l 21.610000 -0.100000 l ef
+/Courier-latin1 ff 0.560000 scf sf
+(1) 12.225000 3.650000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 20.325000 3.000000 m 20.325000 1.100000 l 21.850000 1.100000 l 21.850000 -0.800000 l s
+[] 0 sd
+0 slj
+0 slc
+n 21.850000 -0.800000 m 22.090000 -0.100000 l 21.850000 0.600000 l 21.610000 -0.100000 l ef
+/Courier-latin1 ff 0.560000 scf sf
+(1) 20.675000 3.650000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+1.000000 1.000000 1.000000 srgb
+n 70.000000 -11.000000 m 70.000000 -8.600000 l 86.350000 -8.600000 l 86.350000 -11.000000 l f
+0.000000 0.000000 0.000000 srgb
+n 70.000000 -11.000000 m 70.000000 -8.600000 l 86.350000 -8.600000 l 86.350000 -11.000000 l cp s
+/Helvetica-latin1 ff 0.700000 scf sf
+(MeasurementValue) dup sw 2 div 78.175000 ex sub -10.000000 m gs 1 -1 sc sh gr
+/Helvetica-latin1 ff 0.700000 scf sf
+(<T>) dup sw 2 div 78.175000 ex sub -9.000000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 70.000000 -8.600000 m 70.000000 1.200000 l 86.350000 1.200000 l 86.350000 -8.600000 l f
+0.000000 0.000000 0.000000 srgb
+n 70.000000 -8.600000 m 70.000000 1.200000 l 86.350000 1.200000 l 86.350000 -8.600000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(+X: MeasurementValue<Double>) 70.150000 -7.850000 m gs 1 -1 sc sh gr
+0.050000 slw
+n 70.150000 -7.770000 m 79.900000 -7.770000 l s
+0.100000 slw
+/Courier-latin1 ff 0.560000 scf sf
+(+Y: MeasurementValue<Double>) 70.150000 -7.050000 m gs 1 -1 sc sh gr
+0.050000 slw
+n 70.150000 -6.970000 m 79.900000 -6.970000 l s
+0.100000 slw
+/Courier-latin1 ff 0.560000 scf sf
+(+Z: MeasurementValue<Double>) 70.150000 -6.250000 m gs 1 -1 sc sh gr
+0.050000 slw
+n 70.150000 -6.170000 m 79.900000 -6.170000 l s
+0.100000 slw
+/Courier-latin1 ff 0.560000 scf sf
+(+DECLINATION: MeasurementValue<Double>) 70.150000 -5.450000 m gs 1 -1 sc sh gr
+0.050000 slw
+n 70.150000 -5.370000 m 83.400000 -5.370000 l s
+0.100000 slw
+/Courier-latin1 ff 0.560000 scf sf
+(+INCLINATION: MeasurementValue<Double>) 70.150000 -4.650000 m gs 1 -1 sc sh gr
+0.050000 slw
+n 70.150000 -4.570000 m 83.400000 -4.570000 l s
+0.100000 slw
+/Courier-latin1 ff 0.560000 scf sf
+(+MOMENT: MeasurementValue<Double>) 70.150000 -3.850000 m gs 1 -1 sc sh gr
+0.050000 slw
+n 70.150000 -3.770000 m 81.650000 -3.770000 l s
+0.100000 slw
+/Courier-latin1 ff 0.560000 scf sf
+(+REMANENCE: MeasurementValue<Double>) 70.150000 -3.050000 m gs 1 -1 sc sh gr
+0.050000 slw
+n 70.150000 -2.970000 m 82.700000 -2.970000 l s
+0.100000 slw
+/Courier-latin1 ff 0.560000 scf sf
+(+RELATIVE_REMANENCE: MeasurementValue<Double>) 70.150000 -2.250000 m gs 1 -1 sc sh gr
+0.050000 slw
+n 70.150000 -2.170000 m 85.850000 -2.170000 l s
+0.100000 slw
+/Courier-latin1 ff 0.560000 scf sf
+(+THETA63: MeasurementValue<Double>) 70.150000 -1.450000 m gs 1 -1 sc sh gr
+0.050000 slw
+n 70.150000 -1.370000 m 82.000000 -1.370000 l s
+0.100000 slw
+/Courier-latin1 ff 0.560000 scf sf
+(-caption: String) 70.150000 -0.650000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-unit: String) 70.150000 0.150000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-description: String) 70.150000 0.950000 m gs 1 -1 sc sh gr
+1.000000 1.000000 1.000000 srgb
+n 70.000000 1.200000 m 70.000000 6.200000 l 86.350000 6.200000 l 86.350000 1.200000 l f
+0.000000 0.000000 0.000000 srgb
+n 70.000000 1.200000 m 70.000000 6.200000 l 86.350000 6.200000 l 86.350000 1.200000 l cp s
+/Courier-latin1 ff 0.560000 scf sf
+(-<<constructor>> \(caption:String,unit:String,) 70.150000 1.950000 m gs 1 -1 sc sh gr
+(                  description:String\)) 70.150000 2.600000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+( getValue\(step:MeasurementStep\): T) 70.150000 3.400000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getCaption\(\): String) 70.150000 4.200000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getUnit\(\): String) 70.150000 5.000000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getDescription\(\): String) 70.150000 5.800000 m gs 1 -1 sc sh gr
+0.100000 slw
+[] 0 sd
+[0.400000] 0 sd
+0 slc
+n 78.175000 6.200000 m 72.615312 10.495038 l s
+0.100000 slw
+[] 0 sd
+0 slj
+0 slc
+n 72.962906 9.910598 m 72.482656 10.597519 l 73.268582 10.306278 l s
+/Courier-latin1 ff 0.560000 scf sf
+({uses}) 75.262500 8.450000 m gs 1 -1 sc sh gr
+/Helvetica-latin1 ff 0.560000 scf sf
+(Tarvitaan metodi, joka kertoo Sequence-taululle) 30.000000 24.000000 m gs 1 -1 sc sh gr
+(mit‰ sarakkeita t‰m‰ projekti tukee ja n‰ytt‰‰.) 30.000000 24.800000 m gs 1 -1 sc sh gr
+showpage
