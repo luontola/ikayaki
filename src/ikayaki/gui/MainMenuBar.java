@@ -179,7 +179,6 @@ Event I: On exit Clicked - closes program
      * Initializes the private action fields of the class.
      */
     private void initialize() {
-        // TODO: take Actions from other classes (through MainViewPanel)
 
         /* File Menu */
         newProject = main.getNewProjectAction();
