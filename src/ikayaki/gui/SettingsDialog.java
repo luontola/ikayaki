@@ -34,6 +34,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 
 /**
@@ -158,9 +159,10 @@ Event B: On Cancel Clicked - closes window (discarding changes)
 
     private JButton saveButton;
     private JButton cancelButton;
-  private Action saveAction;
+    private Action saveAction;
+    private Action cancelAction;
 
-  private SettingsDialog(Frame owner, String message) {
+    private SettingsDialog(Frame owner, String message) {
         super(owner, message, true);
         if (owner != null) {
             setLocationRelativeTo(owner);
@@ -244,14 +246,31 @@ Event B: On Cancel Clicked - closes window (discarding changes)
           }
         }
 
-        getRootPane().setDefaultButton(saveButton);
-        saveButton.setAction(this.getSaveAction());
-        getSaveAction().setEnabled(false);
-        cancelButton.addActionListener(new ActionListener() {
+        // TODO: this closes window with esc, so maybe something else as simple works too?
+        JMenuBar jmb = new JMenuBar();
+        JMenu jm = new JMenu("Heppa");
+        JMenuItem jmi = new JMenuItem("Close");
+        jmi.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 closeWindow();
             }
         });
+        jmi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+        jm.add(jmi);
+        jmb.add(jm);
+        this.setJMenuBar(jmb);
+        this.pack();
+
+        getRootPane().setDefaultButton(saveButton);
+        saveButton.setAction(this.getSaveAction());
+        getSaveAction().setEnabled(false);
+        cancelButton.setAction(this.getCancelAction());
+
+//        cancelButton.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                closeWindow();
+//            }
+//        });
 
         //TODO: need to check if values are ok, disable Save button if not.
         DocumentListener saveListener = new DocumentListener() {
@@ -345,6 +364,23 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         saveAction.putValue(Action.NAME, "Save");
       }
       return saveAction;
+    }
+
+    public Action getCancelAction() {
+      if (cancelAction == null) {
+        cancelAction = new AbstractAction() {
+          public void actionPerformed(ActionEvent e) {
+            closeWindow();
+          }
+
+        };
+
+        cancelAction.putValue(Action.NAME, "Cancel");
+        cancelAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
+        // TODO: doesn't work
+        cancelAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+      }
+      return cancelAction;
     }
 
     {
