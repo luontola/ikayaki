@@ -130,8 +130,16 @@ whose measuring ended.
 
         // TODO: where is the last directory?
         if (project == null) setDirectory("."); // Settings.instance().getLastDirectory();
-        else setDirectory(project.getFile().getPath());
+        else {
+            setDirectory(
+                    project.getFile().getAbsolutePath().substring(
+                            0,
+                            project.getFile().getAbsolutePath().lastIndexOf(System.getProperty("file.separator"))));
+            //setDirectory(project.getFile().getPath());
+        }
+        System.out.println(
 
+        );
         // combo box / text field
         browserField = new JComboBox(getDirectoryHistory());
         browserField.setSelectedItem(directory.getName());
