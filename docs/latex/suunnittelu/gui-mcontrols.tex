@@ -94,6 +94,7 @@
 \classExtends{JPanel}
 \classCreatedBy{MeasurementControlsPanel}
 \classUses{Project}
+\classUses{Settings}
 \classEvent{On moveXXX click}{call project.doManualMove(int) with clicked position. If false is returned, show small error message. Position values are found from Settings; demagZ is Settings.instance().getAxialAFPosition() and demagY is Settings.instance().getTransverseYAFPosition().}
 \classEvent{On rotateXXX click}{call project.doManualRotate(int) with clicked angle. If false is returned, show small error message.}
 \classEvent{On measureAllButton click}{call project.doManualMeasure(). If false is returned, show small error message.}
