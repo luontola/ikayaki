@@ -426,8 +426,8 @@ public class Settings {
         Rectangle maxBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         if (i < 400) {
             i = 400;
-        } else if (i > (int) maxBounds.getWidth()) {
-            i = (int) maxBounds.getWidth();
+        } else if (i > maxBounds.width) {
+            i = maxBounds.width;
         }
         return i;
     }
@@ -442,8 +442,8 @@ public class Settings {
         Rectangle maxBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         if (i < 300) {
             i = 300;
-        } else if (i > (int) maxBounds.getHeight()) {
-            i = (int) maxBounds.getHeight();
+        } else if (i > maxBounds.height) {
+            i = maxBounds.height;
         }
         return i;
     }

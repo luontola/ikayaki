@@ -63,7 +63,6 @@ be closed.
     public Ikayaki(Project project) throws HeadlessException {
         super(APP_NAME + " " + APP_VERSION);
 
-
         PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
         try {
             UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
@@ -81,21 +80,7 @@ be closed.
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         pack();
 
-        // restore size and position
-        setSize(Settings.instance().getWindowWidth(), Settings.instance().getWindowHeight());
-        setLocationByPlatform(true);
-        setVisible(true);
-
-        if (Settings.instance().getWindowMaximized() && System.getProperty("os.name").startsWith("Windows")) {
-            // native code for maximizing the window
-            try {
-                int hwnd = JUtil.getHwnd(getTitle());
-                JUtil.setWindowMaximized(hwnd);
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
-        }
-
+        // listeners for this frame
         addComponentListener(new ComponentAdapter() {
             @Override public void componentResized(ComponentEvent e) {
                 if ((getExtendedState() & MAXIMIZED_BOTH) == 0) {
@@ -114,6 +99,26 @@ be closed.
                 main.exitProgram();
             }
         });
+
+        // restore size and position
+        setSize(Settings.instance().getWindowWidth(), Settings.instance().getWindowHeight());
+        setLocationByPlatform(true);
+        setVisible(true);
+
+        Rectangle maxBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+        setLocation(getX() + getWidth() > maxBounds.width ? maxBounds.width - getWidth() : getX(),
+                getY() + getHeight() > maxBounds.height ? maxBounds.height - getHeight() : getY());
+        setLocation(getX() < 0 ? 0 : getX(), getY() < 0 ? 0 : getY());
+
+        if (Settings.instance().getWindowMaximized() && System.getProperty("os.name").startsWith("Windows")) {
+            try {
+                // native code for maximizing the window
+                int hwnd = JUtil.getHwnd(getTitle());
+                JUtil.setWindowMaximized(hwnd);
+            } catch (UnsatisfiedLinkError e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**

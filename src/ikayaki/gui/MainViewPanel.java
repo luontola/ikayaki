@@ -40,7 +40,7 @@ import java.awt.event.ActionListener;
  */
 public class MainViewPanel extends ProjectComponent {
 
-    private static final int DIVIDER_DEFAULT_LOCATION = 250;
+    private static final int DIVIDER_DEFAULT_LOCATION = 200;
 
     /**
      * Front-end for controlling the SQUID. Only one project at a time may have access to the SQUID.
@@ -153,9 +153,9 @@ public class MainViewPanel extends ProjectComponent {
         splitPane.setRightComponent(right);
         //splitPane.setOneTouchExpandable(true);
         splitPane.setContinuousLayout(true);
-        splitPane.setDividerLocation(DIVIDER_DEFAULT_LOCATION);
+        splitPane.setDividerLocation(Math.max(DIVIDER_DEFAULT_LOCATION, left.getPreferredSize().width));
         splitPane.setResizeWeight(0.0);
-        //splitPane.setEnabled(false);
+        splitPane.setEnabled(false);
         splitPane.setBorder(null);
         splitPane.setDividerSize(0);
 
