@@ -39,7 +39,7 @@ import ikayaki.MeasurementEvent;
  */
 public class MeasurementControlsPanel extends ProjectComponent {
     /**
-     * Hold all measuring buttons
+     * Holds all measuring buttons.
      */
     private JPanel buttonPanel = new JPanel();
 
