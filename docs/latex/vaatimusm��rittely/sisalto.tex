@@ -57,24 +57,60 @@ Interface to existing software and use of it described here..
 
 \section{Use cases}
 
+% super-makrot pre-, post- ja error conditioneille x)
+% huomaa että \error lopuksi ei ole uutta riviä, joten laita se viimeiseksi
+\newcommand{\pre}[1]{\textbf{Precondition:} #1\\}
+\newcommand{\post}[1]{\textbf{Postcondition:} #1\\}
+\newcommand{\error}[1]{\textbf{Error condition:} #1}
+
 Describes planned use cases for the program. Derived from user interface prototype and requiremets. All use cases are made by "the user" in program main screen, unless otherwise noted.
 
 \subsection{Measuring}
 
 \subsubsection{Do single step measuring without demagnetization}
 
-With any open project, insert as next step "0" or empty (default for new projects), meaning no demagnetization, and click "Single step".
+Enter as next AF demagnetization step "0" or empty (default for new projects), meaning no demagnetization, and click "Single step".
 
-Precondition: Sample in sample holder.\\
-Postcondition: Sample measured, results on screen.\\
-Error condition: The program shall let the user know if something went wrong.\\
+\pre{Open project, sample in sample holder.}
+\post{Sample measured, results on screen.}
+\error{The program shall let the user know if something went wrong.}
 
 \subsubsection{Do single step measuring with demagnetization}
+
+Enter as next AF demag step anything greater than zero, and click "Single step".
+
+\pre{Open project, sample in sample holder.}
+\post{Sample demagnetized (possibly ruined) and measured, results on screen.}
+\error{The program shall let the user know if something went wrong, and, should the demagnetization field not be coming down, warn user with an alarm sound :)}
+
 \subsubsection{Do automatic demagnetization-measuring sequence}
+
+Enter the AF sequence (see \ref{sequsecaseaf} for ways to enter it) and click "Measure".
+
+\pre{Open project, sample in sample holder.}
+\post{Sample demagnetized according to entered AF sequence (possibly ruined) and measured after each demagnetization, results on screen.}
+\error{The program shall let the user know if something went wrong, and, should the demagnetization field be uncalm, warn user with an alarm sound x)}
+
   \begin{itemize}
+
   \item Pause automatic measuring sequence
-  \item Cancel automatic measuring sequence
+
+  While measure sequence is running, click "Pause".
+
+  \pre{Ongoing measure sequence.}
+  \post{Measure sequence halts after current step is done, results on screen.}
+  \error{Program tells if sequence can't be paused (and something has gone terribly wrong).}
+
+  \item Abort automatic measuring sequence
+
+  While measure sequence is running or paused, click "Stop immediately".
+
+  \pre{Ongoing or paused measure sequence.}
+  \post{Measure sequence halts immediately and program enters "fully manual" mode?}
+  \error{Program tells if sequence can't be aborted (and something has gone terribly wrong).}
+
   \end{itemize}
+
 \subsubsection{Do thellier measuring}
 \subsubsection{Do thermal measuring}
 \subsubsection{Measure magnetometer ground noise}
@@ -104,6 +140,7 @@ Error condition: The program shall let the user know if something went wrong.\\
 \subsubsection{Panic abort operation instantly}
 
 \subsection{AF sequences}
+\label{sequsecaseaf}
 
 {\it As in automatic demagnetization-measuring sequences, or Alternating Field sequences}
 
