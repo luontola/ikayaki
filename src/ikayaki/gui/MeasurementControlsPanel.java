@@ -22,11 +22,13 @@
 
 package ikayaki.gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import ikayaki.ProjectEvent;
 import ikayaki.MeasurementEvent;
+import ikayaki.ProjectEvent;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 /**
  * Has "Measure"/"Pause", "Single step" and "Stop now!" buttons for controlling measurements; "+z/-z" radiobuttons for
@@ -49,14 +51,9 @@ public class MeasurementControlsPanel extends ProjectComponent {
      */
     private JButton measureButton;
 
-    /**
-     * Current button status: false=="Measure", true=="Pause" (tells also whether measuring is in action).
-     */
-    private boolean measureButtonMeasuring = false;
-
     private JButton stepButton;
 
-    private JButton stopButton;
+    private JButton abortButton;
 
     /**
      * Groups together +z and -z RadioButtons.
@@ -82,67 +79,25 @@ public class MeasurementControlsPanel extends ProjectComponent {
 
     private ManualControlsPanel manualControlsPanel;
 
-    public MeasurementControlsPanel()
-    {
-        measureButton = new JButton("Measure");
-        stepButton = new JButton("Single step");
-        stopButton = new JButton("Stop now!");
-        measureButton.setEnabled(false);
-        stepButton.setEnabled(false);
-        stopButton.setEnabled(false);
+    /* Swing Actions */
+    private Action autoStepAction;
+    private Action singleStepAction;
+    private Action pauseAction;
+    private Action abortAction;
+
+    public MeasurementControlsPanel() {
+        measureButton = new JButton(getAutoStepAction());
+        stepButton = new JButton(getSingleStepAction());
+        abortButton = new JButton(getAbortAction());
+        updateActions();
 
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.add(measureButton);
         buttonPanel.add(stepButton);
-        buttonPanel.add(stopButton);
+        buttonPanel.add(abortButton);
 
         this.setLayout(new BorderLayout());
         this.add(buttonPanel, BorderLayout.NORTH);
-
-        /*
-        Event A: On measureButton click - call project.doAutoStep() or project.doPause(), depending
-        on current button status. Show error message if false is returned.
-        */
-        measureButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                assert project != null;
-
-                boolean ok;
-                if (measureButtonMeasuring) ok = project.doPause();
-                else ok = project.doAutoStep();
-
-                if (!ok) measureButton.setText(measureButton.getText() + " [error]");
-                // TODO or what?
-            }
-        });
-
-        /**
-         * Event B: On stepButton click - call project.doSingleStep(); show error message if false is returned.
-         */
-        stepButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                assert project != null;
-                boolean ok = project.doSingleStep();
-                if (!ok) stepButton.setText(stepButton.getText() + " [error]");
-                // TODO or what?
-            }
-        });
-
-        /**
-         * Event C: On stopButton click - call project.doAbort(); show critical error message if false
-         * is returned.
-         */
-        stopButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                assert project != null;
-                boolean ok = project.doAbort();
-                if (!ok) stopButton.setText(stopButton.getText() + " [error!]");
-                // TODO or what?
-            }
-        });
 
         /*
         Event D: On zPlus,MinusRadioButton click - call project.setOrientation(boolean) where
@@ -157,23 +112,111 @@ public class MeasurementControlsPanel extends ProjectComponent {
      *
      * @param event ProjectEvent received.
      */
-    public void projectUpdated(ProjectEvent event)
-    {
-        // TODO: set names also?
-        // TODO: measureButton changes to a pause button when a measurement is running
-        measureButton.setEnabled(project.isAutoStepEnabled());
-        stepButton.setEnabled(project.isSingleStepEnabled());
-        stopButton.setEnabled(project.isAbortEnabled());
+    public void projectUpdated(ProjectEvent event) {
+        updateActions();
     }
 
     /**
-     * Event F: On MeasurementEvent - call magnetometerStatusPanel.updateStatus(int, int)
-     * with the right values from MeasurementEvent.
+     * Event F: On MeasurementEvent - call magnetometerStatusPanel.updateStatus(int, int) with the right values from
+     * MeasurementEvent.
      *
      * @param event MeasurementEvent received.
      */
-    public void measurementUpdated(MeasurementEvent event)
-    {
+    public void measurementUpdated(MeasurementEvent event) {
         // TODO
+    }
+
+    /**
+     * Checks the current state of the active project and enables/disables the measurement controls accordingly.
+     */
+    private void updateActions() {
+        if (getProject() != null) {
+            getAutoStepAction().setEnabled(getProject().isAutoStepEnabled());
+            getSingleStepAction().setEnabled(getProject().isSingleStepEnabled());
+            getPauseAction().setEnabled(getProject().isPauseEnabled());
+            getAbortAction().setEnabled(getProject().isAbortEnabled());
+        } else {
+            getAutoStepAction().setEnabled(false);
+            getSingleStepAction().setEnabled(false);
+            getPauseAction().setEnabled(false);
+            getAbortAction().setEnabled(false);
+        }
+
+        if (getAutoStepAction().isEnabled()) {
+            measureButton.setAction(getAutoStepAction());
+        } else {
+            measureButton.setAction(getPauseAction());
+        }
+    }
+
+    /* Getters for Swing Actions */
+
+    public Action getAutoStepAction() {
+        if (autoStepAction == null) {
+            autoStepAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    if (!getProject().doAutoStep()) {
+                        JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
+                                "Unable to measure.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            };
+            autoStepAction.putValue(Action.NAME, "Measure");
+            //autoStepAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_M);
+            autoStepAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.CTRL_MASK));
+        }
+        return autoStepAction;
+    }
+
+    public Action getSingleStepAction() {
+        if (singleStepAction == null) {
+            singleStepAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    if (!getProject().doSingleStep()) {
+                        JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
+                                "Unable to single step.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            };
+            singleStepAction.putValue(Action.NAME, "Single Step");
+            //singleStepAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_I);
+            singleStepAction.putValue(Action.ACCELERATOR_KEY,
+                    KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_MASK));
+        }
+        return singleStepAction;
+    }
+
+    public Action getPauseAction() {
+        if (pauseAction == null) {
+            pauseAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    if (!getProject().doPause()) {
+                        JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
+                                "Unable to pause.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            };
+            pauseAction.putValue(Action.NAME, "Pause");
+            //pauseAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_P);
+            pauseAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK));
+        }
+        return pauseAction;
+    }
+
+    public Action getAbortAction() {
+        if (abortAction == null) {
+            abortAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    if (!getProject().doAbort()) {
+                        JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
+                                "Unable to abort.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            };
+            abortAction.putValue(Action.NAME, "Stop Now!");
+            //abortAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_T);
+            abortAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_MASK));
+        }
+        return abortAction;
     }
 }

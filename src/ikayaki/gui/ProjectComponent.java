@@ -37,7 +37,7 @@ public class ProjectComponent extends JPanel implements ProjectListener, Measure
     /**
      * The active project.
      */
-    protected Project project;
+    private Project project;
 
     /**
      * Initializes this ProjectComponent with no project.

@@ -404,7 +404,7 @@ public class MainViewPanel extends ProjectComponent {
             };
             newProjectAction.putValue(Action.NAME, "New...");
             newProjectAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
-
+            newProjectAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_MASK));
         }
         return newProjectAction;
     }
@@ -418,7 +418,7 @@ public class MainViewPanel extends ProjectComponent {
             };
             openProjectAction.putValue(Action.NAME, "Open...");
             openProjectAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_O);
-
+            openProjectAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK));
         }
         return openProjectAction;
     }
@@ -472,6 +472,7 @@ public class MainViewPanel extends ProjectComponent {
             };
             exitAction.putValue(Action.NAME, "Exit");
             exitAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_X);
+            exitAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK));
         }
         return exitAction;
     }
@@ -498,6 +499,7 @@ public class MainViewPanel extends ProjectComponent {
             };
             helpAction.putValue(Action.NAME, "Help Topics");
             helpAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_H);
+            helpAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
         }
         return helpAction;
     }

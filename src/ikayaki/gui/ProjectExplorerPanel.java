@@ -332,8 +332,8 @@ whose measuring ended.
 
         // set current project file index to selectedFile
         selectedFile = -1;
-        if (project != null) for (int n = 0; n < files.length; n++)
-            if (project.getFile().equals(files[n])) selectedFile = n;
+        if (getProject() != null) for (int n = 0; n < files.length; n++)
+            if (getProject().getFile().equals(files[n])) selectedFile = n;
 
         return files;
     }

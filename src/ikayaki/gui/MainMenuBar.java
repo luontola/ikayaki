@@ -83,6 +83,12 @@ Event I: On exit Clicked - closes program
     private Action exportProjectToSRM;
     private Action exit;
 
+    private JMenu measurementMenu;
+    private Action autoStep;
+    private Action singleStep;
+    private Action pause;
+    private Action abort;
+
     private JMenu optionsMenu;
     private Action configuration;
 
@@ -118,6 +124,14 @@ Event I: On exit Clicked - closes program
         fileMenu.add(new JSeparator());
         fileMenu.add(exit);
         add(fileMenu);
+
+        measurementMenu = new JMenu("Measurement");
+        measurementMenu.setMnemonic(KeyEvent.VK_M);
+        measurementMenu.add(autoStep);
+        measurementMenu.add(singleStep);
+        measurementMenu.add(pause);
+        measurementMenu.add(abort);
+        add(measurementMenu);
 
         optionsMenu = new JMenu("Options");
         optionsMenu.setMnemonic(KeyEvent.VK_O);
@@ -172,6 +186,12 @@ Event I: On exit Clicked - closes program
         exportProjectToDTD = main.getExportProjectToDTDAction();
         exportProjectToSRM = main.getExportProjectToSRMAction();
         exit = main.getExitAction();
+
+        /* Measurement Menu */
+        autoStep = main.getMeasurementControlsPanel().getAutoStepAction();
+        singleStep = main.getMeasurementControlsPanel().getSingleStepAction();
+        pause = main.getMeasurementControlsPanel().getPauseAction();
+        abort = main.getMeasurementControlsPanel().getAbortAction();
 
         /* Options Menu */
         configuration = main.getConfigurationAction();
