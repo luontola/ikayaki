@@ -38,7 +38,7 @@ A brief overview of the problem domain..
 \newcounter{ucsce}[ucnum]
 \hbadness=10000 % estämmä ihme "underfull \hbox (badness 10000)" -varoitukset (ei hajua mistä tulevat)
 
-Describes planned use cases for the program. Use cases are derived from user interface prototype and user requiremets. All use cases are perfomed by any ordinary user and in program main screen. A simplified use case diagram is presented in Figure~\ref{fig:usecases}.
+Describes planned use cases for the program. Use cases are derived from user interface prototype and requirements. All use cases are perfomed by any ordinary user and in program main screen. A simplified use case diagram is presented in Figure~\ref{fig:usecases}.
 
 \begin{figure}
 \begin{center}
@@ -328,7 +328,7 @@ Use case format:
 
 
 
-\section{User requirements}
+\section{Requirements}
 \label{seq:req}
 
 % Makrot vaatimuksille
@@ -337,10 +337,11 @@ Use case format:
 \newcommand{\ReqDesc}[1]{\textbf{Description:} #1\\}
 \newcommand{\ReqPrio}[1]{\textbf{Priority:} #1\\}
 
-Goals of the software set by the client. Priorities are from 1 (highest) to 4 
-(lowest). Our goal is to fulfill at least the requirements with priorities 1 and 
-2. Requirements with priority 3 will be fulfilled as time permits, and priority 
-4's will propably be left out.
+Goals and restrictions of the software set by the client, the project team and 
+the environment. Priorities are from 1 (highest) to 4 (lowest). Our goal is to 
+fulfill at least the requirements with priorities 1 and 2. Requirements with 
+priority 3 will be fulfilled only if time permits, and priority 4's will 
+propably be left out.
 
 
 \subsection{Functional requirements}
@@ -482,10 +483,17 @@ Goals of the software set by the client. Priorities are from 1 (highest) to 4
 
 \subsection{Environment}
 
-The computer that will run this program will be equal or better to 1GHz CPU, 
-256MB RAM, 1280x1024 resolution. The program must run under Windows XP. The 
-hardware and communication with it is described in the section "External 
-interfaces".
+Program will be used in normal PC which is connected to magnetometer. The 
+computer that will run this program will be equal or better to 1GHz CPU, 256MB 
+RAM, 1280x1024 resolution. The current computer is running Windows XP.
+
+Taking into account rapid phase of computer evolution it is possible that 
+computer in which program is used can change, accordingly the program should be 
+installable by outsiders. We need not prepare to changing of magnetometer, as 
+new magnenetometer will probably have its own program.
+
+The SQUID hardware and communication with it is described in the section 
+"External interfaces".
 
 
 \subsection{Maintainability}
@@ -495,24 +503,6 @@ documentation must be complete so that other teams can quickly continue the
 development even if they have not studied user interface designing. It must be 
 possible to add new graph types to the program and export the measurement data 
 to other programs.
-
-
-\subsection{Restrictions}
-
-Program will be used in normal PC which is connected to magnetometer. 
-Taking into account rapid phase of computer evolution it is possible 
-that computer in which program is used can change, accordingly the 
-program should be able to be installed by outsiders. 
-We need not prepare to changing of magnetometer, as new 
-magnenetometer will probably have its own program.
-
-
-
-\section{System requirements / Functions}
-
-Specific explanation of the functions to be implemented
-
-\subsection{System restrictions}
 
 
 
