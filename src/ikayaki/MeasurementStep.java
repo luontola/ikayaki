@@ -24,6 +24,7 @@ package ikayaki;
 
 import org.w3c.dom.Element;
 
+import javax.vecmath.Matrix3d;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,7 +43,7 @@ public class MeasurementStep {
     /**
      * The project that owns this step, or null if there is no owner.
      */
-    private Project project = null;
+    private Project project;
 
     /**
      * Tells if this step has been completed or not, or if a measurement is still running.
@@ -78,7 +79,7 @@ public class MeasurementStep {
      * Creates a blank measurement step.
      */
     public MeasurementStep() {
-        return; // TODO
+        project = null;
     }
 
     /**
@@ -87,18 +88,18 @@ public class MeasurementStep {
      * @param project the project who is the owner of this step.
      */
     public MeasurementStep(Project project) {
-        return; // TODO
+        this.project = project;
     }
 
     /**
      * Creates a measurement step from the specified element.
      *
      * @param element the element from which this step will be created.
-     * @throws NullPointerException     if import is null.
+     * @throws NullPointerException     if element is null.
      * @throws IllegalArgumentException if the element was not in the right format.
      */
     public MeasurementStep(Element element) {
-        return; // TODO
+        this(element, null);
     }
 
     /**
@@ -106,10 +107,15 @@ public class MeasurementStep {
      *
      * @param element the element from which this step will be created.
      * @param project the project who is the owner of this step.
-     * @throws NullPointerException     if import is null.
+     * @throws NullPointerException     if element is null.
      * @throws IllegalArgumentException if the element was not in the right format.
      */
     public MeasurementStep(Element element, Project project) {
+        if (element == null) {
+            throw new NullPointerException();
+        }
+        this.project = project;
+
         return; // TODO
     }
 
@@ -124,14 +130,14 @@ public class MeasurementStep {
      * Returns the owner project of this step, or null if there is no owner.
      */
     public synchronized Project getProject() {
-        return null; // TODO
+        return project;
     }
 
     /**
      * Tells if this step has been completed or not, or if a measurement is still running.
      */
     public synchronized State getState() {
-        return null; // TODO
+        return state;
     }
 
     /**
@@ -140,56 +146,68 @@ public class MeasurementStep {
      * @throws NullPointerException if state is null.
      */
     synchronized void setState(State state) {
-        return; // TODO
+        if (state == null) {
+            throw new NullPointerException();
+        }
+        this.state = state;
     }
 
     /**
      * Returns the time the measurements were completed, or null if that has not yet happened.
      */
     public synchronized Date getTimestamp() {
-        return null; // TODO
+        return timestamp;
     }
 
     /**
      * Returns the AF/Thermal value of this step, or a negative number if it has not been specified.
      */
     public synchronized double getStepValue() {
-        return 0.0; // TODO
+        return stepValue;
     }
 
     /**
      * Sets the value of this step. A negative value will clear it.
      */
     public synchronized void setStepValue(double stepValue) {
-        return; // TODO
+        if (stepValue < 0.0) {
+            stepValue = -1.0;
+        }
+        this.stepValue = stepValue;
     }
 
     /**
      * Returns the mass of this step’s sample, or a negative number to use the project’s default mass.
      */
     public synchronized double getMass() {
-        return 0.0; // TODO
+        return mass;
     }
 
     /**
      * Sets the mass of this step’s sample. A negative value will clear it.
      */
     public synchronized void setMass(double mass) {
-        return; // TODO
+        if (mass < 0.0) {
+            mass = -1.0;
+        }
+        this.mass = mass;
     }
 
     /**
      * Returns the volume of this step’s sample, or a negative number to use the project’s default volume.
      */
     public synchronized double getVolume() {
-        return 0.0; // TODO
+        return volume;
     }
 
     /**
      * Sets the volume of this step’s sample. A negative value will clear it.
      */
     public synchronized void setVolume(double volume) {
-        return; // TODO
+        if (volume < 0.0) {
+            volume = -1.0;
+        }
+        this.volume = volume;
     }
 
     /**
@@ -197,14 +215,23 @@ public class MeasurementStep {
      * identity matrix will be used.
      */
     synchronized void updateTransforms() {
-        return; // TODO
+        Matrix3d transform;
+        if (project == null) {
+            transform = new Matrix3d();
+            transform.setIdentity();
+        } else {
+            transform = project.getTransform();
+        }
+        for (MeasurementResult result : results) {
+            result.setTransform(transform);
+        }
     }
 
     /**
      * Returns the number of results in this step.
      */
     public synchronized int getResults() {
-        return 0; // TODO
+        return results.size();
     }
 
     /**
@@ -215,7 +242,7 @@ public class MeasurementStep {
      * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= getResults()).
      */
     public synchronized MeasurementResult getResult(int index) {
-        return null; // TODO
+        return results.get(index);
     }
 
     /**
@@ -226,7 +253,11 @@ public class MeasurementStep {
      * @throws NullPointerException if result is null.
      */
     public synchronized void addResult(MeasurementResult result) {
-        return; // TODO
+        if (result == null) {
+            throw new NullPointerException();
+        }
+        results.add(result);
+        updateTransforms();
     }
 
     /**

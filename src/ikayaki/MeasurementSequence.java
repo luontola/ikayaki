@@ -66,7 +66,7 @@ public class MeasurementSequence {
      * Creates a sequence from the specified element.
      *
      * @param element the element from which this sequence will be created.
-     * @throws NullPointerException     if import is null.
+     * @throws NullPointerException     if element is null.
      * @throws IllegalArgumentException if the element was not in the right format.
      */
     public MeasurementSequence(Element element) {
@@ -78,7 +78,7 @@ public class MeasurementSequence {
      *
      * @param element the element from which this sequence will be created.
      * @param project the project whose sequence this will be. Needed for importing the measurement steps correctly.
-     * @throws NullPointerException     if import is null.
+     * @throws NullPointerException     if element is null.
      * @throws IllegalArgumentException if the element was not in the right format.
      */
     public MeasurementSequence(Element element, Project project) {
