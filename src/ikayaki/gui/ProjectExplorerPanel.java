@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.*;
 import java.text.DateFormat;
 import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Creates a history/autocomplete field (browserField) for choosing the project directory, a listing of project files in
@@ -240,7 +241,7 @@ whose measuring ended.
                     // avoid the popup menu from showing, when the Project Explorer tab is hidden with ALT+P
                     browserField.hidePopup();
                     return;
-                    
+
                 } else {
                     autocompleteExecutor.execute(new Runnable() {
                         public void run() {
@@ -320,9 +321,26 @@ whose measuring ended.
                 TableColumnModel cm = th.getColumnModel();
                 int viewColumn = cm.getColumnIndexAtX(e.getX());
                 explorerTableSortColumn = cm.getColumn(viewColumn).getModelIndex();
+
+                // TODO: causes java.lang.AbstractMethodError
+                Arrays.sort(files, new Comparator <File>() {
+                    public int compare(File a, File b) {
+                        switch (explorerTableSortColumn) {
+                            case 0: return a.compareTo(b);
+                            // WARNING: might chocke Project.getType(File)
+                            case 1: return Project.getType(a).compareTo(Project.getType(b));
+                            // TODO: int-cast changes sign if difference larger than maxint
+                            case 2: return (int) (a.lastModified() - b.lastModified());
+                            default: return 0;
+                        }
+                    }
+                });
+
                 // TODO: update table header somehow (to show the new sort column)
-                // TODO: add proper table sorting here
-                System.out.println("sort " + cm.getColumn(viewColumn).getHeaderValue());
+
+                // update table with sorted data, update selected file and table selection
+                explorerTableModel.fireTableDataChanged();
+                updateSelectedFile();
             }
         });
 
@@ -358,44 +376,25 @@ whose measuring ended.
         // update browserField and explorerTable with new directory
         if (browserField != null) browserField.setSelectedItem(directory.getPath());
         if (explorerTableModel != null) explorerTableModel.fireTableDataChanged();
-        // fireTableDataChanged messes with selection, set it again
-        if (explorerTable != null && selectedFile != -1)
-            explorerTable.setRowSelectionInterval(selectedFile, selectedFile);
+        if (explorerTable != null) updateSelectedFile();
 
         return true;
     }
 
     /**
-     * Reads project file listing from given directory. Sets selected project index, or -1, to selectedFile.
+     * Reads project file listing from given directory.
      *
      * @param directory directory whose project file listing to read.
-     * @return project files in that directory, sorted alphabetically.
+     * @return project files in that directory.
      */
     private File[] getProjectFiles(File directory) {
-        File[] files = directory.listFiles(new FileFilter() {
+        return directory.listFiles(new FileFilter() {
             public boolean accept(File file) {
                 // TODO: shouldn't this return only a list of valid project files? so why is Ikayaki.FILE_TYPE commented out?
                 // - for explorerTable testing, need some (working perhaps) project file expamples :)
                 return (file.isFile() && file.getName().endsWith(/*Ikayaki.FILE_TYPE*/ ""));
             }
         });
-
-        // TODO: sort according to explorerTableSortColumn (although this is a wrong way for sorting JTable, see
-        // http://java.sun.com/docs/books/tutorial/uiswing/components/table.html for the right one).
-        // Arrays.sort(files);
-        switch (explorerTableSortColumn) {
-            case 0: // filename
-            case 1: // type
-            case 2: // last modified
-            default: // -1, no sort
-        }
-
-        // set current project file index to selectedFile
-        selectedFile = -1;
-        if (getProject() != null) for (int n = 0; n < files.length; n++)
-            if (getProject().getFile().equals(files[n])) selectedFile = n;
-
-        return files;
     }
 
     /**
@@ -453,6 +452,17 @@ whose measuring ended.
                 }
             });
         }
+    }
+
+    /**
+     * Updates selectedFile index and explorerTable selection with selected project file, or -1.
+     */
+    private void updateSelectedFile() {
+        selectedFile = -1;
+        if (getProject() != null) for (int n = 0; n < files.length; n++)
+            if (getProject().getFile().equals(files[n])) selectedFile = n;
+
+        if (selectedFile != -1) explorerTable.setRowSelectionInterval(selectedFile, selectedFile);
     }
 
     /**
@@ -517,6 +527,8 @@ whose measuring ended.
 
         /**
          * Updates the file list when a project file has been saved.
+         *
+         * @param event ProjectEvent received.
          */
         public void projectUpdated(ProjectEvent event) {
             if (event.getType() == ProjectEvent.Type.FILE_SAVED) {
