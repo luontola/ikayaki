@@ -4,3 +4,7 @@ SQUID.iws
 classes
 ikayaki.config
 squid.jpx
+bak
+java version 1.5.0_02-b09.library
+javah.bat
+javap.bat
