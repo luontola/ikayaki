@@ -374,6 +374,7 @@ project listeners.
                 return null;
             }
         }
+        // TODO: should the cache be emptied at some point?
 
         Type type = null;
         try {

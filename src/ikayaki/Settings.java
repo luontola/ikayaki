@@ -516,7 +516,10 @@ public class Settings {
             if (s == null) {
                 break;
             } else {
-                directoryHistory.add(new File(s));
+                File file = new File(s);
+                if (file.isDirectory()) {
+                    directoryHistory.add(file);
+                }
             }
             i++;
         }
@@ -560,7 +563,10 @@ public class Settings {
             if (s == null) {
                 break;
             } else {
-                projectHistory.add(new File(s));
+                File file = new File(s);
+                if (file.isFile()) {
+                    projectHistory.add(file);
+                }
             }
             i++;
         }
