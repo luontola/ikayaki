@@ -1,19 +1,12 @@
 \beginClass{SquidEmulator}
 \classComment{
-	This class tries to emulate behavior of real squid-system. It generates random data values as results and generates random error situations to see that program using real squid system does survive those. Uses 2-3 COM ports. Usage SquidEmulator x z.. where x is 0 or 1 and indicates if Magnetometer and Demagnetizer are on same COM port. z... values are COM ports.
+    This class tries to emulate behavior of real squid-system. It starts 3 threads (handler,magnetometer,degausser), opens COM-ports for them and adds SerialIO Listeners.  Threads generates random data values as results and generates random error situations to see that program using real squid system does survive those. Uses 2-3 COM ports. Usage SquidEmulator x z.. where x is 0 or 1 and indicates if Magnetometer and Demagnetizer are on same COM port. z... values are COM ports.
 }
 \classPackage{ikayaki.squid}
 \classDeclaration{public class SquidEmulation}
-\classExtends{Thread}
-\classImplements{SerialIOListener}
 \classUses{SerialIO}
 \classEvent{On New IO Message}{reads message and puts it in Buffer}
 \closeClass
-
-\beginField{messageBuffer}
-\fieldDeclaration{private Stack messageBuffer}
-\fieldComment{buffer for incoming messages}
-\closeField
 
 \beginField{online}
 \fieldDeclaration{private bool online}
@@ -98,17 +91,31 @@ factory for half stepping.}
 \fieldComment{Z=Zero, T=Tracking, ?=Unknown}
 \closeField
 
-\beginField{messageReader}
-\fieldDeclaration{private SerialIO[] messageReader}
-\fieldComment{starts Threads which reads messages from selected COM port}
+\beginField{serialIO}
+\fieldDeclaration{private SerialIO[] serialIO} 
+\fieldComment{starts
+Threads which reads messages from selected COM port. Own listener
+for each. Offers write commads to port too.}
 \closeField
 
-\beginMethod{readMessageFromBuffer()}
-\methodDeclaration{public void getSequences()}
-\methodComment{
-    reads message and commits it.
-}
-\closeMethod
+\beginField{handler}
+\fieldDeclaration{private HandlerEmu handler}
+\fieldComment{private class which implements Thread and runs handler emulation process. Process incoming messages and sends data back. When message comes, process it (wait if needed for a while), updates own status and sends result back.}
+\closeField
+
+\beginField{magnetometer}
+\fieldDeclaration{private MagnetometerEmu magnetometer}
+\fieldComment{private class which implements Thread and runs
+magnetometer emulation process. Process incoming messages and sends
+data back. When message comes, process it (wait if needed for a while), updates own status and sends result back.}
+\closeField
+
+\beginField{degausser}
+\fieldDeclaration{private DegausserEmu degausser}
+\fieldComment{private class which implements Thread and runs
+degausser emulation process. Process incoming messages and sends
+data back. When message comes, process it (wait if needed for a while), updates own status and sends result back.}
+\closeField
 
 \beginMethod{writeMessage(String,int)}
 \methodDeclaration{public void writeMessage(String message ,int port))}

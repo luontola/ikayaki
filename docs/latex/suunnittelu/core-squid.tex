@@ -175,7 +175,7 @@
 \closeMethod
 
 \beginMethod{setCoil(char)}
-\methodDeclaration{public void setCoil(char coil)}
+\methodDeclaration{private void setCoil(char coil)}
 \methodComment{
     Sets coil X,Y,Z.
 }
@@ -183,7 +183,7 @@
 \closeMethod
 
 \beginMethod{setAmplitude(int)}
-\methodDeclaration{public void setAmplitude(int amplitude)}
+\methodDeclaration{private void setAmplitude(int amplitude)}
 \methodComment{
     Sets amplitude to ramp, range 0 to 3000.
 }
@@ -191,21 +191,21 @@
 \closeMethod
 
 \beginMethod{executeRampUp()}
-\methodDeclaration{public void executeRampUp()}
+\methodDeclaration{private void executeRampUp()}
 \methodComment{
     Performs Ramp up.
 }
 \closeMethod
 
 \beginMethod{executeRampDown()}
-\methodDeclaration{public void executeRampDown()}
+\methodDeclaration{private void executeRampDown()}
 \methodComment{
     Brings Ramp down.
 }
 \closeMethod
 
 \beginMethod{executeRampCycle()}
-\methodDeclaration{public void executeRampCycle()}
+\methodDeclaration{private void executeRampCycle()}
 \methodComment{
     Performs Ramp up and down.
 }
@@ -677,7 +677,7 @@ G Motor is indexing and no other notice pending
 \beginMethod{measure(char)}
 \methodDeclaration{public String measure(char axis)}
 \methodComment{
-    Performs full sequence to measure axis.
+    Performs full sequence to measure axis. Blocking.
 }
 \methodParam{axis}{x,y,x.}
 \methodReturn{Returns results for measuring.}
