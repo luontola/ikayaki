@@ -286,247 +286,270 @@
 \beginMethod{setSquid(Squid)}
 \methodDeclaration{public synchronized boolean setSquid(Squid squid)}
 \methodComment{
-	Sets this project the owner of the Squid. Only one project may own the Squid at a time. The Squid must be first detached with "setSquid(null)" from its owner before it can be given to another project. 
+	Sets this project the owner of the Squid. Uses the setOwner() method of the specified Squid.
+	
+	Only one project may own the Squid at a time. The Squid must be first detached with "setSquid(null)" from its owner before it can be given to another project. Detaching the Squid is possible only when the project's state is IDLE.
 }
 \methodParam{squid}{pointer to the SQUID interface, or null to detach this project from it.}
-\methodReturn{true if the operation was completed, otherwise false (in which case nothing was done).}
+\methodReturn{true if the operation was completed, otherwise false (in which case nothing was changed).}
 \closeMethod
 
 \beginMethod{getProperty(String)}
 \methodDeclaration{public synchronized String getProperty(String key)}
 \methodComment{
+	Returns a project information property.
 }
-\methodParam{key}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{key}{the key which is associated with the property.}
+\methodReturn{the specified property, or an empty String if the property is not set.}
 \closeMethod
 
 \beginMethod{setProperty(String,String)}
 \methodDeclaration{public synchronized void setProperty(String key, String value)}
 \methodComment{
+	Sets a project information property.
 }
-\methodParam{key}{}
-\methodParam{value}{}
-\methodThrows{}{}
+\methodParam{key}{the key which is associated with the property.}
+\methodParam{value}{new value for the property, or null to remove the property.}
 \closeMethod
 
 \beginMethod{getStrike()}
 \methodDeclaration{public synchronized double getStrike()}
 \methodComment{
+	Returns the strike of the sample.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{setStrike(double)}
 \methodDeclaration{public synchronized void setStrike(double strike)}
 \methodComment{
+	Sets the strike of the sample and calls updateTransforms().
 }
-\methodParam{strike}{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getDip()}
 \methodDeclaration{public synchronized double getDip()}
 \methodComment{
+	Returns the dip of the sample.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{setDip(double)}
 \methodDeclaration{public synchronized void setDip(double dip)}
 \methodComment{
+	Sets the dip of the sample and calls updateTransforms().
 }
-\methodParam{dip}{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getSampleType()}
 \methodDeclaration{public synchronized SampleType getSampleType()}
 \methodComment{
+	Returns the type of the sample.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{setSampleType(SampleType)}
 \methodDeclaration{public synchronized void setSampleType(SampleType sampleType)}
 \methodComment{
+	Sets the type of the sample and calls updateTransforms().
 }
-\methodParam{sampleType}{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getTransform()}
 \methodDeclaration{synchronized Matrix3d getTransform()}
 \methodComment{
+	Returns the current transformation matrix for the sample. For performance reasons, this method returns a reference to the internal data structure and not a copy.
+	
 	WARNING!!! Absolutely NO modification of the data contained in this matrix should be made -- if any such manipulation is necessary, it should be done on a copy of the matrix returned rather than the matrix itself.
 }
-\methodReturn{}
-\methodThrows{}{}
+\methodReturn{reference to the transformation matrix.}
 \closeMethod
 
 \beginMethod{updateTransforms()}
 \methodDeclaration{private synchronized void updateTransforms()}
 \methodComment{
+	Recalculates the transformation matrix and updates all measurements. This method is called automatically by the setStrike(), setDip() and setSampleType() methods.
 }
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getMass()}
 \methodDeclaration{public synchronized double getMass()}
 \methodComment{
+	Returns the mass of the sample.
 }
-\methodReturn{}
-\methodThrows{}{}
+\methodReturn{mass of the sample, or a negative number if no mass is specified.}
 \closeMethod
 
 \beginMethod{setMass(double)}
 \methodDeclaration{public synchronized void setMass(double mass)}
 \methodComment{
+	Sets the mass of the sample.
 }
-\methodParam{mass}{}
-\methodThrows{}{}
+\methodParam{mass}{mass of the sample, or a negative number to clear it.}
 \closeMethod
 
 \beginMethod{getVolume()}
 \methodDeclaration{public synchronized double getVolume()}
 \methodComment{
+	Returns the volume of the sample.
 }
-\methodReturn{}
-\methodThrows{}{}
+\methodReturn{volume of the sample, or a negative number if no volume is specified.}
 \closeMethod
 
 \beginMethod{setVolume(double)}
 \methodDeclaration{public synchronized void setVolume(double volume)}
 \methodComment{
+	Sets the volume of the sample.
 }
-\methodParam{volume}{}
-\methodThrows{}{}
+\methodParam{volume}{volume of the sample, or a negative number to clear it.}
 \closeMethod
 
 \beginMethod{addProjectListener(ProjectListener)}
 \methodDeclaration{public synchronized void addProjectListener(ProjectListener l)}
 \methodComment{
+	Adds a ProjectListener to the project.
 }
-\methodParam{listener}{}
-\methodThrows{}{}
+\methodParam{l}{the listener to be added.}
 \closeMethod
 
 \beginMethod{removeProjectListener(ProjectListener)}
 \methodDeclaration{public synchronized void removeProjectListener(ProjectListener l)}
 \methodComment{
+	Removes a ProjectListener from the project.
 }
-\methodParam{listener}{}
+\methodParam{l}{the listener to be removed}
 \methodThrows{}{}
 \closeMethod
 
 \beginMethod{fireProjectEvent(ProjectEvent.Type)}
 \methodDeclaration{private synchronized void fireProjectEvent(ProjectEvent.Type type)}
 \methodComment{
+	Notifies all listeners that have registered for ProjectEvents.
 }
-\methodThrows{}{}
+\methodParam{type}{type of the event.}
 \closeMethod
 
 \beginMethod{addMeasurementListener}
 \methodDeclaration{public synchronized void addMeasurementListener(MeasurementListener l)}
 \methodComment{
+	Adds a MeasurementListener to the project.
 }
-\methodParam{listener}{}
-\methodThrows{}{}
+\methodParam{l}{the listener to be added.}
 \closeMethod
 
 \beginMethod{removeMeasurementListener}
 \methodDeclaration{public synchronized void removeMeasurementListener(MeasurementListener l)}
 \methodComment{
+	Removes a MeasurementListener from the project.
 }
-\methodParam{listener}{}
-\methodThrows{}{}
+\methodParam{l}{the listener to be removed}
 \closeMethod
 
 \beginMethod{fireMeasurementEvent(MeasurementStep,MeasurementEvent.Type)}
 \methodDeclaration{private synchronized void fireMeasurementEvent(MeasurementStep step, MeasurementEvent.Type type)}
 \methodComment{
+	Notifies all listeners that have registered for MeasurementEvents.
 }
-\methodThrows{}{}
+\methodParam{step}{the measurement step that has generated the event.}
+\methodParam{type}{the type of the event.}
 \closeMethod
 
 \beginMethod{addSequence(MeasurementSequence}
 \methodDeclaration{public synchronized void addSequence(MeasurementSequence sequence)}
 \methodComment{
+	Appends a sequence to this project's sequence. Only the stepValues will be copied from the specified sequence and added as new steps to this project.
+	
+	If isSequenceEditEnabled() is false, nothing will be done.
 }
-\methodParam{sequence}{}
-\methodThrows{}{}
+\methodParam{sequence}{the measurement sequence to be added.}
 \closeMethod
 
 \beginMethod{copySequence(int,int)}
 \methodDeclaration{public synchronized MeasurementSequence copySequence(int start, int end)}
 \methodComment{
+	Returns a copy of this project's sequence. Only the stepValues will be copied from this project's sequence. The returned sequence will have no name.
 }
-\methodParam{start}{}
-\methodParam{end}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{start}{index of the first step in the sequence.}
+\methodParam{end}{index of the last step in the sequence. If end < start, then an empty sequence will be returned.}
+\methodReturn{copy of the sequence with only stepValues and no results.}
 \closeMethod
 
 \beginMethod{addStep(MeasurementStep)}
 \methodDeclaration{public synchronized void addStep(MeasurementStep step)}
 \methodComment{
+	Appends a step to this project's sequence. Only the stepValue will be copied from the specified step and added as new steps to this project.
+	
+	If isSequenceEditEnabled() is false, nothing will be done.
 }
-\methodParam{step}{}
-\methodThrows{}{}
+\methodParam{step}{the measurement step to be added.}
 \closeMethod
 
 \beginMethod{addStep(int,MeasurementStep)}
 \methodDeclaration{public synchronized void addStep(int index, MeasurementStep step)}
 \methodComment{
+	Appends a step to this project's sequence to the specified index. Only the stepValue will be copied from the specified step and added as new steps to this project.
+	
+	The index must be such, that the order of the completed measurements will not change.
+	
+	If isSequenceEditEnabled() is false, nothing will be done.
 }
-\methodParam{index}{}
-\methodParam{step}{}
-\methodThrows{}{}
+\methodParam{index}{the index to which the step will be added.}
+\methodParam{step}{the measurement step to be added.}
+\methodThrows{IndexOutOfBoundsException}{if the index is out of range (index < getCompletedSteps() || index > getSteps()).}
 \closeMethod
 
 \beginMethod{removeStep(int)}
 \methodDeclaration{public synchronized void removeStep(int index)}
 \methodComment{
+	Removes a step from this project's sequence. Completed measurements can not be removed.
+	
+	If isSequenceEditEnabled() is false, nothing will be done.
 }
-\methodParam{index}{}
-\methodThrows{}{}
+\methodParam{index}{the index of the step to be removed.}
+\methodThrows{IndexOutOfBoundsException}{if the index is out of range (index < getCompletedSteps() || index >= getSteps()).}
 \closeMethod
 
 \beginMethod{removeStep(int,int)}
 \methodDeclaration{public synchronized void removeStep(int start, int end)}
 \methodComment{
+	Removes a series of steps from this project's sequence. Completed measurements can not be removed.
+	
+	If isSequenceEditEnabled() is false, nothing will be done.
 }
-\methodParam{start}{}
-\methodParam{end}{}
-\methodThrows{}{}
+\methodParam{start}{the first index to be removed.}
+\methodParam{end}{the last index to be removed. If end < start, no steps will be removed.}
+\methodThrows{IndexOutOfBoundsException}{if the index is out of range (start < getCompletedSteps() || end >= getSteps()).}
 \closeMethod
 
 \beginMethod{getSteps()}
 \methodDeclaration{public synchronized int getSteps()}
 \methodComment{
+	Returns the number of steps in this project.
 }
-\methodReturn{}
-\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getCompletedSteps()}
+\methodDeclaration{public synchronized int getCompletedSteps()}
+\methodComment{
+	Returns the number of completed steps in this project. Steps that are currently being measured, are included in this count. Completed steps are always first in the sequence.
+}
 \closeMethod
 
 \beginMethod{getStep(int)}
 \methodDeclaration{public synchronized MeasurementStep getStep(int index)}
 \methodComment{
+	Returns a step from the sequence.
 }
-\methodParam{index}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{index}{the index of the step.}
+\methodReturn{the specified step.}
+\methodThrows{IndexOutOfBoundsException}{if the index is out of range (index < 0 || index >= getSteps()).}
 \closeMethod
 
 \beginMethod{getCurrentStep()}
 \methodDeclaration{public synchronized MeasurementStep getCurrentStep()}
 \methodComment{
+	Returns the step that is currently being measured.
 }
-\methodReturn{}
-\methodThrows{}{}
+\methodReturn{the currently measured step, or null if no measurement is active.}
 \closeMethod
 
 \beginMethod{getValue(int,MeasurementValue)}
