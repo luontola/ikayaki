@@ -1,0 +1,40 @@
+\beginClass{MeasurementDetailsPanel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class MeasurementDetailsPanel}
+\classExtends{ProjectComponent}
+\classCreatedBy{MainViewPanel}
+\classComment{Shows details of measurement selected in
+MeasurementSequencePanel.}
+\classEvent{On change of project}{Update tables to correspond new
+project.}
+\classEvent{n change of selected row in MeasurementSequencePanel}{Change
+tables to correspond selected row.}
+\classEvent{On new measurement data from SQUID}{If row corresponding to
+ongoing measurement is selected in MeasurementSequencePanel update tables with new
+measurement data.}
+\closeClass
+
+\beginField{measurementDetails}
+\fieldDeclaration{private JTable measurementDetails}
+\fieldComment{X, Y and Z components of BG1, 0, 90, 180, 270, BG2}
+\closeField
+
+\beginField{errorDetails}
+\fieldDeclaration{private JTable errorDetails}
+\fieldComment{S/D, S/H and S/N of error}
+\closeField
+
+\beginField{tableModel}
+\fieldDeclaration{private DefaultTableModel tableMoled}
+\closeField
+
+\beginMethod{MeasurementDetails()}
+\methodDeclaration{public MeasurementDetails()}
+\methodComment{Creates default MeasurementDetailsPanel.}
+\closeMethod
+
+\beginMethod{MeasurementDetails(Project)}
+\methodDeclaration{public MeasurementDetails(Project project)}
+\methodComment{Creates MeasurementDetailsPanel with measurement details taken
+from project.}
+\closeMethod

@@ -1,0 +1,134 @@
+\beginClass{MeasurementSequencePanel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class MeasurementSequencePanel}
+\classExtends{ProjectComponent}
+\classCreatedBy{MainViewPanel}
+\classUses{MeasurementSequenceTableModel}
+\classUses{MeasurementSequencePopupMenu}
+\classComment{Allows creating, editing and removing measurement
+sequences. Shows measurement data. Right-click brings popup menu for hiding columns, and saving
+sequence. Left-click selects a row. Multiple rows can be selected by
+painting or ctrl-clicking. Allows dragging rows to different order. Has three
+textfields for inserting new sequences, first field for start value,
+second for step and third for stop value. Clicking Add sequence-button
+appends sequence into table. Saved sequences can be loaded from dropdown menu.}
+\classEvent{On SequenceTable mouse right-click}{create a MeasurementSequencePopupMenu.}
+\classEvent{On addSequence mouseclick}{add measurement sequence to end
+of table and tell MeasurementSequenceTableModel to update itself.}
+\classEvent{On sequenceSelector mouseclick}{bring dropdown menu for
+selecting premade sequence.}
+\classEvent{On selecting sequence from dropdown menu}{add measurement
+sequence to table and tell MeasurementSequenceTableModel to update itself.}
+\closeClass
+
+\beginField{addSequence}
+\fieldDeclaration{private JButton addSequence}
+\closeField
+
+\beginField{sequenceSelector}
+\fieldDeclaration{private JComboBox sequenceSelector}
+\closeField
+
+\beginField{sequenceStart}
+\fieldDeclaration{private JTextField sequenceStart}
+\closeField
+
+\beginField{sequenceStep}
+\fieldDeclaration{private JTextField sequenceStep}
+\closeField
+
+\beginField{sequenceStop}
+\fieldDeclaration{private JTextField sequenceStop}
+\closeField
+
+\beginField{sequenceTable}
+\fieldDeclaration{private JTable sequenceTable}
+\closeField
+
+\beginField{tableModel}
+\fieldDeclaration{private MeasurementSequenceTableModel tableModel}
+\closeField
+
+\beginMethod{MeasurementSequencePanel()}
+\methodDeclaration{public MeasurementSequencePanel()}
+\methodComment{Creates MeasurementSequencePanel with default (AF?) columns.}
+\closeMethod
+
+\beginMethod{MeasurementSequencePanel(Project)}
+\methodDeclaration{public MeasurementSequencePanel(Project project)}
+\methodComment{Creates MeasurementSequencePanel with columns determined
+by project and calculate shown data from project's measurement data.
+Higlight right row (Project should know higlighted row and tell it to
+MeasurementDeatails also).}
+\closeMethod
+
+\beginMethod{addSequence()}
+\methodDeclaration{private void addSequence()}
+\methodComment{Adds sequence determined by textfields to end of table.}
+\closeMethod
+
+\beginMethod{saveSequence()}
+\methodDeclaration{private? void saveSequence()}
+\methodComment{Saves current sequence into dropdown menu. (Popup-menu
+for name?)}
+\closeMethod
+
+\beginMethod{recalculate()}
+\methodDeclaration{public void recalculate()}
+\methodComment{Recalculates measurement data.}
+\closeMethod
+
+
+\beginClass{MeasurementSequenceTableModel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class MeasurementSequenceTableModel}
+\classExtends{AbstractTableModel}
+\classCreatedBy{MeasurementSequencePanel}
+\classComment{Handles data in table.}
+\closeClass
+
+\beginField{shownColumns}
+\fieldDeclaration{private Vector<TableColumns> shownColumns}
+\fieldComment{Currently shown columns. }
+\closeField
+
+\beginField{allColumns}
+\fieldDeclaration{private Vector<TableColumns> allColumns}
+\fieldComment{All possible columns.}
+\closeField
+
+\beginMethod{MeasurementSequenceTableModel()}
+\methodDeclaration{public MeasurementSequenceTableModel()}
+\methodComment{Creates SequenceTableModel}
+\closeMethod
+
+\beginMethod{showColumn(String)}
+\methodDeclaration{public void showColumn(String name)}
+\methodComment{Shows named column.}
+\methodParam{name}{name of the column to be shown}
+\closeMethod
+
+\beginMethod{hideColumn(String)}
+\methodDeclaration{public void hideColumn(String name)}
+\methodComment{Hides named column.}
+\methodParam{name}{name of the column to be hidden}
+\closeMethod
+
+
+\beginClass{MeasurementSequencePopupMenu}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class MeasurementSequencePopupMenu}
+\classExtends{JPopupMenu}
+\classCreatedBy{MeasurementSequencePanel}
+\classComment{Allows selection of columns shown in table.}
+\closeClass
+
+\beginField{step}
+\fieldDeclaration{private JCheckBox step}
+\closeField
+//TODO: Add all other selectable columns.
+
+beginMethod{MeasurementSequencePopupMenu()}
+\methodDeclaration{public MeasurementSequencePopupMenu()}
+\methodComment{Creates SequencePopupMenu.}
+\closeMethod

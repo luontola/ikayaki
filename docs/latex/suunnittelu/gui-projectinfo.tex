@@ -1,0 +1,127 @@
+\beginClass{ProjectInformationPanel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class ProjectInformationPanel}
+\classExtends{ProjectComponent}
+\classCreatedBy{MainViewPanel}
+\classComment{Allows inserting and editing project information.}
+\classEvent{On change of contest in textfield}{Notify project about
+change in project information and tell MeasurementSequencePanel to recalculate if strike,
+dip or volume changed.}
+\classEvent{On change of project}{Update textfields to correspond new project.}
+\closeClass
+
+\beginField{operatorLabel}
+\fieldDeclaration{private JLabel operatorLabel}
+\closeField
+
+\beginField{operatorTextField}
+\fieldDeclaration{private JTextFiels operatorTextField}
+\closeField
+
+\beginField{dateLabel}
+\fieldDeclaration{private JLabel dateLabel}
+\closeField
+
+\beginField{dateTextField}
+\fieldDeclaration{private JTextFiels dateTextField}
+\closeField
+
+\beginField{measurementType}
+\fieldDeclaration{private ButtonGroup measurementType}
+\fieldComment{Groups autoMeasurement and manualMeasurement radiobuttons.}
+\closeField
+
+\beginField{autoMeasurement}
+\fieldDeclaration{private JRadioButton autoMeasurement}
+\closeField
+
+\beginField{manualMeasurement}
+\fieldDeclaration{private JRadioButton manualMeasurement}
+\closeField
+
+\beginField{rocktypeLabel}
+\fieldDeclaration{private JLabel rocktypeLabel}
+\closeField
+
+\beginField{rocktypeTextField}
+\fieldDeclaration{private JTextFiels rocktypeTextField}
+\closeField
+
+\beginField{siteLabel}
+\fieldDeclaration{private JLabel siteLabel}
+\closeField
+
+\beginField{siteTextField}
+\fieldDeclaration{private JTextFiels siteTextField}
+\closeField
+
+\beginField{commentLabel}
+\fieldDeclaration{private JLabel commentLabel}
+\closeField
+
+\beginField{commentTextField}
+\fieldDeclaration{private JTextFiels commentTextField}
+\closeField
+
+\beginField{latitudeLabel}
+\fieldDeclaration{private JLabel latitudeLabel}
+\closeField
+
+\beginField{latitudeTextField}
+\fieldDeclaration{private JTextFiels latitudeTextField}
+\closeField
+
+\beginField{longLabel}
+\fieldDeclaration{private JLabel longLabel}
+\closeField
+
+\beginField{longTextField}
+\fieldDeclaration{private JTextFiels longTextField}
+\closeField
+
+\beginField{strikeLabel}
+\fieldDeclaration{private JLabel strikeLabel}
+\closeField
+
+\beginField{strikeTextField}
+\fieldDeclaration{private JTextFiels strikeTextField}
+\closeField
+
+\beginField{dipLabel}
+\fieldDeclaration{private JLabel dipLabel}
+\closeField
+
+\beginField{dipTextField}
+\fieldDeclaration{private JTextFiels dipTextField}
+\closeField
+
+\beginField{dateLabel}
+\fieldDeclaration{private JLabel dateLabel}
+\closeField
+
+\beginField{volumeTextField}
+\fieldDeclaration{private JTextFiels volumeTextField}
+\closeField
+
+\beginField{sampleType}
+\fieldDeclaration{private ButtonGroup sampleType}
+\fieldComment{Groups coreSample and handSample radiobuttons.}
+\closeField
+
+\beginField{coreSample}
+\fieldDeclaration{private JRadioButton coreSample}
+\closeField
+
+\beginField{handSample}
+\fieldDeclaration{private JRadioButton handSample}
+\closeField
+
+\beginMethod{ProjectInformationPanel()}
+\methodDeclaration{public ProjectInformationPanel()}
+\methodComment{Creates default ProjectInformationPanel.}
+\closeMethod
+
+\beginMethod{ProjectInformationPanel(Project)}
+\methodDeclaration{public ProjectInformationPanel(Project project)}
+\methodComment{Creates ProjectInformationPanel with information taken from project.}
+\closeMethod
