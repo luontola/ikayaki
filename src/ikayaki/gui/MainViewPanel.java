@@ -82,7 +82,8 @@ public class MainViewPanel extends ProjectComponent {
         // TODO: if project == null, load the last open project from settings
 
         /* Init SQUID interface */
-        squid = Squid.instance();
+        // TODO: needs to catch an exception?
+        // squid = Squid.instance();
 
         /* Init GUI components */
         menuBar = new MainMenuBar();
@@ -163,8 +164,8 @@ public class MainViewPanel extends ProjectComponent {
 
         // button for hiding the tabs
         Box tabControls = new Box(BoxLayout.Y_AXIS);
-        final Icon tabButtonDown = new ImageIcon(ClassLoader.getSystemResource("resources/projectExplorerTabDown.png"));
-        final Icon tabButtonUp = new ImageIcon(ClassLoader.getSystemResource("resources/projectExplorerTabUp.png"));
+        final Icon tabButtonDown = new ImageIcon("resources/projectExplorerTabDown.png");
+        final Icon tabButtonUp = new ImageIcon("resources/projectExplorerTabUp.png");
         final JButton tabButton = new JButton(tabButtonDown);
         tabButton.setContentAreaFilled(false);
         tabButton.setBorder(null);
