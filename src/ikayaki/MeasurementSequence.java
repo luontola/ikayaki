@@ -39,7 +39,7 @@ public class MeasurementSequence {
     /**
      * Name of the sequence or null if it has no name.
      */
-    private String name = null;
+    private String name;
 
     /**
      * The measurement steps of this sequence.
@@ -50,7 +50,7 @@ public class MeasurementSequence {
      * Creates an empty sequence with no name.
      */
     public MeasurementSequence() {
-        return; // TODO
+        name = null;
     }
 
     /**
@@ -59,7 +59,7 @@ public class MeasurementSequence {
      * @param name name of the sequence.
      */
     public MeasurementSequence(String name) {
-        return; // TODO
+        this.name = name;
     }
 
     /**
@@ -98,21 +98,21 @@ public class MeasurementSequence {
      * @return the name, or null if it has no name
      */
     public synchronized String getName() {
-        return null; // TODO
+        return name;
     }
 
     /**
      * Sets the name of this sequence.
      */
     public synchronized void setName(String name) {
-        return; // TODO
+        this.name = name;
     }
 
     /**
      * Returns the number of steps in this sequence.
      */
     public synchronized int getSteps() {
-        return 0; // TODO
+        return steps.size();
     }
 
     /**
@@ -123,7 +123,7 @@ public class MeasurementSequence {
      * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= getSteps()).
      */
     public synchronized MeasurementStep getStep(int index) {
-        return null; // TODO
+        return steps.get(index);
     }
 
     /**
@@ -133,7 +133,10 @@ public class MeasurementSequence {
      * @throws NullPointerException if step is null.
      */
     public synchronized void addStep(MeasurementStep step) {
-        return; // TODO
+        if (step == null) {
+            throw new NullPointerException();
+        }
+        steps.add(step);
     }
 
     /**
@@ -145,7 +148,10 @@ public class MeasurementSequence {
      * @throws NullPointerException      if step is null.
      */
     public synchronized void addStep(int index, MeasurementStep step) {
-        return; // TODO
+        if (step == null) {
+            throw new NullPointerException();
+        }
+        steps.add(index, step);
     }
 
     /**
@@ -155,6 +161,6 @@ public class MeasurementSequence {
      * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= getSteps()).
      */
     public synchronized void removeStep(int index) {
-        return; // TODO
+        steps.remove(index);
     }
 }
