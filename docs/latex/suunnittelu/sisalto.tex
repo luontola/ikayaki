@@ -55,12 +55,15 @@ It is recommendable for everybody to have a quick glance at Design Patterns. Her
 
 
 \section{Overview of the system}
+\label{sec:over}
 
 This system has two different separete project, Ikayaki-program and Squid Emulator which is subproject. Ikayaki, as main project, has graphical user interface (see requirements-document) and interface for communicating with SQUID magnetometer (Superconducting Quantum Interference Device) to measusure magnetization of minerals and rocks. Squid Emulator is vital for testing Ikayaki and it will be simple command-line program which emulates only data flow with random data and communication.
 
 Software is plitted in two main parts in this document. Data section includes files needed for project-management, data flow in software and interface to control SQUID-system. There is also Settings for whole system and a subproject squid emulator. User Interface section documents all  graphical interface classes, nothing more. There will be no graphical user interface for squid emulator.
 
-\label{sec:over}
+
+\section{Architecture description}
+\label{sec:arch}
 
 \begin{figure}
 \begin{center}
@@ -81,17 +84,49 @@ Software is plitted in two main parts in this document. Data section includes fi
 See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 
 
-\section{Architecture description}
-\label{sec:arch}
+\subsection{Data classes and methods}
 
-Is this needed? What would be here anyway? Perhaps some chainsaw-humour...
+\subsubsection{Project data}
 
+\subsubsection{Squid interface}
 
-SerialIO:
+\subsubsection{Squid emulator}
+
+\subsubsection{Serial communication}
+
+SerialIO:\par
 SerialIO and classes related to it takes care of the harware layer of serial communication. Using these classes Ikayaki communicates with the Degausser, Samplehandler and Magnetometer. SerialIO represents one serial port and when it's created it reserves the port to itself. SerialProperties class includes all the configuration data for the serial port.
 
-Graphs:
+\subsubsection{Global settings}
+
+\subsubsection{Utilities}
+
+
+\subsection{GUI classes and methods}
+
+\subsubsection{Generic GUI components}
+
+\subsubsection{Main window}
+
+\subsubsection{Configuration window}
+
+\subsubsection{Project Explorer}
+
+\subsubsection{Calibration}
+
+\subsubsection{Project information}
+
+\subsubsection{Sequence and measurement data}
+
+\subsubsection{Measurement details}
+
+\subsubsection{Measurement controls}
+
+\subsubsection{Graphs}
+
+Graphs:\par
 Graph panels visualice the measurement data. They are located at the lower right corner in the UI. MeasurementGraphsPanel listens to MeasurementEvents to update the measurement data in plots. GeneralPlot is an abstract class which implements all the general features of graph plots. IntensityPlot and StereoPlot extend the functionality of GeneralPlot and implement their special drawing features accordingly.
+
 
 \section{Data classes and methods}
 \label{sec:data}
