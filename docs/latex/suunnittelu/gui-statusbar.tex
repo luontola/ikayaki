@@ -4,7 +4,6 @@
 \classExtends{ProjectComponent}
 \classCreatedBy{MainViewPanel}
 \classComment{Creates its components and listens project events on status change and calculates estimated time for measurement}
-
 \classEvent{On Measurement Event}{recalculates progress and updates status for current measurement}
 \closeClass
 
@@ -35,15 +34,15 @@
 }
 \closeMethod
 
-\beginMethod{calculateStatus(int sequenceStep,int currentStep)}
-\methodDeclaration{private void calculateStatus(String phase,int sequenceStep,int currentStep)}
+\beginMethod{calculateStatus(int,int)}
+\methodDeclaration{private void calculateStatus(String phase, int sequenceStep, int currentStep)}
 \methodComment{
     Recalculates current progress and updates status.
 }
 \closeMethod
 
-\beginMethod{setMeasurement(int projectType,int[] sequence)}
-\methodDeclaration{private void setMeasurement(int projectType,int[] sequence)}
+\beginMethod{setMeasurement(int,int[])}
+\methodDeclaration{private void setMeasurement(int projectType, int[] sequence)}
 \methodComment{
     Formats status and creates new measurement status values.
 }
