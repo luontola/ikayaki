@@ -1,0 +1,191 @@
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Matalan tason rajapintaa - updated Aki Korpua 30.1.2005                                   //
+// 0. SerialIO:n sisällöstä                                                                  //
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+SeriolIO:ta käytetään ilmeisesti rajapintana koodin ja laitteen välillä.
+
+static DWORD WriteCommBlock( SERIALIO *SerialIO, unsigned char *Buffer, DWORD BufferLength ) // WriteSerialBuffer käyttää
+
+static DWORD ReadCommBlock( SERIALIO *SerialIO, unsigned char *Buffer, DWORD MaxBufferLength ) // CommWatchProc käyttää
+
+static DWORD WINAPI CommWatchProc( LPVOID vSerialIO ) //Threadi funktio portin lukemiseen
+
+static BOOL ReadSerialBuffer(
+  SERIALIO      *SerialIO,
+  unsigned char *Buffer,
+  long           BufferLength,
+  DWORD         *DataRead )  // tätä funktiota käytetään
+
+static BOOL WriteSerialBuffer(
+  SERIALIO      *SerialIO,
+  unsigned char *Buffer,
+  long           BufferLength,
+  DWORD         *DataWrite ) // tätä funktiota käytetään
+
+static BOOL SetBaudRate(
+  SERIALIO     *SerialIO,
+  unsigned long BaudRate,
+  unsigned char DataBits,
+  unsigned char Parity,
+  unsigned char StopBits,
+  BOOL          ConfigMode ) // tätä käytetään portin avaamisessa, asetusten laittamiseen.
+
+static BOOL CloseSerialDevice( SERIALIO *SerialIO ) // tätä funktiota käytetään
+
+SERIALIO *OpenSerialDevice( char SerialPortNumber ) // tätä funktiota käytetään
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// 1. Porttien avaaminen                                                                      //
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+Portit avataan käyttäen SerialIO.c:n funktiota 
+    SERIALIO *OpenSerialDevice( char SerialPortNumber )
+
+OpenSerialDevicessä laitetaan SERIALIO:lle funktiopointterit
+rivi 554: serialIO.c SERIALIO *OpenSerialDevice( char SerialPortNumber )
+
+    /* Setup Function Pointers. */
+
+    SerialIO->Close       = CloseSerialDevice;
+    SerialIO->SetBaudRate = SetBaudRate;
+    SerialIO->Write       = WriteSerialBuffer;
+    SerialIO->Read        = ReadSerialBuffer;
+
+Porttiin tehdään myös kuuntelija-threadi rivillä 601 samaisessa funktiossa.
+
+if( SerialIO->hWatchThread = CreateThread( (LPSECURITY_ATTRIBUTES) NULL, 0, CommWatchProc, (LPVOID) SerialIO, 0, &SerialIO->ThreadID ) ) {
+          return SerialIO;
+          }
+
+Main.c riviltä 1308 avataan portit ja luodaan niihin serialIO oliot OpenSerialDevice funktiolla
+
+  // Initialize serial ports
+
+  if( Acquire->ac_ConfigureDData.dwMagCom ) {           // If the magnetometer is configured for use via a serial port
+    if( Acquire->ac_nMagComID = OpenSerialDevice( (char) Acquire->ac_ConfigureDData.dwMagCom ) ) {
+      Acquire->ac_bMagCom = TRUE;                       // Set flag
+      Acquire->ac_nMagComID->SetBaudRate( Acquire->ac_nMagComID, 1200, 8, NOPARITY, ONESTOPBIT, FALSE );
+      }
+    else {                                              // If port did not open
+      SystemError( ErrorText, "Cannot Open Mag Com Serial Port" );
+      ErrorMessage(ErrorText, ProgramTitle );
+      }
+    }
+
+  if( Acquire->ac_ConfigureDData.dwAFCom ) {            // If the AF demagnetizer is configured for use via a serial port
+    if( Acquire->ac_ConfigureDData.dwAFCom == Acquire->ac_ConfigureDData.dwMagCom ) { // If the AF demagnetizer and the magnetometer share a serial port
+      Acquire->ac_bAFCom   = TRUE;                      // Set flag since serial port is already opened
+      Acquire->ac_nAFComID = Acquire->ac_nMagComID;     // Both will have the same serial port ID
+      }
+    else {                                              // Otherwise, open another serial port
+      if( Acquire->ac_nAFComID = OpenSerialDevice( (char) Acquire->ac_ConfigureDData.dwAFCom ) ) {
+        Acquire->ac_bAFCom = TRUE;                      // Set flag
+        Acquire->ac_nAFComID->SetBaudRate( Acquire->ac_nAFComID, 1200, 8, NOPARITY, ONESTOPBIT, FALSE );
+        }
+      else {                                            // If port did not open
+        SystemError( ErrorText, "Cannot Open AF Com Serial Port" );
+        ErrorMessage(ErrorText, ProgramTitle );
+        }
+      }
+    }
+
+  if( Acquire->ac_ConfigureDData.dwSHCom ) {            // If the sample handler is configured for use via a serial port
+    if( Acquire->ac_nSHComID = OpenSerialDevice( (char) Acquire->ac_ConfigureDData.dwSHCom ) ) {
+      Acquire->ac_bSHCom = TRUE;                        // Set flag
+      Acquire->ac_nSHComID->SetBaudRate( Acquire->ac_nSHComID, 1200, 8, NOPARITY, ONESTOPBIT, FALSE );
+      }
+    else {                                              // If port did not open
+      SystemError( ErrorText, "Cannot Open SH Com Serial Port" );
+      ErrorMessage(ErrorText, ProgramTitle );
+      }
+    }
+
+Ja rivillä 376 ne suljetaan
+
+    // Close opened serial ports
+
+    if( Acquire->ac_bMagCom && Acquire->ac_nMagComID ) {
+      Acquire->ac_nMagComID->Close( Acquire->ac_nMagComID );
+      if( Acquire->ac_nAFComID == Acquire->ac_nMagComID )       // If the AF demagnetizer and the magnetometer share a serial port
+        Acquire->ac_nAFComID = (SERIALIO *) NULL;
+      Acquire->ac_nMagComID = (SERIALIO *) NULL;
+      }
+    if( Acquire->ac_bAFCom  && Acquire->ac_nAFComID  ) {
+      Acquire->ac_nAFComID->Close( Acquire->ac_nAFComID );
+      Acquire->ac_nAFComID = (SERIALIO *) NULL;
+      }
+    if( Acquire->ac_bSHCom  && Acquire->ac_nSHComID  ) {
+      Acquire->ac_nSHComID->Close( Acquire->ac_nSHComID );
+      Acquire->ac_nSHComID = (SERIALIO *) NULL;
+      }
+    PostQuitMessage( 0 );
+    }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// 2. Porttien käyttöä                                                                    //
+////////////////////////////////////////////////////////////////////////////////////////////
+
+Avattuihin portteihin kirjoitetaan 
+
+int PASCAL WriteSerial(HWND hwnd, SERIALIO *nComID, char ach[], int nLen)	// Returns the number of characters transmitted to the serial port
+{
+       DWORD nRetBytes;
+       int   nErrorCode;
+
+        nRetBytes = 0;                // Jamie
+        if( nComID == (SERIALIO *) NULL ) return 0;
+        if( !nComID->Write( nComID, ach, nLen, &nRetBytes ) ) {
+
+        nErrorCode = GetLastError();
+        PostMessage(hwnd, UM_ERROR, nErrorCode, MAKELONG(1, nComID));	// Notify error routine
+	}
+
+	return nRetBytes;
+}
+
+Eli tuo write funktio on oikeasti vain alias funktiolle WriteSerialBuffer( 
+  SERIALIO      *SerialIO,
+  unsigned char *Buffer,
+  long           BufferLength,
+  DWORD         *DataWrite )
+
+Ilmeisesti kaikki apufunktiot on määritelty fnctns.c filussa riveillä 248-428
+
+int PASCAL WriteSerial(HWND hwnd, SERIALIO *nComID, char ach[], int nLen)	// Returns the number of characters transmitted to the serial port
+int PASCAL ReadSerial(HWND hwnd, SERIALIO *nComID, char ach[], int nLen)	// Returns the number of characters actually read from the serial port
+BOOL PASCAL ConfirmMagStatus(HWND hwnd, SERIALIO *nComID, char achAxis[], char achParameter[])	// Returns true if status is confirmed
+BOOL PASCAL ConfirmAFStatus(HWND hwnd, SERIALIO *nComID, char ach[])	// Returns true if status is confirmed
+BOOL PASCAL ConfirmSHStatus(HWND hwnd, SERIALIO *nComID, char achRegister[], char achContents[])	// Returns true if status is confirmed
+
+Esimerkkejä käytöstä
+
+rivillä 888 MyChild.c:ssä funktiossa void TMyMDIChildWMDemagnetize( ACQUIRE *Acquire, HWND hWindow )
+
+DegaussCycle( hWindow, Acquire->ac_nAFComID, "Z", Acquire->ac_dAFLevel );       // Demagnetize
+
+SerialIO:t on siis Jossain piilossa ja ne haetaan aina kun halutaan käyttää. Ja osasyötettävistä parametreista tulee myös jostain jänskästä piilosta.
+
+Ilmeisesti ReadSerial funktiota käytetään myös erillaisten (lue määrä x) funktiossa, kuten tässä fnctns.c rivi 1104
+
+int ReadNChars( HWND hwnd, SERIALIO *nComID, int AmtToRead, char *Buffer ) {
+
+  int numread = 0;
+  int totalread;
+  int errorread = 0;
+
+  numread = ReadSerial(hwnd, nComID, Buffer, AmtToRead );
+  totalread = numread;
+
+  while( totalread < AmtToRead ) {
+    Sleep(100);
+    numread = ReadSerial(hwnd, nComID, Buffer+totalread, AmtToRead-totalread );
+    totalread += numread;
+    if( numread == 0 )  
+      errorread++;
+    if( errorread == 5 )
+      break;
+    }
+  return totalread; 
+  }
