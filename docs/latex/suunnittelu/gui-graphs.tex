@@ -3,7 +3,79 @@
 \classPackage{ikayaki.gui}
 \classDeclaration{public class MeasurementGraphsPanel}
 \classExtends{ProjectComponent}
+\classImplements{MeasurementListener}
 \classCreatedBy{MainViewPanel}
-\classUses{MainViewPanel}
-\classUses{Project}
+\classUses{MeasurementStep}
+\closeClass
+
+
+\beginClass{GeneralPlot}
+\classComment{abstract class that implements general construction of a graphical plot}
+\classPackage{ikayaki.gui}
+\classDeclaration{public abstract GeneralPlot}
+\classExtends{JPanel}
+\classUses{Measurement}
+\classSubclass{StereoPlot}
+\classSubclass{IntensityPlot}
+\closeClass
+
+\beginField{measurements}
+\fieldDeclaration{private Vector<Measurement> measurement}
+\fieldValue{null}
+\fieldComment{Contains all the data that is shown in this graph.}
+\closeField
+
+\beginMethod{addMeasurement}
+\methodDeclaration{public void addMeasurement(int declination, int inclination)}
+\methodComment{Adds new measurement data to plot.}
+\methodParam{declination}{Declination coordinate of the measurement.}
+\methodParam{inclination}{Inclination coordinate of the measurement.}
+\closeMethod
+
+
+\beginMethod{highlightMeasurement}
+\methodDeclaration{public void highlightMeasurement(int index)}
+\methodComment{High lights measurement in plot in the given index.}
+\methodParam{index}{Index of measurement to be highlighted.}
+\methodThrows{IndexOutOfBoundsException}{If no such measurement existed.}
+\closeMethod
+
+\beginMethod{highlightMeasurementRange}
+\methodDeclaration{public void highLightMeasurementRange(int from, int to)}
+\methodComment{Highlights a set of measurements in given range.}
+\methodParam{from}{Starting index of highlighted measurements.}
+\methodParam{to}{End index of highlighted meeasurements.}
+\methodThrows{IndexOutOfBoundsException}{If one or both of the indices are out of bounds.}
+\closeMethod
+
+\beginMethod{unHighlightAll}
+\methodDeclaration{public void unHighlightAll()}
+\methodComment{dehighlights all values in this graph.}
+\closeMethod
+
+\beginMethod{resetGraph}
+\methodDeclaration{public void resetGraph()}
+\methodComment{Removes all measurements from the graph.}
+\closeMethod
+
+\beginMethod{getNumMeasurements}
+\methodDeclaration{public int getNumMeasurements()}
+\methodComment{Returns the number of measurements in this graph.}
+\methodReturn{Number of measurements.}
+\closeMethod
+
+\beginClass{IntensityPlot}
+\classComment{Implements intensity graph plot.}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class IntensityPlot}
+\classExtends{GeneralPlot}
+\classCreatedBy{MeasurementGraphsPanel}
+\closeClass
+
+\beginClass{StereoPlot}
+\classComment{Implements stereo graph plot.}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class IntensityPlot}
+\classExtends{GeneralPlot}
+\classCreatedBy{MeasurementGraphsPanel}
 \closeClass
