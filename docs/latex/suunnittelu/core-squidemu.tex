@@ -1,13 +1,14 @@
+
 \beginClass{SquidEmulator}
 \classPackage{ikayaki.squid}
 \classDeclaration{public class SquidEmulation}
 \classExtends{Thread}
 \classCreatedBy{}
 \classUses{SerialIO}
-\classComment{This class tries to emulate behavior of real squid-system. It generates random data values as results and generates random error situations to see that program using real squid system does survive those. Uses 2-3 COM ports. Usage SquidEmulator x z.. where x is 0 or 1 and indicates if Magnetometer and Demagnetizer are on same COM port. z... values are COM ports. Commands are at most five characters in length including a carriage return <CR>. The syntax is as follows: "<device><command><subcommand><data><CR>"}
-
-\classEvent{On New IO Message }{reads message and puts it in Buffer}
-
+\classComment{
+	This class tries to emulate behavior of real squid-system. It generates random data values as results and generates random error situations to see that program using real squid system does survive those. Uses 2-3 COM ports. Usage SquidEmulator x z.. where x is 0 or 1 and indicates if Magnetometer and Demagnetizer are on same COM port. z... values are COM ports. Commands are at most five characters in length including a carriage return <CR>. The syntax is as follows: "<device><command><subcommand><data><CR>"
+}
+\classEvent{On New IO Message}{reads message and puts it in Buffer}
 \closeClass
 
 \beginField{messageBuffer}
@@ -108,18 +109,18 @@ factory for half stepping.}
 \methodComment{
     reads message and commits it.
 }
+\closeMethod
 
 \beginMethod{writeMessage(String message,int port)}
 \methodDeclaration{public void writeMessage(String message,int port))}
 \methodComment{
     send message to SerialIO to be sented.
 }
+\closeMethod
 
 \beginMethod{run()}
 \methodDeclaration{public void run())}
 \methodComment{
     runs sequence where read data from buffer and run cheduled actions (move, rotate, demag, measure) and send feedback to COM ports.
 }
-
-
 \closeMethod
