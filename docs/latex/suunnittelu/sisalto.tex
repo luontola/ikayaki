@@ -32,6 +32,7 @@ The document serves as an internal guide to the project team for aiding implemen
 \par Section~\ref{sec:arch} describes planned architecture at lower abstarction, including class diagrams and a short description of each subsystem.
 \par Section~\ref{sec:data} describes planned data classes.
 \par Section~\ref{sec:gui} describes planned gui classes.
+\par Section~\ref{sec:test} describes testing details.
 
 
 \section{Code conventions}
@@ -168,9 +169,22 @@ CalibrationPanel holds predefined "Holder noise" and "Standard sample" projects 
 
 \subsubsection{Project information}
 
+Located at lower left corner of main window.
+
+Contains and allows editing of basic inforamtion of sample.
+
 \subsubsection{Sequence and measurement data}
 
+Located at upper middle side of main window.
+
+Contains and allows editing of measurement sequence. Whenever
+measurement step is finished its data is added here.
+
 \subsubsection{Measurement details}
+
+Located at lower middle side of main window.
+
+Contains details of ongoing measurement or row selected in measrurement sequence.
 
 \subsubsection{Measurement controls}
 \insertdia{gui-mcontrols}
@@ -245,3 +259,20 @@ Graph panels visualize the measurement data. They are located at the lower right
 
 \subsection{Graphs}
 \input{gui-graphs}
+
+
+\section{Testing}
+\label{sec:test}
+
+Because program will be used to control a magnetometer, testing will be
+more important than in normal Ohtu-projects. In unit testing each class
+is tested independently. Unit testing will be done by using JUnit.
+Every programmer will test his own classes. Class should be tested when
+it is finished. Integration testing tests interfaces between classes.
+System testing tests the program in the environment it will be used.
+System testing will be done using Squid-emulator before testing it with
+real magnetometer. Squid-emulator runs in different machine and is
+connected by Serial I/O. Squid-emulator will be tested with old program.
+If Rita testing utility is easy enough to use it will be used in
+testing. Tests will be constructed in such way that every line of code
+is visited at least once.
