@@ -23,13 +23,16 @@
 package ikayaki.gui;
 
 import ikayaki.Project;
+import ikayaki.ProjectEvent;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  * Allows inserting and editing project information.
  *
- * @author
+ * @author Mikko Jormalainen
  */
 public class ProjectInformationPanel extends ProjectComponent {
 /*
@@ -90,7 +93,84 @@ Event B: On project event - Update textfields to correspond new project informat
      * Creates default ProjectInformationPanel.
      */
     public ProjectInformationPanel() {
-        add(new JLabel("Project Information"));
+        setLayout(new GridLayout(0, 2, 5, 5));
+        
+        operatorLabel = new JLabel("Operator");
+        operatorTextField = new JTextField(20);
+        add(operatorLabel);
+        add(operatorTextField);
+        
+        dateLabel = new JLabel("Date");
+        dateTextField = new JTextField(20);
+        add(dateLabel);
+        add(dateTextField);
+        
+        operatorLabel = new JLabel("Operator");
+        operatorTextField = new JTextField(20);
+        add(operatorLabel);
+        add(operatorTextField);
+        
+        measurementType = new ButtonGroup();
+        autoMeasurement = new JRadioButton("Auto", true);
+        manualMeasurement = new JRadioButton("Manual", false);
+        measurementType.add(autoMeasurement);
+        measurementType.add(manualMeasurement);
+        add(autoMeasurement);
+        add(manualMeasurement);
+        
+        rocktypeLabel = new JLabel("Rock type");
+        rocktypeTextField = new JTextField(20);
+        add(rocktypeLabel);
+        add(rocktypeTextField);
+        
+        siteLabel = new JLabel("Site");
+        siteTextField = new JTextField(20);
+        add(siteLabel);
+        add(siteTextField);
+        
+        commentLabel = new JLabel("Comment");
+        commentTextField = new JTextField(20);
+        add(commentLabel);
+        add(commentTextField);
+        
+        latitudeLabel = new JLabel("Latitude");
+        latitudeTextField = new JTextField(20);
+        add(latitudeLabel);
+        add(latitudeTextField);
+        
+        longLabel = new JLabel("Long");
+        longTextField = new JTextField(20);
+        add(longLabel);
+        add(longTextField);
+        
+        strikeLabel = new JLabel("Strike");
+        strikeTextField = new JTextField(20);
+        add(strikeLabel);
+        add(strikeTextField);
+        
+        dipLabel = new JLabel("Dip");
+        dipTextField = new JTextField(20);
+        add(dipLabel);
+        add(dipTextField);
+        
+        volumeLabel = new JLabel("Volume");
+        volumeTextField = new JTextField(20);
+        add(volumeLabel);
+        add(volumeTextField);
+        
+        massLabel = new JLabel("Mass");
+        massTextField = new JTextField(20);
+        add(massLabel);
+        add(massTextField);
+        
+        sampleType = new ButtonGroup();
+        coreSample = new JRadioButton("Core", true);
+        handSample = new JRadioButton("Hand", false);
+        sampleType.add(coreSample);
+        sampleType.add(handSample);
+        add(coreSample);
+        add(handSample);
+        
         return; // TODO
     }
 
@@ -98,6 +178,10 @@ Event B: On project event - Update textfields to correspond new project informat
      * Calls super.setProject(project) and updates textfield with new projects data.
      */
     public void setProject(Project project) {
-        return; // TODO
+        super.setProject(project);
+    }
+
+    public void projectUpdated(ProjectEvent event) {
+        // DOES NOTHING
     }
 }

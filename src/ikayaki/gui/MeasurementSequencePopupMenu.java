@@ -28,7 +28,7 @@ import javax.swing.*;
  * Allows selection if volume is shown in table and saving sequence. Pops up when measurement sequence table is
  * right-clicked. Allows saving selected sequence or whole sequence.
  *
- * @author
+ * @author Mikko Jormalainen
  */
 public class MeasurementSequencePopupMenu extends JPopupMenu {
 

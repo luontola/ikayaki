@@ -23,14 +23,17 @@
 package ikayaki.gui;
 
 import ikayaki.Project;
+import ikayaki.ProjectEvent;
+import ikayaki.MeasurementEvent;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
 /**
  * Shows details of measurement selected in MeasurementSequencePanel.
  *
- * @author
+ * @author Mikko Jormalainen
  */
 public class MeasurementDetailsPanel extends ProjectComponent {
 /*
@@ -55,20 +58,76 @@ in MeasurementSequencePanel update tables with new measurement data.
      */
     private JTable errorDetails;
 
-    private DefaultTableModel tableModel;
+    private DefaultTableModel measurementModel;
+    private DefaultTableModel errorModel;
+
+    /**
+     * Tells if currently measured row in MeasurementSequenceTable is selected.
+     */
+    private boolean rowSelected;
 
     /**
      * Creates default MeasurementDetailsPanel.
      */
     public MeasurementDetailsPanel() {
-        add(new JLabel("Details"));
-        return; // TODO
+        setLayout(new GridLayout(0, 1, 5, 5));
+        measurementModel = new DefaultTableModel(7, 4);
+        measurementDetails = new JTable(measurementModel);
+        measurementModel.setValueAt("X", 0, 1);
+        measurementModel.setValueAt("Y", 0, 2);
+        measurementModel.setValueAt("Z", 0, 3);
+        measurementModel.setValueAt("BG", 1, 0);
+        measurementModel.setValueAt("0", 2, 0);
+        measurementModel.setValueAt("90", 3, 0);
+        measurementModel.setValueAt("180", 4, 0);
+        measurementModel.setValueAt("270", 5, 0);
+        measurementModel.setValueAt("BG", 6, 0);
+        add(measurementDetails);
+        errorModel = new DefaultTableModel(2, 4);
+        errorDetails = new JTable(errorModel);
+        errorModel.setValueAt("S/D", 0, 1);
+        errorModel.setValueAt("S/H", 0, 2);
+        errorModel.setValueAt("S/N", 0, 3);
+        errorModel.setValueAt("Error", 1, 0);
+        add(errorDetails);
+        rowSelected = true;
     }
 
     /**
      * Calls super.setProject(project), clears tables and shows new projects measurement details.
      */
     public void setProject(Project project) {
-        return; // TODO
+        super.setProject(project);
+    }
+
+    public void projectUpdated(ProjectEvent event) {
+        if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
+            // TODO
+        }
+        else if (event.getType() == ProjectEvent.Type.STATE_CHANGED) {
+            // TODO
+        }
+    }
+
+    public void measurementUpdated(MeasurementEvent event) {
+        if (event.getType() == MeasurementEvent.Type.VALUE_MEASURED && rowSelected) {
+            // TODO
+        }
+        else if (event.getType() == MeasurementEvent.Type.STEP_START && rowSelected) {
+            // TODO
+        }
+    }
+
+    public void toggleSelected() {
+        if (rowSelected) {
+            rowSelected = false;
+        }
+        else {
+            rowSelected = true;
+        }
+    }
+
+    public boolean getSelected() {
+        return rowSelected;
     }
 }

@@ -27,7 +27,7 @@ import javax.swing.table.AbstractTableModel;
 /**
  * Handles data in table.
  *
- * @author
+ * @author Mikko Jormalainen
  */
 public class MeasurementSequenceTableModel extends AbstractTableModel {
 
@@ -37,10 +37,44 @@ public class MeasurementSequenceTableModel extends AbstractTableModel {
     private boolean volume;
 
     /**
+     * Number of Columns shown by table.
+     */
+    private int numberOfColumns;
+
+    /**
+     * Number of Rows shown by table.
+     */
+    private int numberOfRows;
+
+    private final int VOL = 0;
+    private final int MAXROWS = 255;
+    private final int MAXCOLUMNS = 11;
+    
+    /**
+     * Table data.
+     */
+    private String[][] tableData;
+    
+    /**
      * Creates SequenceTableModel
      */
     public MeasurementSequenceTableModel() {
-        return; // TODO
+        tableData = new String[MAXROWS][MAXCOLUMNS];
+        volume = false;
+        numberOfColumns = 10;
+        numberOfRows = 2;
+        tableData[0][0] = "#";
+        tableData[0][1] = "Tesla";
+        tableData[0][2] = "D(o)";
+        tableData[0][3] = "I(\")";
+        tableData[0][4] = "J(T)";
+        tableData[0][5] = "M(T)";
+        tableData[0][6] = "X(T)";
+        tableData[0][7] = "Y(T)";
+        tableData[0][8] = "Z(T)";
+        tableData[0][9] = "O63";
+        tableData[0][10] = "V";
+        tableData[1][0] = "0";
     }
 
     /**
@@ -49,7 +83,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel {
      * @param name name of the column to be shown. possible values VOLUME=0
      */
     public void showColumn(int name) {
-        return; // TODO
+        if (volume == false && VOL == name) {
+            volume = true;
+            numberOfColumns++;
+        }
     }
 
     /**
@@ -58,7 +95,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel {
      * @param name name of the column to be hidden. possible values VOLUME=0
      */
     public void hideColumn(int name) {
-        return; // TODO
+        if (volume == true && VOL == name) {
+            volume = false;
+            numberOfColumns--;
+        }
     }
 
     /**
@@ -69,7 +109,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel {
      * @see #getColumnCount
      */
     public int getRowCount() {
-        return 0;
+        return numberOfRows;
     }
 
     /**
@@ -80,7 +120,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel {
      * @see #getRowCount
      */
     public int getColumnCount() {
-        return 0;
+        return numberOfColumns;
     }
 
     /**
@@ -91,6 +131,17 @@ public class MeasurementSequenceTableModel extends AbstractTableModel {
      * @return	the value Object at the specified cell
      */
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return null;
+        return tableData[rowIndex][columnIndex];
     }
+
+    /**
+     * Sets the value for the cell at <code>columnIndex</code> and <code>rowIndex</code>.
+     *
+     * @param   data        new value of the cell
+     * @param	rowIndex	the row whose value is to be queried
+     * @param	columnIndex the column whose value is to be queried
+     */
+    public void setValueAt(Object data, int rowIndex, int columnIndex) {
+		tableData[rowIndex][columnIndex] = data.toString();
+	}
 }

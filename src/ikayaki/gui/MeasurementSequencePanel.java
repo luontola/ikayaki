@@ -23,8 +23,11 @@
 package ikayaki.gui;
 
 import ikayaki.Project;
+import ikayaki.ProjectEvent;
+import ikayaki.MeasurementEvent;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Allows creating, editing and removing measurement sequences. Shows measurement data. Right-click brings popup menu
@@ -33,7 +36,7 @@ import javax.swing.*;
  * three textfields for inserting new sequences, first field for start value, second for step and third for stop value.
  * Clicking Add sequence-button appends sequence into table. Saved sequences can be loaded from dropdown menu.
  *
- * @author
+ * @author Mikko Jormalainen
  */
 public class MeasurementSequencePanel extends ProjectComponent {
 /*
@@ -64,7 +67,11 @@ Event G: On Drag event - Change measurement sequences row order in project class
 and tell MeasurementSequenceTableModel to update itself to correspond new row order.
 Order of rows with measurement data cannot be changed.
 */
-
+    private JLabel startLabel;
+    private JLabel stepLabel;
+    private JLabel stopLabel;
+    private JLabel mtLabel;
+    private JLabel loadsetLabel;
     private JButton addSequence;
     private JComboBox sequenceSelector;
     private JTextField sequenceStart;
@@ -77,21 +84,94 @@ Order of rows with measurement data cannot be changed.
      * Creates default MeasurementSequencePanel.
      */
     public MeasurementSequencePanel() {
-        add(new JLabel("Sequence"));
-        return; // TODO
+        GridBagLayout gridbag = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
+        setLayout(gridbag);
+        c.weightx = 1.0;
+        c.weighty = 1.0;
+        c.anchor = GridBagConstraints.WEST;
+
+        startLabel = new JLabel("Start");
+        gridbag.setConstraints(startLabel, c);
+        add(startLabel);
+
+        stepLabel = new JLabel("Step");
+        gridbag.setConstraints(stepLabel, c);
+        add(stepLabel);
+
+        stopLabel = new JLabel("Stop");
+        gridbag.setConstraints(stopLabel, c);
+        add(stopLabel);
+
+        loadsetLabel = new JLabel("Load Set");
+        c.anchor = GridBagConstraints.EAST;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridbag.setConstraints(loadsetLabel, c);
+        add(loadsetLabel);
+
+        sequenceStart = new JTextField(5);
+        c.weightx = 4.0;
+        c.anchor = GridBagConstraints.WEST;
+        c.gridwidth = 1;
+        c.fill =  GridBagConstraints.HORIZONTAL;
+        gridbag.setConstraints(sequenceStart, c);
+        add(sequenceStart);
+
+        sequenceStep = new JTextField(5);
+        gridbag.setConstraints(sequenceStep, c);
+        add(sequenceStep);
+
+        sequenceStop = new JTextField(5);
+        gridbag.setConstraints(sequenceStop, c);
+        add(sequenceStop);
+
+        mtLabel = new JLabel("mT");
+        c.weightx = 1.0;
+        c.fill =  GridBagConstraints.NONE;
+        gridbag.setConstraints(mtLabel, c);
+        add(mtLabel);
+
+        addSequence = new JButton("Add Sequence");
+        c.weightx = 0.5;
+        gridbag.setConstraints(addSequence, c);
+        add(addSequence);
+
+        sequenceSelector = new JComboBox();
+        c.weightx = 2.0;
+        c.anchor = GridBagConstraints.EAST;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridbag.setConstraints(sequenceSelector, c);
+        add(sequenceSelector);
+
+        tableModel = new MeasurementSequenceTableModel();
+        c.weightx = 100.0;
+        c.weighty = 100.0;
+        c.anchor = GridBagConstraints.NORTH;
+        c.fill =  GridBagConstraints.HORIZONTAL;
+        sequenceTable = new JTable(tableModel);
+        gridbag.setConstraints(sequenceTable, c);
+        add(sequenceTable);
     }
 
     /**
      * Adds sequence determined by textfields to end of table.
      */
     private void addSequence() {
-        return; // TODO
+        // TODO
     }
 
     /**
      * Calls super.setProject(project), clears table and calculates shown data from project’s measurement data.
      */
     public void setProject(Project project) {
-        return; // TODO
+        super.setProject(project);
+    }
+
+    public void projectUpdated(ProjectEvent event) {
+        // DOES NOTHING
+    }
+
+    public void measurementUpdated(MeasurementEvent event) {
+        // DOES NOTHING
     }
 }
