@@ -337,7 +337,11 @@ Use case format:
 \newcommand{\ReqDesc}[1]{\textbf{Description:} #1\\}
 \newcommand{\ReqPrio}[1]{\textbf{Priority:} #1\\}
 
-Goals of the software set by client..
+Goals of the software set by the client. Priorities are from 1 (highest) to 4 
+(lowest). Our goal is to fulfill at least the requirements with priorities 1 and 
+2. Requirements with priority 3 will be fulfilled as time permits, and priority 
+4's will propably be left out.
+
 
 \subsection{Functional requirements}
 
@@ -351,7 +355,7 @@ Goals of the software set by client..
 \ReqId{R2}
 \ReqName{Manual control}
 \ReqDesc{Able to operate the magnetometer manually. (TODO: what this means?)}
-\ReqPrio{2}
+\ReqPrio{3}
 
 \ReqId{R3}
 \ReqName{Calibration reminder}
@@ -447,17 +451,12 @@ Goals of the software set by client..
 \ReqDesc{Possibility to change hotkey assignments.}
 \ReqPrio{4}
 
-\ReqId{RXX}
-\ReqName{}
-\ReqDesc{}
-\ReqPrio{}
-
 
 \subsection{Quality requirements}
 
 \ReqId{QR1}
-\ReqName{Accuracy of measurements}
-\ReqDesc{The calculations that the program makes from measurements, must be done right.}
+\ReqName{Error free}
+\ReqDesc{The program should not crash. All the functions need to work as documented. The calculations that the program makes from measurements must be done right.}
 \ReqPrio{1}
 
 \ReqId{QR2}
@@ -466,14 +465,19 @@ Goals of the software set by client..
 \ReqPrio{1}
 
 \ReqId{QR3}
-\ReqName{User guide}
-\ReqDesc{Program should have good help pages.}
-\ReqPrio{3}
+\ReqName{Quality of documentation}
+\ReqDesc{The documentation must be so good that other teams can easily continue the development. Program should have good help pages for the end-users.}
+\ReqPrio{2}
 
-\ReqId{QRXX}
-\ReqName{}
-\ReqDesc{}
-\ReqPrio{}
+\ReqId{QR4}
+\ReqName{Performance}
+\ReqDesc{The program must keep up with the SQUID hardware. The user interface should not freeze for periods of over 0,5 seconds.}
+\ReqPrio{2}
+
+\ReqId{QR5}
+\ReqName{Expandable architecture}
+\ReqDesc{It should be possible to expand the program to process the measurement data in more ways.}
+\ReqPrio{2}
 
 
 \subsection{Environment}
@@ -482,6 +486,7 @@ The computer that will run this program will be equal or better to 1GHz CPU,
 256MB RAM, 1280x1024 resolution. The program must run under Windows XP. The 
 hardware and communication with it is described in the section "External 
 interfaces".
+
 
 \subsection{Maintainability}
 
