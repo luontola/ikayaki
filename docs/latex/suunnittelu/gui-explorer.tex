@@ -10,8 +10,8 @@
 \classUses{ProjectExplorerTable}
 \classUses{ProjectExplorerPopupMenu}
 \classUses{NewProjectPanel}
-\classUses{RunQueue}
-\classEvent{On browserField change}{send autocomplete-results-finder with browserField's text to RunQueue via runQueue.offer(Runnable), which schedules disk access and displaying autocomplete results in browserField's popup window.}
+\classUses{LastExecutor}
+\classEvent{On browserField change}{send autocomplete-results-finder with browserField's text to LastExecutor via lastExecutor.execute(Runnable), which schedules disk access and displaying autocomplete results in browserField's popup window.}
 \classEvent{On browserField down-arrow-click}{show directory history in browserField's popup window.}
 \classEvent{On browserField popup window click}{set clicked line as {\it directory}, update {\it files} listing, update explorerTable and browserField.}
 \classEvent{On browseButton click}{open a FileChooser dialog for choosing new directory, set it to {\it directory}, update {\it files} listing, update explorerTable and browserField.}
@@ -25,7 +25,7 @@
 
 \beginField{browserField}
 \fieldDeclaration{private JComboBox browserField}
-\fieldComment{Text field for writing directory to change to. Autocomplete results appear to Combo Box' popup window, scheduled by RunQueue. Directory history appears to the same popup window when the down-arrow right to text field is clicked.}
+\fieldComment{Text field for writing directory to change to. Autocomplete results appear to Combo Box' popup window, scheduled by LastExecutor. Directory history appears to the same popup window when the down-arrow right to text field is clicked.}
 \closeField
 
 \beginField{browseButton}
@@ -41,9 +41,9 @@
 \closeField
 
 \beginField{autocompleteQueue}
-\fieldDeclaration{private RunQueue autocompleteQueue}
-\fieldValue{new RunQueue(100, true)}
-\fieldComment{RunQueue for scheduling autocomplete results to separate thread (disk access and displaying).}
+\fieldDeclaration{private LastExecutor autocompleteQueue}
+\fieldValue{new LastExecutor(100, true)}
+\fieldComment{LastExecutor for scheduling autocomplete results to separate thread (disk access and displaying).}
 \closeField
 
 \beginField{directory}

@@ -15,7 +15,7 @@
 \classUses{MeasurementResult}
 \classUses{MeasurementValue}
 \classUses{Squid}
-\classUses{RunQueue}
+\classUses{LastExecutor}
 \classUses{ProjectEvent}
 \classUses{MeasurementEvent}
 \classPatterns{Facade}
@@ -216,8 +216,8 @@
 \closeField
 
 \beginField{autosaveQueue}
-\fieldDeclaration{private RunQueue autosaveQueue}
-\fieldValue{new RunQueue(500, true)}
+\fieldDeclaration{private LastExecutor autosaveQueue}
+\fieldValue{new LastExecutor(500, true)}
 \fieldComment{
 	Scheduler for automatically writing the modified project to file after a short delay.
 }

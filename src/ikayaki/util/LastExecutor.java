@@ -104,14 +104,14 @@ public class LastExecutor implements Executor {
     }
 
     /**
-     * @return true if only the last event will be executed after the delay; otherwise false.
+     * @return true if only the last task will be executed after the delay; otherwise false.
      */
     public synchronized boolean isExecOnlyLast() {
         return execOnlyLast;
     }
 
     /**
-     * @param execOnlyLast if true, only the last event will be executed after the delay; otherwise all are executed in
+     * @param execOnlyLast if true, only the last task will be executed after the delay; otherwise all are executed in
      *                     order of appearance.
      */
     public synchronized void setExecOnlyLast(boolean execOnlyLast) {
@@ -119,7 +119,7 @@ public class LastExecutor implements Executor {
     }
 
     /**
-     * @return the delay in milliseconds
+     * @return the delay in milliseconds.
      */
     public synchronized int getDelayMillis() {
         return delayMillis;
@@ -139,8 +139,8 @@ public class LastExecutor implements Executor {
      * replaces it. If execOnlyLast is set to true, the queue will be cleared before inserting this runnable to it. If
      * there is no worker thread running, a new one will be spawned.
      *
-     * @param command the runnable task to be executed after a pre-defined delay
-     * @throws NullPointerException if command is null
+     * @param command the runnable task to be executed after a pre-defined delay.
+     * @throws NullPointerException if command is null.
      */
     public synchronized void execute(Runnable command) {
         if (command == null) {

@@ -1,27 +1,28 @@
 
-\beginClass{RunQueue}
+\beginClass{LastExecutor}
 \classComment{
-	Executes Runnable objects in a private worker thread after a pre-defined delay. The worker thread will terminate automatically when there are no runnables to be executed. Optionally executes only the last inserted runnable. All operations are thread-safe.
+	Executes the last Runnable tasks of a series of tasks after a delay. The worker thread will terminate automatically when there are no runnables to be executed. Optionally executes all of the tasks and not only the last one. All operations are thread-safe.
 
 	This class can be used for example in connection with a "continuous search" invoked by a series of GUI events (such as a DocumentListener), but it is necessary to react to only the last event after a short period of user inactivity.
 }
 \classPackage{ikayaki.util}
-\classDeclaration{public class RunQueue}
-\classUses{RunQueue.RunQueueThread}
-\classUses{RunQueue.RunDelayed}
+\classDeclaration{public class LastExecutor}
+\classImplements{Executor}
+\classUses{LastExecutor.LastExecutorThread}
+\classUses{LastExecutor.RunDelayed}
 \classPatterns{Command}
 \closeClass
 
 \beginToc
-\tocMethod{RunQueue()}
-\tocMethod{RunQueue(int)}
-\tocMethod{RunQueue(boolean)}
-\tocMethod{RunQueue(int,boolean)}
+\tocMethod{LastExecutor()}
+\tocMethod{LastExecutor(int)}
+\tocMethod{LastExecutor(boolean)}
+\tocMethod{LastExecutor(int,boolean)}
 \tocMethod{isExecOnlyLast()}
 \tocMethod{setExecOnlyLast(boolean)}
 \tocMethod{getDelayMillis()}
 \tocMethod{setDelayMillis(int)}
-\tocMethod{offer(Runnable)}
+\tocMethod{execute(Runnable)}
 \tocMethod{join()}
 \closeToc
 
@@ -57,33 +58,33 @@
 }
 \closeField
 
-\beginMethod{RunQueue()}
-\methodDeclaration{public RunQueue()}
+\beginMethod{LastExecutor()}
+\methodDeclaration{public LastExecutor()}
 \methodComment{
-	Creates an empty RunQueue with a delay of 0 and execOnlyLast set to false.
+	Creates an empty LastExecutor with a delay of 0 and execOnlyLast set to true.
 }
 \closeMethod
 
-\beginMethod{RunQueue(int)}
-\methodDeclaration{public RunQueue(int delayMillis)}
+\beginMethod{LastExecutor(int)}
+\methodDeclaration{public LastExecutor(int delayMillis)}
 \methodComment{
-	Creates an empty RunQueue with execOnlyLast set to false.
+	Creates an empty LastExecutor with execOnlyLast set to true.
 }
 \methodParam{delayMillis}{the length of execution delay in milliseconds; if less than 0, then 0 will be used.}
 \closeMethod
 
-\beginMethod{RunQueue(boolean)}
-\methodDeclaration{public RunQueue(boolean execOnlyLast)}
+\beginMethod{LastExecutor(boolean)}
+\methodDeclaration{public LastExecutor(boolean execOnlyLast)}
 \methodComment{
-	Creates an empty RunQueue with a delay of 0.
+	Creates an empty LastExecutor with a delay of 0.
 }
 \methodParam{execOnlyLast}{if true, only the last event will be executed after the delay; otherwise all are executed in order of appearance.}
 \closeMethod
 
-\beginMethod{RunQueue(int,boolean)}
-\methodDeclaration{public RunQueue(int delayMillis, boolean execOnlyLast)}
+\beginMethod{LastExecutor(int,boolean)}
+\methodDeclaration{public LastExecutor(int delayMillis, boolean execOnlyLast)}
 \methodComment{
-	Creates an empty RunQueue.
+	Creates an empty LastExecutor.
 }
 \methodParam{delayMillis}{the length of execution delay in milliseconds; if less than 0, then 0 will be used.}
 \methodParam{execOnlyLast}{if true, only the last event will be executed after the delay; otherwise all are executed in order of appearance.}
@@ -91,17 +92,17 @@
 
 \beginMethod{isExecOnlyLast()}
 \methodDeclaration{public synchronized boolean isExecOnlyLast()}
-\methodReturn{true if only the last event will be executed after the delay; otherwise false.}
+\methodReturn{true if only the last task will be executed after the delay; otherwise false.}
 \closeMethod
 
 \beginMethod{setExecOnlyLast(boolean)}
 \methodDeclaration{public synchronized void setExecOnlyLast(boolean execOnlyLast)}
-\methodParam{execOnlyLast}{if true, only the last event will be executed after the delay; otherwise all are executed in order of appearance.}
+\methodParam{execOnlyLast}{if true, only the last task will be executed after the delay; otherwise all are executed in order of appearance.}
 \closeMethod
 
 \beginMethod{getDelayMillis()}
 \methodDeclaration{public synchronized int getDelayMillis()}
-\methodReturn{the delay in milliseconds}
+\methodReturn{the delay in milliseconds.}
 \closeMethod
 
 \beginMethod{setDelayMillis(int)}
@@ -109,14 +110,14 @@
 \methodParam{delayMillis}{delay in milliseconds; if less than 0, then the new value is ignored.}
 \closeMethod
 
-\beginMethod{offer(Runnable)}
-\methodDeclaration{public synchronized boolean offer(Runnable runnable)}
+\beginMethod{execute(Runnable)}
+\methodDeclaration{public synchronized boolean execute(Runnable command)}
 \methodComment{
 	Inserts a Runnable object to the end of the queue. It will remain there until it is executed or another object replaces it. If execOnlyLast is set to true, the queue will be cleared before inserting this runnable to it. If there is no worker thread running, a new one will be spawned.
 }
-\methodParam{runnable}{the Runnable to be run after a pre-defined delay}
+\methodParam{command}{the runnable task to be executed after a pre-defined delay.}
 \methodReturn{true}
-\methodThrows{NullPointerException}{if runnable is null}
+\methodThrows{NullPointerException}{if command is null.}
 \closeMethod
 
 \beginMethod{join()}
@@ -128,14 +129,14 @@
 \closeMethod
 
 
-\beginClass{RunQueue.RunQueueThread}
+\beginClass{LastExecutor.LastExecutorThread}
 \classComment{
-	Keeps on checking the RunQueue.queue to see if there are Runnables to be executed. If there is one, execute it and proceed to the next one. If an uncaught Throwable is thrown during the execution, prints an error message and stack trace to stderr. If the queue is empty, this thread will set RunDelayed.workerThread to null and terminate itself.
+	Keeps on checking the LastExecutor.queue to see if there are Runnables to be executed. If there is one, execute it and proceed to the next one. If an uncaught Throwable is thrown during the execution, prints an error message and stack trace to stderr. If the queue is empty, this thread will set LastExecutor.workerThread to null and terminate itself.
 }
 \classPackage{ikayaki.util}
-\classDeclaration{private class RunQueueThread}
+\classDeclaration{private class LastExecutorThread}
 \classExtends{Thread}
-\classCreatedBy{RunQueue}
+\classCreatedBy{LastExecutor}
 \closeClass
 
 \beginToc
@@ -147,14 +148,14 @@
 \closeMethod
 
 
-\beginClass{RunQueue.RunDelayed}
+\beginClass{LastExecutor.RunDelayed}
 \classComment{
 	Wraps a Runnable object and sets the delay after which it should be executed by a worker thread.
 }
 \classPackage{ikayaki.util}
 \classDeclaration{private class RunDelayed}
 \classImplements{Delayed}
-\classCreatedBy{RunQueue}
+\classCreatedBy{LastExecutor}
 \closeClass
 
 \beginToc
