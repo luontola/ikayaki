@@ -47,10 +47,6 @@ import java.util.Arrays;
  */
 public class ProjectExplorerPanel extends ProjectComponent {
 /*
-Event D: On browseButton click - open a FileChooser dialog for choosing new directory,
-set it to directory, update files listing, update explorerTable and browserField.
-*/
-/*
 Event E: On ProjectEvent - hilight project whose measuring started, or unhilight one
 whose measuring ended.
 */
@@ -104,6 +100,11 @@ whose measuring ended.
     private File[] files = null;
 
     /**
+     * Selected project file index, or -1 if none selected in current directory.
+     */
+    private int selectedFile = -1;
+
+    /**
      * Creates all components, sets directory as the last open directory, initializes files with files from that
      * directory.
      *
@@ -121,7 +122,7 @@ whose measuring ended.
      * @param project the project whose directory is to be opened and which project is then selected, or null to use the
      *                last known directory.
      */
-    public ProjectExplorerPanel(final ProjectComponent parent, Project project) {
+    public ProjectExplorerPanel(ProjectComponent parent, Project project) {
         this.parent = parent;
 
         // set project directory to browserField
@@ -148,12 +149,14 @@ whose measuring ended.
 
         // add both into this
         browsePanel.setLayout(new BorderLayout());
+        //browsePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
         browsePanel.add(browserField, BorderLayout.CENTER);
         browsePanel.add(browseButton, BorderLayout.EAST);
 
         // project file table (and its table model)
         explorerTableModel = new ProjectExplorerTableModel();
         explorerTable = new JTable(explorerTableModel);
+        explorerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         explorerTableScrollPane = new JScrollPane(explorerTable);
         explorerTableScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         explorerTableScrollPane.getViewport().setBackground(Color.WHITE);
@@ -167,6 +170,24 @@ whose measuring ended.
         this.add(browsePanel, BorderLayout.NORTH);
         this.add(explorerTableScrollPane, BorderLayout.CENTER);
 
+        // ProjectExplorer events
+
+        /**
+         * Event D: On browseButton click - open a FileChooser dialog for choosing new directory,
+         * set it to directory, update files listing, update explorerTable and browserField.
+         */
+        browseButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fc = new JFileChooser(directory);
+                fc.setDialogTitle("Change directory");
+                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+                if (fc.showOpenDialog(browseButton) == JFileChooser.APPROVE_OPTION) {
+                        setDirectory(fc.getSelectedFile().getPath());
+                }
+            }
+        });
+
         /**
          * Event C: On browserField popup window click - set clicked line as directory, update files
          * listing, update explorerTable and browserField.
@@ -177,7 +198,8 @@ whose measuring ended.
 
                 if (e.getActionCommand().equals("comboBoxEdited")) {
                     // the user pressed enter in the text field or selected an item by pressing enter
-                    doAutoComplete();
+                    // TODO: causes problems for exapmle when clicking browse button
+                    // doAutoComplete();
 
                 } else if (e.getActionCommand().equals("comboBoxChanged")) {
 
@@ -228,9 +250,44 @@ whose measuring ended.
             }
         });
 
+        // ProjectExplorerTable events
+
+        /*
+             Event B: On table mouse right-click - create a ProjectExplorerPopupMenu for rightclicked
+             project file.
+         */
+
+        /**
+         * Event A: On table click - call Project.loadProject(File) with clicked project file, call
+         * MainViewPanel.changeProject(Project) with returned Project unless null, on which case
+         * show error message and revert explorerTable selection to old project, if any.
+         */
+        explorerTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                // we only want the actually selected row, and don't want to react to an already selected line
+                // (which could mean that there were load error, and that selection was reverted)
+                if (e.getValueIsAdjusting() || explorerTable.getSelectedRow() == selectedFile) return;
+                /*System.out.print("row " + explorerTable.getSelectedRow());
+                System.out.print("  listmin " + ((ListSelectionModel) e.getSource()).getMinSelectionIndex());
+                System.out.print("  e.first " + e.getFirstIndex());
+                System.out.println("  e.last " + e.getLastIndex());*/
+
+                Project loadproject = Project.loadProject(files[explorerTable.getSelectedRow()]);
+                // load error, revert back ro old selection
+                if (loadproject == null) {
+                    // TODO: flash selected row red for 100 ms, perhaps?
+                    if (selectedFile == -1) explorerTable.clearSelection();
+                    else explorerTable.setRowSelectionInterval(selectedFile, selectedFile);
+                }
+            }
+        });
+
         return; // TODO
     }
 
+    /**
+     * Updates autocomplete popup-menu.
+     */
     private void doAutoComplete() {
         File[] files = getAutocompleteFiles(browserField.getEditor().getItem().toString());
         Arrays.sort(files);
@@ -259,26 +316,29 @@ whose measuring ended.
     }
 
     /**
-     * Attempts to change to the selected directory.
+     * Attempts to change to the given directory. Updates browserField and explorerTable with new directory.
      *
      * @param dir directory to change to.
      * @return true if succesful, false otherwise.
      */
+    // TODO: this should probably be setDirectory(File), for consistency
     private boolean setDirectory(String dir) {
         if (dir == null || !new File(dir).isDirectory()) return false;
 
         directory = new File(dir);
         files = getProjectFiles(directory);
-//        updateDirectoryHistory(directory); // this is already done in MainViewPanel when opening a project
+        // updateDirectoryHistory(directory); // this is already done in MainViewPanel when opening a project
+                                             // TODO: but should it be done when changing directory, too?
 
-        // update table with new directory
+        // update browserField and explorerTable with new directory
+        if (browserField != null) browserField.setSelectedItem(directory);
         if (explorerTableModel != null) explorerTableModel.fireTableDataChanged();
 
         return true;
     }
 
     /**
-     * Reads project file listing from given directory.
+     * Reads project file listing from given directory. Sets selected project index, or -1, to selectedFile.
      *
      * @param directory directory whose project file listing to read.
      * @return project files in that directory, sorted alphabetically.
@@ -286,10 +346,16 @@ whose measuring ended.
     private File[] getProjectFiles(File directory) {
         File[] files = directory.listFiles(new FileFilter() {
             public boolean accept(File file) {
-                return (file.isFile() && file.getName().endsWith(Ikayaki.FILE_TYPE));
+                return (file.isFile() && file.getName().endsWith(/*Ikayaki.FILE_TYPE*/ ""));
             }
         });
         Arrays.sort(files);
+
+        // set current project file index to selectedFile
+        selectedFile = -1;
+        if (project != null) for (int n = 0; n < files.length; n++)
+            if (project.getFile().equals(files[n])) selectedFile = n;
+
         return files;
     }
 
@@ -378,16 +444,6 @@ whose measuring ended.
      * TableModel which handles data from files (in upper-class ProjectExplorerPanel).
      */
     private class ProjectExplorerTableModel extends AbstractTableModel {
-        /*
-             Event A: On table click - call Project.loadProject(File) with clicked project file, call
-             MainViewPanel.changeProject(Project) with returned Project unless null, on which case
-             show error message and revert explorerTable selection to old project, if any.
-         */
-        /*
-             Event B: On table mouse right-click - create a ProjectExplorerPopupMenu for rightclicked
-             project file.
-         */
-
         private final String[] columns = { "filename", "type", "last modified" };
 
         public String getColumnName(int column) {
@@ -407,7 +463,7 @@ whose measuring ended.
                 case 0: return files[row].getName();
                 case 1: return Project.getType(files[row]);
                 case 2: return DateFormat.getInstance().format(files[row].lastModified());
-                default: assert(false); return null;
+                default: assert false; return null;
             }
         }
     }
