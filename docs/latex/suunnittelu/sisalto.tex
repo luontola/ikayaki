@@ -6,17 +6,30 @@
 
 
 \section{Introduction}
+\label{sec:intro}
 
-\subsection{Meaning and structure of the document}
+This document describes planned architecture for the SQUID magnetometer program that will be implemented as a software engineering student project at University of Helsinki, Department of Computer Science. The clients are Lauri Pesonen with his assistants Fabio Donadini and Tomas Kohout from Department of Geophysics.
 
-Document aids implemetation phase? Allows anyone to continue from out plans (or should anyway)? Division between data and gui classes? Each data/gui part may have several classes?
+The document serves as an internal guide to the project team for aiding implementation phase, and describes the software at about level of accuracy which allows to implement the software based on this document and requirements document (version 1.1), which has user interface prototypes as appendices, and on which this document is based.
+
+\subsection{Structure of the document}
+
+\par Section~\ref{sec:intro} (this section) describes the meaning and structure of the document.
+\par Section~\ref{sec:code} describes coding conventions used by the project group in this sowtware.
+\par Section~\ref{sec:over} describes the software and architecture at high abstarction.
+\par Section~\ref{sec:arch} describes planned architecture at lower abstarction, including class diagrams and a short description of each subsystem.
+\par Section~\ref{sec:data} describes planned data classes.
+\par Section~\ref{sec:gui} describes planned gui classes.
+\par Section~\ref{sec:pack} describes planned package hierarchy.
+\par Section~\ref{sec:bibl} has bibliography references (which we wont be having any).
 
 \subsection{Glossary}
 
 Probably dumped again...
 
 
-\section{Conventions}
+\section{Code conventions}
+\label{sec:code}
 
 Everybody will follow the Code Conventions for the Java Programming Language set by Sun, with the following refinements.
 
@@ -42,6 +55,7 @@ It is recommendable for everybody to have a quick glance at Design Patterns. Her
 
 
 \section{Overview of the system}
+\label{sec:over}
 
 \begin{figure}
 \begin{center}
@@ -63,11 +77,13 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 
 
 \section{Architecture description}
+\label{sec:arch}
 
 Is this needed? What would be here anyway? Perhaps some chainsaw-humour...
 
 
 \section{Data classes and methods}
+\label{sec:data}
 
 \subsection{Project data}
 \input{core-project}
@@ -89,6 +105,7 @@ Is this needed? What would be here anyway? Perhaps some chainsaw-humour...
 
 
 \section{GUI classes and methods}
+\label{sec:gui}
 
 \subsection{Generic GUI components}
 \input{gui-generic}
@@ -124,6 +141,8 @@ Is this needed? What would be here anyway? Perhaps some chainsaw-humour...
 
 
 \section{Package structure}
+\label{sec:pack}
 
 
 \section{Bibliography}
+\label{sec:bibl}
