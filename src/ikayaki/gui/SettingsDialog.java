@@ -248,7 +248,7 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         });
 
         //TODO: need to check if values are ok, disable Save button if not.
-        /*
+      /*
         DocumentListener myListener = new DocumentListener() {
           public void insertUpdate(DocumentEvent e) {
             saveButton.setEnabled(true);
@@ -262,11 +262,23 @@ Event B: On Cancel Clicked - closes window (discarding changes)
 
           }
         };
+*/
+        acceleration.getDocument().addDocumentListener(new DocumentListener() {
+          public void insertUpdate(DocumentEvent e) {
+            saveButton.setEnabled(true);
+          }
 
-        acceleration.getDocument().addDocumentListener(myListener);
+          public void removeUpdate(DocumentEvent e) {
+            saveButton.setEnabled(true);
+          }
+
+          public void changedUpdate(DocumentEvent e) {
+            saveButton.setEnabled(true);
+          }
+        });
 
         saveButton.setEnabled(false);
-*/
+
     }
 
     public static void showSettingsDialog(Frame owner, String message) {
