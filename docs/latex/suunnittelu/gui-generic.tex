@@ -11,7 +11,11 @@
 \classSubclass{MeasurementGraphsPanel}
 \classSubclass{ProjectExplorerPanel}
 \classSubclass{CalibrationPanel}
-\classComment{Generic gui component which uses Project and listens MeasurementEvents and ProjectEvents.}
+\classComment{
+	Generic gui component which uses Project and listens MeasurementEvents and ProjectEvents.
+}
+\classEvent{On ProjectEvent}{does nothing; subclasses may override this.}
+\classEvent{On MeasurementEvent}{does nothing; subclasses may override this.}
 \closeClass
 
 \beginField{project}
@@ -35,4 +39,20 @@
 	Sets the project for this ProjectComponent. Unregisters MeasurementListener and ProjectListener from the old project, and registers them to the new project.
 }
 \methodParam{project}{new active project, or null to make no project active.}
+\closeMethod
+
+\beginMethod{projectUpdated(ProjectEvent)}
+\methodDeclaration{public projectUpdated(ProjectEvent event)}
+\methodComment{
+	Does nothing; subclasses override this if they want to listen ProjectEvents.
+}
+\methodParam{event}{ProjectEvent received.}
+\closeMethod
+
+\beginMethod{measurementUpdated(MeasurementEvent)}
+\methodDeclaration{public measurementUpdated(MeasurementEvent event)}
+\methodComment{
+	Does nothing; subclasses override this if they want to listen MeasurementEvents.
+}
+\methodParam{event}{MeasurementEvent received.}
 \closeMethod

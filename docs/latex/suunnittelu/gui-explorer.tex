@@ -4,23 +4,22 @@
 \classExtends{ProjectComponent}
 \classCreatedBy{MainViewPanel}
 \classUses{MainViewPanel}
-\classUses{ProjectExplorerTableModel}
+\classUses{ProjectExplorerTable}
 \classUses{ProjectExplorerPopupMenu}
 \classUses{NewProjectPanel}
+\classUses{RunQueue}
 \classComment{
 	Creates a history/autocomplete field (browserField) for choosing the project directory, a listing of project files in that directory (explorerTable) and in that listing a line for creating new project, which has a textbox for project name, an AF/TH ComboBox and a "Create new" button (createNewProjectButton) for actuating the creation. Also has a right-click popup menu for exporting project files.
 }
-\classEvent{On browserField change}{send browserField's text to RunQueue which schedules disk access and autocomplete.}
-\classEvent{On browserHistoryButton click}{show browserAutocompletePanel with directory history.}
+\classEvent{On browserField change}{send autocomplete-results-finder with browserField's text to RunQueue via runQueue.offer(Runnable), which schedules disk access and displaying autocomplete results in browserField's popup window.}
+\classEvent{On browserField down-arrow-click}{show directory history in browserField's popup window.}
 \classEvent{On browseButton click}{open a FileChooser dialog for choosing new directory and tell explorerTable and browserField to change to that directory.}
-\classEvent{On explorerTable click}{call Project.loadProject(File) with clicked project file, call MainViewPanel.changeProject(Project) with returned Project unless null, on which case show error message and revert explorerTable selection to old project, if any. (This could be in ProjectExplorerTableModel class?)}
-\classEvent{On explorerTable mouse right-click}{create a ProjectExplorerPopupMenu for right-clicked project file. (This could be in ProjectExplorerTableModel class?)}
-\classEvent{On createNewProjectButton click}{call Project.createXXXProject(File) with filename from newProjectField; if returns null, show error message and do nothing. Otherwise, update file listing, set new project active, tell explorerTable to reset newProjectField and newProjectType and call MainViewPanel.changeProject(Project) with returned Project.}
 \classEvent{On ProjectEvent}{hilight project whose measuring started, or unhilight one whose measuring ended.}
 \closeClass
 
-\beginField{browserFieldPanel}
-\fieldDeclaration{private BrowserFieldPanel browserFieldPanel}
+\beginField{browserField}
+\fieldDeclaration{private JComboBox browserField}
+\fieldComment{Text field for writing directory to change to. Autocomplete results appear to Combo Box' popup window, scheduled by RunQueue. Directory history appears to the same popup window when the down-arrow right to text field is clicked.}
 \closeField
 
 \beginField{browseButton}
@@ -28,18 +27,34 @@
 \closeField
 
 \beginField{explorerTable}
-\fieldDeclaration{private ProjectExplorerTableModel explorerTable}
+\fieldDeclaration{private ProjectExplorerTable explorerTable}
 \closeField
 
 \beginField{newProjectPanel}
 \fieldDeclaration{private NewProjectPanel newProjectPanel}
 \closeField
 
+\beginField{autocompleteQueue}
+\fieldDeclaration{private RunQueue autocompleteQueue}
+\fieldValue{new RunQueue(100, true)}
+\fieldComment{RunQueue for scheduling autocomplete results to separate thread (disk access and displaying).}
+\closeField
+
+\beginField{directory}
+\fieldDeclaration{private File directory}
+\fieldValue{null}
+\fieldComment{Currently open directory.}
+\closeField
+
+\beginField{files}
+\fieldDeclaration{private Vector<File> files}
+\fieldValue{new Vector<File>()}
+\fieldComment{Project files in current directory.}
+\closeField
+
 \beginMethod{ProjectExplorerPanel(Project)}
 \methodDeclaration{public ProjectExplorerPanel(Project project)}
-\methodComment{
-	Creates all components, sets the last open project folder as current project folder.
-}
+\methodComment{Creates all components, sets directory as the last open directory, initializes files with files from that directory.}
 \closeMethod
 
 \beginMethod{setProject(Project)}
@@ -48,103 +63,16 @@
 \closeMethod
 
 
-\beginClass{BrowserFieldPanel}
-\classPackage{ikayaki.gui}
-\classDeclaration{public class BrowserFieldPanel}
-\classExtends{JPanel}
-\classCreatedBy{ProjectExplorerPanel}
-\classComment{
-	Panel with browser text field and history-down-arrow-button.
-}
-\closeClass
-
-\beginField{browserField}
-\fieldDeclaration{private JTextField browserField}
-\fieldComment{Text field for writing directory to change to.}
-\closeField
-
-\beginField{browserHistoryButton}
-\fieldDeclaration{private JButton browserHistoryButton}
-\fieldComment{Small down-arrow which shows directory history when clicked.}
-\closeField
-
-\beginField{browserAutocompletePanel}
-\fieldDeclaration{private JPanel browserAutocompletePanel}
-\fieldComment{Panel whichs appears when autocomplete results are to be shown, or, when history-downarrow is clicked.}
-\closeField
-
-\beginField{browserAutocompleteList}
-\fieldDeclaration{private JList browserAutocompleteList}
-\fieldComment{List which holds autocomplete/history results.}
-\closeField
-
-
-\beginClass{ProjectExplorerTableModel}
-\classPackage{ikayaki.gui}
-\classDeclaration{public class ProjectExplorerTableModel}
-\classExtends{AbstractTableModel}
-\classCreatedBy{ProjectExplorerPanel}
-\classUses{MainViewPanel}
-\classComment{
-	Creates a list of project files in directory. Handles loading selected projects and executing export choice? What the hell anyway, I'm confused.. *whacks some stupid monsters with a chainsaw* NNNNnnnnnnnnrrnnnnnnnn-splat-grah-blurts-blorp-stuff-guttering
-}
-\closeClass
-
-\beginField{directory}
-\fieldDeclaration{private File directory}
-\fieldValue{null}
-\fieldComment{
-	Currently opened directory
-}
-\closeField
-
-\beginField{files}
-\fieldDeclaration{private Vector<File> files}
-\fieldValue{new Vector<File>()}
-\fieldComment{
-	Project files in the current directory.
-}
-\closeField
-
-\beginMethod{ProjectExplorerTableModel()}
-\methodDeclaration{public ProjectExplorerTableModel()}
-\methodComment{
-	Reads the contents of the default directory and initializes the file list.
-}
-\closeMethod
-
-\beginMethod{ProjectExplorerTableModel(String)}
-\methodDeclaration{public ProjectExplorerTableModel(String directory)}
-\methodComment{
-	Reads the contents of the given directory and initializes the file list.
-}
-\methodParam{directory}{path to the directory to be opened}
-\closeMethod
-
-\beginMethod{loadDirectory(String)}
-\methodDeclaration{public void loadDirectory(String directory)}
-\methodComment{
-	Update list to show given directory.
-}
-\methodParam{directory}{path to the directory to be opened}
-\closeMethod
-
-\beginMethod{loadProject()}
-\methodDeclaration{public void loadProject()}
-\methodComment{
-	Gets the selected line from the file list and sends the file to MainViewPanel.
-}
-\closeMethod
-
-
 \beginClass{NewProjectPanel}
 \classPackage{ikayaki.gui}
 \classDeclaration{public class NewProjectPanel}
 \classExtends{JPanel}
 \classCreatedBy{ProjectExplorerPanel}
+\classUses{MainViewPanel}
 \classComment{
 	Panel with components for creating a new project. This Panel will be somewhere below the project file listing...
 }
+\classEvent{On createNewProjectButton click}{call Project.createXXXProject(File) with filename from newProjectField; if returns null, show error message and do nothing. Otherwise, update file listing, set new project active, tell explorerTable to reset newProjectField and newProjectType and call MainViewPanel.changeProject(Project) with returned Project.}
 \closeClass
 
 \beginField{newProjectField}
@@ -161,20 +89,33 @@
 \closeField
 
 
+\beginClass{ProjectExplorerTable}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class ProjectExplorerTable}
+\classExtends{JTable}
+\classCreatedBy{ProjectExplorerPanel}
+\classUses{MainViewPanel}
+\classComment{
+	Creates a list of project files in directory. Handles loading selected projects and showing export popup menu (ProjectExplorerPopupMenu). Inner class of ProjectExplorerPanel.
+}
+% What the hell anyway, I'm confused.. *whacks some stupid monsters with a chainsaw* NNNNnnnnnnnnrrnnnnnnnn-splat-grah-blurts-blorp-stuff-guttering
+\classEvent{On explorerTable click}{call Project.loadProject(File) with clicked project file, call MainViewPanel.changeProject(Project) with returned Project unless null, on which case show error message and revert explorerTable selection to old project, if any.}
+\classEvent{On explorerTable mouse right-click}{create a ProjectExplorerPopupMenu for right-clicked project file.}
+\closeClass
+
+\beginField{projectExplorerTableModel}
+\fieldDeclaration{private TableModel projectExplorerTableModel}
+\fieldComment{TableModel which handles data from files (in upper-class ProjectExplorerPanel). Unnamed inner class.}
+\closeField
+
+
 \beginClass{ProjectExplorerPopupMenu}
 \classPackage{ikayaki.gui}
 \classDeclaration{public class ProjectExplorerPopupMenu}
 \classExtends{JPopupMenu}
 \classCreatedBy{ProjectExplorerPanel}
 \classComment{
-	Shows choices to export: AF, Thellier, Thermal and executes selected
+	Shows popup menu with export choices: AF (.dat), Thellier (.tdt) and Thermal (.tdt), and executes selected.
 }
-\classEvent{On selectItem mouseEvent}{tells selected Project to create selected file from it's self}
+\classEvent{On selectItem mouseEvent}{call project.exportXXX()...}
 \closeClass
-
-\beginMethod{ProjectExplorerTableModel()}
-\methodDeclaration{public ProjectExplorerTableModel()}
-\methodComment{
-	Builds the menu items
-}
-\closeMethod

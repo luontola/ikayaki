@@ -10,15 +10,16 @@
 	Has "Measure"/"Pause", "Single step" and "Stop now!" buttons for controlling measurements; "+z/-z" radiobuttons for changing sample orientation, help picture for inserting sample, picture of current magnetometer status, and, manual controls.
 	Listens MeasurementEvents and ProjectEvents, and updates buttons and magnetometer status accordingly.
 }
-\classEvent{On measureButton click}{call project.doAutoStep() or project.doPause(), depending on current button status.}
-\classEvent{On singlestepButton click}{call project.doSingleStep().}
-\classEvent{On stopButton click}{call project.doAbort().}
-\classEvent{On MeasurementEvent}{call magnetometerStatusPanel.updateStatus(int, int).}
+\classEvent{On measureButton click}{call project.doAutoStep() or project.doPause(), depending on current button status. Show error message if false is returned.}
+\classEvent{On singlestepButton click}{call project.doSingleStep(); show error message if false is returned.}
+\classEvent{On stopButton click}{call project.doAbort(); show critical error message if false is returned.}
 \classEvent{On ProjectEvent}{update buttons and manual controls according to project.isXXXEnabled().}
+\classEvent{On MeasurementEvent}{call magnetometerStatusPanel.updateStatus(int, int) with the right values from MeasurementEvent.}
 \closeClass
 
 \beginField{measureButton}
 \fieldDeclaration{private JButton measureButton}
+\fieldComment{Measure/pause -button; "Measure" when no measuring is being done, "Pause" when there is ongoing measuring sequence.}
 \closeField
 
 \beginField{singlestepButton}
@@ -39,7 +40,7 @@
 
 \beginField{sampleInsertPanel}
 \fieldDeclaration{private JPanel sampleInsertPanel}
-\fieldComment{Draws the help image for sample inserting.}
+\fieldComment{Draws a help image for sample inserting.}
 \closeField
 
 \beginField{magnetometerStatusPanel}
@@ -56,7 +57,7 @@
 \classDeclaration{public class MagnetometerStatusPanel}
 \classExtends{JPanel}
 \classCreatedBy{MeasurementControlsPanel}
-\classComment{Picture of current magnetometer status, including sample holder position and rotation.}
+\classComment{Picture of current magnetometer status, with sample holder position and rotation.}
 \closeClass
 
 \beginMethod{MagnetometerStatusPanel()}
@@ -66,7 +67,7 @@
 
 \beginMethod{updateStatus(int,int)}
 \methodDeclaration{public updateStatus(int position, int rotation)}
-\methodComment{Updates magnetometer status picture; called by MeasurementControlsPanel.}
+\methodComment{Updates magnetometer status picture; called by MeasurementControlsPanel when it receives MeasurementEvent.}
 \methodParam{position}{sample holder position, from 1 to 16777215.}
 \methodParam{rotation}{sample holder rotation, from 0 (angle 0) to 2000 (angle 360).}
 \closeMethod
@@ -79,7 +80,7 @@
 \classCreatedBy{MeasurementControlsPanel}
 \classComment{Magnetometer manual control radiobuttons.}
 \classUses{Project}
-\classEvent{On xxxN click}{call project.xxxN().}
+\classEvent{On xxxN click}{call project.xxxN(). Or something like that. I shouldn't care.}
 \closeClass
 
 \beginField{demagX}
