@@ -132,9 +132,9 @@
 \fieldComment{Degaussers current status}
 \closeField
 
-\beginField{comPort}
-\fieldDeclaration{private String comPort}
-\fieldComment{COM port for communication}
+\beginField{serialIO}
+\fieldDeclaration{private SerialIO serialIO}
+\fieldComment{COM port for communication.}
 \closeField
 
 \beginField{degausserCoil}
@@ -261,8 +261,8 @@
 \fieldComment{Handlers current status.}
 \closeField
 
-\beginField{comPort}
-\fieldDeclaration{private String comPort}
+\beginField{serialIO}
+\fieldDeclaration{private SerialIO serialIO}
 \fieldComment{COM port for communication.}
 \closeField
 
@@ -351,7 +351,7 @@ factory for half stepping.}
 \beginMethod{getStatus()}
 \methodDeclaration{public String getStatus()}
 \methodComment{
-    Returns current status on Sample Handler.
+    Returns current status on Sample Handler: Position, rotation and moving status(stopped, on move).
 }
 \closeMethod
 
@@ -524,7 +524,7 @@ factory for half stepping.}
 \beginMethod{wait()}
 \methodDeclaration{private void wait()}
 \methodComment{
-   Wait for handler to be idle. Blocking (F). Without the F command the SMC25 will continue to accept commands while the motor is moving. This may be desirable, as when changing speed during a move or working with the inputs or outputs. Or it may be undesirable, such as when you wish to make a series of indexes. Without the F command any subsequent G commands received while the motor is indexing would set the "Not allowed while moving" message. Caution: If this command is used while the motor is executing a Slew command the only way to stop is with a reset or a hard limit switch input.
+   Wait for handler to be idle. Blocking (F). Without the this command the SMC25 (Handler system) will continue to accept commands while the motor is moving. This may be desirable, as when changing speed during a move or working with the inputs or outputs. Or it may be undesirable, such as when you wish to make a series of indexes. Without the this command any subsequent Go commands received while the motor is indexing would set the "Not allowed while moving" message. Caution: If this command is used while the motor is executing a Slew command the only way to stop is with a reset or a hard limit switch input.
 }
 \closeMethod
 
@@ -627,8 +627,8 @@ G Motor is indexing and no other notice pending
 \fieldComment{Magnetometer's current status.}
 \closeField
 
-\beginField{comPort}
-\fieldDeclaration{private String comPort}
+\beginField{serialIO}
+\fieldDeclaration{private SerialIO serialIO}
 \fieldComment{COM port for communication.}
 \closeField
 
@@ -695,21 +695,44 @@ G Motor is indexing and no other notice pending
 \methodParam{axis}{x,y,x}
 \methodParam{command}{"D" Send back the analog data last captured with the LATCH command. The <data> field is not required. "C" Send back the counter value last captured with the LATCH command. The <data> field is not required. "S" Send back status. Various pieces of status can be sent by the magnetometer electronics.}
 \methodParam{datavalues}{Datavalues one or more: "A" Send back all status. "F" Send back all filter status. "R" Send back all range status. "S" Send back slew status. "L" Send back SQUID feedback loop status. Return feedback, waiting time?}
+\methodReturn{Returns data wanted, see command and datavalue}
 \closeMethod
 
-\beginMethod{measure(char)}
-\methodDeclaration{public String measure(char axis)}
+\beginMethod{openLoop(char)}
+\methodDeclaration{public void openLoop(char axis)}
 \methodComment{
-    Performs full sequence to measure axis. Blocking.
+   Pulse reset and opens feedback loop for axis. Need to be done to all axes before measuring.
 }
-\methodParam{axis}{x,y,x.}
-\methodReturn{Returns results for measuring.}
+\methodParam{axis}{x,y,x or a (all).}
+\closeMethod
+
+\beginMethod{clearFlux(char)}
+\methodDeclaration{public void clearFlux(char axis)}
+\methodComment{
+    Clears flux counter for axis. Need to be done to all axes before measuring.
+}
+\methodParam{axis}{x,y,x or a (all).}
+\closeMethod
+
+\beginMethod{wait()}
+\methodDeclaration{public void wait()}
+\methodComment{
+    Waits for magnetometer to settle down. Blocking.
+}
+\closeMethod
+
+\beginMethod{readData()}
+\methodDeclaration{public Double[] readData()}
+\methodComment{
+    Latches axes, reads counters and analog. Calculates data from them and returns them.
+}
+\methodReturn{Returns 3 double values (x,y,z)}
 \closeMethod
 
 \beginMethod{getStatus()}
 \methodDeclaration{public String getStatus()}
 \methodComment{
-    Returns current status on Sample Handler.
+    Returns current status and configuration on magnetometer: Filters, Fast Slew on/off, Loop on/off, Range and current job (busy, ready).
 }
 \closeMethod
 
