@@ -9,7 +9,7 @@
 	Holds predefined "Holder noise" and "Standard sample" projects for calibration; they are in a technically same table as Project explorer files. Also has a "Calibrate" button, which executes selected calibration project, similarly to clicking "Single step" in normal projects.
 }
 \classEvent{On calibrateButton click}{call project.doSingleStep().}
-\classEvent{On calibrationProjectTable click}{call Project.loadProject(File) with clicked project file, call MainViewPanel.changeProject(Project) with returned Project unless null, on which case show error message and revert calibrationProjectTable selection to old project.}
+\classEvent{On calibrationProjectTable click}{call Project.loadProject(File) with clicked project file, call MainViewPanel.changeProject(Project) with returned Project unless null, on which case show error message and revert calibrationProjectTable selection to old project, if any.}
 \classEvent{On ProjectEvent}{hilight calibration project whose measuring started, or unhilight one whose measuring ended; enable/disable calibrateButton similarly.}
 \closeClass
 
@@ -24,7 +24,5 @@
 
 \beginMethod{setProject(Project)}
 \methodDeclaration{public void setProject(Project project)}
-\methodComment{
-	Call super.setProject(Project)?, hilight selected calibration project, or unhilight unselected calibration project.
-}
+\methodComment{Call super.setProject(Project)?, hilight selected calibration project, or unhilight unselected calibration project.}
 \closeMethod

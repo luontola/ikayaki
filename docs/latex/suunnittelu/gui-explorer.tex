@@ -6,20 +6,21 @@
 \classUses{MainViewPanel}
 \classUses{ProjectExplorerTableModel}
 \classUses{ProjectExplorerPopupMenu}
+\classUses{NewProjectPanel}
 \classComment{
 	Creates a history/autocomplete field (browserField) for choosing the project directory, a listing of project files in that directory (explorerTable) and in that listing a line for creating new project, which has a textbox for project name, an AF/TH ComboBox and a "Create new" button (createNewProjectButton) for actuating the creation. Also has a right-click popup menu for exporting project files.
 }
-\classEvent{On browserField change}{send browserField's text to RunQueue which schedules disk access and autocomplete. (This could be in a separate BrowserFieldComponent class?)}
+\classEvent{On browserField change}{send browserField's text to RunQueue which schedules disk access and autocomplete.}
+\classEvent{On browserHistoryButton click}{show browserAutocompletePanel with directory history.}
+\classEvent{On browseButton click}{open a FileChooser dialog for choosing new directory and tell explorerTable and browserField to change to that directory.}
+\classEvent{On explorerTable click}{call Project.loadProject(File) with clicked project file, call MainViewPanel.changeProject(Project) with returned Project unless null, on which case show error message and revert explorerTable selection to old project, if any. (This could be in ProjectExplorerTableModel class?)}
 \classEvent{On explorerTable mouse right-click}{create a ProjectExplorerPopupMenu for right-clicked project file. (This could be in ProjectExplorerTableModel class?)}
-\classEvent{On createNewProjectButton click}{call Project.createXXXProject(File) with filename from newProjectField, send returned Project to MainViewPanel?, tell explorerTable to reset newProjectField and newProjectType.}
-\classEvent{On browseButton click}{open a FileChooser dialog for choosing the directory.}
-\classEvent{On MeasurementEvent}{hilight project whose measuring started, or unhilight one whose measuring ended.}
-\classEvent{On ProjectEvent}{hilight selected project, or unhilight unselected project.}
+\classEvent{On createNewProjectButton click}{call Project.createXXXProject(File) with filename from newProjectField; if returns null, show error message and do nothing. Otherwise, update file listing, set new project active, tell explorerTable to reset newProjectField and newProjectType and call MainViewPanel.changeProject(Project) with returned Project.}
+\classEvent{On ProjectEvent}{hilight project whose measuring started, or unhilight one whose measuring ended.}
 \closeClass
 
-\beginField{browserField}
-\fieldDeclaration{private BrowserFieldComponent browserField}
-\fieldComment{(need a separate class for this?)}
+\beginField{browserFieldPanel}
+\fieldDeclaration{private BrowserField browserFieldPanel}
 \closeField
 
 \beginField{browseButton}
@@ -30,30 +31,52 @@
 \fieldDeclaration{private ProjectExplorerTableModel explorerTable}
 \closeField
 
-\beginField{newProjectField}
-\fieldDeclaration{private JTextField newProject}
-\closeField
-
-\beginField{newProjectType}
-\fieldDeclaration{private JComboBox newProjectType}
-\fieldValue{AF/Thellier/Thermal}
-\closeField
-
-\beginField{createNewProjectButton}
-\fieldDeclaration{private JButton createNewProjectButton}
+\beginField{newProjectPanel}
+\fieldDeclaration{private NewProjectPanel newProjectPanel}
 \closeField
 
 \beginMethod{ProjectExplorerPanel(Project)}
 \methodDeclaration{public ProjectExplorerPanel(Project project)}
 \methodComment{
-	Creates all its components, sets the last open project folder as current project folder.
+	Creates all components, sets the last open project folder as current project folder.
 }
 \closeMethod
 
-\beginMethod{doBrowse()}
-\methodDeclaration{public void doBrowse()}
-\methodComment{Creates a FileChooser dialog and tells explorerTable and browserField to change to directory returned by it.}
+\beginMethod{setProject(Project)}
+\methodDeclaration{public void setProject(Project project)}
+\methodComment{Call super.setProject(Project)?, hilight selected project, or unhilight unselected project.}
 \closeMethod
+
+
+\beginClass{BrowserFieldPanel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class BrowserFieldPanel}
+\classExtends{JPanel}
+\classCreatedBy{ProjectExplorerPanel}
+\classComment{
+	Panel with browser text field and history-down-arrow-button.
+}
+\closeClass
+
+\beginField{browserField}
+\fieldDeclaration{private JTextField browserField}
+\fieldComment{Text field for writing directory to change to.}
+\closeField
+
+\beginField{browserHistoryButton}
+\fieldDeclaration{private JButton browserHistoryButton}
+\fieldComment{Small down-arrow which shows directory history when clicked.}
+\closeField
+
+\beginField{browserAutocompletePanel}
+\fieldDeclaration{private JPanel browserAutocompletePanel}
+\fieldComment{Panel whichs appears when autocomplete results are to be shown, or, when history-downarrow is clicked.}
+\closeField
+
+\beginField{browserAutocompleteList}
+\fieldDeclaration{private JList browserAutocompleteList}
+\fieldComment{List which holds autocomplete/history results.}
+\closeField
 
 
 \beginClass{ProjectExplorerTableModel}
@@ -63,10 +86,8 @@
 \classCreatedBy{ProjectExplorerPanel}
 \classUses{MainViewPanel}
 \classComment{
-	Creates a list of project files in directory. Handles loading selected projects and executing export choice.
+	Creates a list of project files in directory. Handles loading selected projects and executing export choice? What the hell anyway, I'm confused.. *whacks some stupid monsters with a chainsaw* NNNNnnnnnnnnrrnnnnnnnn-splat-grah-blurts-blorp-stuff-guttering
 }
-\classEvent{On newDirectoryEvent}{updates list of project files on JTable}
-\classEvent{On selectTable MouseEvent}{sets new Project active}
 \closeClass
 
 \beginField{directory}
@@ -114,6 +135,30 @@
 	Gets the selected line from the file list and sends the file to MainViewPanel.
 }
 \closeMethod
+
+
+\beginClass{NewProjectPanel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class NewProjectPanel}
+\classExtends{JPanel}
+\classCreatedBy{ProjectExplorerPanel}
+\classComment{
+	Panel with components for creating a new project. This Panel will be somewhere below the project file listing...
+}
+\closeClass
+
+\beginField{newProjectField}
+\fieldDeclaration{private JTextField newProject}
+\closeField
+
+\beginField{JComboBox newProjectType}
+\fieldDeclaration{private JComboBox newProjectType}
+\fieldValue{AF/Thellier/Thermal}
+\closeField
+
+\beginField{createNewProjectButton}
+\fieldDeclaration{private JButton createNewProjectButton}
+\closeField
 
 
 \beginClass{ProjectExplorerPopupMenu}
