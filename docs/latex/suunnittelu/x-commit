@@ -4,6 +4,7 @@
 # Samuli Kaipiainen / 17.3.2005
 # 2005-03-17 v1.0 first version
 # 2005-03-17 v1.1 added name inserting to versio.tex
+# 2005-03-17 v1.2 added \\ to versio.tex
 
 hourfile=/home/group/squid/public_html/$USER/hours.txt
 verfile=./versio.tex
@@ -12,8 +13,8 @@ if [ -z "$1" ]; then
 	echo "super-commit-all-script, does the following:"
 	echo "1) appends date, phase code, hours and message to"
 	echo "   $hourfile"
-	echo "2) appends message and name to $verfile; name is read"
-	echo "   from the first line of hours.txt"
+	echo "2) appends message and name to $verfile;"
+	echo "   name is read from the first line of hours.txt"
 	echo "3) executes 'cvs commit -m \"message\"'"
 	echo
 	echo usage: $0 "message" [hours] [phase code]
@@ -38,5 +39,5 @@ hours=$2
 msg=$1
 
 echo $date$'\t'$code$'\t'$hours$'\t'$msg >> $hourfile &&
-echo $'\t\t'\&\& $msg \($name\) >> $verfile &&
+echo $'\t\t'\&\& $msg \($name\) \\\\ >> $verfile &&
 cvs commit -m "$msg"
