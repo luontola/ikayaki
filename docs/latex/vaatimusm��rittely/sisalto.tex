@@ -43,6 +43,7 @@ these formats.
 
 
 
+\newpage % LAYOUT FIX
 \section{Use cases}
 
 % super-makrot use caseille; huomaa että \uctitle aloittaa ja \ucend lopettaa, muuten tulee ongelma
@@ -436,16 +437,32 @@ Use case format: \nopagebreak
 
 
 
+\newpage % LAYOUT FIX
 \section{Requirements}
 \label{seq:req}
 
 % Makrot vaatimuksille
-\newcommand{\ReqId}[1]{\textbf{Identifier:} #1\\}
-\newcommand{\ReqName}[1]{\textbf{Name:} #1\\}
-\newcommand{\ReqDesc}[1]{\textbf{Description:} #1\\}
-\newcommand{\ReqPrio}[1]{\textbf{Priority:} #1\\}
-\newcommand{\ReqSet}[1]{\textbf{Set by:} #1\\}
-\newcommand{\ReqUc}[1]{\textbf{Use Cases:} #1\\}
+%\newcommand{\ReqId}[1]{\textbf{Identifier:} #1\\}
+%\newcommand{\ReqName}[1]{\textbf{Name:} #1\\}
+%\newcommand{\ReqDesc}[1]{\textbf{Description:} #1\\}
+%\newcommand{\ReqPrio}[1]{\textbf{Priority:} #1\\}
+%\newcommand{\ReqSet}[1]{\textbf{Set by:} #1\\}
+%\newcommand{\ReqUc}[1]{\textbf{Use Cases:} #1\\}
+
+% Uudet makrot vaatimuksille
+\newcommand{\ReqName}[2]{
+	\begin{tabular}{p{2.5cm}p{11.5cm}}
+	\multicolumn{2}{p{14cm}} {
+		\hspace{-0.32cm}
+		\textbf{#1: #2}
+	}\\
+}
+\newcommand{\ReqDesc}[1]{\textbf{Description} & #1\\}
+\newcommand{\ReqPrio}[1]{\textbf{Priority} & #1\\}
+\newcommand{\ReqSet}[1]{\textbf{Set by} & #1\\}
+\newcommand{\ReqUc}[1]{\textbf{Use Cases} & #1\\}
+\newcommand{\ReqEND}[0]{\end{tabular}}
+
 
 Goals of the software set by client, project team and environment. Requirements 
 were collected from 1) powerpoint slides received from client, 2) lectures given 
@@ -495,14 +512,16 @@ QR5 & Expandable architecture 		& 2 	& Group \\
 \label{tab:requirements}
 \end{table}
 
-Requirement format: \nopagebreak
-
-\ReqId{Requirement identifier}
-\ReqName{Name of the requirement}
+\begin{tabular}{l}
+Requirement format:\\
+\\
+\ReqName{R0}{Name of the requirement}
 \ReqDesc{Description of the requirement.}
 \ReqPrio{Requirement priority from 1 (most important) to 4 (least important)}
 \ReqSet{Who set the requirement; client, project team or environment}
 \ReqUc{Use cases derived from this requirement}
+\ReqEND
+\end{tabular}
 
 
 \subsection{Functional requirements}
@@ -512,194 +531,193 @@ including error handling. May also define things the software shall not do.}
 
 \subsubsection{Magnetometer}
 
-\ReqId{R1}
-\ReqName{SQUID control and usage}
+\ReqName{R1}{SQUID control and usage}
 \ReqDesc{Able to control Squid-magnetometer and make measurements with it.}
 \ReqPrio{1}
 \ReqSet{Customer}
 \ReqUc{UC1, UC2, UC3, UC4, UC5, UC6, UC7, UC8, UC9, UC10, UC11}
+\ReqEND
 
-\ReqId{R2}
-\ReqName{Manual control}
+\ReqName{R2}{Manual control}
 \ReqDesc{Able to operate the magnetometer manually. User can move and
 rotate sample handler and measure and demagnetize sample.}
 \ReqPrio{3}
 \ReqSet{Customer}
 \ReqUc{UC11, UC12}
+\ReqEND
 
-\ReqId{R3}
-\ReqName{Calibration reminder}
+\ReqName{R3}{Calibration reminder}
 \ReqDesc{Magnetometer must be calibrated every 24 hours. The program will remind the user when it would be time to do calibration.}
 \ReqPrio{2}
 \ReqSet{Customer}
 \ReqUc{UC8, UC9, UC10}
+\ReqEND
 
-\ReqId{R4}
-\ReqName{Warning signal}
+\ReqName{R4}{Warning signal}
 \ReqDesc{Program should warn user with alarm signal if magnetic field remains on for too long. The implementation depends on if the Degaussing System's protocol makes it possible.}
 \ReqPrio{3}
 \ReqSet{Customer}
 \ReqUc{UC2, UC3}
+\ReqEND
 
 
 \subsubsection{Project files}
 
-\ReqId{R5}
-\ReqName{Create project}
+\ReqName{R5}{Create project}
 \ReqDesc{Create a new project file which will include the measurement sequence, measurement results and information about the sample. The file format will be custom made for this program.}
 \ReqPrio{1}
 \ReqSet{Customer}
 \ReqUc{UC19}
+\ReqEND
 
-\ReqId{R6}
-\ReqName{Autosave project}
+\ReqName{R6}{Autosave project}
 \ReqDesc{Program will save measurement data and project information after every measurement step and modification.}
 \ReqPrio{1}
 \ReqSet{Customer}
-\ReqUc{UC1, UC2, UC3, UC6, UC7, UC8, UC9, UC10, UC11, UC18, UC22, UC23,
-UC24, UC25, UC26}
+\ReqUc{UC1, UC2, UC3, UC6, UC7, UC8, UC9, UC10, UC11, UC18, UC22, UC23, UC24, UC25, UC26}
+\ReqEND
 
-\ReqId{R7}
-\ReqName{Load project}
+\ReqName{R7}{Load project}
 \ReqDesc{Saved projects can be loaded into program.}
 \ReqPrio{1}
 \ReqSet{Customer}
 \ReqUc{UC20}
+\ReqEND
 
-\ReqId{R8}
-\ReqName{Edit project}
+\ReqName{R8}{Edit project}
 \ReqDesc{Ability edit project information and measurement data afterwards. \ucnotein{2005-02-28 Which data fields?}}
 \ReqPrio{2}
 \ReqSet{Customer}
 \ReqUc{UC22}
+\ReqEND
 
-\ReqId{R9}
-\ReqName{Recalculate derived measurement data}
+\ReqName{R9}{Recalculate derived measurement data}
 \ReqDesc{When the measurement data or the mass/volume of the specimen is changed, recalculate all numbers that have been derived from the modified data.}
 \ReqPrio{2}
 \ReqSet{Customer}
 \ReqUc{UC22}
+\ReqEND
 
-\ReqId{R10}
-\ReqName{Append project}
+\ReqName{R10}{Append project}
 \ReqDesc{New measurements can be added to existing projects.}
 \ReqPrio{2}
 \ReqSet{Customer}
 \ReqUc{UC1, UC2, UC3, UC6, UC7, UC11, UC18, UC20}
+\ReqEND
 
-\ReqId{R11}
-\ReqName{Export to other file formats}
+\ReqName{R11}{Export to other file formats}
 \ReqDesc{Measurements can be saved in .dat, .tdt and .srm files. \ucnotein{2005-03-01 We don't yet have their format specifications so we can't do this!}}
 \ReqPrio{1}
 \ReqSet{Customer}
 \ReqUc{UC13, UC14, UC15}
+\ReqEND
 
 
 \subsubsection{Measurements}
 
-\ReqId{R12}
-\ReqName{Create a measurement sequence}
+\ReqName{R12}{Create a measurement sequence}
 \ReqDesc{Able to create AF and Thellier measurement sequences with several different sized steps.}
 \ReqPrio{2}
 \ReqSet{Customer}
 \ReqUc{UC23, UC24}
+\ReqEND
 
-\ReqId{R13}
-\ReqName{Automatic sequence}
+\ReqName{R13}{Automatic sequence}
 \ReqDesc{Do all the measurement steps automatically.}
 \ReqPrio{2}
 \ReqSet{Customer}
 \ReqUc{UC3}
+\ReqEND
 
-\ReqId{R14}
-\ReqName{Single step sequence}
+\ReqName{R14}{Single step sequence}
 \ReqDesc{Do only one measurement step at a time.}
 \ReqPrio{2}
 \ReqSet{Customer}
 \ReqUc{UC1, UC2, UC6, UC7}
+\ReqEND
 
-\ReqId{R15}
-\ReqName{Pause automatic sequence}
+\ReqName{R15}{Pause automatic sequence}
 \ReqDesc{Able to stop the measurement sequence after current step. After being stopped, the user can make modifications to the sequence and continue from where the sequence was left.}
 \ReqPrio{2}
 \ReqSet{Customer}
 \ReqUc{UC4}
+\ReqEND
 
-\ReqId{R16}
-\ReqName{Panic abort}
+\ReqName{R16}{Panic abort}
 \ReqDesc{Able to stop any measurement immediately. The demagnetizer will be turned off and the sample holder will stop where it is. The current measurement data will be discarded.}
 \ReqPrio{1}
 \ReqSet{Customer}
 \ReqUc{UC5}
+\ReqEND
 
-\ReqId{R17}
-\ReqName{Numeric presentation of measurements}
+\ReqName{R17}{Numeric presentation of measurements}
 \ReqDesc{Program shows measurement data in numbers. Measurement data will be displayed using scientic notation (1.23e4). \ucnotein{2005-03-01 What are all the numbers that need to be calculated? How are they calculated?}}
 \ReqPrio{1}
 \ReqSet{Customer}
 \ReqUc{UC1, UC2, UC3, UC6, UC7, UC8, UC9, UC10, UC11, UC16}
+\ReqEND
 
-\ReqId{R18}
-\ReqName{Graphic presentation of measurements}
+\ReqName{R18}{Graphic presentation of measurements}
 \ReqDesc{Program draws graphs from measurement data. Available graph types are: Stereo Plot, Intensity, Zijderveld, Difference Vectors, Susteptibility, O63, Great Circles. \ucnotein{2005-02-28 What are the definitions of these graphs? Priorities per graph?}}
 \ReqPrio{4}
 \ReqSet{Customer}
 \ReqUc{UC1, UC2, UC3, UC6, UC7, UC8, UC9, UC10, UC11, UC17}
+\ReqEND
 
 
 \subsubsection{Others}
 
-\ReqId{R19}
-\ReqName{Hotkeys}
+\ReqName{R19}{Hotkeys}
 \ReqDesc{The program has hotkeys for the most often used operations.}
 \ReqPrio{3}
 \ReqSet{Customer}
 \ReqUc{-}
+\ReqEND
 
-\ReqId{R20}
-\ReqName{Change hotkeys}
+\ReqName{R20}{Change hotkeys}
 \ReqDesc{Possibility to change hotkey assignments.}
 \ReqPrio{4}
 \ReqSet{Customer}
 \ReqUc{-}
+\ReqEND
 
 
 \subsection{Quality requirements}
 
-\ReqId{QR1}
-\ReqName{Error free}
+\ReqName{QR1}{Error free}
 \ReqDesc{The program should not crash. All the functions need to work as documented. The calculations that the program makes from measurements must be done right.}
 \ReqPrio{1}
 \ReqSet{Customer}
 \ReqUc{-}
+\ReqEND
 
-\ReqId{QR2}
-\ReqName{Ease of use}
+\ReqName{QR2}{Ease of use}
 \ReqDesc{Program should be easy to use for first time users after it has been explained to them how to take measurements with the magnetometer.}
 \ReqPrio{1}
 \ReqSet{Customer}
 \ReqUc{-}
+\ReqEND
 
-\ReqId{QR3}
-\ReqName{Quality of documentation}
+\ReqName{QR3}{Quality of documentation}
 \ReqDesc{The documentation must be so good that other teams can easily continue the development. Program should have good help pages for the end-users.}
 \ReqPrio{2}
 \ReqSet{Group}
 \ReqUc{-}
+\ReqEND
 
-\ReqId{QR4}
-\ReqName{Performance}
+\ReqName{QR4}{Performance}
 \ReqDesc{The program must keep up with the SQUID hardware. The user interface should not freeze for periods of over 0,5 seconds.}
 \ReqPrio{2}
 \ReqSet{Group}
 \ReqUc{-}
+\ReqEND
 
-\ReqId{QR5}
-\ReqName{Expandable architecture}
+\ReqName{QR5}{Expandable architecture}
 \ReqDesc{It should be possible to expand the program to process the measurement data in more ways.}
 \ReqPrio{2}
 \ReqSet{Group}
 \ReqUc{-}
+\ReqEND
 
 
 \subsection{Environment}
@@ -732,6 +750,7 @@ to other programs.
 
 
 
+%\newpage % LAYOUT FIX
 \section{User interface}
 
 User interface for the program is loosely generated from goal-derived use 
@@ -741,11 +760,14 @@ at their magnetometer lab (using the old squid software).
 Method for generating the user interface is "applied GDD". GDD, or {\it 
 Goal-Derived Design}, is taught on courses "User Interfaces" and "User 
 Interfaces II" at Department of Computer Science. For more info, see
+\nopagebreak
 
-\hspace{1cm} {\tt http://www.cs.helsinki.fi/u/salaakso/} \\
-\hspace{1cm} {\tt Goal-derived design?} \\
-\hspace{1cm} {\tt Goal-derived use cases?} \\
-
+\hspace{1cm}
+\begin{tabular}{l}
+{\tt http://www.cs.helsinki.fi/u/salaakso/} \\
+{\tt Goal-derived design?} \\
+{\tt Goal-derived use cases?}
+\end{tabular}
 
 \subsection{Goal-derived use cases}
 \label{seq:gduc}
@@ -839,6 +861,7 @@ To get some idea how meteor rocks are magnetised.
 
 
 
+\newpage % LAYOUT FIX
 \section{Architecture overview}
 
 The program architecture can be divided into three parts: SQUID interface, 
@@ -873,6 +896,7 @@ will send commands from the user to the program.
 
 
 
+\newpage % LAYOUT FIX
 \section{External interfaces}
 
 {\it Interfaces to existing software and hardware.}
