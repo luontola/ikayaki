@@ -32,6 +32,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import ikayaki.Settings;
+import javax.comm.CommPortIdentifier;
+import java.util.Enumeration;
 
 /**
  * Creates its components and updats changes to Settings and saves them in Configuration file
@@ -183,6 +186,51 @@ Event B: On Cancel Clicked - closes window (discarding changes)
 //                }
 //            }
 //        });
+
+        this.acceleration.setText("" + Settings.instance().getHandlerAcceleration());
+        this.deceleration.setText("" + Settings.instance().getHandlerDeceleration());
+        this.axialAFPosition.setText("" + Settings.instance().getHandlerAxialAFPosition());
+        this.transverseYAFPosition.setText("" + Settings.instance().getHandlerTransverseYAFPosition());
+        this.measurementPosition.setText("" + Settings.instance().getHandlerMeasurementPosition());
+        this.measurementVelocity.setText(""+ Settings.instance().getHandlerMeasurementVelocity());
+        this.xAxisCalibration.setText("" + Settings.instance().getMagnetometerXAxisCalibration());
+        this.yAxisCalibration.setText("" + Settings.instance().getMagnetometerYAxisCalibration());
+        this.zAxisCalibration.setText("" + Settings.instance().getMagnetometerZAxisCalibration());
+        this.demagRamp.addItem(3);
+        this.demagRamp.addItem(5);
+        this.demagRamp.addItem(7);
+        this.demagRamp.addItem(9);
+        for(int i = 1;i<10;i++)
+          this.demagDelay.addItem(i);
+        this.sampleLoadPosition.setText("" + Settings.instance().getHandlerSampleLoadPosition());
+        this.backgroundPosition.setText("" + Settings.instance().getHandlerBackgroundPosition());
+        this.rotation.setText("" + Settings.instance().getHandlerRotation());
+        this.handlerRightLimit.addItem("plus");
+        this.handlerRightLimit.addItem("minus");
+        this.handlerRightLimit.setSelectedIndex(Settings.instance().getHandlerRightLimit());
+
+        Enumeration ports = CommPortIdentifier.getPortIdentifiers();
+
+        if (ports == null) {
+          System.err.println("No comm ports found!");
+
+          return;
+        }
+        else {
+          while (ports.hasMoreElements()) {
+            /*
+             *  Get the specific port
+             */
+
+            CommPortIdentifier portId = (CommPortIdentifier)
+                ports.nextElement();
+
+            this.magnetometerPort.addItem(portId.getName());
+            this.handlerPort.addItem(portId.getName());
+            this.demagnetizerPort.addItem(portId.getName());
+          }
+        }
+
         getRootPane().setDefaultButton(saveButton);
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
