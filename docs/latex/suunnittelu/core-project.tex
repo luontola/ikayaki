@@ -1167,7 +1167,7 @@
 }
 \closeField
 
-\beginField{RELATIVE\_REMANENCE}
+\beginField{RELATIVE_REMANENCE}
 \fieldDeclaration{public static final MeasurementValue<Double> RELATIVE\_REMANENCE}
 \fieldComment{
 }
@@ -1291,6 +1291,15 @@
 \closeMethod
 
 
+\beginClass{ProjectEvent.Type}
+\classPackage{ikayaki}
+\classDeclaration{public enum Type}
+\classComment{
+	The type of a project event. Options are ...
+}
+\closeClass
+
+
 \beginClass{ProjectListener}
 \classPackage{ikayaki}
 \classDeclaration{public interface ProjectListener}
@@ -1370,6 +1379,15 @@
 \methodReturn{}
 \methodThrows{}{}
 \closeMethod
+
+
+\beginClass{MeasurementEvent.Type}
+\classPackage{ikayaki}
+\classDeclaration{public enum Type}
+\classComment{
+	The type of a measurement event. Options are ...
+}
+\closeClass
 
 
 \beginClass{MeasurementListener}
