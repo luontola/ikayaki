@@ -487,8 +487,12 @@ public class Settings {
     }
 
     public synchronized boolean updateDirectoryHistory(File visited) {
+        if (!visited.isAbsolute()) {
+            visited = visited.getAbsoluteFile();
+        }
+
         // update history list
-        directoryHistory.remove(visited);
+        while (directoryHistory.remove(visited)) ;
         directoryHistory.add(0, visited);
         while (directoryHistory.size() > DIRECTORY_HISTORY_SIZE) {
             directoryHistory.remove(directoryHistory.size() - 1);
@@ -527,8 +531,12 @@ public class Settings {
     }
 
     public synchronized boolean updateProjectHistory(File visited) {
+        if (!visited.isAbsolute()) {
+            visited = visited.getAbsoluteFile();
+        }
+
         // update history list
-        projectHistory.remove(visited);
+        while (projectHistory.remove(visited)) ;
         projectHistory.add(0, visited);
         while (projectHistory.size() > PROJECT_HISTORY_SIZE) {
             projectHistory.remove(projectHistory.size() - 1);
