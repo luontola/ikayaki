@@ -9,6 +9,9 @@ HELPPOJA:
 
 - muuta "_plain" muotoon "-plain" tiedostonimien yhtenäistämiseksi
 
+- järjestä merkinnät automaattisesti (älä kuitenkaan sekoita saman päivän
+sisäistä järjestystä)
+
 
 KESKIVAIKEITA:
 
