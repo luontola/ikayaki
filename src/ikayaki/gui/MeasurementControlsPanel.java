@@ -24,6 +24,7 @@ package ikayaki.gui;
 
 import ikayaki.MeasurementEvent;
 import ikayaki.ProjectEvent;
+import ikayaki.Project;
 
 import javax.swing.*;
 import java.awt.*;
@@ -111,6 +112,11 @@ public class MeasurementControlsPanel extends ProjectComponent {
         */
 
         return; // TODO
+    }
+
+    @Override public void setProject(Project project) {
+        super.setProject(project);
+        updateActions();
     }
 
     /**

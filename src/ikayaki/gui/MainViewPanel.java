@@ -240,6 +240,17 @@ public class MainViewPanel extends ProjectComponent {
             project.setSquid(squid);        // will do nothing if another project has a measurement running
 
             // update GUI components
+            Frame parent = getParentFrame();
+            if (parent != null) {
+                parent.setTitle(project.getFile().getAbsolutePath());
+            } else {
+                // set the title after the program has fully started
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        getParentFrame().setTitle(getProject().getFile().getAbsolutePath());
+                    }
+                });
+            }
             getProjectInformationPanel().setBorder(
                     BorderFactory.createTitledBorder(project.getName() + " (" + project.getType() + " Project)"));
             getExportProjectToDATAction().setEnabled(true);
@@ -247,6 +258,7 @@ public class MainViewPanel extends ProjectComponent {
             getExportProjectToSRMAction().setEnabled(true);
         } else {
             // update GUI components
+            getParentFrame().setTitle(null);
             getProjectInformationPanel().setBorder(BorderFactory.createTitledBorder("Project Information"));
             getExportProjectToDATAction().setEnabled(false);
             getExportProjectToTDTAction().setEnabled(false);
@@ -522,12 +534,12 @@ public class MainViewPanel extends ProjectComponent {
             aboutAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(MainViewPanel.this,
-                        Ikayaki.APP_NAME + " " + Ikayaki.APP_VERSION + " / purselo\n\n" +
-                        Ikayaki.APP_HOME_PAGE + "\n\n" +
-                        "Mikko Jormalainen\nSamuli Kaipiainen\nAki Korpua\nEsko Luontola\nAki Sysmäläinen",
-                        "About " + Ikayaki.APP_NAME, JOptionPane.INFORMATION_MESSAGE,
-                        // TODO: add some nice picture here :)
-                        new ImageIcon(ClassLoader.getSystemResource("resources/projectExplorerTabDown.png")));
+                            Ikayaki.APP_NAME + " " + Ikayaki.APP_VERSION + " / purselo\n\n" +
+                            Ikayaki.APP_HOME_PAGE + "\n\n" +
+                            "Mikko Jormalainen\nSamuli Kaipiainen\nAki Korpua\nEsko Luontola\nAki Sysmäläinen",
+                            "About " + Ikayaki.APP_NAME, JOptionPane.INFORMATION_MESSAGE,
+                            // TODO: add some nice picture here :)
+                            new ImageIcon(ClassLoader.getSystemResource("resources/projectExplorerTabDown.png")));
                 }
             };
             aboutAction.putValue(Action.NAME, "About");

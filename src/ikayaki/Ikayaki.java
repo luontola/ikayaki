@@ -61,8 +61,6 @@ be closed.
      * @throws HeadlessException if GraphicsEnvironment.isHeadless() returns true.
      */
     public Ikayaki(Project project) throws HeadlessException {
-        super(APP_NAME + " " + APP_VERSION);
-
         PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
         try {
             UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
@@ -72,6 +70,7 @@ be closed.
 
         final MainViewPanel main = new MainViewPanel(project);
 
+        setTitle(null);
         setLayout(new BorderLayout());
         setJMenuBar(main.getMenuBar());
         add(main, "Center");
@@ -122,6 +121,19 @@ be closed.
     }
 
     /**
+     * Sets the title of the program. Appends the name and version of the program with the supplied parameter.
+     *
+     * @param title the text to be shown in the title, or null to show only the program's name and version.
+     */
+    @Override public void setTitle(String title) {
+        if (title != null) {
+            super.setTitle(APP_NAME + " " + APP_VERSION + " - " + title);
+        } else {
+            super.setTitle(APP_NAME + " " + APP_VERSION);
+        }
+    }
+
+    /**
      * Starts the program with the provided command line parameters. If the location of a project file is given as a
      * parameter, the program will try to load it.
      *
@@ -136,9 +148,7 @@ be closed.
             }
         }
 
-        /* HACK:
-         * ProjectExplorerPanel's text field requires that the program is started in the event dispatch thread.
-         */
+        // the program must be started in the event dispatch thread
         final Project p = project;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
