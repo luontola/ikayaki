@@ -289,8 +289,9 @@ whose measuring ended.
                 // (which could mean that there were load error, and that selection was reverted)
                 if (e.getValueIsAdjusting() || explorerTable.getSelectedRow() == selectedFile) return;
 
+                if (explorerTable.getSelectedRow() == -1) return; // otherwise will crash the program upon loading a file
                 Project project = Project.loadProject(files[explorerTable.getSelectedRow()]);
-                // load error, revert back ro old selection
+                // load error, revert back to old selection
                 if (project == null) {
                     // TODO: flash selected row red for 100 ms, perhaps?
                     if (selectedFile == -1) explorerTable.clearSelection();
