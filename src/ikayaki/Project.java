@@ -380,18 +380,22 @@ project listeners.
         // TODO: should the cache be emptied at some point?
 
         Type type = null;
+        BufferedReader reader = null;
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+            reader = new BufferedReader(new FileReader(file));
 
             // check that it is a XML file
             String line = reader.readLine();
-            if (line.indexOf("<?xml") < 0) {
+            if (line == null || line.indexOf("<?xml") < 0) {
                 return null;
             }
 
             // the second line of the file should be something like:
             // <project type="TYPE" version="1.0">
             line = reader.readLine();
+            if (line == null) {
+                return null;
+            }
             int start = line.indexOf("<project type=\"");
             if (start < 0) {
                 return null;
@@ -408,6 +412,14 @@ project listeners.
             e.printStackTrace();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         // save the results to cache

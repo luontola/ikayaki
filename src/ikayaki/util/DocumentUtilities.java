@@ -27,8 +27,12 @@ public class DocumentUtilities {
      * @param file     the file on which to emit the XML document.
      * @param document the document to be emitted.
      * @return true if the operation was successful, otherwise false.
+     * @throws NullPointerException if any of the arguments is null.
      */
     public static boolean storeToXML(File file, Document document) {
+        if (file == null || document == null) {
+            throw new NullPointerException();
+        }
         try {
             return storeToXML(new FileOutputStream(file), document);
         } catch (FileNotFoundException e) {
@@ -43,8 +47,12 @@ public class DocumentUtilities {
      * @param out      the output stream on which to emit the XML document.
      * @param document the document to be emitted.
      * @return true if the operation was successful, otherwise false.
+     * @throws NullPointerException if any of the arguments is null.
      */
     public static boolean storeToXML(OutputStream out, Document document) {
+        if (out == null || document == null) {
+            throw new NullPointerException();
+        }
         try {
             TransformerFactory tf = TransformerFactory.newInstance();
             tf.setAttribute("indent-number", new Integer(2));
@@ -61,6 +69,12 @@ public class DocumentUtilities {
             e.printStackTrace();
         } catch (TransformerException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }
@@ -70,8 +84,12 @@ public class DocumentUtilities {
      *
      * @param file the file from which to read the XML document.
      * @return the loaded document, or null if there was an error in loading it.
+     * @throws NullPointerException if any of the arguments is null.
      */
     public static Document loadFromXML(File file) {
+        if (file == null) {
+            throw new NullPointerException();
+        }
         try {
             return loadFromXML(new FileInputStream(file));
         } catch (FileNotFoundException e) {
@@ -85,8 +103,12 @@ public class DocumentUtilities {
      *
      * @param in the input stream from which to read the XML document.
      * @return the loaded document, or null if there was an error in loading it.
+     * @throws NullPointerException if any of the arguments is null.
      */
     public static Document loadFromXML(InputStream in) {
+        if (in == null) {
+            throw new NullPointerException();
+        }
         try {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document document = builder.parse(in);
@@ -98,6 +120,12 @@ public class DocumentUtilities {
             e.printStackTrace();
         } catch (SAXException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
