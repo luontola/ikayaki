@@ -1,7 +1,6 @@
 
 % Macros for generating design documents and .java files
 
-
 % MACROS FOR CLASS DOCUMENTATION
 \newcommand{\getClass}[0]{}
 \newcommand{\beginClass}[1] {
@@ -10,7 +9,13 @@
 	\renewcommand{\getClass}[0]{#1}
 	\label{class:#1}
 	
+	\begin{hyphenrules}{nohyphenation}
 	\begin{tabular}{p{3cm}p{11cm}}
+}
+\newcommand{\classComment}[1] {
+	\multicolumn{2}{p{14cm}} {
+		#1
+	}\\
 }
 \newcommand{\classPackage}[1] {
 	\textbf{Package} & #1 \\
@@ -35,11 +40,6 @@
 	\stepcounter{classSubclassCounter}
 	\textbf{Subclass \arabic{classSubclassCounter}} & #1 (\ref{class:#1}) \\
 }
-\newcommand{\classComment}[1] {
-	\multicolumn{2}{p{14cm}} {
-		#1
-	}\\
-}
 \newcommand{\classPatterns}[1] {
 	\textbf{Design patterns} & #1 \\
 }
@@ -49,27 +49,39 @@
 }
 \newcommand{\closeClass}[0] {
 	\end{tabular}\\
+	\end{hyphenrules}
+	
 	\setcounter{classUsesCounter}{0}
 	\setcounter{classSubclassCounter}{0}
 	\setcounter{classEventCounter}{0}
+	
+	\renewcommand{\isFirstField}[0]{ \large\textbf{Fields of \getClass}\normalsize }
+	\renewcommand{\isFirstMethod}[0]{ \large\textbf{Methods of \getClass}\normalsize }
 }
 \newcounter{classUsesCounter}
 \newcounter{classSubclassCounter}
 \newcounter{classEventCounter}
+\newcommand{\isFirstField}[0]{}
+\newcommand{\isFirstMethod}[0]{}
 
 
 % MACROS FOR FIELD DOCUMENTATION
 \newcommand{\getField}[0]{}
 \newcommand{\beginField}[1] {
+	\isFirstField
+	\renewcommand{\isFirstField}[0]{}
+	
 	\renewcommand{\getField}[0]{#1}
 	\label{field:\getClass.#1}
 	
+	\begin{hyphenrules}{nohyphenation}
 	\begin{tabular}{p{3cm}p{11cm}}
 }
 \newcommand{\fieldDeclaration}[1] {
 	\multicolumn{2}{p{14cm}} {
 		\hspace{-0.32cm}
-		\texttt{#1}
+%		\large{\textsf{#1}}
+		\textsf{#1}
 	}\\
 }
 \newcommand{\fieldValue}[1] {
@@ -82,21 +94,27 @@
 }
 \newcommand{\closeField}[0] {
 	\end{tabular}\\
+	\end{hyphenrules}
 }
 
 
 % MACROS FOR METHOD DOCUMENTATION
 \newcommand{\getMethod}[0]{}
 \newcommand{\beginMethod}[1] {
+	\isFirstMethod
+	\renewcommand{\isFirstMethod}[0]{}
+	
 	\renewcommand{\getMethod}[0]{#1}
 	\label{method:\getClass.#1}
 	
+	\begin{hyphenrules}{nohyphenation}
 	\begin{tabular}{p{3cm}p{11cm}}
 }
 \newcommand{\methodDeclaration}[1] {
 	\multicolumn{2}{p{14cm}} {
 		\hspace{-0.32cm}
-		\texttt{#1}
+%		\large{\textsf{#1}}
+		\textsf{#1}
 	}\\
 }
 \newcommand{\methodComment}[1] {
@@ -116,6 +134,7 @@
 }
 \newcommand{\closeMethod}[0] {
 	\end{tabular}\\
+	\end{hyphenrules}
 	\setcounter{methodParamCounter}{0}
 }
 \newcounter{methodParamCounter}

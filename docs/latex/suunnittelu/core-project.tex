@@ -1,5 +1,12 @@
 
 \beginClass{Project}
+\classComment{
+	Represents a measurement project file. Project is responsible for managing and storing the data that is recieved from the magnetometer measurements. Any changes made to the project will be written to file regularly (autosave).
+	
+	Project is responsible for controlling the magnetometer through the SQUID API. Controlling the SQUID will be done in a private worker thread. Only one project at a time may access the SQUID.
+	
+	All operations are thread-safe.
+}
 \classPackage{ikayaki}
 \classDeclaration{public class Project}
 \classCreatedBy{ProjectExplorerPanel}
@@ -11,13 +18,6 @@
 \classUses{RunQueue}
 \classUses{ProjectEvent}
 \classUses{MeasurementEvent}
-\classComment{
-	Represents a measurement project file. Project is responsible for managing and storing the data that is recieved from the magnetometer measurements. Any changes made to the project will be written to file regularly (autosave).
-	
-	Project is responsible for controlling the magnetometer through the SQUID API. Controlling the SQUID will be done in a private worker thread. Only one project at a time may access the SQUID.
-	
-	All operations are thread-safe.
-}
 \classPatterns{Facade}
 \classEvent{On property change}{Autosaving will be invoked and the project written to file after a short delay.}
 \classEvent{On measurement started/ended/paused/aborted}{ProjectEvent will be fired to all project listeners.}
@@ -677,33 +677,33 @@
 
 
 \beginClass{Project.Type}
-\classPackage{ikayaki}
-\classDeclaration{public enum Type}
 \classComment{
 	The type of the project. Options are CALIBRATION, AF, THELLIER and THERMAL.
 }
+\classPackage{ikayaki}
+\classDeclaration{public enum Type}
 \closeClass
 
 
 \beginClass{Project.State}
-\classPackage{ikayaki}
-\classDeclaration{public enum State}
 \classComment{
 	The state of the project's measurements. Options are IDLE, MEASURING, PAUSED, ABORTED.
 }
+\classPackage{ikayaki}
+\classDeclaration{public enum State}
 \closeClass
 
 
 \beginClass{MeasurementSequence}
-\classPackage{ikayaki}
-\classDeclaration{public class MeasurementSequence}
-\classCreatedBy{Project}
-\classUses{MeasurementStep}
 \classComment{
 	A list of measurement steps. Steps can be added or removed from the sequence.
 	
 	All operations are thread-safe.
 }
+\classPackage{ikayaki}
+\classDeclaration{public class MeasurementSequence}
+\classCreatedBy{Project}
+\classUses{MeasurementStep}
 \closeClass
 
 \beginField{name}
@@ -830,16 +830,17 @@
 
 
 \beginClass{MeasurementStep}
-\classPackage{ikayaki}
-\classDeclaration{public class MeasurementStep}
-\classCreatedBy{Project, MeasurementSequencePanel}
-\classUses{Project}
-\classUses{MeasurementResult}
 \classComment{
 	A single step in a measurement sequence. Each step can include multiple measurements for improved precision. A step can have a different volume and mass than the related project, but by default the volume and mass of the project will be used. Only the project may change the state and results of a measurement step.
 	
 	All operations are thread-safe.
 }
+\classPackage{ikayaki}
+\classDeclaration{public class MeasurementStep}
+\classCreatedBy{Project}
+\classCreatedBy{MeasurementSequencePanel}
+\classUses{Project}
+\classUses{MeasurementResult}
 \closeClass
 
 \beginField{project}
@@ -1050,21 +1051,21 @@
 
 
 \beginClass{MeasurementStep.State}
-\classPackage{ikayaki}
-\classDeclaration{public enum State}
 \classComment{
 	The state of a measurement step. Options are READY, MEASURING, DONE\_RECENTLY and DONE.
 }
+\classPackage{ikayaki}
+\classDeclaration{public enum State}
 \closeClass
 
 
 \beginClass{MeasurementResult}
-\classPackage{ikayaki}
-\classDeclaration{public class MeasurementResult}
-\classCreatedBy{Magnetometer}
 \classComment{
 	A set of X, Y and Z values measured by the magnetometer. The raw XYZ values will be rotated in 3D space by using a transformation matrix. The project will set and update the transformation whenever its parameters are changed.
 }
+\classPackage{ikayaki}
+\classDeclaration{public class MeasurementResult}
+\classCreatedBy{Magnetometer}
 \closeClass
 
 \beginField{type}
@@ -1180,11 +1181,11 @@
 
 
 \beginClass{MeasurementResult.Type}
-\classPackage{ikayaki}
-\classDeclaration{public enum Type}
 \classComment{
 	The orientation of the sample when it was measured. Options are BG, DEG0, DEG90, DEG180 and DEG270.
 }
+\classPackage{ikayaki}
+\classDeclaration{public enum Type}
 \closeClass
 
 \beginMethod{getName()}
@@ -1213,12 +1214,12 @@
 
 
 \beginClass{MeasurementValue}
-\classPackage{ikayaki}
-\classDeclaration{public abstract class MeasurementValue<T>}
-\classUses{MeasurementStep}
 \classComment{
 	Algorithms for calculating values from the measurements. A MeasurementValue object will be passed to the getValue() method of a project to retrieve the desired value.
 }
+\classPackage{ikayaki}
+\classDeclaration{public abstract class MeasurementValue<T>}
+\classUses{MeasurementStep}
 \classPatterns{Strategy}
 \closeClass
 
@@ -1351,13 +1352,13 @@
 
 
 \beginClass{ProjectEvent}
+\classComment{
+	ProjectEvent is used to notify others about the state change of a project.
+}
 \classPackage{ikayaki}
 \classDeclaration{public class ProjectEvent}
 \classExtends{EventObject}
 \classCreatedBy{Project}
-\classComment{
-	ProjectEvent is used to notify others about the state change of a project.
-}
 \closeClass
 
 \beginField{project}
@@ -1401,21 +1402,21 @@
 
 
 \beginClass{ProjectEvent.Type}
-\classPackage{ikayaki}
-\classDeclaration{public enum Type}
 \classComment{
 	The type of a project event. Options are STATE\_CHANGED, DATA\_CHANGED.
 }
+\classPackage{ikayaki}
+\classDeclaration{public enum Type}
 \closeClass
 
 
 \beginClass{ProjectListener}
-\classPackage{ikayaki}
-\classDeclaration{public interface ProjectListener}
-\classExtends{EventListener}
 \classComment{
 	Defines a listener for project events.
 }
+\classPackage{ikayaki}
+\classDeclaration{public interface ProjectListener}
+\classExtends{EventListener}
 \closeClass
 
 \beginMethod{projectUpdated(ProjectEvent)}
@@ -1428,13 +1429,13 @@
 
 
 \beginClass{MeasurementEvent}
+\classComment{
+	MeasurementEvent is used to notify listeners about the stages of an ongoing measurement.
+}
 \classPackage{ikayaki}
 \classDeclaration{public class MeasurementEvent}
 \classExtends{EventObject}
 \classCreatedBy{Project}
-\classComment{
-	MeasurementEvent is used to notify listeners about the stages of an ongoing measurement.
-}
 \closeClass
 
 \beginField{project}
@@ -1493,21 +1494,21 @@
 
 
 \beginClass{MeasurementEvent.Type}
-\classPackage{ikayaki}
-\classDeclaration{public enum Type}
 \classComment{
 	The type of a measurement event. Options are STEP\_START, STEP\_END, STEP\_ABORTED, HANDLER\_MOVE, HANDLER\_ROTATE, HANDLER\_STOP, DEMAGNETIZE\_START, DEMAGNETIZE\_END, VALUE\_MEASURED.
 }
+\classPackage{ikayaki}
+\classDeclaration{public enum Type}
 \closeClass
 
 
 \beginClass{MeasurementListener}
-\classPackage{ikayaki}
-\classDeclaration{public interface MeasurementListener}
-\classExtends{EventListener}
 \classComment{
 	Defines a listener for measurement events.
 }
+\classPackage{ikayaki}
+\classDeclaration{public interface MeasurementListener}
+\classExtends{EventListener}
 \closeClass
 
 \beginMethod{measurementUpdated(MeasurementEvent)}
