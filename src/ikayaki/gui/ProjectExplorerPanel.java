@@ -128,7 +128,7 @@ whose measuring ended.
      * @param project the project whose directory is to be opened and which project is then selected, or null to use
      *                the last known directory.
      */
-    public ProjectExplorerPanel(final ProjectComponent parent, Project project) {
+    public ProjectExplorerPanel(ProjectComponent parent, Project project) {
         this.parent = parent;
 
         // set current directory to project directory, or latest directory history dir
@@ -256,27 +256,8 @@ whose measuring ended.
             }
         });
 
-        /**
-         * Table sorting.
-         */
-        explorerTable.getTableHeader().addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                JTableHeader th = (JTableHeader) e.getSource();
-                TableColumnModel cm = th.getColumnModel();
-                int viewColumn = cm.getColumnIndexAtX(e.getX());
-                explorerTableSortColumn = cm.getColumn(viewColumn).getModelIndex();
-                // TODO: add proper table sorting here
-                System.out.println("sort " + cm.getColumn(viewColumn).getHeaderValue());
-            }
-        });
-
         // ProjectExplorerTable events
         // TODO: these should be in inner class ProjectExplorerTable
-
-        /*
-             Event B: On table mouse right-click - create a ProjectExplorerPopupMenu for rightclicked
-             project file.
-         */
 
         /**
          * Event A: On table click - call Project.loadProject(File) with clicked project file, call
@@ -286,23 +267,48 @@ whose measuring ended.
         explorerTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 // we only want the actually selected row, and don't want to react to an already selected line
-                // (which could mean that there were load error, and that selection was reverted)
+                // (which could also mean that we had a load error, and that selection was reverted)
                 if (e.getValueIsAdjusting() || explorerTable.getSelectedRow() == selectedFile) return;
-
                 if (explorerTable.getSelectedRow() == -1) return; // otherwise will crash the program upon loading a file
+
                 Project project = Project.loadProject(files[explorerTable.getSelectedRow()]);
+
                 // load error, revert back to old selection
                 if (project == null) {
                     // TODO: flash selected row red for 100 ms, perhaps?
                     if (selectedFile == -1) explorerTable.clearSelection();
                     else explorerTable.setRowSelectionInterval(selectedFile, selectedFile);
                 } else {
-                    // TODO: setProject does too much, but can't call super.setProject from here :/
-                    // setProject(project);
-                    // TODO: can't test if this works, stupid JBuilder got confused again
-                    ProjectExplorerPanel.super.setProject(project);
-                    parent.setProject(project);
+                    // super.setProject nod needed; MainViewPanel (parent) calls our setProject anyway
+                    // ProjectExplorerPanel.super.setProject(project);
+                    ProjectExplorerPanel.this.parent.setProject(project);
                 }
+            }
+        });
+
+        /**
+         * Event B: On table mouse right-click - create a ProjectExplorerPopupMenu for rightclicked
+         * project file.
+         */
+        explorerTable.add(new PopupMenu("heppa"));
+        /*explorerTable.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                // only right-click brings popup menu
+                if (e.getButton() != MouseEvent.BUTTON2) return;
+            }
+        });*/
+
+        /**
+         * ExplorerTable sorting.
+         */
+        explorerTable.getTableHeader().addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTableHeader th = (JTableHeader) e.getSource();
+                TableColumnModel cm = th.getColumnModel();
+                int viewColumn = cm.getColumnIndexAtX(e.getX());
+                explorerTableSortColumn = cm.getColumn(viewColumn).getModelIndex();
+                // TODO: add proper table sorting here
+                System.out.println("sort " + cm.getColumn(viewColumn).getHeaderValue());
             }
         });
 
@@ -336,10 +342,14 @@ whose measuring ended.
                                               // - No. Otherwise you would end up with the dropdown menu full of directories
                                               //   that you would never use, because they contain no projects. The history
                                               //   dropdown menu is meant for a quick access to folders with project files.
+                                              // - OK. Next TODO: remove all these superfluous comments x)
 
         // update browserField and explorerTable with new directory
         if (browserField != null) browserField.setSelectedItem(directory.getPath());
         if (explorerTableModel != null) explorerTableModel.fireTableDataChanged();
+        // fireTableDataChanged messes with selection, set it again
+        if (explorerTable != null && selectedFile != -1)
+            explorerTable.setRowSelectionInterval(selectedFile, selectedFile);
 
         return true;
     }
@@ -354,6 +364,7 @@ whose measuring ended.
         File[] files = directory.listFiles(new FileFilter() {
             public boolean accept(File file) {
                 // TODO: shouldn't this return only a list of valid project files? so why is Ikayaki.FILE_TYPE commented out?
+                // - for explorerTable testing, need some (working perhaps) project file expamples :)
                 return (file.isFile() && file.getName().endsWith(/*Ikayaki.FILE_TYPE*/ ""));
             }
         });
@@ -476,7 +487,7 @@ whose measuring ended.
      *
      * @author Samuli Kaipiainen
      */
-    // TODO: loose comment above...
+    // TODO: comment above awaiting for refactoring into ProjectExplorerTable class
 
     /**
      * TableModel which handles data from files (in upper-class ProjectExplorerPanel).
