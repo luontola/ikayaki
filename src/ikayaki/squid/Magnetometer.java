@@ -126,8 +126,8 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * Generic send message sender, use with caution and knowledge. Checks if commands are good.
      *
      * @param axis       x,y,z. In lower case.
-     * @param command    "D" Send back the analog data last captured with the LATCH command. The <data> field is not
-     *                   required. <br/>"C" Send back the counter value last captured with the LATCH command. The <data>
+     * @param command    "D" Send back the analog data last captured with the LATCH command. The data field is not
+     *                   required. <br/>"C" Send back the counter value last captured with the LATCH command. The data
      *                   field is not required. <br/>"S" Send back status. Various pieces of status can be sent by the
      *                   magnetometer electronics.
      * @param datavalues Datavalues one or more: <br/>"A" Send back all status. <br/>"F" Send back all filter status.

@@ -31,7 +31,9 @@ import java.util.List;
 /**
  * A single step in a measurement sequence. Each step can include multiple measurements for improved precision. A step
  * can have a different volume and mass than the related project, but by default the volume and mass of the project will
- * be used. Only the project may change the state and results of a measurement step. All operations are thread-safe.
+ * be used. Only the project may change the state and results of a measurement step.
+ * <p/>
+ * All operations are thread-safe.
  *
  * @author
  */

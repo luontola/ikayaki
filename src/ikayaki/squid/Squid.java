@@ -100,9 +100,11 @@ public class Squid {
 
     /**
      * Checks which settings have changed and updates all the device interfaces. This method should be called when
-     * changes are made to the device parameters. This method starts a worker thread that will update the settings. If
-     * the current project has a measurement running, the thread will keep on retrying until the measurement is
-     * finished. Multiple calls to this method within a short period of time will update the settings only once.
+     * changes are made to the device parameters.
+     * <p/>
+     * This method starts a worker thread that will update the settings. If the current project has a measurement
+     * running, the thread will keep on retrying until the measurement is finished. Multiple calls to this method within
+     * a short period of time will update the settings only once.
      */
     public synchronized void updateSettings() {
         return; // TODO

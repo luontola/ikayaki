@@ -27,8 +27,9 @@ import javax.swing.*;
 /**
  * Has "Measure"/"Pause", "Single step" and "Stop now!" buttons for controlling measurements; "+z/-z" radiobuttons for
  * changing sample orientation used in calculations, help picture for inserting sample, picture of current magnetometer
- * status, and, manual controls. Listens MeasurementEvents and ProjectEvents, and updates buttons and magnetometer
- * status accordingly.
+ * status, and, manual controls.
+ * <p/>
+ * Listens MeasurementEvents and ProjectEvents, and updates buttons and magnetometer status accordingly.
  *
  * @author
  */

@@ -36,9 +36,12 @@ import java.util.Properties;
 
 /**
  * Represents a measurement project file. Project is responsible for managing and storing the data that is recieved from
- * the magnetometer measurements. Any changes made to the project will be written to file regularly (autosave). Project
- * is responsible for controlling the magnetometer through the SQUID API. Controlling the SQUID will be done in a
- * private worker thread. Only one project at a time may access the SQUID. All operations are thread-safe.
+ * the magnetometer measurements. Any changes made to the project will be written to file regularly (autosave).
+ * <p/>
+ * Project is responsible for controlling the magnetometer through the SQUID API. Controlling the SQUID will be done in
+ * a private worker thread. Only one project at a time may access the SQUID.
+ * <p/>
+ * All operations are thread-safe.
  *
  * @author
  */
@@ -367,17 +370,21 @@ project listeners.
     }
 
     /**
-     * Returns the Squid if this project is its owner, otherwise returns null. (NOTE: Make this method public? Or return
-     * a Proxy (see design patterns), so others can know where the handler is moving but not control it?)
+     * Returns the Squid if this project is its owner, otherwise returns null.
+     * <p/>
+     * (NOTE: Make this method public? Or return a Proxy (see design patterns), so others can know where the handler is
+     * moving but not control it?)
      */
     private synchronized Squid getSquid() {
         return null; // TODO
     }
 
     /**
-     * Sets this project the owner of the Squid. Uses the setOwner() method of the specified Squid. Only one project may
-     * own the Squid at a time. The Squid must be first detached with "setSquid(null)" from its owner before it can be
-     * given to another project. Detaching the Squid is possible only when the project’s state is IDLE.
+     * Sets this project the owner of the Squid. Uses the setOwner() method of the specified Squid.
+     * <p/>
+     * Only one project may own the Squid at a time. The Squid must be first detached with "setSquid(null)" from its
+     * owner before it can be given to another project. Detaching the Squid is possible only when the project’s state is
+     * IDLE.
      *
      * @param squid pointer to the SQUID interface, or null to detach this project from it.
      * @return true if the operation was completed, false if the Squid has another owner or a measurement is running (in
@@ -471,9 +478,10 @@ project listeners.
 
     /**
      * Returns the current transformation matrix for the sample. For performance reasons, this method returns a
-     * reference to the internal data structure and not a copy of it. WARNING!!! Absolutely NO modification of the data
-     * contained in this matrix should be made – if any such manipulation is necessary, it should be done on a copy of
-     * the matrix returned rather than the matrix itself.
+     * reference to the internal data structure and not a copy of it.
+     * <p/>
+     * WARNING!!! Absolutely NO modification of the data contained in this matrix should be made – if any such
+     * manipulation is necessary, it should be done on a copy of the matrix returned rather than the matrix itself.
      *
      * @return reference to the transformation matrix.
      */
@@ -582,7 +590,9 @@ project listeners.
 
     /**
      * Appends a sequence to this project’s sequence. Only the stepValues will be copied from the specified sequence and
-     * added as new steps to this project. If isSequenceEditEnabled() is false, nothing will be done.
+     * added as new steps to this project.
+     * <p/>
+     * If isSequenceEditEnabled() is false, nothing will be done.
      *
      * @param sequence the measurement sequence to be added.
      * @return true if the steps were added, or false if isSequenceEditEnabled() was false.
@@ -607,7 +617,9 @@ project listeners.
 
     /**
      * Appends a step to this project’s sequence. Only the stepValue will be copied from the specified step and added as
-     * a new step to this project. If isSequenceEditEnabled() is false, nothing will be done.
+     * a new step to this project.
+     * <p/>
+     * If isSequenceEditEnabled() is false, nothing will be done.
      *
      * @param step the measurement step to be added.
      * @return true if the step was added, or false if isSequenceEditEnabled() was false.
@@ -619,8 +631,11 @@ project listeners.
 
     /**
      * Adds a step to the specified index of this project’s sequence. Only the stepValue will be copied from the
-     * specified step and added as a new step to this project. The index must be such, that the indices of the completed
-     * measurements will not change. If isSequenceEditEnabled() is false, nothing will be done.
+     * specified step and added as a new step to this project.
+     * <p/>
+     * The index must be such, that the indices of the completed measurements will not change.
+     * <p/>
+     * If isSequenceEditEnabled() is false, nothing will be done.
      *
      * @param index the index to which the step will be added.
      * @param step  the measurement step to be added.
@@ -634,8 +649,9 @@ project listeners.
     }
 
     /**
-     * Removes a step from this project’s sequence. Completed measurements can not be removed. If
-     * isSequenceEditEnabled() is false, nothing will be done.
+     * Removes a step from this project’s sequence. Completed measurements can not be removed.
+     * <p/>
+     * If isSequenceEditEnabled() is false, nothing will be done.
      *
      * @param index the index of the step to be removed.
      * @return true if the step was removed, or false if isSequenceEditEnabled() was false.
@@ -647,8 +663,9 @@ project listeners.
     }
 
     /**
-     * Removes a series of steps from this project’s sequence. Completed measurements can not be removed. If
-     * isSequenceEditEnabled() is false, nothing will be done.
+     * Removes a series of steps from this project’s sequence. Completed measurements can not be removed.
+     * <p/>
+     * If isSequenceEditEnabled() is false, nothing will be done.
      *
      * @param start the first index to be removed.
      * @param end   the last index to be removed. If end < start, no steps will be removed.
@@ -765,8 +782,9 @@ project listeners.
     }
 
     /**
-     * Starts an auto step measurement. Will do nothing if isAutoStepEnabled() is false. The measurement will run in its
-     * own thread, and this method will not wait for it to finish.
+     * Starts an auto step measurement. Will do nothing if isAutoStepEnabled() is false.
+     * <p/>
+     * The measurement will run in its own thread, and this method will not wait for it to finish.
      *
      * @return true if the measurement was started, otherwise false.
      */
@@ -775,8 +793,9 @@ project listeners.
     }
 
     /**
-     * Starts a single step measurement. Will do nothing if isSingleStepEnabled() is false. The measurement will run in
-     * its own thread, and this method will not wait for it to finish.
+     * Starts a single step measurement. Will do nothing if isSingleStepEnabled() is false.
+     * <p/>
+     * The measurement will run in its own thread, and this method will not wait for it to finish.
      *
      * @return true if the measurement was started, otherwise false.
      */
@@ -786,8 +805,9 @@ project listeners.
 
     /**
      * Pauses the currently running measurement. A paused measurement will halt after it finishes the current
-     * measurement step. Will do nothing if isPauseEnabled() is false. This method will notify the measurement thread to
-     * pause, but will not wait for it to finish.
+     * measurement step. Will do nothing if isPauseEnabled() is false.
+     * <p/>
+     * This method will notify the measurement thread to pause, but will not wait for it to finish.
      *
      * @return true if the measurement will pause, otherwise false.
      */
@@ -797,8 +817,9 @@ project listeners.
 
     /**
      * Aborts the currently running measurement. An aborted measurement will halt immediately and leave the handler
-     * where it was (enables manual control). Will do nothing if isAbortEnabled() is false. This method will notify the
-     * measurement thread to abort, but will not wait for it to finish.
+     * where it was (enables manual control). Will do nothing if isAbortEnabled() is false.
+     * <p/>
+     * This method will notify the measurement thread to abort, but will not wait for it to finish.
      *
      * @return true if the measurement will abort, otherwise false.
      */
@@ -807,8 +828,9 @@ project listeners.
     }
 
     /**
-     * Moves the sample handler to the specified position. Will do nothing if isManualControlEnabled() is false. The
-     * operation will run in its own thread, and this method will not wait for it to finish.
+     * Moves the sample handler to the specified position. Will do nothing if isManualControlEnabled() is false.
+     * <p/>
+     * The operation will run in its own thread, and this method will not wait for it to finish.
      *
      * @param position the position to move the handler to.
      * @return true if the operation was started, otherwise false.
@@ -818,8 +840,9 @@ project listeners.
     }
 
     /**
-     * Rotates the sample handler to the specified angle. Will do nothing if isManualControlEnabled() is false. The
-     * operation will run in its own thread, and this method will not wait for it to finish.
+     * Rotates the sample handler to the specified angle. Will do nothing if isManualControlEnabled() is false.
+     * <p/>
+     * The operation will run in its own thread, and this method will not wait for it to finish.
      *
      * @param angle the angle to rotate the handler to.
      * @return true if the operation was started, otherwise false.
@@ -830,8 +853,9 @@ project listeners.
 
     /**
      * Measures the X, Y and Z of the sample. Adds the results as a new measurement step to the project. Will do nothing
-     * if isManualControlEnabled() is false. The operation will run in its own thread, and this method will not wait for
-     * it to finish.
+     * if isManualControlEnabled() is false.
+     * <p/>
+     * The operation will run in its own thread, and this method will not wait for it to finish.
      *
      * @return true if the operation was started, otherwise false.
      */
@@ -841,7 +865,9 @@ project listeners.
 
     /**
      * Demagnetizes the sample in Z direction with the specified amplitude. Will do nothing if isManualControlEnabled()
-     * is false. The operation will run in its own thread, and this method will not wait for it to finish.
+     * is false.
+     * <p/>
+     * The operation will run in its own thread, and this method will not wait for it to finish.
      *
      * @param amplitude the amplitude to demagnetize in mT.
      * @return true if the operation was started, otherwise false.
@@ -852,7 +878,9 @@ project listeners.
 
     /**
      * Demagnetizes the sample in Y direction with the specified amplitude. Will do nothing if isManualControlEnabled()
-     * is false. The operation will run in its own thread, and this method will not wait for it to finish.
+     * is false.
+     * <p/>
+     * The operation will run in its own thread, and this method will not wait for it to finish.
      *
      * @param amplitude the amplitude to demagnetize in mT.
      * @return true if the operation was started, otherwise false.

@@ -28,7 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A list of measurement steps. Steps can be added or removed from the sequence. All operations are thread-safe.
+ * A list of measurement steps. Steps can be added or removed from the sequence.
+ * <p/>
+ * All operations are thread-safe.
  *
  * @author
  */
