@@ -1,0 +1,80 @@
+% -- makrot ja muut alkutavarat kuuluisivat ehkäpä loogisemmin dokumentti.tex -tiedostoon, mutta kun niitä kuitenkin pitää jatkuvasti muokkailla, ei se olisi ollenkaan kätevää
+
+% estämmä ihme "underfull \hbox (badness 10000)" -varoitukset (ei hajua mistä tulevat)
+\hbadness=10000
+
+% vaatimusdokkarista kopioidut makrot; muokkaillaan näistä jotain uutta fiksua, lisätään myös automaattiset \labelit ja tehdään viittaukset tällä kertaa Oiken
+
+% super-makrot use caseille; huomaa että \uctitle aloittaa ja \ucend lopettaa, muuten tulee ongelma
+% lopullisesta versiosta poistettavat kommentit joko 1) [], 2) \ucnote{} tai 3) \ucnotein{} sisällä
+\newcommand{\ucsecdesc}[1]{\textit{#1}\\}
+% vanha sivunvaihdon salliva \uctitle...
+% \newcommand{\uctitle}[1]{\refstepcounter{ucnum}\textbf{UC\arabic{ucnum}: #1}\\\begin{tabular}{p{3cm}p{11cm}}}
+% ...uusi sivunvaihdon estävä, jossa on purkatettu 0,32cm sisennyksen poisto; siitä olisi kiva päästä eroon, raastaa niin sydäntä
+\newcommand{\uctitle}[1] {
+	\refstepcounter{ucnum}
+	\begin{tabular}{p{3cm}p{11cm}}
+	\multicolumn{2}{p{14cm}} {
+		\hspace{-0.32cm}
+		\textbf{UC\arabic{ucnum}: #1}
+	}\\
+}
+\newcommand{\ucnote}[1]{\multicolumn{2}{p{14cm}}{[\textsc{#1}]}\\}
+\newcommand{\ucnotein}[1]{[\textsc{#1}]}
+\newcommand{\ucscenario}[1]{\stepcounter{ucsce}\textbf{Scenario \alph{ucsce}} & #1\\}
+\newcommand{\ucpre}[1]{\textbf{Precondition} & #1\\}
+\newcommand{\ucpost}[1]{\textbf{Postcondition} & #1\\}
+\newcommand{\ucerror}[1]{\textbf{Error condition} & #1\\}
+\newcommand{\ucgd}[1]{\textbf{Goal-derived} & #1\\}
+\newcommand{\ucreq}[1]{\textbf{Requirements} & #1\\}
+\newcommand{\ucend}[0]{\end{tabular}\\}
+\newcounter{ucnum}
+\newcounter{ucsce}[ucnum]
+
+% makrojen käyttö; \setcounter vain mahdollisen pseudo-taulukon alkuun
+
+Use case format: \nopagebreak
+
+\setcounter{ucnum}{-1}
+\uctitle{Use case identifier and title}
+\ucnote{Possible temporary note here for project group; shall be removed from final version... Or maybe not.}
+\ucscenario{First scenario for doing the use case.}
+\ucscenario{Second scenario for doing the use case. ...}
+\ucpre{Preconditions for use case.}
+\ucpost{Postconditions for use case.}
+\ucerror{Error handling, mainly if anything special needs to be done.}
+\ucgd{Goal-derived use case(s) in which this use case occurs (if any); see section~\ref{seq:gduc}.}
+\ucreq{Requirement(s) from which this use case derives; see section~\ref{seq:req}.}
+\ucend
+
+% kuvan lisäys ja siihen viittaus estetyllä rivinvaihdolla
+%\begin{figure}
+%\begin{center}
+%\includegraphics[angle=90,width=14cm]{classdiagram.eps}
+%\caption{}
+%\label{fig:classdiagram}
+%\end{center}
+%\end{figure}
+
+%See Figure~\ref{fig:classdiagram}.
+
+
+% esimerkkirakenne mukaillen kopioitu ekasta löytämästäni esimerkistä -> http://www.cs.helsinki.fi/group/assari/
+
+\section{Introduction}
+
+\subsection{Meaning and structure of the document}
+\subsection{Glossary}
+
+\section{Overview of the system}
+
+Class diagram?
+
+\section{Architecture description}
+
+\section{Some specific part to this system...}
+\section{Some other specific part to this system...}
+
+\section{Package structure}
+
+\section{Bibliography}
