@@ -423,7 +423,7 @@ Goals of the software set by client..
 
 \ReqId{R17}
 \ReqName{Graphic presentation of measurements}
-\ReqDesc{Program draws graphs from measurement data. Available grap types are: Stereo Plot, Intensity, Zijderveld, Difference Vectors, Susteptibility, O63, Great Circles. (TODO: what are the definitions of these graphs? priorities per graph?)}
+\ReqDesc{Program draws graphs from measurement data. Available graph types are: Stereo Plot, Intensity, Zijderveld, Difference Vectors, Susteptibility, O63, Great Circles. (TODO: what are the definitions of these graphs? priorities per graph?)}
 \ReqPrio{3}
 
 
@@ -454,7 +454,7 @@ Goals of the software set by client..
 
 \ReqId{QR2}
 \ReqName{Ease of use}
-\ReqDesc{Program should be easy to use for first time users.}
+\ReqDesc{Program should be easy to use for first time users after it has been explained to them how to take measurements with the magnetometer.}
 \ReqPrio{1}
 
 \ReqId{QR3}
@@ -480,8 +480,8 @@ interfaces".
 It must be possible to continue the development of the program. The 
 documentation must be complete so that other teams can quickly continue the 
 development even if they have not studied user interface designing. It must be 
-possible to add new grap types to the program and export the measurement data to 
-other programs.
+possible to add new graph types to the program and export the measurement data 
+to other programs.
 
 
 \subsection{Restrictions}
@@ -523,6 +523,11 @@ Overview of UI described here..
 
 \section{Architecture overview}
 
+The program architecture can be divided into three parts: SQUID interface, 
+measurement project and user interface. The program will also communicate with 
+the SQUID hardware and local file system. A graphical representation of the 
+architecture can be seen in Figure~\ref{fig:architecture}.
+
 \begin{figure}
 \begin{center}
 \includegraphics[width=10cm]{architecture.eps}
@@ -530,10 +535,6 @@ Overview of UI described here..
 \label{fig:architecture}
 \end{center}
 \end{figure}
-
-The program architecture can be divided into three parts: SQUID interface, 
-measurement project and user interface. The program will also communicate with 
-the SQUID hardware and local file system.
 
 SQUID interface is responsible for controlling the hardware in an orderly 
 manner. It will provide high- and low-level controls for using the hardware. 
@@ -551,6 +552,7 @@ be automatically synchronized after a short delay (1 second or less).
 User interface is responsible for communicating with the user of the program. It 
 will update itself whenever the state of the measurement project is changed. It 
 will send commands from the user to the program.
+
 
 
 \section{External interfaces}
