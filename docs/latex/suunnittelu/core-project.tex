@@ -60,71 +60,66 @@
 \classUses{Project}
 \classUses{MeasurementResult}
 \classComment{
-	
+	A single step in a measurement sequence. Each step can include multiple measurements for improved measurement precision. A step can have a different volume and mass than the related project, but by default the volume and mass of the project will be used. Only the project may change the state and results of a measurement step.
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
 \closeClass
 
 
 \beginClass{MeasurementStep.State}
 \classPackage{ikayaki}
-\classDeclaration{}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
+\classDeclaration{public enum State}
 \classComment{
+	The state of a measurement step. Options are READY, MEASURING, DONE_RECENTLY and DONE.
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
 \closeClass
 
 
 \beginClass{MeasurementResult}
 \classPackage{ikayaki}
-\classDeclaration{}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
+\classDeclaration{public class MeasurementResult}
+\classCreatedBy{Magnetometer}
 \classComment{
+	A set of X, Y and Z values measured by the magnetometer. The raw XYZ values will be rotated in 3D space by using a transformation matrix. The project will set and update the transformation whenever its parameters are changed.
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
 \closeClass
 
 
 \beginClass{MeasurementResult.Type}
 \classPackage{ikayaki}
-\classDeclaration{}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
+\classDeclaration{public enum Type}
 \classComment{
+	The orientation of the sample when it was measured. Options are BG, DEG0, DEG90, DEG180 and DEG270.
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
 \closeClass
+
+\beginMethod{getName()}
+\methodDeclaration{public String getName()}
+\methodReturn{"BG", "0", "90", "180" or "270"}
+\closeMethod
+
+\beginMethod{rotate(Tuple3d,Tuple3d)}
+\methodDeclaration{public Tuple3d rotate(Tuple3d from, Tuple3d to)}
+\methodComment{
+	Rotates the raw XYZ values from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will just copy the values directly.
+}
+\methodParam{from}{Old values that need to be rotated}
+\methodParam{to}{Where the new values will be saved}
+\methodReturn{The same as parameter to, or a new object if to was null.}
+\closeMethod
+
+\beginMethod{rotate(Tuple3d)}
+\methodDeclaration{public Tuple3d rotate(Tuple3d from)}
+\methodComment{
+	Rotates the raw XYZ values from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will just copy the values directly.
+}
+\methodParam{from}{Old values that need to be rotated}
+\methodReturn{A new object with the rotated values.}
+\closeMethod
 
 
 \beginClass{MeasurementValue}
 \classPackage{ikayaki}
-\classDeclaration{}
+\classDeclaration{public class MeasurementValue<T>}
 \classExtends{}
 \classImplements{}
 \classCreatedBy{}
