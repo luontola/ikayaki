@@ -98,7 +98,7 @@ public class RunQueue {
     /**
      * @return the delay in milliseconds
      */
-    public synchronized long getDelayMillis() {
+    public synchronized int getDelayMillis() {
         return delayMillis;
     }
 
