@@ -9,10 +9,10 @@
 \closeClass
 
 
-\beginClass{GeneralPlot}
-\classComment{abstract class that implements general construction of a graphical plot}
+\beginClass{AbstractPlot}
+\classComment{Abstract class that implements general construction of a graphical plot.}
 \classPackage{ikayaki.gui}
-\classDeclaration{public abstract GeneralPlot}
+\classDeclaration{public abstract AbstractPlot}
 \classExtends{JPanel}
 \classUses{Measurement}
 \classSubclass{StereoPlot}
@@ -68,7 +68,7 @@
 \classComment{Implements intensity graph plot.}
 \classPackage{ikayaki.gui}
 \classDeclaration{public class IntensityPlot}
-\classExtends{GeneralPlot}
+\classExtends{AbstractPlot}
 \classCreatedBy{MeasurementGraphsPanel}
 \closeClass
 
@@ -76,6 +76,6 @@
 \classComment{Implements stereo graph plot.}
 \classPackage{ikayaki.gui}
 \classDeclaration{public class IntensityPlot}
-\classExtends{GeneralPlot}
+\classExtends{AbstractPlot}
 \classCreatedBy{MeasurementGraphsPanel}
 \closeClass

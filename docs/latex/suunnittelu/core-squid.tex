@@ -90,7 +90,7 @@
 \methodReturn{true if everything is correct, otherwise false.}
 \closeMethod
 
-\beginMethod{setOwner(Project owner)}
+\beginMethod{setOwner(Project)}
 \methodDeclaration{public synchronized boolean setOwner(Project owner)}
 \methodComment{
 	Sets the owner of the Squid. Only one project may have access to the Squid at a time. This method may be called only from the Project class.
@@ -211,7 +211,7 @@
 }
 \closeMethod
 
-\beginMethod{demagnetize(int amplitude)}
+\beginMethod{demagnetize(int)}
 \methodDeclaration{public boolean demagnetize(int amplitude)}
 \methodComment{
     Performs full sequence to demagnetize with given amplitude. Blocking method.
@@ -420,7 +420,7 @@ factory for half stepping.}
 }
 \closeMethod
 
-\beginMethod{setAcceleration(int a)}
+\beginMethod{setAcceleration(int)}
 \methodDeclaration{private void setAcceleration(int a)}
 \methodComment{
     Sends message to handler to set acceleration (Aa).
@@ -428,7 +428,7 @@ factory for half stepping.}
 \methodParam{a}{Acceleration is a number from 0 to 127}
 \closeMethod
 
-\beginMethod{setDeceleration(int d)}
+\beginMethod{setDeceleration(int)}
 \methodDeclaration{private void setDeceleration(int d)}
 \methodComment{
     Sends message to handler to set deceleration (Dd).
@@ -436,7 +436,7 @@ factory for half stepping.}
 \methodParam{a}{Deceleration is a number from 0 to 127}
 \closeMethod
 
-\beginMethod{setBaseSpeed(int b)}
+\beginMethod{setBaseSpeed(int)}
 \methodDeclaration{private void setBaseSpeed(int b)}
 \methodComment{
     Sends message to handler to set base speed. Base rate is the speed at which the motor motion starts and stops. (Bb).
@@ -444,7 +444,7 @@ factory for half stepping.}
 \methodParam{b}{Base Speed is pulses per second and has a range of 50 to 5000.}
 \closeMethod
 
-\beginMethod{setVelocity(int v)}
+\beginMethod{setVelocity(int)}
 \methodDeclaration{private void setVelocity(int v)}
 \methodComment{
     Sends message to handler to set maximum velocity (Mv).
@@ -452,7 +452,7 @@ factory for half stepping.}
 \methodParam{v}{Velocity range is 50 to 20,000}
 \closeMethod
 
-\beginMethod{setHoldTime(int h)}
+\beginMethod{setHoldTime(int)}
 \methodDeclaration{private void setHoldTime(int h)}
 \methodComment{
     This command causes the POWER pin to be pulled low within a specified number of ticks after a move of the motor is completed and it will stay low until just prior to the start of the next move command. This command allows the holding torque of the motor to be turned off automatically after a delay for the mechanical system stabilize thus reducing power consumption and allowing the motor to be turned by hand if this feature is required. If the value is zero then the power is left on forever. (CH h).
@@ -460,7 +460,7 @@ factory for half stepping.}
 \methodParam{h}{value from 0 to 127 representing the number of clock ticks to leave power on the motor after a move.}
 \closeMethod
 
-\beginMethod{setCrystalFrequence(int cf)}
+\beginMethod{setCrystalFrequence(int)}
 \methodDeclaration{private void setCrystalFrequence(int cf)}
 \methodComment{
     numbers. The crystal frequency is used by the chip for setting the base speed and maximum speed and for controlling the time for the wait command. (CX cf).
@@ -496,7 +496,7 @@ factory for half stepping.}
 }
 \closeMethod
 
-\beginMethod{setSteps(int s)}
+\beginMethod{setSteps(int)}
 \methodDeclaration{private void setSteps(int s)}
 \methodComment{
    Set the number of steps to move for the G command. (N s).
@@ -504,7 +504,7 @@ factory for half stepping.}
 \methodParam{s}{steps range is 0 to 16,777,215}
 \closeMethod
 
-\beginMethod{setPosition(int p)}
+\beginMethod{setPosition(int)}
 \methodDeclaration{private void setPosition(int p)}
 \methodComment{
    Set absolut position to move for the G command. (P p).
@@ -526,7 +526,7 @@ factory for half stepping.}
 }
 \closeMethod
 
-\beginMethod{verify(char v)}
+\beginMethod{verify(char)}
 \methodDeclaration{private String verify(char v)}
 \methodComment{
    Gives result for wanted registery. (V v).
@@ -552,7 +552,7 @@ X Crystal frequency
 \methodReturn{returns registery as string}
 \closeMethod
 
-\beginMethod{setPositionRegister(int r)}
+\beginMethod{setPositionRegister(int)}
 \methodDeclaration{private void setPositionRegister(int r)}
 \methodComment{
    Set the position register. This command sets the internal absolute position counter to the value of r. (Z r).

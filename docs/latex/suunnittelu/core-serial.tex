@@ -13,7 +13,7 @@
 \fieldComment{contains last received message from the serial port that this SerialIO represents.}
 \closeField
 
-\beginMethod{SerialIO}
+\beginMethod{SerialIO(SerialParameters)}
 \methodDeclaration{public void SerialIO(SerialParameters parameters)}
 \methodComment{Creates an instance of SerialIO which represents one serial port.}
 \methodParam{parameters}{parameters for the serial port being opened.}
@@ -22,22 +22,22 @@
 \methodThrows{PortInUseException}{if the serial port is already in use.}
 \closeMethod
 
-\beginMethod{writeMessage}
-\methodDeclaration{public writeMessage(String message)}
+\beginMethod{writeMessage(String)}
+\methodDeclaration{public void writeMessage(String message)}
 \methodComment{Writes an ASCII format message to serial port.}
 \methodParam{message}{message to be send}
 \methodThrows{NoSuchPortException}{if no such port is found.}
 \methodThrows{PortInUseException}{if serial port is already in use.}
 \closeMethod
 
-\beginMethod{getLastAnswer}
+\beginMethod{getLastAnswer()}
 \methodDeclaration{public String getLastAnswer()}
 \methodComment{Writes an ASCII format message to serial port. SerialIO sends andSerialPortEvent if it gets answer to this message.}
 \methodReturn{last answer received from serial port or null if no last message is available.}
 \closeMethod
 
-\beginMethod{serialEvent}
-\methodDeclaration{private serialEvent(serialPortEvent event)}
+\beginMethod{serialEvent(SerialPortEvent)}
+\methodDeclaration{private void serialEvent(SerialPortEvent event)}
 \methodComment{This method is run when a serial message is received from serial port. It generates a new SerialIOEvent.}
 \closeMethod
 
@@ -50,41 +50,41 @@
 \closeClass
 
 \beginField{portName}
-\fieldDeclaration{private String}
+\fieldDeclaration{private String portName}
 \fieldComment{The name of the serial port.}
 \closeField
 
 \beginField{baudRate}
-\fieldDeclaration{private int}
+\fieldDeclaration{private int baudRate}
 \fieldComment{The baud rate.}
 \closeField
 
 \beginField{flowControlIn}
-\fieldDeclaration{private int}
+\fieldDeclaration{private int flowControlIn}
 \fieldComment{Type of flow control for receiving.}
 \closeField
 
 \beginField{flowControlOut}
-\fieldDeclaration{private int}
+\fieldDeclaration{private int flowControlOut}
 \fieldComment{Type of flow control for sending.}
 \closeField
 
 \beginField{databits}
-\fieldDeclaration{private int}
+\fieldDeclaration{private int databits}
 \fieldComment{The number of data bits.}
 \closeField
 
 \beginField{stopbits}
-\fieldDeclaration{private int}
+\fieldDeclaration{private int stopbits}
 \fieldComment{The number of stop bits.}
 \closeField
 
 \beginField{parity}
-\fieldDeclaration{private int}
+\fieldDeclaration{private int parity}
 \fieldComment{The type of parity.}
 \closeField
 
-\beginMethod{SerialParameters}
+\beginMethod{SerialParameters(String,int,int,int,int,int,int)}
 \methodDeclaration{public SerialParameters(String portName, int baudRate, int flowControlIn, int flowControlOut, int databits, int stopbits, int parity)}
 \methodComment{Creates a SerialParameter object containing settings for serial port communication.}
 \methodReturn{Parameter settings object.}
@@ -106,11 +106,11 @@
 \closeClass
 
 \beginField{message}
-\fieldDeclaration{private String}
+\fieldDeclaration{private String message}
 \fieldComment{ASCII message recieved from serial port.}
 \closeField
 
-\beginMethod{getMessage}
+\beginMethod{getMessage()}
 \methodDeclaration{public String getMessage()}
 \methodComment{Returns received serial message.}
 \methodReturn{The message in ASCII form that was received from serial port.}
@@ -122,7 +122,7 @@
 \classDeclaration{public abstract interface SerialIOListener extends java.util.EventListener}
 \closeClass
 
-\beginMethod{serialIOEvent}
+\beginMethod{serialIOEvent(SerialIOEvent)}
 \methodDeclaration{void serialIOEvent(SerialIOEvent event) }
 \methodComment{Propagates serial port message event.}
 \methodParam{event}{the event that happened.}
