@@ -260,6 +260,9 @@ project listeners.
             return null;
         }
         projectCache.put(file, project);
+
+        // update history log
+        Settings.instance().updateProjectHistory(file);
         return project;
     }
 
@@ -282,6 +285,8 @@ project listeners.
         // check cache
         Project project = projectCache.get(file);
         if (project != null) {
+            // update history log
+            Settings.instance().updateProjectHistory(file);
             return project;
         }
 
@@ -298,6 +303,9 @@ project listeners.
             e.printStackTrace();
             return null;
         }
+
+        // update history log
+        Settings.instance().updateProjectHistory(file);
         return project;
     }
 
