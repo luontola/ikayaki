@@ -1,0 +1,125 @@
+\beginClass{SerialIO}
+\classComment{This class represents hardware layer to serial port communications.}
+\classPackage{ikayaki.squid}
+\classDeclaration{public class SerialIO}
+\classImplements{SerialPortEventListener}
+\classCreatedBy{Squid}
+\classEvent{On new SerialPortEvent}{generates new SerialMessageArrivedEvent if a data message from serial port is received.}
+\closeClass
+
+\beginField{lastMessage}
+\fieldDeclaration{private String lastMessge}
+\fieldValue{null}
+\fieldComment{contains last received message from the serial port that this SerialIO represents.}
+\closeField
+
+\beginMethod{SerialIO}
+\methodDeclaration{public void SerialIO(SerialParameters parameters)}
+\methodComment{Creates an instance of SerialIO which represents one serial port.}
+\methodParam{parameters}{parameters for the serial port being opened.}
+\methodReturn{SerialIO object.}
+\methodThrows{NoSuchPortException}{if no such port is found.}
+\methodThrows{PortInUseException}{if the serial port is already in use.}
+\closeMethod
+
+\beginMethod{writeMessage}
+\methodDeclaration{public writeMessage(String message)}
+\methodComment{Writes an ASCII format message to serial port.}
+\methodParam{message}{message to be send}
+\methodThrows{NoSuchPortException}{if no such port is found.}
+\methodThrows{PortInUseException}{if serial port is already in use.}
+\closeMethod
+
+\beginMethod{getLastAnswer}
+\methodDeclaration{public String getLastAnswer()}
+\methodComment{Writes an ASCII format message to serial port. SerialIO sends andSerialPortEvent if it gets answer to this message.}
+\methodReturn{last answer receiver from serial port or null if no last message is available.}
+\closeMethod
+
+
+\beginClass{SerialParameters}
+\classComment{Contains all the serial communication parameters which SerialIO uses when opening the port.}
+\classPackage{ikayaki.squid}
+\classDeclaration{public class SerialParameters}
+\classCreatedBy{Squid}
+\closeClass
+
+\beginField{portName}
+\fieldDeclaration{private String}
+\fieldComment{The name of the serial port.}
+\closeField
+
+\beginField{baudRate}
+\fieldDeclaration{private int}
+\fieldComment{The baud rate.}
+\closeField
+
+\beginField{flowControlIn}
+\fieldDeclaration{private int}
+\fieldComment{Type of flow control for receiving.}
+\closeField
+
+\beginField{flowControlOut}
+\fieldDeclaration{private int}
+\fieldComment{Type of flow control for sending.}
+\closeField
+
+\beginField{databits}
+\fieldDeclaration{private int}
+\fieldComment{The number of data bits.}
+\closeField
+
+\beginField{stopbits}
+\fieldDeclaration{private int}
+\fieldComment{The number of stop bits.}
+\closeField
+
+\beginField{parity}
+\fieldDeclaration{private int}
+\fieldComment{The type of parity.}
+\closeField
+
+\beginMethod{SerialParameters}
+\methodDeclaration{public SerialParameters(String portName, int baudRate, int flowControlIn, int flowControlOut, int databits, int stopbits, int parity)}
+\methodComment{Creates a SerialParameter object containing settings for serial port communication.}
+\methodReturn{Parameter settings object.}
+\methodParam{portName}{The name of the serial port.}
+\methodParam{baudRate}{The baud rate.}
+\methodParam{flowControlIn}{Type of flow control for receiving.}
+\methodParam{flowControlOut}{Type of flow control for sending.}
+\methodParam{databits}{The number of data bits.}
+\methodParam{stopbits}{The number of stop bits.}
+\methodParam{parity}{The type of parity.}
+\closeMethod
+
+
+\beginClass{SerialMessageEvent}
+\classComment{An event that is generated when SerialIO receives data from serial port. }
+\classPackage{ikayaki.squid}
+\classDeclaration{public class SerialMessageEvent extends java.util.EventObject}
+\classCreatedBy{SerialIO}
+\closeClass
+
+\beginField{message}
+\fieldDeclaration{private String}
+\fieldComment{ASCII message recieved from serial port.}
+\closeField
+
+\beginMethod{getMessage}
+\methodDeclaration{public String getMessage()}
+\methodComment{Returns received serial message.}
+\methodReturn{The message in ASCII form that was received from serial port.}
+\closeMethod
+
+\beginClass{SerialMessageListener}
+\classComment{If a class wants to receive SerialMessageEvents it must implement this interface.}
+\classPackage{ikayaki.squid}
+\classDeclaration{public abstract interface SerialMessageListener extends java.util.EventListener}
+\classCreatedBy{SerialIO}
+\closeClass
+
+\beginMethod{SerialMessageEvent}
+\methodDeclaration{void serialEvent(SerialMessageEvent event) }
+\methodComment{Propagates serial port message event.}
+\methodParam{event}{the event that happened.}
+\closeMethod
