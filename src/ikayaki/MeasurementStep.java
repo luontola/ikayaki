@@ -43,7 +43,8 @@ import static ikayaki.MeasurementStep.State.*;
 /**
  * A single step in a measurement sequence. Each step can include multiple measurements for improved precision. A step
  * can have a different volume and mass than the related project, but by default the volume and mass of the project will
- * be used. Only the project may change the state and results of a measurement step.
+ * be used. Any changes made to the measurement step will invoke the project's autosaving. Only the project may change
+ * the state and results of a measurement step.
  * <p/>
  * All operations are thread-safe.
  *
@@ -216,6 +217,15 @@ public class MeasurementStep {
     }
 
     /**
+     * Invokes the owner project's autosaving. If there is no owner, will do nothing.
+     */
+    public void save() {
+        if (project != null) {
+            project.save();
+        }
+    }
+
+    /**
      * Returns the owner project of this step, or null if there is no owner.
      */
     public synchronized Project getProject() {
@@ -269,6 +279,7 @@ public class MeasurementStep {
             stepValue = -1.0;
         }
         this.stepValue = stepValue;
+        save();
     }
 
     /**
@@ -286,6 +297,7 @@ public class MeasurementStep {
             mass = -1.0;
         }
         this.mass = mass;
+        save();
     }
 
     /**
@@ -303,6 +315,7 @@ public class MeasurementStep {
             volume = -1.0;
         }
         this.volume = volume;
+        save();
     }
 
     /**
@@ -310,11 +323,8 @@ public class MeasurementStep {
      * identity matrix will be used.
      */
     synchronized void updateTransforms() {
-        Matrix3d transform;
-        if (project == null) {
-            transform = new Matrix3d();
-            transform.setIdentity();
-        } else {
+        Matrix3d transform = null;
+        if (project != null) {
             transform = project.getTransform();
         }
         for (MeasurementResult result : results) {
@@ -362,6 +372,7 @@ public class MeasurementStep {
             timestamp.setTime(System.currentTimeMillis());
             state = MEASURING;
             updateTransforms();
+            save();
         }
     }
 
@@ -372,6 +383,7 @@ public class MeasurementStep {
     public synchronized void setDone() {
         if (state != DONE && state != DONE_RECENTLY) {
             state = DONE_RECENTLY;
+            save();
         }
     }
 
