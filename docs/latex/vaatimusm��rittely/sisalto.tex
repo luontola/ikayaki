@@ -2,13 +2,13 @@
 
 This document describes requirements for a SQUID magnetometer program that will 
 be designed and implemented as a software engineering student project at 
-University of Helsinki at the Computer Science Department. The clients is  
-Lauri Pesonen with his assistants Fabio Donadini and Tomas Kohout from the 
-Department of Geophysics.
+University of Helsinki at the Computer Science Department. The clients is  Lauri 
+Pesonen with his assistants Fabio Donadini and Tomas Kohout from the Department 
+of Geophysics.
 
-This document serves as a contract between client and the project group about the implemented 
-functions of the program. Particulary the use cases and requirements sections of this document 
-describes those functions.
+This document serves as a contract between client and the project group about 
+the implemented functions of the program. Particulary the use cases and 
+requirements sections of this document describes those functions.
 
 
 
@@ -21,25 +21,25 @@ controls and reads electric components that control the device itself.
 
 The use of the present magnetometer software is complicated and unnecessarily 
 burdens the users work memory with complicated work phases and divergent 
-operation in many use cases. The work flow now requires the use of various programs 
-in different phases of the measurement, which is quite complicated and slow. 
-Functions of those two program could be combined to one. The present programs 
-are also hard to learn and teach which limits the group of users.
+operation in many use cases. The work flow now requires the use of various 
+programs in different phases of the measurement, which is quite complicated and 
+slow. The functions of those programs could be combined to one. The present 
+programs are also hard to learn and teach which limits the group of users.
 
-User of the device must know clearly what it's state is and which operation 
-is being performed at the moment. The device is delicate and expensive, so a 
-misfunction of it must be noticed early to prevent any damage. For example faulty 
-state of demagnetizer can damage the device if it's not shut down manually in 
-time.
+User of the device must know clearly what its state is and which operation is 
+being performed at the moment. The device is delicate and expensive, so a 
+misfunction of it must be noticed early to prevent any damage. For example 
+faulty state of demagnetizer can damage the device if it's not shut down 
+manually in time.
  
-Device and program are used to carry out long, several stages involving 
-measurement sequences. It's important that these sequences can be performed 
+The device and program are used to carry out long measurement sequences, 
+involving several stages. It's important that these sequences can be performed 
 flexibly and fast. User must be able to follow the measuring procedure and to 
 stop it and modify the sequence if there are unexpected changes in the results.
 
 Further processing and analyzing of the results occurs in various other programs 
-which use a standard file format. So the new program has to be able to export these 
-formats.
+which use a standard file format. So the new program has to be able to export 
+these formats.
 
 
 
@@ -61,10 +61,10 @@ formats.
 \newcounter{ucsce}[ucnum]
 \hbadness=10000 % estämmä ihme "underfull \hbox (badness 10000)" -varoitukset (ei hajua mistä tulevat)
 
-Describes planned use cases for the program. Use cases are derived from user 
-interface prototype and requirements. All use cases are perfomed by any ordinary 
-user and in program main screen. A simplified use case diagram is presented in 
-Figure~\ref{fig:usecases}.
+This section describes planned use cases for the program. Use cases are derived 
+from user interface prototype and requirements. All use cases are perfomed by 
+any ordinary user and in program main screen. A simplified use case diagram is 
+presented in Figure~\ref{fig:usecases}.
 
 \begin{figure}
 \begin{center}
@@ -203,7 +203,7 @@ Use case format:
 \subsection{Exporting}
 \label{seq:ucexport}
 
-\ucsecdesc{As in exporting measurement results to another file format for othrer programs to use.}
+\ucsecdesc{As in exporting measurement results to another file format for other programs to use.}
 
 \uctitle{Export project data into .dat file}
 \ucscenario{In project explorer file list, right-click on desired project file, click "Export .dat in current directory".}
@@ -254,7 +254,7 @@ Use case format:
 \ucend
 
 \uctitle{Print graph sheet (with 7 different graphs; described elsewhere)}
-\ucscenario{Click "Print...", "Grap sheet".}
+\ucscenario{Click "Print...", "Graph sheet".}
 \ucpre{Open project.}
 \ucpost{Measurement results printed via [Java] standard printing window.}
 \ucerror{Let know if printing error occurs.}
@@ -338,7 +338,7 @@ Use case format:
 \uctitle{Load sequence}
 \ucscenario{Click down-arrow in right side of "Load set" combo box; from appearing list, click sequence to load.}
 \ucpre{An open project, at least 1 saved sequence.}
-\ucpost{Selected sequence appended and selected to measurement result table, and appended to current project.}
+\ucpost{Selected sequence appended to measurement result table and selected.}
 \ucgd{\ref{seq:gduc1}, after typing project data, load "Basalt" set; \ref{seq:gduc2} set already loaded for each project file (when created).}
 \ucreq{R6}
 \ucend
@@ -352,14 +352,14 @@ Use case format:
 \ucscenario{Select multiple unmeasured lines in measurement result table with shift-clicks and ctrl-clicks, make any of above actions (except enter new value).}
 \ucpre{Unmeasured lines in current project's measurement result table (note that measuring sequence can be going on).}
 \ucpost{Editing committed, saved to current project.}
-\ucerror{Editing or screwing up measured lines won't be allowed.}
+\ucerror{Editing or deleting measured lines won't be allowed.}
 \ucgd{\ref{seq:gduc3}, when sequence demagnetizes too rapidly, Tomas deletes unmeasured lines.}
 \ucreq{R6}
 \ucend
 \label{uc:editseq}
 
 \uctitle{Save sequence}
-\ucscenario{Click "Load set" combo box, enter new sequence name, click "Save set". \ucnotein{2005-02-25 not in current (almost final) UI prototype!}}
+\ucscenario{Click "Load set" combo box, enter new sequence name, click "Save set". \ucnotein{2005-02-25 not in current (almost final) UI prototype! Remove this scenario or decide later?}}
 \ucscenario{Right-click any line in measurement result table, choose "Save full sequence...", enter name, press enter.}
 \ucscenario{Select any lines in measurement result table with shift-clicks and ctrl-clicks, right-click on selected lines, choose "Save selected sequence...", enter name, press enter.}
 \ucpre{At least 1 line in measurement results table (although you propably don't want to save a sequence with only one step x).}
@@ -550,7 +550,7 @@ UC24, UC25, UC26}
 
 \ReqId{R11}
 \ReqName{Export to other file formats}
-\ReqDesc{Measurements can be saved in .dat, .tdt and .srm files.}
+\ReqDesc{Measurements can be saved in .dat, .tdt and .srm files. \ucnotein{2005-03-01 We don't yet have their format specifications so we can't do this!}}
 \ReqPrio{1}
 \ReqSet{Customer}
 \ReqUc{UC13, UC14, UC15}
@@ -602,7 +602,7 @@ UC24, UC25, UC26}
 
 \ReqId{R18}
 \ReqName{Graphic presentation of measurements}
-\ReqDesc{Program draws graphs from measurement data. Available graph types are: Stereo Plot, Intensity, Zijderveld, Difference Vectors, Susteptibility, O63, Great Circles. (TODO: what are the definitions of these graphs? priorities per graph?)}
+\ReqDesc{Program draws graphs from measurement data. Available graph types are: Stereo Plot, Intensity, Zijderveld, Difference Vectors, Susteptibility, O63, Great Circles. \ucnotein{2005-02-28 What are the definitions of these graphs? Priorities per graph?}}
 \ReqPrio{4}
 \ReqSet{Customer}
 \ReqUc{UC1, UC2, UC3, UC6, UC7, UC8, UC9, UC10, UC11, UC17}
