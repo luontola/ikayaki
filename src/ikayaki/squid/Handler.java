@@ -23,11 +23,12 @@
 package ikayaki.squid;
 
 import java.util.Stack;
+import ikayaki.Settings;
 
 /**
  * Offers an interface for controlling the sample handler.
  *
- * @author
+ * @author Aki Korpua
  */
 public class Handler implements SerialIOListener {
 /*
@@ -111,14 +112,34 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     /**
      * Angles are between 0 (0) and 2000 (360).
      */
-    private int currentRotation;
+    private int currentRotation = 0;
 
     /**
      * Creates a new handler interface. Opens connection to handler COM port and reads settings from the Settings
      * class.
      */
     public Handler() {
-        return; // TODO
+        this.serialIO = new SerialIO(new SerialParameters(Settings.instance().getHandlerPort(),1200,0,0,8,1,0));
+        this.acceleration = Settings.instance().getHandlerAcceleration();
+        this.deceleration = Settings.instance().getHandlerDeceleration();
+        this.axialAFPosition = Settings.instance().getHandlerAxialAFPosition();
+        this.backgroundPosition = Settings.instance().getHandlerBackgroundPosition();
+        this.homePosition = Settings.instance().getHandlerSampleLoadPosition();
+        this.measurementPosition = Settings.instance().getHandlerMeasurementPosition();
+        this.measurementVelocity = Settings.instance().getHandlerMeasurementVelocity();
+        this.transverseYAFPosition = Settings.instance().getHandlerTransverseYAFPosition();
+        this.velocity = Settings.instance().getHandlerVelocity();
+
+        //first put system online
+        this.setOnline();
+
+        //set all settings
+        this.setAcceleration(this.acceleration);
+        this.setVelocity(this.velocity);
+        this.setDeceleration(this.deceleration);
+
+        //must be send to seek home position, so we can know where we are
+        this.moveToHome();
     }
 
     /**
