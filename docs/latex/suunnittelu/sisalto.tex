@@ -47,7 +47,7 @@ See Figure~\ref{fig:classdiagram}.
 \classComment{
 	Creates a history/autocomplete field (browserField) for choosing the project directory, a listing of project files in that directory (explorerTable) and in that listing a line for creating new project, which has a textbox for project name, an AF/TH ComboBox and a "Create new" button for actuating the creation. Also has a right-click popup menu for exporting project files.
 }
-\classEvent{On browserField change}{send browserField's text to RunQueue (singleton?) which schedules disk access and autocomplete. (This could be in a separate BrowserFieldComponent class)}
+\classEvent{On browserField change}{send browserField's text to RunQueue which schedules disk access and autocomplete. (This could be in a separate BrowserFieldComponent class)}
 \classEvent{On explorerTable mouse right-click}{create a ProjectExplorerPopupMenu for right-clicked project file. (This could be in ProjectExplorerTableModel class)}
 \classEvent{On createNewProject mouseclick}{create a new project, set it active and tell ProjectExplorerTableMode to update itself.}
 \classEvent{On browseButton mouseclick}{open a FileChooser dialog for choosing the directory.}
@@ -230,7 +230,7 @@ See Figure~\ref{fig:classdiagram}.
 \closeField
 
 \beginMethod{RunQueue()}
-\methodDeclaration{RunQueue()}
+\methodDeclaration{public RunQueue()}
 \methodComment{
 	Creates an empty RunQueue with a delay of 0 and execOnlyLast set to false.
 }
