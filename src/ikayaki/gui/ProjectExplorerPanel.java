@@ -277,7 +277,7 @@ whose measuring ended.
 
         directory = new File(dir);
         files = getProjectFiles(directory);
-        updateDirectoryHistory(directory);
+//        updateDirectoryHistory(directory); // this is already done in MainViewPanel when opening a project
 
         // update table with new directory
         if (explorerTableModel != null) explorerTableModel.fireTableDataChanged();
@@ -313,14 +313,15 @@ whose measuring ended.
         else return dirhist;
     }
 
-    /**
-     * Attemps to add given directory into dir history.
-     *
-     * @param dir directory to add.
-     */
-    private void updateDirectoryHistory(File dir) {
-        Settings.instance().updateDirectoryHistory(dir);
-    }
+//    /**
+//     * Attemps to add given directory into dir history.
+//     *
+//     * @param dir directory to add.
+//     * @deprecated This is done in MainViewPanel
+//     */
+//    private void updateDirectoryHistory(File dir) {
+//        Settings.instance().updateDirectoryHistory(dir);
+//    }
 
     /**
      * Reads matching directories from given directory name's parent.
