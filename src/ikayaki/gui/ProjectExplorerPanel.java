@@ -53,46 +53,50 @@ whose measuring ended.
     /**
      * The component whose setProject() method will be called on opening a new project file.
      */
-    private ProjectComponent parent;
+    private final ProjectComponent parent;
 
     /**
      * Holds browserField and browseButton
      */
-    private JPanel browsePanel = new JPanel();
+    private final JPanel browsePanel = new JPanel();
 
     /**
      * Text field for writing directory to change to. Autocomplete results appear to Combo Box’ popup window, scheduled
      * by LastExecutor. Directory history appears to the same popup window when the down-arrow right to text field is
      * clicked.
      */
-    private JComboBox browserField;
-    private JTextField browserFieldEditor;
+    private final JComboBox browserField;
+    private final JTextField browserFieldEditor;
 
     /**
      * Tells whether the next-to-be-shown popup menu will be autocomplete list (and not directory history).
      */
     private boolean browserFieldNextPopupAutocomplete = false;
 
-    private JButton browseButton;
+    private final JButton browseButton;
 
-    private JTable explorerTable;
+    private final JTable explorerTable;
 
-    private ProjectExplorerTableModel explorerTableModel;
+    private final ProjectExplorerTableModel explorerTableModel;
 
-    private JScrollPane explorerTableScrollPane;
+    private final JScrollPane explorerTableScrollPane;
 
-    /**
-     * -1==undefined, 0==filename, 1==type, 2==last modified
-     */
-    // TODO: enum?
-    private int explorerTableSortColumn = -1;
+    private final Comparator <File> explorerTableComparator = new ExplorerTableComparator();
+
+    private int explorerTableSortColumn = COLUMN_UNDEFINED;
+
+    private static final int COLUMN_UNDEFINED = -1;
+    private static final int COLUMN_FILENAME = 0;
+    private static final int COLUMN_TYPE = 1;
+    private static final int COLUMN_LASTMOD = 2;
+    private static final String[] column_name = { "filename", "type", "last modified" };
 
     private NewProjectPanel newProjectPanel;
 
     /**
      * LastExecutor for scheduling autocomplete results to separate thread (disk access and displaying).
      */
-    private LastExecutor autocompleteExecutor = new LastExecutor(100, true);
+    private final LastExecutor autocompleteExecutor = new LastExecutor(100, true);
 
     /**
      * Currently open directory.
@@ -320,23 +324,19 @@ whose measuring ended.
                 JTableHeader th = (JTableHeader) e.getSource();
                 TableColumnModel cm = th.getColumnModel();
                 int viewColumn = cm.getColumnIndexAtX(e.getX());
+
+                // TODO: what the sick hell of chainsaw internals do I have to touch just to update table headers?
+
+                // reset all column header names
+                for (int col = 0; col < cm.getColumnCount(); col++)
+                    cm.getColumn(col).setHeaderValue(column_name[cm.getColumn(col).getModelIndex()]);
+
+                // set sort column header name
                 explorerTableSortColumn = cm.getColumn(viewColumn).getModelIndex();
+                cm.getColumn(viewColumn).setHeaderValue(column_name[explorerTableSortColumn] + " *");
+                th.repaint();
 
-                // TODO: causes java.lang.AbstractMethodError
-                Arrays.sort(files, new Comparator <File>() {
-                    public int compare(File a, File b) {
-                        switch (explorerTableSortColumn) {
-                            case 0: return a.compareTo(b);
-                            // WARNING: might chocke Project.getType(File)
-                            case 1: return Project.getType(a).compareTo(Project.getType(b));
-                            // TODO: int-cast changes sign if difference larger than maxint
-                            case 2: return (int) (a.lastModified() - b.lastModified());
-                            default: return 0;
-                        }
-                    }
-                });
-
-                // TODO: update table header somehow (to show the new sort column)
+                Arrays.sort(files, explorerTableComparator);
 
                 // update table with sorted data, update selected file and table selection
                 explorerTableModel.fireTableDataChanged();
@@ -372,6 +372,9 @@ whose measuring ended.
 
         this.directory = directory;
         files = getProjectFiles(directory);
+
+        // needs to be sorted here, because MainViewPanel calls our setProject when changing project
+        if (explorerTableSortColumn != COLUMN_UNDEFINED) Arrays.sort(files, explorerTableComparator);
 
         // update browserField and explorerTable with new directory
         if (browserField != null) browserField.setSelectedItem(directory.getPath());
@@ -491,6 +494,22 @@ whose measuring ended.
     }
 
     /**
+     * Comparator used for ExplorerTable sorting.
+     */
+    private class ExplorerTableComparator implements Comparator <File> {
+        public int compare(File a, File b) {
+            switch (explorerTableSortColumn) {
+                case COLUMN_FILENAME: return a.compareTo(b);
+                // WARNING: might chocke Project.getType(File)
+                case COLUMN_TYPE: return Project.getType(a).compareTo(Project.getType(b));
+                // TODO: int-cast changes sign if difference larger than maxint
+                case COLUMN_LASTMOD: return (int) (a.lastModified() - b.lastModified());
+                default: return 0;
+            }
+        }
+    }
+
+    /**
      * Creates a list of project files in directory. Handles loading selected projects and showing export popup menu
      * (ProjectExplorerPopupMenu). Inner class of ProjectExplorerPanel.
      *
@@ -502,10 +521,9 @@ whose measuring ended.
      * TableModel which handles data from files (in upper-class ProjectExplorerPanel).
      */
     private class ProjectExplorerTableModel extends AbstractTableModel implements ProjectListener {
-        private final String[] columns = { "filename", "type", "last modified" };
 
         public String getColumnName(int column) {
-            return columns[column] + (column == explorerTableSortColumn ? " *" : "");
+            return column_name[column] + (column == explorerTableSortColumn ? " *" : "");
         }
 
         public int getRowCount() {
@@ -513,14 +531,14 @@ whose measuring ended.
         }
 
         public int getColumnCount() {
-            return columns.length;
+            return column_name.length;
         }
 
         public Object getValueAt(int row, int column) {
             switch (column) {
-                case 0: return files[row].getName();
-                case 1: return Project.getType(files[row]);
-                case 2: return DateFormat.getInstance().format(files[row].lastModified());
+                case COLUMN_FILENAME: return files[row].getName();
+                case COLUMN_TYPE: return Project.getType(files[row]);
+                case COLUMN_LASTMOD: return DateFormat.getInstance().format(files[row].lastModified());
                 default: assert false; return null;
             }
         }
