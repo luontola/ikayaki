@@ -326,8 +326,12 @@ public class Settings {
     }
 
     public synchronized boolean setDegausserRamp(int value) {
-        setProperty("squid.degausser.ramp", Integer.toString(value));
-        return true;
+        if(value == 3 || value == 5 || value == 7 || value == 9) {
+          setProperty("squid.degausser.ramp", Integer.toString(value));
+          return true;
+        }
+        else
+          return false;
     }
 
     public synchronized int getDegausserDelay() {
@@ -335,8 +339,12 @@ public class Settings {
     }
 
     public synchronized boolean setDegausserDelay(int value) {
-        setProperty("squid.degausser.delay", Integer.toString(value));
-        return true;
+        if(value>0 && value <10) {
+          setProperty("squid.degausser.delay", Integer.toString(value));
+          return true;
+        }
+        else
+          return false;
     }
 
     /* Sample handler */
@@ -346,8 +354,12 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerAcceleration(int value) {
+      if(value>=0 && value <= 127) {
         setProperty("squid.handler.acceleration", Integer.toString(value));
         return true;
+      }
+      else
+        return false;
     }
 
     public synchronized int getHandlerDeceleration() {
@@ -355,8 +367,12 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerDeceleration(int value) {
+      if(value>=0 && value <= 127) {
         setProperty("squid.handler.deceleration", Integer.toString(value));
         return true;
+      }
+      else
+        return false;
     }
 
     public synchronized int getHandlerVelocity() {
@@ -364,8 +380,12 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerVelocity(int value) {
+      if(value>=50 && value <= 2000) {
         setProperty("squid.handler.velocity", Integer.toString(value));
         return true;
+      }
+      else
+        return false;
     }
 
     public synchronized int getHandlerMeasurementVelocity() {
@@ -373,8 +393,12 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerMeasurementVelocity(int value) {
+      if(value>=50 && value <= 2000) {
         setProperty("squid.handler.measurementvelocity", Integer.toString(value));
         return true;
+      }
+      else
+        return false;
     }
 
     public synchronized int getHandlerTransverseYAFPosition() {
@@ -382,8 +406,12 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerTransverseYAFPosition(int value) {
+      if(value>=1 && value <= 16777215) {
         setProperty("squid.handler.pos.transverseyaf", Integer.toString(value));
         return true;
+      }
+      else
+        return false;
     }
 
     public synchronized int getHandlerAxialAFPosition() {
@@ -391,8 +419,12 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerAxialAFPosition(int value) {
+      if(value>=1 && value <= 16777215) {
         setProperty("squid.handler.pos.axialaf", Integer.toString(value));
         return true;
+      }
+      else
+        return false;
     }
 
     public synchronized int getHandlerSampleLoadPosition() {
@@ -400,8 +432,12 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerSampleLoadPosition(int value) {
+      if(value>=1 && value <= 16777215) {
         setProperty("squid.handler.pos.sampleload", Integer.toString(value));
         return true;
+      }
+      else
+        return false;
     }
 
     public synchronized int getHandlerBackgroundPosition() {
@@ -409,8 +445,12 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerBackgroundPosition(int value) {
+      if(value>=1 && value <= 16777215) {
         setProperty("squid.handler.pos.background", Integer.toString(value));
         return true;
+      }
+      else
+        return false;
     }
 
     public synchronized int getHandlerMeasurementPosition() {
@@ -418,8 +458,12 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerMeasurementPosition(int value) {
+      if(value>=1 && value <= 16777215) {
         setProperty("squid.handler.pos.measurement", Integer.toString(value));
         return true;
+      }
+      else
+        return false;
     }
 
     public synchronized int getHandlerRightLimit() {
@@ -427,8 +471,12 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerRightLimit(int value) {
+      if(value == 0 || value == 1) {
         setProperty("squid.handler.pos.rightlimit", Integer.toString(value));
         return true;
+      }
+      else
+        return false;
     }
 
     public synchronized int getHandlerRotation() {

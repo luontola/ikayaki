@@ -35,6 +35,8 @@ import java.awt.event.KeyEvent;
 import ikayaki.Settings;
 import javax.comm.CommPortIdentifier;
 import java.util.Enumeration;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
 
 /**
  * Creates its components and updats changes to Settings and saves them in Configuration file
@@ -211,12 +213,14 @@ Event B: On Cancel Clicked - closes window (discarding changes)
 
         Enumeration ports = CommPortIdentifier.getPortIdentifiers();
 
+        // TODO cannot find COM-ports :/
         if (ports == null) {
           System.err.println("No comm ports found!");
 
           return;
         }
         else {
+          System.err.println("Comm ports found " + ports.hasMoreElements());
           while (ports.hasMoreElements()) {
             /*
              *  Get the specific port
@@ -242,6 +246,27 @@ Event B: On Cancel Clicked - closes window (discarding changes)
                 closeWindow();
             }
         });
+
+        //TODO: need to check if values are ok, disable Save button if not.
+        /*
+        DocumentListener myListener = new DocumentListener() {
+          public void insertUpdate(DocumentEvent e) {
+            saveButton.setEnabled(true);
+          }
+
+          public void removeUpdate(DocumentEvent e) {
+            saveButton.setEnabled(true);
+          }
+
+          public void changedUpdate(DocumentEvent e) {
+
+          }
+        };
+
+        acceleration.getDocument().addDocumentListener(myListener);
+
+        saveButton.setEnabled(false);
+*/
     }
 
     public static void showSettingsDialog(Frame owner, String message) {
@@ -261,7 +286,31 @@ Event B: On Cancel Clicked - closes window (discarding changes)
      * Saves all settings to Settings-singleton and calls closeWindow().
      */
     public void saveSettings() {
-        return; // TODO
+      try{
+        Settings.instance().setDegausserDelay(Integer.parseInt( (String)this.demagDelay.getSelectedItem()));
+        Settings.instance().setDegausserPort( (String)this.demagnetizerPort.getSelectedItem());
+        Settings.instance().setDegausserRamp( Integer.parseInt((String)this.demagRamp.getSelectedItem()));
+        Settings.instance().setHandlerAcceleration( Integer.parseInt(this.acceleration.getText()));
+        Settings.instance().setHandlerAxialAFPosition( Integer.parseInt(this.axialAFPosition.getText()));
+        Settings.instance().setHandlerBackgroundPosition( Integer.parseInt(this.backgroundPosition.getText()));
+        Settings.instance().setHandlerDeceleration( Integer.parseInt(this.deceleration.getText()));
+        Settings.instance().setHandlerMeasurementPosition( Integer.parseInt(this.measurementPosition.getText()));
+        Settings.instance().setHandlerMeasurementVelocity( Integer.parseInt(this.velocity.getText()));
+        Settings.instance().setHandlerPort( (String)this.handlerPort.getSelectedItem());
+        Settings.instance().setHandlerRightLimit( Integer.parseInt((String)this.handlerRightLimit.getSelectedItem()));
+        Settings.instance().setHandlerRotation( Integer.parseInt(this.rotation.getText()));
+        Settings.instance().setHandlerSampleLoadPosition( Integer.parseInt(this.sampleLoadPosition.getText()));
+        Settings.instance().setHandlerTransverseYAFPosition( Integer.parseInt(this.transverseYAFPosition.getText()));
+        Settings.instance().setHandlerVelocity( Integer.parseInt(this.velocity.getText()));
+        Settings.instance().setMagnetometerPort( (String)this.magnetometerPort.getSelectedItem());
+        Settings.instance().setMagnetometerXAxisCalibration( Integer.parseInt(this.xAxisCalibration.getText()));
+        Settings.instance().setMagnetometerYAxisCalibration( Integer.parseInt(this.yAxisCalibration.getText()));
+        Settings.instance().setMagnetometerZAxisCalibration( Integer.parseInt(this.zAxisCalibration.getText()));
+        closeWindow();
+      }
+      catch(Exception e) {
+
+      }
     }
 
     {
