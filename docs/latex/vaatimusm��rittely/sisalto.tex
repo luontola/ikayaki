@@ -18,144 +18,157 @@ Technical terms here..
 
 A brief overview of the problem domain..
 
+
 \section{Use cases}
 
-% super-makrot otsikoille, pre-, post- ja error conditioneille x)
-\newcommand{\uctitle}[1]{\stepcounter{uc}\textbf{UC\arabic{uc}: #1}\\}
+% super-makrot uce caseille
+\newcommand{\uctitle}[1]{\stepcounter{ucnum}\textbf{UC\arabic{ucnum}: #1}\\}
+\newcommand{\ucscenario}[1]{\stepcounter{ucsce}\textbf{Scenario \alph{ucsce}:} #1\\}
 \newcommand{\ucpre}[1]{\textbf{Precondition:} #1\\}
 \newcommand{\ucpost}[1]{\textbf{Postcondition:} #1\\}
 \newcommand{\ucerror}[1]{\textbf{Error condition:} #1\\}
-\newcounter{uc}
+\newcounter{ucnum}
+\newcounter{ucsce}[ucnum]
 
-Describes planned use cases for the program. Derived from user interface prototype and requiremets. All use cases are made by "the user" in program main screen, unless otherwise noted.
+Describes planned use cases for the program. Derived from user interface prototype and user requiremets. All use cases are made by "the user" in program main screen, unless otherwise noted.
+
+Format for uce cases:
+
+\setcounter{ucnum}{-1}
+\uctitle{Uce case number and title}
+\ucscenario{First scenario for doing the use case}
+\ucscenario{Second scenario for doing the use case}
+\ucpre{Preconditions for use case}
+\ucpost{Postconditions for use case}
+\ucerror{Error handling, mainly if anything special needs to be done}
+
 
 \subsection{Measuring}
 
-
 \uctitle{Do single step measuring without demagnetization}
-
-Enter as next AF demagnetization step "0" or empty (default for new projects), meaning no demagnetization, and click "Single step".
-
+\ucscenario{Enter as next AF demagnetization step "0" or empty (default for new projects), meaning no demagnetization, and click "Single step".}
 \ucpre{Open AF project, sample in sample holder.}
 \ucpost{Sample measured, results on screen.}
 \ucerror{The program shall let the user know if something went wrong.}
 
-
 \uctitle{Do single step measuring with demagnetization}
-
-Enter as next AF demag step anything greater than zero, and click "Single step".
-
+\ucscenario{Enter as next AF demag step anything greater than zero, and click "Single step".}
 \ucpre{Open AF project, sample in sample holder.}
 \ucpost{Sample demagnetized (possibly ruined) and measured, results on screen.}
 \ucerror{The program shall let the user know if something went wrong, and, should the demagnetization field not be coming down, warn user with an alarm sound :)}
 
-
 \uctitle{Do automatic demagnetization-measuring sequence}
-
-Enter the AF sequence (see \ref{sequsecaseaf} for ways to enter it) and click "Measure".
-
+\ucscenario{Enter the AF sequence (see \ref{sequsecaseaf} for ways to enter it) and click "Measure".}
 \ucpre{Open AF project, sample in sample holder.}
 \ucpost{Sample demagnetized according to entered AF sequence (possibly ruined) and measured after each demagnetization, results on screen.}
 \ucerror{The program shall let the user know if something went wrong, and, should the demagnetization field be uncalm, warn user with an alarm sound x)}
 
-  \begin{itemize}
-
-  \item Pause automatic measuring sequence
-
-  While measure sequence is running, click "Pause".
-
+  \uctitle{Pause automatic measuring sequence}
+  \ucscenario{While measure sequence is running, click "Pause".}
   \ucpre{Ongoing measure sequence.}
   \ucpost{Measure sequence halts after current step is done, results on screen.}
   \ucerror{Program tells if sequence can't be paused (and something has gone terribly wrong).}
 
-  \item Abort automatic measuring sequence
-
-  While measure sequence is running or paused, click "Stop immediately".
-
+  \uctitle{Abort automatic measuring sequence}
+  \ucscenario{While measure sequence is running or paused, click "Stop immediately".}
   \ucpre{Ongoing or paused measure sequence.}
   \ucpost{Measure sequence halts immediately [and program enters "fully manual" mode?]}
   \ucerror{Program tells if sequence can't be aborted (and something has gone terribly wrong).}
 
-  \end{itemize}
-
-
 \uctitle{Do thellier measuring}
-
-Click "Single step". (Temperature can be entered later, as it won't affect measuring.)
-
+\ucscenario{Click "Single step". (Temperature can be entered later, as it won't affect measuring.)}
 \ucpre{Open TH project, sample in sample holder.}
 \ucpost{Sample measured, results on screen.}
 \ucerror{As usual.}
-
 
 \uctitle{Do thermal measuring}
-
-[Exactly the same as thellier?]
-
-Click "Single step". (Temperature can be entered later, as it won't affect measuring.)
-
+{}[Exactly the same as thellier?]\\
+\ucscenario{Click "Single step". (Temperature can be entered later, as it won't affect measuring.)}
 \ucpre{Open TH project, sample in sample holder.}
 \ucpost{Sample measured, results on screen.}
 \ucerror{As usual.}
 
-
 \uctitle{Measure magnetometer ground noise}
-
-Click "Noise" and "Calibrate".
-
+{}[2005-02-23 not in current UI proto, nor planned for implementation]\\
+\ucscenario{Click "Ground noise" and "Calibrate".}
 \ucpre{None.}
-\ucpost{[Sample holder at home?] Ground noise measured, results on screen.}
-\ucerror{As usual.}
-
+\ucpost{Ground noise measured, results on screen.}
 
 \uctitle{Measure empty sample holder noise}
-
-[2005-02-21 In current UI prototype, "Noise" actually does sample holder noise measuring.]
-
-Click "Holder noise" and "Calibrate".
-
+{}[2005-02-21 In current UI prototype, "Noise" actually does sample holder noise measuring.]\\
+\ucscenario{Click "Holder noise" and "Calibrate".}
 \ucpre{Empty sample holder.}
-\ucpost{[Sample holder at home?] Holder noise measured, results on screen.}
-\ucerror{As usual.}
-
+\ucpost{Holder noise measured, results on screen.}
 
 \uctitle{Fully manual measuring}
-
-Click any of the manual control components [2005-02-21 at right third of UI proto].
-
-\ucpre{None.}
+- Demagnetize X, Y or Z axis\\
+- item Measure X, Y or Z axis\\
+\ucscenario{Click any of the manual control components [2005-02-21 at right third of UI proto].}
+\ucpre{Manual mode enabled.}
 \ucpost{Manual action done, result on screen.}
-\ucerror{As usual.}
 
-  \begin{itemize}
-  \item Move sample handler to desired position
-  \item Rotate sample handler to desired angle
-  \item Measure in current position
-  \item Demagnetize in current position
-  \end{itemize}
+\uctitle{Enable manual mode}
+\ucscenario{Click "Manual" checkbox above the manual control components.}
+\ucpre{No ongoing measurement.}
+\ucpost{Manual mode enabled.}
+
 
 \subsection{File formats}
 
-\uctitle{Automatically save all measurement cycles in project (.dat?) file}
+\uctitle{Automatically save all measurement cycles in project [.dat?] file}
+\ucscenario{Make any measurement action.}
+\ucpre{Open project file.}
+\ucpost{After measurement is done, new results appended to project file.}
 
 \uctitle{Save standard sample measurement results in .std file}
+\ucscenario{Click "Standard sample", "Calibrate".}
+\ucpre{No ongoing measurement.}
+\ucpost{After standard sample measurement is done, new results appended to predefined .std file.}
 
-\uctitle{Export (thellier) results into .tdt file}
+\uctitle{Export project data into .dat file}
+\ucscenario{In project explorer file list, right-click on desired project file, click "Export .dat in current directory".}
+\ucscenario{In project explorer file list, right-click on desired project file, click "Export .dat to disk drive A:".}
+\ucscenario{In project explorer file list, right-click on desired project file, click "Export .dat...", chooce directory and filename to export.}
+\ucpre{At least 1 project file in current (selected) directory.}
+\ucpost{Project data exported to .dat file.}
+\ucerror{Notify if file error occurs (such as no disk in A: drive).}
+
+\uctitle{Export (thellier) project data into .tdt file}
+\ucscenario{In project explorer file list, right-click on desired project file, click "Export .tdt in current directory".}
+\ucscenario{In project explorer file list, right-click on desired project file, click "Export .tdt to disk drive A:".}
+\ucscenario{In project explorer file list, right-click on desired project file, click "Export .tdt...", chooce directory and filename to export.}
+\ucpre{At least 1 project file in current (selected) directory.}
+\ucpost{Project data exported to .tdt file.}
+\ucerror{Notify if file error occurs (such as no disk in A: drive).}
 
 \uctitle{Export single measurement details into .srm file}
+\ucscenario{In measurement result table, right-click on desired measurement line, click "Export .srm in current directory".}
+\ucscenario{In measurement result table, right-click on desired measurement line, click "Export .srm to disk drive A:".}
+\ucscenario{In measurement result table, right-click on desired measurement line, click "Export...", chooce directory and filename to export.}
+\ucpre{At least 1 measurement result in current project.}
+\ucpost{Measurement details exported to .srm file.}
+\ucerror{Notify if file error occurs (such as no disk in A: drive).}
 
 \uctitle{Print measurement results}
+\ucscenario{Click "Print...", "Measurement results". [2005-02-23 propably gone in current UI prototype; implementation priority low]}
+\ucpre{Open project.}
+\ucpost{Measurement results printed via [Java] standard printing window.}
+\ucerror{Let know if printing error occurs.}
 
 \uctitle{Print graph sheet (with 7 different graphs; described elsewhere)}
+\ucscenario{Click "Print...", "Grap sheet". [2005-02-23 propably gone in current UI prototype; implementation priority low]}
+\ucpre{Open project.}
+\ucpost{Measurement results printed via [Java] standard printing window.}
+\ucerror{Let know if printing error occurs.}
+
 
 \subsection{Functionality}
 
-\uctitle{Create new project (.dat file?)}
+\uctitle{Create new project [.dat file?]}
 
-\uctitle{Load project (.dat file?)}
+\uctitle{Load project [.dat file?]}
 
-\uctitle{Append measurement results to project (.dat file?)}
-
+\uctitle{Append measurement results to project [.dat file?]}
 
 \uctitle{Panic abort operation instantly}
 
