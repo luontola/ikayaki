@@ -55,6 +55,11 @@ It is recommendable for everybody to have a quick glance at Design Patterns. Her
 
 
 \section{Overview of the system}
+
+This system has two different separete project, Ikayaki-program and Squid Emulator which is subproject. Ikayaki, as main project, has graphical user interface (see requirements-document) and interface for communicating with SQUID magnetometer (Superconducting Quantum Interference Device) to measusure magnetization of minerals and rocks. Squid Emulator is vital for testing Ikayaki and it will be simple command-line program which emulates only data flow with random data and communication.
+
+Software is plitted in two main parts in this document. Data section includes files needed for project-management, data flow in software and interface to control SQUID-system. There is also Settings for whole system and a subproject squid emulator. User Interface section documents all  graphical interface classes, nothing more. There will be no graphical user interface for squid emulator.
+
 \label{sec:over}
 
 \begin{figure}
