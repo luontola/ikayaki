@@ -169,13 +169,18 @@ public class LastExecutor implements Executor {
     }
 
     /**
-     * Removes all of the elements from the execution queue. The queue will be empty after this call returns. Will
-     * interrupt the execution thread if it happens to be running.
+     * Removes all of the elements from the execution queue. The queue will be empty after this call returns. The
+     * execution thread will stop after the currently running task, if any.
      */
     public synchronized void clear() {
         queue.clear();
         if (workerThread != null) {
-            workerThread.interrupt();
+            // run an empty task, after which the execution thread will stop
+            queue.offer(new RunDelayed(new Runnable() {
+                public void run() {
+                    // DO NOTHING
+                }
+            }, 0));
         }
     }
 
@@ -187,8 +192,6 @@ public class LastExecutor implements Executor {
      */
     private class LastExecutorThread extends Thread {
         public void run() {
-            // DEBUG:
-//            System.out.println("new LastExecutorThread started");
             while (true) {
                 synchronized (LastExecutor.this) {
                     if (queue.size() == 0) {
@@ -281,11 +284,9 @@ public class LastExecutor implements Executor {
                     System.out.println("A " + j);
                 }
             });
-            //Thread.sleep(30 * i);
         }
 
         q.join();
-        //Thread.sleep(1000);
 
         for (int i = 0; i < 10; i++) {
             final int j = i;
@@ -316,5 +317,18 @@ public class LastExecutor implements Executor {
                 System.out.println("D");
             }
         });
+        q.join();
+
+        // test that the clear() method stops the execution thread cleanly
+        System.out.println("1");
+        q.execute(new Runnable() {
+            public void run() {
+                System.out.println("A");
+            }
+        });
+        Thread.sleep(100);
+        System.out.println("2");
+        q.clear();
+        System.out.println("3");
     }
 }
