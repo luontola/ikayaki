@@ -1,6 +1,28 @@
+\beginClass{Ikayaki}
+\classComment{
+	Starts the program. Lays out MainViewPanel, MainMenuBar and MainStatusBar in a JFrame.
+}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class Ikayaki}
+\classExtends{JFrame}
+\classUses{MainViewPanel}
+\classUses{MainMenuBar}
+\classUses{MainStatusBar}
+\classEvent{On window close}{checks that no measurement is running. Saves all opened project files and settings. Closes the program, or notifies the user if the program may not be closed.}
+\closeClass
+
+\beginMethod{main(String[])}
+\methodDeclaration{public static void main(String[] args)}
+\methodComment{
+	Starts the program with the provided command line parameters. If the location of a project file is given as a parameter, the program will try to load it.
+}
+\methodParam{args}{command line parameters.}
+\closeMethod
+
+
 \beginClass{MainViewPanel}
 \classComment{
-    Creates the main view panels (split panels) and Squid and Project components. It also tells everybody if project is changed. 
+    Creates the main view panels (split panels) and Squid and Project components. It also tells everybody if the current project is changed. 
 }
 \classPackage{ikayaki.gui}
 \classDeclaration{public class MainViewPanel}
@@ -31,8 +53,13 @@
 \closeField
 
 \beginField{project}
-\fieldDeclaration{private ProjectComponent project}
-\fieldComment{currently active project}
+\fieldDeclaration{private Project project}
+\fieldComment{Currently opened project.}
+\closeField
+
+\beginField{measuringProject}
+\fieldDeclaration{private Project measuringProject}
+\fieldComment{Project which has an ongoing measurement, or null if no measurement is running.}
 \closeField
 
 \beginField{menuBar}

@@ -20,17 +20,17 @@
 
 \beginField{project}
 \fieldDeclaration{private Project project}
-\fieldComment{Active project.}
+\fieldComment{The active project.}
 \closeField
 
 \beginMethod{ProjectComponent()}
 \methodDeclaration{public ProjectComponent()}
-\methodComment{Initializes this ProjectComponent with no Project (one probably arrives shortly with setProject(Project)).}
+\methodComment{Initializes this ProjectComponent with no project (one probably arrives shortly with setProject(Project)).}
 \closeMethod
 
 \beginMethod{getProject()}
 \methodDeclaration{public Project getProject()}
-\methodReturn{this.project.}
+\methodReturn{the active project, or null if no project is active.}
 \closeMethod
 
 \beginMethod{setProject(Project)}
@@ -42,7 +42,7 @@
 \closeMethod
 
 \beginMethod{projectUpdated(ProjectEvent)}
-\methodDeclaration{public projectUpdated(ProjectEvent event)}
+\methodDeclaration{public void projectUpdated(ProjectEvent event)}
 \methodComment{
 	Does nothing; subclasses override this if they want to listen ProjectEvents.
 }
@@ -50,7 +50,7 @@
 \closeMethod
 
 \beginMethod{measurementUpdated(MeasurementEvent)}
-\methodDeclaration{public measurementUpdated(MeasurementEvent event)}
+\methodDeclaration{public void measurementUpdated(MeasurementEvent event)}
 \methodComment{
 	Does nothing; subclasses override this if they want to listen MeasurementEvents.
 }
