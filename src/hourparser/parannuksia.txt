@@ -1,7 +1,16 @@
 
-HELPPOJA TOTEUTTAA:
+HELPPOJA:
 
 - suoraan nimestä vois olla linkki henkilön omiin työtunteihin
+
+- tuntien summat myös kunkin henkilön omalle sivulle (viikottain ja yhteensä)
+
+- base url ja output directory -parametrit
+
+
+KESKIVAIKEITA:
+
+- yhteenveto työlajin koodin perusteella
 
 
 LIIAN HANKALIA:
