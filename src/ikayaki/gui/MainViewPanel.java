@@ -31,6 +31,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 
 /**
  * Creates the main view panels (split panels) and Squid and Project components. It also tells everybody if the current
@@ -82,6 +83,11 @@ public class MainViewPanel extends ProjectComponent {
         // TODO: if project == null, load the last open project from settings
 
         /* Init SQUID interface */
+        try {
+            squid = Squid.instance();
+        } catch (IOException ex) {
+            System.err.println("Squid failed!");
+        }
         // TODO: needs to catch an exception?
         // squid = Squid.instance();
 
