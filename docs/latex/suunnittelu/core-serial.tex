@@ -32,7 +32,7 @@
 
 \beginMethod{getLastAnswer()}
 \methodDeclaration{public String getLastAnswer()}
-\methodComment{Writes an ASCII format message to serial port. SerialIO sends andSerialPortEvent if it gets answer to this message.}
+\methodComment{Writes an ASCII format message to serial port. SerialIO sends and SerialPortEvent if it gets answer to this message.}
 \methodReturn{last answer received from serial port or null if no last message is available.}
 \closeMethod
 
@@ -116,14 +116,15 @@
 \methodReturn{The message in ASCII form that was received from serial port.}
 \closeMethod
 
+
 \beginClass{SerialIOListener}
 \classComment{If a class wants to receive SerialIOEvents it must implement this interface.}
 \classPackage{ikayaki.squid}
-\classDeclaration{public abstract interface SerialIOListener extends java.util.EventListener}
+\classDeclaration{public interface SerialIOListener extends java.util.EventListener}
 \closeClass
 
 \beginMethod{serialIOEvent(SerialIOEvent)}
-\methodDeclaration{void serialIOEvent(SerialIOEvent event) }
+\methodDeclaration{public void serialIOEvent(SerialIOEvent event) }
 \methodComment{Propagates serial port message event.}
 \methodParam{event}{the event that happened.}
 \closeMethod
