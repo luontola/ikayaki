@@ -6,11 +6,24 @@ import java.util.Date;
 
 /**
  * Represents a person who has a personal log file.
+ *
+ * @author Esko Luontola, http://www.orfjackal.net/
  */
 public class Person {
 
+    /**
+     * Personal log file of this person.
+     */
     private File file;
+
+    /**
+     * Name of this person, or <code>null</code> if no name is known.
+     */
     private String name;
+
+    /**
+     * Work records of this person.
+     */
     private Vector<Entry> records;
 
     /**
@@ -40,7 +53,17 @@ public class Person {
         while ((line = reader.readLine()) != null) {
             Entry e = new Entry(line);
             if (e.isRecord()) {
-                records.add(e);
+                // sort list
+                int insert = 0;
+                Date thisDate = e.getDate();
+                for (int i = records.size() - 1; i >= 0; i--) {
+                    Date otherDate = records.get(i).getDate();
+                    if (thisDate.after(otherDate) || thisDate.equals(otherDate)) {
+                        insert = i + 1;
+                        break;
+                    }
+                }
+                records.add(insert, e);
             } else if (e.isName() && name == null) {
                 name = e.getName();
             }
@@ -51,7 +74,7 @@ public class Person {
     /**
      * Returns the name of this person as defined in the first row of the log file.
      *
-     * @return The name of this person
+     * @return The name of this person or <code>null</code> if no name is set
      */
     public String getName() {
         return name;
@@ -59,10 +82,9 @@ public class Person {
 
     /**
      * Returns the entries the person has made during a time period.
-     * The time period will be <i>start <= date < end</i>.
      *
-     * @param start The beginning of the time period
-     * @param end   The end of the time period
+     * @param start The beginning of the time period. Results are <code>&gt;= start</code>
+     * @param end   The end of the time period. Results are <code>&lt; end</code>
      * @return Total hours of work during the time period
      */
     public Entry[] getEntries(Date start, Date end) {
@@ -78,8 +100,8 @@ public class Person {
     /**
      * Returns how many hours in total the person has made during a time period.
      *
-     * @param start The beginning of the time period
-     * @param end   The end of the time period
+     * @param start The beginning of the time period. Results are <code>&gt;= start</code>
+     * @param end   The end of the time period. Results are <code>&lt; end</code>
      * @return Total hours of work during the time period
      */
     public double getHours(Date start, Date end) {
@@ -94,9 +116,9 @@ public class Person {
     /**
      * Returns how many hours of a specific work the person has made during a time period.
      *
-     * @param start The beginning of the time period
-     * @param end   The end of the time period
-     * @param code  The code of the work type to be included or null to include all
+     * @param start The beginning of the time period. Results are <code>&gt;= start</code>
+     * @param end   The end of the time period. Results are <code>&lt; end</code>
+     * @param code  The code of the work type to be included or <code>null</code> to include all
      * @return Total hours of work during the time period
      */
     public double getHours(Date start, Date end, String code) {
@@ -116,11 +138,11 @@ public class Person {
     /**
      * Returns the time of the first record this person has.
      *
-     * @return The time of the first record or null if there are no records
+     * @return The time of the first record, or the current time if there are no records
      */
     public Date getStart() {
         if (records.size() == 0) {
-            return null;
+            return new Date();
         } else {
             Date first = records.get(0).getDate();
             for (Entry e : records) {
@@ -135,11 +157,11 @@ public class Person {
     /**
      * Returns the time of the last record this person has.
      *
-     * @return The time of the last record or null if there are no records
+     * @return The time of the last record, or the current time if there are no records
      */
     public Date getEnd() {
         if (records.size() == 0) {
-            return null;
+            return new Date();
         } else {
             Date last = records.get(0).getDate();
             for (Entry e : records) {

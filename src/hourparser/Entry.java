@@ -2,18 +2,19 @@ package hourparser;
 
 import java.util.Scanner;
 import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.text.ParseException;
 
 /**
- * Represents one row in a log file. The format of the log file must be this:
- * <pre>dd.mm.yyyy   CODE    hours    comment</pre>
+ * Represents one row in a log file. The format of the log file is like this:
+ * <pre>dd.mm.yyyy   code    hours    comment</pre>
  * <p/>
  * A row that starts with an alphabet will be used as the name of the person. Rows beginning with # will be concidered
  * empty lines.
+ *
+ * @author Esko Luontola, http://www.orfjackal.net/
  */
-public class Entry implements Comparable<Entry> {
+public class Entry {
 
     private enum State {
         EMPTY, NAME, RECORD
@@ -41,27 +42,36 @@ public class Entry implements Comparable<Entry> {
 
         // decide what kind of row we are talking about
         if (!sc.hasNext()) {
-            // empty line
+            // EMPTY LINE
             state = State.EMPTY;
 
         } else if (sc.hasNext("#.*")) {
-            // comment
+            // COMMENT
             state = State.EMPTY;
 
         } else if (sc.hasNext("\\D.*")) {
-            // name of the person (starts with non-digit)
+            // NAME OF THE PERSON (starts with non-digit)
             state = State.NAME;
             name = row.trim();
 
         } else {
-            // record
+            // RECORD
             state = State.RECORD;
 
             // parse date
             String s = sc.next();
-            DateFormat df = new SimpleDateFormat(HourParser.getDateFormat());
             try {
-                date = df.parse(s);
+                date = HourParser.getDateFormat().parse(s);
+
+                // if the date format includes no year, then assume the current year
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(new Date(0)); // beginning of UNIX time or something
+                int historicalYear = cal.get(Calendar.YEAR); // should be 1970
+                cal.setTime(date);
+                if (cal.get(Calendar.YEAR) == historicalYear) {
+                    cal.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR)); // set to this year
+                    date = cal.getTime();
+                }
             } catch (ParseException e) {
                 System.err.println("Error in parsing the date in row: " + row);
                 state = null;
@@ -98,7 +108,7 @@ public class Entry implements Comparable<Entry> {
     /**
      * Is this entry an empty line or a comment
      *
-     * @return true if is empty or a comment
+     * @return <code>true</code> if is empty or a comment, <code>false</code> otherwise
      */
     public boolean isEmpty() {
         return state == State.EMPTY;
@@ -107,7 +117,7 @@ public class Entry implements Comparable<Entry> {
     /**
      * Is this entry the name of the person
      *
-     * @return true if is a name
+     * @return <code>true</code> if is a name, <code>false</code> otherwise
      */
     public boolean isName() {
         return state == State.NAME;
@@ -116,7 +126,7 @@ public class Entry implements Comparable<Entry> {
     /**
      * Is this entry a record of work
      *
-     * @return true if is a record
+     * @return <code>true</code> if is a record, <code>false</code> otherwise
      */
     public boolean isRecord() {
         return state == State.RECORD;
@@ -178,16 +188,4 @@ public class Entry implements Comparable<Entry> {
         }
         return s.toString();
     }
-
-    /**
-     * Compares this Entry with the specified Entry for order.
-     *
-     * @param entry the Entry to be compared.
-     * @return the value 0 if the argument's date is equal to this; a value less than 0 if this is before the argument's
-     *         date; and a value greater than 0 if this is after the argument's date.
-     */
-    public int compareTo(Entry entry) {
-        return this.getDate().compareTo(entry.getDate());
-    }
-
 }
