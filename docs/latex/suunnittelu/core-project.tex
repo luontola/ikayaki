@@ -56,6 +56,8 @@
 \tocMethod{setDip(double)}
 \tocMethod{getSampleType()}
 \tocMethod{setSampleType(SampleType)}
+\tocMethod{getOrientation()}
+\tocMethod{setOrientation(boolean)}
 \tocMethod{getTransform()}
 \tocMethod{updateTransforms()}
 \tocMethod{getMass()}
@@ -175,11 +177,19 @@
 }
 \closeField
 
+\beginField{orientation}
+\fieldDeclaration{private boolean orientation}
+\fieldValue{true}
+\fieldComment{
+	Orientation of the sample. true if the sample orientation is +Z, or false if it is -Z. Will be used to create the transform matrix.
+}
+\closeField
+
 \beginField{transform}
 \fieldDeclaration{private Matrix3d transform}
 \fieldValue{new Matrix3d().setIdentity()}
 \fieldComment{
-	Matrix for correcting the sample's orientation. The matrix will be updated whenever the strike, dip or sampleType is changed. After that the updated matrix will be applied to all measurements.
+	Matrix for correcting the sample's orientation. The matrix will be updated whenever the strike, dip, sampleType or orientation is changed. After that the updated matrix will be applied to all measurements.
 }
 \closeField
 
@@ -485,6 +495,22 @@
 	Sets the type of the sample and calls updateTransforms().
 }
 \methodThrows{NullPointerException}{if sampleType is null.}
+\closeMethod
+
+\beginMethod{getOrientation()}
+\methodDeclaration{public synchronized boolean getOrientation()}
+\methodComment{
+	Returns the orientation of the sample.
+}
+\methodReturn{true if the sample orientation is +Z, or false if it is -Z.}
+\closeMethod
+
+\beginMethod{setOrientation(boolean)}
+\methodDeclaration{public synchronized void setOrientation(boolean orientation)}
+\methodComment{
+	Sets the orientation of the sample and calls updateTransforms().
+}
+\methodParam{orientation}{true if the sample orientation is +Z, or false if it is -Z.}
 \closeMethod
 
 \beginMethod{getTransform()}
