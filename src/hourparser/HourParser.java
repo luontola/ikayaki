@@ -16,7 +16,7 @@ public class HourParser {
             printHelp();
             return;
         }
-        
+
         // read all the files given as program parameters
         persons = new Person[args.length];
         for (int i = 0; i < args.length; i++) {

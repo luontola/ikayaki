@@ -130,7 +130,7 @@ public class Person {
     /**
      * Returns the time of the last record this person has.
      *
-     * @return The time of the first record or null if there are no records
+     * @return The time of the last record or null if there are no records
      */
     public Date getEnd() {
         if (records.size() == 0) {
