@@ -1276,14 +1276,93 @@ project listeners.
     }
 
     /**
-     * Starts an auto step measurement. Will do nothing if isAutoStepEnabled() is false.
+     * Starts an auto step measurement. If isAutoStepEnabled() is false but is isSingleStepEnabled() is true, will start
+     * a single step measurement. Will do nothing if both are false.
      * <p/>
      * The measurement will run in its own thread, and this method will not wait for it to finish.
      *
      * @return true if the measurement was started, otherwise false.
      */
     public synchronized boolean doAutoStep() {
-        return false; // TODO
+        if (state == IDLE) {
+            if (isAutoStepEnabled()) {
+                state = MEASURING;
+            } else if (isSingleStepEnabled()) {
+                state = PAUSED;
+            } else {
+                return false;
+            }
+
+            new Thread() {
+                @Override public void run() {
+                    for (int i = getCompletedSteps(); i < getSteps(); i++) {
+                        System.out.println("Measuring step " + i + "...");
+                        try {
+                            Thread.sleep(500);
+                            if (state == ABORTED) {
+                                state = IDLE;
+                                return;
+                            }
+                            getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.BG,
+                                    Math.random(), Math.random(), Math.random()));
+                            Thread.sleep(500);
+                            if (state == ABORTED) {
+                                state = IDLE;
+                                getStep(i).setDone();
+                                return;
+                            }
+                            getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.DEG0,
+                                    Math.random(), Math.random(), Math.random()));
+                            Thread.sleep(500);
+                            if (state == ABORTED) {
+                                state = IDLE;
+                                getStep(i).setDone();
+                                return;
+                            }
+                            getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.DEG90,
+                                    Math.random(), Math.random(), Math.random()));
+                            Thread.sleep(500);
+                            if (state == ABORTED) {
+                                state = IDLE;
+                                getStep(i).setDone();
+                                return;
+                            }
+                            getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.DEG180,
+                                    Math.random(), Math.random(), Math.random()));
+                            Thread.sleep(500);
+                            if (state == ABORTED) {
+                                state = IDLE;
+                                getStep(i).setDone();
+                                return;
+                            }
+                            getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.DEG270,
+                                    Math.random(), Math.random(), Math.random()));
+                            Thread.sleep(500);
+                            if (state == ABORTED) {
+                                state = IDLE;
+                                getStep(i).setDone();
+                                return;
+                            }
+                            getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.BG,
+                                    Math.random(), Math.random(), Math.random()));
+                            Thread.sleep(500);
+                            getStep(i).setDone();
+                        } catch (InterruptedException e) {
+                        }
+
+                        if (state == PAUSED) {
+                            state = IDLE;
+                            return;
+                        }
+
+                        // TODO
+                    }
+                }
+            }.start();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -1294,7 +1373,14 @@ project listeners.
      * @return true if the measurement was started, otherwise false.
      */
     public synchronized boolean doSingleStep() {
-        return false; // TODO
+        if (!isSingleStepEnabled()) {
+            return false;
+        }
+        if (doAutoStep()) {
+            return doPause();
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -1306,7 +1392,19 @@ project listeners.
      * @return true if the measurement will pause, otherwise false.
      */
     public synchronized boolean doPause() {
-        return false; // TODO
+        if (!isPauseEnabled()) {
+            return false;
+        }
+        if (state == IDLE) {
+            return false;
+        } else if (state == MEASURING) {
+            state = PAUSED;
+            return true;
+        } else if (state == PAUSED) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -1318,7 +1416,15 @@ project listeners.
      * @return true if the measurement will abort, otherwise false.
      */
     public synchronized boolean doAbort() {
-        return false; // TODO
+        if (!isAbortEnabled()) {
+            return false;
+        }
+        if (state == IDLE) {
+            return false;
+        } else {
+            state = ABORTED;
+            return true;
+        }
     }
 
     /**
