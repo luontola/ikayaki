@@ -1,0 +1,20 @@
+\beginClass{ProjectComponent}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class ProjectComponent}
+\classExtends{JPanel}
+\classCreatedBy{MainViewPanel}
+\classUses{Project}
+\classSubclass{ProjectInformationPanel}
+\classSubclass{MeasurementSequencePanel}
+\classSubclass{MeasurementDetailsPanel}
+\classSubclass{MeasurementControlsPanel}
+\classSubclass{MeasurementGraphsPanel}
+\classSubclass{ProjectExplorerPanel}
+\classSubclass{CalibrationPanel}
+\classComment{Generic gui component which uses Project and listens MeasurementEvents and ProjectEvents.}
+\closeClass
+
+\beginMethod{ProjectComponent(Project)}
+\methodDeclaration{public ProjectComponent(Project project)}
+\methodComment{Registers MeasurementListener and ProjectListener to project.}
+\closeMethod

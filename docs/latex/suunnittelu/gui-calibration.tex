@@ -1,0 +1,24 @@
+\beginClass{CalibrationPanel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class CalibrationPanel}
+\classExtends{ProjectComponent}
+\classCreatedBy{MainViewPanel}
+\classUses{MainViewPanel}
+\classUses{Project}
+\classComment{
+	Holds predefined "Holder noise" and "Standard sample" projects for calibration; they are in a technically same table as Project explorer files. Also has a "Calibrate" button, which executes selected calibration project, similarly to clicking "Single step" in normal projects.
+}
+\classEvent{On calibrateButton click}{call project.doSingleStep().}
+\classEvent{On calibrationProjectTable click}{call Project.loadProject(File) with clicked project file, send returned Project to MainViewPanel?}
+\classEvent{On MeasurementEvent}{hilight calibration project whose measuring started, or unhilight one whose measuring ended; enable/disable calibrateButton similarly.}
+\classEvent{On ProjectEvent}{hilight selected calibration project, or unhilight unselected calibration project.}
+\closeClass
+
+\beginField{calibrateButton}
+\fieldDeclaration{private JButton calibrateButton}
+\closeField
+
+\beginField{calibrationProjectTable}
+\fieldDeclaration{private JTable calibrationProjectTable}
+\fieldComment{Table for the two calibration projects; has "filename", "last modified" and "time" (time since last modification) columns.}
+\closeField
