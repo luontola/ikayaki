@@ -21,184 +21,303 @@ A brief overview of the problem domain..
 
 \section{Use cases}
 
-% super-makrot uce caseille
-\newcommand{\uctitle}[1]{\stepcounter{ucnum}\textbf{UC\arabic{ucnum}: #1}\\}
-\newcommand{\ucscenario}[1]{\stepcounter{ucsce}\textbf{Scenario \alph{ucsce}:} #1\\}
-\newcommand{\ucpre}[1]{\textbf{Precondition:} #1\\}
-\newcommand{\ucpost}[1]{\textbf{Postcondition:} #1\\}
-\newcommand{\ucerror}[1]{\textbf{Error condition:} #1\\}
+% super-makrot use caseille; huomaa että \uctitle aloittaa ja \ucend lopettaa, muuten tulee ongelma
+\newcommand{\uctitle}[1]{\refstepcounter{ucnum}\textbf{UC\arabic{ucnum}: #1}\\\begin{tabular}{p{3cm}p{11cm}}}
+\newcommand{\ucnote}[1]{\multicolumn{2}{l}{#1}\\}
+\newcommand{\ucscenario}[1]{\stepcounter{ucsce}\textbf{Scenario \alph{ucsce}} & #1\\}
+\newcommand{\ucpre}[1]{\textbf{Precondition} & #1\\}
+\newcommand{\ucpost}[1]{\textbf{Postcondition} & #1\\}
+\newcommand{\ucerror}[1]{\textbf{Error condition} & #1\\}
+\newcommand{\ucgd}[1]{\textbf{Goal-derived} & #1\\}
+\newcommand{\ucreq}[1]{\textbf{Requirements} & #1\\}
+\newcommand{\ucend}[0]{\\\end{tabular}}
 \newcounter{ucnum}
 \newcounter{ucsce}[ucnum]
+\hbadness=10000 % estämmä ihme "underfull \hbox" -varoitukset (ei hajua mistä tulevat)
 
-Describes planned use cases for the program. Derived from user interface prototype and user requiremets. All use cases are made by "the user" in program main screen, unless otherwise noted.
+Describes planned use cases for the program. Use cases are derived from user interface prototype and user requiremets. All use cases are perfomed by any ordinary user and in program main screen.
 
-Format for uce cases:
+Use cases are divided to different sections, grouping logically similar use cases together.
+
+Use case format:
 
 \setcounter{ucnum}{-1}
-\uctitle{Uce case number and title}
-\ucscenario{First scenario for doing the use case}
-\ucscenario{Second scenario for doing the use case}
-\ucpre{Preconditions for use case}
-\ucpost{Postconditions for use case}
-\ucerror{Error handling, mainly if anything special needs to be done}
+\uctitle{Use case identifier and title}
+\ucscenario{First scenario for doing the use case.}
+\ucscenario{Second scenario for doing the use case.}
+\ucscenario{...}
+\ucpre{Preconditions for use case.}
+\ucpost{Postconditions for use case.}
+\ucerror{Error handling, mainly if anything special needs to be done.}
+\ucgd{Goal-derived use case(s) in which this use case occurs (if any); see section \ref{seq:gduc}.}
+\ucreq{Requirement(s) from which this use case derives; see section \ref{seq:req}.}
+\ucend
 
 
 \subsection{Measuring}
+\label{seq:ucmeasuring}
 
 \uctitle{Do single step measuring without demagnetization}
 \ucscenario{Enter as next AF demagnetization step "0" or empty (default for new projects), meaning no demagnetization, and click "Single step".}
-\ucpre{Open AF project, sample in sample holder.}
-\ucpost{Sample measured, results on screen.}
+\ucpre{AF project open, sample in sample holder.}
+\ucpost{Sample measured, results on screen and appended to current project.}
 \ucerror{The program shall let the user know if something went wrong.}
+\ucgd{\ref{seq:gduc3}, first few steps.}
+\ucend
 
 \uctitle{Do single step measuring with demagnetization}
 \ucscenario{Enter as next AF demag step anything greater than zero, and click "Single step".}
-\ucpre{Open AF project, sample in sample holder.}
-\ucpost{Sample demagnetized (possibly ruined) and measured, results on screen.}
+\ucpre{AF project open, sample in sample holder.}
+\ucpost{Sample demagnetized (possibly ruined) and measured, results on screen and appended to current project.}
 \ucerror{The program shall let the user know if something went wrong, and, should the demagnetization field not be coming down, warn user with an alarm sound :)}
+\ucend
 
 \uctitle{Do automatic demagnetization-measuring sequence}
-\ucscenario{Enter the AF sequence (see \ref{sequsecaseaf} for ways to enter it) and click "Measure".}
-\ucpre{Open AF project, sample in sample holder.}
-\ucpost{Sample demagnetized according to entered AF sequence (possibly ruined) and measured after each demagnetization, results on screen.}
+\label{uc:autoseq}
+\ucscenario{Enter the AF sequence (see section \ref{seq:ucseq} for ways to enter it) and click "Measure".}
+\ucpre{AF project open, sample in sample holder.}
+\ucpost{Sample demagnetized according to entered AF sequence (possibly ruined) and measured after each demagnetization, results on screen and appended to current project.}
 \ucerror{The program shall let the user know if something went wrong, and, should the demagnetization field be uncalm, warn user with an alarm sound x)}
+\ucgd{\ref{seq:gduc1} whole sequence, \ref{seq:gduc3} sequence after few single steps at the beginning.}
+\ucend
 
   \uctitle{Pause automatic measuring sequence}
   \ucscenario{While measure sequence is running, click "Pause".}
-  \ucpre{Ongoing measure sequence.}
+  \ucpre{Ongoing measuring sequence (UC\ref{uc:autoseq}).}
   \ucpost{Measure sequence halts after current step is done, results on screen.}
   \ucerror{Program tells if sequence can't be paused (and something has gone terribly wrong).}
+  \ucgd{\ref{seq:gduc3}, Tomas pauses the sequence as the meteor demagnetizes too rapidly.}
+  \ucend
 
   \uctitle{Abort automatic measuring sequence}
   \ucscenario{While measure sequence is running or paused, click "Stop immediately".}
-  \ucpre{Ongoing or paused measure sequence.}
+  \ucpre{Ongoing or paused measuring sequence (UC\ref{uc:autoseq}).}
   \ucpost{Measure sequence halts immediately [and program enters "fully manual" mode?]}
   \ucerror{Program tells if sequence can't be aborted (and something has gone terribly wrong).}
+  \ucend
 
 \uctitle{Do thellier measuring}
 \ucscenario{Click "Single step". (Temperature can be entered later, as it won't affect measuring.)}
-\ucpre{Open TH project, sample in sample holder.}
-\ucpost{Sample measured, results on screen.}
+\ucpre{TH project open, sample in sample holder.}
+\ucpost{Sample measured, results on screen and appended to current project.}
 \ucerror{As usual.}
+\ucgd{\ref{seq:gduc2}, temperatures already entered, one step at 380 °C.}
+\ucend
 
 \uctitle{Do thermal measuring}
-{}[Exactly the same as thellier?]\\
+\ucnote{[Exactly the same as thellier?]}
 \ucscenario{Click "Single step". (Temperature can be entered later, as it won't affect measuring.)}
-\ucpre{Open TH project, sample in sample holder.}
-\ucpost{Sample measured, results on screen.}
+\ucpre{TH project open, sample in sample holder.}
+\ucpost{Sample measured, results on screen and appended to current project.}
 \ucerror{As usual.}
+\ucend
 
 \uctitle{Measure magnetometer ground noise}
-{}[2005-02-23 not in current UI proto, nor planned for implementation]\\
+\ucnote{[2005-02-23 not in current UI proto, nor planned for implementation]}
 \ucscenario{Click "Ground noise" and "Calibrate".}
-\ucpre{None.}
-\ucpost{Ground noise measured, results on screen.}
+\ucpre{No ongoing measurements.}
+\ucpost{Ground noise measured, results on screen and appended to "Ground noise" project.}
+\ucend
 
 \uctitle{Measure empty sample holder noise}
-{}[2005-02-21 In current UI prototype, "Noise" actually does sample holder noise measuring.]\\
 \ucscenario{Click "Holder noise" and "Calibrate".}
-\ucpre{Empty sample holder.}
-\ucpost{Holder noise measured, results on screen.}
+\ucpre{No ongoing measurements, empty sample holder.}
+\ucpost{Holder noise measured, results on screen and appended to "Holder noise" project.}
+\ucgd{\ref{seq:gduc1}, calibration at the beginning.}
+\ucend
+
+\uctitle{Measure standard sample}
+\ucscenario{Click "Standard sample" and "Calibrate".}
+\ucpre{No ongoing measurements, standard sample in sample holder.}
+\ucpost{Standard sample measured, results on screen and appended to "Standard sample" project, and, predefined .std file.}
+\ucpost{Holder noise measured, results on screen and appended to "Holder noise" project.}
+\ucend
 
 \uctitle{Fully manual measuring}
-- Demagnetize X, Y or Z axis\\
-- item Measure X, Y or Z axis\\
-\ucscenario{Click any of the manual control components [2005-02-21 at right third of UI proto].}
+\ucnote{[2005-02-25 still not clear how fully manual is supposed to work; Tomas will be back on tuesday 1.3. and might tell us]}
+\ucscenario{Click any of the manual control components.}
 \ucpre{Manual mode enabled.}
 \ucpost{Manual action done, result on screen.}
+\ucend
 
 \uctitle{Enable manual mode}
 \ucscenario{Click "Manual" checkbox above the manual control components.}
 \ucpre{No ongoing measurement.}
 \ucpost{Manual mode enabled.}
+\ucend
 
 
-\subsection{File formats}
-
-\uctitle{Automatically save all measurement cycles in project [.dat?] file}
-\ucscenario{Make any measurement action.}
-\ucpre{Open project file.}
-\ucpost{After measurement is done, new results appended to project file.}
-
-\uctitle{Save standard sample measurement results in .std file}
-\ucscenario{Click "Standard sample", "Calibrate".}
-\ucpre{No ongoing measurement.}
-\ucpost{After standard sample measurement is done, new results appended to predefined .std file.}
+\subsection{Exporting}
+\label{seq:ucexport}
 
 \uctitle{Export project data into .dat file}
 \ucscenario{In project explorer file list, right-click on desired project file, click "Export .dat in current directory".}
 \ucscenario{In project explorer file list, right-click on desired project file, click "Export .dat to disk drive A:".}
 \ucscenario{In project explorer file list, right-click on desired project file, click "Export .dat...", chooce directory and filename to export.}
+\ucscenario{In project explorer file list, select multiple files with shift-click and ctrl-click, and make any of above actions.}
 \ucpre{At least 1 project file in current (selected) directory.}
 \ucpost{Project data exported to .dat file.}
 \ucerror{Notify if file error occurs (such as no disk in A: drive).}
+\ucend
 
 \uctitle{Export (thellier) project data into .tdt file}
 \ucscenario{In project explorer file list, right-click on desired project file, click "Export .tdt in current directory".}
 \ucscenario{In project explorer file list, right-click on desired project file, click "Export .tdt to disk drive A:".}
 \ucscenario{In project explorer file list, right-click on desired project file, click "Export .tdt...", chooce directory and filename to export.}
+\ucscenario{In project explorer file list, select multiple files with shift-click and ctrl-click, and make any of above actions.}
 \ucpre{At least 1 project file in current (selected) directory.}
 \ucpost{Project data exported to .tdt file.}
 \ucerror{Notify if file error occurs (such as no disk in A: drive).}
+\ucend
 
 \uctitle{Export single measurement details into .srm file}
-\ucscenario{In measurement result table, right-click on desired measurement line, click "Export .srm in current directory".}
-\ucscenario{In measurement result table, right-click on desired measurement line, click "Export .srm to disk drive A:".}
-\ucscenario{In measurement result table, right-click on desired measurement line, click "Export...", chooce directory and filename to export.}
+\ucscenario{In measurement result table, right-click on desired measurement line(s), click "Export .srm in current directory".}
+\ucscenario{In measurement result table, right-click on desired measurement line(s), click "Export .srm to disk drive A:".}
+\ucscenario{In measurement result table, right-click on desired measurement line(s), click "Export...", chooce directory and filename to export.}
+\ucscenario{In measurement result table, select multiple lines with shift-click and ctrl-click, and make any of above actions.}
 \ucpre{At least 1 measurement result in current project.}
 \ucpost{Measurement details exported to .srm file.}
 \ucerror{Notify if file error occurs (such as no disk in A: drive).}
+\ucend
+
+
+\subsection{Printing}
+\label{seq:ucprint}
+
+[2005-02-25 not in current UI prototype, implementation priority low.]\\
 
 \uctitle{Print measurement results}
-\ucscenario{Click "Print...", "Measurement results". [2005-02-23 propably gone in current UI prototype; implementation priority low]}
+\ucscenario{Click "Print...", "Measurement results".}
 \ucpre{Open project.}
 \ucpost{Measurement results printed via [Java] standard printing window.}
 \ucerror{Let know if printing error occurs.}
+\ucend
 
 \uctitle{Print graph sheet (with 7 different graphs; described elsewhere)}
-\ucscenario{Click "Print...", "Grap sheet". [2005-02-23 propably gone in current UI prototype; implementation priority low]}
+\ucscenario{Click "Print...", "Grap sheet".}
 \ucpre{Open project.}
 \ucpost{Measurement results printed via [Java] standard printing window.}
 \ucerror{Let know if printing error occurs.}
+\ucend
 
 
-\subsection{Functionality}
+\subsection{Projects}
+\label{seq:ucproject}
 
-\uctitle{Create new project [.dat file?]}
+{\it As in project files, which store all measurement results}\\
 
-\uctitle{Load project [.dat file?]}
+\uctitle{Automatically save all measurement cycles in project file}
+\ucnote{[Propably more of a requirement than use case and shall be removed from here]}
+\ucscenario{Make any measurement action (see section \ref{seq:ucmeasuring} for those).}
+\ucpre{Project file open.}
+\ucpost{After measurement (step) is done, new results appended to project file.}
+\ucgd{\ref{seq:gduc1}, \ref{seq:gduc2}, \ref{seq:gduc3}.}
+\ucend
 
-\uctitle{Append measurement results to project [.dat file?]}
+\uctitle{Create new project}
+\ucscenario{Click the empty line below filenames in project explorer, enter new project name, chooce AF/TH (thellier) project, click "Create new" or press enter.}
+\ucpre{Project explorer in desired directory (UC\ref{uc:choosedir}).}
+\ucpost{New project created and selected.}
+\ucgd{\ref{seq:gduc1} after calibration, \ref{seq:gduc3} at the beginning.}
+\ucend
 
-\uctitle{Panic abort operation instantly}
+\uctitle{Load project}
+\ucscenario{Click any filename in project explorer.}
+\ucpre{Project explorer in desired directory (UC\ref{uc:choosedir}).}
+\ucpost{Existing project loaded and selected.}
+\ucgd{\ref{seq:gduc2} all samples already as project files.}
+\ucscenario{Click "Browse..." in project explorer, use standard [Java] file chooser to select project file to be opened.}
+\ucpre{None.}
+\ucpost{Existing project loaded and selected, project explorer in opened project's directory.}
+\ucend
 
-When any measuring action, click "Stop immediately".
+\uctitle{Change project explorer directory}
+\label{uc:choosedir}
+\ucscenario{Click into current directory textbox in project explorer, write directory to change to, press enter.}
+\ucscenario{Click into current directory textbox in project explorer, start writing directory; when autocomplete-results appear below, use up/down+enter or mouseclick to select the directory.}
+\ucscenario{Click the down-arrow on the right side of current directory textbox in project explorer, choose desired directory from appearing directory history.}
+\ucscenario{Click "Browse..." in project explorer, use standard [Java] file chooser to select directory to change to.}
+\ucpre{Project explorer in desired directory.}
+\ucpost{New project created and selected.}
+\ucgd{\ref{seq:gduc1}, \ref{seq:gduc2}, \ref{seq:gduc3}.}
+\ucend
 
-\ucpre{Single step measuring or ongoing measure sequence.}
-\ucpost{All demagnetization and measuring halts immediately [and program enters "fully manual" mode?]}
-\ucerror{Program tells if measuring can't be aborted, meaning something has gone terribly wrong.}
+\uctitle{Insert/edit project data}
+\ucscenario{Click any of the project data checkboxes, or textboxes and enter value.}
+\ucpre{Open project (usually just created).}
+\ucpost{Project data changed, saved automatically to project file.}
+\ucgd{\ref{seq:gduc1} after creating new project.}
+\ucend
 
-\subsection{AF sequences}
-\label{sequsecaseaf}
 
-{\it As in automatic demagnetization-measuring sequences, or Alternating Field sequences}
+\subsection{Sequences}
+\label{seq:ucseq}
 
-\uctitle{Insert AF sequence with start-step-stop values}
+{\it As in automatic demagnetization-measuring sequences (AF sequences), or, thellier temperature sequences}
 
-\uctitle{Load AF sequence}
+\uctitle{Insert sequence with start-step-stop values}
+\ucscenario{Click "Start" textbox, insert start value, click "Step" textbox, insert step value, click "Stop" checkbox, insert stop value, click "Add sequence" or press enter.}
+\ucscenario{Click "Start" textbox, insert start value, press tab, insert step value, press tab, insert stop value, press enter or click "Add sequence".}
+\ucpre{An open project.}
+\ucpost{Sequence from {\it start} to {\it stop}, increasing by {\it step} for every step, appended to measurement result table, and selected.}
+\ucgd{\ref{seq:gduc3} after creating new project.}
+\ucend
 
-\uctitle{Save AF sequence}
+\uctitle{Load sequence}
+\label{uc:loadseq}
+\ucscenario{Click down-arrow in right side of "Load set" combo box; from appearing list, click sequence to load.}
+\ucpre{An open project, at least 1 saved sequence.}
+\ucpost{Selected sequence appended and selected to measurement result table.}
+\ucgd{\ref{seq:gduc1}, after typing project data, load "Basalt" set; \ref{seq:gduc2} set already loaded for each project file (when created).}
+\ucend
 
-\uctitle{Edit AF sequence on-the-fly}
+\uctitle{Edit sequence on-the-fly}
+\label{uc:editseq}
+\ucscenario{Click any unmeasured "Tesla" or "Temp" column in measurement result table, enter new value.}
+\ucscenario{Click any unmeasured line in measurement result table, press del to delete that line.}
+\ucscenario{Right-click any unmeasured line in measurement result table, choose "Delete" to delete that line.}
+\ucscenario{Click-drag any unmeasured line in measurement result table to new position within unmeasured lines.}
+\ucscenario{Select multiple unmeasured lines in measurement result table with shift-clicks and ctrl-clicks, make any of above actions (except enter new value).}
+\ucpre{Unmeasured lines in current project's measurement result table (note that measuring sequence can be going on).}
+\ucpost{Editing committed.}
+\ucerror{Editing or screwing up measured lines won't be allowed.}
+\ucgd{\ref{seq:gduc3}, when sequence demagnetizes too rapidly, Tomas deletes unmeasured lines.}
+\ucend
 
-\uctitle{Edit stored AF sequences}
+\uctitle{Save sequence}
+\label{uc:saveseq}
+\ucscenario{Click "Load set" combo box, enter new sequence name, click "Save set". [2005-02-25 not in current (almost final) UI prototype!]}
+\ucscenario{Right-click any line in measurement result table, choose "Save full sequence...", enter name, press enter.}
+\ucscenario{Select any lines in measurement result table with shift-clicks and ctrl-clicks, right-click on selected lines, choose "Save selected sequence...", enter name, press enter.}
+\ucpre{At least 1 line in measurement results table (although you propably don't want to save a sequence with only one step x).}
+\ucpost{New sequence set saved to predefined sequence file and available from "Load set" combo box.}
+\ucerror{Ask whether to overwrite, if sequence with the same name already exists (allow to enter new name if choose not to overwrite).}
+\ucend
 
-\uctitle{Rename stored AF sequence}
+\uctitle{Edit stored sequence}
+\ucscenario{UC\ref{uc:loadseq} "Load sequence" -> UC\ref{uc:editseq} "Edit sequence" -> UC\ref{uc:saveseq} "Save sequence" with same name as the loaded sequence.}
+\ucscenario{Click menu "Options"->"Sequences...", edit any sequence in appearing window... [2005-02-25 not in UI prototype, must be improvised :)]}
+\ucpre{At least 1 saved sequence.}
+\ucpost{Changes saved to predefined sequence file.}
+\ucend
 
-\uctitle{Delete stored AF sequence}
+\uctitle{Delete stored sequence}
+\ucscenario{Click down-arrow in right side of "Load set" combo box; from appearing list, right-click sequence to delete, choose "Delete".}
+\ucscenario{Click menu "Options"->"Sequences...", delete sequence in appearing window... [2005-02-25 not in UI prototype, must be improvised :)]}
+\ucpre{At least 1 saved sequence.}
+\ucpost{Sequence deleted, changes saved to predefined sequence file.}
+\ucend
+
+\uctitle{Rename stored sequence}
+\ucscenario{Click down-arrow in right side of "Load set" combo box; from appearing list, right-click sequence to rename, choose "Rename...", enter new name, press enter.}
+\ucscenario{Click menu "Options"->"Sequences...", rename any sequence in appearing window... [2005-02-25 not in UI prototype, must be improvised :)]}
+\ucpre{At least 1 saved sequence.}
+\ucpost{Sequence renamed, changes saved to predefined sequence file.}
+\ucend
 
 
 \section{User requirements}
+\label{seq:req}
 
 % Makrot vaatimuksille
 \newcommand{\ReqId}[1]{\textbf{Identifier:} #1\\}
@@ -335,7 +454,17 @@ Specific explanation of the functions to be implemented
 
 Overview of UI described here.. 
 
-\subsection{Goal derived use cases}
+\subsection{Goal-derived use cases}
+\label{seq:gduc}
+
+\subsubsection{Goal-derived use case 1: Erkki...}
+\label{seq:gduc1}
+
+\subsubsection{Goal-derived use case 2: Fabio...}
+\label{seq:gduc2}
+
+\subsubsection{Goal-derived use case 3: Tomas...}
+\label{seq:gduc3}
 
 
 \section{Architecture overview}
