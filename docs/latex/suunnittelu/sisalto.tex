@@ -57,11 +57,18 @@ It is recommendable for everybody to have a quick glance at Design Patterns. Her
 
 This system has two different separete project, Ikayaki-program and Squid Emulator which is subproject. Ikayaki, as main project, has graphical user interface (see requirements-document) and interface for communicating with SQUID magnetometer (Superconducting Quantum Interference Device) to measusure magnetization of minerals and rocks. Squid Emulator is vital for testing Ikayaki and it will be simple command-line program which emulates only data flow with random data and communication.
 
-Software is plitted in two main parts in this document. Data section includes files needed for project-management, data flow in software and interface to control SQUID-system. There is also Settings for whole system and a subproject squid emulator. User Interface section documents all  graphical interface classes, nothing more. There will be no graphical user interface for squid emulator.
+Software is split in two main parts in this document. Data section includes files needed for project-management, data flow in software and interface to control SQUID-system. There is also Settings for whole system and a subproject squid emulator. User Interface section documents all graphical interface classes, nothing more. There will be no graphical user interface for squid emulator.
 
 
 \section{Architecture description}
 \label{sec:arch}
+
+Here we describe each subsystem shortly, and present a class diagram of each, as well as the whole system divided roughly into data and gui parts.
+
+Note that the structure of this section is exactly the same as sections \ref{sec:data}-\ref{sec:gui}, but with only first two sectioning levels.
+
+
+\subsection{Data classes and methods}
 
 \begin{figure}
 \begin{center}
@@ -71,18 +78,11 @@ Software is plitted in two main parts in this document. Data section includes fi
 \end{center}
 \end{figure}
 
-\begin{figure}
-\begin{center}
-\includegraphics[angle=90,width=12cm]{class-diagram-part2.eps}
-\caption{Squid class diagram: GUI classes}
-\label{fig:classdiagram2}
-\end{center}
-\end{figure}
+Class diagram of data classes is in Figure~\ref{fig:classdiagram1}.
 
-Class diagrams for the whole system are in Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
+Data classes are in package ikayaki, ikayaki.squid or ikayaki.util.
 
-
-\subsection{Data classes and methods}
+Package ikayaki holds generic data classes, ikayaki.squid holds classes loosely related to squid interface, and ikayaki.util has utilities (\ref{sec:utilities}).
 
 \subsubsection{Project data}
 
@@ -97,11 +97,26 @@ SerialIO and classes related to it takes care of the harware layer of serial com
 \subsubsection{Global settings}
 
 \subsubsection{Utilities}
+\label{sec:utilities}
 
 
 \subsection{GUI classes and methods}
 
+\begin{figure}
+\begin{center}
+\includegraphics[angle=90,width=12cm]{class-diagram-part2.eps}
+\caption{Squid class diagram: GUI classes}
+\label{fig:classdiagram2}
+\end{center}
+\end{figure}
+
+Class diagram of gui classes is in Figure~\ref{fig:classdiagram2}. This section is divided into sections by gui components, each of which has one or more classes.
+
+All gui classes are in package ikayaki.gui.
+
 \subsubsection{Generic GUI components}
+
+ProjectComponent, a generic gui base class which handles registering Project- and MeasurementListeners to new projects, and which every gui component subclasses.
 
 \subsubsection{Main window}
 
@@ -109,7 +124,21 @@ SerialIO and classes related to it takes care of the harware layer of serial com
 
 \subsubsection{Project Explorer}
 
+Located at middle left side of main window.
+
+ProjectExplorerPanel handles loading existing projects and creating new ones. Shows a listing of project files in current directory, which can be changed by typing new directory into ComboBox text field, or using the browse-button and standars dir chooser dialog. ComboBox also holds directory history, and, when typing text into it's text field, automatically shows autocomplete results.
+
+NewProjectPanel has components for creating a new project.
+
+ProjectExplorerTable is a JTable with the project file listing, including "filename", "type" and "last modified" columns.
+
+ProjectExplorerPopupMenu has options for exporting project files into different formats.
+
 \subsubsection{Calibration}
+
+Located at upper left corner of main window.
+
+CalibrationPanel holds predefined "Holder noise" and "Standard sample" projects for calibration in a similar table as Project Explorer. Also has a "Calibrate" button, which executes selected calibration project, similarly to clicking "Single step" in normal projects.
 
 \subsubsection{Project information}
 
@@ -119,9 +148,18 @@ SerialIO and classes related to it takes care of the harware layer of serial com
 
 \subsubsection{Measurement controls}
 
+Located at upper right corner of main window.
+
+MeasurementControlsPanel holds the buttons for controlling measurements, a help picture for sample inserting, radiobuttons for changing +z/-z orientation of sample, magnetometer status picture and manual controlling components.
+
+MagnetometerStatusPanel shows an image of current magnetometer status, as in sample holder position and rotation. Image is updated according to MeasurementEvents received.
+
+ManualControlsPanel has controls for fully manual measuring, which are enabled when no "normal" measurements are happening.
+
+
 \subsubsection{Graphs}
 
-Graph panels visualice the measurement data. They are located at the lower right corner in the UI. MeasurementGraphsPanel listens to MeasurementEvents to update the measurement data in plots. AbstractPlot is an abstract class which implements all the general features of graph plots. IntensityPlot and StereoPlot extend the functionality of AbstractPlot and implement their special drawing features accordingly.
+Graph panels visualize the measurement data. They are located at the lower right corner in the UI. MeasurementGraphsPanel listens to MeasurementEvents to update the measurement data in plots. AbstractPlot is an abstract class which implements all the general features of graph plots. IntensityPlot and StereoPlot extend the functionality of AbstractPlot and implement their special drawing features accordingly.
 
 
 \section{Data classes and methods}
