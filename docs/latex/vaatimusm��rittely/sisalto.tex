@@ -18,78 +18,44 @@ Technical terms here..
 
 A brief overview of the problem domain..
 
-\section{User requirements definition}
-
-Goals of the software set by client..
-
-\subsection{Requirements}
-
-Requirements by client..
-
-\subsection{Restrictions}
-
-Restrictions set by client..
-
-\section{System requirements specification}
-
-Specific explanation of the functions to be implemented
-
-\subsection{Functional requirements}
-
-\subsection{Non-functional requirements}
-
-Requirements conserning the quality and performance of the 
-software..
-
-\subsubsection{Environment}
-
-\subsubsection{Maintainability}
-
-\subsubsection{Etc.}
-
-\subsubsection{Etc.}
-
-\subsection{External interfaces}
-
-Interface to existing software and use of it described here..
-
-\subsection{System restrictions}
-
 \section{Use cases}
 
 % super-makrot pre-, post- ja error conditioneille x)
-% huomaa että \error lopuksi ei ole uutta riviä, joten laita se viimeiseksi
-\newcommand{\pre}[1]{\textbf{Precondition:} #1\\}
-\newcommand{\post}[1]{\textbf{Postcondition:} #1\\}
-\newcommand{\error}[1]{\textbf{Error condition:} #1}
+\newcommand{\UcTitle}[1]{\textbf{#1}\\}
+\newcommand{\UcPre}[1]{\textbf{Precondition:} #1\\}
+\newcommand{\UcPost}[1]{\textbf{Postcondition:} #1\\}
+\newcommand{\UcError}[1]{\textbf{Error condition:} #1\\}
 
 Describes planned use cases for the program. Derived from user interface prototype and requiremets. All use cases are made by "the user" in program main screen, unless otherwise noted.
 
 \subsection{Measuring}
 
-\subsubsection{Do single step measuring without demagnetization}
+
+\UcTitle{Do single step measuring without demagnetization}
 
 Enter as next AF demagnetization step "0" or empty (default for new projects), meaning no demagnetization, and click "Single step".
 
-\pre{Open AF project, sample in sample holder.}
-\post{Sample measured, results on screen.}
-\error{The program shall let the user know if something went wrong.}
+\UcPre{Open AF project, sample in sample holder.}
+\UcPost{Sample measured, results on screen.}
+\UcError{The program shall let the user know if something went wrong.}
 
-\subsubsection{Do single step measuring with demagnetization}
+
+\UcTitle{Do single step measuring with demagnetization}
 
 Enter as next AF demag step anything greater than zero, and click "Single step".
 
-\pre{Open AF project, sample in sample holder.}
-\post{Sample demagnetized (possibly ruined) and measured, results on screen.}
-\error{The program shall let the user know if something went wrong, and, should the demagnetization field not be coming down, warn user with an alarm sound :)}
+\UcPre{Open AF project, sample in sample holder.}
+\UcPost{Sample demagnetized (possibly ruined) and measured, results on screen.}
+\UcError{The program shall let the user know if something went wrong, and, should the demagnetization field not be coming down, warn user with an alarm sound :)}
 
-\subsubsection{Do automatic demagnetization-measuring sequence}
+
+\UcTitle{Do automatic demagnetization-measuring sequence}
 
 Enter the AF sequence (see \ref{sequsecaseaf} for ways to enter it) and click "Measure".
 
-\pre{Open AF project, sample in sample holder.}
-\post{Sample demagnetized according to entered AF sequence (possibly ruined) and measured after each demagnetization, results on screen.}
-\error{The program shall let the user know if something went wrong, and, should the demagnetization field be uncalm, warn user with an alarm sound x)}
+\UcPre{Open AF project, sample in sample holder.}
+\UcPost{Sample demagnetized according to entered AF sequence (possibly ruined) and measured after each demagnetization, results on screen.}
+\UcError{The program shall let the user know if something went wrong, and, should the demagnetization field be uncalm, warn user with an alarm sound x)}
 
   \begin{itemize}
 
@@ -97,63 +63,68 @@ Enter the AF sequence (see \ref{sequsecaseaf} for ways to enter it) and click "M
 
   While measure sequence is running, click "Pause".
 
-  \pre{Ongoing measure sequence.}
-  \post{Measure sequence halts after current step is done, results on screen.}
-  \error{Program tells if sequence can't be paused (and something has gone terribly wrong).}
+  \UcPre{Ongoing measure sequence.}
+  \UcPost{Measure sequence halts after current step is done, results on screen.}
+  \UcError{Program tells if sequence can't be paused (and something has gone terribly wrong).}
 
   \item Abort automatic measuring sequence
 
   While measure sequence is running or paused, click "Stop immediately".
 
-  \pre{Ongoing or paused measure sequence.}
-  \post{Measure sequence halts immediately [and program enters "fully manual" mode?]}
-  \error{Program tells if sequence can't be aborted (and something has gone terribly wrong).}
+  \UcPre{Ongoing or paused measure sequence.}
+  \UcPost{Measure sequence halts immediately [and program enters "fully manual" mode?]}
+  \UcError{Program tells if sequence can't be aborted (and something has gone terribly wrong).}
 
   \end{itemize}
 
-\subsubsection{Do thellier measuring}
+
+\UcTitle{Do thellier measuring}
 
 Click "Single step". (Temperature can be entered later, as it won't affect measuring.)
 
-\pre{Open TH project, sample in sample holder.}
-\post{Sample measured, results on screen.}
-\error{As usual.}
+\UcPre{Open TH project, sample in sample holder.}
+\UcPost{Sample measured, results on screen.}
+\UcError{As usual.}
 
-\subsubsection{Do thermal measuring}
+
+\UcTitle{Do thermal measuring}
 
 [Exactly the same as thellier?]
 
 Click "Single step". (Temperature can be entered later, as it won't affect measuring.)
 
-\pre{Open TH project, sample in sample holder.}
-\post{Sample measured, results on screen.}
-\error{As usual.}
+\UcPre{Open TH project, sample in sample holder.}
+\UcPost{Sample measured, results on screen.}
+\UcError{As usual.}
 
-\subsubsection{Measure magnetometer ground noise}
+
+\UcTitle{Measure magnetometer ground noise}
 
 Click "Noise" and "Calibrate".
 
-\pre{None.}
-\post{[Sample holder at home?] Ground noise measured, results on screen.}
-\error{As usual.}
+\UcPre{None.}
+\UcPost{[Sample holder at home?] Ground noise measured, results on screen.}
+\UcError{As usual.}
 
-\subsubsection{Measure empty sample holder noise}
+
+\UcTitle{Measure empty sample holder noise}
 
 [2005-02-21 In current UI prototype, "Noise" actually does sample holder noise measuring.]
 
 Click "Holder noise" and "Calibrate".
 
-\pre{Empty sample holder.}
-\post{[Sample holder at home?] Holder noise measured, results on screen.}
-\error{As usual.}
+\UcPre{Empty sample holder.}
+\UcPost{[Sample holder at home?] Holder noise measured, results on screen.}
+\UcError{As usual.}
 
-\subsubsection{Fully manual measuring}
+
+\UcTitle{Fully manual measuring}
 
 Click any of the manual control components [2005-02-21 at right third of UI proto].
 
-\pre{None.}
-\post{Manual action done, result on screen.}
-\error{As usual.}
+\UcPre{None.}
+\UcPost{Manual action done, result on screen.}
+\UcError{As usual.}
 
   \begin{itemize}
   \item Move sample handler to desired position
@@ -164,44 +135,189 @@ Click any of the manual control components [2005-02-21 at right third of UI prot
 
 \subsection{File formats}
 
-\subsubsection{Automatically save all measurement cycles in project (.dat?) file}
-\subsubsection{Save standard sample measurement results in .std file}
-\subsubsection{Export (thellier) results into .tdt file}
-\subsubsection{Export single measurement details into .srm file}
-\subsubsection{Print measurement results}
-\subsubsection{Print graph sheet (with 7 different graphs; described elsewhere)}
+\UcTitle{Automatically save all measurement cycles in project (.dat?) file}
+
+\UcTitle{Save standard sample measurement results in .std file}
+
+\UcTitle{Export (thellier) results into .tdt file}
+
+\UcTitle{Export single measurement details into .srm file}
+
+\UcTitle{Print measurement results}
+
+\UcTitle{Print graph sheet (with 7 different graphs; described elsewhere)}
 
 \subsection{Functionality}
 
-\subsubsection{Create new project (.dat file?)}
-\subsubsection{Load project (.dat file?)}
-\subsubsection{Append measurement results to project (.dat file?)}
-\subsubsection{Panic abort operation instantly}
+\UcTitle{Create new project (.dat file?)}
+
+\UcTitle{Load project (.dat file?)}
+
+\UcTitle{Append measurement results to project (.dat file?)}
+
+
+\UcTitle{Panic abort operation instantly}
 
 When any measuring action, click "Stop immediately".
 
-\pre{Single step measuring or ongoing measure sequence.}
-\post{All demagnetization and measuring halts immediately [and program enters "fully manual" mode?]}
-\error{Program tells if measuring can't be aborted, meaning something has gone terribly wrong.}
+\UcPre{Single step measuring or ongoing measure sequence.}
+\UcPost{All demagnetization and measuring halts immediately [and program enters "fully manual" mode?]}
+\UcError{Program tells if measuring can't be aborted, meaning something has gone terribly wrong.}
 
 \subsection{AF sequences}
 \label{sequsecaseaf}
 
 {\it As in automatic demagnetization-measuring sequences, or Alternating Field sequences}
 
-\subsubsection{Insert AF sequence with start-step-stop values}
-\subsubsection{Load AF sequence}
-\subsubsection{Save AF sequence}
-\subsubsection{Edit AF sequence on-the-fly}
-\subsubsection{Edit stored AF sequences}
-\subsubsection{Rename stored AF sequence}
-\subsubsection{Delete stored AF sequence}
+\UcTitle{Insert AF sequence with start-step-stop values}
+
+\UcTitle{Load AF sequence}
+
+\UcTitle{Save AF sequence}
+
+\UcTitle{Edit AF sequence on-the-fly}
+
+\UcTitle{Edit stored AF sequences}
+
+\UcTitle{Rename stored AF sequence}
+
+\UcTitle{Delete stored AF sequence}
+
+
+\section{User requirements}
+
+% Makrot vaatimuksille
+\newcommand{\ReqId}[1]{\textbf{Identifier:} #1\\}
+\newcommand{\ReqName}[1]{\textbf{Name:} #1\\}
+\newcommand{\ReqDesc}[1]{\textbf{Description:} #1\\}
+\newcommand{\ReqPrio}[1]{\textbf{Priority:} #1\\}
+
+Goals of the software set by client..
+
+\subsection{Functional requirements}
+
+\ReqId{R1}
+\ReqName{Basic}
+\ReqDesc{Able to control Squid-magnetometer and make measurements with it.}
+\ReqPrio{1}
+
+\ReqId{R2}
+\ReqName{Saving}
+\ReqDesc{Measurements can be saved in .dat, .dtd and .srm files.}
+\ReqPrio{1}
+
+\ReqId{R3}
+\ReqName{Auto saving}
+\ReqDesc{Program will save information after every measurement.}
+\ReqPrio{1}
+
+\ReqId{R4}
+\ReqName{Loading}
+\ReqDesc{Saved information can be loaded into program.}
+\ReqPrio{2}
+
+\ReqId{R5}
+\ReqName{Filemanagement}
+\ReqDesc{New data can be added to existing datafiles.}
+\ReqPrio{2}
+
+\ReqId{R6}
+\ReqName{Numeric presentation of data}
+\ReqDesc{Program shows measurement data in numbers.}
+\ReqPrio{1}
+
+\ReqId{R7}
+\ReqName{Graphic presentation of data}
+\ReqDesc{Program draws graphs from measurement data.}
+\ReqPrio{3}
+
+\ReqId{R8}
+\ReqName{Editing}
+\ReqDesc{Ability edit data afterwards.}
+\ReqPrio{2}
+
+\ReqId{R9}
+\ReqName{Recalculation}
+\ReqDesc{Recalculate based on changed data.}
+\ReqPrio{2}
+
+\ReqId{R10}
+\ReqName{Control}
+\ReqDesc{Ability to stop any action immediately.}
+\ReqPrio{1}
+
+\ReqId{R11}
+\ReqName{Sequence}
+\ReqDesc{Able to create measuring sequences with several different sized steps.}
+\ReqPrio{2}
+
+\ReqId{R12}
+\ReqName{Sequence control}
+\ReqDesc{Able to stop sequence after current step.}
+\ReqPrio{2}
+
+\ReqId{R13}
+\ReqName{Hotkeys}
+\ReqDesc{Possibility to create and change hotkeys.}
+\ReqPrio{4}
+
+\ReqId{RXX}
+\ReqName{}
+\ReqDesc{}
+\ReqPrio{}
+
+
+\subsection{Quality requirements}
+
+\ReqId{QR1}
+\ReqName{Ease of use}
+\ReqDesc{Program should be easy to use for first time users.}
+\ReqPrio{1}
+
+\ReqId{QR2}
+\ReqName{Help pages}
+\ReqDesc{Program should have good help pages.}
+\ReqPrio{3}
+
+\subsection{Environment}
+
+\subsection{Maintainability}
+
+\subsection{Restrictions}
+
+Program will be used in normal PC which is connected to magnetometer. 
+Taking into account rapid phase of computer evolution it is possible 
+that computer in which program is used can change, accordingly the 
+program should be able to be installed by outsiders. 
+We need not prepare to changing of magnetometer, as new 
+magnenetometer will probably have its own program.
+
+
+\section{System requirements / Functions}
+
+Specific explanation of the functions to be implemented
+
+\subsection{System restrictions}
 
 \section{User interface}
 
 Overview of UI described here.. 
 
+\subsection{Goal derived use cases}
+
 \section{Architecture overview}
+
+\section{External interfaces}
+
+Interface to existing software and use of it described here..
+
+\subsection{Hardware control protoocls}
+
+\subsubsection{Handler control protocol}
+
+\subsubsection{Measurement reading protocol}
+
+\subsubsection{Demagnetizer control protocol}
 
 \section{Validation}
 
