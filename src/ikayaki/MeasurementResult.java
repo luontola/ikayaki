@@ -22,10 +22,15 @@
 
 package ikayaki;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Vector3d;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import static ikayaki.MeasurementResult.Type.*;
 
 /**
  * A set of X, Y and Z values measured by the magnetometer. The raw XYZ values will be rotated in 3D space by using a
@@ -81,16 +86,57 @@ public class MeasurementResult {
         if (element == null) {
             throw new NullPointerException();
         }
-        setTransform(null);     // initialize this.vector with an identity matrix
 
-        return; // TODO;
+        // verify tag name
+        if (!element.getTagName().equals("result")) {
+            throw new IllegalArgumentException("Invalid tag name: " + element.getTagName());
+        }
+
+        // get type
+        String type = element.getAttribute("type");
+        if (type.equals(BG.toString())) {
+            this.type = BG;
+        } else if (type.equals(DEG0.toString())) {
+            this.type = DEG0;
+        } else if (type.equals(DEG90.toString())) {
+            this.type = DEG90;
+        } else if (type.equals(DEG180.toString())) {
+            this.type = DEG180;
+        } else if (type.equals(DEG270.toString())) {
+            this.type = DEG270;
+        } else {
+            throw new IllegalArgumentException("Invalid type: " + type);
+        }
+
+        // get x, y, z
+        try {
+            rawVector.set(Double.parseDouble(element.getAttribute("x")),
+                    Double.parseDouble(element.getAttribute("y")),
+                    Double.parseDouble(element.getAttribute("z")));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid number: " + e.getMessage());
+        }
+
+        // initialize this.vector with an identity matrix;
+        setTransform(null);
     }
 
     /**
      * Exports this result to a DOM element.
      */
     public Element getElement() {
-        return null; // TODO
+        try {
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            Element element = document.createElement("result");
+            element.setAttribute("type", type.toString());
+            element.setAttribute("x", Double.toString(rawVector.x));
+            element.setAttribute("y", Double.toString(rawVector.y));
+            element.setAttribute("z", Double.toString(rawVector.z));
+            return element;
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -152,6 +198,10 @@ public class MeasurementResult {
      */
     public double getRawZ() {
         return rawVector.z;
+    }
+
+    @Override public String toString() {
+        return "[result type=" + type + " value=(" + vector.x + ", " + vector.y + ", " + vector.z + ")]";
     }
 
     /**
@@ -224,6 +274,21 @@ public class MeasurementResult {
                 break;
             }
             return result;
+        }
+    }
+
+    public static void main(String[] args) {
+        MeasurementResult r = new MeasurementResult(DEG90, 1, 2.15019801981090189109019091098, 3);
+        System.out.println(r);
+        System.out.println(new MeasurementResult(r.getElement()));
+
+        for (int j = 0; j < 10; j++) {
+            long time = System.currentTimeMillis();
+            for (int i = 0; i < 1000; i++) {
+                r.getElement();
+            }
+            time = System.currentTimeMillis() - time;
+            System.out.println("getElement(): " + time / 1000.0 + " ms/call");
         }
     }
 }
