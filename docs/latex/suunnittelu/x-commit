@@ -4,23 +4,23 @@
 # Samuli Kaipiainen / 17.3.2005
 
 # 2005-03-17  v1.0  first version
-# 2005-03-17  v1.1  added name inserting to versio.tex
-# 2005-03-17  v1.15 added \\ to versio.tex
-# 2005-03-18  v1.2  file checking into for loop, some optimizations
+# 2005-03-17  v1.1  added name and \\ to versio.tex
+# 2005-03-18  v1.2  file checking into for loop, some "optimizations"
+# 2005-03-18  v1.3  more help arguments, version adding to versio.tex
 
 hourfile=/home/group/squid/public_html/$USER/hours.txt
 verfile=./versio.tex
 
-if [ -z "$1" ]; then
+if [ -z "$1" -o "$1" == "-?" -o "$1" == "-h" -o "$1" == "--help" ]; then
 	echo "super-commit-all-script, does the following:"
-	echo "1) appends date, phase code, hours and message to"
+	echo "1) appends date, phase_code, hours and message to"
 	echo "   $hourfile"
-	echo "2) appends message and name to $verfile;"
+	echo "2) appends [version date] message and name to $verfile;"
 	echo "   name is read from the first line of ${hourfile##*/}"
 	echo "3) executes 'cvs commit -m \"message\"'"
 	echo
-	echo usage: $0 "message" [hours] [phase code]
-	echo exmpl: $0 \"added some stuff\" 2,5 SU
+	echo "usage: $0 "message" [hours] [phase_code] [version]"
+	echo "exmpl: $0 \"added some stuff\" 2,5 SU 0.2"
 	exit 1
 fi
 
@@ -31,10 +31,12 @@ fi done
 
 name=$(head -1 $hourfile)
 date=$(date +%-d.%-m.%Y)
+if [ -z $4 ]; then verdate=$'\t\t&&'
+else verdate=$(printf "%-4s & %9s &\n" $4 $date); fi
 code=$3
 hours=$2
 msg=$1
 
-echo $date$'\t'$code$'\t'$hours$'\t'$msg >> $hourfile &&
-echo $'\t\t&&' $msg \($name\) \\\\ >> $verfile &&
+echo "$date	$code	$hours	$msg" >> $hourfile &&
+echo "$verdate $msg ($name) \\\\" >> $verfile &&
 cvs commit -m "$msg"
