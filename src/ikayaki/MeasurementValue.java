@@ -22,6 +22,8 @@
 
 package ikayaki;
 
+import static java.lang.Math.PI;
+import static java.lang.Math.atan;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
@@ -36,131 +38,167 @@ public abstract class MeasurementValue <T> {
     /**
      * Calculates the average of all X components.
      */
-    public static final MeasurementValue<Double> X = new MeasurementValue<Double>("X", "mT", "Average of measured X components") {
-        public Double getValue(MeasurementStep step) {
-            double sum = 0.0;
-            int count = step.getResults();
-            for (int i = 0; i < count; i++) {
-                sum += step.getResult(i).getX();
-            }
-            if (count > 0) {
-                return new Double(sum / count);
-            } else {
-                return null;
-            }
-        }
-    };
+    public static final MeasurementValue<Double> X =
+            new MeasurementValue<Double>("X", "mT", "Average of measured X components") {
+                public Double getValue(MeasurementStep step) {
+                    double sum = 0.0;
+                    int count = step.getResults();
+                    for (int i = 0; i < count; i++) {
+                        sum += step.getResult(i).getX();
+                    }
+                    if (count > 0) {
+                        return new Double(sum / count);
+                    } else {
+                        return null;
+                    }
+                }
+            };
 
     /**
      * Calculates the average of all Y components.
      */
-    public static final MeasurementValue<Double> Y = new MeasurementValue<Double>("Y", "mT", "Average of measured Y components") {
-        public Double getValue(MeasurementStep step) {
-            double sum = 0.0;
-            int count = step.getResults();
-            for (int i = 0; i < count; i++) {
-                sum += step.getResult(i).getY();
-            }
-            if (count > 0) {
-                return new Double(sum / count);
-            } else {
-                return null;
-            }
-        }
-    };
+    public static final MeasurementValue<Double> Y =
+            new MeasurementValue<Double>("Y", "mT", "Average of measured Y components") {
+                public Double getValue(MeasurementStep step) {
+                    double sum = 0.0;
+                    int count = step.getResults();
+                    for (int i = 0; i < count; i++) {
+                        sum += step.getResult(i).getY();
+                    }
+                    if (count > 0) {
+                        return new Double(sum / count);
+                    } else {
+                        return null;
+                    }
+                }
+            };
 
     /**
      * Calculates the average of all Z components.
      */
-    public static final MeasurementValue<Double> Z = new MeasurementValue<Double>("Z", "mT", "Average of measured Z components") {
-        public Double getValue(MeasurementStep step) {
-            double sum = 0.0;
-            int count = step.getResults();
-            for (int i = 0; i < count; i++) {
-                sum += step.getResult(i).getZ();
-            }
-            if (count > 0) {
-                return new Double(sum / count);
-            } else {
-                return null;
-            }
-        }
-    };
+    public static final MeasurementValue<Double> Z =
+            new MeasurementValue<Double>("Z", "mT", "Average of measured Z components") {
+                public Double getValue(MeasurementStep step) {
+                    double sum = 0.0;
+                    int count = step.getResults();
+                    for (int i = 0; i < count; i++) {
+                        sum += step.getResult(i).getZ();
+                    }
+                    if (count > 0) {
+                        return new Double(sum / count);
+                    } else {
+                        return null;
+                    }
+                }
+            };
 
     /**
      * Calculates the declination from the component averages.
      */
-    public static final MeasurementValue<Double> DECLINATION = new MeasurementValue<Double>("D", "\u00b0", "Geographic declination") {
-        public Double getValue(MeasurementStep step) {
-
-            return null; // TODO
-        }
-    };
+    public static final MeasurementValue<Double> DECLINATION =
+            new MeasurementValue<Double>("D", "\u00b0", "Geographic declination") {
+                public Double getValue(MeasurementStep step) {
+                    Double x = X.getValue(step);
+                    Double y = Y.getValue(step);
+                    if (x == null || y == null) {
+                        return null;
+                    } else {
+                        double d = atan(x / y);
+                        if (d < 0.0) {
+                            d += PI;
+                        }
+                        return (d / PI) * 360.0;
+                    }
+                }
+            };
 
     /**
      * Calculates the inclination from the component averages.
      */
-    public static final MeasurementValue<Double> INCLINATION = new MeasurementValue<Double>("I", "\u00b0", "Geographic inclination") {
-        public Double getValue(MeasurementStep step) {
-            return null; // TODO
-        }
-    };
+    public static final MeasurementValue<Double> INCLINATION =
+            new MeasurementValue<Double>("I", "\u00b0", "Geographic inclination") {
+                public Double getValue(MeasurementStep step) {
+                    Double x = X.getValue(step);
+                    Double y = Y.getValue(step);
+                    Double z = Z.getValue(step);
+                    if (x == null || y == null || z == null) {
+                        return null;
+                    } else {
+                        double d = atan(z / sqrt(pow(x, 2) + pow(y, 2)));
+                        return (d / PI) * 360.0;
+                    }
+                }
+            };
 
     /**
      * Calculates the length of the vector from the component averages.
      */
-    public static final MeasurementValue<Double> MOMENT = new MeasurementValue<Double>("M", "mT", "Length of the magnetization vector") {
-        public Double getValue(MeasurementStep step) {
-            Double x = X.getValue(step);
-            Double y = Y.getValue(step);
-            Double z = Z.getValue(step);
-            if (x == null || y == null || z == null) {
-                return null;
-            } else {
-                return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
-            }
-        }
-    };
+    public static final MeasurementValue<Double> MOMENT =
+            new MeasurementValue<Double>("M", "mT", "Length of the magnetization vector") {
+                public Double getValue(MeasurementStep step) {
+                    Double x = X.getValue(step);
+                    Double y = Y.getValue(step);
+                    Double z = Z.getValue(step);
+                    if (x == null || y == null || z == null) {
+                        return null;
+                    } else {
+                        return sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
+                    }
+                }
+            };
 
     /**
      * Calculates the remanence from the component averages and the sample’s volume.
      */
-    public static final MeasurementValue<Double> REMANENCE = new MeasurementValue<Double>("J", "?", "Magnitude of the magnetization (M/V=J)") {
-        public Double getValue(MeasurementStep step) {
-            Project project = step.getProject();
-            double volume = step.getVolume();
-            if (volume < 0.0 && project != null) {
-                volume = project.getVolume();
-            }
-            if (volume <= 0.0) {
-                return null;
-            }
-            Double moment = MOMENT.getValue(step);
-            if (moment == null) {
-                return null;
-            } else {
-                return moment / volume;
-            }
-        }
-    };
+    public static final MeasurementValue<Double> REMANENCE =
+            new MeasurementValue<Double>("J", "?", "Magnitude of the magnetization (M/V=J)") {
+                public Double getValue(MeasurementStep step) {
+                    Project project = step.getProject();
+                    double volume = step.getVolume();
+                    if (volume < 0.0 && project != null) {
+                        volume = project.getVolume();
+                    }
+                    if (volume <= 0.0) {
+                        return null;
+                    }
+                    Double moment = MOMENT.getValue(step);
+                    if (moment == null) {
+                        return null;
+                    } else {
+                        return moment / volume;
+                    }
+                }
+            };
 
     /**
      * Calculates the remanence relative to the first measurement’s remanence.
      */
-    public static final MeasurementValue<Double> RELATIVE_REMANENCE = new MeasurementValue<Double>("J/J0", "", "Relative magnitude of the magnetization") {
-        public Double getValue(MeasurementStep step) {
-            return null; // TODO
-        }
-    };
+    public static final MeasurementValue<Double> RELATIVE_REMANENCE =
+            new MeasurementValue<Double>("J/J0", "", "Relative magnitude of the magnetization") {
+                public Double getValue(MeasurementStep step) {
+                    Project project = step.getProject();
+                    if (project == null) {
+                        return null;
+                    }
+                    Double j = REMANENCE.getValue(step);
+                    Double j0 = REMANENCE.getValue(project.getStep(0));     // there is at least one step in the project
+                    if (j == null || j0 == null) {
+                        return null;
+                    } else {
+                        return j.doubleValue() / j0.doubleValue();
+                    }
+                }
+            };
 
     /**
      * Calculates the Theta 63 value from the measurement result set.
      */
-    public static final MeasurementValue<Double> THETA63 = new MeasurementValue<Double>("caption", "unit", "description") {
-        public Double getValue(MeasurementStep step) {
-            return null; // TODO
-        }
-    };
+    public static final MeasurementValue<Double> THETA63 =
+            new MeasurementValue<Double>("caption", "unit", "description") {
+                public Double getValue(MeasurementStep step) {
+                    return null; // TODO
+                }
+            };
 
     /**
      * A short name for the value.
@@ -223,17 +261,17 @@ public abstract class MeasurementValue <T> {
     }
 }
 
-enum Test {
-
-    TEST1(){
-        public void test() {
-        }
-    },
-
-    TEST2(){
-        public void test() {
-        }
-    };
-
-    public abstract void test();
-}
+//enum Test {
+//
+//    TEST1(){
+//        public void test() {
+//        }
+//    },
+//
+//    TEST2(){
+//        public void test() {
+//        }
+//    };
+//
+//    public abstract void test();
+//}
