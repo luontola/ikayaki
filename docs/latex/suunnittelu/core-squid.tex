@@ -1,6 +1,6 @@
 \beginClass{Squid}
 \classComment{
-	Offers an interface for controlling the SQUID system. Reads settings from the Settings class. Creates instances of the degausser, handler and magnetometer interfaces and offers handlers for them.
+	Offers an interface for controlling the SQUID system. Reads settings from the Settings class. Creates instances of the degausser, handler and magnetometer classes and offers handles for them.
 }
 \classPackage{ikayaki.squid}
 \classDeclaration{public class Squid}
@@ -132,7 +132,7 @@
 \classCreatedBy{Squid}
 \classUses{Settings}
 \classUses{SerialIO}
-\classEvent{On new IO message}{reads the message and puts it in a buffer}
+\classEvent{On SerialEvent}{reads the message and puts it in a buffer}
 \closeClass
 
 \beginToc
@@ -144,7 +144,11 @@
 \tocMethod{executeRampDown()}
 \tocMethod{executeRampCycle()}
 \tocMethod{demagnetize(int,char)}
-\tocMethod{getStatus()}
+\tocMethod{getRamp0Status()}
+\tocMethod{getRamp()}
+\tocMethod{getDelay()}
+\tocMethod{getCoil()}
+\tocMethod{getAmplitude}
 \tocMethod{isOK()}
 \closeToc
 
@@ -239,21 +243,62 @@
 }
 \closeMethod
 
-\beginMethod{demagnetize(int,char)}
-\methodDeclaration{public boolean demagnetize(int amplitude,char coil)}
+\beginMethod{demagnetizeZ(int)}
+\methodDeclaration{public boolean demagnetize(int amplitude)}
 \methodComment{
-    Performs full sequence to demagnetize selected coil with the given amplitude. Blocking method.
+    Performs full sequence to demagnetize Z coil with the given amplitude. Blocking method.
 }
 \methodParam{amplitude}{amplitude to demag.}
-\methodParam{coil}{coil to demagnetize. x,y or z}
 \methodReturn{true if process was sended succesfully, otherwise false.}
 \closeMethod
 
-\beginMethod{getStatus()}
-\methodDeclaration{public String getStatus()}
+\beginMethod{demagnetizeY(int)}
+\methodDeclaration{public boolean demagnetize(int amplitude)}
 \methodComment{
-    Gives configuration and ramp status.
+    Performs full sequence to demagnetize Y (and X) coil with the given amplitude. Blocking method.
 }
+\methodParam{amplitude}{amplitude to demag.}
+\methodReturn{true if process was sended succesfully, otherwise false.}
+\closeMethod
+
+\beginMethod{getRampStatus()}
+\methodDeclaration{public char getRampStatus()}
+\methodComment{
+    Sends status query to degausser and returns answer. Blocking.
+}
+\methodReturn{Z=Zero, T=Tracking, ?=Unknown}
+\closeMethod
+
+\beginMethod{getRamp()}
+\methodDeclaration{public int getRamp()}
+\methodComment{
+    Sends ramp query to degausser and returns answer. Blocking.
+}
+\methodReturn{3, 5, 7 or 9}
+\closeMethod
+
+\beginMethod{getDelay()}
+\methodDeclaration{public int getDelay()}
+\methodComment{
+    Sends delay query to degausser and returns answer. Blocking.
+}
+\methodReturn{1 to 9 as seconds}
+\closeMethod
+
+\beginMethod{getCoil()}
+\methodDeclaration{public char getCoil()}
+\methodComment{
+    Sends coil query to degausser and returns answer. Blocking.
+}
+\methodReturn{X=X Axis, Y=Y Axis, Z=Z Axis, ?=Unknown}
+\closeMethod
+
+\beginMethod{getAmplitude()}
+\methodDeclaration{public int getAmplitude()}
+\methodComment{
+    Sends amplitude query to degausser and returns answer. Blocking.
+}
+\methodReturn{0 to 3000}
 \closeMethod
 
 \beginMethod{isOK()}
@@ -275,7 +320,7 @@
 \classCreatedBy{Squid}
 \classUses{Settings}
 \classUses{SerialIO}
-\classEvent{On new IO message}{reads message and puts it in a buffer}
+\classEvent{On SerialEvent}{reads message and puts it in a buffer}
 \closeClass
 
 \beginToc
@@ -408,10 +453,37 @@ factory for half stepping.}
 \closeMethod
 
 \beginMethod{getStatus()}
-\methodDeclaration{public String getStatus()}
+\methodDeclaration{public char getStatus()}
 \methodComment{
-    Returns current status on Sample Handler: Position, rotation and moving status(stopped, on move).
+    Returns current status on Sample Handler.
 }
+\methodReturn{0 Normal, no service required, 
+1 Command error, illegal command sent, 
+2 Range error, an out of range numeric parameter was sent, 
+3 Command invalid while moving (e.g. G, S, H), 
+4 Command only valid in program (e.g. I, U, L), 
+5 End of move notice, a previous G command is complete, 
+6 End of wait notice, a previous W command is complete, 
+7 Hard limit stop, the move was stopped by the hard limit, 
+8 End of program notice, internal program has completed, 
+G Motor is indexing and no other notice pending.
+}
+\closeMethod
+
+\beginMethod{getPosition()}
+\methodDeclaration{public int getPosition()}
+\methodComment{
+    Returns current known position.
+}
+\methodReturn{Value between 1 and 16,777,215}
+\closeMethod
+
+\beginMethod{getRotation()}
+\methodDeclaration{public int getRotation()}
+\methodComment{
+    Returns current known rotation.
+}
+\methodReturn{Value between 0 and 2000}
 \closeMethod
 
 \beginMethod{isOK()}

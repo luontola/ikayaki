@@ -112,7 +112,7 @@ Classes are Squid, Handler, Magnetometer, Degausser.
 \subsubsection{Squid emulator}
 \insertdia{core-squidemu}
 
-This system is separate from the rest of the program and is used only for testing that the Squid Interface works correctly.
+Squid Emulator is separate from the rest of the program and it is used only for testing that the Squid Interface works correctly.
 
 \subsubsection{Serial communication}
 \insertdia{core-serial}
@@ -152,7 +152,10 @@ ProjectComponent, a generic gui base class which handles registering Project- an
 \subsubsection{Main window}
 \insertdia{gui-main}
 
+Creates main view for GUI. Menubar at top, Statusbar at bottom and makes panels and splitpanels for other GUI components to middle. This also tells other GUI components if someone changes project file.
+
 \subsubsection{Configuration window}
+\insertdia{gui-configuration}
 
 Separate window which is opened from menubar and it updates settings for Squid interface. Used usually only when system is installed to 
 setup it.
