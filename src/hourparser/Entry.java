@@ -2,7 +2,6 @@ package hourparser;
 
 import java.util.Scanner;
 import java.util.Date;
-import java.util.NoSuchElementException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -20,19 +19,13 @@ public class Entry {
         EMPTY, NAME, RECORD
     }
 
-    /**
-     * What kind of entry this is
-     */
+    /* What kind of entry this is */
     private State state;
 
-    /**
-     * Set if this is a name entry
-     */
+    /* Set if this is a name entry */
     private String name;
 
-    /**
-     * Set if this is a record entry
-     */
+    /* Set if this is a record entry */
     private Date date;
     private String code;
     private double hours;
@@ -49,23 +42,19 @@ public class Entry {
         // decide what kind of row we are talking about
         if (!sc.hasNext()) {
             // empty line
-//            System.out.println("EMPTY: " + row);
             state = State.EMPTY;
 
         } else if (sc.hasNext("#.*")) {
             // comment
-//            System.out.println("COMMENT: " + row);
             state = State.EMPTY;
 
         } else if (sc.hasNext("\\D.*")) {
             // name of the person (starts with non-digit)
-//            System.out.println("NAME: " + row);
             state = State.NAME;
             name = row.trim();
 
         } else {
             // record
-//            System.out.println("RECORD: " + row);
             state = State.RECORD;
 
             // parse date
@@ -107,27 +96,27 @@ public class Entry {
     }
 
     /**
-     * Is the row empty or a comment or erroneous
+     * Is this entry an empty line or a comment
      *
-     * @return
+     * @return true if is empty or a comment
      */
     public boolean isEmpty() {
         return state == State.EMPTY;
     }
 
     /**
-     * Is the row the name of the person
+     * Is this entry the name of the person
      *
-     * @return
+     * @return true if is a name
      */
     public boolean isName() {
         return state == State.NAME;
     }
 
     /**
-     * Is the row a valid record
+     * Is this entry a record of work
      *
-     * @return
+     * @return true if is a record
      */
     public boolean isRecord() {
         return state == State.RECORD;

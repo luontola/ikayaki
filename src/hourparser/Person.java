@@ -2,10 +2,10 @@ package hourparser;
 
 import java.io.*;
 import java.util.Vector;
+import java.util.Date;
 
 /**
- * Created by IntelliJ IDEA. User: ORFJackal Date: 8.2.2005 Time: 23:02:57 To change this template use File | Settings |
- * File Templates.
+ * Represents a person who has a personal log file.
  */
 public class Person {
 
@@ -13,6 +13,12 @@ public class Person {
     private String name;
     private Vector<Entry> records;
 
+    /**
+     * Constructs a new person from the data in a log file.
+     *
+     * @param file The log file of the person
+     * @throws IOException Reading the log file fails
+     */
     public Person(File file) throws IOException {
         if (!file.exists()) {
             throw new FileNotFoundException("No such file " + file);
@@ -23,6 +29,11 @@ public class Person {
         readFile();
     }
 
+    /**
+     * Reads all the information from the the log file of this person.
+     *
+     * @throws IOException Reading the log file fails
+     */
     private void readFile() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line;
@@ -34,10 +45,105 @@ public class Person {
                 name = e.getName();
             }
         }
-//        System.out.println(name);
-//        for (Entry r : records) {
-//            System.out.println(r);
-//        }
+    }
+
+    /**
+     * Returns the name of this person as defined in the first row of the log file.
+     *
+     * @return The name of this person
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Returns the entries the person has made during a time period.
+     *
+     * @param start The beginning of the time period
+     * @param end   The end of the time period
+     * @return Total hours of work during the time period
+     */
+    public Entry[] getEntries(Date start, Date end) {
+        Vector<Entry> result = new Vector<Entry>();
+        for (Entry e : records) {
+            if (e.getDate().after(start) && e.getDate().before(end)) {
+                result.add(e);
+            }
+        }
+        return result.toArray(new Entry[result.size()]);
+    }
+
+    /**
+     * Returns how many hours in total the person has made during a time period.
+     *
+     * @param start The beginning of the time period
+     * @param end   The end of the time period
+     * @return Total hours of work during the time period
+     */
+    public double getHours(Date start, Date end) {
+        Entry[] entries = getEntries(start, end);
+        double sum = 0.0;
+        for (Entry e : entries) {
+            sum += e.getHours();
+        }
+        return sum;
+    }
+
+    /**
+     * Returns how many hours of a specific work the person has made during a time period.
+     *
+     * @param start The beginning of the time period
+     * @param end   The end of the time period
+     * @param code  The code of the work type to be included
+     * @return Total hours of work during the time period
+     */
+    public double getHours(Date start, Date end, String code) {
+        Entry[] entries = getEntries(start, end);
+        double sum = 0.0;
+        for (Entry e : entries) {
+            if (e.getCode().equals(code)) {
+                sum += e.getHours();
+            }
+        }
+        return sum;
+    }
+
+    /**
+     * Returns the time of the first record this person has.
+     *
+     * @return The time of the first record or null if there are no records
+     */
+    public Date getStart() {
+        if (records.size() == 0) {
+            return null;
+        } else {
+            Date first = records.get(0).getDate();
+            for (Entry e : records) {
+                if (e.getDate().before(first)) {
+                    first = e.getDate();
+                }
+            }
+            return first;
+        }
+    }
+
+    /**
+     * Returns the time of the last record this person has.
+     *
+     * @return The time of the first record or null if there are no records
+     */
+    public Date getEnd() {
+        if (records.size() == 0) {
+            return null;
+        } else {
+            Date last = records.get(0).getDate();
+            for (Entry e : records) {
+                if (e.getDate().after(last)) {
+                    last = e.getDate();
+                }
+            }
+            return last;
+        }
     }
 
 }
