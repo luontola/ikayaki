@@ -815,44 +815,54 @@
 \closeMethod
 
 \beginMethod{doManualMove(int)}
-\methodDeclaration{public boolean doManualMove(int position)}
+\methodDeclaration{public synchronized boolean doManualMove(int position)}
 \methodComment{
-	Moves the sample handler to the specified position. This method will wait until the operation completes. Will do nothing if isManualControlEnabled() is false.
+	Moves the sample handler to the specified position. Will do nothing if isManualControlEnabled() is false.
+	
+	The operation will run in its own thread, and this method will not wait for it to finish.
 }
 \methodParam{position}{the position to move the handler to.}
 \methodReturn{true if the operation was completed, otherwise false.}
 \closeMethod
 
 \beginMethod{doManualRotate(int)}
-\methodDeclaration{public boolean doManualRotate(int angle)}
+\methodDeclaration{public synchronized boolean doManualRotate(int angle)}
 \methodComment{
-	Rotates the sample handler to the specified angle. This method will wait until the operation completes. Will do nothing if isManualControlEnabled() is false.
+	Rotates the sample handler to the specified angle. Will do nothing if isManualControlEnabled() is false.
+	
+	The operation will run in its own thread, and this method will not wait for it to finish.
 }
 \methodParam{angle}{the angle to rotate the handler to.}
 \methodReturn{true if the operation was completed, otherwise false.}
 \closeMethod
 
 \beginMethod{doManualMeasure()}
-\methodDeclaration{public boolean doManualMeasure()}
+\methodDeclaration{public synchronized boolean doManualMeasure()}
 \methodComment{
-	Measures the X, Y and Z of the sample. Adds the results as a new measurement step to the project. This method will wait until the operation completes. Will do nothing if isManualControlEnabled() is false.
+	Measures the X, Y and Z of the sample. Adds the results as a new measurement step to the project. Will do nothing if isManualControlEnabled() is false.
+	
+	The operation will run in its own thread, and this method will not wait for it to finish.
 }
 \methodReturn{true if the operation was completed, otherwise false.}
 \closeMethod
 
 \beginMethod{doManualDemagZ(double)}
-\methodDeclaration{public boolean doManualDemagZ(double amplitude)}
+\methodDeclaration{public synchronized boolean doManualDemagZ(double amplitude)}
 \methodComment{
-	Demagnetizes the sample in Z direction with the specified amplitude. This method will wait until the operation completes. Will do nothing if isManualControlEnabled() is false.
+	Demagnetizes the sample in Z direction with the specified amplitude. Will do nothing if isManualControlEnabled() is false.
+	
+	The operation will run in its own thread, and this method will not wait for it to finish.
 }
 \methodParam{amplitude}{the amplitude to demagnetize in mT.}
 \methodReturn{true if the operation was completed, otherwise false.}
 \closeMethod
 
 \beginMethod{doManualDemagY(double)}
-\methodDeclaration{public boolean doManualDemagY(double amplitude)}
+\methodDeclaration{public synchronized boolean doManualDemagY(double amplitude)}
 \methodComment{
-	Demagnetizes the sample in Y direction with the specified amplitude. This method will wait until the operation completes. Will do nothing if isManualControlEnabled() is false.
+	Demagnetizes the sample in Y direction with the specified amplitude. Will do nothing if isManualControlEnabled() is false.
+	
+	The operation will run in its own thread, and this method will not wait for it to finish.
 }
 \methodParam{amplitude}{the amplitude to demagnetize in mT.}
 \methodReturn{true if the operation was completed, otherwise false.}
