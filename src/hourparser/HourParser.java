@@ -12,6 +12,7 @@ public class HourParser {
 
     private static File headerFile = null;
     private static File footerFile = null;
+    private static boolean plainIndex = false;
     private static String namePrefix = "hours";
     private static String nameSuffix = ".html";
     private static String dateFormat = "d.M.yyyy";
@@ -33,6 +34,8 @@ public class HourParser {
             } else if (args[arg].startsWith("--footer-file=")) {
                 String param = args[arg].substring("--footer-file=".length());
                 setFooterFile(param);
+            } else if (args[arg].startsWith("--plain-index")) {
+                setPlainIndex(true);
             } else if (args[arg].startsWith("--name-prefix=")) {
                 String param = args[arg].substring("--name-prefix=".length());
                 setNamePrefix(param);
@@ -103,6 +106,8 @@ public class HourParser {
 
         // make reports
         Report report = new Report(persons);
+        report.setHeader(header);
+        report.setFooter(footer);
         for (int i = 0; i < report.getPages(); i++) {
             String page = report.getPage(i);
             String pageName = report.getPageName(i);
@@ -112,9 +117,13 @@ public class HourParser {
             try {
                 file.createNewFile();
                 FileWriter writer = new FileWriter(file, false);
-                writer.write(header);
+//                if (i == Report.INDEX_PAGE && isPlainIndex()) {
+//                    writer.write(page);
+//                } else {
+//                writer.write(header);
                 writer.write(page);
-                writer.write(footer);
+//                writer.write(footer);
+//                }
                 writer.close();
             } catch (IOException e) {
                 System.err.println("Unable to write file " + file);
@@ -129,6 +138,7 @@ public class HourParser {
         System.out.println();
         System.out.println("  --header-file=FILE      header for the output files");
         System.out.println("  --footer-file=FILE      footer for the output files");
+        System.out.println("  --plain-index           generate a plain index");
         System.out.println("  --name-prefix=STRING    prefix for the output file names (default: " + getNamePrefix() + ")");
         System.out.println("  --name-suffix=STRING    suffix for the output file names (default: " + getNameSuffix() + ")");
         System.out.println("  --date-format=FORMAT    format of the dates in input files (default: " + getDateFormat() + ")");
@@ -168,6 +178,14 @@ public class HourParser {
             System.err.println("Unable to read footer file " + file);
             System.exit(1);
         }
+    }
+
+    public static boolean isPlainIndex() {
+        return plainIndex;
+    }
+
+    public static void setPlainIndex(boolean plainIndex) {
+        HourParser.plainIndex = plainIndex;
     }
 
     public static String getNamePrefix() {

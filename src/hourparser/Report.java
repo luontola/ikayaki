@@ -33,6 +33,9 @@ public class Report {
      */
     private final Vector<Date> weeks;
 
+    private String header = "";
+    private String footer = "";
+
     /**
      * Creates a report from a Vector of Persons.
      *
@@ -121,7 +124,11 @@ public class Report {
      * @return Number of pages
      */
     public int getPages() {
-        return persons.length + 1;
+        if (HourParser.isPlainIndex()) {
+            return persons.length + 2;
+        } else {
+            return persons.length + 1;
+        }
     }
 
     /**
@@ -132,9 +139,11 @@ public class Report {
      */
     public String getPage(int page) {
         if (page == INDEX_PAGE) {
+            return getHeader() + getIndexPage() + getFooter();
+        } else if (page > persons.length && HourParser.isPlainIndex()) {
             return getIndexPage();
         } else {
-            return getPersonPage(page - 1);
+            return getHeader() + getPersonPage(page - 1) + getFooter();
         }
     }
 
@@ -147,6 +156,8 @@ public class Report {
     public String getPageName(int page) {
         if (page == INDEX_PAGE) {
             return HourParser.getNamePrefix() + HourParser.getNameSuffix();
+        } else if (page > persons.length && HourParser.isPlainIndex()) {
+            return HourParser.getNamePrefix() + "_plain" + HourParser.getNameSuffix();
         } else {
             return HourParser.getNamePrefix() + "-" + page + HourParser.getNameSuffix();
         }
@@ -180,8 +191,13 @@ public class Report {
 
         // each person's total hours for every week
         for (int i = 0; i < persons.length; i++) {
-            html.append("<tr>\n");
+            if (i % 2 == 0) {
+                html.append("<tr style=\"background-color: #DDDDDD;\">\n");
+            } else {
+                html.append("<tr style=\"background-color: #EEEEEE;\">\n");
+            }
             html.append("   <td>" + persons[i].getName() + "</td>\n");
+
             double sum = 0.0;
             for (int j = 0; j < hours[i].size(); j++) {
                 html.append("   <td align=\"center\"><a href=\"" + getPageName(i + 1) + "#" + j + "\">" + nf.format(hours[i].get(j)) + "</a></td>\n");
@@ -212,13 +228,13 @@ public class Report {
         }
         DateFormat df = new SimpleDateFormat(HourParser.getDateFormat());
 
-        html.append("<h1>" + persons[person].getName() + "</h1>\n\n");
+        html.append("<h2>" + persons[person].getName() + "</h2>\n\n");
         html.append("<p><a href=\"" + getPageName(INDEX_PAGE) + "\">Return to index</a></p>\n\n");
 
         // print entries for each week
         for (int i = 0; i < weeks.size(); i++) {
             cal.setTime(weeks.get(i));
-            html.append("<h2><a name=\"" + i + "\"></a>Week " + cal.get(Calendar.WEEK_OF_YEAR) + "</h2>\n\n");
+            html.append("<h3><a name=\"" + i + "\"></a>Week " + cal.get(Calendar.WEEK_OF_YEAR) + "</h3>\n\n");
 
             cal.add(Calendar.DATE, 7);
             Date start = weeks.get(i);
@@ -247,5 +263,19 @@ public class Report {
         return html.toString();
     }
 
+    public String getHeader() {
+        return header;
+    }
 
+    public void setHeader(String header) {
+        this.header = header;
+    }
+
+    public String getFooter() {
+        return footer;
+    }
+
+    public void setFooter(String footer) {
+        this.footer = footer;
+    }
 }
