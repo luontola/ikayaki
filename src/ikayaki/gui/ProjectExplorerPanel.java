@@ -24,6 +24,7 @@ package ikayaki.gui;
 
 import ikayaki.Project;
 import ikayaki.Settings;
+import ikayaki.Ikayaki;
 import ikayaki.util.LastExecutor;
 
 import java.awt.*;
@@ -34,6 +35,7 @@ import javax.swing.table.*;
 import java.io.File;
 import java.io.*;
 import java.text.DateFormat;
+import java.util.Arrays;
 
 /**
  * Creates a history/autocomplete field (browserField) for choosing the project directory, a listing of project files in
@@ -88,7 +90,7 @@ whose measuring ended.
     /**
      * LastExecutor for scheduling autocomplete results to separate thread (disk access and displaying).
      */
-    private LastExecutor autocompleteExecutor = new LastExecutor(300, true);
+    private LastExecutor autocompleteExecutor = new LastExecutor(150, true);
 
     /**
      * Currently open directory.
@@ -176,17 +178,22 @@ whose measuring ended.
         browserField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //System.out.println(e.getActionCommand());
-                // we only want Changed-events
-                if (!e.getActionCommand().equals("comboBoxChanged")) return;
 
-                //System.out.println(browserField.getSelectedItem());
-/*
-                // TODO: changing JComboBox popup-list content fires ActionEvents which we don't want... argh.
-                if (!setDirectory((String) browserField.getSelectedItem())) {
-                    // TODO: how to display error?
-                    browserField.getEditor().selectAll();
+                if (e.getActionCommand().equals("comboBoxEdited")) {
+                    // the user pressed enter in the text field or selected an item by pressing enter
+                    doAutoComplete();
+
+                } else if (e.getActionCommand().equals("comboBoxChanged")) {
+
+
+//                    System.out.println(browserField.getSelectedItem());
+//
+//                    // TODO: changing JComboBox popup-list content fires ActionEvents which we don't want... argh.
+//                    if (!setDirectory((String) browserField.getSelectedItem())) {
+//                        // TODO: how to display error?
+//                        browserField.getEditor().selectAll();
+//                    }
                 }
-*/
             }
         });
 
@@ -210,32 +217,39 @@ whose measuring ended.
          */
         browserField.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
-                if (e.getKeyChar() == 27 || e.getKeyChar() == 10) return;
-
-                autocompleteExecutor.execute(new Runnable() {
-                    public void run() {
-                        File[] files = getAutocompleteFiles(browserField.getEditor().getItem().toString());
-                        setBrowserFieldPopup(files);
-
-                        if (files.length > 0) {
-                            // gui updating must be done from event-dispatching thread
-                            SwingUtilities.invokeLater(new Runnable() {
-                                public void run() {
-                                    if (browserField.isPopupVisible()) {
-                                        // when the popup is hidden before showing, it will be automatically resized
-                                        browserField.hidePopup();
-                                    }
-                                    browserFieldNextPopupAutocomplete = true;
-                                    browserField.showPopup();
-                                }
-                            });
+                if (e.getKeyChar() == KeyEvent.VK_ESCAPE || e.getKeyChar() == KeyEvent.VK_ENTER) {
+                    return;
+                } else {
+                    autocompleteExecutor.execute(new Runnable() {
+                        public void run() {
+                            doAutoComplete();
                         }
-                    }
-                });
+                    });
+                }
             }
         });
 
         return; // TODO
+    }
+
+    private void doAutoComplete() {
+        File[] files = getAutocompleteFiles(browserField.getEditor().getItem().toString());
+        Arrays.sort(files);
+        setBrowserFieldPopup(files);
+
+        if (files.length > 0) {
+            // gui updating must be done from event-dispatching thread
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    if (browserField.isPopupVisible()) {
+                        // when the popup is hidden before showing, it will be automatically resized
+                        browserField.hidePopup();
+                    }
+                    browserFieldNextPopupAutocomplete = true;
+                    browserField.showPopup();
+                }
+            });
+        }
     }
 
     /**
@@ -273,11 +287,13 @@ whose measuring ended.
      * @return project files in that directory.
      */
     private File[] getProjectFiles(File directory) {
-        return directory.listFiles(new FileFilter() {
+        File[] files = directory.listFiles(new FileFilter() {
             public boolean accept(File file) {
-                return (file.isFile() && file.getName().endsWith(""));
+                return (file.isFile() && file.getName().endsWith(Ikayaki.FILE_TYPE));
             }
         });
+        Arrays.sort(files);
+        return files;
     }
 
     /**
@@ -288,7 +304,7 @@ whose measuring ended.
     private File[] getDirectoryHistory() {
         File[] dirhist = Settings.instance().getDirectoryHistory();
 
-        if (dirhist == null || dirhist.length == 0) return new File[] { new File(".").getAbsoluteFile() };
+        if (dirhist == null || dirhist.length == 0) return new File[] { new File("").getAbsoluteFile() };
         else return dirhist;
     }
 
@@ -309,6 +325,9 @@ whose measuring ended.
      */
     private File[] getAutocompleteFiles(String dirmatch) {
         File dirfile = new File(dirmatch);
+        if (!dirfile.isAbsolute()) {
+            return File.listRoots();
+        }
         File dir = dirfile.isDirectory() ? dirfile : dirfile.getParentFile();
 
         // protect against no-parent-null and invalid-dir-list-null
@@ -319,7 +338,7 @@ whose measuring ended.
 
         return dir.listFiles(new FileFilter() {
             public boolean accept(File file) {
-                return (file.isDirectory() && file.getName().startsWith(match));
+                return (file.isDirectory() && file.getName().toLowerCase().startsWith(match.toLowerCase()));
             }
         });
     }

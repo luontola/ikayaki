@@ -118,6 +118,8 @@ Event I: On exit Clicked - closes program
     }
 
     private void initialize() {
+        // TODO: take Actions from other classes (through MainViewPanel)
+        
         /* FILE MENU ITEMS */
         newProject = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {

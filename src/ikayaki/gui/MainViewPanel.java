@@ -248,6 +248,8 @@ public class MainViewPanel extends ProjectComponent {
         // register the new project
         if (project != null) {
             Settings.instance().updateProjectHistory(project.getFile());
+            Settings.instance().updateDirectoryHistory(project.getFile().getAbsoluteFile().getParentFile());
+
             project.addProjectListener(this);
             project.setSquid(squid);        // will do nothing if another project has a measurement running
             projectInformation.setBorder(
