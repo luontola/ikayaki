@@ -312,7 +312,7 @@ project listeners.
         }
 
         synchronized (project) {
-            // prevent any delaying autosave operations
+            // clear any delaying autosave operations
             project.autosaveQueue.clear();
 
             // save the project to file and remove it from cache
