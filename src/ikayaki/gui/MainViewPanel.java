@@ -22,6 +22,7 @@
 
 package ikayaki.gui;
 
+import ikayaki.Ikayaki;
 import ikayaki.Project;
 import ikayaki.ProjectEvent;
 import ikayaki.Settings;
@@ -520,7 +521,13 @@ public class MainViewPanel extends ProjectComponent {
         if (aboutAction == null) {
             aboutAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    // TODO
+                    JOptionPane.showMessageDialog(MainViewPanel.this,
+                        Ikayaki.APP_NAME + " " + Ikayaki.APP_VERSION + " / purselo\n\n" +
+                        Ikayaki.APP_HOME_PAGE + "\n\n" +
+                        "Mikko Jormalainen\nSamuli Kaipiainen\nAki Korpua\nEsko Luontola\nAki Sysmäläinen",
+                        "About " + Ikayaki.APP_NAME, JOptionPane.INFORMATION_MESSAGE,
+                        // TODO: add some nice picture here :)
+                        new ImageIcon(ClassLoader.getSystemResource("resources/projectExplorerTabDown.png")));
                 }
             };
             aboutAction.putValue(Action.NAME, "About");
