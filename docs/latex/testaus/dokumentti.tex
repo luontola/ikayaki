@@ -1,0 +1,35 @@
+\documentclass[final, english]{ohtu}
+
+%
+% \usepackage-komennot tulevat tähän
+%
+% \usepackage{graphicx}		% kuvien käsittelyyn
+% \usepackage{pstricks}		% tex-postscriptien lisäilyyn
+
+% Sisältää kansi- ja etusivun tietoja.
+\input{asetukset}
+
+\title{Testing document x.x}
+\date{\today}
+
+\begin{document}
+% Tulostetaan kansisivu, etusivu ja sisällysluettelo.
+\maketitle
+\projectinfopage
+\setcounter{page}{1}
+\mytableofcontents
+
+% Dokumentin varsinainen sisältö on tiedostossa sisalto.tex.
+\input{sisalto}
+
+% Sisältöosan lopuksi tulee lähteet.
+\bibliographystyle{tktl}
+\bibliography{lahteet}
+
+\lastpage
+\appendices
+
+% Liitteet tiedostossa liitteet.tex.
+\input{liitteet}
+
+\end{document}
