@@ -1,11 +1,11 @@
 %!PS-Adobe-2.0 EPSF-2.0
-%%Title: core-squid.dia
+%%Title: C:\Documents and Settings\Aki Korpua\Desktop\suunnittelu\dia\core-squid.dia
 %%Creator: Dia v0.94
-%%CreationDate: Sat Mar 19 12:50:08 2005
-%%For: blue
+%%CreationDate: Wed Mar 23 15:12:52 2005
+%%For: Aki Korpua
 %%Orientation: Portrait
 %%Magnification: 1.0000
-%%BoundingBox: 0 0 1367 1034
+%%BoundingBox: 0 0 1340 1079
 %%BeginSetup
 %%EndSetup
 %%EndComments
@@ -341,22 +341,22 @@ definefont pop
     currentdict end
 definefont pop
 28.346000 -28.346000 scale
--0.425000 -35.365000 translate
+-0.425000 -36.965000 translate
 %%EndProlog
 
 
 0.100000 slw
 [] 0 sd
 1.000000 1.000000 1.000000 srgb
-n 13.425000 -1.035000 m 13.425000 0.365000 l 26.625000 0.365000 l 26.625000 -1.035000 l f
+n 13.425000 -1.035000 m 13.425000 0.365000 l 26.975000 0.365000 l 26.975000 -1.035000 l f
 0.000000 0.000000 0.000000 srgb
-n 13.425000 -1.035000 m 13.425000 0.365000 l 26.625000 0.365000 l 26.625000 -1.035000 l cp s
+n 13.425000 -1.035000 m 13.425000 0.365000 l 26.975000 0.365000 l 26.975000 -1.035000 l cp s
 /Helvetica-latin1 ff 0.700000 scf sf
-(Degausser) dup sw 2 div 20.025000 ex sub -0.035000 m gs 1 -1 sc sh gr
+(Degausser) dup sw 2 div 20.200000 ex sub -0.035000 m gs 1 -1 sc sh gr
 1.000000 1.000000 1.000000 srgb
-n 13.425000 0.365000 m 13.425000 6.165000 l 26.625000 6.165000 l 26.625000 0.365000 l f
+n 13.425000 0.365000 m 13.425000 6.165000 l 26.975000 6.165000 l 26.975000 0.365000 l f
 0.000000 0.000000 0.000000 srgb
-n 13.425000 0.365000 m 13.425000 6.165000 l 26.625000 6.165000 l 26.625000 0.365000 l cp s
+n 13.425000 0.365000 m 13.425000 6.165000 l 26.975000 6.165000 l 26.975000 0.365000 l cp s
 /Courier-latin1 ff 0.560000 scf sf
 (-messageBuffer: Stack) 13.575000 1.015000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
@@ -372,9 +372,9 @@ n 13.425000 0.365000 m 13.425000 6.165000 l 26.625000 6.165000 l 26.625000 0.365
 /Courier-latin1 ff 0.560000 scf sf
 (-degausserRamp: char) 13.575000 5.815000 m gs 1 -1 sc sh gr
 1.000000 1.000000 1.000000 srgb
-n 13.425000 6.165000 m 13.425000 13.565000 l 26.625000 13.565000 l 26.625000 6.165000 l f
+n 13.425000 6.165000 m 13.425000 17.565000 l 26.975000 17.565000 l 26.975000 6.165000 l f
 0.000000 0.000000 0.000000 srgb
-n 13.425000 6.165000 m 13.425000 13.565000 l 26.625000 13.565000 l 26.625000 6.165000 l cp s
+n 13.425000 6.165000 m 13.425000 17.565000 l 26.975000 17.565000 l 26.975000 6.165000 l cp s
 /Courier-latin1 ff 0.560000 scf sf
 (-setCoil\(coil:char\)) 13.575000 6.815000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
@@ -386,13 +386,23 @@ n 13.425000 6.165000 m 13.425000 13.565000 l 26.625000 13.565000 l 26.625000 6.1
 /Courier-latin1 ff 0.560000 scf sf
 (-ExecuteRampCycle\(\)) 13.575000 10.015000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+demagnetize\(amplitude:int\): boolean) 13.575000 10.815000 m gs 1 -1 sc sh gr
+(+demagnetizeZ\(amplitude:int\): boolean) 13.575000 10.815000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+getStatus\(\): String) 13.575000 11.615000 m gs 1 -1 sc sh gr
+(+demagnetizeY\(amplitude:int\): boolean) 13.575000 11.615000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+isOK\(\): boolean) 13.575000 12.415000 m gs 1 -1 sc sh gr
+(+getRampStatus\(\): char) 13.575000 12.415000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+updateSettings\(\)) 13.575000 13.215000 m gs 1 -1 sc sh gr
+(+getRamp\(\): int) 13.575000 13.215000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getDelay\(\): int) 13.575000 14.015000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getCoil\(\): char) 13.575000 14.815000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getAmplitude\(\): int) 13.575000 15.615000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+isOK\(\): boolean) 13.575000 16.415000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+updateSettings\(\)) 13.575000 17.215000 m gs 1 -1 sc sh gr
 0.100000 slw
 [] 0 sd
 1.000000 1.000000 1.000000 srgb
@@ -436,65 +446,69 @@ n 0.475000 0.515000 m 0.475000 12.715000 l 10.875000 12.715000 l 10.875000 0.515
 /Courier-latin1 ff 0.560000 scf sf
 (-currentRotation: int) 0.625000 12.365000 m gs 1 -1 sc sh gr
 1.000000 1.000000 1.000000 srgb
-n 0.475000 12.715000 m 0.475000 35.315000 l 10.875000 35.315000 l 10.875000 12.715000 l f
+n 0.475000 12.715000 m 0.475000 36.915000 l 10.875000 36.915000 l 10.875000 12.715000 l f
 0.000000 0.000000 0.000000 srgb
-n 0.475000 12.715000 m 0.475000 35.315000 l 10.875000 35.315000 l 10.875000 12.715000 l cp s
+n 0.475000 12.715000 m 0.475000 36.915000 l 10.875000 36.915000 l 10.875000 12.715000 l cp s
 /Courier-latin1 ff 0.560000 scf sf
 (+updateSettings\(\)) 0.625000 13.365000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+getStatus\(\): String) 0.625000 14.165000 m gs 1 -1 sc sh gr
+(+getStatus\(\): char) 0.625000 14.165000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+isOK\(\): boolean) 0.625000 14.965000 m gs 1 -1 sc sh gr
+(+getPosition\(\): int) 0.625000 14.965000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+moveToHome\(\)) 0.625000 15.765000 m gs 1 -1 sc sh gr
+(+getRotation\(\): int) 0.625000 15.765000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+moveToDegausser\(\)) 0.625000 16.565000 m gs 1 -1 sc sh gr
+(+isOK\(\): boolean) 0.625000 16.565000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+moveToMeasurement\(\)) 0.625000 17.365000 m gs 1 -1 sc sh gr
+(+moveToHome\(\)) 0.625000 17.365000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+moveToBackground\(\)) 0.625000 18.165000 m gs 1 -1 sc sh gr
+(+moveToDegausser\(\)) 0.625000 18.165000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+moveToPos\(pos:int\): boolean) 0.625000 18.965000 m gs 1 -1 sc sh gr
+(+moveToMeasurement\(\)) 0.625000 18.965000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+stop\(\)) 0.625000 19.765000 m gs 1 -1 sc sh gr
+(+moveToBackground\(\)) 0.625000 19.765000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+rotateTo\(angle:int\)) 0.625000 20.565000 m gs 1 -1 sc sh gr
+(+moveToPos\(pos:int\): boolean) 0.625000 20.565000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-setOnline\(\)) 0.625000 21.365000 m gs 1 -1 sc sh gr
+(+stop\(\)) 0.625000 21.365000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-setAcceleration\(a:int\)) 0.625000 22.165000 m gs 1 -1 sc sh gr
+(+rotateTo\(angle:int\)) 0.625000 22.165000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-setDeceleration\(d:int\)) 0.625000 22.965000 m gs 1 -1 sc sh gr
+(-setOnline\(\)) 0.625000 22.965000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-setBaseSpeed\(b:int\)) 0.625000 23.765000 m gs 1 -1 sc sh gr
+(-setAcceleration\(a:int\)) 0.625000 23.765000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-setVelocity\(v:int\)) 0.625000 24.565000 m gs 1 -1 sc sh gr
+(-setDeceleration\(d:int\)) 0.625000 24.565000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-setHoldTime\(h:int\)) 0.625000 25.365000 m gs 1 -1 sc sh gr
+(-setBaseSpeed\(b:int\)) 0.625000 25.365000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-setCrystalFrequence\(cf:int\)) 0.625000 26.165000 m gs 1 -1 sc sh gr
+(-setVelocity\(v:int\)) 0.625000 26.165000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-stopExecution\(\)) 0.625000 26.965000 m gs 1 -1 sc sh gr
+(-setHoldTime\(h:int\)) 0.625000 26.965000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-performSlew\(\)) 0.625000 27.765000 m gs 1 -1 sc sh gr
+(-setCrystalFrequence\(cf:int\)) 0.625000 27.765000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-setMotorPositive\(\)) 0.625000 28.565000 m gs 1 -1 sc sh gr
+(-stopExecution\(\)) 0.625000 28.565000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-setMotorNegative\(\)) 0.625000 29.365000 m gs 1 -1 sc sh gr
+(-performSlew\(\)) 0.625000 29.365000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-setSteps\(s:int\)) 0.625000 30.165000 m gs 1 -1 sc sh gr
+(-setMotorPositive\(\)) 0.625000 30.165000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-setPosition\(p:int\)) 0.625000 30.965000 m gs 1 -1 sc sh gr
+(-setMotorNegative\(\)) 0.625000 30.965000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-go\(\)) 0.625000 31.765000 m gs 1 -1 sc sh gr
+(-setSteps\(s:int\)) 0.625000 31.765000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-wait\(\)) 0.625000 32.565000 m gs 1 -1 sc sh gr
+(-setPosition\(p:int\)) 0.625000 32.565000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-verify\(v:char\)) 0.625000 33.365000 m gs 1 -1 sc sh gr
+(-go\(\)) 0.625000 33.365000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-setPositionRegister\(r:int\)) 0.625000 34.165000 m gs 1 -1 sc sh gr
+(-join\(\)) 0.625000 34.165000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-pollMessage\(\)) 0.625000 34.965000 m gs 1 -1 sc sh gr
+(-verify\(v:char\)) 0.625000 34.965000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-setPositionRegister\(r:int\)) 0.625000 35.765000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(-pollMessage\(\)) 0.625000 36.565000 m gs 1 -1 sc sh gr
 0.100000 slw
 [] 0 sd
 1.000000 1.000000 1.000000 srgb
@@ -514,9 +528,9 @@ n 29.175000 0.765000 m 29.175000 3.365000 l 47.275000 3.365000 l 47.275000 0.765
 /Courier-latin1 ff 0.560000 scf sf
 (-comPort: String) 29.325000 3.015000 m gs 1 -1 sc sh gr
 1.000000 1.000000 1.000000 srgb
-n 29.175000 3.365000 m 29.175000 11.565000 l 47.275000 11.565000 l 47.275000 3.365000 l f
+n 29.175000 3.365000 m 29.175000 16.365000 l 47.275000 16.365000 l 47.275000 3.365000 l f
 0.000000 0.000000 0.000000 srgb
-n 29.175000 3.365000 m 29.175000 11.565000 l 47.275000 11.565000 l 47.275000 3.365000 l cp s
+n 29.175000 3.365000 m 29.175000 16.365000 l 47.275000 16.365000 l 47.275000 3.365000 l cp s
 /Courier-latin1 ff 0.560000 scf sf
 (+updateSettings\(\)) 29.325000 4.015000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
@@ -530,59 +544,71 @@ n 29.175000 3.365000 m 29.175000 11.565000 l 47.275000 11.565000 l 47.275000 3.3
 /Courier-latin1 ff 0.560000 scf sf
 (-latchCounter\(axis:char\)) 29.325000 8.015000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+measure\(axis:char\)) 29.325000 8.815000 m gs 1 -1 sc sh gr
+(-getData\(axis:char,command:char,datavalues:String\)) 29.325000 8.815000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(-getData\(axis:char,command:char,datavalues:String\)) 29.325000 9.615000 m gs 1 -1 sc sh gr
+(+openLoop\(axis:char\)) 29.325000 9.615000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+getStatus\(\): String) 29.325000 10.415000 m gs 1 -1 sc sh gr
+(+clearFlux\(axis:char\)) 29.325000 10.415000 m gs 1 -1 sc sh gr
 /Courier-latin1 ff 0.560000 scf sf
-(+isOK\(\): boolean) 29.325000 11.215000 m gs 1 -1 sc sh gr
+(+join\(\)) 29.325000 11.215000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+readData\(\): Double[]) 29.325000 12.015000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getFilters\(\): char[]) 29.325000 12.815000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getRange\(\): char[]) 29.325000 13.615000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getSlew\(\): boolean) 29.325000 14.415000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+getLoop\(\): boolean[]) 29.325000 15.215000 m gs 1 -1 sc sh gr
+/Courier-latin1 ff 0.560000 scf sf
+(+isOK\(\): boolean) 29.325000 16.015000 m gs 1 -1 sc sh gr
 0.100000 slw
 [] 0 sd
 1.000000 1.000000 1.000000 srgb
-n 40.275000 27.165000 m 40.275000 29.365000 l 48.575000 29.365000 l 48.575000 27.165000 l f
+n 40.275000 27.165000 m 40.275000 29.565000 l 47.625000 29.565000 l 47.625000 27.165000 l f
 0.000000 0.000000 0.000000 srgb
-n 40.275000 27.165000 m 40.275000 29.365000 l 48.575000 29.365000 l 48.575000 27.165000 l cp s
-/Courier-latin1 ff 0.560000 scf sf
-(<<Look other Diagram>>) dup sw 2 div 44.425000 ex sub 27.815000 m gs 1 -1 sc sh gr
+n 40.275000 27.165000 m 40.275000 29.565000 l 47.625000 29.565000 l 47.625000 27.165000 l cp s
 /Helvetica-latin1 ff 0.700000 scf sf
-(Squid) dup sw 2 div 44.425000 ex sub 28.815000 m gs 1 -1 sc sh gr
+(Squid) dup sw 2 div 43.950000 ex sub 28.165000 m gs 1 -1 sc sh gr
+/Helvetica-latin1 ff 0.700000 scf sf
+(Details in Figure 1) dup sw 2 div 43.950000 ex sub 29.165000 m gs 1 -1 sc sh gr
 1.000000 1.000000 1.000000 srgb
-n 40.275000 29.365000 m 40.275000 29.765000 l 48.575000 29.765000 l 48.575000 29.365000 l f
+n 40.275000 29.565000 m 40.275000 29.965000 l 47.625000 29.965000 l 47.625000 29.565000 l f
 0.000000 0.000000 0.000000 srgb
-n 40.275000 29.365000 m 40.275000 29.765000 l 48.575000 29.765000 l 48.575000 29.365000 l cp s
+n 40.275000 29.565000 m 40.275000 29.965000 l 47.625000 29.965000 l 47.625000 29.565000 l cp s
 1.000000 1.000000 1.000000 srgb
-n 40.275000 29.765000 m 40.275000 30.165000 l 48.575000 30.165000 l 48.575000 29.765000 l f
+n 40.275000 29.965000 m 40.275000 30.365000 l 47.625000 30.365000 l 47.625000 29.965000 l f
 0.000000 0.000000 0.000000 srgb
-n 40.275000 29.765000 m 40.275000 30.165000 l 48.575000 30.165000 l 48.575000 29.765000 l cp s
+n 40.275000 29.965000 m 40.275000 30.365000 l 47.625000 30.365000 l 47.625000 29.965000 l cp s
 0.100000 slw
 [] 0 sd
 0 slj
 0 slc
-n 38.225000 11.565000 m 38.225000 24.402500 l 44.425000 24.402500 l 44.425000 27.165000 l s
+n 38.225000 16.365000 m 38.225000 24.402500 l 43.950000 24.402500 l 43.950000 27.165000 l s
 [] 0 sd
 0 slj
 0 slc
-n 44.425000 27.165000 m 44.185000 26.465000 l 44.425000 25.765000 l 44.665000 26.465000 l ef
+n 43.950000 27.165000 m 43.710000 26.465000 l 43.950000 25.765000 l 44.190000 26.465000 l ef
 /Courier-latin1 ff 0.560000 scf sf
 0.100000 slw
 [] 0 sd
 0 slj
 0 slc
-n 44.425000 27.165000 m 44.425000 24.415000 l 10.875000 24.415000 l s
+n 43.950000 27.165000 m 43.950000 26.015000 l 10.875000 26.015000 l s
 [] 0 sd
 0 slj
 0 slc
-n 44.425000 27.165000 m 44.185000 26.465000 l 44.425000 25.765000 l 44.665000 26.465000 l ef
+n 43.950000 27.165000 m 43.710000 26.465000 l 43.950000 25.765000 l 44.190000 26.465000 l ef
 /Courier-latin1 ff 0.560000 scf sf
 0.100000 slw
 [] 0 sd
 0 slj
 0 slc
-n 44.425000 27.165000 m 44.425000 24.390000 l 20.025000 24.390000 l 20.025000 13.565000 l s
+n 43.950000 27.165000 m 43.950000 24.390000 l 20.200000 24.390000 l 20.200000 17.565000 l s
 [] 0 sd
 0 slj
 0 slc
-n 44.425000 27.165000 m 44.185000 26.465000 l 44.425000 25.765000 l 44.665000 26.465000 l ef
+n 43.950000 27.165000 m 43.710000 26.465000 l 43.950000 25.765000 l 44.190000 26.465000 l ef
 /Courier-latin1 ff 0.560000 scf sf
 showpage
