@@ -22,7 +22,13 @@
 
 package ikayaki.gui;
 
+import ikayaki.Project;
+
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
 
 /**
  * Starts the program. Lays out MainViewPanel, MainMenuBar and MainStatusBar in a JFrame.
@@ -42,6 +48,41 @@ be closed.
     public static final String APP_HOME_PAGE = "http://www.cs.helsinki.fi/group/squid/";
     public static final String FILE_TYPE = ".ika";
 
+    /* GUI components */
+    private JMenuBar menuBar;
+    private JComponent content;
+    private JComponent statusBar;
+
+    /**
+     * Starts the program Ikayaki.
+     *
+     * @param project a project to be opened when the program starts, or null to open no project.
+     * @throws HeadlessException if GraphicsEnvironment.isHeadless() returns true.
+     */
+    public Ikayaki(Project project) throws HeadlessException {
+        super(APP_NAME + " " + APP_VERSION);
+
+        final MainViewPanel main = new MainViewPanel();
+        menuBar = main.getMenuBar();
+        content = main;
+        statusBar = main.getStatusBar();
+
+        setLayout(new BorderLayout());
+        setJMenuBar(menuBar);
+        add(content, "Center");
+        add(statusBar, "South");
+
+        setLocationByPlatform(true);
+        pack();
+
+        addWindowListener(new WindowAdapter() {
+            @Override public void windowClosing(WindowEvent e) {
+                main.exitProgram();
+            }
+        });
+        main.changeProject(project);
+    }
+
     /**
      * Starts the program with the provided command line parameters. If the location of a project file is given as a
      * parameter, the program will try to load it.
@@ -49,6 +90,14 @@ be closed.
      * @param args command line parameters.
      */
     public static void main(String[] args) {
-        return; // TODO
+        Project project = null;
+        if (args.length > 0) {
+            File file = new File(args[0]);
+            if (file.exists() && file.isFile()) {
+                project = Project.loadProject(file);
+            }
+        }
+        Ikayaki ikayaki = new Ikayaki(project);
+        ikayaki.setVisible(true);
     }
 }

@@ -51,6 +51,11 @@ unhighlight one whose measuring ended; enable calibrateButton if measuring has e
 or disable if measuring has started.
 */
 
+    /**
+     * The component whose setProject() method will be called on opening a new project file.
+     */
+    private ProjectComponent parent;
+
     private JButton calibrateButton;
 
     /**
@@ -63,6 +68,16 @@ or disable if measuring has started.
      * TableModel which holds the data for calibration projects. Unnamed inner class.
      */
     private TableModel calibrationProjectTableModel;
+
+    /**
+     * Creates a new calibration panel. Loads the contents of the program's calibration file directory.
+     *
+     * @param parent the parent component whose setProject() method will be called on opening a new project file.
+     */
+    public CalibrationPanel(ProjectComponent parent) {
+        this.parent = parent;
+        return; // TODO
+    }
 
     /**
      * Call super.setProject(project), highlight selected calibration project, or unhighlight unselected calibration

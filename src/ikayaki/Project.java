@@ -328,7 +328,7 @@ project listeners.
             project.autosaveRunnable = null;
             project.currentStep = null;
             project.file = null;
-            project.listenerList = null;
+//          project.listenerList = null; <-- this could cause NullPointerExceptions in ProjectComponent.setProject()
             project.properties = null;
             project.sampleType = null;
             project.sequence = null;
@@ -622,7 +622,8 @@ project listeners.
     }
 
     /**
-     * Sets this project the owner of the Squid. Uses the setOwner() method of the specified Squid.
+     * Sets this project the owner of the Squid. Tries to detach the previous owner of the squid. Uses the setOwner()
+     * method of the specified Squid.
      * <p/>
      * Only one project may own the Squid at a time. The Squid must be first detached with "setSquid(null)" from its
      * owner before it can be given to another project. Detaching the Squid is possible only when the project’s state is
@@ -636,27 +637,30 @@ project listeners.
         // detach the squid from this project
         if (squid == null) {
             if (getSquid() == null) {
-                return true;
+                return true;        // already detached
             }
             if (getState() == IDLE && getSquid().setOwner(null)) {
                 this.squid = null;
                 fireProjectEvent(STATE_CHANGED);
                 return true;
             }
-            return false;
+            return false;       // a measurement is running - can not detach
         }
 
         // attach the squid to this project
         synchronized (squid) {
             if (squid.getOwner() == this) {
-                return true;
+                return true;        // already attached
+            }
+            if (squid.getOwner() != null) {
+                squid.getOwner().setSquid(null);        // try to detach from the old project
             }
             if (squid.getOwner() == null && squid.setOwner(this)) {
                 this.squid = squid;
                 fireProjectEvent(STATE_CHANGED);
                 return true;
             }
-            return false;
+            return false;       // the old project has a measurement running - can not attach to this one
         }
     }
 
