@@ -46,8 +46,19 @@ these formats.
 \section{Use cases}
 
 % super-makrot use caseille; huomaa että \uctitle aloittaa ja \ucend lopettaa, muuten tulee ongelma
+% lopullisesta versiosta poistettavat kommentit joko 1) [], 2) \ucnote{} tai 3) \ucnotein{} sisällä
 \newcommand{\ucsecdesc}[1]{\textit{#1}\\}
-\newcommand{\uctitle}[1]{\refstepcounter{ucnum}\textbf{UC\arabic{ucnum}: #1}\\\begin{tabular}{p{3cm}p{11cm}}}
+% vanha sivunvaihdon salliva \uctitle...
+% \newcommand{\uctitle}[1]{\refstepcounter{ucnum}\textbf{UC\arabic{ucnum}: #1}\\\begin{tabular}{p{3cm}p{11cm}}}
+% ...uusi sivunvaihdon estävä, jossa on purkatettu 0,32cm sisennyksen poisto
+\newcommand{\uctitle}[1] {
+	\refstepcounter{ucnum}
+	\begin{tabular}{p{3cm}p{11cm}}
+	\multicolumn{2}{p{14cm}} {
+		\hspace{-0.32cm}
+		\textbf{UC\arabic{ucnum}: #1}
+	}\\
+}
 \newcommand{\ucnote}[1]{\multicolumn{2}{p{14cm}}{[\textsc{#1}]}\\}
 \newcommand{\ucnotein}[1]{[\textsc{#1}]}
 \newcommand{\ucscenario}[1]{\stepcounter{ucsce}\textbf{Scenario \alph{ucsce}} & #1\\}
@@ -61,14 +72,14 @@ these formats.
 \newcounter{ucsce}[ucnum]
 \hbadness=10000 % estämmä ihme "underfull \hbox (badness 10000)" -varoitukset (ei hajua mistä tulevat)
 
-This section describes planned use cases for the program. Use cases are derived 
-from user interface prototype and requirements. All use cases are perfomed by 
-any ordinary user and in program main screen. A simplified use case diagram is 
-presented in Figure~\ref{fig:usecases}.
+This section describes planned use cases for the program. Use cases are 
+derived from user interface prototype and requirements. All use cases are 
+perfomed by any ordinary user and in program main screen. A simplified use 
+case diagram is presented in Figure~\ref{fig:usecases}.
 
 \begin{figure}
 \begin{center}
-\includegraphics[angle=270,width=13cm]{usecases.eps}
+\includegraphics[angle=90,width=14cm]{usecases.eps}
 \caption{Use case diagram}
 \label{fig:usecases}
 \end{center}
@@ -77,9 +88,8 @@ presented in Figure~\ref{fig:usecases}.
 Use cases are divided to different sections, grouping logically similar use 
 cases together.
 
-Use case format:
+Use case format: \nopagebreak
 
-% lopullisesta versiosta poistettavat kommentit joko 1) [], 2) \ucnote{} tai 3) \ucnotein{} sisällä
 \setcounter{ucnum}{-1}
 \uctitle{Use case identifier and title}
 \ucnote{Possible temporary note here for project group; shall be removed from final version.}
@@ -111,7 +121,8 @@ Use case format:
 \ucscenario{Enter as next AF demag step anything greater than zero, and click "Single step".}
 \ucpre{AF project open, sample in sample holder.}
 \ucpost{Sample demagnetized (possibly ruined) and measured, results on screen and appended to current project.}
-\ucerror{The program shall let the user know if something went wrong, and, should the demagnetization field not be coming down, warn user with an alarm sound :)}
+\ucerror{The program shall let the user know if something went wrong, and, should the demagnetization field not be coming down, warn user with an alarm sound.}
+\ucgd{-}
 \ucreq{R1, R4, R6, R10, R14, R17, R18}
 \ucend
 
@@ -119,7 +130,7 @@ Use case format:
 \ucscenario{Enter the AF sequence (see section~\ref{seq:ucseq} for ways to enter it) and click "Measure".}
 \ucpre{AF project open, sample in sample holder.}
 \ucpost{Sample demagnetized according to entered AF sequence (possibly ruined) and measured after each demagnetization, results on screen and appended to current project.}
-\ucerror{The program shall let the user know if something went wrong, and, should the demagnetization field be uncalm, warn user with an alarm sound x)}
+\ucerror{The program shall let the user know if something went wrong, and, should the demagnetization field not be coming down, warn user with an alarm sound.}
 \ucgd{\ref{seq:gduc1} whole sequence, \ref{seq:gduc3} sequence after few single steps at the beginning.}
 \ucreq{R1, R4, R6, R10, R13, R17, R18}
 \ucend
@@ -136,14 +147,15 @@ Use case format:
 
   \uctitle{Abort automatic measuring sequence}
   \ucscenario{While measure sequence is running or paused, click "Stop now!".}
-  \ucpre{Ongoing or paused measuring sequence (UC\ref{uc:autoseq}).}
+  \ucpre{Ongoing measuring sequence (UC\ref{uc:autoseq}).}
   \ucpost{Measure sequence halts immediately \ucnotein{and program enters "fully manual" mode?}}
   \ucerror{Program tells if sequence can't be aborted (and something has gone terribly wrong).}
+  \ucgd{-}
   \ucreq{R1, R16}
   \ucend
 
 \uctitle{Thellier measuring}
-\ucscenario{Click "Single step". (Temperature can be entered later, as it won't affect measuring.)}
+\ucscenario{Click "Single step".}
 \ucpre{TH project open, sample in sample holder.}
 \ucpost{Sample measured, results on screen and appended to current project.}
 \ucerror{As usual.}
@@ -157,6 +169,7 @@ Use case format:
 \ucpre{TH project open, sample in sample holder.}
 \ucpost{Sample measured, results on screen and appended to current project.}
 \ucerror{As usual.}
+\ucgd{-}
 \ucreq{R1, R6, R10, R14, R17, R18}
 \ucend
 
@@ -165,6 +178,8 @@ Use case format:
 \ucscenario{Click "Ground noise" and "Calibrate".}
 \ucpre{No ongoing measurements.}
 \ucpost{Ground noise measured, results on screen and appended to "Ground noise" project.}
+\ucerror{-}
+\ucgd{-}
 \ucreq{R1, R3, R6, R17, R18}
 \ucend
 
@@ -172,6 +187,7 @@ Use case format:
 \ucscenario{Click "Holder noise" and "Calibrate".}
 \ucpre{No ongoing measurements, empty sample holder.}
 \ucpost{Holder noise measured, results on screen and appended to "Holder noise" project.}
+\ucerror{-}
 \ucgd{\ref{seq:gduc1}, calibration at the beginning.}
 \ucreq{R1, R3, R6, R17, R18}
 \ucend
@@ -179,23 +195,29 @@ Use case format:
 \uctitle{Measure standard sample}
 \ucscenario{Click "Standard sample" and "Calibrate".}
 \ucpre{No ongoing measurements, standard sample in sample holder.}
-\ucpost{Standard sample measured, results on screen and appended to "Standard sample" project, and, predefined .std file.}
-\ucpost{Holder noise measured, results on screen and appended to "Standard sample" project.}
+\ucpost{Standard sample measured, results on screen and appended to "Standard sample" project.}
+\ucerror{-}
+\ucgd{-}
 \ucreq{R1, R3, R6, R17, R18}
 \ucend
 
 \uctitle{Fully manual measuring}
-\ucnote{2005-02-25 still not clear how fully manual is supposed to work; Tomas will be back on tuesday 1.3. and might tell us.}
+\ucnote{2005-02-25 Still not clear how fully manual is supposed to work; Tomas will be back on tuesday 1.3. and might tell us.}
 \ucscenario{Click any of the manual control components.}
 \ucpre{Manual mode enabled.}
 \ucpost{Manual action done, result on screen \ucnotein{and appended to current project? draw graphplots?}.}
+\ucerror{-}
+\ucgd{-}
 \ucreq{R1, R2, R6, R10, R17, R18}
 \ucend
 
 \uctitle{Enable manual mode}
+\ucnote{2005-03-01 Deleted use case, still here to remind it existed, and, to keep references working :)}
 \ucscenario{Click "Manual" checkbox above the manual control components.}
 \ucpre{No ongoing measurement.}
 \ucpost{Manual mode enabled.}
+\ucerror{-}
+\ucgd{-}
 \ucreq{R2}
 \ucend
 
@@ -213,6 +235,7 @@ Use case format:
 \ucpre{At least 1 project file in current (selected) directory.}
 \ucpost{Project data exported to .dat file.}
 \ucerror{Notify if file error occurs (such as no disk in A: drive).}
+\ucgd{-}
 \ucreq{R11}
 \ucend
 
@@ -224,6 +247,7 @@ Use case format:
 \ucpre{At least 1 project file in current (selected) directory.}
 \ucpost{Project data exported to .tdt file.}
 \ucerror{Notify if file error occurs (such as no disk in A: drive).}
+\ucgd{-}
 \ucreq{R11}
 \ucend
 
@@ -235,6 +259,7 @@ Use case format:
 \ucpre{At least 1 measurement result in current project.}
 \ucpost{Measurement details exported to .srm file.}
 \ucerror{Notify if file error occurs (such as no disk in A: drive).}
+\ucgd{-}
 \ucreq{R11}
 \ucend
 
@@ -250,6 +275,7 @@ Use case format:
 \ucpre{Open project.}
 \ucpost{Measurement results printed via [Java] standard printing window.}
 \ucerror{Let know if printing error occurs.}
+\ucgd{-}
 \ucreq{R17}
 \ucend
 
@@ -258,6 +284,7 @@ Use case format:
 \ucpre{Open project.}
 \ucpost{Measurement results printed via [Java] standard printing window.}
 \ucerror{Let know if printing error occurs.}
+\ucgd{-}
 \ucreq{R18}
 \ucend
 
@@ -271,14 +298,16 @@ Use case format:
 \ucscenario{Make any measurement action (see section~\ref{seq:ucmeasuring} for those).}
 \ucpre{Project file open.}
 \ucpost{After measurement (step) is done, new results appended to project file.}
+\ucerror{-}
 \ucgd{\ref{seq:gduc1}, \ref{seq:gduc2}, \ref{seq:gduc3}.}
 \ucreq{R6, R10}
 \ucend
 
 \uctitle{Create new project}
-\ucscenario{Click the empty line below filenames in project explorer, enter new project name, chooce AF/TH (thellier) project, click "Create new" or press enter.}
+\ucscenario{Click the empty line (which is always visible) below filenames in project explorer, enter new project name, chooce AF/TH (thellier) project, click "Create new" or press enter.}
 \ucpre{Project explorer in desired directory (UC\ref{uc:choosedir}).}
 \ucpost{New project created and selected.}
+\ucerror{-}
 \ucgd{\ref{seq:gduc1} after calibration, \ref{seq:gduc3} at the beginning.}
 \ucreq{R5}
 \ucend
@@ -287,26 +316,29 @@ Use case format:
 \ucscenario{Click any filename in project explorer.}
 \ucpre{Project explorer in desired directory (UC\ref{uc:choosedir}). A measurement can be running at the same time (it will be highlighted in the project explorer).}
 \ucpost{Existing project loaded and selected.}
+\ucerror{-}
 \ucgd{\ref{seq:gduc2} all samples already as project files.}
 \ucreq{R7, R10}
 \ucend
 
 \uctitle{Change project explorer directory}
-\ucscenario{Click into current directory textbox in project explorer, write directory to change to. If the typed directory exists, the program will open it automatically. \ucnotein{Or will a push of Enter be anyway required to change directory? Should we try both before deciding?}}
-\ucscenario{Click into current directory textbox in project explorer, start writing directory; when autocomplete-results appear below, use up/down+enter or mouseclick to select the directory.}
+\ucscenario{Click into current directory textbox in project explorer, write directory to change to. If the typed directory exists, the program will open it automatically. \ucnotein{Or will a push of Enter be anyway required to change directory? Should we try both before deciding?} Pressing esc while in textbox undoes any writing, and reverts back to previous directory.}
+\ucscenario{Click into current directory textbox in project explorer, start writing directory; when autocomplete-results appear below, use up/down+enter or mouseclick to select the directory. Pressing esc while in textbox undoes any writing, and reverts back to previous directory.}
 \ucscenario{Click the down-arrow on the right side of current directory textbox in project explorer, choose desired directory from appearing directory history.}
 \ucscenario{Click "Browse..." in project explorer, use standard [Java] file chooser to select directory to change to.}
 \ucpre{There is no measurement running right now (to prevent the user from getting lost).}
-\ucpost{The contents of the chosen directory are shown in the project explorer. The newest project file in the directory will be selected and loaded.}
-\ucerror{If the user has typed an invalid directory, then a "No such directory" message will be displayed in place of the autocomplete-results.}
+\ucpost{The contents of the chosen directory are shown in the project explorer. Last modified project file in the directory will be selected and loaded; it's type (AF/TH) shall be the default type for creating a new project into that directory.}
+\ucerror{If the user has typed an invalid directory and presses enter, a "No such directory" message will be displayed in place of the autocomplete-results.}
 \ucgd{\ref{seq:gduc1}, \ref{seq:gduc2}, \ref{seq:gduc3}.}
+\ucreq{-}
 \ucend
 \label{uc:choosedir}
 
 \uctitle{Insert/edit project data}
-\ucscenario{Click any of the project data checkboxes, or textboxes and enter value.}
+\ucscenario{Click any of the project data checkboxes or textboxes (at lower right corner of main window) and enter value.}
 \ucpre{Project file open (usually just created it).}
 \ucpost{Project data changed, measuring results recalculated, saved automatically to project file. Saving can happen after a short delay to avoid unnecessary file system access.}
+\ucerror{-}
 \ucgd{\ref{seq:gduc1} after creating new project.}
 \ucreq{R6, R8, R9}
 \ucend
@@ -318,9 +350,10 @@ Use case format:
 \ucsecdesc{As in automatic demagnetization-measuring sequences (AF sequences), or, thellier temperature sequences.}
 
 \uctitle{Insert sequence manually}
-\ucscenario{Click "Tesla" or "Temp" column in the last line (which is empty) of measurement result table, enter value; press down, [tab?] or enter to advance to a new line, enter value; and so on.}
+\ucscenario{Click "Tesla" or "Temp" \ucnotein{Some better names for these?} column in the last line (which is empty) of measurement result table, enter value; press down, [tab?] or enter to advance to a new line, enter value; and so on.}
 \ucpre{An open project.}
 \ucpost{Sequence appended to measurement result table and current project.}
+\ucerror{-}
 \ucgd{\ref{seq:gduc3} after creating new project.}
 \ucreq{R6, R12}
 \ucend
@@ -339,6 +372,7 @@ Use case format:
 \ucscenario{Click down-arrow in right side of "Load set" combo box; from appearing list, click sequence to load.}
 \ucpre{An open project, at least 1 saved sequence.}
 \ucpost{Selected sequence appended to measurement result table and selected.}
+\ucerror{(If accidentally inserted the wrong sequence, pressing del will delete it as it's selected after inserting.)}
 \ucgd{\ref{seq:gduc1}, after typing project data, load "Basalt" set; \ref{seq:gduc2} set already loaded for each project file (when created).}
 \ucreq{R6}
 \ucend
@@ -359,12 +393,14 @@ Use case format:
 \label{uc:editseq}
 
 \uctitle{Save sequence}
-\ucscenario{Click "Load set" combo box, enter new sequence name, click "Save set". \ucnotein{2005-02-25 not in current (almost final) UI prototype! Remove this scenario or decide later?}}
+\ucscenario{Click "Load set" combo box, enter new sequence name, click "Save set". \ucnotein{2005-03-01 not in UI prototype; remove this scenario or decide later?}}
 \ucscenario{Right-click any line in measurement result table, choose "Save full sequence...", enter name, press enter.}
 \ucscenario{Select any lines in measurement result table with shift-clicks and ctrl-clicks, right-click on selected lines, choose "Save selected sequence...", enter name, press enter.}
 \ucpre{At least 1 line in measurement results table (although you probably don't want to save a sequence with only one step x).}
 \ucpost{New sequence set saved to predefined sequence file and available from "Load set" combo box.}
 \ucerror{Ask whether to overwrite, if sequence with the same name already exists (allow to enter new name if choose not to overwrite).}
+\ucgd{-}
+\ucreq{-}
 \ucend
 \label{uc:saveseq}
 
@@ -373,6 +409,9 @@ Use case format:
 \ucscenario{Click menu "Options"->"Sequences...", edit any sequence in appearing window... \ucnotein{2005-02-25 not in UI prototype, must be improvised :)}}
 \ucpre{At least 1 saved sequence.}
 \ucpost{Changes saved to predefined sequence file.}
+\ucerror{-}
+\ucgd{-}
+\ucreq{-}
 \ucend
 
 \uctitle{Delete stored sequence}
@@ -380,6 +419,9 @@ Use case format:
 \ucscenario{Click menu "Options"->"Sequences...", delete sequence in appearing window... \ucnotein{2005-02-25 not in UI prototype, must be improvised :)}}
 \ucpre{At least 1 saved sequence.}
 \ucpost{Sequence deleted, changes saved to predefined sequence file.}
+\ucerror{-}
+\ucgd{-}
+\ucreq{-}
 \ucend
 
 \uctitle{Rename stored sequence}
@@ -387,6 +429,9 @@ Use case format:
 \ucscenario{Click menu "Options"->"Sequences...", rename any sequence in appearing window... \ucnotein{2005-02-25 not in UI prototype, must be improvised :)}}
 \ucpre{At least 1 saved sequence.}
 \ucpost{Sequence renamed, changes saved to predefined sequence file.}
+\ucerror{-}
+\ucgd{-}
+\ucreq{-}
 \ucend
 
 
@@ -416,16 +461,14 @@ fulfilled only if time permits, and priority 4's will probably be left out.
 Overview of requirements is presented in Table~\ref{tab:requirements}.
 
 \begin{table}
-\begin{tabular}{llll}
-{\bf Identifier} & {\bf Name} & {\bf Priority} & {\bf Set by}\\
+\begin{tabular}{*{4}{l}}
+{\bf Identifier} & {\bf Name} & {\bf Priority} & {\bf Set by} \\
 \hline
 % regexp-generated table of requiremnts [28.2.2005 @ 17:50] // Samuli
-
 R1 & SQUID control and usage 		& 1 	& Customer \\
 R2 & Manual control 			& 3 	& Customer \\
 R3 & Calibration reminder 		& 2 	& Customer \\
 R4 & Warning signal 			& 3 	& Customer \\
-
 R5 & Create project 			& 1 	& Customer \\
 R6 & Autosave project 			& 1 	& Customer \\
 R7 & Load project 			& 1 	& Customer \\
@@ -433,7 +476,6 @@ R8 & Edit project 			& 2 	& Customer \\
 R9 & Recalculate derived measurement data & 2 	& Customer \\
 R10 & Append project 			& 2 	& Customer \\
 R11 & Export to other file formats 	& 1 	& Customer \\
-
 R12 & Create a measurement sequence 	& 2 	& Customer \\
 R13 & Automatic sequence 		& 2 	& Customer \\
 R14 & Single step sequence 		& 2 	& Customer \\
@@ -441,22 +483,19 @@ R15 & Pause automatic sequence 		& 2 	& Customer \\
 R16 & Panic abort 			& 1 	& Customer \\
 R17 & Numeric presentation of measurements & 1 	& Customer \\
 R18 & Graphic presentation of measurements & 4 	& Customer \\
-
 R19 & Hotkeys 				& 3 	& Customer \\
 R20 & Change hotkeys 			& 4 	& Customer \\
-
 QR1 & Error free 			& 1 	& Customer \\
 QR2 & Ease of use 			& 1 	& Customer \\
 QR3 & Quality of documentation 		& 2 	& Group \\
 QR4 & Performance 			& 2 	& Group \\
 QR5 & Expandable architecture 		& 2 	& Group \\
-
 \end{tabular}
 \caption{Requirements summary}
 \label{tab:requirements}
 \end{table}
 
-Requirement format:
+Requirement format: \nopagebreak
 
 \ReqId{Requirement identifier}
 \ReqName{Name of the requirement}
@@ -615,12 +654,14 @@ UC24, UC25, UC26}
 \ReqDesc{The program has hotkeys for the most often used operations.}
 \ReqPrio{3}
 \ReqSet{Customer}
+\ReqUc{-}
 
 \ReqId{R20}
 \ReqName{Change hotkeys}
 \ReqDesc{Possibility to change hotkey assignments.}
 \ReqPrio{4}
 \ReqSet{Customer}
+\ReqUc{-}
 
 
 \subsection{Quality requirements}
@@ -630,30 +671,35 @@ UC24, UC25, UC26}
 \ReqDesc{The program should not crash. All the functions need to work as documented. The calculations that the program makes from measurements must be done right.}
 \ReqPrio{1}
 \ReqSet{Customer}
+\ReqUc{-}
 
 \ReqId{QR2}
 \ReqName{Ease of use}
 \ReqDesc{Program should be easy to use for first time users after it has been explained to them how to take measurements with the magnetometer.}
 \ReqPrio{1}
 \ReqSet{Customer}
+\ReqUc{-}
 
 \ReqId{QR3}
 \ReqName{Quality of documentation}
 \ReqDesc{The documentation must be so good that other teams can easily continue the development. Program should have good help pages for the end-users.}
 \ReqPrio{2}
 \ReqSet{Group}
+\ReqUc{-}
 
 \ReqId{QR4}
 \ReqName{Performance}
 \ReqDesc{The program must keep up with the SQUID hardware. The user interface should not freeze for periods of over 0,5 seconds.}
 \ReqPrio{2}
 \ReqSet{Group}
+\ReqUc{-}
 
 \ReqId{QR5}
 \ReqName{Expandable architecture}
 \ReqDesc{It should be possible to expand the program to process the measurement data in more ways.}
 \ReqPrio{2}
 \ReqSet{Group}
+\ReqUc{-}
 
 
 \subsection{Environment}
@@ -696,7 +742,9 @@ Method for generating the user interface is "applied GDD". GDD, or {\it
 Goal-Derived Design}, is taught on courses "User Interfaces" and "User 
 Interfaces II" at Department of Computer Science. For more info, see
 
-\hspace{1cm} {\tt http://www.cs.helsinki.fi/u/salaakso/}
+\hspace{1cm} {\tt http://www.cs.helsinki.fi/u/salaakso/} \\
+\hspace{1cm} {\tt Goal-derived design?} \\
+\hspace{1cm} {\tt Goal-derived use cases?} \\
 
 
 \subsection{Goal-derived use cases}
@@ -720,7 +768,7 @@ the phases.
 To measure where Antarctis was 180 miljon years ago.
 
 \textbf{Information:} \\
-- Now is Tue 8.2.2005 at 14:27 \\
+- Now is Tuesday 8.2.2005 at 14:27 \\
 - Erkki is in laboratory at Physicum
 
 \textbf{Erkki's knowledge:} \\
@@ -781,7 +829,7 @@ Lauri has asked Fabio to study more samples from that time, to be sure about the
 To get some idea how meteor rocks are magnetised.
 
 \textbf{Information:} \\
-- Now is Mo 14.2.2005 klo 15:15 \\
+- Now is Monday 14.2.2005 klo 15:15 \\
 - Tomas is in laboratory at Physicum \\
 - Tomas has many samples from meteors and he has splitted some of them into two kind of rocks: old rock pieces and gluerock (space dust?). This particular meteor is from Brazil named Avandahah.
 
