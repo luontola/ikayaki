@@ -75,7 +75,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * Squid class.
      */
     public void updateSettings() {
-        return; // TODO
+        //no settings for this.. really. Only COM port.
     }
 
     /**
@@ -90,9 +90,12 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         else if (axis == 'z') axis = 'Z';
         else if (axis == 'a') axis = 'A';
         try {
-            this.serialIO.writeMessage(axis + "R<CR>");
+            //as a note: <CR> obviously means /r
+            this.serialIO.writeMessage(axis + "R/r");
         } catch (PortInUseException ex) {
+            System.err.println(ex);
         } catch (NoSuchPortException ex) {
+            System.err.println(ex);
         }
     }
 
@@ -109,9 +112,11 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         else if (axis == 'a') axis = 'A';
 
         try {
-            this.serialIO.writeMessage(axis + "RC<CR>");
+            this.serialIO.writeMessage(axis + "RC/r");
         } catch (PortInUseException ex) {
+            System.err.println(ex);
         } catch (NoSuchPortException ex) {
+            System.err.println(ex);
         }
     }
 
@@ -139,9 +144,11 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         else if (axis == 'z') axis = 'Z';
         else if (axis == 'a') axis = 'A';
         try {
-            this.serialIO.writeMessage(axis + "C" + subcommand + option + "<CR>");
+            this.serialIO.writeMessage(axis + "C" + subcommand + option + "/r");
         } catch (PortInUseException ex) {
+            System.err.println(ex);
         } catch (NoSuchPortException ex) {
+            System.err.println(ex);
         }
     }
 
@@ -157,9 +164,11 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         else if (axis == 'z') axis = 'Z';
         else if (axis == 'a') axis = 'A';
         try {
-            this.serialIO.writeMessage(axis + "LD<CR>");
+            this.serialIO.writeMessage(axis + "LD/r");
         } catch (PortInUseException ex) {
+            System.err.println(ex);
         } catch (NoSuchPortException ex) {
+            System.err.println(ex);
         }
     }
 
@@ -175,9 +184,11 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         else if (axis == 'z') axis = 'Z';
         else if (axis == 'a') axis = 'A';
         try {
-            this.serialIO.writeMessage(axis + "LC<CR>");
+            this.serialIO.writeMessage(axis + "LC/r");
         } catch (PortInUseException ex) {
+            System.err.println(ex);
         } catch (NoSuchPortException ex) {
+            System.err.println(ex);
         }
     }
 
@@ -201,15 +212,23 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         else return null; // invalid axis
         if (command == 'D' || command == 'C')
             try {
-                this.serialIO.writeMessage(axis + "S" + command + "<CR>");
+                this.serialIO.writeMessage(axis + "S" + command + "/r");
             } catch (PortInUseException ex) {
+                System.err.println(ex);
+                return null;
             } catch (NoSuchPortException ex) {
+                System.err.println(ex);
+                return null;
             }
         else if( command == 'S')
             try {
-                this.serialIO.writeMessage(axis + "S" + command + datavalues + "<CR>");
+                this.serialIO.writeMessage(axis + "S" + command + datavalues + "/r");
             } catch (PortInUseException ex) {
+                System.err.println(ex);
+                return null;
             } catch (NoSuchPortException ex) {
+                System.err.println(ex);
+                return null;
             }
         else return null;
         waitingForMessage = true;
@@ -234,7 +253,6 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     public void clearFlux(char axis) {
         this.resetCounter(axis);
-        ///return; // TODO
     }
 
     /**
@@ -268,6 +286,8 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
 
         this.latchAnalog('a');
 
+        //Maybe need to read many times and take mean value.
+        //But we do it only ones (default for old software)
         //read all latched analog values
         Double analogX = Double.parseDouble(this.getData('x','D',""));
         Double analogY = Double.parseDouble(this.getData('y','D',""));
