@@ -14,7 +14,19 @@
 \classComment{Generic gui component which uses Project and listens MeasurementEvents and ProjectEvents.}
 \closeClass
 
-\beginMethod{ProjectComponent(Project)}
-\methodDeclaration{public ProjectComponent(Project project)}
-\methodComment{Registers MeasurementListener and ProjectListener to project.}
+\beginField{project}
+\fieldDeclaration{private Project project}
+\fieldComment{Active project.}
+\closeField
+
+\beginMethod{ProjectComponent()}
+\methodDeclaration{public ProjectComponent()}
+\methodComment{Initializes this ProjectComponent with no Project (one probably arrives shortly with setProject(Project)).}
+\closeMethod
+
+\beginMethod{setProject(Project)}
+\methodDeclaration{public void setProject(Project project)}
+\methodComment{
+	Unregisters MeasurementListener and ProjectListener from old project, saves new Project to project, registers MeasurementListener and ProjectListener to new project.
+}
 \closeMethod

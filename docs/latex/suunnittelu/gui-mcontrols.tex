@@ -37,8 +37,9 @@
 \fieldDeclaration{private JRadioButton zMinusRadioButton}
 \closeField
 
-\beginField{sampleInsertImage}
-\fieldDeclaration{private JImage? sampleInsertImage}
+\beginField{sampleInsertPanel}
+\fieldDeclaration{private JPanel sampleInsertPanel}
+\fieldComment{Draws the help image for sample inserting.}
 \closeField
 
 \beginField{magnetometerStatusPanel}
@@ -66,8 +67,8 @@
 \beginMethod{updateStatus(int, int)}
 \methodDeclaration{public updateStatus(int position, int rotation)}
 \methodComment{Updates magnetometer status picture; called by MeasurementControlsPanel.}
-\methodParam{position}{sample holder position, from a to b?}
-\methodParam{rotation}{sample holder rotation; 0, 90, 180 or 270.}
+\methodParam{position}{sample holder position, from 1 to 16777215.}
+\methodParam{rotation}{sample holder rotation, from 0 (angle 0) to 2000 (angle 360).}
 \closeMethod
 
 
