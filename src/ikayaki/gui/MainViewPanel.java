@@ -173,21 +173,14 @@ public class MainViewPanel extends ProjectComponent {
         //splitPane.setDividerLocation(Math.max(DIVIDER_DEFAULT_LOCATION, left.getPreferredSize().width));
         splitPane.setDividerLocation(DIVIDER_DEFAULT_LOCATION);
         splitPane.setResizeWeight(0.0);
-        splitPane.setEnabled(false);
+        //splitPane.setEnabled(false);
         splitPane.setBorder(null);
         splitPane.setDividerSize(0);
 
-        // HACK: prevent the left tab from being resized automatically
-        left.addComponentListener(new ComponentAdapter() {
-            @Override public void componentResized(ComponentEvent e) {
-                if (splitPane.getDividerLocation() > DIVIDER_DEFAULT_LOCATION) {
-                    splitPane.setDividerLocation(DIVIDER_DEFAULT_LOCATION);
-                }
-            }
-        });
-//        Dimension leftMax = left.getMaximumSize();
-//        leftMax.width = DIVIDER_DEFAULT_LOCATION;
-//        left.setMaximumSize(leftMax);
+        // prevent the left tab from being resized when the window is resized
+        Dimension d = left.getMinimumSize();
+        d.width = DIVIDER_DEFAULT_LOCATION / 2;
+        left.setMinimumSize(d);
 
         // button for hiding the tabs
         Box tabControls = new Box(BoxLayout.Y_AXIS);
