@@ -74,6 +74,8 @@ public class ProjectComponent extends JPanel implements ProjectListener, Measure
 
     /**
      * Returns the parent Frame of this component.
+     *
+     * @return the parent frame, or null if this component had not been laid in a frame.
      */
     public Frame getParentFrame() {
         Container c = getParent();
