@@ -33,7 +33,12 @@
 \beginMethod{getLastAnswer}
 \methodDeclaration{public String getLastAnswer()}
 \methodComment{Writes an ASCII format message to serial port. SerialIO sends andSerialPortEvent if it gets answer to this message.}
-\methodReturn{last answer receiver from serial port or null if no last message is available.}
+\methodReturn{last answer received from serial port or null if no last message is available.}
+\closeMethod
+
+\beginMethod{serialEvent}
+\methodDeclaration{private serialEvent(serialPortEvent event)}
+\methodComment{This method is run when a serial message is received from serial port. It generates a new SerialIOEvent.}
 \closeMethod
 
 
@@ -93,10 +98,10 @@
 \closeMethod
 
 
-\beginClass{SerialMessageEvent}
+\beginClass{SerialIOEvent}
 \classComment{An event that is generated when SerialIO receives data from serial port. }
 \classPackage{ikayaki.squid}
-\classDeclaration{public class SerialMessageEvent extends java.util.EventObject}
+\classDeclaration{public class SerialIOEvent extends java.util.EventObject}
 \classCreatedBy{SerialIO}
 \closeClass
 
@@ -111,15 +116,14 @@
 \methodReturn{The message in ASCII form that was received from serial port.}
 \closeMethod
 
-\beginClass{SerialMessageListener}
-\classComment{If a class wants to receive SerialMessageEvents it must implement this interface.}
+\beginClass{SerialIOListener}
+\classComment{If a class wants to receive SerialIOEvents it must implement this interface.}
 \classPackage{ikayaki.squid}
-\classDeclaration{public abstract interface SerialMessageListener extends java.util.EventListener}
-\classCreatedBy{SerialIO}
+\classDeclaration{public abstract interface SerialIOListener extends java.util.EventListener}
 \closeClass
 
-\beginMethod{SerialMessageEvent}
-\methodDeclaration{void serialEvent(SerialMessageEvent event) }
+\beginMethod{serialIOEvent}
+\methodDeclaration{void serialIOEvent(SerialIOEvent event) }
 \methodComment{Propagates serial port message event.}
 \methodParam{event}{the event that happened.}
 \closeMethod
