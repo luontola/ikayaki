@@ -76,7 +76,8 @@
 \classCreatedBy{Squid}
 \classUses{Settings}
 \classUses{SerialIO}
-\classComment{ Controls Degausser (demagnetizer). Sets it up and offers Interface to control it. Because the data link is implemented in the degausser by a single board computer running a small basic program, the response time of the degausser to commands is slow. Suitable wait loops will have to be used in the external computer code to prevent unreliable communications. }
+\classComment{
+    Controls Degausser (demagnetizer). Sets it up and offers Interface to control it. Because the data link is implemented in the degausser by a single board computer running a small basic program, the response time of the degausser to commands is slow. Suitable wait loops will have to be used in the external computer code to prevent unreliable communications.
 }
 \classEvent{On New IO Message }{reads message and puts it in Buffer}
 \closeClass
@@ -184,7 +185,8 @@
 \classCreatedBy{Squid}
 \classUses{Settings}
 \classUses{SerialIO}
-\classComment{ Controls Sample Handler and sets it up, offering interface for it.}
+\classComment{
+    Controls Sample Handler and sets it up, offering interface for it.
 }
 \classEvent{On New IO Message }{reads message and puts it in Buffer}
 \closeClass
@@ -245,7 +247,7 @@ factory for half stepping.}
 \beginField{homePosition}
 \fieldDeclaration{private int homePosition}
 \fieldComment{value between 1 and 16,777,215}
-\closeFiel
+\closeField
 
 \beginField{transverseYAFPosition}
 \fieldDeclaration{private int transverseYAFPosition}
