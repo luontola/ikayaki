@@ -102,7 +102,7 @@
 
 \beginField{transform}
 \fieldDeclaration{private Matrix3d transform}
-\fieldValue{new Matrix3d()}
+\fieldValue{new Matrix3d().setIdentity()}
 \fieldComment{
 	Matrix for correcting the sample's orientation. The matrix will be updated whenever the strike, dip or sampleType is changed. After that the updated matrix will be applied to all measurements.
 }
@@ -746,6 +746,7 @@
 }
 \methodParam{import}{the element from which this sequence will be created.}
 \methodReturn{the created sequence.}
+\methodThrows{NullPointerException}{if import is null.}
 \methodThrows{IllegalArgumentException}{if the element was not in the right format.}
 \closeMethod
 
@@ -757,6 +758,7 @@
 \methodParam{import}{the element from which this sequence will be created.}
 \methodParam{project}{the project whose sequence this will be. Needed for importing the measurement steps correctly.}
 \methodReturn{the created sequence.}
+\methodThrows{NullPointerException}{if import is null.}
 \methodThrows{IllegalArgumentException}{if the element was not in the right format.}
 \closeMethod
 
@@ -923,6 +925,7 @@
 }
 \methodParam{import}{the element from which this step will be created.}
 \methodReturn{the created measurement step.}
+\methodThrows{NullPointerException}{if import is null.}
 \methodThrows{IllegalArgumentException}{if the element was not in the right format.}
 \closeMethod
 
@@ -934,6 +937,7 @@
 \methodParam{import}{the element from which this step will be created.}
 \methodParam{project}{the project who is the owner of this step.}
 \methodReturn{the created measurement step.}
+\methodThrows{NullPointerException}{if import is null.}
 \methodThrows{IllegalArgumentException}{if the element was not in the right format.}
 \closeMethod
 
@@ -1018,9 +1022,8 @@
 \beginMethod{updateTransforms()}
 \methodDeclaration{synchronized void updateTransforms()}
 \methodComment{
-	Updates all of the measurement results with the owner project's transformation matrix.
+	Updates all of the measurement results with the owner project's transformation matrix. If there is no owner, an identity matrix will be used.
 }
-\methodThrows{NullPointerException}{if this step is not owned by a project.}
 \closeMethod
 
 \beginMethod{getResults()}
@@ -1033,7 +1036,7 @@
 \beginMethod{getResult(int)}
 \methodDeclaration{public synchronized MeasurementResult getResult(int index)}
 \methodComment{
-	Returns a results from this step.
+	Returns the specified result from this step.
 }
 \methodParam{index}{the index of the result.}
 \methodReturn{the specified result.}
@@ -1071,7 +1074,7 @@
 \beginField{type}
 \fieldDeclaration{private Type type}
 \fieldComment{
-	The type of this result. Can be either a background noise measurement, or a sample in one of the four rotations.
+	The type of this result. Can be either a background noise measurement, or a sample in one of four rotations (0, 90, 180 or 270 degrees).
 }
 \closeField
 
@@ -1111,6 +1114,7 @@
 }
 \methodParam{import}{the element from which this result will be created.}
 \methodReturn{the created measurement result.}
+\methodThrows{NullPointerException}{if import is null.}
 \methodThrows{IllegalArgumentException}{if the element was not in the right format.}
 \closeMethod
 
@@ -1126,8 +1130,7 @@
 \methodComment{
 	Applies a transformation matrix to this result.
 }
-\methodParam{transform}{the matrix to be applied.}
-\methodThrows{NullPointerException}{if transform is null.}
+\methodParam{transform}{the matrix to be applied. If null, will assume identity matrix.}
 \closeMethod
 
 \beginMethod{getType()}
@@ -1196,7 +1199,7 @@
 \beginMethod{rotate(Tuple3d)}
 \methodDeclaration{public Tuple3d rotate(Tuple3d t)}
 \methodComment{
-	Rotates the raw XYZ values from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will just copy the values directly.
+	Rotates the specified tuple from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will just copy the values directly.
 }
 \methodParam{t}{old values that need to be rotated.}
 \methodReturn{a new object with the rotated values.}
@@ -1205,7 +1208,7 @@
 \beginMethod{rotate(Tuple3d,Tuple3d)}
 \methodDeclaration{public Tuple3d rotate(Tuple3d t, Tuple3d result)}
 \methodComment{
-	Rotates the raw XYZ values from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will just copy the values directly.
+	Rotates the specified tuple from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will just copy the values directly.
 }
 \methodParam{t}{old values that need to be rotated.}
 \methodParam{result}{where the new values will be saved.}
@@ -1268,7 +1271,7 @@
 \beginField{REMANENCE}
 \fieldDeclaration{public static final MeasurementValue<Double> REMANENCE}
 \fieldComment{
-	Calculates the remanence from the component averages and sample volume.
+	Calculates the remanence from the component averages and the sample's volume.
 }
 \closeField
 
