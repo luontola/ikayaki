@@ -13,15 +13,6 @@
 \closeClass
 
 \beginToc
-\tocMethod{instance()}
-\tocMethod{Squid()}
-\tocMethod{getDegausser()}
-\tocMethod{getHandler()}
-\tocMethod{getMagnetometer()}
-\tocMethod{updateSettings()}
-\tocMethod{isOK()}
-\tocMethod{setOwner(Project)}
-\tocMethod{getOwner()}
 \closeToc
 
 \beginField{instance}
@@ -121,7 +112,6 @@
 \methodReturn{the project, or null if none is using the Squid.}
 \closeMethod
 
-
 \beginClass{Degausser}
 \classComment{
     Offers an interface for controlling the degausser (demagnetizer). Because the data link is implemented in the degausser by a single board computer running a small basic program, the response time of the degausser to commands is slow. This class will make sure that commands are not sent faster than the device can handle.
@@ -136,16 +126,6 @@
 \closeClass
 
 \beginToc
-\tocMethod{Degausser()}
-\tocMethod{updateSettings()}
-\tocMethod{setCoil(char)}
-\tocMethod{setAmplitude(int)}
-\tocMethod{executeRampUp()}
-\tocMethod{executeRampDown()}
-\tocMethod{executeRampCycle()}
-\tocMethod{demagnetize(int)}
-\tocMethod{getStatus()}
-\tocMethod{isOK()}
 \closeToc
 
 \beginField{messageBuffer}
@@ -278,35 +258,6 @@
 \closeClass
 
 \beginToc
-\tocMethod{Handler()}
-\tocMethod{updateSettings()}
-\tocMethod{getStatus()}
-\tocMethod{isOK()}
-\tocMethod{moveToHome()}
-\tocMethod{moveToDegausser()}
-\tocMethod{moveToMeasurement()}
-\tocMethod{moveToBackground()}
-\tocMethod{moveToPos(int)}
-\tocMethod{stop()}
-\tocMethod{rotateTo(int)}
-\tocMethod{setOnline()}
-\tocMethod{setAcceleration(int)}
-\tocMethod{setDeceleration(int)}
-\tocMethod{setBaseSpeed(int)}
-\tocMethod{setVelocity(int)}
-\tocMethod{setHoldTime(int)}
-\tocMethod{setCrystalFrequence(int)}
-\tocMethod{stopExecution()}
-\tocMethod{performSlew()}
-\tocMethod{setMotorPositive()}
-\tocMethod{setMotorNegative()}
-\tocMethod{setSteps(int)}
-\tocMethod{setPosition(int)}
-\tocMethod{go()}
-\tocMethod{join()}
-\tocMethod{verify(char)}
-\tocMethod{setPositionRegister(int)}
-\tocMethod{pollMessage()}
 \closeToc
 
 \beginField{messageBuffer}
@@ -579,8 +530,8 @@ factory for half stepping.}
 }
 \closeMethod
 
-\beginMethod{join()}
-\methodDeclaration{private void join()}
+\beginMethod{wait()}
+\methodDeclaration{private void wait()}
 \methodComment{
    Wait for handler to be idle. Blocking (F). Without the this command the SMC25 (Handler system) will continue to accept commands while the motor is moving. This may be desirable, as when changing speed during a move or working with the inputs or outputs. Or it may be undesirable, such as when you wish to make a series of indexes. Without the this command any subsequent Go commands received while the motor is indexing would set the "Not allowed while moving" message. Caution: If this command is used while the motor is executing a Slew command the only way to stop is with a reset or a hard limit switch input.
 }
@@ -633,7 +584,7 @@ X Crystal frequency
 \closeMethod
 
 \beginMethod{pollMessage()}
-\methodDeclaration{private char pollMessage()}
+\methodDeclaration{private char pollMessage}
 \methodComment{
    Poll the device for any waiting messages such as errors or end of move. (%).
 }
@@ -676,20 +627,6 @@ G Motor is indexing and no other notice pending
 \closeClass
 
 \beginToc
-\tocMethod{Magnetometer()}
-\tocMethod{updateSettings()}
-\tocMethod{reset(char)}
-\tocMethod{resetCounter(char)}
-\tocMethod{configure(char,char,char)}
-\tocMethod{latchAnalog(char)}
-\tocMethod{latchCounter(char)}
-\tocMethod{getData(char,char,String)}
-\tocMethod{openLoop(char)}
-\tocMethod{clearFlux(char)}
-\tocMethod{join()}
-\tocMethod{readData()}
-\tocMethod{getStatus()}
-\tocMethod{isOK()}
 \closeToc
 
 \beginField{messageBuffer}
@@ -739,8 +676,7 @@ G Motor is indexing and no other notice pending
 
 \beginMethod{configure(char,char,char)}
 \methodDeclaration{private void configure(char axis, char subcommand, char option)}
-\methodComment{
-}
+\methodComment{Used for configuring Magnetometer parameters. See subcommand for usages.}
 \methodParam{axis}{x,y,x or a (all)}
 \methodParam{subcommand}{The CONFIGURE subcommands follow: "F" Set filter configuration. The data subfield sets the filter to the indicated range. The four possible data values are: "1" One Hertz Filter; 1 Hz "T" Ten Hertz Filter; 10 Hz "H" One hundred Hertz Filter; 100 Hz "W" Wide band filter; WB "R" Set DC SQUID electronic range. The data subfield selects the range desired. The four possible data values are: "1" One time range; 1x "T" Ten times range; 10x "H" One hundred times range; 100x "E" Extended range; 1000x "S" Set/Reset the fast-slew option. Two data values are possible: "E" Enable the fast-slew; turn it on. "D" Disable the fast-slew; turn it off. "L" This subcommand opens or closes the SQUID feedback loop or resets the analog signal to +/- 1/2 flux quantum about zero. The three possible data values are: "O" Open the feedback loop. (This command also zeros the flux counter) "C" Close the feedback loop. "P" Pulse-reset (open then close) the feedback loop. (This command also zeros the flux counter)}
 \methodParam{option}{see data values from subcommands.}
