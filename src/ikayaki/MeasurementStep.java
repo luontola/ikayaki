@@ -224,6 +224,8 @@ public class MeasurementStep {
         return state;
     }
 
+// setState(State) was replaced by setDone()
+//
 //    /**
 //     * Sets the completion status of this step. Only the owner project may set the state.
 //     *
@@ -362,7 +364,7 @@ public class MeasurementStep {
      * Called after all results have been added. Sets the step's status to DONE_RECENTLY and prevents the adding of
      * further results. If the state is already DONE or DONE_RECENTLY, then nothing will be changed.
      */
-    public synchronized void setResultsDone() {
+    public synchronized void setDone() {
         if (state != DONE && state != DONE_RECENTLY) {
             state = DONE_RECENTLY;
         }
@@ -439,7 +441,7 @@ public class MeasurementStep {
         step.addResult(new MeasurementResult(MeasurementResult.Type.BG, 1, 2, 3));
         System.out.println(step);
         Thread.sleep(100);
-        step.setResultsDone();
+        step.setDone();
         System.out.println(step);
 
         step = new MeasurementStep(step.getElement(document));
