@@ -1,0 +1,11 @@
+Java-dll
++ kaikki osaa sitä
++ "helpompi" koodata (turvallisempaa)
+- Rajapinta valmiiseen ohjelmaan tulee määrittää
+- Härpätin, kahta eri koodia. Tuleeko ongelmia?
+
+C++
++ vain yhtä kieltä ja samassa kasassa kaikki
++ rajapinta valmiina käytettävissä
+- c++ käyttöliittymän koodauksen opettelu
+- koodin korjaaminen Meille sopivaksi
