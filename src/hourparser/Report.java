@@ -209,7 +209,7 @@ public class Report {
                         + HourParser.getNumberFormat().format(hours[row].get(i)) + "</a></td>\n");
                 totalSum += hours[row].get(i);
             }
-            html.append("   <td align=\"center\">" + HourParser.getNumberFormat().format(totalSum) + " h</td>\n");
+            html.append("   <td align=\"center\">" + HourParser.getNumberFormat().format(totalSum) + "&nbsp;h</td>\n");
             html.append("</tr>\n");
         }
 
@@ -228,10 +228,10 @@ public class Report {
                 for (Vector<Double> personHours : hours) {
                     weekSum += personHours.get(i);
                 }
-                html.append("   <td align=\"center\">" + HourParser.getNumberFormat().format(weekSum) + " h</td>\n");
+                html.append("   <td align=\"center\"><b>" + HourParser.getNumberFormat().format(weekSum) + "</b></td>\n");
                 totalSum += weekSum;
             }
-            html.append("   <td align=\"center\">" + HourParser.getNumberFormat().format(totalSum) + " h</td>\n");
+            html.append("   <td align=\"center\"><b>" + HourParser.getNumberFormat().format(totalSum) + "&nbsp;h</b></td>\n");
             html.append("</tr>\n");
         }
 
