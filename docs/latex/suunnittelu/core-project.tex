@@ -297,6 +297,8 @@
 \methodDeclaration{private synchronized Squid getSquid()}
 \methodComment{
 	Returns the Squid if this project is its owner, otherwise returns null.
+	
+	(NOTE: Make this method public? Or return a Proxy (see design patterns), so others can know where the handler is moving but not control it?)
 }
 \closeMethod
 
@@ -1068,6 +1070,7 @@
 \beginField{type}
 \fieldDeclaration{private Type type}
 \fieldComment{
+	The type of this result. Can be either a background noise measurement, or a sample in one of the four rotations.
 }
 \closeField
 
@@ -1075,6 +1078,7 @@
 \fieldDeclaration{private Tuple3d rawTuple}
 \fieldValue{new Tuple3d()}
 \fieldComment{
+	The unmodified measurements recieved from the squid.
 }
 \closeField
 
@@ -1082,93 +1086,96 @@
 \fieldDeclaration{private Tuple3d tuple}
 \fieldValue{new Tuple3d()}
 \fieldComment{
+	The measurements with the rotation and transformation matrix applied.
 }
 \closeField
 
 \beginMethod{MeasurementResult(Type,double,double,double)}
 \methodDeclaration{public MeasurementResult(Type type, double x, double y, double z}
 \methodComment{
+	Creates a new measurement result.
 }
-\methodParam{type}{}
-\methodParam{x}{}
-\methodParam{y}{}
-\methodParam{z}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{type}{the type (background or rotation) of this result.}
+\methodParam{x}{the measured X coordinate value.}
+\methodParam{y}{the measured Y coordinate value.}
+\methodParam{z}{the measured Z coordinate value.}
+\methodReturn{the created measurement result.}
+\methodThrows{NullPointerException}{if type is null.}
 \closeMethod
 
 \beginMethod{MeasurementResult(Element)}
 \methodDeclaration{public MeasurementResult(Element import)}
 \methodComment{
+	Creates a measurement result from the specified element. This will not apply the transformation matrix.
 }
-\methodParam{import}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{import}{the element from which this result will be created.}
+\methodReturn{the created measurement result.}
+\methodThrows{IllegalArgumentException}{if the element was not in the right format.}
 \closeMethod
 
 \beginMethod{getElement()}
 \methodDeclaration{public Element getElement()}
 \methodComment{
+	Exports this result to a DOM element.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{setTransform(Matrix3d)}
 \methodDeclaration{void setTransform(Matrix3d transform)}
 \methodComment{
+	Applies a transformation matrix to this result.
 }
-\methodParam{transform}{}
-\methodThrows{}{}
+\methodParam{transform}{the matrix to be applied.}
+\methodThrows{NullPointerException}{if transform is null.}
 \closeMethod
 
 \beginMethod{getType()}
 \methodDeclaration{public Type getType()}
 \methodComment{
+	Returns the type of this result (background or rotation).
 }
-\methodReturn{}
 \closeMethod
 
 \beginMethod{getX()}
 \methodDeclaration{public double getX()}
 \methodComment{
+	Returns the rotated and transformed X coordinate of this result.
 }
-\methodReturn{}
 \closeMethod
 
 \beginMethod{getY()}
 \methodDeclaration{public double getY()}
 \methodComment{
+	Returns the rotated and transformed Y coordinate of this result.
 }
-\methodReturn{}
 \closeMethod
 
 \beginMethod{getZ()}
 \methodDeclaration{public double getZ()}
 \methodComment{
+	Returns the rotated and transformed Z coordinate of this result.
 }
-\methodReturn{}
 \closeMethod
 
 \beginMethod{getRawX()}
 \methodDeclaration{public double getRawX()}
 \methodComment{
+	Returns the unmodified X coordinate of this result as recieved from the Squid.
 }
-\methodReturn{}
 \closeMethod
 
 \beginMethod{getRawY()}
 \methodDeclaration{public double getRawY()}
 \methodComment{
+	Returns the unmodified Y coordinate of this result as recieved from the Squid.
 }
-\methodReturn{}
 \closeMethod
 
 \beginMethod{getRawZ()}
 \methodDeclaration{public double getRawZ()}
 \methodComment{
+	Returns the unmodified Z coordinate of this result as recieved from the Squid.
 }
-\methodReturn{}
 \closeMethod
 
 
@@ -1190,8 +1197,8 @@
 \methodComment{
 	Rotates the raw XYZ values from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will just copy the values directly.
 }
-\methodParam{t}{Old values that need to be rotated}
-\methodReturn{A new object with the rotated values.}
+\methodParam{t}{old values that need to be rotated.}
+\methodReturn{a new object with the rotated values.}
 \closeMethod
 
 \beginMethod{rotate(Tuple3d,Tuple3d)}
@@ -1199,9 +1206,9 @@
 \methodComment{
 	Rotates the raw XYZ values from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will just copy the values directly.
 }
-\methodParam{t}{Old values that need to be rotated}
-\methodParam{result}{Where the new values will be saved}
-\methodReturn{The same as the result parameter, or a new object if it was null.}
+\methodParam{t}{old values that need to be rotated.}
+\methodParam{result}{where the new values will be saved.}
+\methodReturn{the same as the result parameter, or a new object if it was null.}
 \closeMethod
 
 
@@ -1210,7 +1217,7 @@
 \classDeclaration{public abstract class MeasurementValue<T>}
 \classUses{MeasurementStep}
 \classComment{
-	Algorithms for calculating values from the measurements. A MeasurementValue object will be passed to the getValue method of a project to retrieve the desired value.
+	Algorithms for calculating values from the measurements. A MeasurementValue object will be passed to the getValue() method of a project to retrieve the desired value.
 }
 \classPatterns{Strategy}
 \closeClass
@@ -1218,117 +1225,128 @@
 \beginField{X}
 \fieldDeclaration{public static final MeasurementValue<Double> X}
 \fieldComment{
+	Calculates the average of all X components.
 }
 \closeField
 
 \beginField{Y}
 \fieldDeclaration{public static final MeasurementValue<Double> Y}
 \fieldComment{
+	Calculates the average of all Y components.
 }
 \closeField
 
 \beginField{Z}
 \fieldDeclaration{public static final MeasurementValue<Double> Z}
 \fieldComment{
+	Calculates the average of all Z components.
 }
 \closeField
 
 \beginField{DECLINATION}
 \fieldDeclaration{public static final MeasurementValue<Double> DECLINATION}
 \fieldComment{
+	Calculates the declination from the component averages.
 }
 \closeField
 
 \beginField{INCLINATION}
 \fieldDeclaration{public static final MeasurementValue<Double> INCLINATION}
 \fieldComment{
+	Calculates the inclination from the component averages.
 }
 \closeField
 
 \beginField{MOMENT}
 \fieldDeclaration{public static final MeasurementValue<Double> MOMENT}
 \fieldComment{
+	Calculates the length of the vector from the component averages.
 }
 \closeField
 
 \beginField{REMANENCE}
 \fieldDeclaration{public static final MeasurementValue<Double> REMANENCE}
 \fieldComment{
+	Calculates the remanence from the component averages and sample volume.
 }
 \closeField
 
 \beginField{RELATIVE_REMANENCE}
 \fieldDeclaration{public static final MeasurementValue<Double> RELATIVE\_REMANENCE}
 \fieldComment{
+	Calculates the remanence relative to the first measurement's remanence.
 }
 \closeField
 
 \beginField{THETA63}
 \fieldDeclaration{public static final MeasurementValue<Double> THETA63}
 \fieldComment{
+	Calculates the Theta 63 value from the measurement result set.
 }
 \closeField
 
 \beginField{caption}
 \fieldDeclaration{private String caption}
 \fieldComment{
+	A short name for the value.
 }
 \closeField
 
 \beginField{unit}
 \fieldDeclaration{private String unit}
 \fieldComment{
+	The unit of the value.
 }
 \closeField
 
 \beginField{description}
 \fieldDeclaration{private String description}
 \fieldComment{
+	A long description of the value.
 }
 \closeField
 
 \beginMethod{MeasurementValue(String,String,String)}
 \methodDeclaration{public MeasurementValue(String caption, String unit, String description)}
 \methodComment{
+	Creates a new measurement value.
 }
-\methodParam{caption}{}
-\methodParam{unit}{}
-\methodParam{description}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{caption}{a short name for the value.}
+\methodParam{unit}{the unit of the value.}
+\methodParam{description}{a long description of the value.}
+\methodReturn{the created measurement value.}
+\methodThrows{NullPointerException}{if any of the arguments is null.}
 \closeMethod
 
 \beginMethod{getValue(MeasurementStep)}
 \methodDeclaration{abstract T getValue(MeasurementStep step)}
 \methodComment{
+	Calculates a specific value from a measurement step.
 }
-\methodParam{step}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{step}{the step from which the value will be calculated.}
+\methodReturn{the calculated value, or null if it was not possible to calculate it.}
+\methodThrows{NullPointerException}{if step is null.}
 \closeMethod
 
 \beginMethod{getCaption()}
 \methodDeclaration{public String getCaption()}
 \methodComment{
+	Returns a short name for the value.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getUnit()}
 \methodDeclaration{public String getUnit()}
 \methodComment{
+	Returns the unit of the value.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getDescription()}
 \methodDeclaration{public String getDescription()}
 \methodComment{
+	Returns a long description of the value.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 
@@ -1345,39 +1363,40 @@
 \beginField{project}
 \fieldDeclaration{private Project project}
 \fieldComment{
+	The project that sent this event.
 }
 \closeField
 
 \beginField{type}
 \fieldDeclaration{private Type type}
 \fieldComment{
+	The type of event this is.
 }
 \closeField
 
 \beginMethod{ProjectEvent(Project,Type)}
 \methodDeclaration{public ProjectEvent(Project project, Type type)}
 \methodComment{
+	Creates a new project event.
 }
-\methodParam{project}{}
-\methodParam{type}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{project}{the project that sends this event.}
+\methodParam{type}{the type of the event.}
+\methodReturn{the created event.}
+\methodThrows{NullPointerException}{if any of the arguments is null.}
 \closeMethod
 
 \beginMethod{getProject()}
 \methodDeclaration{public Project getProject()}
 \methodComment{
+	Returns the project that sent this event.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getType()}
 \methodDeclaration{public Type getType()}
 \methodComment{
+	Returns the type of this event.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 
@@ -1402,8 +1421,9 @@
 \beginMethod{projectUpdated(ProjectEvent)}
 \methodDeclaration{public void projectUpdated(ProjectEvent event)}
 \methodComment{
+	Will be invoked whenever a project event happens.
 }
-\methodParam{event}{}
+\methodParam{event}{the event that happened.}
 \closeMethod
 
 
@@ -1420,54 +1440,55 @@
 \beginField{project}
 \fieldDeclaration{private Project project}
 \fieldComment{
+	The project whose measurement sent this event.
 }
 \closeField
 
 \beginField{step}
 \fieldDeclaration{private MeasurementStep step}
 \fieldComment{
+	The measurement that sent this event.
 }
 \closeField
 
 \beginField{type}
 \fieldDeclaration{private Type type}
 \fieldComment{
+	The type of event this is.
 }
 \closeField
 
 \beginMethod{MeasurementEvent(Project,MeasurementStep,Type)}
 \methodDeclaration{public MeasurementEvent(Project project, MeasurementStep step, Type type)}
 \methodComment{
+	Creates a new measurement event.
 }
-\methodParam{project}{}
-\methodParam{step}{}
-\methodParam{type}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{project}{the project whose measurement sent this event.}
+\methodParam{step}{the measurement that sent this event.}
+\methodParam{type}{the type of event this is.}
+\methodReturn{the created event.}
+\methodThrows{NullPointerException}{if any of the arguments is null.}
 \closeMethod
 
 \beginMethod{getProject()}
 \methodDeclaration{public Project getProject()}
 \methodComment{
+	Returns the project whose measurement sent this event.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getStep()}
 \methodDeclaration{public MeasurementStep getStep()}
 \methodComment{
+	Returns the measurement that sent this event.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getType()}
 \methodDeclaration{public Type getType()}
 \methodComment{
+	Returns the type of event this is.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 
@@ -1492,8 +1513,9 @@
 \beginMethod{measurementUpdated(MeasurementEvent)}
 \methodDeclaration{public void measurementUpdated(MeasurementEvent event)}
 \methodComment{
+	Will be invoked whenever a measurement event happens.
 }
-\methodParam{event}{}
+\methodParam{event}{the event that happened.}
 \closeMethod
 
 
