@@ -22,8 +22,9 @@
 
 package ikayaki;
 
-import org.w3c.dom.Element;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class MeasurementSequence {
      * Creates an empty sequence with no name.
      */
     public MeasurementSequence() {
-        name = null;
+        setName(null);
     }
 
     /**
@@ -60,7 +61,7 @@ public class MeasurementSequence {
      * @param name name of the sequence.
      */
     public MeasurementSequence(String name) {
-        this.name = name;
+        setName(name);
     }
 
     /**
@@ -71,7 +72,7 @@ public class MeasurementSequence {
      * @throws IllegalArgumentException if the element was not in the right format.
      */
     public MeasurementSequence(Element element) {
-        return; // TODO
+        this(element, null);
     }
 
     /**
@@ -83,7 +84,24 @@ public class MeasurementSequence {
      * @throws IllegalArgumentException if the element was not in the right format.
      */
     public MeasurementSequence(Element element, Project project) {
-        return; // TODO
+        if (element == null) {
+            throw new NullPointerException();
+        }
+
+        // get name
+        String s = element.getAttribute("name");
+        if (s.equals("")) {
+            setName(null);
+        } else {
+            setName(s);
+        }
+
+        // get steps
+        NodeList steps = element.getChildNodes();
+        for (int i = 0; i < steps.getLength(); i++) {
+            Element step = (Element) steps.item(i);
+            this.steps.add(new MeasurementStep(step, project));
+        }
     }
 
     /**
@@ -92,7 +110,15 @@ public class MeasurementSequence {
      * @param document the document that will contain this element.
      */
     public synchronized Element getElement(Document document) {
-        return null; // TODO
+        Element element = document.createElement("sequence");
+
+        element.setAttribute("name", name == null ? "" : name);
+        
+        for (MeasurementStep step : steps) {
+            element.appendChild(step.getElement(document));
+        }
+
+        return element;
     }
 
     /**
@@ -105,9 +131,12 @@ public class MeasurementSequence {
     }
 
     /**
-     * Sets the name of this sequence.
+     * Sets the name of this sequence. Use null or an empty String to clear the name.
      */
     public synchronized void setName(String name) {
+        if (name != null && name.equals("")) {
+            name = null;
+        }
         this.name = name;
     }
 
