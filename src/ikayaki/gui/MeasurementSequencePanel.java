@@ -77,6 +77,7 @@ Order of rows with measurement data cannot be changed.
      * Creates default MeasurementSequencePanel.
      */
     public MeasurementSequencePanel() {
+        add(new JLabel("Sequence"));
         return; // TODO
     }
 

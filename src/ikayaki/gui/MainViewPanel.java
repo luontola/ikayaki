@@ -28,6 +28,7 @@ import ikayaki.Settings;
 import ikayaki.squid.Squid;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Creates the main view panels (split panels) and Squid and Project components. It also tells everybody if the current
@@ -56,6 +57,7 @@ public class MainViewPanel extends ProjectComponent {
     private MainMenuBar menuBar;
     private MainStatusBar statusBar;
 
+    private JSplitPane splitPane;
     private ProjectExplorerPanel projectExplorer;
     private CalibrationPanel calibration;
 
@@ -80,6 +82,7 @@ public class MainViewPanel extends ProjectComponent {
         menuBar = new MainMenuBar();
         statusBar = new MainStatusBar();
 
+        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         projectExplorer = new ProjectExplorerPanel(this, project);
         calibration = new CalibrationPanel(this);
 
@@ -92,8 +95,50 @@ public class MainViewPanel extends ProjectComponent {
         setProject(project);
 
         /* lay out GUI components */
+        setLayout(new BorderLayout());
+        add(splitPane, "Center");
 
-        return; // TODO
+        JPanel left = new JPanel(new GridBagLayout());
+        JPanel right = new JPanel(new GridBagLayout());
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.fill = GridBagConstraints.BOTH;
+        gc.weightx = 1.0;
+        gc.weighty = 1.0;
+
+        // build left tab
+        gc.gridx = 0;
+        gc.gridy = 0;
+        left.add(calibration, gc);
+        gc.gridx = 0;
+        gc.gridy = 1;
+        left.add(projectExplorer, gc);
+        gc.gridx = 0;
+        gc.gridy = 2;
+        left.add(projectInformation, gc);
+
+        // build right tab
+        gc.gridx = 0;
+        gc.gridy = 0;
+        right.add(measurementSequence, gc);
+        gc.gridx = 1;
+        gc.gridy = 0;
+        right.add(measurementControls, gc);
+        gc.gridx = 0;
+        gc.gridy = 1;
+        right.add(measurementDetails, gc);
+        gc.gridx = 1;
+        gc.gridy = 1;
+        right.add(measurementGraphs, gc);
+
+        // configure tabs
+        splitPane.setOneTouchExpandable(true);
+        splitPane.setContinuousLayout(true);
+        splitPane.setDividerLocation(200);
+        splitPane.setResizeWeight(0.0);
+        splitPane.setLeftComponent(left);
+        splitPane.setRightComponent(right);
+
+        return;
     }
 
     public MainMenuBar getMenuBar() {

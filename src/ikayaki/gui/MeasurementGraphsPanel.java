@@ -22,8 +22,15 @@
 
 package ikayaki.gui;
 
+import javax.swing.*;
+
 /**
  * @author
  */
 public class MeasurementGraphsPanel extends ProjectComponent {
+
+    public MeasurementGraphsPanel() {
+        add(new JLabel("Graphs"));
+        return; // TODO
+    }
 }

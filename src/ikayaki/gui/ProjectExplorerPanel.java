@@ -112,6 +112,7 @@ whose measuring ended.
      *                last known directory.
      */
     public ProjectExplorerPanel(ProjectComponent parent, Project project) {
+        add(new JLabel("Project Explorer"));
         return; // TODO
     }
 

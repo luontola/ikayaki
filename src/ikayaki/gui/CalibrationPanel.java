@@ -76,6 +76,7 @@ or disable if measuring has started.
      */
     public CalibrationPanel(ProjectComponent parent) {
         this.parent = parent;
+        add(new JLabel("Calibration"));
         return; // TODO
     }
 

@@ -92,4 +92,8 @@ with the right values from MeasurementEvent.
 
     private ManualControlsPanel manualControlsPanel;
 
+    public MeasurementControlsPanel() {
+        add(new JLabel("Controls"));
+        return; // TODO
+    }
 }

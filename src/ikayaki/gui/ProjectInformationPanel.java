@@ -90,6 +90,7 @@ Event B: On project event - Update textfields to correspond new project informat
      * Creates default ProjectInformationPanel.
      */
     public ProjectInformationPanel() {
+        add(new JLabel("Project Information"));
         return; // TODO
     }
 

@@ -61,6 +61,7 @@ in MeasurementSequencePanel update tables with new measurement data.
      * Creates default MeasurementDetailsPanel.
      */
     public MeasurementDetailsPanel() {
+        add(new JLabel("Details"));
         return; // TODO
     }
 

@@ -22,6 +22,9 @@
 
 package ikayaki;
 
+import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
+import com.jgoodies.looks.plastic.PlasticLookAndFeel;
+import com.jgoodies.looks.plastic.theme.DesertBluer;
 import ikayaki.gui.MainViewPanel;
 
 import javax.swing.*;
@@ -57,6 +60,13 @@ be closed.
     public Ikayaki(Project project) throws HeadlessException {
         super(APP_NAME + " " + APP_VERSION);
 
+        PlasticLookAndFeel.setMyCurrentTheme(new DesertBluer());
+        try {
+            UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         final MainViewPanel main = new MainViewPanel(project);
 
         setLayout(new BorderLayout());
@@ -67,6 +77,7 @@ be closed.
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationByPlatform(true);
         pack();
+        setSize(800, 600);
 
         addWindowListener(new WindowAdapter() {
             @Override public void windowClosing(WindowEvent e) {
