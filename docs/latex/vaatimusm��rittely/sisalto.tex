@@ -25,9 +25,11 @@ A brief overview of the problem domain..
 \section{Use cases}
 
 % super-makrot use caseille; huomaa että \uctitle aloittaa ja \ucend lopettaa, muuten tulee ongelma
+\newcommand{\ucsecdesc}[1]{\textit{#1}\\}
 \newcommand{\uctitle}[1]{\refstepcounter{ucnum}\textbf{UC\arabic{ucnum}: #1}\\\begin{tabular}{p{3cm}p{11cm}}}
-\newcommand{\ucnote}[1]{\multicolumn{2}{p{14cm}}{\textsc{#1}}\\}
-\newcommand{\ucscenario}[1]{\stepcounter{ucsce}\textbf{Scenario \Alph{ucsce}} & #1\\}
+\newcommand{\ucnote}[1]{\multicolumn{2}{p{14cm}}{[\textsc{#1}]}\\}
+\newcommand{\ucnotein}[1]{[\textsc{#1}]}
+\newcommand{\ucscenario}[1]{\stepcounter{ucsce}\textbf{Scenario \alph{ucsce}} & #1\\}
 \newcommand{\ucpre}[1]{\textbf{Precondition} & #1\\}
 \newcommand{\ucpost}[1]{\textbf{Postcondition} & #1\\}
 \newcommand{\ucerror}[1]{\textbf{Error condition} & #1\\}
@@ -52,9 +54,10 @@ Use cases are divided to different sections, grouping logically similar use case
 
 Use case format:
 
+% lopullisesta versiosta poistettavat kommentit joko 1) [], 2) \ucnote{} tai 3) \ucnotein{} sisällä
 \setcounter{ucnum}{-1}
 \uctitle{Use case identifier and title}
-\ucnote{[Possibly temporary note here for project group; shall be removed from final version.]}
+\ucnote{Possible temporary note here for project group; shall be removed from final version.}
 \ucscenario{First scenario for doing the use case.}
 \ucscenario{Second scenario for doing the use case. ...}
 \ucpre{Preconditions for use case.}
@@ -68,12 +71,15 @@ Use case format:
 \subsection{Measuring}
 \label{seq:ucmeasuring}
 
+\ucsecdesc{As in any and all measuring action with the squid.}
+
 \uctitle{Single step measuring without demagnetization}
 \ucscenario{Enter as next AF demagnetization step "0" or empty (default for new projects), meaning no demagnetization, and click "Single step".}
 \ucpre{AF project open, sample in sample holder.}
 \ucpost{Sample measured, results on screen and appended to current project.}
 \ucerror{The program shall let the user know if something went wrong.}
 \ucgd{\ref{seq:gduc3}, first few steps.}
+\ucreq{R1, R5, R9, R13, R16, R17}
 \ucend
 
 \uctitle{Single step measuring with (AF) demagnetization}
@@ -81,6 +87,7 @@ Use case format:
 \ucpre{AF project open, sample in sample holder.}
 \ucpost{Sample demagnetized (possibly ruined) and measured, results on screen and appended to current project.}
 \ucerror{The program shall let the user know if something went wrong, and, should the demagnetization field not be coming down, warn user with an alarm sound :)}
+\ucreq{R1, R5, R9, R13, R16, R17}
 \ucend
 
 \uctitle{Automatic demagnetization-measuring sequence (AF sequence)}
@@ -89,6 +96,7 @@ Use case format:
 \ucpost{Sample demagnetized according to entered AF sequence (possibly ruined) and measured after each demagnetization, results on screen and appended to current project.}
 \ucerror{The program shall let the user know if something went wrong, and, should the demagnetization field be uncalm, warn user with an alarm sound x)}
 \ucgd{\ref{seq:gduc1} whole sequence, \ref{seq:gduc3} sequence after few single steps at the beginning.}
+\ucreq{R1, R5, R9, R12, R16, R17}
 \ucend
 \label{uc:autoseq}
 
@@ -98,13 +106,15 @@ Use case format:
   \ucpost{Measure sequence halts after current step is done, results on screen.}
   \ucerror{Program tells if sequence can't be paused (and something has gone terribly wrong).}
   \ucgd{\ref{seq:gduc3}, Tomas pauses the sequence as the meteor demagnetizes too rapidly.}
+  \ucreq{R1, R14}
   \ucend
 
   \uctitle{Abort automatic measuring sequence}
   \ucscenario{While measure sequence is running or paused, click "Stop immediately".}
   \ucpre{Ongoing or paused measuring sequence (UC\ref{uc:autoseq}).}
-  \ucpost{Measure sequence halts immediately [and program enters "fully manual" mode?]}
+  \ucpost{Measure sequence halts immediately \ucnotein{and program enters "fully manual" mode?}}
   \ucerror{Program tells if sequence can't be aborted (and something has gone terribly wrong).}
+  \ucreq{R1, R15}
   \ucend
 
 \uctitle{Thellier measuring}
@@ -113,21 +123,24 @@ Use case format:
 \ucpost{Sample measured, results on screen and appended to current project.}
 \ucerror{As usual.}
 \ucgd{\ref{seq:gduc2}, temperatures already entered, one step at 380 °C.}
+\ucreq{R1, R5, R9, R13, R16, R17}
 \ucend
 
 \uctitle{Thermal measuring}
-\ucnote{[Exactly the same as thellier?]}
+\ucnote{Exactly the same as thellier?}
 \ucscenario{Click "Single step". (Temperature can be entered later, as it won't affect measuring.)}
 \ucpre{TH project open, sample in sample holder.}
 \ucpost{Sample measured, results on screen and appended to current project.}
 \ucerror{As usual.}
+\ucreq{R1, R5, R9, R13, R16, R17}
 \ucend
 
 \uctitle{Measure magnetometer ground noise}
-\ucnote{[2005-02-23 not in current UI proto, nor planned for implementation.]}
+\ucnote{2005-02-23 not in current UI proto, nor planned for implementation.}
 \ucscenario{Click "Ground noise" and "Calibrate".}
 \ucpre{No ongoing measurements.}
 \ucpost{Ground noise measured, results on screen and appended to "Ground noise" project.}
+\ucreq{R1, R3, R5, R16, R17}
 \ucend
 
 \uctitle{Measure empty sample holder noise}
@@ -135,31 +148,37 @@ Use case format:
 \ucpre{No ongoing measurements, empty sample holder.}
 \ucpost{Holder noise measured, results on screen and appended to "Holder noise" project.}
 \ucgd{\ref{seq:gduc1}, calibration at the beginning.}
+\ucreq{R1, R3, R5, R16, R17}
 \ucend
 
 \uctitle{Measure standard sample}
 \ucscenario{Click "Standard sample" and "Calibrate".}
 \ucpre{No ongoing measurements, standard sample in sample holder.}
 \ucpost{Standard sample measured, results on screen and appended to "Standard sample" project, and, predefined .std file.}
-\ucpost{Holder noise measured, results on screen and appended to "Holder noise" project.}
+\ucpost{Holder noise measured, results on screen and appended to "Standard sample" project.}
+\ucreq{R1, R3, R5, R16, R17}
 \ucend
 
 \uctitle{Fully manual measuring}
-\ucnote{[2005-02-25 still not clear how fully manual is supposed to work; Tomas will be back on tuesday 1.3. and might tell us.]}
+\ucnote{2005-02-25 still not clear how fully manual is supposed to work; Tomas will be back on tuesday 1.3. and might tell us.}
 \ucscenario{Click any of the manual control components.}
 \ucpre{Manual mode enabled.}
-\ucpost{Manual action done, result on screen.}
+\ucpost{Manual action done, result on screen \ucnotein{and appended to current project? draw graphplots?}.}
+\ucreq{R1, R2, R5, R9, R16, R17}
 \ucend
 
 \uctitle{Enable manual mode}
 \ucscenario{Click "Manual" checkbox above the manual control components.}
 \ucpre{No ongoing measurement.}
 \ucpost{Manual mode enabled.}
+\ucreq{R2}
 \ucend
 
 
 \subsection{Exporting}
 \label{seq:ucexport}
+
+\ucsecdesc{As in exporting measurement results to another file format for othrer programs to use.}
 
 \uctitle{Export project data into .dat file}
 \ucscenario{In project explorer file list, right-click on desired project file, click "Export .dat in current directory".}
@@ -169,6 +188,7 @@ Use case format:
 \ucpre{At least 1 project file in current (selected) directory.}
 \ucpost{Project data exported to .dat file.}
 \ucerror{Notify if file error occurs (such as no disk in A: drive).}
+\ucreq{R10}
 \ucend
 
 \uctitle{Export (thellier) project data into .tdt file}
@@ -179,6 +199,7 @@ Use case format:
 \ucpre{At least 1 project file in current (selected) directory.}
 \ucpost{Project data exported to .tdt file.}
 \ucerror{Notify if file error occurs (such as no disk in A: drive).}
+\ucreq{R10}
 \ucend
 
 \uctitle{Export single measurement details into .srm file}
@@ -189,19 +210,22 @@ Use case format:
 \ucpre{At least 1 measurement result in current project.}
 \ucpost{Measurement details exported to .srm file.}
 \ucerror{Notify if file error occurs (such as no disk in A: drive).}
+\ucreq{R10}
 \ucend
 
 
 \subsection{Printing}
 \label{seq:ucprint}
 
-[2005-02-25 not in current UI prototype, implementation priority low.]
+\ucsecdesc{As in printing measurement results as text or graphs.}
+\ucnotein{2005-02-25 not in current UI prototype, implementation priority low.}
 
 \uctitle{Print measurement results}
 \ucscenario{Click "Print...", "Measurement results".}
 \ucpre{Open project.}
 \ucpost{Measurement results printed via [Java] standard printing window.}
 \ucerror{Let know if printing error occurs.}
+\ucreq{R16}
 \ucend
 
 \uctitle{Print graph sheet (with 7 different graphs; described elsewhere)}
@@ -209,20 +233,22 @@ Use case format:
 \ucpre{Open project.}
 \ucpost{Measurement results printed via [Java] standard printing window.}
 \ucerror{Let know if printing error occurs.}
+\ucreq{R17}
 \ucend
 
 
 \subsection{Projects}
 \label{seq:ucproject}
 
-{\it As in project files, which store all measurement results.}\\
+\ucsecdesc{As in project files, which store all measurement results.}
 
 \uctitle{Automatically save all measurement cycles in project file}
-\ucnote{[Propably more of a requirement than use case and shall be removed from here.]}
+\ucnote{Propably more of a requirement than use case and shall be removed from here.}
 \ucscenario{Make any measurement action (see section~\ref{seq:ucmeasuring} for those).}
 \ucpre{Project file open.}
 \ucpost{After measurement (step) is done, new results appended to project file.}
 \ucgd{\ref{seq:gduc1}, \ref{seq:gduc2}, \ref{seq:gduc3}.}
+\ucreq{R5, R9}
 \ucend
 
 \uctitle{Create new project}
@@ -230,6 +256,7 @@ Use case format:
 \ucpre{Project explorer in desired directory (UC\ref{uc:choosedir}).}
 \ucpost{New project created and selected.}
 \ucgd{\ref{seq:gduc1} after calibration, \ref{seq:gduc3} at the beginning.}
+\ucreq{R4}
 \ucend
 
 \uctitle{Load project}
@@ -240,6 +267,7 @@ Use case format:
 \ucscenario{Click "Browse..." in project explorer, use standard [Java] file chooser to select project file to be opened.}
 \ucpre{None.}
 \ucpost{Existing project loaded and selected, project explorer in opened project's directory.}
+\ucreq{R6, R9}
 \ucend
 
 \uctitle{Change project explorer directory}
@@ -255,30 +283,41 @@ Use case format:
 
 \uctitle{Insert/edit project data}
 \ucscenario{Click any of the project data checkboxes, or textboxes and enter value.}
-\ucpre{Open project (usually just created).}
-\ucpost{Project data changed, saved automatically to project file.}
+\ucpre{Open project (usually just created it).}
+\ucpost{Project data changed, measuring results recalculated, saved automatically to project file.}
 \ucgd{\ref{seq:gduc1} after creating new project.}
+\ucreq{R5, R7, R8}
 \ucend
 
 
 \subsection{Sequences}
 \label{seq:ucseq}
 
-{\it As in automatic demagnetization-measuring sequences (AF sequences), or, thellier temperature sequences.}\\
+\ucsecdesc{As in automatic demagnetization-measuring sequences (AF sequences), or, thellier temperature sequences.}
+
+\uctitle{Insert sequence manually}
+\ucscenario{Click "Tesla" or "Temp" column in the last line (which is empty) of measurement result table, enter value; press down, [tab?] or enter to advance to a new line, enter value; and so on.}
+\ucpre{An open project.}
+\ucpost{Sequence appended to measurement result table and current project.}
+\ucgd{\ref{seq:gduc3} after creating new project.}
+\ucreq{R5, R11}
+\ucend
 
 \uctitle{Insert sequence with start-step-stop values}
 \ucscenario{Click "Start" textbox, insert start value, click "Step" textbox, insert step value, click "Stop" checkbox, insert stop value, click "Add sequence" or press enter.}
 \ucscenario{Click "Start" textbox, insert start value, press tab, insert step value, press tab, insert stop value, press enter or click "Add sequence".}
 \ucpre{An open project.}
-\ucpost{Sequence from {\it start} to {\it stop}, increasing by {\it step} for every step, appended to measurement result table, and selected.}
-\ucgd{\ref{seq:gduc3} after creating new project.}
+\ucpost{Sequence from {\it start} to {\it stop}, increasing by {\it step} for every step, appended to measurement result table, selected, and appended to current project.}
+\ucgd{\ref{seq:gduc3} after creating new project and entering manual values.}
+\ucreq{R5, R11}
 \ucend
 
 \uctitle{Load sequence}
 \ucscenario{Click down-arrow in right side of "Load set" combo box; from appearing list, click sequence to load.}
 \ucpre{An open project, at least 1 saved sequence.}
-\ucpost{Selected sequence appended and selected to measurement result table.}
+\ucpost{Selected sequence appended and selected to measurement result table, and appended to current project.}
 \ucgd{\ref{seq:gduc1}, after typing project data, load "Basalt" set; \ref{seq:gduc2} set already loaded for each project file (when created).}
+\ucreq{R5}
 \ucend
 \label{uc:loadseq}
 
@@ -289,14 +328,15 @@ Use case format:
 \ucscenario{Click-drag any unmeasured line in measurement result table to new position within unmeasured lines.}
 \ucscenario{Select multiple unmeasured lines in measurement result table with shift-clicks and ctrl-clicks, make any of above actions (except enter new value).}
 \ucpre{Unmeasured lines in current project's measurement result table (note that measuring sequence can be going on).}
-\ucpost{Editing committed.}
+\ucpost{Editing committed, saved to current project.}
 \ucerror{Editing or screwing up measured lines won't be allowed.}
 \ucgd{\ref{seq:gduc3}, when sequence demagnetizes too rapidly, Tomas deletes unmeasured lines.}
+\ucreq{R5}
 \ucend
 \label{uc:editseq}
 
 \uctitle{Save sequence}
-\ucscenario{Click "Load set" combo box, enter new sequence name, click "Save set". [2005-02-25 not in current (almost final) UI prototype!]}
+\ucscenario{Click "Load set" combo box, enter new sequence name, click "Save set". \ucnotein{2005-02-25 not in current (almost final) UI prototype!}}
 \ucscenario{Right-click any line in measurement result table, choose "Save full sequence...", enter name, press enter.}
 \ucscenario{Select any lines in measurement result table with shift-clicks and ctrl-clicks, right-click on selected lines, choose "Save selected sequence...", enter name, press enter.}
 \ucpre{At least 1 line in measurement results table (although you propably don't want to save a sequence with only one step x).}
@@ -307,21 +347,21 @@ Use case format:
 
 \uctitle{Edit stored sequence}
 \ucscenario{UC\ref{uc:loadseq} "Load sequence" -> UC\ref{uc:editseq} "Edit sequence" -> UC\ref{uc:saveseq} "Save sequence" with same name as the loaded sequence.}
-\ucscenario{Click menu "Options"->"Sequences...", edit any sequence in appearing window... [2005-02-25 not in UI prototype, must be improvised :)]}
+\ucscenario{Click menu "Options"->"Sequences...", edit any sequence in appearing window... \ucnotein{2005-02-25 not in UI prototype, must be improvised :)}}
 \ucpre{At least 1 saved sequence.}
 \ucpost{Changes saved to predefined sequence file.}
 \ucend
 
 \uctitle{Delete stored sequence}
 \ucscenario{Click down-arrow in right side of "Load set" combo box; from appearing list, right-click sequence to delete, choose "Delete".}
-\ucscenario{Click menu "Options"->"Sequences...", delete sequence in appearing window... [2005-02-25 not in UI prototype, must be improvised :)]}
+\ucscenario{Click menu "Options"->"Sequences...", delete sequence in appearing window... \ucnotein{2005-02-25 not in UI prototype, must be improvised :)}}
 \ucpre{At least 1 saved sequence.}
 \ucpost{Sequence deleted, changes saved to predefined sequence file.}
 \ucend
 
 \uctitle{Rename stored sequence}
 \ucscenario{Click down-arrow in right side of "Load set" combo box; from appearing list, right-click sequence to rename, choose "Rename...", enter new name, press enter.}
-\ucscenario{Click menu "Options"->"Sequences...", rename any sequence in appearing window... [2005-02-25 not in UI prototype, must be improvised :)]}
+\ucscenario{Click menu "Options"->"Sequences...", rename any sequence in appearing window... \ucnotein{2005-02-25 not in UI prototype, must be improvised :)}}
 \ucpre{At least 1 saved sequence.}
 \ucpost{Sequence renamed, changes saved to predefined sequence file.}
 \ucend
@@ -337,14 +377,22 @@ Use case format:
 \newcommand{\ReqDesc}[1]{\textbf{Description:} #1\\}
 \newcommand{\ReqPrio}[1]{\textbf{Priority:} #1\\}
 
-Goals and restrictions of the software set by the client, the project team and 
-the environment. Priorities are from 1 (highest) to 4 (lowest). Our goal is to 
-fulfill at least the requirements with priorities 1 and 2. Requirements with 
-priority 3 will be fulfilled only if time permits, and priority 4's will 
+Goals of the software set by client, project team and environment.
+Requirements were collected from 1) powerpoint slides received from
+client, 2) lectures given by client, 3) user observations held at the
+squid lab with client (used to collect goal-derived use cases), and 4)
+user interface prototype demonstrations given to client, after which the
+client gave suggestions and corrections to prototype functions.
+
+Priorities are from 1 (highest) to 4 (lowest). Our goal is to fulfill at
+least the requirements with priorities 1 and 2. Requirements with
+priority 3 will be fulfilled only if time permits, and priority 4's will
 propably be left out.
 
 
 \subsection{Functional requirements}
+
+Define the services which the software offers and how the software behaves, including error handling. May also define things the software shall not do.
 
 \subsubsection{Magnetometer}
 
@@ -482,6 +530,10 @@ propably be left out.
 
 
 \subsection{Environment}
+
+[{\it Define requirements for the software which origin from the environment 
+in which the sowtware will be working, and which the software must satisfy for 
+being able to work in its environment.}]
 
 Program will be used in normal PC which is connected to magnetometer. The 
 computer that will run this program will be equal or better to 1GHz CPU, 256MB 
