@@ -14,7 +14,9 @@
 \classComment{
 	Represents a measurement project file. Project is responsible for managing and storing the data that is recieved from the magnetometer measurements. Any changes made to the project will be written to file regularly (autosave).
 	
-	Project is responsible for controlling the magnetometer through the SQUID API. Controlling the SQUID will be done in a private worker thread. Only one project at a time may access the SQUID. 
+	Project is responsible for controlling the magnetometer through the SQUID API. Controlling the SQUID will be done in a private worker thread. Only one project at a time may access the SQUID.
+	
+	All operations are thread-safe.
 }
 \classPatterns{Facade}
 \classEvent{On property change}{Autosaving will be invoked and the project written to file after a short delay.}
@@ -22,6 +24,573 @@
 \classEvent{On measurement subphase started/completed}{MeasurementEvent will be fired to all measurement listeners.}
 \classEvent{On declination/inclination/volume changed}{The updated transformation matrix will be applied to all measurements and a ProjectEvent will be fired to all project listeners.}
 \closeClass
+
+\beginField{file}
+\fieldDeclaration{private File file}
+\fieldComment{
+}
+\closeField
+
+\beginField{type}
+\fieldDeclaration{private Type type}
+\fieldComment{
+}
+\closeField
+
+\beginField{state}
+\fieldDeclaration{private State state}
+\fieldValue{IDLE}
+\fieldComment{
+}
+\closeField
+
+\beginField{squid}
+\fieldDeclaration{private Squid squid}
+\fieldValue{null}
+\fieldComment{
+}
+\closeField
+
+\beginField{properties}
+\fieldDeclaration{private Properties properties}
+\fieldComment{
+}
+\closeField
+
+\beginField{sequence}
+\fieldDeclaration{private MeasurementSequence sequence}
+\fieldComment{
+}
+\closeField
+
+\beginField{strike}
+\fieldDeclaration{private double strike}
+\fieldValue{0.0}
+\fieldComment{
+}
+\closeField
+
+\beginField{dip}
+\fieldDeclaration{private double dip}
+\fieldValue{0.0}
+\fieldComment{
+}
+\closeField
+
+\beginField{transform}
+\fieldDeclaration{private Matrix3d transform}
+\fieldValue{new Matrix3d()}
+\fieldComment{
+}
+\closeField
+
+\beginField{mass}
+\fieldDeclaration{private double mass}
+\fieldValue{-1.0}
+\fieldComment{
+}
+\closeField
+
+\beginField{volume}
+\fieldDeclaration{private double volume}
+\fieldValue{-1.0}
+\fieldComment{
+}
+\closeField
+
+\beginField{currentStep}
+\fieldDeclaration{private MeasurementStep currentStep}
+\fieldValue{null}
+\fieldComment{
+}
+\closeField
+
+\beginField{listenerList}
+\fieldDeclaration{private EventListenerList listenerList}
+\fieldValue{new EventListenerList()}
+\fieldComment{
+}
+\closeField
+
+\beginField{autosaveQueue}
+\fieldDeclaration{private RunQueue autosaveQueue}
+\fieldValue{new RunQueue(500, true)}
+\fieldComment{
+}
+\closeField
+
+\beginMethod{loadProject(File)}
+\methodDeclaration{public static Project loadProject(File file)}
+\methodComment{
+}
+\methodParam{file}{}
+\methodReturn{}
+\methodThrows{IOException}{}
+\closeMethod
+
+\beginMethod{createCalibrationProject(File)}
+\methodDeclaration{public static Project createCalibrationProject(File file)}
+\methodComment{
+}
+\methodParam{file}{}
+\methodReturn{}
+\methodThrows{IOException}{}
+\closeMethod
+
+\beginMethod{createAFProject(File)}
+\methodDeclaration{public static Project createAFProject(File file)}
+\methodComment{
+}
+\methodParam{file}{}
+\methodReturn{}
+\methodThrows{IOException}{}
+\closeMethod
+
+\beginMethod{createThellierProject(File)}
+\methodDeclaration{public static Project createThellierProject(File file)}
+\methodComment{
+}
+\methodParam{file}{}
+\methodReturn{}
+\methodThrows{IOException}{}
+\closeMethod
+
+\beginMethod{createThermalProject(File)}
+\methodDeclaration{public static Project createThermalProject(File file)}
+\methodComment{
+}
+\methodParam{file}{}
+\methodReturn{}
+\methodThrows{IOException}{}
+\closeMethod
+
+\beginMethod{createProject(File,Type)}
+\methodDeclaration{private static Project createProject(File file, Type type)}
+\methodComment{
+}
+\methodParam{file}{}
+\methodParam{type}{}
+\methodReturn{}
+\methodThrows{IOException}{}
+\closeMethod
+
+\beginMethod{Project(File,Type)}
+\methodDeclaration{private Project(File file, Type type)}
+\methodComment{
+}
+\methodParam{file}{}
+\methodParam{type}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{Project(File,Element)}
+\methodDeclaration{private Project(File file, Element import)}
+\methodComment{
+}
+\methodParam{file}{}
+\methodParam{import}{}
+\methodReturn{}
+\methodThrows{IllegalArgumentException}{}
+\closeMethod
+
+\beginMethod{export()}
+\methodDeclaration{public Element export()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{save()}
+\methodDeclaration{public void save()}
+\methodComment{
+}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{saveNow()}
+\methodDeclaration{public void saveNow()}
+\methodComment{
+}
+\methodThrows{IOException}{}
+\closeMethod
+
+\beginMethod{getFile()}
+\methodDeclaration{public File getFile()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getType()}
+\methodDeclaration{public Type getType()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getState()}
+\methodDeclaration{public State getState()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getName()}
+\methodDeclaration{public String getName()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getTimestamp()}
+\methodDeclaration{public Date getTimestamp()}
+\methodComment{
+}
+\methodParam{}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getSquid()}
+\methodDeclaration{private Squid getSquid()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{setSquid(Squid)}
+\methodDeclaration{public void setSquid(Squid squid)}
+\methodComment{
+}
+\methodParam{squid}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getProperty(String)}
+\methodDeclaration{public String getProperty(String key)}
+\methodComment{
+}
+\methodParam{key}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{setProperty(String,String)}
+\methodDeclaration{public void setProperty(String key, String value)}
+\methodComment{
+}
+\methodParam{key}{}
+\methodParam{value}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getStrike()}
+\methodDeclaration{public double getStrike()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{setStrike(double)}
+\methodDeclaration{public void setStrike(double strike)}
+\methodComment{
+}
+\methodParam{strike}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getDip()}
+\methodDeclaration{public double getDip()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{setDip(double)}
+\methodDeclaration{public void setDip(double dip)}
+\methodComment{
+}
+\methodParam{dip}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getTransform()}
+\methodDeclaration{Matrix3d getTransform()}
+\methodComment{
+	WARNING!!! Absolutely NO modification of the data contained in this matrix should be made -- if any such manipulation is necessary, it should be done on a copy of the matrix returned rather than the matrix itself.
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{updateTransforms()}
+\methodDeclaration{private void updateTransforms()}
+\methodComment{
+}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getMass()}
+\methodDeclaration{public double getMass()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{setMass(double)}
+\methodDeclaration{public void setMass(double mass)}
+\methodComment{
+}
+\methodParam{mass}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getVolume()}
+\methodDeclaration{public double getVolume()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{setVolume(double)}
+\methodDeclaration{public void setVolume(double volume)}
+\methodComment{
+}
+\methodParam{volume}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{addProjectListener(ProjectListener)}
+\methodDeclaration{public void addProjectListener(ProjectListener l)}
+\methodComment{
+}
+\methodParam{listener}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{removeProjectListener(ProjectListener)}
+\methodDeclaration{public void removeProjectListener(ProjectListener l)}
+\methodComment{
+}
+\methodParam{listener}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{fireProjectEvent(ProjectEvent.Type)}
+\methodDeclaration{private void fireProjectEvent(ProjectEvent.Type type)}
+\methodComment{
+}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{addMeasurementListener}
+\methodDeclaration{public void addMeasurementListener(MeasurementListener l)}
+\methodComment{
+}
+\methodParam{listener}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{removeMeasurementListener}
+\methodDeclaration{public void removeMeasurementListener(MeasurementListener l)}
+\methodComment{
+}
+\methodParam{listener}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{fireMeasurementEvent(MeasurementStep,MeasurementEvent.Type)}
+\methodDeclaration{private void fireMeasurementEvent(MeasurementStep step, MeasurementEvent.Type type)}
+\methodComment{
+}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{addSequence(MeasurementSequence}
+\methodDeclaration{public void addSequence(MeasurementSequence sequence)}
+\methodComment{
+}
+\methodParam{sequence}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{copySequence(int,int)}
+\methodDeclaration{public MeasurementSequence copySequence(int start, int end)}
+\methodComment{
+}
+\methodParam{start}{}
+\methodParam{end}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{addStep(MeasurementStep)}
+\methodDeclaration{public void addStep(MeasurementStep step)}
+\methodComment{
+}
+\methodParam{step}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{addStep(int,MeasurementStep)}
+\methodDeclaration{public void addStep(int index, MeasurementStep step)}
+\methodComment{
+}
+\methodParam{index}{}
+\methodParam{step}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{removeStep(int)}
+\methodDeclaration{public void removeStep(int index)}
+\methodComment{
+}
+\methodParam{index}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{removeStep(int,int)}
+\methodDeclaration{public void removeStep(int start, int end)}
+\methodComment{
+}
+\methodParam{start}{}
+\methodParam{end}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getSteps()}
+\methodDeclaration{public int getSteps()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getStep(int)}
+\methodDeclaration{public MeasurementStep getStep(int index)}
+\methodComment{
+}
+\methodParam{index}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getCurrentStep()}
+\methodDeclaration{public MeasurementStep getCurrentStep()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getValue(int,MeasurementValue)}
+\methodDeclaration{public <A> A getValue(int step, MeasurementValue<A> value)}
+\methodComment{
+}
+\methodParam{step}{}
+\methodParam{value}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{isDegaussingEnabled()}
+\methodDeclaration{public boolean isDegaussingEnabled()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{isSequenceEditEnabled()}
+\methodDeclaration{public boolean isSequenceEditEnabled()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{isManualControlEnabled()}
+\methodDeclaration{public boolean isManualControlEnabled()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{isAutoStepEnabled()}
+\methodDeclaration{public boolean isAutoStepEnabled()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{isSingleStepEnabled()}
+\methodDeclaration{public boolean isSingleStepEnabled()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{isPauseEnabled()}
+\methodDeclaration{public boolean isPauseEnabled()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{isAbortEnabled()}
+\methodDeclaration{public boolean isAbortEnabled()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{doAutoStep()}
+\methodDeclaration{public boolean doAutoStep()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{doSingleStep()}
+\methodDeclaration{public boolean doSingleStep()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{doPause()}
+\methodDeclaration{public boolean doPause()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{doAbort()}
+\methodDeclaration{public boolean doAbort()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
 
 
 \beginClass{Project.Type}
@@ -49,8 +618,126 @@
 \classUses{MeasurementStep}
 \classComment{
 	A list of measurement steps. Steps can be added or removed from the sequence.
+	
+	All operations are thread-safe.
 }
 \closeClass
+
+\beginField{name}
+\fieldDeclaration{private String name}
+\fieldValue{}
+\fieldComment{
+}
+\closeField
+
+\beginField{steps}
+\fieldDeclaration{private List<MeasurementStep>}
+\fieldValue{new ArrayList<MeasurementStep>()}
+\fieldComment{
+}
+\closeField
+
+\beginMethod{MeasurementSequence()}
+\methodDeclaration{public MeasurementSequence()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{MeasurementSequence(String)}
+\methodDeclaration{public MeasurementSequence(String name)}
+\methodComment{
+}
+\methodParam{name}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{MeasurementSequence(Element)}
+\methodDeclaration{public MeasurementSequence(Element import)}
+\methodComment{
+}
+\methodParam{import}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{MeasurementSequence(Element,Project)}
+\methodDeclaration{public MeasurementSequence(Element import, Project project)}
+\methodComment{
+}
+\methodParam{import}{}
+\methodParam{project}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{export()}
+\methodDeclaration{public Element export()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getName()}
+\methodDeclaration{public String getName()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{setName(String)}
+\methodDeclaration{public void setName(String name)}
+\methodComment{
+}
+\methodParam{name}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getSteps()}
+\methodDeclaration{public int getSteps()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getStep(int)}
+\methodDeclaration{public MeasurementStep getStep(int index)}
+\methodComment{
+}
+\methodParam{index}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{addStep(MeasurementStep)}
+\methodDeclaration{public void addStep(MeasurementStep step)}
+\methodComment{
+}
+\methodParam{step}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{addStep(int,MeasurementStep)}
+\methodDeclaration{public void addStep(int index, MeasurementStep step)}
+\methodComment{
+}
+\methodParam{index}{}
+\methodParam{step}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{removeStep(int)}
+\methodDeclaration{public void removeStep(int index)}
+\methodComment{
+}
+\methodParam{index}{}
+\methodThrows{}{}
+\closeMethod
 
 
 \beginClass{MeasurementStep}
@@ -61,8 +748,213 @@
 \classUses{MeasurementResult}
 \classComment{
 	A single step in a measurement sequence. Each step can include multiple measurements for improved measurement precision. A step can have a different volume and mass than the related project, but by default the volume and mass of the project will be used. Only the project may change the state and results of a measurement step.
+	
+	All operations are thread-safe.
 }
 \closeClass
+
+\beginField{project}
+\fieldDeclaration{private Project project}
+\fieldComment{
+}
+\closeField
+
+\beginField{state}
+\fieldDeclaration{private State state}
+\fieldValue{READY}
+\fieldComment{
+}
+\closeField
+
+\beginField{timestamp}
+\fieldDeclaration{private Date timestamp}
+\fieldComment{
+}
+\closeField
+
+\beginField{stepValue}
+\fieldDeclaration{private double stepValue}
+\fieldValue{-1.0}
+\fieldComment{
+}
+\closeField
+
+\beginField{mass}
+\fieldDeclaration{private double mass}
+\fieldValue{-1.0}
+\fieldComment{
+}
+\closeField
+
+\beginField{volume}
+\fieldDeclaration{private double volume}
+\fieldValue{-1.0}
+\fieldComment{
+}
+\closeField
+
+\beginField{results}
+\fieldDeclaration{private List<MeasurementResult> results}
+\fieldValue{new ArrayList<MeasurementResult>()}
+\fieldComment{
+}
+\closeField
+
+\beginMethod{MeasurementStep()}
+\methodDeclaration{public MeasurementStep()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{MeasurementStep(Project)}
+\methodDeclaration{public MeasurementStep(Project project)}
+\methodComment{
+}
+\methodParam{project}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{MeasurementStep(Element)}
+\methodDeclaration{public MeasurementStep(Element import)}
+\methodComment{
+}
+\methodParam{import}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{MeasurementStep(Element,Project)}
+\methodDeclaration{public MeasurementStep(Element import, Project project)}
+\methodComment{
+}
+\methodParam{import}{}
+\methodParam{project}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{export()}
+\methodDeclaration{public Element export()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getProject()}
+\methodDeclaration{public Project getProject()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getState()}
+\methodDeclaration{public State getState()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{setState}
+\methodDeclaration{void setState(State state)}
+\methodComment{
+}
+\methodParam{state}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getTimestamp()}
+\methodDeclaration{public Date getTimestamp()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getStepValue()}
+\methodDeclaration{public double getStepValue()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{setStepValue(double)}
+\methodDeclaration{public void setStepValue(double stepValue)}
+\methodComment{
+}
+\methodParam{stepValue}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getMass()}
+\methodDeclaration{public double getMass()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{setMass(double)}
+\methodDeclaration{public void setMass(double mass)}
+\methodComment{
+}
+\methodParam{mass}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getVolume()}
+\methodDeclaration{public double getVolume()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{setVolume(double)}
+\methodDeclaration{public void setVolume(double volume)}
+\methodComment{
+}
+\methodParam{volume}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{updateTransforms()}
+\methodDeclaration{void updateTransforms()}
+\methodComment{
+}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getResults()}
+\methodDeclaration{public int getResults()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getResult(int)}
+\methodDeclaration{public MeasurementResult getResult(int index)}
+\methodComment{
+}
+\methodParam{index}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{addResult(MeasurementResult)}
+\methodDeclaration{public void addResult(MeasurementResult result)}
+\methodComment{
+}
+\methodParam{result}{}
+\methodThrows{}{}
+\closeMethod
 
 
 \beginClass{MeasurementStep.State}
@@ -83,6 +975,112 @@
 }
 \closeClass
 
+\beginField{type}
+\fieldDeclaration{private Type type}
+\fieldComment{
+}
+\closeField
+
+\beginField{rawTuple}
+\fieldDeclaration{private Tuple3d rawTuple}
+\fieldValue{new Tuple3d()}
+\fieldComment{
+}
+\closeField
+
+\beginField{tuple}
+\fieldDeclaration{private Tuple3d tuple}
+\fieldValue{new Tuple3d()}
+\fieldComment{
+}
+\closeField
+
+\beginMethod{MeasurementResult(Type,double,double,double)}
+\methodDeclaration{public MeasurementResult(Type type, double x, double y, double z}
+\methodComment{
+}
+\methodParam{type}{}
+\methodParam{x}{}
+\methodParam{y}{}
+\methodParam{z}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{MeasurementResult(Element)}
+\methodDeclaration{public MeasurementResult(Element import)}
+\methodComment{
+}
+\methodParam{import}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{export()}
+\methodDeclaration{public Element export()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{setTransform(Matrix3d)}
+\methodDeclaration{void setTransform(Matrix3d transform)}
+\methodComment{
+}
+\methodParam{transform}{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getType()}
+\methodDeclaration{public Type getType()}
+\methodComment{
+}
+\methodReturn{}
+\closeMethod
+
+\beginMethod{getX()}
+\methodDeclaration{public double getX()}
+\methodComment{
+}
+\methodReturn{}
+\closeMethod
+
+\beginMethod{getY()}
+\methodDeclaration{public double getY()}
+\methodComment{
+}
+\methodReturn{}
+\closeMethod
+
+\beginMethod{getZ()}
+\methodDeclaration{public double getZ()}
+\methodComment{
+}
+\methodReturn{}
+\closeMethod
+
+\beginMethod{getRawX()}
+\methodDeclaration{public double getRawX()}
+\methodComment{
+}
+\methodReturn{}
+\closeMethod
+
+\beginMethod{getRawY()}
+\methodDeclaration{public double getRawY()}
+\methodComment{
+}
+\methodReturn{}
+\closeMethod
+
+\beginMethod{getRawZ()}
+\methodDeclaration{public double getRawZ()}
+\methodComment{
+}
+\methodReturn{}
+\closeMethod
+
 
 \beginClass{MeasurementResult.Type}
 \classPackage{ikayaki}
@@ -97,35 +1095,151 @@
 \methodReturn{"BG", "0", "90", "180" or "270"}
 \closeMethod
 
-\beginMethod{rotate(Tuple3d,Tuple3d)}
-\methodDeclaration{public Tuple3d rotate(Tuple3d from, Tuple3d to)}
+\beginMethod{rotate(Tuple3d)}
+\methodDeclaration{public Tuple3d rotate(Tuple3d t)}
 \methodComment{
 	Rotates the raw XYZ values from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will just copy the values directly.
 }
-\methodParam{from}{Old values that need to be rotated}
-\methodParam{to}{Where the new values will be saved}
-\methodReturn{The same as parameter to, or a new object if to was null.}
+\methodParam{t}{Old values that need to be rotated}
+\methodReturn{A new object with the rotated values.}
 \closeMethod
 
-\beginMethod{rotate(Tuple3d)}
-\methodDeclaration{public Tuple3d rotate(Tuple3d from)}
+\beginMethod{rotate(Tuple3d,Tuple3d)}
+\methodDeclaration{public Tuple3d rotate(Tuple3d t, Tuple3d result)}
 \methodComment{
 	Rotates the raw XYZ values from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will just copy the values directly.
 }
-\methodParam{from}{Old values that need to be rotated}
-\methodReturn{A new object with the rotated values.}
+\methodParam{t}{Old values that need to be rotated}
+\methodParam{result}{Where the new values will be saved}
+\methodReturn{The same as the result parameter, or a new object if it was null.}
 \closeMethod
 
 
 \beginClass{MeasurementValue}
 \classPackage{ikayaki}
-\classDeclaration{public class MeasurementValue<T>}
+\classDeclaration{public abstract class MeasurementValue<T>}
 \classUses{MeasurementStep}
 \classComment{
 	Algorithms for calculating values from the measurements. A MeasurementValue object will be passed to the getValue method of a project to retrieve the desired value.
 }
 \classPatterns{Strategy}
 \closeClass
+
+\beginField{X}
+\fieldDeclaration{public static final MeasurementValue<Double> X}
+\fieldComment{
+}
+\closeField
+
+\beginField{Y}
+\fieldDeclaration{public static final MeasurementValue<Double> Y}
+\fieldComment{
+}
+\closeField
+
+\beginField{Z}
+\fieldDeclaration{public static final MeasurementValue<Double> Z}
+\fieldComment{
+}
+\closeField
+
+\beginField{DECLINATION}
+\fieldDeclaration{public static final MeasurementValue<Double> DECLINATION}
+\fieldComment{
+}
+\closeField
+
+\beginField{INCLINATION}
+\fieldDeclaration{public static final MeasurementValue<Double> INCLINATION}
+\fieldComment{
+}
+\closeField
+
+\beginField{MOMENT}
+\fieldDeclaration{public static final MeasurementValue<Double> MOMENT}
+\fieldComment{
+}
+\closeField
+
+\beginField{REMANENCE}
+\fieldDeclaration{public static final MeasurementValue<Double> REMANENCE}
+\fieldComment{
+}
+\closeField
+
+\beginField{RELATIVE\_REMANENCE}
+\fieldDeclaration{public static final MeasurementValue<Double> RELATIVE\_REMANENCE}
+\fieldComment{
+}
+\closeField
+
+\beginField{THETA63}
+\fieldDeclaration{public static final MeasurementValue<Double> THETA63}
+\fieldComment{
+}
+\closeField
+
+\beginField{caption}
+\fieldDeclaration{private String caption}
+\fieldComment{
+}
+\closeField
+
+\beginField{unit}
+\fieldDeclaration{private String unit}
+\fieldComment{
+}
+\closeField
+
+\beginField{description}
+\fieldDeclaration{private String description}
+\fieldComment{
+}
+\closeField
+
+\beginMethod{MeasurementValue(String,String,String)}
+\methodDeclaration{public MeasurementValue(String caption, String unit, String description)}
+\methodComment{
+}
+\methodParam{caption}{}
+\methodParam{unit}{}
+\methodParam{description}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getValue(MeasurementStep)}
+\methodDeclaration{abstract T getValue(MeasurementStep step)}
+\methodComment{
+}
+\methodParam{step}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getCaption()}
+\methodDeclaration{public String getCaption()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getUnit()}
+\methodDeclaration{public String getUnit()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getDescription()}
+\methodDeclaration{public String getDescription()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
 
 
 \beginClass{ProjectEvent}
@@ -138,6 +1252,44 @@
 }
 \closeClass
 
+\beginField{project}
+\fieldDeclaration{private Project project}
+\fieldComment{
+}
+\closeField
+
+\beginField{type}
+\fieldDeclaration{private Type type}
+\fieldComment{
+}
+\closeField
+
+\beginMethod{ProjectEvent(Project,Type)}
+\methodDeclaration{public ProjectEvent(Project project, Type type)}
+\methodComment{
+}
+\methodParam{project}{}
+\methodParam{type}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getProject()}
+\methodDeclaration{public Project getProject()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getType()}
+\methodDeclaration{public Type getType()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
 
 \beginClass{ProjectListener}
 \classPackage{ikayaki}
@@ -147,6 +1299,13 @@
 	Defines a listener for project events.
 }
 \closeClass
+
+\beginMethod{projectUpdated(ProjectEvent)}
+\methodDeclaration{public void projectUpdated(ProjectEvent event)}
+\methodComment{
+}
+\methodParam{event}{}
+\closeMethod
 
 
 \beginClass{MeasurementEvent}
@@ -159,6 +1318,59 @@
 }
 \closeClass
 
+\beginField{project}
+\fieldDeclaration{private Project project}
+\fieldComment{
+}
+\closeField
+
+\beginField{step}
+\fieldDeclaration{private MeasurementStep step}
+\fieldComment{
+}
+\closeField
+
+\beginField{type}
+\fieldDeclaration{private Type type}
+\fieldComment{
+}
+\closeField
+
+\beginMethod{MeasurementEvent(Project,MeasurementStep,Type)}
+\methodDeclaration{public MeasurementEvent(Project project, MeasurementStep step, Type type)}
+\methodComment{
+}
+\methodParam{project}{}
+\methodParam{step}{}
+\methodParam{type}{}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getProject()}
+\methodDeclaration{public Project getProject()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getStep()}
+\methodDeclaration{public MeasurementStep getStep()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{getType()}
+\methodDeclaration{public Type getType()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
 
 \beginClass{MeasurementListener}
 \classPackage{ikayaki}
@@ -168,5 +1380,12 @@
 	Defines a listener for measurement events.
 }
 \closeClass
+
+\beginMethod{measurementUpdated(MeasurementEvent)}
+\methodDeclaration{public void measurementUpdated(MeasurementEvent event)}
+\methodComment{
+}
+\methodParam{event}{}
+\closeMethod
 
 
