@@ -7,6 +7,8 @@ HELPPOJA:
 
 - base url ja output directory -parametrit
 
+- muuta "_plain" muotoon "-plain" tiedostonimien yhtenäistämiseksi
+
 
 KESKIVAIKEITA:
 
