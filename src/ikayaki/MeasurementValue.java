@@ -26,7 +26,7 @@ package ikayaki;
  * Algorithms for calculating values from the measurements. A MeasurementValue object will be passed to the getValue()
  * method of a project to retrieve the desired value.
  *
- * @author
+ * @author Esko Luontola
  */
 public abstract class MeasurementValue <T> {
 
@@ -133,7 +133,12 @@ public abstract class MeasurementValue <T> {
      * @throws NullPointerException if any of the arguments is null.
      */
     public MeasurementValue(String caption, String unit, String description) {
-        return; // TODO
+        if (caption == null || unit == null || description == null) {
+            throw new NullPointerException();
+        }
+        this.caption = caption;
+        this.unit = unit;
+        this.description = description;
     }
 
     /**
@@ -149,21 +154,21 @@ public abstract class MeasurementValue <T> {
      * Returns a short name for the value.
      */
     public String getCaption() {
-        return null; // TODO
+        return caption;
     }
 
     /**
      * Returns the unit of the value.
      */
     public String getUnit() {
-        return null; // TODO
+        return unit;
     }
 
     /**
      * Returns a long description of the value.
      */
     public String getDescription() {
-        return null; // TODO
+        return description;
     }
 }
 

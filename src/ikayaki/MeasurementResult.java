@@ -31,7 +31,7 @@ import javax.vecmath.Vector3d;
  * A set of X, Y and Z values measured by the magnetometer. The raw XYZ values will be rotated in 3D space by using a
  * transformation matrix. The project will set and update the transformation whenever its parameters are changed.
  *
- * @author
+ * @author Esko Luontola
  */
 public class MeasurementResult {
 
@@ -66,17 +66,24 @@ public class MeasurementResult {
         }
         this.type = type;
         rawVector.set(x, y, z);
+        setTransform(null);     // initialize this.vector with an identity matrix
     }
 
     /**
-     * Creates a measurement result from the specified element. This will not apply the transformation matrix.
+     * Creates a measurement result from the specified element. This will not apply the transformation matrix, so the
+     * user must apply it manually.
      *
      * @param element the element from which this result will be created.
-     * @throws NullPointerException     if import is null.
+     * @throws NullPointerException     if element is null.
      * @throws IllegalArgumentException if the element was not in the right format.
      */
     public MeasurementResult(Element element) {
-        return; // TODO
+        if (element == null) {
+            throw new NullPointerException();
+        }
+        setTransform(null);     // initialize this.vector with an identity matrix
+
+        return; // TODO;
     }
 
     /**
@@ -92,62 +99,65 @@ public class MeasurementResult {
      * @param transform the matrix to be applied. If null, will assume identity matrix.
      */
     void setTransform(Matrix3d transform) {
-        return; // TODO
+        type.rotate(rawVector, vector);     // copy rawVector to vector and rotate the values
+        if (transform != null) {
+            transform.transform(vector);    // apply transformation matrix
+        }
     }
 
     /**
      * Returns the type of this result (background or rotation).
      */
     public Type getType() {
-        return null; // TODO
+        return type;
     }
 
     /**
      * Returns the rotated and transformed X coordinate of this result.
      */
     public double getX() {
-        return 0.0; // TODO
+        return vector.x;
     }
 
     /**
      * Returns the rotated and transformed Y coordinate of this result.
      */
     public double getY() {
-        return 0.0; // TODO
+        return vector.y;
     }
 
     /**
      * Returns the rotated and transformed Z coordinate of this result.
      */
     public double getZ() {
-        return 0.0; // TODO
+        return vector.z;
     }
 
     /**
      * Returns the unmodified X coordinate of this result as recieved from the Squid.
      */
     public double getRawX() {
-        return 0.0; // TODO
+        return rawVector.x;
     }
 
     /**
      * Returns the unmodified Y coordinate of this result as recieved from the Squid.
      */
     public double getRawY() {
-        return 0.0; // TODO
+        return rawVector.y;
     }
 
     /**
      * Returns the unmodified Z coordinate of this result as recieved from the Squid.
      */
     public double getRawZ() {
-        return 0.0; // TODO
+        return rawVector.z;
     }
 
     /**
      * The orientation of the sample when it was measured.
      *
-     * @author
+     * @author Esko Luontola
      */
     public enum Type {
         BG("BG"), DEG0("0"), DEG90("90"), DEG180("180"), DEG270("270");
@@ -159,10 +169,17 @@ public class MeasurementResult {
         }
 
         /**
-         * @return "BG", "0", "90", "180" or "270"
+         * Returns "BG", "0", "90", "180" or "270".
          */
         public String getName() {
             return name;
+        }
+
+        /**
+         * Returns the same as getName().
+         */
+        @Override public String toString() {
+            return getName();
         }
 
         /**
@@ -173,7 +190,7 @@ public class MeasurementResult {
          * @return a new object with the rotated values.
          */
         public Vector3d rotate(Vector3d t) {
-            return null; // TODO
+            return rotate(t, null);
         }
 
         /**
@@ -185,7 +202,28 @@ public class MeasurementResult {
          * @return the same as the result parameter, or a new object if it was null.
          */
         public Vector3d rotate(Vector3d t, Vector3d result) {
-            return null; // TODO
+            if (result == null) {
+                result = new Vector3d();
+            }
+            switch (this) {
+            case BG:
+            case DEG0:
+                result.set(t.x, t.y, t.z);
+                break;
+            case DEG90:
+                result.set(-t.y, t.x, t.z);
+                break;
+            case DEG180:
+                result.set(-t.x, -t.y, t.z);
+                break;
+            case DEG270:
+                result.set(t.y, -t.x, t.z);
+                break;
+            default:
+                assert false;
+                break;
+            }
+            return result;
         }
     }
 }

@@ -32,7 +32,7 @@ import java.util.List;
  * <p/>
  * All operations are thread-safe.
  *
- * @author
+ * @author Esko Luontola
  */
 public class MeasurementSequence {
 
