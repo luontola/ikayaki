@@ -136,5 +136,11 @@ be closed.
             }
         }
         new Ikayaki(project);
+
+        // TESTS:
+
+        Settings.instance().updateDirectoryHistory(new File("."));
+        Settings.instance().updateDirectoryHistory(new File(".."));
+        Settings.instance().updateDirectoryHistory(new File("../.."));
     }
 }
