@@ -12,25 +12,44 @@
 \classPatterns{Singleton}
 \closeClass
 
+\beginField{instance}
+\fieldDeclaration{private static final Squid instance}
+\fieldComment{Instance of the Squid interface.}
+\closeField
+
 \beginField{owner}
 \fieldDeclaration{private Project owner}
 \fieldComment{The project that is currently using the Squid, or null if no project is using it.}
 \closeField
 
 \beginField{degausser}
-\fieldDeclaration{private Degausser degausser}
+\fieldDeclaration{private final Degausser degausser}
 \fieldComment{Instance of the degausser interface.}
 \closeField
 
 \beginField{handler}
-\fieldDeclaration{private Handler handler}
+\fieldDeclaration{private final Handler handler}
 \fieldComment{Instance of the handler interface.}
 \closeField
 
 \beginField{magnetometer}
-\fieldDeclaration{private Magnetometer magnetometer}
+\fieldDeclaration{private final Magnetometer magnetometer}
 \fieldComment{Instance of the magnetometer interface.}
 \closeField
+
+\beginMethod{instance()}
+\methodDeclaration{public static synchronized Settings instance()}
+\methodComment{
+	Returns a reference to the Squid. If it has not yet been created, will create one.
+}
+\closeMethod
+
+\beginMethod{Squid()}
+\methodDeclaration{private Squid()}
+\methodComment{
+    Initializes the Squid interface. Creates instances of Degausser, Handler and Magnetometer.
+}
+\closeMethod
 
 \beginMethod{getDegausser()}
 \methodDeclaration{public Degausser getDegausser()}
@@ -44,66 +63,50 @@
 \methodComment{
     Returns an interface for controlling the handler.
 }
-\methodReturn{Handler object.}
 \closeMethod
 
 \beginMethod{getMagnetometer()}
 \methodDeclaration{public Magnetometer getMagnetometer()}
 \methodComment{
-    Gives handler for Magnetometer
+    Returns an interface for controlling the magnetometer.
 }
-\methodReturn{Magnetometer object.}
 \closeMethod
 
 \beginMethod{updateSettings()}
-\methodDeclaration{public void updateSettings()}
+\methodDeclaration{public synchronized void updateSettings()}
 \methodComment{
-    When settings are saved, update all settings in subclasses.
-}
-\closeMethod
-
-\beginMethod{Squid()}
-\methodDeclaration{private Squid()}
-\methodComment{
-    Creates instances of Degausser, Handler and Magnetometer.
-}
-\closeMethod
-
-\beginMethod{instance()}
-\methodDeclaration{public Settings instance()}
-\methodComment{
-    creates Squid, if not yet created, and return it.
+    Reloads all settings and initializes all the device interfaces. This method should be called when changes are made to the device parameters.
 }
 \closeMethod
 
 \beginMethod{isOK()}
-\methodDeclaration{public boolean isOK()}
+\methodDeclaration{public synchronized boolean isOK()}
 \methodComment{
-    checks all subclasses if they are set and online.
+    Checks whether all devices are working correctly.
 }
-\methodReturn{True if ok}
+\methodReturn{true if everything is correct, otherwise false.}
 \closeMethod
 
 \beginMethod{setOwner(Project owner)}
-\methodDeclaration{public boolean setOwner(Project owner)}
+\methodDeclaration{public synchronized boolean setOwner(Project owner)}
 \methodComment{
-    Sets owner to new project, and only this project can call interface. Check if Squid is currently busy.
+	Sets the owner of the Squid. Only one project may have access to the Squid at a time. This method may be called only from the Project class.
 }
-\methodParam{owner}{Project that we want to use Squid now.}
-\methodReturn{True if success, false if Squid was busy.}
+\methodParam{owner}{the project that will have exclusive access to the Squid.}
+\methodReturn{true if successful, false if the existing owner had a running measurement.}
 \closeMethod
 
 \beginMethod{getOwner()}
-\methodDeclaration{public Project getOwner()}
+\methodDeclaration{public synchronized Project getOwner()}
 \methodComment{
-    Returns Project currently using Squid-interface.
+    Returns project that is currently using the Squid.
 }
-\methodReturn{Project, or null if none is using Squid.}
+\methodReturn{the project, or null if none is using the Squid.}
 \closeMethod
 
 \beginClass{Degausser}
 \classComment{
-    Controls Degausser (demagnetizer). Sets it up and offers Interface to control it. Because the data link is implemented in the degausser by a single board computer running a small basic program, the response time of the degausser to commands is slow. Suitable wait loops will have to be used in the external computer code to prevent unreliable communications.
+    Offers an interface for controlling the degausser (demagnetizer). Because the data link is implemented in the degausser by a single board computer running a small basic program, the response time of the degausser to commands is slow. This class will make sure that would calls are not made faster than the device can handle.
 }
 \classPackage{ikayaki.squid}
 \classDeclaration{public class Degausser}
@@ -111,7 +114,7 @@
 \classCreatedBy{Squid}
 \classUses{Settings}
 \classUses{SerialIO}
-\classEvent{On New IO Message }{reads message and puts it in Buffer}
+\classEvent{On new IO message}{reads the message and puts it in a buffer}
 \closeClass
 
 \beginField{messageBuffer}
@@ -153,6 +156,20 @@
 \fieldDeclaration{private char degausserRamp}
 \fieldComment{Z=Zero, T=Tracking, ?=Unknown}
 \closeField
+
+\beginMethod{Degausser()}
+\methodDeclaration{public Degausser()}
+\methodComment{
+    Creates a new degausser interface. Opens connection to degausser COM port (if not open yet) and reads settings from the Setting class.
+}
+\closeMethod
+
+\beginMethod{updateSettings()}
+\methodDeclaration{public void updateSettings()}
+\methodComment{
+    Reloads all settings and initializes the degausser interface. This method should be called when changes are made to the device parameters.
+}
+\closeMethod
 
 \beginMethod{setCoil(char)}
 \methodDeclaration{public void setCoil(char coil)}
@@ -197,7 +214,7 @@
     Performs full sequence to demagnetize with given amplitude.
 }
 \methodParam{amplitude}{amplitude to demag.}
-\methodReturn{If process was sended succesfully, true.}
+\methodReturn{true if process was sended succesfully, otherwise false.}
 \closeMethod
 
 \beginMethod{getStatus()}
@@ -215,24 +232,10 @@
 \methodReturn{True if ok}
 \closeMethod
 
-\beginMethod{updateSettings()}
-\methodDeclaration{public void updateSettings()}
-\methodComment{
-    Squid tells if settings are changed, update all settings.
-}
-\closeMethod
-
-\beginMethod{Degausser()}
-\methodDeclaration{public Degausser()}
-\methodComment{
-    Opens connection to Degausser COM port (if not open yet) and read settings to fields from Setting-class.
-}
-\closeMethod
-
 
 \beginClass{Handler}
 \classComment{
-    Controls Sample Handler and sets it up, offering interface for it.
+    Offers an interface for controlling the sample handler.
 }
 \classPackage{ikayaki.squid}
 \classDeclaration{public class Handler}
@@ -326,10 +329,17 @@ factory for half stepping.}
 \fieldComment{angles are between 0 (0) and 2000 (360)}
 \closeField
 
+\beginMethod{Handler()}
+\methodDeclaration{public Handler()}
+\methodComment{
+    Creates a new handler interface. Opens connection to handler COM port and reads settings from the Setting class.
+}
+\closeMethod
+
 \beginMethod{updateSettings()}
 \methodDeclaration{public void updateSettings()}
 \methodComment{
-    Squid tells if settings are changed, update all settings.
+    Reloads all settings and initializes the handler interface. This method should be called when changes are made to the device parameters.
 }
 \closeMethod
 
@@ -356,9 +366,9 @@ factory for half stepping.}
 \closeMethod
 
 \beginMethod{moveToDegausser()}
-\methodDeclaration{public void moveToHome()}
+\methodDeclaration{public void moveToDegausser()}
 \methodComment{
-    Send handler to Degaus position
+    Send handler to Degauss position
 }
 \closeMethod
 
@@ -382,7 +392,7 @@ factory for half stepping.}
     Value must be between 1 and 16,777,215. return true if good pos-value and moves handler there.
 }
 \methodParam{pos}{Position where handler are sent}
-\methodReturn{if given position was ok, true.}
+\methodReturn{true if given position was ok, otherwise false.}
 \closeMethod
 
 \beginMethod{stop()}
@@ -395,22 +405,17 @@ factory for half stepping.}
 \beginMethod{rotateTo(int)}
 \methodDeclaration{public void rotateTo(int angle)}
 \methodComment{
-    Value is in degrees, remainder of divided by 360. Rotates handler that much.
+    Rotates the handler to the specified angle.
 }
-\methodParam{angle}{Angle in degrees to rotate handler.}
-\closeMethod
-
-\beginMethod{Handler()}
-\methodDeclaration{public Handler()}
-\methodComment{
-    Opens connection to Handler COM port and read settings to fields from Setting-class.
-}
+\methodParam{angle}{the angle in degrees to rotate the handler to.}
 \closeMethod
 
 
 \beginClass{Magnetometer}
 \classComment{
-	Controls Magnetometer and sets it up, offering interface for it. Commands are at most five characters in length including a carriage return <CR>. The syntax is as follows: "<device><command><subcommand><data><CR>"
+	Offers an interface for controlling the magnetometer.
+	
+	Commands are at most five characters in length including a carriage return <CR>. The syntax is as follows: "<device><command><subcommand><data><CR>"
 }
 \classPackage{ikayaki.squid}
 \classDeclaration{public class Magnetometer}
@@ -436,10 +441,17 @@ factory for half stepping.}
 \fieldComment{COM port for communication}
 \closeField
 
+\beginMethod{Magnetometer()}
+\methodDeclaration{public Magnetometer()}
+\methodComment{
+    Creates a new magnetometer interface. Opens connection to Magnetometer COM port (if its not open already) and reads settings from the Setting class.
+}
+\closeMethod
+
 \beginMethod{updateSettings()}
 \methodDeclaration{public void updateSettings()}
 \methodComment{
-    Squid tells if settings are changed, update all settings.
+    Reloads all settings and initializes the magnetometer interface. This method should be called when changes are made to the device parameters.
 }
 \closeMethod
 
@@ -515,11 +527,4 @@ factory for half stepping.}
     checks if connection is ok.
 }
 \methodReturn{True if ok}
-\closeMethod
-
-\beginMethod{Magnetometer()}
-\methodDeclaration{public Magnetometer()}
-\methodComment{
-    Opens connection to Magnetometer COM port (if its not open already) and read settings to fields from Setting-class.
-}
 \closeMethod

@@ -1,6 +1,6 @@
 \beginClass{Settings}
 \classComment{
-    Singleton class for holding all global settings. It also holds saved sequences. All changes are automatically saved to file after a short delay. 
+    Singleton class for holding all global settings. All changes are automatically written to file after a short delay. 
 }
 \classPackage{ikayaki}
 \classDeclaration{public class Settings}
@@ -46,27 +46,29 @@
 
 \beginMethod{instance()}
 \methodDeclaration{public static Settings instance()}
-\methodReturn{Pointer to the global Settings object. If not yet created, will first create a new Settings object.}
+\fieldComment{
+	Returns the global Settings object. If not yet created, will first create one.
+}
 \closeMethod
 
 \beginMethod{Settings()}
 \methodDeclaration{private Settings()}
 \methodComment{
-    Loads settings from configuration files.
+    Creates a new Settings instance. Loads settings from the configuration files.
 }
 \closeMethod
 
 \beginMethod{save()}
 \methodDeclaration{public void save()}
 \methodComment{
-    Saves the settings after a while when no changes have come.
+    Saves the settings after a while when no changes have come. The method call will return immediately and will not wait for the file to be written.
 }
 \closeMethod
 
 \beginMethod{saveNow()}
 \methodDeclaration{public void saveNow()}
 \methodComment{
-    Saves the settings and keeps waiting until its done.
+    Saves the settings and keeps waiting until its done. If no settings have been modified, will do nothing.
 }
 \closeMethod
 
@@ -99,9 +101,9 @@
 \beginMethod{setXXX(Type value)}
 \methodDeclaration{public boolean setXXX(Type value)}
 \methodComment{
-    Generic accessor for all properties. Invoke autosave. Checks if value is ok and sets it.
+    Generic accessor for all properties. Checks whether the value is ok and sets it. Will invoke autosaving.
 }
-\methodReturn{True if value was ok.}
+\methodReturn{true if value was correct, otherwise false.}
 \closeMethod
 
 \beginMethod{getSequences()}
