@@ -88,6 +88,11 @@ public class MeasurementSequence {
             throw new NullPointerException();
         }
 
+        // verify tag name
+        if (!element.getTagName().equals("sequence")) {
+            throw new IllegalArgumentException("Invalid tag name: " + element.getTagName());
+        }
+
         // get name
         String s = element.getAttribute("name");
         if (s.equals("")) {
@@ -97,7 +102,7 @@ public class MeasurementSequence {
         }
 
         // get steps
-        NodeList steps = element.getChildNodes();
+        NodeList steps = element.getElementsByTagName("step");
         for (int i = 0; i < steps.getLength(); i++) {
             Element step = (Element) steps.item(i);
             this.steps.add(new MeasurementStep(step, project));

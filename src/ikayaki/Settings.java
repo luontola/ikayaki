@@ -140,7 +140,7 @@ public class Settings {
                 e.printStackTrace();
             }
             Element root = document.getDocumentElement();
-            NodeList sequenceList = root.getChildNodes();
+            NodeList sequenceList = root.getElementsByTagName("sequence");
             for (int i = 0; i < sequenceList.getLength(); i++) {
                 sequences.add(new MeasurementSequence((Element) sequenceList.item(i)));
             }
@@ -591,6 +591,9 @@ public class Settings {
     }
 
     public synchronized boolean updateProjectHistory(File visited) {
+        if (visited == null) {
+            return false;
+        }
         if (!visited.isAbsolute()) {
             visited = visited.getAbsoluteFile();
         }

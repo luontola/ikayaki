@@ -22,12 +22,19 @@
 
 package ikayaki.gui;
 
+import ikayaki.Project;
+import ikayaki.Settings;
+
 import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 /**
- * Creates Menu items for Menubar and makes action listeners for them
+ * Creates Menu items for Menubar and makes action listeners for them.
  *
  * @author Esko Luontola
  */
@@ -69,6 +76,7 @@ Event I: On exit Clicked - closes program
     private JMenu fileMenu;
     private Action newProject;
     private Action openProject;
+    private JMenu openRecentProjectMenu;
     private JMenu exportProjectMenu;
     private Action exportProjectToDAT;
     private Action exportProjectToDTD;
@@ -94,6 +102,12 @@ Event I: On exit Clicked - closes program
         fileMenu.add(newProject);
         fileMenu.add(openProject);
         {
+            openRecentProjectMenu = new JMenu("Open Recent");
+            openRecentProjectMenu.setMnemonic(KeyEvent.VK_R);
+        }
+        fileMenu.add(openRecentProjectMenu);
+        fileMenu.add(new JSeparator());
+        {
             exportProjectMenu = new JMenu("Export");
             exportProjectMenu.setMnemonic(KeyEvent.VK_E);
             exportProjectMenu.add(exportProjectToDAT);
@@ -115,98 +129,73 @@ Event I: On exit Clicked - closes program
         helpMenu.add(help);
         helpMenu.add(about);
         add(helpMenu);
+
+        // rebuilding of the history list
+        fileMenu.addMenuListener(new MenuListener() {
+            public void menuSelected(MenuEvent e) {
+                openRecentProjectMenu.removeAll();
+                File[] files = Settings.instance().getProjectHistory();
+                if (files.length == 0 || MainMenuBar.this.main.getProject().getState() != Project.State.IDLE) {
+                    openRecentProjectMenu.setEnabled(false);
+                } else {
+                    openRecentProjectMenu.setEnabled(true);
+                    for (final File file : files) {
+                        JMenuItem item = new JMenuItem(file.getAbsolutePath());
+                        item.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                openProject(file);
+                            }
+                        });
+                        openRecentProjectMenu.add(item);
+                    }
+                }
+            }
+
+            public void menuDeselected(MenuEvent e) {
+            }
+
+            public void menuCanceled(MenuEvent e) {
+            }
+        });
     }
 
+    /**
+     * Initializes the private action fields of the class.
+     */
     private void initialize() {
         // TODO: take Actions from other classes (through MainViewPanel)
-        
-        /* FILE MENU ITEMS */
-        newProject = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO
-            }
-        };
-        newProject.putValue(Action.NAME, "New...");
-        newProject.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
 
-        openProject = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO
-            }
-        };
-        openProject.putValue(Action.NAME, "Open...");
-        openProject.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_O);
+        /* File Menu */
+        newProject = main.getNewProjectAction();
+        openProject = main.getOpenProjectAction();
+        exportProjectToDAT = main.getExportProjectToDATAction();
+        exportProjectToDTD = main.getExportProjectToDTDAction();
+        exportProjectToSRM = main.getExportProjectToSRMAction();
+        exit = main.getExitAction();
 
-        // File > Export Project menu items
-        exportProjectToDAT = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO
-            }
-        };
-        exportProjectToDAT.putValue(Action.NAME, "DAT File...");
-        exportProjectToDAT.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
+        /* Options Menu */
+        configuration = main.getConfigurationAction();
 
-        exportProjectToDTD = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO
-            }
-        };
-        exportProjectToDTD.putValue(Action.NAME, "DTD File...");
-        exportProjectToDTD.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_T);
-
-        exportProjectToSRM = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO
-            }
-        };
-        exportProjectToSRM.putValue(Action.NAME, "SRM File...");
-        exportProjectToSRM.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
-
-        exit = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO
-            }
-        };
-        exit.putValue(Action.NAME, "Exit");
-        exit.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_X);
-
-        /* OPTIONS MENU ITEMS */
-        configuration = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                SettingsDialog.showSettingsDialog(main.getParentFrame(), "Configuration");
-            }
-        };
-        configuration.putValue(Action.NAME, "Configuration");
-        configuration.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
-
-        /* HELP MENU ITEMS */
-        help = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO
-            }
-        };
-        help.putValue(Action.NAME, "Help Topics");
-        help.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_H);
-
-        about = new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                // TODO
-            }
-        };
-        about.putValue(Action.NAME, "About");
-        about.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
+        /* Help Menu */
+        help = main.getHelpAction();
+        about = main.getAboutAction();
     }
 
-    private class ItemAction extends AbstractAction {
-        private String s;
-
-        public ItemAction(String s) {
-            this.s = s;
-            putValue(Action.NAME, "" + s);
+    /**
+     * Loads a project file and tries to set it as the active project.
+     *
+     * @param file the project file to be loaded.
+     * @throws NullPointerException if file is null.
+     */
+    public void openProject(File file) {
+        if (file == null) {
+            throw new NullPointerException();
         }
-
-        public void actionPerformed(ActionEvent e) {
-
+        Project project = Project.loadProject(file);
+        if (project != null) {
+            main.setProject(project);
+        } else {
+            JOptionPane.showMessageDialog(this, "Unable to open the file " + file, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

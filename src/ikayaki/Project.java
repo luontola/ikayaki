@@ -328,9 +328,11 @@ project listeners.
         synchronized (project) {
             // save the project to file and remove it from cache
             if (project.getState() != IDLE) {
+                System.err.println("closeProject failed: the project is not idle");
                 return false;
             }
             if (!project.setSquid(null) || !project.saveNow()) {
+                System.err.println("closeProject failed: unable to detatch the squid or save the file");
                 return false;
             }
             projectCache.remove(project.getFile());
@@ -658,6 +660,15 @@ project listeners.
      */
     public synchronized State getState() {
         return state;
+    }
+
+    /**
+     * Sets the state of this project. Fires state change events.
+     * @param state the new state to change to.
+     */
+    private void setState(State state) {
+        this.state = state;
+        fireProjectEvent(STATE_CHANGED);
     }
 
     /**
@@ -1279,7 +1290,7 @@ project listeners.
         if (type == CALIBRATION) {
             return false;
         } else if (type == AF || type == THELLIER || type == THERMAL) {
-            if (state == IDLE) {
+            if (getState() == IDLE) {
                 return true;
             } else {
                 return false;
@@ -1297,7 +1308,7 @@ project listeners.
         if (type == CALIBRATION || type == THELLIER || type == THERMAL) {
             return false;
         } else if (type == AF) {
-            if (state == IDLE) {
+            if (getState() == IDLE) {
                 return true;
             } else {
                 return false;
@@ -1313,7 +1324,7 @@ project listeners.
      */
     public synchronized boolean isSingleStepEnabled() {
         if (type == CALIBRATION || type == AF || type == THELLIER || type == THERMAL) {
-            if (state == IDLE) {
+            if (getState() == IDLE) {
                 return true;
             } else {
                 return false;
@@ -1331,7 +1342,7 @@ project listeners.
         if (type == CALIBRATION || type == THELLIER || type == THERMAL) {
             return false;
         } else if (type == AF) {
-            if (state == MEASURING) {
+            if (getState() == MEASURING) {
                 return true;
             } else {
                 return false;
@@ -1346,7 +1357,7 @@ project listeners.
      * project.
      */
     public synchronized boolean isAbortEnabled() {
-        if (state == MEASURING || state == PAUSED) {
+        if (getState() == MEASURING || getState() == PAUSED) {
             return true;
         } else {
             return false;
@@ -1362,79 +1373,94 @@ project listeners.
      * @return true if the measurement was started, otherwise false.
      */
     public synchronized boolean doAutoStep() {
-        if (state == IDLE) {
+        if (getState() == IDLE) {
             if (isAutoStepEnabled()) {
-                state = MEASURING;
+                setState(MEASURING);
             } else if (isSingleStepEnabled()) {
-                state = PAUSED;
+                setState(PAUSED);
             } else {
                 return false;
             }
 
             new Thread() {
                 @Override public void run() {
+                    System.out.println("Measurement started");
                     for (int i = getCompletedSteps(); i < getSteps(); i++) {
                         System.out.println("Measuring step " + i + "...");
                         try {
                             Thread.sleep(500);
-                            if (state == ABORTED) {
-                                state = IDLE;
+                            if (Project.this.getState() == ABORTED) {
+                                System.out.println("Measurement aborted");
+                                setState(IDLE);
                                 return;
                             }
                             getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.BG,
                                     Math.random(), Math.random(), Math.random()));
+                            System.out.println("Result added");
                             Thread.sleep(500);
-                            if (state == ABORTED) {
-                                state = IDLE;
+                            if (Project.this.getState() == ABORTED) {
+                                System.out.println("Measurement aborted");
+                                setState(IDLE);
                                 getStep(i).setDone();
                                 return;
                             }
                             getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.DEG0,
                                     Math.random(), Math.random(), Math.random()));
+                            System.out.println("Result added");
                             Thread.sleep(500);
-                            if (state == ABORTED) {
-                                state = IDLE;
+                            if (Project.this.getState() == ABORTED) {
+                                System.out.println("Measurement aborted");
+                                setState(IDLE);
                                 getStep(i).setDone();
                                 return;
                             }
                             getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.DEG90,
                                     Math.random(), Math.random(), Math.random()));
+                            System.out.println("Result added");
                             Thread.sleep(500);
-                            if (state == ABORTED) {
-                                state = IDLE;
+                            if (Project.this.getState() == ABORTED) {
+                                System.out.println("Measurement aborted");
+                                setState(IDLE);
                                 getStep(i).setDone();
                                 return;
                             }
                             getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.DEG180,
                                     Math.random(), Math.random(), Math.random()));
+                            System.out.println("Result added");
                             Thread.sleep(500);
-                            if (state == ABORTED) {
-                                state = IDLE;
+                            if (Project.this.getState() == ABORTED) {
+                                System.out.println("Measurement aborted");
+                                setState(IDLE);
                                 getStep(i).setDone();
                                 return;
                             }
                             getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.DEG270,
                                     Math.random(), Math.random(), Math.random()));
+                            System.out.println("Result added");
                             Thread.sleep(500);
-                            if (state == ABORTED) {
-                                state = IDLE;
+                            if (Project.this.getState() == ABORTED) {
+                                System.out.println("Measurement aborted");
+                                setState(IDLE);
                                 getStep(i).setDone();
                                 return;
                             }
                             getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.BG,
                                     Math.random(), Math.random(), Math.random()));
+                            System.out.println("Result added");
                             Thread.sleep(500);
                             getStep(i).setDone();
                         } catch (InterruptedException e) {
                         }
 
-                        if (state == PAUSED) {
-                            state = IDLE;
+                        if (Project.this.getState() == PAUSED) {
+                            setState(IDLE);
                             return;
                         }
 
                         // TODO
                     }
+                    System.out.println("Measurement ended");
+                    setState(IDLE);
                 }
             }.start();
             return true;
@@ -1454,6 +1480,12 @@ project listeners.
         if (!isSingleStepEnabled()) {
             return false;
         }
+
+        // if there are no unmeasured steps, add one for a measurement without demagnetization
+        if (getSteps() == getCompletedSteps()) {
+            addStep(new MeasurementStep(this));
+        }
+
         if (doAutoStep()) {
             return doPause();
         } else {
@@ -1463,22 +1495,23 @@ project listeners.
 
     /**
      * Pauses the currently running measurement. A paused measurement will halt after it finishes the current
-     * measurement step. Will do nothing if isPauseEnabled() is false.
+     * measurement step. <s>Will do nothing if isPauseEnabled() is false.</s> Will work even if isPauseEnabled() is
+     * false.
      * <p/>
      * This method will notify the measurement thread to pause, but will not wait for it to finish.
      *
      * @return true if the measurement will pause, otherwise false.
      */
     public synchronized boolean doPause() {
-        if (!isPauseEnabled()) {
+//        if (!isPauseEnabled()) {
+//            return false; // will cause problems when singlestepping non-AF projects
+//        }
+        if (getState() == IDLE) {
             return false;
-        }
-        if (state == IDLE) {
-            return false;
-        } else if (state == MEASURING) {
-            state = PAUSED;
+        } else if (getState() == MEASURING) {
+            setState(PAUSED);
             return true;
-        } else if (state == PAUSED) {
+        } else if (getState() == PAUSED) {
             return true;
         } else {
             return false;
@@ -1497,10 +1530,10 @@ project listeners.
         if (!isAbortEnabled()) {
             return false;
         }
-        if (state == IDLE) {
+        if (getState() == IDLE) {
             return false;
         } else {
-            state = ABORTED;
+            setState(ABORTED);
             return true;
         }
     }

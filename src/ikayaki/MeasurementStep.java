@@ -174,7 +174,7 @@ public class MeasurementStep {
         }
 
         // get results
-        NodeList results = element.getChildNodes();
+        NodeList results = element.getElementsByTagName("result");
         for (int i = 0; i < results.getLength(); i++) {
             Element result = (Element) results.item(i);
             this.results.add(new MeasurementResult(result));

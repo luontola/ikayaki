@@ -31,8 +31,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 
@@ -61,19 +60,30 @@ public class MainViewPanel extends ProjectComponent {
      */
     private Project measuringProject;
 
-    /* GUI components */
+    /* GUI Components */
     private MainMenuBar menuBar;
     private MainStatusBar statusBar;
 
     private JSplitPane splitPane;
-    private ProjectExplorerPanel projectExplorer;
-    private CalibrationPanel calibration;
+    private ProjectExplorerPanel projectExplorerPanel;
+    private CalibrationPanel calibrationPanel;
 
-    private ProjectInformationPanel projectInformation;
-    private MeasurementSequencePanel measurementSequence;
-    private MeasurementControlsPanel measurementControls;
-    private MeasurementDetailsPanel measurementDetails;
-    private MeasurementGraphsPanel measurementGraphs;
+    private ProjectInformationPanel projectInformationPanel;
+    private MeasurementSequencePanel measurementSequencePanel;
+    private MeasurementControlsPanel measurementControlsPanel;
+    private MeasurementDetailsPanel measurementDetailsPanel;
+    private MeasurementGraphsPanel measurementGraphsPanel;
+
+    /* Swing Actions */
+    private Action newProjectAction;
+    private Action openProjectAction;
+    private Action exportProjectToDATAction;
+    private Action exportProjectToDTDAction;
+    private Action exportProjectToSRMAction;
+    private Action exitAction;
+    private Action configurationAction;
+    private Action helpAction;
+    private Action aboutAction;
 
     /**
      * Loads default view and creates all components and panels. Splitpanel between Calibration, Explorer, Information
@@ -90,6 +100,7 @@ public class MainViewPanel extends ProjectComponent {
                 project = Project.loadProject(projectHistory[0]);
             }
         }
+        setProject(project);    // the project must be set before doing the layout
 
         /* Init SQUID interface */
         try {
@@ -98,20 +109,6 @@ public class MainViewPanel extends ProjectComponent {
             // TODO: what should be done now? give error message?
             e.printStackTrace();
         }
-
-        /* Init GUI components */
-        menuBar = new MainMenuBar(this);
-        statusBar = new MainStatusBar();
-
-        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        projectExplorer = new ProjectExplorerPanel(this, project);
-        calibration = new CalibrationPanel(this);
-
-        projectInformation = new ProjectInformationPanel();
-        measurementSequence = new MeasurementSequencePanel();
-        measurementControls = new MeasurementControlsPanel();
-        measurementDetails = new MeasurementDetailsPanel();
-        measurementGraphs = new MeasurementGraphsPanel();
 
         /* Lay out GUI components */
         final JPanel left = new JPanel(new GridBagLayout());
@@ -124,48 +121,42 @@ public class MainViewPanel extends ProjectComponent {
         gc.gridy = 0;
         gc.weightx = 1.0;
         gc.weighty = 0.0;
-        calibration.setBorder(BorderFactory.createTitledBorder("Calibration"));
-        left.add(calibration, gc);
+        left.add(getCalibrationPanel(), gc);
         gc.gridx = 0;
         gc.gridy = 1;
         gc.weightx = 1.0;
         gc.weighty = 1.0;
-        projectExplorer.setBorder(BorderFactory.createTitledBorder("Project Explorer"));
-        left.add(projectExplorer, gc);
+        left.add(getProjectExplorerPanel(), gc);
         gc.gridx = 0;
         gc.gridy = 2;
         gc.weightx = 1.0;
         gc.weighty = 0.0;
-        projectInformation.setBorder(BorderFactory.createTitledBorder("Project Information"));
-        left.add(projectInformation, gc);
+        left.add(getProjectInformationPanel(), gc);
 
         // build right tab
         gc.gridx = 0;
         gc.gridy = 0;
         gc.weightx = 1.0;
         gc.weighty = 1.0;
-        measurementSequence.setBorder(BorderFactory.createTitledBorder("Sequence"));
-        right.add(measurementSequence, gc);
+        right.add(getMeasurementSequencePanel(), gc);
         gc.gridx = 1;
         gc.gridy = 0;
         gc.weightx = 0.0;
         gc.weighty = 1.0;
-        measurementControls.setBorder(BorderFactory.createTitledBorder("Controls"));
-        right.add(measurementControls, gc);
+        right.add(getMeasurementControlsPanel(), gc);
         gc.gridx = 0;
         gc.gridy = 1;
         gc.weightx = 1.0;
         gc.weighty = 0.0;
-        measurementDetails.setBorder(BorderFactory.createTitledBorder("Details"));
-        right.add(measurementDetails, gc);
+        right.add(getMeasurementDetailsPanel(), gc);
         gc.gridx = 1;
         gc.gridy = 1;
         gc.weightx = 0.0;
         gc.weighty = 0.0;
-        measurementGraphs.setBorder(BorderFactory.createTitledBorder("Graphs"));
-        right.add(measurementGraphs, gc);
+        right.add(getMeasurementGraphsPanel(), gc);
 
         // configure tabs
+        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setLeftComponent(left);
         splitPane.setRightComponent(right);
         //splitPane.setOneTouchExpandable(true);
@@ -183,6 +174,7 @@ public class MainViewPanel extends ProjectComponent {
         left.setMinimumSize(d);
 
         // button for hiding the tabs
+        // TODO: make this as an Action
         Box tabControls = new Box(BoxLayout.Y_AXIS);
         final Icon tabButtonDown = new ImageIcon(ClassLoader.getSystemResource("resources/projectExplorerTabDown.png"));
         final Icon tabButtonUp = new ImageIcon(ClassLoader.getSystemResource("resources/projectExplorerTabUp.png"));
@@ -213,16 +205,8 @@ public class MainViewPanel extends ProjectComponent {
         add(tabControls, "West");
         setBackground(new Color(247, 243, 239));
 
-        /* Finalize */
-        setProject(project);
-    }
-
-    public MainMenuBar getMenuBar() {
-        return menuBar;
-    }
-
-    public MainStatusBar getStatusBar() {
-        return statusBar;
+//        /* Finalize */
+//        setProject(project);
     }
 
     /**
@@ -235,7 +219,7 @@ public class MainViewPanel extends ProjectComponent {
 
         // close the previous project if it has no measurements running
         // (it will be closed by projectUpdated() if there is a measurement running)
-        if (this.project != null && this.project != measuringProject) {
+        if (this.project != null && this.project != measuringProject && this.project != project) {
             if (Project.closeProject(this.project)) {
                 this.project = null;
             } else {
@@ -252,29 +236,26 @@ public class MainViewPanel extends ProjectComponent {
 
             project.addProjectListener(this);
             project.setSquid(squid);        // will do nothing if another project has a measurement running
-            projectInformation.setBorder(
+            getProjectInformationPanel().setBorder(
                     BorderFactory.createTitledBorder(project.getName() + " (" + project.getType() + " Project)"));
         } else {
-            projectInformation.setBorder(BorderFactory.createTitledBorder("Project Information"));
+            getProjectInformationPanel().setBorder(BorderFactory.createTitledBorder("Project Information"));
         }
         this.project = project;
-        projectExplorer.setProject(project);
-        calibration.setProject(project);
-        projectInformation.setProject(project);
-        measurementSequence.setProject(project);
-        measurementControls.setProject(project);
-        measurementDetails.setProject(project);
-        measurementGraphs.setProject(project);
+        getProjectExplorerPanel().setProject(project);
+        getCalibrationPanel().setProject(project);
+        getProjectInformationPanel().setProject(project);
+        getMeasurementSequencePanel().setProject(project);
+        getMeasurementControlsPanel().setProject(project);
+        getMeasurementDetailsPanel().setProject(project);
+        getMeasurementGraphsPanel().setProject(project);
     }
 
     /**
-     * Deprecates a method from the super class.
-     *
-     * @return null
-     * @deprecated access the project variable directly.
+     * Returns the active project, or null if no project is active.
      */
-    @Deprecated @Override public Project getProject() {
-        return null;
+    @Override public Project getProject() {
+        return project;
     }
 
     /**
@@ -296,6 +277,9 @@ public class MainViewPanel extends ProjectComponent {
                                 "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+                } else {
+                    // measuringProject is no more measuring, but it is still the active project
+                    measuringProject = null;
                 }
             }
 
@@ -312,19 +296,222 @@ public class MainViewPanel extends ProjectComponent {
      */
     public void exitProgram() {
         if (measuringProject != null) {
-            System.err.println("Can not exit: a measurement is running");
+            JOptionPane.showMessageDialog(this,
+                    "Can not exit. A measurement is running.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+//            System.err.println("Can not exit: a measurement is running");
             return;
         }
         if (!Settings.instance().saveNow()) {
-            System.err.println("Can not exit: unable to save settings");
+            JOptionPane.showMessageDialog(this,
+                    "Can not exit. Unable to save the settings.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+//            System.err.println("Can not exit: unable to save settings");
             return;
         }
         if (project != null) {
             if (!Project.closeProject(project)) {
-                System.err.println("Can not exit: unable to close project " + project.getName());
+                JOptionPane.showMessageDialog(this,
+                        "Can not exit. Unable to close the project " + project.getName() + ".",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+//                System.err.println("Can not exit: unable to close project " + project.getName());
                 return;
             }
         }
         System.exit(0);
+    }
+
+    /* Getters for GUI Components */
+
+    public MainMenuBar getMenuBar() {
+        if (menuBar == null) {
+            menuBar = new MainMenuBar(this);
+        }
+        return menuBar;
+    }
+
+    public MainStatusBar getStatusBar() {
+        if (statusBar == null) {
+            statusBar = new MainStatusBar();
+        }
+        return statusBar;
+    }
+
+    public MeasurementGraphsPanel getMeasurementGraphsPanel() {
+        if (measurementGraphsPanel == null) {
+            measurementGraphsPanel = new MeasurementGraphsPanel();
+            measurementGraphsPanel.setBorder(BorderFactory.createTitledBorder("Graphs"));
+        }
+        return measurementGraphsPanel;
+    }
+
+    public MeasurementDetailsPanel getMeasurementDetailsPanel() {
+        if (measurementDetailsPanel == null) {
+            measurementDetailsPanel = new MeasurementDetailsPanel();
+            measurementDetailsPanel.setBorder(BorderFactory.createTitledBorder("Details"));
+        }
+        return measurementDetailsPanel;
+    }
+
+    public MeasurementControlsPanel getMeasurementControlsPanel() {
+        if (measurementControlsPanel == null) {
+            measurementControlsPanel = new MeasurementControlsPanel();
+            measurementControlsPanel.setBorder(BorderFactory.createTitledBorder("Controls"));
+        }
+        return measurementControlsPanel;
+    }
+
+    public MeasurementSequencePanel getMeasurementSequencePanel() {
+        if (measurementSequencePanel == null) {
+            measurementSequencePanel = new MeasurementSequencePanel();
+            measurementSequencePanel.setBorder(BorderFactory.createTitledBorder("Sequence"));
+        }
+        return measurementSequencePanel;
+    }
+
+    public ProjectInformationPanel getProjectInformationPanel() {
+        if (projectInformationPanel == null) {
+            projectInformationPanel = new ProjectInformationPanel();
+            projectInformationPanel.setBorder(BorderFactory.createTitledBorder("Project Information"));
+        }
+        return projectInformationPanel;
+    }
+
+    public CalibrationPanel getCalibrationPanel() {
+        if (calibrationPanel == null) {
+            calibrationPanel = new CalibrationPanel(this);
+            calibrationPanel.setBorder(BorderFactory.createTitledBorder("Calibration"));
+        }
+        return calibrationPanel;
+    }
+
+    public ProjectExplorerPanel getProjectExplorerPanel() {
+        if (projectExplorerPanel == null) {
+            projectExplorerPanel = new ProjectExplorerPanel(this, getProject());
+            projectExplorerPanel.setBorder(BorderFactory.createTitledBorder("Project Explorer"));
+        }
+        return projectExplorerPanel;
+    }
+
+    /* Getters for Swing Actions */
+
+    public Action getNewProjectAction() {
+        if (newProjectAction == null) {
+            newProjectAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    // TODO
+                }
+            };
+            newProjectAction.putValue(Action.NAME, "New...");
+            newProjectAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
+
+        }
+        return newProjectAction;
+    }
+
+    public Action getOpenProjectAction() {
+        if (openProjectAction == null) {
+            openProjectAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    // TODO
+                }
+            };
+            openProjectAction.putValue(Action.NAME, "Open...");
+            openProjectAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_O);
+
+        }
+        return openProjectAction;
+    }
+
+    public Action getExportProjectToDATAction() {
+        if (exportProjectToDATAction == null) {
+            exportProjectToDATAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    // TODO
+                }
+            };
+            exportProjectToDATAction.putValue(Action.NAME, "DAT File...");
+            exportProjectToDATAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
+        }
+        return exportProjectToDATAction;
+    }
+
+    public Action getExportProjectToDTDAction() {
+        if (exportProjectToDTDAction == null) {
+            exportProjectToDTDAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    // TODO
+                }
+            };
+            exportProjectToDTDAction.putValue(Action.NAME, "DTD File...");
+            exportProjectToDTDAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_T);
+        }
+        return exportProjectToDTDAction;
+    }
+
+    public Action getExportProjectToSRMAction() {
+        if (exportProjectToSRMAction == null) {
+            exportProjectToSRMAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    // TODO
+                }
+            };
+            exportProjectToSRMAction.putValue(Action.NAME, "SRM File...");
+            exportProjectToSRMAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
+
+        }
+        return exportProjectToSRMAction;
+    }
+
+    public Action getExitAction() {
+        if (exitAction == null) {
+            exitAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    exitProgram();
+                }
+            };
+            exitAction.putValue(Action.NAME, "Exit");
+            exitAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_X);
+        }
+        return exitAction;
+    }
+
+    public Action getConfigurationAction() {
+        if (configurationAction == null) {
+            configurationAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    SettingsDialog.showSettingsDialog(getParentFrame(), "Configuration");
+                }
+            };
+            configurationAction.putValue(Action.NAME, "Configuration");
+            configurationAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
+        }
+        return configurationAction;
+    }
+
+    public Action getHelpAction() {
+        if (helpAction == null) {
+            helpAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    // TODO
+                }
+            };
+            helpAction.putValue(Action.NAME, "Help Topics");
+            helpAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_H);
+        }
+        return helpAction;
+    }
+
+    public Action getAboutAction() {
+        if (aboutAction == null) {
+            aboutAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    // TODO
+                }
+            };
+            aboutAction.putValue(Action.NAME, "About");
+            aboutAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
+        }
+        return aboutAction;
     }
 }
