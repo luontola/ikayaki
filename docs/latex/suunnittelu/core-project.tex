@@ -20,9 +20,9 @@
 \classUses{MeasurementEvent}
 \classPatterns{Facade}
 \classEvent{On property change}{Autosaving will be invoked and the project written to file after a short delay.}
-\classEvent{On measurement started/ended/paused/aborted}{ProjectEvent will be fired to all project listeners.}
+\classEvent{On measurement started/ended/paused/aborted}{ProjectEvent about the state change will be fired to all project listeners.}
 \classEvent{On measurement subphase started/completed}{MeasurementEvent will be fired to all measurement listeners.}
-\classEvent{On declination/inclination/volume changed}{The updated transformation matrix will be applied to all measurements and a ProjectEvent will be fired to all project listeners.}
+\classEvent{On strike/dip/volume etc. changed}{The updated transformation matrix will be applied to all measurements and a ProjectEvent about the data change will be fired to all project listeners.}
 \closeClass
 
 \beginToc
