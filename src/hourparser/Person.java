@@ -58,6 +58,7 @@ public class Person {
 
     /**
      * Returns the entries the person has made during a time period.
+     * The time period will be <i>start <= date < end</i>.
      *
      * @param start The beginning of the time period
      * @param end   The end of the time period
@@ -66,7 +67,7 @@ public class Person {
     public Entry[] getEntries(Date start, Date end) {
         Vector<Entry> result = new Vector<Entry>();
         for (Entry e : records) {
-            if (e.getDate().after(start) && e.getDate().before(end)) {
+            if ((e.getDate().after(start) || e.getDate().equals(start)) && e.getDate().before(end)) {
                 result.add(e);
             }
         }

@@ -3,7 +3,6 @@ package hourparser;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
-import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -71,23 +70,9 @@ public class HourParser {
             return;
         }
 
-        // find out the beginning and end of the statistics
-        Date start = persons.get(0).getStart();
-        Date end = persons.get(0).getEnd();
-        for (Person p : persons) {
-            Date date;
-            date = p.getStart();
-            if (date.before(start)) {
-                start = date;
-            }
-            date = p.getEnd();
-            if (date.after(end)) {
-                end = date;
-            }
-        }
-
+        // make reports
+        Report report = new Report(persons);
         
-
         // TODO
     }
 
@@ -100,7 +85,7 @@ public class HourParser {
         System.out.println("  --name-prefix=STRING    prefix for the output file names (default: " + getNamePrefix() + ")");
         System.out.println("  --name-suffix=STRING    suffix for the output file names (default: " + getNameSuffix() + ")");
         System.out.println("  --date-format=FORMAT    format of the dates in input files (default: " + getDateFormat() + ")");
-        System.out.println("  --locale=LOCALE         locale for reading the hours (default: " + getLocale() + ")");
+        System.out.println("  --locale=LOCALE         sets the system locale (default: " + getLocale() + ")");
         System.out.println("  --help                  display this help and exit");
         System.out.println("  --version               output version information and exit");
     }
