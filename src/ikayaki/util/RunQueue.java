@@ -137,7 +137,7 @@ public class RunQueue {
 
     /**
      * Keeps on checking the RunQueue.queue to see if there are Runnables to be executed. If there is one, execute it
-     * and proceed to the next one. If an uncaught Exception is thrown during the execution, prints an error message and
+     * and proceed to the next one. If an uncaught Throwable is thrown during the execution, prints an error message and
      * stack trace to stderr. If the queue is empty, this thread will set RunDelayed.workerThread to null and terminate
      * itself.
      */
@@ -156,9 +156,10 @@ public class RunQueue {
                 try {
                     delayed = queue.take();
                     delayed.getRunnable().run();
-                } catch (Exception e) {
-                    System.err.println("Exception thrown by " + delayed.getRunnable());
-                    e.printStackTrace();
+                } catch (Throwable t) {
+                    System.err.println(t.getClass().getSimpleName() + " thrown by "
+                            + delayed.getRunnable().getClass().getName());
+                    t.printStackTrace();
                 }
             }
         }
