@@ -79,6 +79,8 @@ public class MainViewPanel extends ProjectComponent {
      */
     public MainViewPanel(Project project) {
 
+        // TODO: if project == null, load the last open project from settings
+
         /* Init SQUID interface */
         squid = Squid.instance();
 
@@ -224,6 +226,7 @@ public class MainViewPanel extends ProjectComponent {
 
         // register the new project
         if (project != null) {
+            // TODO: save this project's path to settings as the last open project
             project.addProjectListener(this);
             project.setSquid(squid);        // will do nothing if another project has a measurement running
             projectInformation.setBorder(
