@@ -26,7 +26,7 @@ import java.util.EventObject;
 /**
  * ProjectEvent is used to notify others about the state change of a project.
  *
- * @author
+ * @author Esko Luontola
  */
 public class ProjectEvent extends EventObject {
 
@@ -49,21 +49,25 @@ public class ProjectEvent extends EventObject {
      */
     public ProjectEvent(Project project, Type type) {
         super(project);
-        return; // TODO
+        if (project == null || type == null) {
+            throw new NullPointerException();
+        }
+        this.project = project;
+        this.type = type;
     }
 
     /**
      * Returns the project that sent this event.
      */
     public Project getProject() {
-        return null; // TODO
+        return project;
     }
 
     /**
      * Returns the type of this event.
      */
     public Type getType() {
-        return null; // TODO
+        return type;
     }
 
     /**

@@ -36,6 +36,11 @@ project files and settings. Closes the program, or notifies the user if the prog
 be closed.
 */
 
+    /* Application information */
+    public static final String APP_NAME = "Ikayaki";
+    public static final String APP_VERSION = "0.1 CVS";
+    public static final String APP_HOME_PAGE = "http://www.cs.helsinki.fi/group/squid/";
+
     /**
      * Starts the program with the provided command line parameters. If the location of a project file is given as a
      * parameter, the program will try to load it.

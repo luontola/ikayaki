@@ -27,7 +27,7 @@ import java.util.EventObject;
 /**
  * MeasurementEvent is used to notify listeners about the stages of an ongoing measurement.
  *
- * @author
+ * @author Esko Luontola
  */
 public class MeasurementEvent extends EventObject {
 
@@ -56,28 +56,33 @@ public class MeasurementEvent extends EventObject {
      */
     public MeasurementEvent(Project project, MeasurementStep step, Type type) {
         super(project);
-        return; // TODO
+        if (project == null || step == null || type == null) {
+            throw new NullPointerException();
+        }
+        this.project = project;
+        this.step = step;
+        this.type = type;
     }
 
     /**
      * Returns the project whose measurement sent this event.
      */
     public Project getProject() {
-        return null; // TODO
+        return project;
     }
 
     /**
      * Returns the measurement that sent this event.
      */
     public MeasurementStep getStep() {
-        return null; // TODO
+        return step;
     }
 
     /**
      * Returns the type of event this is.
      */
     public Type getType() {
-        return null; // TODO
+        return type;
     }
 
     /**

@@ -27,7 +27,7 @@ import java.util.EventListener;
 /**
  * Defines a listener for measurement events.
  *
- * @author
+ * @author Esko Luontola
  */
 public interface MeasurementListener extends EventListener {
 

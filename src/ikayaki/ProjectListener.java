@@ -27,7 +27,7 @@ import java.util.EventListener;
 /**
  * Defines a listener for project events.
  *
- * @author
+ * @author Esko Luontola
  */
 public interface ProjectListener extends EventListener {
 

@@ -23,18 +23,31 @@
 package ikayaki;
 
 import ikayaki.util.LastExecutor;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
-import java.io.File;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Properties;
 
 /**
  * Singleton class for holding all global settings. All changes are automatically written to file after a short delay.
  *
- * @author
+ * @author Esko Luontola
  */
 public class Settings {
+
+    /**
+     * Singleton instance of the Settings object.
+     */
+    private static Settings instance;
 
     /**
      * All properties in a map.
@@ -44,12 +57,12 @@ public class Settings {
     /**
      * File where the properties will be saved in XML format
      */
-    private File propertiesFile;
+    private File propertiesFile = new File("ikayaki.config");
 
     /**
      * true if the properties have been modified, otherwise false
      */
-    private boolean propertiesModified;
+    private boolean propertiesModified = false;
 
     /**
      * All saved sequences
@@ -59,45 +72,111 @@ public class Settings {
     /**
      * File where the sequences will be saved in XML format
      */
-    private File sequencesFile;
+    private File sequencesFile = new File("ikayaki.sequences");
 
     /**
      * true if the sequences have been modified, otherwise false
      */
-    private boolean sequencesModified;
+    private boolean sequencesModified = false;
 
     /**
      * Queue for scheduling save operations after properties/sequences have been changed
      */
-    private LastExecutor autosaveQueue;
+    private LastExecutor autosaveQueue = new LastExecutor(500, true);
+
+    /**
+     * Operation that will save the properties/sequences.
+     */
+    private Runnable autosaveRunnable = new Runnable() {
+        public void run() {
+            saveNow();
+        }
+    };
 
     /**
      * Returns the global Settings object. If not yet created, will first create one.
      */
     public static Settings instance() {
-        return null; // TODO
+        if (instance == null) {
+            instance = new Settings();
+        }
+        return instance;
     }
 
     /**
      * Creates a new Settings instance. Loads settings from the configuration files.
      */
     private Settings() {
-        return; // TODO
+        // load saved properties
+        if (propertiesFile.exists()) {
+            try {
+                InputStream in = new BufferedInputStream(new FileInputStream(propertiesFile));
+                properties.loadFromXML(in);
+                in.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (InvalidPropertiesFormatException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // load saved sequences
+        if (sequencesFile.exists()) {
+            Document document;
+            try {
+                DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                document = builder.parse(sequencesFile);
+
+                Element root = document.getDocumentElement();
+                NodeList items = root.getChildNodes();
+                for (int i = 0; i < items.getLength(); i++) {
+                    System.out.println(items.item(i));
+                    // TODO: load MeasurementSequence objects from the document and put them to the sequences list
+                }
+
+            } catch (SAXException e) {
+                e.printStackTrace();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
      * Saves the settings after a while when no changes have come. The method call will return immediately and will not
      * wait for the file to be written.
      */
-    public void save() {
-        return; // TODO
+    public synchronized void save() {
+        autosaveQueue.execute(autosaveRunnable);
     }
 
     /**
      * Saves the settings and keeps waiting until its done. If no settings have been modified, will do nothing.
      */
-    public void saveNow() {
-        return; // TODO
+    public synchronized void saveNow() {
+        // save properties to file
+        if (propertiesModified) {
+            try {
+                OutputStream out = new FileOutputStream(propertiesFile);
+                properties.storeToXML(out, null);
+                out.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            propertiesModified = false;
+        }
+
+        // save sequences to file
+        if (sequencesModified) {
+            // TODO: save the sequences to an XML file understood by the Settings() constructor
+            sequencesModified = false;
+        }
     }
 
     /**
@@ -107,7 +186,7 @@ public class Settings {
      * @param defaultValue a default value
      * @return Value associated with key, or an empty string if none exists.
      */
-    private String getProperty(String key, String defaultValue) {
+    private synchronized String getProperty(String key, String defaultValue) {
         return properties.getProperty(key, defaultValue);
     }
 
@@ -117,7 +196,7 @@ public class Settings {
      * @param key   key with which the specified value is to be associated.
      * @param value value to be associated with the specified key.
      */
-    private void setProperty(String key, String value) {
+    private synchronized void setProperty(String key, String value) {
         properties.setProperty(key, value);
         propertiesModified = true;
         save();
@@ -128,7 +207,7 @@ public class Settings {
      *
      * @return Value associated with key
      */
-    public Object getXXX() {
+    public synchronized Object getXXX() {
         return null; // TODO
     }
 
@@ -137,181 +216,185 @@ public class Settings {
      *
      * @return true if value was correct, otherwise false.
      */
-    public boolean setXXX(Object value) {
+    public synchronized boolean setXXX(Object value) {
         return false; // TODO
     }
 
-    public String getMagnetometerPort() {
+    public synchronized String getMagnetometerPort() {
         return getProperty("squid.magnetometer.port", "");
     }
 
-    public boolean setMagnetometerPort(String value) {
+    public synchronized boolean setMagnetometerPort(String value) {
         setProperty("squid.magnetometer.port", value);
         return false; // TODO
     }
 
-    public String getHandlerPort() {
+    public synchronized String getHandlerPort() {
         return getProperty("squid.handler.port", "");
     }
 
-    public boolean setHandlerPort(String value) {
+    public synchronized boolean setHandlerPort(String value) {
         return false; // TODO
     }
 
-    public String getDegausserPort() {
+    public synchronized String getDegausserPort() {
         return getProperty("squid.degausser.port", "");
     }
 
-    public boolean setDegausserPort(String value) {
+    public synchronized boolean setDegausserPort(String value) {
         return false; // TODO
     }
 
-    public double getMagnetometerXAxisCalibration() {
+    public synchronized double getMagnetometerXAxisCalibration() {
         return Double.parseDouble(getProperty("squid.magnetometer.xaxiscalibration", "0.0"));
     }
 
-    public boolean setMagnetometerXAxisCalibration(double value) {
+    public synchronized boolean setMagnetometerXAxisCalibration(double value) {
         return false; // TODO
     }
 
-    public double getMagnetometerYAxisCalibration() {
+    public synchronized double getMagnetometerYAxisCalibration() {
         return Double.parseDouble(getProperty("squid.magnetometer.yaxiscalibration", "0.0"));
     }
 
-    public boolean setMagnetometerYAxisCalibration(double value) {
+    public synchronized boolean setMagnetometerYAxisCalibration(double value) {
         return false; // TODO
     }
 
-    public double getMagnetometerZAxisCalibration() {
+    public synchronized double getMagnetometerZAxisCalibration() {
         return Double.parseDouble(getProperty("squid.magnetometer.zaxiscalibration", "0.0"));
     }
 
-    public boolean setMagnetometerZAxisCalibration(double value) {
+    public synchronized boolean setMagnetometerZAxisCalibration(double value) {
         return false; // TODO
     }
 
-    public int getDegausserRamp() {
+    public synchronized int getDegausserRamp() {
         return Integer.parseInt(getProperty("squid.degausser.ramp", "0"));
     }
 
-    public boolean setDegausserRamp(int value) {
+    public synchronized boolean setDegausserRamp(int value) {
         return false; // TODO
     }
 
-    public int getDegausserDelay() {
+    public synchronized int getDegausserDelay() {
         return Integer.parseInt(getProperty("squid.degausser.delay", "0"));
     }
 
-    public boolean setDegausserDelay(int value) {
+    public synchronized boolean setDegausserDelay(int value) {
         return false; // TODO
     }
 
-    public int getHandlerAcceleration() {
+    public synchronized int getHandlerAcceleration() {
         return Integer.parseInt(getProperty("squid.handler.acceleration", "0"));
     }
 
-    public boolean setHandlerAcceleration(int value) {
+    public synchronized boolean setHandlerAcceleration(int value) {
         return false; // TODO
     }
 
-    public int getHandlerDeceleration() {
+    public synchronized int getHandlerDeceleration() {
         return Integer.parseInt(getProperty("squid.handler.deceleration", "0"));
     }
 
-    public boolean setHandlerDeceleration(int value) {
+    public synchronized boolean setHandlerDeceleration(int value) {
         return false; // TODO
     }
 
-    public int getHandlerVelocity() {
+    public synchronized int getHandlerVelocity() {
         return Integer.parseInt(getProperty("squid.handler.velocity", "0"));
     }
 
-    public boolean setHandlerVelocity(int value) {
+    public synchronized boolean setHandlerVelocity(int value) {
         return false; // TODO
     }
 
-    public int getHandlerMeasurementVelocity() {
+    public synchronized int getHandlerMeasurementVelocity() {
         return Integer.parseInt(getProperty("squid.handler.measurementvelocity", "0"));
     }
 
-    public boolean setHandlerMeasurementVelocity(int value) {
+    public synchronized boolean setHandlerMeasurementVelocity(int value) {
         return false; // TODO
     }
 
-    public int getHandlerTransverseYAFPosition() {
+    public synchronized int getHandlerTransverseYAFPosition() {
         return Integer.parseInt(getProperty("squid.handler.pos.transverseyaf", "0"));
     }
 
-    public boolean setHandlerTransverseYAFPosition(int value) {
+    public synchronized boolean setHandlerTransverseYAFPosition(int value) {
         return false; // TODO
     }
 
-    public int getHandlerAxialAFPosition() {
+    public synchronized int getHandlerAxialAFPosition() {
         return Integer.parseInt(getProperty("squid.handler.pos.axialaf", "0"));
     }
 
-    public boolean setHandlerAxialAFPosition(int value) {
+    public synchronized boolean setHandlerAxialAFPosition(int value) {
         return false; // TODO
     }
 
-    public int getHandlerSampleLoadPosition() {
+    public synchronized int getHandlerSampleLoadPosition() {
         return Integer.parseInt(getProperty("squid.handler.pos.sampleload", "0"));
     }
 
-    public boolean setHandlerSampleLoadPosition(int value) {
+    public synchronized boolean setHandlerSampleLoadPosition(int value) {
         return false; // TODO
     }
 
-    public int getHandlerBackgroundPosition() {
+    public synchronized int getHandlerBackgroundPosition() {
         return Integer.parseInt(getProperty("squid.handler.pos.background", "0"));
     }
 
-    public boolean setHandlerBackgroundPosition(int value) {
+    public synchronized boolean setHandlerBackgroundPosition(int value) {
         return false; // TODO
     }
 
-    public int getHandlerMeasurementPosition() {
+    public synchronized int getHandlerMeasurementPosition() {
         return Integer.parseInt(getProperty("squid.handler.pos.measurement", "0"));
     }
 
-    public boolean setHandlerMeasurementPosition(int value) {
+    public synchronized boolean setHandlerMeasurementPosition(int value) {
         return false; // TODO
     }
 
-    public int getHandlerRotation() {
+    public synchronized int getHandlerRotation() {
         return Integer.parseInt(getProperty("squid.handler.rotation", "0"));
     }
 
-    public boolean setHandlerRotation(int value) {
+    public synchronized boolean setHandlerRotation(int value) {
         return false; // TODO
     }
 
-    public int getHandlerRightLimit() {
+    public synchronized int getHandlerRightLimit() {
         return Integer.parseInt(getProperty("squid.handler.pos.rightlimit", "0"));
     }
 
-    public boolean setHandlerRightLimit(int value) {
+    public synchronized boolean setHandlerRightLimit(int value) {
         return false; // TODO
     }
 
     /**
-     * Returns all saved Sequences.
+     * Returns all saved sequences in no particular order.
      */
-    public MeasurementSequence[] getSequences() {
-        return null; // TODO
+    public synchronized MeasurementSequence[] getSequences() {
+        return sequences.toArray(new MeasurementSequence[sequences.size()]);
     }
 
     /**
-     * Adds a sequence to the sequence list.
+     * Adds a sequence to the sequence list. Each sequence may be added only once.
      */
-    public void addSequence(MeasurementSequence sequence) {
-        return; // TODO
+    public synchronized void addSequence(MeasurementSequence sequence) {
+        if (sequence != null && !sequences.contains(sequence)) {
+            sequences.add(sequence);
+        }
     }
 
     /**
      * Removes a sequence from the sequence list. If the specified sequence is not in the list, it will be ignored.
      */
-    public void removeSequence(MeasurementSequence sequence) {
-        return; // TODO
+    public synchronized void removeSequence(MeasurementSequence sequence) {
+        if (sequence != null) {
+            sequences.remove(sequence);
+        }
     }
 }
