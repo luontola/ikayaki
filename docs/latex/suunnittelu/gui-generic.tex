@@ -32,7 +32,7 @@
 \beginMethod{setProject(Project)}
 \methodDeclaration{public void setProject(Project project)}
 \methodComment{
-	Sets the new project for this ProjectComponent, unregisters MeasurementListener and ProjectListener from old project, saves new Project to project, registers MeasurementListener and ProjectListener to new project.
+	Sets the project for this ProjectComponent. Unregisters MeasurementListener and ProjectListener from the old project, and registers them to the new project.
 }
-\methodParam{project}{new active project.}
+\methodParam{project}{new active project, or null to make no project active.}
 \closeMethod
