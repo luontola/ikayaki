@@ -29,6 +29,7 @@ import ikayaki.util.LastExecutor;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.*;
 import javax.swing.table.*;
 import java.io.File;
 import java.io.*;
@@ -43,19 +44,6 @@ import java.text.DateFormat;
  * @author Samuli Kaipiainen
  */
 public class ProjectExplorerPanel extends ProjectComponent {
-/*
-Event A: On browserField change - send autocomplete-results-finder with browserField’s
-text to LastExecutor via lastExecutor.execute(Runnable), which schedules disk access and
-displaying autocomplete results in browserField’s popup window.
-*/
-/*
-Event B: On browserField down-arrow-click - show directory history in browserField’s
-popup window.
-*/
-/*
-Event C: On browserField popup window click - set clicked line as directory, update files
-listing, update explorerTable and browserField.
-*/
 /*
 Event D: On browseButton click - open a FileChooser dialog for choosing new directory,
 set it to directory, update files listing, update explorerTable and browserField.
@@ -82,6 +70,11 @@ whose measuring ended.
      */
     private JComboBox browserField;
 
+    /**
+     * Tells whether the next-to-be-shown popup menu will be autocomplete list (and not directory history).
+     */
+    private boolean browserFieldNextPopupAutocomplete = false;
+
     private JButton browseButton;
 
     private JTable explorerTable;
@@ -95,7 +88,7 @@ whose measuring ended.
     /**
      * LastExecutor for scheduling autocomplete results to separate thread (disk access and displaying).
      */
-    private LastExecutor autocompleteExecutor = new LastExecutor(100, true);
+    private LastExecutor autocompleteExecutor = new LastExecutor(10, true);
 
     /**
      * Currently open directory.
@@ -128,18 +121,15 @@ whose measuring ended.
     public ProjectExplorerPanel(final ProjectComponent parent, Project project) {
         this.parent = parent;
 
-        // TODO: where is the last directory?
-        if (project == null) {
-            setDirectory("."); // Settings.instance().getLastDirectory();
-        } else {
-            setDirectory(project.getFile().getAbsoluteFile().getParent());
-        }
-        
+        // set project directory to browserField
+        if (project == null) setDirectory(getDirectoryHistory()[0].getAbsolutePath());
+        else setDirectory(project.getFile().getAbsoluteFile().getParent());
+
         // combo box / text field
         browserField = new JComboBox(getDirectoryHistory());
-        browserField.setSelectedItem(directory.getName());
         browserField.setEditable(true);
         browserField.setBackground(Color.WHITE);
+        // browserField.getEditor().getEditorComponent().setFocusTraversalKeysEnabled(false);
 
         // browse button
         browseButton = new JButton("Browse...");
@@ -165,13 +155,65 @@ whose measuring ended.
         this.add(browsePanel, BorderLayout.NORTH);
         this.add(explorerTableScrollPane, BorderLayout.CENTER);
 
+        /**
+         * Event C: On browserField popup window click - set clicked line as directory, update files
+         * listing, update explorerTable and browserField.
+         */
         browserField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println(browserField.getSelectedItem());
+                //System.out.println(e.getActionCommand());
+                // we only want Changed-events
+                if (!e.getActionCommand().equals("comboBoxChanged")) return;
+
+                //System.out.println(browserField.getSelectedItem());
+/*
+                // TODO: changing JComboBox popup-list content fires ActionEvents which we don't want... argh.
                 if (!setDirectory((String) browserField.getSelectedItem())) {
                     // TODO: how to display error?
                     browserField.getEditor().selectAll();
                 }
+*/
+            }
+        });
+
+        /**
+         * Event B: On browserField down-arrow-click - show directory history in browserField’s popup window.
+         */
+        browserField.addPopupMenuListener(new PopupMenuListener() {
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                if (browserFieldNextPopupAutocomplete) browserFieldNextPopupAutocomplete = false;
+                else setBrowserFieldPopup(getDirectoryHistory());
+            }
+
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
+            public void popupMenuCanceled(PopupMenuEvent e) {}
+        });
+
+        /**
+         * Event A: On browserField change - send autocomplete-results-finder with browserField’s text
+         * to LastExecutor via autocompleteExecutor.execute(Runnable), which schedules disk access and
+         * displaying autocomplete results in browserField’s popup window.
+         */
+        browserField.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                if (e.getKeyChar() == 27 || e.getKeyChar() == 10) return;
+
+                autocompleteExecutor.execute(new Runnable() {
+                    public void run() {
+                        File[] files = getAutocompleteFiles(browserField.getEditor().getItem().toString());
+                        setBrowserFieldPopup(files);
+
+                        if (files.length > 0) {
+                            // gui updating must be done from event-dispatching thread
+                            SwingUtilities.invokeLater(new Runnable() {
+                                public void run() {
+                                    browserFieldNextPopupAutocomplete = true;
+                                    browserField.showPopup();
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
 
@@ -194,10 +236,11 @@ whose measuring ended.
      * @return true if succesful, false otherwise.
      */
     private boolean setDirectory(String dir) {
-        if (!new File(dir).isDirectory()) return false;
+        if (dir == null || !new File(dir).isDirectory()) return false;
 
         directory = new File(dir);
         files = getProjectFiles(directory);
+        updateDirectoryHistory(directory);
 
         // update table with new directory
         if (explorerTableModel != null) explorerTableModel.fireTableDataChanged();
@@ -214,21 +257,72 @@ whose measuring ended.
     private File[] getProjectFiles(File directory) {
         return directory.listFiles(new FileFilter() {
             public boolean accept(File file) {
-                return (file.isFile() && !file.getName().endsWith(".ika"));
+                return (file.isFile() && file.getName().endsWith(""));
             }
         });
     }
 
     /**
-     * Gets current directory history from TODO.
+     * Reads current directory history from Settings. If directory history is empty, returns current directory instead.
      *
-     * @return current directory history.
+     * @return current directory history, or if empty, only current directory (as File[0]).
      */
-    private String[] getDirectoryHistory() {
-        return new String[] { directory.getAbsolutePath(), "resources", "mursukas", "heppa", "marsupapana" };
+    private File[] getDirectoryHistory() {
+        File[] dirhist = Settings.instance().getDirectoryHistory();
 
-        // TODO:
-        //return Settings.instance().getDirectoryHistory();
+        if (dirhist == null || dirhist.length == 0) return new File[] { new File(".").getAbsoluteFile() };
+        else return dirhist;
+    }
+
+    /**
+     * Attemps to add given directory into dir history.
+     *
+     * @param dir directory to add.
+     */
+    private void updateDirectoryHistory(File dir) {
+        Settings.instance().updateDirectoryHistory(dir);
+    }
+
+    /**
+     * Reads matching directories from given directory name's parent.
+     *
+     * @param dirmatch beginning of directory to which match the directories in its parent directory...
+     * @return matching directories.
+     */
+    private File[] getAutocompleteFiles(String dirmatch) {
+        File dirfile = new File(dirmatch);
+        File dir = dirfile.isDirectory() ? dirfile : dirfile.getParentFile();
+
+        // protect against no-parent-null and invalid-dir-list-null
+        if (dir == null) dir = directory;
+        else if (!dir.isDirectory()) return new File[0];
+
+        final String match = dirfile.isDirectory() ? "" : dirfile.getName();
+
+        return dir.listFiles(new FileFilter() {
+            public boolean accept(File file) {
+                return (file.isDirectory() && file.getName().startsWith(match));
+            }
+        });
+    }
+
+    /**
+     * Sets browserField popup-menu-list as given files; also clears any selection.
+     *
+     * @param files list of files to set the list to.
+     */
+    private void setBrowserFieldPopup(File[] files) {
+        // purkkaillaan -- some hardcore bubblegum stitching
+        JTextField browserFieldEditor = (JTextField) browserField.getEditor().getEditorComponent();
+        String browserFieldEditorText = browserFieldEditor.getText();
+        int browserFieldEditorCursorPosition = browserFieldEditor.getCaretPosition();
+
+        browserField.removeAllItems();
+        for (File file : files) browserField.addItem(file.getAbsolutePath());
+
+        browserField.setSelectedIndex(-1);
+        browserFieldEditor.setText(browserFieldEditorText);
+        browserFieldEditor.setCaretPosition(browserFieldEditorCursorPosition);
     }
 
     /**
@@ -237,8 +331,10 @@ whose measuring ended.
      *
      * @author Samuli Kaipiainen
      */
+    // TODO: loose comment above...
+
     /**
-     * TableModel which handles data from files (in upper-class ProjectExplorerPanel). Unnamed inner class.
+     * TableModel which handles data from files (in upper-class ProjectExplorerPanel).
      */
     private class ProjectExplorerTableModel extends AbstractTableModel {
         /*
@@ -256,11 +352,6 @@ whose measuring ended.
         public String getColumnName(int column) {
             return columns[column];
         }
-
-        // TODO: probably not needed
-        //public Class getColumnClass(int column) {
-        //    return getValueAt(0, column).getClass();
-        //}
 
         public int getRowCount() {
             return files.length;
