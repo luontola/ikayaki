@@ -1,5 +1,5 @@
 /*
- * RunQueue.java
+ * LastExecutor.java
  *
  * Copyright (C) 2005 Project SQUID, http://www.cs.helsinki.fi/group/squid/
  *
@@ -25,6 +25,7 @@ package ikayaki.util;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Executor;
 
 /**
  * Executes Runnable objects in a private worker thread after a pre-defined delay. The worker thread will terminate
@@ -36,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Esko Luontola
  */
-public class RunQueue {
+public class LastExecutor implements Executor {
 
     /**
      * Defines how long is the delay in milliseconds, after which the events need to be run.
@@ -62,39 +63,39 @@ public class RunQueue {
     private Thread workerThread = null;
 
     /**
-     * Creates an empty RunQueue with a delay of 0 and execOnlyLast set to false.
+     * Creates an empty LastExecutor with a delay of 0 and execOnlyLast set to false.
      */
-    public RunQueue() {
+    public LastExecutor() {
         this(0, false);
     }
 
     /**
-     * Creates an empty RunQueue with execOnlyLast set to false.
+     * Creates an empty LastExecutor with execOnlyLast set to false.
      *
      * @param delayMillis the length of execution delay in milliseconds; if less than 0, then 0 will be used.
      */
-    public RunQueue(int delayMillis) {
+    public LastExecutor(int delayMillis) {
         this(delayMillis, false);
     }
 
     /**
-     * Creates an empty RunQueue with a delay of 0.
+     * Creates an empty LastExecutor with a delay of 0.
      *
      * @param execOnlyLast if true, only the last event will be executed after the delay; otherwise all are executed in
      *                     order of appearance.
      */
-    public RunQueue(boolean execOnlyLast) {
+    public LastExecutor(boolean execOnlyLast) {
         this(0, execOnlyLast);
     }
 
     /**
-     * Creates an empty RunQueue.
+     * Creates an empty LastExecutor.
      *
      * @param delayMillis  the length of execution delay in milliseconds; if less than 0, then 0 will be used.
-     * @param execOnlyLast if true, only the last event will be executed after the delay; otherwise all are executed in
+     * @param execOnlyLast if true, only the last task will be executed after the delay; otherwise all are executed in
      *                     order of appearance.
      */
-    public RunQueue(int delayMillis, boolean execOnlyLast) {
+    public LastExecutor(int delayMillis, boolean execOnlyLast) {
         if (delayMillis < 0) {
             delayMillis = 0;
         }
@@ -134,27 +135,25 @@ public class RunQueue {
     }
 
     /**
-     * Inserts a Runnable object to the end of the queue. It will remain there until it is executed or another object
+     * Inserts a runnable task to the end of the queue. It will remain there until it is executed or another object
      * replaces it. If execOnlyLast is set to true, the queue will be cleared before inserting this runnable to it. If
      * there is no worker thread running, a new one will be spawned.
      *
-     * @param runnable the Runnable to be run after a pre-defined delay
-     * @return true
-     * @throws NullPointerException if runnable is null
+     * @param command the runnable task to be executed after a pre-defined delay
+     * @throws NullPointerException if command is null
      */
-    public synchronized boolean offer(Runnable runnable) {
-        if (runnable == null) {
+    public synchronized void execute(Runnable command) {
+        if (command == null) {
             throw new NullPointerException();
         }
         if (execOnlyLast) {
             queue.clear();
         }
-        queue.offer(new RunDelayed(runnable, delayMillis)); // always successful
+        queue.offer(new RunDelayed(command, delayMillis)); // always successful
         if (workerThread == null) {
             workerThread = new RunQueueThread();
             workerThread.start();
         }
-        return true;
     }
 
     /**
@@ -170,7 +169,7 @@ public class RunQueue {
     }
 
     /**
-     * Keeps on checking the RunQueue.queue to see if there are Runnables to be executed. If there is one, execute it
+     * Keeps on checking the LastExecutor.queue to see if there are Runnables to be executed. If there is one, execute it
      * and proceed to the next one. If an uncaught Throwable is thrown during the execution, prints an error message and
      * stack trace to stderr. If the queue is empty, this thread will set RunDelayed.workerThread to null and terminate
      * itself.
@@ -180,10 +179,10 @@ public class RunQueue {
             // DEBUG:
 //            System.out.println("new RunQueueThread started");
             while (true) {
-                synchronized (RunQueue.this) {
+                synchronized (LastExecutor.this) {
                     if (queue.size() == 0) {
                         workerThread = null;
-                        RunQueue.this.notifyAll(); // notify all who wait in RunQueue.join()
+                        LastExecutor.this.notifyAll(); // notify all who wait in LastExecutor.join()
                         return;
                     }
                 }
@@ -262,11 +261,11 @@ public class RunQueue {
      * TEST METHOD
      */
     public static void main(String[] args) throws InterruptedException {
-        RunQueue q = new RunQueue(200, true);
+        LastExecutor q = new LastExecutor(200, true);
 
         for (int i = 0; i < 10; i++) {
             final int j = i;
-            q.offer(new Runnable() {
+            q.execute(new Runnable() {
                 public void run() {
                     System.out.println("A " + j);
                 }
@@ -279,7 +278,7 @@ public class RunQueue {
 
         for (int i = 0; i < 10; i++) {
             final int j = i;
-            q.offer(new Runnable() {
+            q.execute(new Runnable() {
                 public void run() {
                     System.out.println("B " + j);
                 }
@@ -287,9 +286,9 @@ public class RunQueue {
             Thread.sleep(50 * i);
         }
 
-        // test that the RunQueue will catch the Exception
+        // test that the LastExecutor will catch the Exception
         // and the same thread will continue to execute the next Runnable
-        q.offer(new Runnable() {
+        q.execute(new Runnable() {
             public void run() {
                 System.out.println("C");
                 try {
@@ -301,7 +300,7 @@ public class RunQueue {
             }
         });
         Thread.sleep(300);
-        q.offer(new Runnable() {
+        q.execute(new Runnable() {
             public void run() {
                 System.out.println("D");
             }
