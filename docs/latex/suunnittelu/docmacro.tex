@@ -15,20 +15,127 @@
 
 
 
+% MACROS FOR CLASS DOCUMENTATION
+\newcommand{\getClass}[0]{}
+\newcommand{\beginClass}[1] {
+	\subsection{#1}
+	\label{class:#1}
+	
+	\renewcommand{\getClass}[0]{#1}
+	\begin{tabular}{p{3cm}p{11cm}}
+}
+\newcommand{\classPackage}[1] {
+	\textbf{Package} & #1 \\
+}
+\newcommand{\classDeclaration}[1] {
+	\textbf{Declaration} & #1 \\
+}
+\newcommand{\classExtends}[1] {
+	\textbf{Extends} & #1 \\
+}
+\newcommand{\classImplements}[1] {
+	\textbf{Implements} & #1 \\
+}
+\newcommand{\classSubclass}[1] {
+	\textbf{Subclass} & #1 (\ref{class:#1}) \\
+}
+\newcommand{\classComment}[1] {
+	\multicolumn{2}{p{14cm}} {
+		#1
+	}\\
+}
+\newcommand{\classPatterns}[1] {
+	\textbf{Design Patterns} & #1 \\
+}
+\newcommand{\closeClass}[0] {
+	\end{tabular}
+}
+
+
+% MACROS FOR METHOD DOCUMENTATION
+\newcommand{\getMethod}[0]{}
+\newcommand{\beginMethod}[1] {
+	\renewcommand{\getMethod}[0]{#1}
+	\begin{tabular}{p{3cm}p{11cm}}
+%	\multicolumn{2}{p{14cm}} {
+%		\hspace{-0.32cm}
+%		\textbf{Method: #1}
+%	}\\
+}
+\newcommand{\methodDeclaration}[1] {
+	\multicolumn{2}{p{14cm}} {
+		\hspace{-0.32cm}
+		\texttt{#1}
+	}\\
+%	\textbf{Declaration} &  \\
+}
+\newcommand{\methodComment}[1] {
+	\multicolumn{2}{p{14cm}} {
+		#1
+	}\\
+}
+\newcommand{\methodParam}[2] {
+	\textbf{Parameter} & \textit{#1} - #2 \\
+}
+\newcommand{\methodReturns}[1] {
+	\textbf{Returns} & #1 \\
+}
+\newcommand{\methodThrows}[2] {
+	\textbf{Throws} & \textit{#1} - #2 \\
+}
+\newcommand{\closeMethod}[0] {
+	\end{tabular}
+}
+
+
+% MACROS FOR FIELD DOCUMENTATION
+\newcommand{\getField}[0]{}
+\newcommand{\beginField}[1] {
+	\renewcommand{\getField}[0]{#1}
+	\begin{tabular}{p{3cm}p{11cm}}
+%	\multicolumn{2}{p{14cm}} {
+%		\hspace{-0.32cm}
+%		\textbf{Field: #1}
+%	}\\
+}
+\newcommand{\fieldDeclaration}[1] {
+	\multicolumn{2}{p{14cm}} {
+		\hspace{-0.32cm}
+		\texttt{#1}
+	}\\
+%	\textbf{Declaration} & #1 \\
+}
+\newcommand{\fieldValue}[1] {
+	
+	\textbf{Default Value} & #1 \\
+}
+\newcommand{\fieldComment}[1] {
+	\multicolumn{2}{p{14cm}} {
+		#1
+	}\\
+}
+\newcommand{\closeField}[1] {
+	& (end of field \getField) \\
+	\end{tabular}
+}
+
+
+
+% EXAMPLE:
 
 \beginClass{RunQueue}
 \classPackage{ikayaki.util}
 \classDeclaration{public class RunQueue}
 \classExtends{Object}
 \classImplements{FooBarInterface}
-\classSubclass{ChildRunQueue}
+\classSubclass{RunQueue}
 \classComment{
 	Executes Runnable objects in a private worker thread after a pre-defined delay. The worker thread will terminate automatically when there are no runnables to be executed. Optionally executes only the last inserted runnable. All operations are thread-safe.
 
 	This class can be used for example in connection with a "continuous search" invoked by a series of GUI events (such as a DocumentListener), but it is necessary to react to only the last event after a short period of user inactivity.
 }
 \classPatterns{Command, Strategy}
-\endClass
+\closeClass
 
 \beginMethod{offer}
 \methodDeclaration{public synchronized boolean offer(Runnable runnable)}
@@ -38,7 +145,7 @@
 \methodParam{runnable}{the Runnable to be run after a pre-defined delay}
 \methodReturns{true}
 \methodThrows{NullPointerException}{if runnable is null}
-\endMethod
+\closeMethod
 
 \beginField{queue}
 \fieldDeclaration{private DelayQueue<RunDelayed> queue}
@@ -46,5 +153,5 @@
 \fieldComment{
 	Prioritized FIFO queue for containing the RunDelayed items that have not expired. If execOnlyLast is true, then this queue should never contain more than one item.
 }
-\endField
+\closeField
 
