@@ -7,6 +7,9 @@
 \classEvent{On new SerialPortEvent}{generates new SerialMessageArrivedEvent if a data message from serial port is received.}
 \closeClass
 
+\beginToc
+\closeToc
+
 \beginField{lastMessage}
 \fieldDeclaration{private String lastMessge}
 \fieldValue{null}
@@ -48,6 +51,9 @@
 \classDeclaration{public class SerialParameters}
 \classCreatedBy{Squid}
 \closeClass
+
+\beginToc
+\closeToc
 
 \beginField{portName}
 \fieldDeclaration{private String portName}
@@ -105,6 +111,9 @@
 \classCreatedBy{SerialIO}
 \closeClass
 
+\beginToc
+\closeToc
+
 \beginField{message}
 \fieldDeclaration{private String message}
 \fieldComment{ASCII message recieved from serial port.}
@@ -122,6 +131,9 @@
 \classPackage{ikayaki.squid}
 \classDeclaration{public interface SerialIOListener extends java.util.EventListener}
 \closeClass
+
+\beginToc
+\closeToc
 
 \beginMethod{serialIOEvent(SerialIOEvent)}
 \methodDeclaration{public void serialIOEvent(SerialIOEvent event) }

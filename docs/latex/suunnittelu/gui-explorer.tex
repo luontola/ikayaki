@@ -18,6 +18,9 @@
 \classEvent{On ProjectEvent}{hilight project whose measuring started, or unhilight one whose measuring ended.}
 \closeClass
 
+\beginToc
+\closeToc
+
 \beginField{browserField}
 \fieldDeclaration{private JComboBox browserField}
 \fieldComment{Text field for writing directory to change to. Autocomplete results appear to Combo Box' popup window, scheduled by RunQueue. Directory history appears to the same popup window when the down-arrow right to text field is clicked.}
@@ -76,6 +79,9 @@
 \classEvent{On createNewProjectButton click}{call Project.createXXXProject(File) with filename from newProjectField; if returns null, show error message and do nothing. Otherwise, update file listing, set new project active, tell explorerTable to reset newProjectField and newProjectType and call MainViewPanel.changeProject(Project) with returned Project.}
 \closeClass
 
+\beginToc
+\closeToc
+
 \beginField{newProjectField}
 \fieldDeclaration{private JTextField newProject}
 \closeField
@@ -103,6 +109,9 @@
 \classEvent{On table click}{call Project.loadProject(File) with clicked project file, call MainViewPanel.changeProject(Project) with returned Project unless null, on which case show error message and revert explorerTable selection to old project, if any.}
 \classEvent{On table mouse right-click}{create a ProjectExplorerPopupMenu for right-clicked project file.}
 \closeClass
+
+\beginToc
+\closeToc
 
 \beginField{projectExplorerTableModel}
 \fieldDeclaration{private TableModel projectExplorerTableModel}
