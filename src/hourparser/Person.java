@@ -14,7 +14,7 @@ public class Person {
     private Vector<Entry> records;
 
     /**
-     * Constructs a new person from the data in a log file.
+     * Constructs a new person by reading the data from a log file.
      *
      * @param file The log file of the person
      * @throws IOException Reading the log file fails
