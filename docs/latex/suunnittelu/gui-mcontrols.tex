@@ -17,9 +17,6 @@
 \classEvent{On MeasurementEvent}{call magnetometerStatusPanel.updateStatus(int, int) with the right values from MeasurementEvent.}
 \closeClass
 
-\beginToc
-\closeToc
-
 \beginField{measureButton}
 \fieldDeclaration{private JButton measureButton}
 \fieldComment{Measure/pause -button; "Measure" when no measuring is being done, "Pause" when there is ongoing measuring sequence.}
@@ -69,6 +66,8 @@
 \closeClass
 
 \beginToc
+\tocMethod{MagnetometerStatusPanel()}
+\tocMethod{updateStatus(int,int)}
 \closeToc
 
 \beginMethod{MagnetometerStatusPanel()}
@@ -93,9 +92,6 @@
 \classUses{Project}
 \classEvent{On xxxN click}{call project.xxxN()...}
 \closeClass
-
-\beginToc
-\closeToc
 
 \beginField{moveButtonGroup}
 \fieldDeclaration{private ButtonGroup moveButtonGroup}

@@ -8,9 +8,6 @@
 \classUses{MeasurementStep}
 \closeClass
 
-\beginToc
-\closeToc
-
 
 \beginClass{AbstractPlot}
 \classComment{Abstract class that implements general construction of a graphical plot.}
@@ -23,6 +20,12 @@
 \closeClass
 
 \beginToc
+\tocMethod{addMeasurement(int,int)}
+\tocMethod{highlightMeasurement(int)}
+\tocMethod{highlightMeasurementRange(int,int)}
+\tocMethod{unHighlightAll()}
+\tocMethod{resetGraph()}
+\tocMethod{getNumMeasurements()}
 \closeToc
 
 \beginField{measurements}
@@ -31,44 +34,44 @@
 \fieldComment{Contains all the data that is shown in this graph.}
 \closeField
 
-\beginMethod{addMeasurement}
+\beginMethod{addMeasurement(int,int)}
 \methodDeclaration{public void addMeasurement(int declination, int inclination)}
 \methodComment{Adds new measurement data to plot.}
 \methodParam{declination}{Declination coordinate of the measurement.}
 \methodParam{inclination}{Inclination coordinate of the measurement.}
 \closeMethod
 
-
-\beginMethod{highlightMeasurement}
+\beginMethod{highlightMeasurement(int)}
 \methodDeclaration{public void highlightMeasurement(int index)}
 \methodComment{High lights measurement in plot in the given index.}
 \methodParam{index}{Index of measurement to be highlighted.}
 \methodThrows{IndexOutOfBoundsException}{If no such measurement existed.}
 \closeMethod
 
-\beginMethod{highlightMeasurementRange}
-\methodDeclaration{public void highLightMeasurementRange(int from, int to)}
+\beginMethod{highlightMeasurementRange(int,int)}
+\methodDeclaration{public void highlightMeasurementRange(int from, int to)}
 \methodComment{Highlights a set of measurements in given range.}
 \methodParam{from}{Starting index of highlighted measurements.}
 \methodParam{to}{End index of highlighted meeasurements.}
 \methodThrows{IndexOutOfBoundsException}{If one or both of the indices are out of bounds.}
 \closeMethod
 
-\beginMethod{unHighlightAll}
+\beginMethod{unHighlightAll()}
 \methodDeclaration{public void unHighlightAll()}
 \methodComment{dehighlights all values in this graph.}
 \closeMethod
 
-\beginMethod{resetGraph}
+\beginMethod{resetGraph()}
 \methodDeclaration{public void resetGraph()}
 \methodComment{Removes all measurements from the graph.}
 \closeMethod
 
-\beginMethod{getNumMeasurements}
+\beginMethod{getNumMeasurements()}
 \methodDeclaration{public int getNumMeasurements()}
 \methodComment{Returns the number of measurements in this graph.}
 \methodReturn{Number of measurements.}
 \closeMethod
+
 
 \beginClass{IntensityPlot}
 \classComment{Implements intensity graph plot.}
@@ -78,8 +81,6 @@
 \classCreatedBy{MeasurementGraphsPanel}
 \closeClass
 
-\beginToc
-\closeToc
 
 \beginClass{StereoPlot}
 \classComment{Implements stereo graph plot.}

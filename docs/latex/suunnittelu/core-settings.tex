@@ -8,6 +8,17 @@
 \closeClass
 
 \beginToc
+\tocMethod{instance()}
+\tocMethod{Settings()}
+\tocMethod{save()}
+\tocMethod{saveNow()}
+\tocMethod{getProperty(String)}
+\tocMethod{setProperty(String,String)}
+\tocMethod{getXXX()}
+\tocMethod{setXXX(Type)}
+\tocMethod{getSequences()}
+\tocMethod{addSequence(MeasurementSequence)}
+\tocMethod{removeSequence(MeasurementSequence)}
 \closeToc
 
 \beginField{properties}
@@ -101,7 +112,7 @@
 \methodReturn{Value associated with key}
 \closeMethod
 
-\beginMethod{setXXX(Type value)}
+\beginMethod{setXXX(Type)}
 \methodDeclaration{public boolean setXXX(Type value)}
 \methodComment{
     Generic accessor for all properties. Checks whether the value is ok and sets it. Will invoke autosaving.
@@ -116,14 +127,14 @@
 }
 \closeMethod
 
-\beginMethod{addSequence(MeasurementSequence sequence)}
+\beginMethod{addSequence(MeasurementSequence)}
 \methodDeclaration{public void addSequence(MeasurementSequence sequence)}
 \methodComment{
     Adds a sequence to the sequence list.
 }
 \closeMethod
 
-\beginMethod{removeSequence(MeasurementSequence sequence)}
+\beginMethod{removeSequence(MeasurementSequence)}
 \methodDeclaration{public void removeSequence(MeasurementSequence sequence)}
 \methodComment{
     Removes a sequence from the sequence list. If the specified sequence is not in the list, it will be ignored.

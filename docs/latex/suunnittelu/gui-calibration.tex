@@ -10,10 +10,11 @@
 \classUses{Project}
 \classEvent{On calibrateButton click}{call project.doSingleStep(); show error message if false is returned.}
 \classEvent{On calibrationProjectTable click}{call Project.loadProject(File) with clicked project file (calibrationProjectTable row); call MainViewPanel.changeProject(Project) with returned Project unless null, on which case show error message and revert calibrationProjectTable selection to old project, if any.}
-\classEvent{On ProjectEvent}{hilight calibration project whose measuring started, or unhilight one whose measuring ended; enable calibrateButton if measuring has ended, or disable if measuring has started.}
+\classEvent{On ProjectEvent}{highlight calibration project whose measuring started, or unhighlight one whose measuring ended; enable calibrateButton if measuring has ended, or disable if measuring has started.}
 \closeClass
 
 \beginToc
+\tocMethod{setProject(Project)}
 \closeToc
 
 \beginField{calibrateButton}
@@ -32,5 +33,5 @@
 
 \beginMethod{setProject(Project)}
 \methodDeclaration{public void setProject(Project project)}
-\methodComment{Call super.setProject(project), hilight selected calibration project, or unhilight unselected calibration project.}
+\methodComment{Call super.setProject(project), highlight selected calibration project, or unhighlight unselected calibration project.}
 \closeMethod

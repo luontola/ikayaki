@@ -13,6 +13,16 @@
 \closeClass
 
 \beginToc
+\tocMethod{RunQueue()}
+\tocMethod{RunQueue(int)}
+\tocMethod{RunQueue(boolean)}
+\tocMethod{RunQueue(int,boolean)}
+\tocMethod{isExecOnlyLast()}
+\tocMethod{setExecOnlyLast(boolean)}
+\tocMethod{getDelayMillis()}
+\tocMethod{setDelayMillis(int)}
+\tocMethod{offer(Runnable)}
+\tocMethod{join()}
 \closeToc
 
 \beginField{delayMillis}
@@ -129,6 +139,7 @@
 \closeClass
 
 \beginToc
+\tocMethod{run()}
 \closeToc
 
 \beginMethod{run()}
@@ -147,6 +158,10 @@
 \closeClass
 
 \beginToc
+\tocMethod{RunDelayed(Runnable,int)}
+\tocMethod{getDelay(TimeUnit)}
+\tocMethod{getRunnable()}
+\tocMethod{compareTo(Delayed)}
 \closeToc
 
 \beginField{expires}
