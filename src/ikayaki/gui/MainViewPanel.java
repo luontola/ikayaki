@@ -52,6 +52,7 @@ public class MainViewPanel extends ProjectComponent {
      */
     private Project measuringProject;
 
+    /* GUI components */
     private MainMenuBar menuBar;
     private MainStatusBar statusBar;
 
@@ -90,6 +91,8 @@ public class MainViewPanel extends ProjectComponent {
 
         setProject(project);
 
+        /* lay out GUI components */
+        
         return; // TODO
     }
 

@@ -48,11 +48,6 @@ be closed.
     public static final String APP_HOME_PAGE = "http://www.cs.helsinki.fi/group/squid/";
     public static final String FILE_TYPE = ".ika";
 
-    /* GUI components */
-    private JMenuBar menuBar;
-    private JComponent content;
-    private JComponent statusBar;
-
     /**
      * Starts the program Ikayaki.
      *
@@ -62,16 +57,14 @@ be closed.
     public Ikayaki(Project project) throws HeadlessException {
         super(APP_NAME + " " + APP_VERSION);
 
-        final MainViewPanel main = new MainViewPanel();
-        menuBar = main.getMenuBar();
-        content = main;
-        statusBar = main.getStatusBar();
+        final MainViewPanel main = new MainViewPanel(project);
 
         setLayout(new BorderLayout());
-        setJMenuBar(menuBar);
-        add(content, "Center");
-        add(statusBar, "South");
+        setJMenuBar(main.getMenuBar());
+        add(main, "Center");
+        add(main.getStatusBar(), "South");
 
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationByPlatform(true);
         pack();
 
@@ -80,7 +73,6 @@ be closed.
                 main.exitProgram();
             }
         });
-        main.changeProject(project);
     }
 
     /**
