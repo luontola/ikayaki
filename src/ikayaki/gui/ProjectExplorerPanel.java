@@ -136,18 +136,12 @@ whose measuring ended.
         // browserFieldEditor.setFocusTraversalKeysEnabled(false); // disable tab-exiting from browserField
 
         // scroll to the end of the combo box's text field
-//        SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {
-                /* HACK:
-                 * This hack will work only if we are currently in the event-dispatching thread.
-                 * Otherwise the setCaretPosition will be executed before the GUI is visible,
-                 * and the JTextField will not scroll automatically to show the caret.
-                 */
-                // UNHACK: works fine for me...
-                // scroll the caret to be visible when the program starts
-                setBrowserFieldCursorToEnd();
-//            }
-//        });
+        setBrowserFieldCursorToEnd();       /* Requires a hack in the class Ikayaki:
+                                             * The caret should be visible when the program starts.
+                                             * This requires that we are currently in the event dispatch thread.
+                                             * Otherwise the setCaretPosition will be executed before the GUI is visible,
+                                             * and the JTextField will not scroll automatically to show the caret.
+                                             */
 
         // browse button
         browseButton = new JButton("Browse...");

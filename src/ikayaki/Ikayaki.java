@@ -137,7 +137,7 @@ be closed.
         }
 
         /* HACK:
-         * ProjectExplorerPanel requires that the program is started in the event-dispatching thread.
+         * ProjectExplorerPanel's text field requires that the program is started in the event dispatch thread.
          */
         final Project p = project;
         SwingUtilities.invokeLater(new Runnable() {

@@ -25,18 +25,16 @@ package ikayaki.gui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import ikayaki.Settings;
 
+import javax.comm.CommPortIdentifier;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import ikayaki.Settings;
-import javax.comm.CommPortIdentifier;
 import java.util.Enumeration;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.DocumentEvent;
 
 /**
  * Creates its components and updats changes to Settings and saves them in Configuration file
