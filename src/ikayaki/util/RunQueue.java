@@ -1,7 +1,7 @@
 /*
  * RunQueue.java
  *
- * Copyright (C) 2005 University of Helsinki, www.cs.helsinki.fi
+ * Copyright (C) 2005 Project SQUID, http://www.cs.helsinki.fi/group/squid/
  *
  * This file is part of Ikayaki.
  *
@@ -35,7 +35,6 @@ import java.util.concurrent.TimeUnit;
  * as a DocumentListener), but it is necessary to react to only the last event after a short period of user inactivity.
  *
  * @author Esko Luontola
- * @version 2005-03-05
  */
 public class RunQueue {
 
