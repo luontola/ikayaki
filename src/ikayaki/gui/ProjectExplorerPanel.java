@@ -61,6 +61,11 @@ whose measuring ended.
 */
 
     /**
+     * The component whose setProject() method will be called on opening a new project file.
+     */
+    private ProjectComponent parent;
+
+    /**
      * Text field for writing directory to change to. Autocomplete results appear to Combo Box’ popup window, scheduled
      * by LastExecutor. Directory history appears to the same popup window when the down-arrow right to text field is
      * clicked.
@@ -91,8 +96,22 @@ whose measuring ended.
     /**
      * Creates all components, sets directory as the last open directory, initializes files with files from that
      * directory.
+     *
+     * @param parent the component whose setProject() method will be called on opening a new project file.
      */
-    public ProjectExplorerPanel(Project project) {
+    public ProjectExplorerPanel(ProjectComponent parent) {
+        this(parent, null);
+    }
+
+    /**
+     * Creates all components, sets directory to that of the specified project, initializes files with files from that
+     * directory. Will NOT send an event to MainViewPanel to open the project.
+     *
+     * @param parent  the parent component whose setProject() method will be called on opening a new project file.
+     * @param project the project whose directory is to be opened and which project is then selected, or null to use the
+     *                last known directory.
+     */
+    public ProjectExplorerPanel(ProjectComponent parent, Project project) {
         return; // TODO
     }
 

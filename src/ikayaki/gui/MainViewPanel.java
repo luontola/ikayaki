@@ -33,7 +33,7 @@ import javax.swing.*;
  * Creates the main view panels (split panels) and Squid and Project components. It also tells everybody if the current
  * project is changed.
  *
- * @author Aki Korpua (?), Esko Luontola
+ * @author Esko Luontola (lisäksi joku muu?)
  */
 public class MainViewPanel extends ProjectComponent {
 
