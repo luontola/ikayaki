@@ -24,6 +24,7 @@ package ikayaki.gui;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 /**
  * Creates Menu items for Menubar and makes action listeners for them
@@ -54,7 +55,7 @@ selected file
 Event F: On configuration Clicked - Opens SettingsDialog (frame)
 */
 /*
-Event G: On helpItem Clicked - Opens Help dialog (own frame?)
+Event G: On help Clicked - Opens Help dialog (own frame?)
 */
 /*
 Event H: On about Clicked - Opens dialog with credits and version number
@@ -65,18 +66,20 @@ Event I: On exit Clicked - closes program
 
     private MainViewPanel main;
 
-    private JMenu file;
-    private JMenu options;
-    private JMenu help;
+    private JMenu fileMenu;
     private Action newProject;
     private Action openProject;
-    private JMenu exportProject;
+    private JMenu exportProjectMenu;
     private Action exportProjectToDAT;
     private Action exportProjectToDTD;
     private Action exportProjectToSRM;
     private Action exit;
+
+    private JMenu optionsMenu;
     private Action configuration;
-    private Action helpItem;
+
+    private JMenu helpMenu;
+    private Action help;
     private Action about;
 
     /**
@@ -84,14 +87,112 @@ Event I: On exit Clicked - closes program
      */
     public MainMenuBar(MainViewPanel main) {
         this.main = main;
+        initialize();
 
-        add(new JMenu("Menu bar"));
-        options = new JMenu("Options");
-        add(options);
-        configuration = new ItemAction("Configuration");
-        options.add(configuration);
+        fileMenu = new JMenu("File");
+        fileMenu.setMnemonic(KeyEvent.VK_F);
+        fileMenu.add(newProject);
+        fileMenu.add(openProject);
+        {
+            exportProjectMenu = new JMenu("Export");
+            exportProjectMenu.setMnemonic(KeyEvent.VK_E);
+            exportProjectMenu.add(exportProjectToDAT);
+            exportProjectMenu.add(exportProjectToDTD);
+            exportProjectMenu.add(exportProjectToSRM);
+        }
+        fileMenu.add(exportProjectMenu);
+        fileMenu.add(new JSeparator());
+        fileMenu.add(exit);
+        add(fileMenu);
 
-        return; // TODO
+        optionsMenu = new JMenu("Options");
+        optionsMenu.setMnemonic(KeyEvent.VK_O);
+        optionsMenu.add(configuration);
+        add(optionsMenu);
+
+        helpMenu = new JMenu("Help");
+        helpMenu.setMnemonic(KeyEvent.VK_H);
+        helpMenu.add(help);
+        helpMenu.add(about);
+        add(helpMenu);
+    }
+
+    private void initialize() {
+        /* FILE MENU ITEMS */
+        newProject = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                // TODO
+            }
+        };
+        newProject.putValue(Action.NAME, "New...");
+        newProject.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
+
+        openProject = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                // TODO
+            }
+        };
+        openProject.putValue(Action.NAME, "Open...");
+        openProject.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_O);
+
+        // File > Export Project menu items
+        exportProjectToDAT = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                // TODO
+            }
+        };
+        exportProjectToDAT.putValue(Action.NAME, "DAT File...");
+        exportProjectToDAT.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
+
+        exportProjectToDTD = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                // TODO
+            }
+        };
+        exportProjectToDTD.putValue(Action.NAME, "DTD File...");
+        exportProjectToDTD.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_T);
+
+        exportProjectToSRM = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                // TODO
+            }
+        };
+        exportProjectToSRM.putValue(Action.NAME, "SRM File...");
+        exportProjectToSRM.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
+
+        exit = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                // TODO
+            }
+        };
+        exit.putValue(Action.NAME, "Exit");
+        exit.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_X);
+
+        /* OPTIONS MENU ITEMS */
+        configuration = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                SettingsDialog.showSettingsDialog(main.getParentFrame(), "Configuration");
+            }
+        };
+        configuration.putValue(Action.NAME, "Configuration");
+        configuration.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
+
+        /* HELP MENU ITEMS */
+        help = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                // TODO
+            }
+        };
+        help.putValue(Action.NAME, "Help Topics");
+        help.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_H);
+
+        about = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                // TODO
+            }
+        };
+        about.putValue(Action.NAME, "About");
+        about.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
     }
 
     private class ItemAction extends AbstractAction {
@@ -103,8 +204,7 @@ Event I: On exit Clicked - closes program
         }
 
         public void actionPerformed(ActionEvent e) {
-            SettingsDialog.showSettingsDialog(main.getParentFrame(),
-                    "Configuration");
+
         }
     }
 
