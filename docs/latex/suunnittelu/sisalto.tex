@@ -6,13 +6,13 @@
 
 % nopsa pikkuluokkakaavioiden lisäysmakro
 \newcommand{\insertdia}[3] {
-	\begin{figure}[h]
+	% \begin{figure}[h]
 	\begin{center}
 	\includegraphics[width=#2]{dia/#1.eps}
-	\caption{#3}
-	\label{fig:#1}
+	% \caption{#3}
+	% \label{fig:#1}
 	\end{center}
-	\end{figure}
+	% \end{figure}
 }
 
 \section{Introduction}
@@ -83,7 +83,7 @@ Note that the structure of this section is exactly the same as sections \ref{sec
 \begin{figure}
 \begin{center}
 %\hspace{-2cm}\includegraphics[angle=90,width=16cm]{dia/core.eps}
-\hspace{-2cm}\includegraphics[width=17cm]{dia/core.eps}
+\includegraphics[width=17cm]{dia/core.eps}
 \caption{Squid class diagram: central classes}
 \label{fig:core}
 \end{center}
@@ -100,7 +100,7 @@ Package ikayaki holds generic data classes, ikayaki.squid holds classes loosely 
 Responsible for holding all the measurement data and controlling the SQUID. Most of the GUI classes use the Project class. When the state of the project changes, the Project class fires ProjectEvents and MeasurementEvents to the GUI classes, which in turn will call the Project class to get the changed information.
 
 \subsubsection{Squid interface}
-\insertdia{core-squid}{10cm}{Squid interface}
+\insertdia{core-squid}{12cm}{Squid interface}
 
 Squid Interface offers the Project class an interface to safely control the SQUID magnetometer. It holds three subclasses that handle communication to to three separate parts of the SQUID (Handler, Degausser and Magnetometer).
 
@@ -112,7 +112,7 @@ Classes are Squid, Handler, Magnetometer, Degausser.
 This is separate from other and is used only for testing the Squid Interface that it works correctly.
 
 \subsubsection{Serial communication}
-\insertdia{core-serial}{10cm}{Serial communication}
+\insertdia{core-serial}{12cm}{Serial communication}
 
 SerialIO and classes related to it takes care of the harware layer of serial communication. Using these classes Ikayaki communicates with the Degausser, Samplehandler and Magnetometer. SerialIO represents one serial port and when it's created it reserves the port to itself. SerialProperties class includes all the configuration data for the serial port.
 
@@ -145,7 +145,7 @@ All gui classes are in package ikayaki.gui.
 ProjectComponent, a generic gui base class which handles registering Project- and MeasurementListeners to new projects, and which every gui component subclasses.
 
 \subsubsection{Main window}
-\insertdia{gui-main}{10cm}{Main window}
+\insertdia{gui-main}{12cm}{Main window}
 
 \subsubsection{Configuration window}
 
