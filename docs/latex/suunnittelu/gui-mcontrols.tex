@@ -30,6 +30,11 @@
 \fieldDeclaration{private JButton stopButton}
 \closeField
 
+\beginField{zButtonGroup}
+\fieldDeclaration{private ButtonGroup zButtonGroup}
+\fieldComment{Groups together +z and -z RadioButtons.}
+\closeField
+
 \beginField{zPlusRadioButton}
 \fieldDeclaration{private JRadioButton zPlusRadioButton}
 \closeField
@@ -66,7 +71,7 @@
 \closeMethod
 
 \beginMethod{updateStatus(int,int)}
-\methodDeclaration{public updateStatus(int position, int rotation)}
+\methodDeclaration{public void updateStatus(int position, int rotation)}
 \methodComment{Updates magnetometer status picture; called by MeasurementControlsPanel when it receives MeasurementEvent.}
 \methodParam{position}{sample holder position, from 1 to 16777215.}
 \methodParam{rotation}{sample holder rotation, from 0 (angle 0) to 2000 (angle 360).}
@@ -85,7 +90,7 @@
 
 \beginField{moveButtonGroup}
 \fieldDeclaration{private ButtonGroup moveButtonGroup}
-\fieldComment{Groups together all sample holder moving radiobuttons (moveXXX).}
+\fieldComment{Groups together all sample holder moving RadioButtons (moveXXX).}
 \closeField
 
 \beginField{moveHome}
@@ -115,12 +120,27 @@
 
 \beginField{rotateButtonGroup}
 \fieldDeclaration{private ButtonGroup rotateButtonGroup}
-\fieldComment{Groups together all sample holder rotating radiobuttons (rotateXXX).}
+\fieldComment{Groups together all sample holder rotating RadioButtons (rotateXXX).}
 \closeField
 
-\beginField{rotateX}
-\fieldDeclaration{private JRadioButton rotateX}
-\fieldComment{Rotates sample holder to angle X, where X is 0, 90, 180 or 270.}
+\beginField{rotate0}
+\fieldDeclaration{private JRadioButton rotate0}
+\fieldComment{Rotates sample holder to angle 0.}
+\closeField
+
+\beginField{rotate90}
+\fieldDeclaration{private JRadioButton rotate90}
+\fieldComment{Rotates sample holder to angle 90.}
+\closeField
+
+\beginField{rotate180}
+\fieldDeclaration{private JRadioButton rotate180}
+\fieldComment{Rotates sample holder to angle 180.}
+\closeField
+
+\beginField{rotate270}
+\fieldDeclaration{private JRadioButton rotate270}
+\fieldComment{Rotates sample holder to angle 270.}
 \closeField
 
 \beginField{measureAllButton}
