@@ -536,10 +536,14 @@ public class MainViewPanel extends ProjectComponent {
                     JOptionPane.showMessageDialog(MainViewPanel.this,
                             Ikayaki.APP_NAME + " " + Ikayaki.APP_VERSION + " / purselo\n\n" +
                             Ikayaki.APP_HOME_PAGE + "\n\n" +
-                            "Mikko Jormalainen\nSamuli Kaipiainen\nAki Korpua\nEsko Luontola\nAki Sysmäläinen",
+                            "Mikko Jormalainen\n" +
+                            "Samuli Kaipiainen\n" +
+                            "Aki Korpua\n" +
+                            "Esko Luontola\n" +
+                            "Aki Sysmäläinen",
                             "About " + Ikayaki.APP_NAME, JOptionPane.INFORMATION_MESSAGE,
                             // TODO: add some nice picture here :)
-                            new ImageIcon(ClassLoader.getSystemResource("resources/projectExplorerTabDown.png")));
+                            new ImageIcon(ClassLoader.getSystemResource("resources/ikayaki.png")));
                 }
             };
             aboutAction.putValue(Action.NAME, "About");
