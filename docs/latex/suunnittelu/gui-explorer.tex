@@ -13,7 +13,8 @@
 \classUses{RunQueue}
 \classEvent{On browserField change}{send autocomplete-results-finder with browserField's text to RunQueue via runQueue.offer(Runnable), which schedules disk access and displaying autocomplete results in browserField's popup window.}
 \classEvent{On browserField down-arrow-click}{show directory history in browserField's popup window.}
-\classEvent{On browseButton click}{open a FileChooser dialog for choosing new directory and tell explorerTable and browserField to change to that directory.}
+\classEvent{On browserField popup window click}{set clicked line as {\it directory}, update {\it files} listing, update explorerTable and browserField.}
+\classEvent{On browseButton click}{open a FileChooser dialog for choosing new directory, set it to {\it directory}, update {\it files} listing, update explorerTable and browserField.}
 \classEvent{On ProjectEvent}{hilight project whose measuring started, or unhilight one whose measuring ended.}
 \closeClass
 
@@ -54,7 +55,7 @@
 
 \beginMethod{ProjectExplorerPanel(Project)}
 \methodDeclaration{public ProjectExplorerPanel(Project project)}
-\methodComment{Creates all components, sets directory as the last open directory, initializes files with files from that directory.}
+\methodComment{Creates all components, sets {\it directory} as the last open directory, initializes {\it files} with files from that directory.}
 \closeMethod
 
 \beginMethod{setProject(Project)}
@@ -91,14 +92,14 @@
 
 \beginClass{ProjectExplorerTable}
 \classComment{
-	Creates a list of project files in directory. Handles loading selected projects and showing export popup menu (ProjectExplorerPopupMenu). Inner class of ProjectExplorerPanel.
+	Creates a list of project files in {\it directory}. Handles loading selected projects and showing export popup menu (ProjectExplorerPopupMenu). Inner class of ProjectExplorerPanel.
 }
+% What the hell anyway, I'm confused.. *whacks some stupid monsters with a chainsaw* NNNNnnnnnnnnrrnnnnnnnn-splat-grah-blurts-blorp-stuff-guttering
 \classPackage{ikayaki.gui}
 \classDeclaration{public class ProjectExplorerTable}
 \classExtends{JTable}
 \classCreatedBy{ProjectExplorerPanel}
 \classUses{MainViewPanel}
-% What the hell anyway, I'm confused.. *whacks some stupid monsters with a chainsaw* NNNNnnnnnnnnrrnnnnnnnn-splat-grah-blurts-blorp-stuff-guttering
 \classEvent{On explorerTable click}{call Project.loadProject(File) with clicked project file, call MainViewPanel.changeProject(Project) with returned Project unless null, on which case show error message and revert explorerTable selection to old project, if any.}
 \classEvent{On explorerTable mouse right-click}{create a ProjectExplorerPopupMenu for right-clicked project file.}
 \closeClass
@@ -117,5 +118,5 @@
 \classDeclaration{public class ProjectExplorerPopupMenu}
 \classExtends{JPopupMenu}
 \classCreatedBy{ProjectExplorerPanel}
-\classEvent{On selectItem mouseEvent}{call project.exportXXX()...}
+\classEvent{On selectItem mouseEvent}{call project.exportXXX(); if false is returned, show error message.}
 \closeClass
