@@ -139,8 +139,8 @@ be closed.
 
         // TESTS:
 
-        Settings.instance().updateDirectoryHistory(new File("."));
-        Settings.instance().updateDirectoryHistory(new File(".."));
-        Settings.instance().updateDirectoryHistory(new File("../.."));
+//        Settings.instance().updateDirectoryHistory(new File("."));
+//        Settings.instance().updateDirectoryHistory(new File(".."));
+//        Settings.instance().updateDirectoryHistory(new File("../.."));
     }
 }
