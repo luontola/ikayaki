@@ -61,12 +61,12 @@ be closed.
     public Ikayaki(Project project) throws HeadlessException {
         super(APP_NAME + " " + APP_VERSION);
 
-//        PlasticLookAndFeel.setMyCurrentTheme(new DesertBluer());
-//        try {
-//            UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        PlasticLookAndFeel.setMyCurrentTheme(new DesertBluer());
+        try {
+            UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         final MainViewPanel main = new MainViewPanel(project);
 
