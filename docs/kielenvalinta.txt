@@ -9,6 +9,13 @@ Java (rajapinta vanhaan koodiin JNI:llä)
 - Käyttöliittymän tekeminen javalla ei myöskään ole kovin mukavaa (edes 
   esim. Jbuilderin kälikehittimellä -- verrattuna johonkin Visual C:n 
   kälieditoriin). Vai onko jollain toista näkemystä?
++ Toinen näkemys (Esko):
+     Tässä on kuinka IDEA:n UI Designer toimii. Sillä tuntuu olevan nopeaa
+     tehdä GridBag-tyylisiä layoutteja ja käsin koodattavaksi jää
+     ainoastaan toiminnallisuuden tekeminen. Lukekaa ensimmäisestä linkistä
+     vaikka "Building GUI Forms" ja "Making GUI Forms Function".
+     http://www.jetbrains.com/idea/docs/help/uidesigner/
+     http://www.intellij.org/twiki/bin/view/Main/IntelliJUIDesignerGuide
 
 C++
 + Vain yhtä kieltä ja samassa kasassa kaikki
