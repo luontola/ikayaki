@@ -22,6 +22,8 @@
 
 package ikayaki;
 
+import static java.lang.Math.sin;
+import static java.lang.Math.cos;
 import static java.lang.Math.PI;
 import static java.lang.Math.atan;
 import static java.lang.Math.pow;
@@ -194,9 +196,36 @@ public abstract class MeasurementValue <T> {
      * Calculates the Theta 63 value from the measurement result set.
      */
     public static final MeasurementValue<Double> THETA63 =
-            new MeasurementValue<Double>("caption", "unit", "description") {
+            new MeasurementValue<Double>("\u03b863", "\u00b0", "Angular standard deviation") {
                 public Double getValue(MeasurementStep step) {
-                    return null; // TODO
+                    if (step.getResults() == 0) {
+                        return null;
+                    }
+//                  double sumL = 0.0;
+//                  double sumM = 0.0;
+//                  double sumN = 0.0;
+                    double sumL2 = 0.0;
+                    double sumM2 = 0.0;
+                    double sumN2 = 0.0;
+
+                    for (int i = 0; i < step.getResults(); i++) {
+                        MeasurementResult r = step.getResult(i);
+                        double declination = atan(r.getX() / r.getY());
+                        double inclination = atan(r.getZ() / sqrt(pow(r.getX(), 2) + pow(r.getY(), 2)));
+                        double l = cos(declination) * cos(inclination);
+                        double m = sin(declination) * cos(inclination);
+                        double n = sin(inclination);
+//                      sumL += l;
+//                      sumM += m;
+//                      sumN += n;
+                        sumL2 += l * l;
+                        sumM2 += m * m;
+                        sumN2 += n * n;
+                    }
+
+                    double R = sqrt(sumL2 + sumM2 + sumN2);
+                    double k = (step.getResults() - 1) / (step.getResults() - R);
+                    return 81.0 / sqrt(k);
                 }
             };
 
