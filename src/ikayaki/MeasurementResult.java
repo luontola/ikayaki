@@ -61,7 +61,11 @@ public class MeasurementResult {
      * @throws NullPointerException if type is null.
      */
     public MeasurementResult(Type type, double x, double y, double z) {
-        return; // TODO
+        if (type == null) {
+            throw new NullPointerException();
+        }
+        this.type = type;
+        rawVector.set(x, y, z);
     }
 
     /**
