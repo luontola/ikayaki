@@ -1,0 +1,50 @@
+% macros for generating design documents and javadoc
+
+\newcommand{\ReqName}[2]{
+	\begin{tabular}{p{2.5cm}p{11.5cm}}
+	\multicolumn{2}{p{14cm}} {
+		\hspace{-0.32cm}
+		\textbf{#1: #2}
+	}\\
+}
+\newcommand{\ReqDesc}[1]{\textbf{Description} & #1\\}
+\newcommand{\ReqPrio}[1]{\textbf{Priority} & #1\\}
+\newcommand{\ReqSet}[1]{\textbf{Set by} & #1\\}
+\newcommand{\ReqUc}[1]{\textbf{Use Cases} & #1\\}
+\newcommand{\ReqEND}[0]{\end{tabular}}
+
+
+
+
+\beginClass{RunQueue}
+\classPackage{ikayaki.util}
+\classDeclaration{public class RunQueue}
+\classExtends{Object}
+\classImplements{FooBarInterface}
+\classSubclass{ChildRunQueue}
+\classComment{
+	Executes Runnable objects in a private worker thread after a pre-defined delay. The worker thread will terminate automatically when there are no runnables to be executed. Optionally executes only the last inserted runnable. All operations are thread-safe.
+
+	This class can be used for example in connection with a "continuous search" invoked by a series of GUI events (such as a DocumentListener), but it is necessary to react to only the last event after a short period of user inactivity.
+}
+\classPatterns{Command, Strategy}
+\endClass
+
+\beginMethod{offer}
+\methodDeclaration{public synchronized boolean offer(Runnable runnable)}
+\methodComment{
+	Inserts a Runnable object to the end of the queue. It will remain there until it is executed or another object replaces it. If execOnlyLast is set to true, the queue will be cleared before inserting this runnable to it. If there is no worker thread running, a new one will be spawned.
+}
+\methodParam{runnable}{the Runnable to be run after a pre-defined delay}
+\methodReturns{true}
+\methodThrows{NullPointerException}{if runnable is null}
+\endMethod
+
+\beginField{queue}
+\fieldDeclaration{private DelayQueue<RunDelayed> queue}
+\fieldValue{new DelayQueue<RunDelayed>()}
+\fieldComment{
+	Prioritized FIFO queue for containing the RunDelayed items that have not expired. If execOnlyLast is true, then this queue should never contain more than one item.
+}
+\endField
+
