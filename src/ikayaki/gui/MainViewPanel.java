@@ -165,6 +165,7 @@ public class MainViewPanel extends ProjectComponent {
         tabButton.setContentAreaFilled(false);
         tabButton.setBorder(null);
         tabButton.setFocusable(false);
+        tabButton.setMnemonic('P');
         tabButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (splitPane.getDividerLocation() == 0) {
