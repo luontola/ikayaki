@@ -6,14 +6,16 @@
 %\input{docmacro-javadoc}
 
 % nopsa pikkuluokkakaavioiden lis‰ysmakro
-% pois figuren sis‰lt‰ niin kuvat tulee minne pit‰‰kin, ilman kuvateksti‰ ja kuvanumerointia tosin
+% pois figuren sis‰lt‰ niin kuvat tulee minne pit‰‰kin, feikataan kuvanumerointi ja kuvateksti
 \newcommand{\insertdia}[1] {
-	% \begin{figure}[h]
+	% \begin{figure}[h!]
 	\begin{center}
 	\includegraphics[scale=0.33]{dia/#1.eps}
-	% \includegraphics[width=#2]{dia/#1.eps}
-	% \caption{#3}
-	% \label{fig:#1}
+	% \caption{#1}
+	\refstepcounter{figure}
+	\label{fig:#1}
+	\nopagebreak \\ \medskip Figure \arabic{figure}: #1 \\
+	\addcontentsline{lof}{figure}{#1}
 	\end{center}
 	% \end{figure}
 }
@@ -29,7 +31,7 @@ The document serves as an internal guide to the project team for aiding implemen
 
 \par Section~\ref{sec:intro} (this section) describes the meaning and structure of the document.
 \par Section~\ref{sec:code} describes coding conventions used by the project group in this sowtware.
-\par Section~\ref{sec:over} describes the software and architecture at high abstarction.
+\par Section~\ref{sec:overview} describes the software and architecture at high abstarction.
 \par Section~\ref{sec:arch} describes planned architecture at lower abstarction, including class diagrams and a short description of each subsystem.
 \par Section~\ref{sec:data} describes planned data classes.
 \par Section~\ref{sec:gui} describes planned gui classes.
@@ -63,10 +65,11 @@ It is recommendable for everybody to have a quick glance at Design Patterns. Her
 
 
 \section{Overview of the system}
-\label{sec:over}
+\label{sec:overview}
 
-% T‰ll‰ pit‰is varmaan ainaskin olla kuvanumero? Mutta sitten menisi kaavioiden v‰liset viitteet sekaisin...
 \insertdia{overview}
+
+Overview and architecture of the system is illustrated in Figure~\ref{fig:overview}.
 
 This system has two different separete project, Ikayaki-program and Squid Emulator which is subproject. Ikayaki, as main project, has graphical user interface (see requirements-document) and interface for communicating with SQUID magnetometer (Superconducting Quantum Interference Device) to measusure magnetization of minerals and rocks. Squid Emulator is vital for testing Ikayaki and it will be simple command-line program which emulates only data flow with random data and communication.
 
@@ -291,7 +294,7 @@ Graph panels visualize the measurement data. MeasurementGraphsPanel listens to M
 \section{Testing}
 \label{sec:test}
 
-Because program will be used to control a magnetometer, testing will be more important than in normal OHTU-projects. We will do unit testing for each class, integrate testing to program and use separate squid emulator to test squid interface system. 
+Because program will be used to control a magnetometer, testing will be more important than in normal software engineering student projects. We will do unit testing for each class, integrate testing to program and use separate squid emulator to test squid interface system. 
 
 In unit testing each class is tested independently. Unit testing will be done by using JUnit. Every programmer will test his own classes. Class should be tested when it is finished and corrected before integration test begins. 
 
