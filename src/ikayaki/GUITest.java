@@ -34,8 +34,8 @@ public class GUITest extends JFrame {
     public GUITest() throws HeadlessException {
         setLayout(new BorderLayout());
         add(contentPane, "Center");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
-
     }
 
     public static void main(String[] args) {
