@@ -321,7 +321,7 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         closeWindow();
       }
       catch(Exception e) {
-
+          e.printStackTrace();
       }
     }
 
