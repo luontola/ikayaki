@@ -18,7 +18,7 @@ public class HourParser {
 
     /* Application information */
     public static final String APP_NAME = "HourParser";
-    public static final String APP_VERSION = "1.01 CVS";
+    public static final String APP_VERSION = "1.01";
     public static final String APP_HOME_PAGE = "http://www.cs.helsinki.fi/group/squid/";
     public static final String COMMAND_LINE = "java -jar HourParser.jar";
 
