@@ -91,7 +91,7 @@ whose measuring ended.
     /**
      * LastExecutor for scheduling autocomplete results to separate thread (disk access and displaying).
      */
-    private LastExecutor autocompleteExecutor = new LastExecutor(150, true);
+    private LastExecutor autocompleteExecutor = new LastExecutor(100, true);
 
     /**
      * Currently open directory.
@@ -132,21 +132,23 @@ whose measuring ended.
         browserField = new JComboBox(getDirectoryHistory());
         browserField.setEditable(true);
         browserField.setBackground(Color.WHITE);
+        browserField.setPreferredSize(new Dimension(50, 20));
         // browserField.getEditor().getEditorComponent().setFocusTraversalKeysEnabled(false);
         browserFieldEditor = (JTextField) browserField.getEditor().getEditorComponent();
 
         // scroll to the end of the combo box's text field
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
                 /* HACK:
                  * This hack will work only if we are currently in the event-dispatching thread.
                  * Otherwise the setCaretPosition will be executed before the GUI is visible,
                  * and the JTextField will not scroll automatically to show the caret.
                  */
+                // UNHACK: works fine for me...
                 // scroll the caret to be visible when the program starts
-                browserFieldEditor.setCaretPosition(browserFieldEditor.getDocument().getLength());
-            }
-        });
+                setBrowserFieldCursorToEnd();
+//            }
+//        });
 
         // browse button
         browseButton = new JButton("Browse...");
@@ -246,10 +248,10 @@ whose measuring ended.
             // gui updating must be done from event-dispatching thread
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    if (browserField.isPopupVisible()) {
-                        // when the popup is hidden before showing, it will be automatically resized
-                        browserField.hidePopup();
-                    }
+                    // when the popup is hidden before showing, it will be automatically resized
+                    // -- but, it flickers awkwardly; also don't know what you mean by that autoresize?
+                    // if (browserField.isPopupVisible()) browserField.hidePopup();
+
                     browserFieldNextPopupAutocomplete = true;
                     browserField.showPopup();
                 }
@@ -289,7 +291,7 @@ whose measuring ended.
      * Reads project file listing from given directory.
      *
      * @param directory directory whose project file listing to read.
-     * @return project files in that directory.
+     * @return project files in that directory, sorted alphabetically.
      */
     private File[] getProjectFiles(File directory) {
         File[] files = directory.listFiles(new FileFilter() {
@@ -365,6 +367,13 @@ whose measuring ended.
         browserField.setSelectedIndex(-1);
         browserFieldEditor.setText(browserFieldEditorText);
         browserFieldEditor.setCaretPosition(browserFieldEditorCursorPosition);
+    }
+
+    /**
+     * Sets browserField's cursor to text field's (right) end.
+     */
+    private void setBrowserFieldCursorToEnd() {
+        browserFieldEditor.setCaretPosition(browserFieldEditor.getDocument().getLength());
     }
 
     /**
