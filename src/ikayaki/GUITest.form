@@ -36,9 +36,9 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="f7323" class="javax.swing.JTextField">
+              <component id="f7323" class="javax.swing.JTextField" binding="textField5">
                 <constraints>
-                  <xy x="0" y="25" width="50" height="21"/>
+                  <xy x="0" y="25" width="52" height="21"/>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="1">
                     <preferred-size width="50" height="-1"/>
                   </grid>
@@ -48,9 +48,9 @@
                   <text value="0"/>
                 </properties>
               </component>
-              <component id="8aba8" class="javax.swing.JTextField">
+              <component id="8aba8" class="javax.swing.JTextField" binding="textField6">
                 <constraints>
-                  <xy x="60" y="25" width="50" height="21"/>
+                  <xy x="62" y="25" width="50" height="21"/>
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="1">
                     <preferred-size width="50" height="-1"/>
                   </grid>
@@ -60,9 +60,9 @@
                   <text value="0"/>
                 </properties>
               </component>
-              <component id="9458b" class="javax.swing.JTextField">
+              <component id="9458b" class="javax.swing.JTextField" binding="textField7">
                 <constraints>
-                  <xy x="120" y="25" width="50" height="21"/>
+                  <xy x="122" y="25" width="50" height="21"/>
                   <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="1">
                     <preferred-size width="50" height="-1"/>
                   </grid>
@@ -74,7 +74,7 @@
               </component>
               <component id="7cdf5" class="javax.swing.JLabel">
                 <constraints>
-                  <xy x="0" y="6" width="46" height="14"/>
+                  <xy x="0" y="6" width="52" height="14"/>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="10" fill="0"/>
                 </constraints>
                 <properties>
@@ -83,7 +83,7 @@
               </component>
               <component id="44ed6" class="javax.swing.JLabel">
                 <constraints>
-                  <xy x="60" y="6" width="49" height="14"/>
+                  <xy x="62" y="6" width="49" height="14"/>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="10" fill="0"/>
                 </constraints>
                 <properties>
@@ -92,7 +92,7 @@
               </component>
               <component id="80e1c" class="javax.swing.JLabel">
                 <constraints>
-                  <xy x="120" y="6" width="34" height="14"/>
+                  <xy x="122" y="6" width="34" height="14"/>
                   <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="10" fill="0"/>
                 </constraints>
                 <properties>
@@ -101,7 +101,7 @@
               </component>
               <hspacer id="c8550">
                 <constraints>
-                  <xy x="170" y="30" width="299" height="11"/>
+                  <xy x="172" y="30" width="297" height="11"/>
                   <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1"/>
                 </constraints>
               </hspacer>
@@ -255,7 +255,7 @@
                       <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
                     </constraints>
                     <properties>
-                      <text value="Panic Abort!"/>
+                      <text value="Stop Immediately"/>
                     </properties>
                   </component>
                   <hspacer id="d40d1">
