@@ -3,29 +3,53 @@
 <!-- -->    <description>    </description>
 
     <tasks color="#8cb6ce">
-        <task id="0" name="Projektisuunnitelma" color="#8cb6ce" meeting="false" start="25/1/2005" duration="21" complete="0" fixed-start="false" priority="1" expand="true"/>
+        <task id="0" name="Projektisuunnitelma" color="#8cb6ce" meeting="false" start="25/1/2005" duration="21" complete="0" fixed-start="false" priority="1" expand="true">
+            <depend id="24" type="2"/>
+        </task>
+        <task id="24" name="Project Plan" color="#8cb6ce" meeting="true" start="15/2/2005" duration="1" complete="0" fixed-start="false" priority="1" expand="true"/>
         <task id="1" name="Definition" color="#8cb6ce" meeting="false" start="25/1/2005" duration="28" complete="0" fixed-start="false" priority="1" expand="true">
             <depend id="2" type="2"/>
+            <depend id="25" type="2"/>
         </task>
+        <task id="25" name="Requirements Document" color="#8cb6ce" meeting="true" start="22/2/2005" duration="1" complete="0" fixed-start="false" priority="1" expand="true"/>
         <task id="2" name="(Main) Design" color="#8cb6ce" meeting="false" start="22/2/2005" duration="21" complete="0" fixed-start="false" priority="1" expand="true">
             <depend id="8" type="2"/>
+            <depend id="26" type="2"/>
+            <depend id="32" type="2"/>
         </task>
-        <task id="8" name="(Main) Production" color="#8cb6ce" meeting="false" start="15/3/2005" duration="14" complete="0" fixed-start="false" priority="1" expand="true">
-            <depend id="11" type="2"/>
-        </task>
-        <task id="11" name="(Main) Testing" color="#8cb6ce" meeting="false" start="29/3/2005" duration="28" complete="0" fixed-start="false" priority="1" expand="true">
-            <depend id="12" type="2"/>
-        </task>
-        <task id="12" name="Installing" color="#8cb6ce" meeting="false" start="26/4/2005" duration="7" complete="0" fixed-start="false" priority="1" expand="true"/>
         <task id="13" name="(Sub) Design" color="#8cb6ce" meeting="false" start="25/1/2005" duration="28" complete="0" fixed-start="false" priority="1" expand="true">
             <depend id="14" type="2"/>
+            <depend id="26" type="2"/>
+            <depend id="32" type="2"/>
+        </task>
+        <task id="26" name="Design Document" color="#8cb6ce" meeting="true" start="15/3/2005" duration="1" complete="0" fixed-start="false" priority="1" expand="true"/>
+        <task id="32" name="Testing Plan" color="#8cb6ce" meeting="true" start="15/3/2005" duration="1" complete="0" fixed-start="false" priority="1" expand="true"/>
+        <task id="8" name="(Main) Production" color="#8cb6ce" meeting="false" start="15/3/2005" duration="14" complete="0" fixed-start="false" priority="1" expand="true">
+            <depend id="11" type="2"/>
+            <depend id="34" type="2"/>
         </task>
         <task id="14" name="(Sub) Production" color="#8cb6ce" meeting="false" start="22/2/2005" duration="7" complete="0" fixed-start="false" priority="1" expand="true">
             <depend id="15" type="2"/>
+            <depend id="34" type="2"/>
+        </task>
+        <task id="34" name="Program Code" color="#8cb6ce" meeting="true" start="29/3/2005" duration="1" complete="0" fixed-start="false" priority="1" expand="true"/>
+        <task id="11" name="(Main) Testing" color="#8cb6ce" meeting="false" start="29/3/2005" duration="28" complete="0" fixed-start="false" priority="1" expand="true">
+            <depend id="12" type="2"/>
+            <depend id="27" type="2"/>
+            <depend id="28" type="2"/>
+            <depend id="29" type="2"/>
         </task>
         <task id="15" name="(Sub) Testing" color="#8cb6ce" meeting="false" start="1/3/2005" duration="21" complete="0" fixed-start="false" priority="1" expand="true">
             <depend id="11" type="2"/>
+            <depend id="27" type="2"/>
         </task>
+        <task id="27" name="Testing Report" color="#8cb6ce" meeting="true" start="26/4/2005" duration="1" complete="0" fixed-start="false" priority="1" expand="true"/>
+        <task id="28" name="User Manual" color="#8cb6ce" meeting="true" start="26/4/2005" duration="1" complete="0" fixed-start="false" priority="1" expand="true"/>
+        <task id="29" name="Realization Document" color="#8cb6ce" meeting="true" start="26/4/2005" duration="1" complete="0" fixed-start="false" priority="1" expand="true"/>
+        <task id="12" name="Installing" color="#8cb6ce" meeting="false" start="26/4/2005" duration="7" complete="0" fixed-start="false" priority="1" expand="true">
+            <depend id="30" type="2"/>
+        </task>
+        <task id="30" name="Final Report" color="#8cb6ce" meeting="true" start="3/5/2005" duration="1" complete="0" fixed-start="false" priority="1" expand="true"/>
     </tasks>
 
     <resources>
