@@ -131,6 +131,11 @@ whose measuring ended.
         browserField.setBackground(Color.WHITE);
         // browserField.getEditor().getEditorComponent().setFocusTraversalKeysEnabled(false);
 
+        // scroll to the end of the combo box's text field
+        JTextField browserTextField = (JTextField) browserField.getEditor().getEditorComponent();
+        browserTextField.setCaretPosition(browserTextField.getDocument().getLength());
+        // TODO: scroll the caret to be visible when the program starts
+
         // browse button
         browseButton = new JButton("Browse...");
 
