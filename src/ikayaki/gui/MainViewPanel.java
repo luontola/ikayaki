@@ -258,7 +258,10 @@ public class MainViewPanel extends ProjectComponent {
             getExportProjectToSRMAction().setEnabled(true);
         } else {
             // update GUI components
-            getParentFrame().setTitle(null);
+            Frame parent = getParentFrame();
+            if (parent != null) {
+                getParentFrame().setTitle(null);
+            }
             getProjectInformationPanel().setBorder(BorderFactory.createTitledBorder("Project Information"));
             getExportProjectToDATAction().setEnabled(false);
             getExportProjectToTDTAction().setEnabled(false);
