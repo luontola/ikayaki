@@ -353,6 +353,7 @@ whose measuring ended.
     private File[] getProjectFiles(File directory) {
         File[] files = directory.listFiles(new FileFilter() {
             public boolean accept(File file) {
+                // TODO: shouldn't this return only a list of valid project files? so why is Ikayaki.FILE_TYPE commented out?
                 return (file.isFile() && file.getName().endsWith(/*Ikayaki.FILE_TYPE*/ ""));
             }
         });
