@@ -95,10 +95,13 @@ public class Person {
      *
      * @param start The beginning of the time period
      * @param end   The end of the time period
-     * @param code  The code of the work type to be included
+     * @param code  The code of the work type to be included or null to include all
      * @return Total hours of work during the time period
      */
     public double getHours(Date start, Date end, String code) {
+        if (code == null) {
+            return getHours(start, end);
+        }
         Entry[] entries = getEntries(start, end);
         double sum = 0.0;
         for (Entry e : entries) {
