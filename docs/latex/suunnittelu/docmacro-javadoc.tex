@@ -1,0 +1,157 @@
+
+% Macros for generating design documents and .java files
+
+% MACROS FOR CLASS DOCUMENTATION
+\newcommand{\getClass}[0]{}
+\newcommand{\beginClass}[1] {
+	\subsubsection{#1}
+	
+	\renewcommand{\getClass}[0]{#1}
+	\label{class:#1}
+	
+	\begin{hyphenrules}{nohyphenation}
+	\begin{tabular}{p{3cm}p{11cm}}
+}
+\newcommand{\classComment}[1] {
+	\multicolumn{2}{p{14cm}} {
+		#1
+	}\\
+}
+\newcommand{\classPackage}[1] {
+	\textbf{Package} & #1 \\
+}
+\newcommand{\classDeclaration}[1] {
+	\textbf{Declaration} & #1 \\
+}
+\newcommand{\classExtends}[1] {
+	\textbf{Extends} & #1 \\
+}
+\newcommand{\classImplements}[1] {
+	\textbf{Implements} & #1 \\
+}
+\newcommand{\classCreatedBy}[1] {
+	\textbf{Created by} & #1 (\ref{class:#1}) \\
+}
+\newcommand{\classUses}[1] {
+	\stepcounter{classUsesCounter}
+	\textbf{Uses \arabic{classUsesCounter}} & #1 (\ref{class:#1}) \\
+}
+\newcommand{\classSubclass}[1] {
+	\stepcounter{classSubclassCounter}
+	\textbf{Subclass \arabic{classSubclassCounter}} & #1 (\ref{class:#1}) \\
+}
+\newcommand{\classPatterns}[1] {
+	\textbf{Design patterns} & #1 \\
+}
+\newcommand{\classEvent}[2] {
+	\stepcounter{classEventCounter}
+	\textbf{Event \Alph{classEventCounter}} & \textit{#1} - #2 \\
+}
+\newcommand{\closeClass}[0] {
+	\end{tabular}\\
+	\end{hyphenrules}
+	
+	\setcounter{classUsesCounter}{0}
+	\setcounter{classSubclassCounter}{0}
+	\setcounter{classEventCounter}{0}
+	
+	\renewcommand{\isFirstField}[0]{ \large\textbf{Fields of \getClass}\normalsize }
+	\renewcommand{\isFirstMethod}[0]{ \large\textbf{Methods of \getClass}\normalsize }
+}
+\newcounter{classUsesCounter}
+\newcounter{classSubclassCounter}
+\newcounter{classEventCounter}
+\newcommand{\isFirstField}[0]{}
+\newcommand{\isFirstMethod}[0]{}
+
+
+% MACROS FOR CLASS TABLE OF CONTENTS
+\newcommand{\beginToc}[0] {
+	\begin{hyphenrules}{nohyphenation}
+	%\begin{tabular*}{14cm}{lr}
+	\begin{tabular*}{14cm}{@{\extracolsep{\fill}}lr}
+	\textbf{Method} & \textbf{Page} \\
+}
+\newcommand{\tocMethod}[1] {
+	#1 & \pageref{method:\getClass.#1} \\
+}
+\newcommand{\closeToc}[0] {
+	\end{tabular*}\\
+	\end{hyphenrules}
+}
+
+
+% MACROS FOR FIELD DOCUMENTATION
+\newcommand{\getField}[0]{}
+\newcommand{\beginField}[1] {
+	\isFirstField
+	\renewcommand{\isFirstField}[0]{}
+	
+	\renewcommand{\getField}[0]{#1}
+	\label{field:\getClass.#1}
+	
+	\begin{hyphenrules}{nohyphenation}
+	\begin{tabular}{p{3cm}p{11cm}}
+}
+\newcommand{\fieldDeclaration}[1] {
+	\multicolumn{2}{p{14cm}} {
+		\hspace{-0.32cm}
+%		\large{\textsf{#1}}
+		\textsf{#1}
+	}\\
+}
+\newcommand{\fieldValue}[1] {
+	\textbf{Default value} & #1 \\
+}
+\newcommand{\fieldComment}[1] {
+	\multicolumn{2}{p{14cm}} {
+		#1
+	}\\
+}
+\newcommand{\closeField}[0] {
+	\end{tabular}\\
+	\end{hyphenrules}
+}
+
+
+% MACROS FOR METHOD DOCUMENTATION
+\newcommand{\getMethod}[0]{}
+\newcommand{\beginMethod}[1] {
+	\isFirstMethod
+	\renewcommand{\isFirstMethod}[0]{}
+	
+	\renewcommand{\getMethod}[0]{#1}
+	\label{method:\getClass.#1}
+	
+	\begin{hyphenrules}{nohyphenation}
+	\begin{tabular}{p{3cm}p{11cm}}
+}
+\newcommand{\methodDeclaration}[1] {
+	\multicolumn{2}{p{14cm}} {
+		\hspace{-0.32cm}
+%		\large{\textsf{#1}}
+		\textsf{#1}
+	}\\
+}
+\newcommand{\methodComment}[1] {
+	\multicolumn{2}{p{14cm}} {
+		#1
+	}\\
+}
+\newcommand{\methodParam}[2] {
+	\stepcounter{methodParamCounter}
+	\textbf{Parameter \arabic{methodParamCounter}} & \textit{#1} - #2 \\
+}
+\newcommand{\methodReturn}[1] {
+	\textbf{Returns} & #1 \\
+}
+\newcommand{\methodThrows}[2] {
+	\textbf{Throws} & \textit{#1} - #2 \\
+}
+\newcommand{\closeMethod}[0] {
+	\end{tabular}\\
+	\end{hyphenrules}
+	\setcounter{methodParamCounter}{0}
+}
+\newcounter{methodParamCounter}
+
