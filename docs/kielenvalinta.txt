@@ -6,6 +6,8 @@ Java (rajapinta vanhaan koodiin JNI:llä)
 - Härpätin, kahta eri koodia. Tuleeko ongelmia?
 
 - "Javamainen" käyttöliittymä; ei kai haittaa asiakasta?
+  + Javan Look&Feel on vaihdettavissa lennossa. Tämä näyttää kokeilemisen arvoiselta:
+    http://www.jgoodies.com/freeware/looks/index.html
 - Käyttöliittymän tekeminen javalla ei myöskään ole kovin mukavaa (edes 
   esim. Jbuilderin kälikehittimellä -- verrattuna johonkin Visual C:n 
   kälieditoriin). Vai onko jollain toista näkemystä?
