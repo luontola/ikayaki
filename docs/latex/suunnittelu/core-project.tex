@@ -555,99 +555,100 @@
 \beginMethod{getValue(int,MeasurementValue)}
 \methodDeclaration{public synchronized <A> A getValue(int step, MeasurementValue<A> value)}
 \methodComment{
+	Calculates and returns a value from a measurement step. The specified MeasurementValue's algorithm will be used and the results returned.
 }
-\methodParam{step}{}
-\methodParam{value}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{step}{the measurement step from which the value is calculated.}
+\methodParam{value}{the algorithm for calculating the desired value.}
+\methodReturn{the value returned by the algorithm.}
 \closeMethod
 
 \beginMethod{isDegaussingEnabled()}
 \methodDeclaration{public synchronized boolean isDegaussingEnabled()}
 \methodComment{
+	Tells whether it is allowed to use the degausser in this project. The returned value depends on the type and state of this project.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{isSequenceEditEnabled()}
 \methodDeclaration{public synchronized boolean isSequenceEditEnabled()}
 \methodComment{
+	Tells whether it is allowed to edit the sequence. The returned value depends on the type and state of this project.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{isManualControlEnabled()}
 \methodDeclaration{public synchronized boolean isManualControlEnabled()}
 \methodComment{
+	Tells whether it is allowed to control the Squid manually. The returned value depends on the type and state of this project.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{isAutoStepEnabled()}
 \methodDeclaration{public synchronized boolean isAutoStepEnabled()}
 \methodComment{
+	Tells whether it is allowed to do an auto step measurement. The returned value depends on the type and state of this project.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{isSingleStepEnabled()}
 \methodDeclaration{public synchronized boolean isSingleStepEnabled()}
 \methodComment{
+	Tells whether it is allowed to do a single step measurement. The returned value depends on the type and state of this project.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{isPauseEnabled()}
 \methodDeclaration{public synchronized boolean isPauseEnabled()}
 \methodComment{
+	Tells whether it is possible to pause the measurement. The returned value depends on the type and state of this project.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{isAbortEnabled()}
 \methodDeclaration{public synchronized boolean isAbortEnabled()}
 \methodComment{
+	Tells whether it is possible to abort the measurement. The returned value depends on the type and state of this project.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{doAutoStep()}
 \methodDeclaration{public synchronized boolean doAutoStep()}
 \methodComment{
+	Begins an auto step measurement. Will do nothing if isAutoStepEnabled() is false.
+	
+	The measurement will run its own thread, and this method will not wait for it to finish.
 }
-\methodReturn{}
-\methodThrows{}{}
+\methodReturn{true if the measurement was started, otherwise false.}
 \closeMethod
 
 \beginMethod{doSingleStep()}
 \methodDeclaration{public synchronized boolean doSingleStep()}
 \methodComment{
+	Begins a single step measurement. Will do nothing if isSingleStepEnabled() is false.
+	
+	The measurement will run its own thread, and this method will not wait for it to finish.
 }
-\methodReturn{}
-\methodThrows{}{}
+\methodReturn{true if the measurement was started, otherwise false.}
 \closeMethod
 
 \beginMethod{doPause()}
 \methodDeclaration{public synchronized boolean doPause()}
 \methodComment{
+	Pauses the currently running measurement. A paused measurement will halt after it finishes the current measurement step. Will do nothing if isPauseEnabled() is false.
+	
+	This method will notify the measurement thread to pause, but will not wait for it to finish.
 }
-\methodReturn{}
-\methodThrows{}{}
+\methodReturn{true if the measurement will pause, otherwise false.}
 \closeMethod
 
 \beginMethod{doAbort()}
 \methodDeclaration{public synchronized boolean doAbort()}
 \methodComment{
+	Aborts the currently running measurement. An aborted measurement will halt immediately, leave the handler where it was and enable manual control. Will do nothing if isAbortEnabled() is false.
+	
+	This method will notify the measurement thread to abort, but will not wait for it to finish.
 }
-\methodReturn{}
-\methodThrows{}{}
+\methodReturn{true if the measurement will abort, otherwise false.}
 \closeMethod
 
 
