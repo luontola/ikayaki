@@ -28,12 +28,14 @@
 \beginField{file}
 \fieldDeclaration{private File file}
 \fieldComment{
+	Location of the project file in the local file system. Autosaving will save the project to this file.
 }
 \closeField
 
 \beginField{type}
 \fieldDeclaration{private Type type}
 \fieldComment{
+	Type of the measurement project. This will affect which features of the project are enabled and disabled.
 }
 \closeField
 
@@ -41,6 +43,7 @@
 \fieldDeclaration{private State state}
 \fieldValue{IDLE}
 \fieldComment{
+	Current state of the measurements. If no measurement is running, then state is IDLE. Only one measurement may be running at a time.
 }
 \closeField
 
@@ -48,18 +51,21 @@
 \fieldDeclaration{private Squid squid}
 \fieldValue{null}
 \fieldComment{
+	Pointer to the SQUID device interface, or null if this project is not allowed to access it.
 }
 \closeField
 
 \beginField{properties}
 \fieldDeclaration{private Properties properties}
 \fieldComment{
+	Custom properties of this project stored in a map. The project is not interested in what properties are stored; it only saves them.
 }
 \closeField
 
 \beginField{sequence}
 \fieldDeclaration{private MeasurementSequence sequence}
 \fieldComment{
+	Measurement sequence of this project. In the beginning are all completed measurement steps, and in the end are planned measurement steps. Completed measurements may NOT be deleted.
 }
 \closeField
 
@@ -67,6 +73,7 @@
 \fieldDeclaration{private double strike}
 \fieldValue{0.0}
 \fieldComment{
+	Strike of the sample. Will be used to create the transform matrix.
 }
 \closeField
 
@@ -74,6 +81,15 @@
 \fieldDeclaration{private double dip}
 \fieldValue{0.0}
 \fieldComment{
+	Dip of the sample. Will be used to create the transform matrix.
+}
+\closeField
+
+\beginField{sampleType}
+\fieldDeclaration{private SampleType sampleType}
+\fieldValue{CORE}
+\fieldComment{
+	Type of the sample. Will be used to create the transform matrix.
 }
 \closeField
 
@@ -81,6 +97,7 @@
 \fieldDeclaration{private Matrix3d transform}
 \fieldValue{new Matrix3d()}
 \fieldComment{
+	Matrix for correcting the sample's orientation. The matrix will be updated whenever the strike, dip or sampleType is changed. After that updated matrix will be applied to all measurements.
 }
 \closeField
 
@@ -88,6 +105,7 @@
 \fieldDeclaration{private double mass}
 \fieldValue{-1.0}
 \fieldComment{
+	Mass of the sample, or a negative value if no mass is defined.
 }
 \closeField
 
@@ -95,6 +113,7 @@
 \fieldDeclaration{private double volume}
 \fieldValue{-1.0}
 \fieldComment{
+	Volume of the sample, or a negative value if no volume is defined.
 }
 \closeField
 
@@ -102,6 +121,7 @@
 \fieldDeclaration{private MeasurementStep currentStep}
 \fieldValue{null}
 \fieldComment{
+	Current measurement step, or null if no measurement is running.
 }
 \closeField
 
@@ -109,6 +129,7 @@
 \fieldDeclaration{private EventListenerList listenerList}
 \fieldValue{new EventListenerList()}
 \fieldComment{
+	Listeners for this project.
 }
 \closeField
 
@@ -116,116 +137,119 @@
 \fieldDeclaration{private RunQueue autosaveQueue}
 \fieldValue{new RunQueue(500, true)}
 \fieldComment{
+	Scheduler for automatically writing the modified project to file after a short delay.
 }
 \closeField
 
 \beginMethod{loadProject(File)}
 \methodDeclaration{public static Project loadProject(File file)}
 \methodComment{
+	Loads a saved project file.
 }
-\methodParam{file}{}
-\methodReturn{}
-\methodThrows{IOException}{}
+\methodParam{file}{project file to be loaded.}
+\methodReturn{the loaded project, or null if file is not a valid project file or it was not readable.}
 \closeMethod
 
 \beginMethod{createCalibrationProject(File)}
 \methodDeclaration{public static Project createCalibrationProject(File file)}
 \methodComment{
+	Creates a calibration project file.
 }
-\methodParam{file}{}
-\methodReturn{}
-\methodThrows{IOException}{}
+\methodParam{file}{path for the new project file.}
+\methodReturn{the created project, or null if file was not writable.}
 \closeMethod
 
 \beginMethod{createAFProject(File)}
 \methodDeclaration{public static Project createAFProject(File file)}
 \methodComment{
+	Creates an AF project file.
 }
-\methodParam{file}{}
-\methodReturn{}
-\methodThrows{IOException}{}
+\methodParam{file}{path for the new project file.}
+\methodReturn{the created project, or null if file was not writable.}
 \closeMethod
 
 \beginMethod{createThellierProject(File)}
 \methodDeclaration{public static Project createThellierProject(File file)}
 \methodComment{
+	Creates a thellier project file.
 }
-\methodParam{file}{}
-\methodReturn{}
-\methodThrows{IOException}{}
+\methodParam{file}{path for the new project file.}
+\methodReturn{the created project, or null if file was not writable.}
 \closeMethod
 
 \beginMethod{createThermalProject(File)}
 \methodDeclaration{public static Project createThermalProject(File file)}
 \methodComment{
+	Creates a thermal project file.
 }
-\methodParam{file}{}
-\methodReturn{}
-\methodThrows{IOException}{}
+\methodParam{file}{path for the new project file.}
+\methodReturn{the created project, or null if file was not writable.}
 \closeMethod
 
 \beginMethod{createProject(File,Type)}
 \methodDeclaration{private static Project createProject(File file, Type type)}
 \methodComment{
+	Creates a project file of the specified type.
 }
-\methodParam{file}{}
-\methodParam{type}{}
-\methodReturn{}
-\methodThrows{IOException}{}
+\methodParam{file}{path for the new project file.}
+\methodParam{type}{type of the project.}
+\methodReturn{the created project, or null if file was not writable.}
 \closeMethod
 
 \beginMethod{Project(File,Type)}
 \methodDeclaration{private Project(File file, Type type)}
 \methodComment{
+	Creates a new project of the specified type. This constructor will not write to file, so the user of this method should call the saveNow() method after the project is initialized.
 }
-\methodParam{file}{}
-\methodParam{type}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{file}{path for this project file. The file should exist (may be empty) and be writable, but this constructor will not check it.}
+\methodParam{type}{type of the project.}
+\methodReturn{the created project.}
 \closeMethod
 
 \beginMethod{Project(File,Element)}
 \methodDeclaration{private Project(File file, Element import)}
 \methodComment{
+	Creates a new project from the specified import data. This constructor will assume that the specified file is the same from which the import data was read.
 }
-\methodParam{file}{}
-\methodParam{import}{}
-\methodReturn{}
-\methodThrows{IllegalArgumentException}{}
+\methodParam{file}{path for this project file. The file should be the same from which import data was read and be writable, but this constructor will not check it.}
+\methodParam{import}{import data from which this project will be created.}
+\methodReturn{the created project.}
+\methodThrows{IllegalArgumentException}{if the import data was not in the right format.}
 \closeMethod
 
 \beginMethod{export()}
-\methodDeclaration{public Element export()}
+\methodDeclaration{public synchronized Element export()}
 \methodComment{
+	Exports this project to a DOM element.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{save()}
-\methodDeclaration{public void save()}
+\methodDeclaration{public synchronized void save()}
 \methodComment{
+	Invokes autosaving. This method will schedule a saving operation and return. After this method has not been called for a short while, the project will be written to file.
 }
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{saveNow()}
 \methodDeclaration{public void saveNow()}
 \methodComment{
+	Writes this project to its project file and waits for the operation to complete.
+	
+	(NOTE: Synchronizing is done inside the method)
 }
-\methodThrows{IOException}{}
+\methodThrows{IOException}{if there was an error when writing to file.}
 \closeMethod
 
 \beginMethod{getFile()}
-\methodDeclaration{public File getFile()}
+\methodDeclaration{public synchronized File getFile()}
 \methodComment{
+	Returns the project file of this project.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getType()}
-\methodDeclaration{public Type getType()}
+\methodDeclaration{public synchronized Type getType()}
 \methodComment{
 }
 \methodReturn{}
@@ -233,7 +257,7 @@
 \closeMethod
 
 \beginMethod{getState()}
-\methodDeclaration{public State getState()}
+\methodDeclaration{public synchronized State getState()}
 \methodComment{
 }
 \methodReturn{}
@@ -241,7 +265,7 @@
 \closeMethod
 
 \beginMethod{getName()}
-\methodDeclaration{public String getName()}
+\methodDeclaration{public synchronized String getName()}
 \methodComment{
 }
 \methodReturn{}
@@ -249,7 +273,7 @@
 \closeMethod
 
 \beginMethod{getTimestamp()}
-\methodDeclaration{public Date getTimestamp()}
+\methodDeclaration{public synchronized Date getTimestamp()}
 \methodComment{
 }
 \methodParam{}{}
@@ -258,7 +282,7 @@
 \closeMethod
 
 \beginMethod{getSquid()}
-\methodDeclaration{private Squid getSquid()}
+\methodDeclaration{private synchronized Squid getSquid()}
 \methodComment{
 }
 \methodReturn{}
@@ -266,7 +290,7 @@
 \closeMethod
 
 \beginMethod{setSquid(Squid)}
-\methodDeclaration{public void setSquid(Squid squid)}
+\methodDeclaration{public synchronized void setSquid(Squid squid)}
 \methodComment{
 }
 \methodParam{squid}{}
@@ -274,7 +298,7 @@
 \closeMethod
 
 \beginMethod{getProperty(String)}
-\methodDeclaration{public String getProperty(String key)}
+\methodDeclaration{public synchronized String getProperty(String key)}
 \methodComment{
 }
 \methodParam{key}{}
@@ -283,7 +307,7 @@
 \closeMethod
 
 \beginMethod{setProperty(String,String)}
-\methodDeclaration{public void setProperty(String key, String value)}
+\methodDeclaration{public synchronized void setProperty(String key, String value)}
 \methodComment{
 }
 \methodParam{key}{}
@@ -292,7 +316,7 @@
 \closeMethod
 
 \beginMethod{getStrike()}
-\methodDeclaration{public double getStrike()}
+\methodDeclaration{public synchronized double getStrike()}
 \methodComment{
 }
 \methodReturn{}
@@ -300,7 +324,7 @@
 \closeMethod
 
 \beginMethod{setStrike(double)}
-\methodDeclaration{public void setStrike(double strike)}
+\methodDeclaration{public synchronized void setStrike(double strike)}
 \methodComment{
 }
 \methodParam{strike}{}
@@ -308,7 +332,7 @@
 \closeMethod
 
 \beginMethod{getDip()}
-\methodDeclaration{public double getDip()}
+\methodDeclaration{public synchronized double getDip()}
 \methodComment{
 }
 \methodReturn{}
@@ -316,15 +340,31 @@
 \closeMethod
 
 \beginMethod{setDip(double)}
-\methodDeclaration{public void setDip(double dip)}
+\methodDeclaration{public synchronized void setDip(double dip)}
 \methodComment{
 }
 \methodParam{dip}{}
 \methodThrows{}{}
 \closeMethod
 
+\beginMethod{getSampleType()}
+\methodDeclaration{public synchronized SampleType getSampleType()}
+\methodComment{
+}
+\methodReturn{}
+\methodThrows{}{}
+\closeMethod
+
+\beginMethod{setSampleType(SampleType)}
+\methodDeclaration{public synchronized void setSampleType(SampleType sampleType)}
+\methodComment{
+}
+\methodParam{sampleType}{}
+\methodThrows{}{}
+\closeMethod
+
 \beginMethod{getTransform()}
-\methodDeclaration{Matrix3d getTransform()}
+\methodDeclaration{synchronized Matrix3d getTransform()}
 \methodComment{
 	WARNING!!! Absolutely NO modification of the data contained in this matrix should be made -- if any such manipulation is necessary, it should be done on a copy of the matrix returned rather than the matrix itself.
 }
@@ -333,14 +373,14 @@
 \closeMethod
 
 \beginMethod{updateTransforms()}
-\methodDeclaration{private void updateTransforms()}
+\methodDeclaration{private synchronized void updateTransforms()}
 \methodComment{
 }
 \methodThrows{}{}
 \closeMethod
 
 \beginMethod{getMass()}
-\methodDeclaration{public double getMass()}
+\methodDeclaration{public synchronized double getMass()}
 \methodComment{
 }
 \methodReturn{}
@@ -348,7 +388,7 @@
 \closeMethod
 
 \beginMethod{setMass(double)}
-\methodDeclaration{public void setMass(double mass)}
+\methodDeclaration{public synchronized void setMass(double mass)}
 \methodComment{
 }
 \methodParam{mass}{}
@@ -356,7 +396,7 @@
 \closeMethod
 
 \beginMethod{getVolume()}
-\methodDeclaration{public double getVolume()}
+\methodDeclaration{public synchronized double getVolume()}
 \methodComment{
 }
 \methodReturn{}
@@ -364,7 +404,7 @@
 \closeMethod
 
 \beginMethod{setVolume(double)}
-\methodDeclaration{public void setVolume(double volume)}
+\methodDeclaration{public synchronized void setVolume(double volume)}
 \methodComment{
 }
 \methodParam{volume}{}
@@ -372,7 +412,7 @@
 \closeMethod
 
 \beginMethod{addProjectListener(ProjectListener)}
-\methodDeclaration{public void addProjectListener(ProjectListener l)}
+\methodDeclaration{public synchronized void addProjectListener(ProjectListener l)}
 \methodComment{
 }
 \methodParam{listener}{}
@@ -380,7 +420,7 @@
 \closeMethod
 
 \beginMethod{removeProjectListener(ProjectListener)}
-\methodDeclaration{public void removeProjectListener(ProjectListener l)}
+\methodDeclaration{public synchronized void removeProjectListener(ProjectListener l)}
 \methodComment{
 }
 \methodParam{listener}{}
@@ -388,14 +428,14 @@
 \closeMethod
 
 \beginMethod{fireProjectEvent(ProjectEvent.Type)}
-\methodDeclaration{private void fireProjectEvent(ProjectEvent.Type type)}
+\methodDeclaration{private synchronized void fireProjectEvent(ProjectEvent.Type type)}
 \methodComment{
 }
 \methodThrows{}{}
 \closeMethod
 
 \beginMethod{addMeasurementListener}
-\methodDeclaration{public void addMeasurementListener(MeasurementListener l)}
+\methodDeclaration{public synchronized void addMeasurementListener(MeasurementListener l)}
 \methodComment{
 }
 \methodParam{listener}{}
@@ -403,7 +443,7 @@
 \closeMethod
 
 \beginMethod{removeMeasurementListener}
-\methodDeclaration{public void removeMeasurementListener(MeasurementListener l)}
+\methodDeclaration{public synchronized void removeMeasurementListener(MeasurementListener l)}
 \methodComment{
 }
 \methodParam{listener}{}
@@ -411,14 +451,14 @@
 \closeMethod
 
 \beginMethod{fireMeasurementEvent(MeasurementStep,MeasurementEvent.Type)}
-\methodDeclaration{private void fireMeasurementEvent(MeasurementStep step, MeasurementEvent.Type type)}
+\methodDeclaration{private synchronized void fireMeasurementEvent(MeasurementStep step, MeasurementEvent.Type type)}
 \methodComment{
 }
 \methodThrows{}{}
 \closeMethod
 
 \beginMethod{addSequence(MeasurementSequence}
-\methodDeclaration{public void addSequence(MeasurementSequence sequence)}
+\methodDeclaration{public synchronized void addSequence(MeasurementSequence sequence)}
 \methodComment{
 }
 \methodParam{sequence}{}
@@ -426,7 +466,7 @@
 \closeMethod
 
 \beginMethod{copySequence(int,int)}
-\methodDeclaration{public MeasurementSequence copySequence(int start, int end)}
+\methodDeclaration{public synchronized MeasurementSequence copySequence(int start, int end)}
 \methodComment{
 }
 \methodParam{start}{}
@@ -436,7 +476,7 @@
 \closeMethod
 
 \beginMethod{addStep(MeasurementStep)}
-\methodDeclaration{public void addStep(MeasurementStep step)}
+\methodDeclaration{public synchronized void addStep(MeasurementStep step)}
 \methodComment{
 }
 \methodParam{step}{}
@@ -444,7 +484,7 @@
 \closeMethod
 
 \beginMethod{addStep(int,MeasurementStep)}
-\methodDeclaration{public void addStep(int index, MeasurementStep step)}
+\methodDeclaration{public synchronized void addStep(int index, MeasurementStep step)}
 \methodComment{
 }
 \methodParam{index}{}
@@ -453,7 +493,7 @@
 \closeMethod
 
 \beginMethod{removeStep(int)}
-\methodDeclaration{public void removeStep(int index)}
+\methodDeclaration{public synchronized void removeStep(int index)}
 \methodComment{
 }
 \methodParam{index}{}
@@ -461,7 +501,7 @@
 \closeMethod
 
 \beginMethod{removeStep(int,int)}
-\methodDeclaration{public void removeStep(int start, int end)}
+\methodDeclaration{public synchronized void removeStep(int start, int end)}
 \methodComment{
 }
 \methodParam{start}{}
@@ -470,7 +510,7 @@
 \closeMethod
 
 \beginMethod{getSteps()}
-\methodDeclaration{public int getSteps()}
+\methodDeclaration{public synchronized int getSteps()}
 \methodComment{
 }
 \methodReturn{}
@@ -478,7 +518,7 @@
 \closeMethod
 
 \beginMethod{getStep(int)}
-\methodDeclaration{public MeasurementStep getStep(int index)}
+\methodDeclaration{public synchronized MeasurementStep getStep(int index)}
 \methodComment{
 }
 \methodParam{index}{}
@@ -487,7 +527,7 @@
 \closeMethod
 
 \beginMethod{getCurrentStep()}
-\methodDeclaration{public MeasurementStep getCurrentStep()}
+\methodDeclaration{public synchronized MeasurementStep getCurrentStep()}
 \methodComment{
 }
 \methodReturn{}
@@ -495,7 +535,7 @@
 \closeMethod
 
 \beginMethod{getValue(int,MeasurementValue)}
-\methodDeclaration{public <A> A getValue(int step, MeasurementValue<A> value)}
+\methodDeclaration{public synchronized <A> A getValue(int step, MeasurementValue<A> value)}
 \methodComment{
 }
 \methodParam{step}{}
@@ -505,7 +545,7 @@
 \closeMethod
 
 \beginMethod{isDegaussingEnabled()}
-\methodDeclaration{public boolean isDegaussingEnabled()}
+\methodDeclaration{public synchronized boolean isDegaussingEnabled()}
 \methodComment{
 }
 \methodReturn{}
@@ -513,7 +553,7 @@
 \closeMethod
 
 \beginMethod{isSequenceEditEnabled()}
-\methodDeclaration{public boolean isSequenceEditEnabled()}
+\methodDeclaration{public synchronized boolean isSequenceEditEnabled()}
 \methodComment{
 }
 \methodReturn{}
@@ -521,7 +561,7 @@
 \closeMethod
 
 \beginMethod{isManualControlEnabled()}
-\methodDeclaration{public boolean isManualControlEnabled()}
+\methodDeclaration{public synchronized boolean isManualControlEnabled()}
 \methodComment{
 }
 \methodReturn{}
@@ -529,7 +569,7 @@
 \closeMethod
 
 \beginMethod{isAutoStepEnabled()}
-\methodDeclaration{public boolean isAutoStepEnabled()}
+\methodDeclaration{public synchronized boolean isAutoStepEnabled()}
 \methodComment{
 }
 \methodReturn{}
@@ -537,7 +577,7 @@
 \closeMethod
 
 \beginMethod{isSingleStepEnabled()}
-\methodDeclaration{public boolean isSingleStepEnabled()}
+\methodDeclaration{public synchronized boolean isSingleStepEnabled()}
 \methodComment{
 }
 \methodReturn{}
@@ -545,7 +585,7 @@
 \closeMethod
 
 \beginMethod{isPauseEnabled()}
-\methodDeclaration{public boolean isPauseEnabled()}
+\methodDeclaration{public synchronized boolean isPauseEnabled()}
 \methodComment{
 }
 \methodReturn{}
@@ -553,7 +593,7 @@
 \closeMethod
 
 \beginMethod{isAbortEnabled()}
-\methodDeclaration{public boolean isAbortEnabled()}
+\methodDeclaration{public synchronized boolean isAbortEnabled()}
 \methodComment{
 }
 \methodReturn{}
@@ -561,7 +601,7 @@
 \closeMethod
 
 \beginMethod{doAutoStep()}
-\methodDeclaration{public boolean doAutoStep()}
+\methodDeclaration{public synchronized boolean doAutoStep()}
 \methodComment{
 }
 \methodReturn{}
@@ -569,7 +609,7 @@
 \closeMethod
 
 \beginMethod{doSingleStep()}
-\methodDeclaration{public boolean doSingleStep()}
+\methodDeclaration{public synchronized boolean doSingleStep()}
 \methodComment{
 }
 \methodReturn{}
@@ -577,7 +617,7 @@
 \closeMethod
 
 \beginMethod{doPause()}
-\methodDeclaration{public boolean doPause()}
+\methodDeclaration{public synchronized boolean doPause()}
 \methodComment{
 }
 \methodReturn{}
@@ -585,7 +625,7 @@
 \closeMethod
 
 \beginMethod{doAbort()}
-\methodDeclaration{public boolean doAbort()}
+\methodDeclaration{public synchronized boolean doAbort()}
 \methodComment{
 }
 \methodReturn{}
@@ -674,7 +714,7 @@
 \closeMethod
 
 \beginMethod{export()}
-\methodDeclaration{public Element export()}
+\methodDeclaration{public synchronized Element export()}
 \methodComment{
 }
 \methodReturn{}
@@ -682,7 +722,7 @@
 \closeMethod
 
 \beginMethod{getName()}
-\methodDeclaration{public String getName()}
+\methodDeclaration{public synchronized String getName()}
 \methodComment{
 }
 \methodReturn{}
@@ -690,7 +730,7 @@
 \closeMethod
 
 \beginMethod{setName(String)}
-\methodDeclaration{public void setName(String name)}
+\methodDeclaration{public synchronized void setName(String name)}
 \methodComment{
 }
 \methodParam{name}{}
@@ -698,7 +738,7 @@
 \closeMethod
 
 \beginMethod{getSteps()}
-\methodDeclaration{public int getSteps()}
+\methodDeclaration{public synchronized int getSteps()}
 \methodComment{
 }
 \methodReturn{}
@@ -706,7 +746,7 @@
 \closeMethod
 
 \beginMethod{getStep(int)}
-\methodDeclaration{public MeasurementStep getStep(int index)}
+\methodDeclaration{public synchronized MeasurementStep getStep(int index)}
 \methodComment{
 }
 \methodParam{index}{}
@@ -715,7 +755,7 @@
 \closeMethod
 
 \beginMethod{addStep(MeasurementStep)}
-\methodDeclaration{public void addStep(MeasurementStep step)}
+\methodDeclaration{public synchronized void addStep(MeasurementStep step)}
 \methodComment{
 }
 \methodParam{step}{}
@@ -723,7 +763,7 @@
 \closeMethod
 
 \beginMethod{addStep(int,MeasurementStep)}
-\methodDeclaration{public void addStep(int index, MeasurementStep step)}
+\methodDeclaration{public synchronized void addStep(int index, MeasurementStep step)}
 \methodComment{
 }
 \methodParam{index}{}
@@ -732,7 +772,7 @@
 \closeMethod
 
 \beginMethod{removeStep(int)}
-\methodDeclaration{public void removeStep(int index)}
+\methodDeclaration{public synchronized void removeStep(int index)}
 \methodComment{
 }
 \methodParam{index}{}
@@ -837,7 +877,7 @@
 \closeMethod
 
 \beginMethod{export()}
-\methodDeclaration{public Element export()}
+\methodDeclaration{public synchronized Element export()}
 \methodComment{
 }
 \methodReturn{}
@@ -845,7 +885,7 @@
 \closeMethod
 
 \beginMethod{getProject()}
-\methodDeclaration{public Project getProject()}
+\methodDeclaration{public synchronized Project getProject()}
 \methodComment{
 }
 \methodReturn{}
@@ -853,7 +893,7 @@
 \closeMethod
 
 \beginMethod{getState()}
-\methodDeclaration{public State getState()}
+\methodDeclaration{public synchronized State getState()}
 \methodComment{
 }
 \methodReturn{}
@@ -861,7 +901,7 @@
 \closeMethod
 
 \beginMethod{setState}
-\methodDeclaration{void setState(State state)}
+\methodDeclaration{void synchronized setState(State state)}
 \methodComment{
 }
 \methodParam{state}{}
@@ -869,7 +909,7 @@
 \closeMethod
 
 \beginMethod{getTimestamp()}
-\methodDeclaration{public Date getTimestamp()}
+\methodDeclaration{public synchronized Date getTimestamp()}
 \methodComment{
 }
 \methodReturn{}
@@ -877,7 +917,7 @@
 \closeMethod
 
 \beginMethod{getStepValue()}
-\methodDeclaration{public double getStepValue()}
+\methodDeclaration{public synchronized double getStepValue()}
 \methodComment{
 }
 \methodReturn{}
@@ -885,7 +925,7 @@
 \closeMethod
 
 \beginMethod{setStepValue(double)}
-\methodDeclaration{public void setStepValue(double stepValue)}
+\methodDeclaration{public synchronized void setStepValue(double stepValue)}
 \methodComment{
 }
 \methodParam{stepValue}{}
@@ -893,7 +933,7 @@
 \closeMethod
 
 \beginMethod{getMass()}
-\methodDeclaration{public double getMass()}
+\methodDeclaration{public synchronized double getMass()}
 \methodComment{
 }
 \methodReturn{}
@@ -901,7 +941,7 @@
 \closeMethod
 
 \beginMethod{setMass(double)}
-\methodDeclaration{public void setMass(double mass)}
+\methodDeclaration{public synchronized void setMass(double mass)}
 \methodComment{
 }
 \methodParam{mass}{}
@@ -909,7 +949,7 @@
 \closeMethod
 
 \beginMethod{getVolume()}
-\methodDeclaration{public double getVolume()}
+\methodDeclaration{public synchronized double getVolume()}
 \methodComment{
 }
 \methodReturn{}
@@ -917,7 +957,7 @@
 \closeMethod
 
 \beginMethod{setVolume(double)}
-\methodDeclaration{public void setVolume(double volume)}
+\methodDeclaration{public synchronized void setVolume(double volume)}
 \methodComment{
 }
 \methodParam{volume}{}
@@ -925,14 +965,14 @@
 \closeMethod
 
 \beginMethod{updateTransforms()}
-\methodDeclaration{void updateTransforms()}
+\methodDeclaration{synchronized void updateTransforms()}
 \methodComment{
 }
 \methodThrows{}{}
 \closeMethod
 
 \beginMethod{getResults()}
-\methodDeclaration{public int getResults()}
+\methodDeclaration{public synchronized int getResults()}
 \methodComment{
 }
 \methodReturn{}
@@ -940,7 +980,7 @@
 \closeMethod
 
 \beginMethod{getResult(int)}
-\methodDeclaration{public MeasurementResult getResult(int index)}
+\methodDeclaration{public synchronized MeasurementResult getResult(int index)}
 \methodComment{
 }
 \methodParam{index}{}
@@ -949,7 +989,7 @@
 \closeMethod
 
 \beginMethod{addResult(MeasurementResult)}
-\methodDeclaration{public void addResult(MeasurementResult result)}
+\methodDeclaration{public synchronized void addResult(MeasurementResult result)}
 \methodComment{
 }
 \methodParam{result}{}
