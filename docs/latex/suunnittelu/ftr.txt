@@ -43,16 +43,10 @@ Tarkastettu tuotos
 	5.3 Squid emulator			0,5 sivua
 		Luokkakuvaus, metodit
 
-	5.4 Serial communication		3 sivua
-		Kokonaan
-
-	6.6 Project Explorer [?]		3,5 sivua
-		
-
 	6.9 Sequence and measurement data	3 sivua
 		Kokonaan
 
-	Yhteensä 25-29 sivua
+	Yhteensä noin 23 sivua
 
 Tarkistuslista
 	S1  Viittaukset ovat oikein, ei puuttuvia viittauksia "??"
