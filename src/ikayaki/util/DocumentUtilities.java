@@ -15,7 +15,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 
 /**
- * Tools from reading and writing DOM documents.
+ * Tools for reading and writing DOM documents.
  *
  * @author Esko Luontola
  */

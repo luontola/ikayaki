@@ -804,6 +804,12 @@ project listeners.
         }
         if (!orientation) {
             // -Z position -> +Z position
+            /*
+             *  transform multipied by
+             *   [[ 1  0  0 ]
+             *    [ 0 -1  0 ]
+             *    [ 0  0 -1 ]]
+             */
             transform.setColumn(1, -transform.m01, -transform.m11, -transform.m21);
             transform.setColumn(2, -transform.m02, -transform.m12, -transform.m22);
         }
