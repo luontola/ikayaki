@@ -186,27 +186,50 @@ public class Report {
         html.append("   <th style=\"padding: 0ex 3ex 0ex 3ex;\">Name / Week</th>\n");
         for (Date week : weeks) {
             cal.setTime(week);
-            html.append("   <th style=\"width: 4.5ex;\">" + cal.get(Calendar.WEEK_OF_YEAR) + "</th>\n");
+            html.append("   <th style=\"width: 5ex;\">" + cal.get(Calendar.WEEK_OF_YEAR) + "</th>\n");
         }
         html.append("   <th style=\"padding: 0ex 1ex 0ex 1ex;\">Total</th>\n");
         html.append("</tr>\n");
 
         // each person's total hours for every week
-        for (int i = 0; i < persons.length; i++) {
-            if (i % 2 == 0) {
+        int row;
+        for (row = 0; row < persons.length; row++) {
+            if (row % 2 == 0) {
                 html.append("<tr style=\"background-color: #DDDDDD;\">\n");
             } else {
                 html.append("<tr style=\"background-color: #EEEEEE;\">\n");
             }
-            html.append("   <td><a href=\"" + HourParser.getBaseUrl() + getPageName(i + 1) + "\">"
-                    + persons[i].getName() + "</a></td>\n");
+            html.append("   <td><a href=\"" + HourParser.getBaseUrl() + getPageName(row + 1) + "\">"
+                    + persons[row].getName() + "</a></td>\n");
 
             double totalSum = 0.0;
-            for (int j = 0; j < hours[i].size(); j++) {
+            for (int i = 0; i < hours[row].size(); i++) {
                 html.append("   <td align=\"center\"><a href=\""
-                        + HourParser.getBaseUrl() + getPageName(i + 1) + "#" + j + "\">"
-                        + HourParser.getNumberFormat().format(hours[i].get(j)) + "</a></td>\n");
-                totalSum += hours[i].get(j);
+                        + HourParser.getBaseUrl() + getPageName(row + 1) + "#" + i + "\">"
+                        + HourParser.getNumberFormat().format(hours[row].get(i)) + "</a></td>\n");
+                totalSum += hours[row].get(i);
+            }
+            html.append("   <td align=\"center\">" + HourParser.getNumberFormat().format(totalSum) + " h</td>\n");
+            html.append("</tr>\n");
+        }
+
+        // weekly total hours
+        {
+            if (row % 2 == 0) {
+                html.append("<tr style=\"background-color: #DDDDDD;\">\n");
+            } else {
+                html.append("<tr style=\"background-color: #EEEEEE;\">\n");
+            }
+            html.append("   <th align=\"left\">Total</th>\n");
+
+            double totalSum = 0.0;
+            for (int i = 0; i < weeks.size(); i++) {
+                double weekSum = 0.0;
+                for (Vector<Double> personHours : hours) {
+                    weekSum += personHours.get(i);
+                }
+                html.append("   <td align=\"center\">" + HourParser.getNumberFormat().format(weekSum) + " h</td>\n");
+                totalSum += weekSum;
             }
             html.append("   <td align=\"center\">" + HourParser.getNumberFormat().format(totalSum) + " h</td>\n");
             html.append("</tr>\n");
