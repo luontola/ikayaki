@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
  * object. This class can be used for example in connection with a "continuous search" invoked by lots of GUI events,
  * but it is necessary to react to only the last event.
  *
- * @author Esko Luontola
+ * @author Esko Luontola, 2005-03-05
  */
 public class RunQueue {
 
