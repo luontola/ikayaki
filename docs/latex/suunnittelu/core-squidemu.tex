@@ -16,7 +16,7 @@ existing log file, which is used to generate same sequence used to verify that o
 
 \beginToc
 \tocMethod{writeMessage(String,int)}
-\tocMethod{main(String args)}
+\tocMethod{main(String[])}
 \closeToc
 
 \beginField{online}
@@ -147,8 +147,8 @@ data back. When message comes, process it (wait if needed for a while), updates 
 \methodParam{port}{port number to be sent}
 \closeMethod
 
-\beginMethod{main(String args)}
-\methodDeclaration{public void main(String args))}
+\beginMethod{main(String[])}
+\methodDeclaration{public static void main(String[] args)}
 \methodComment{
     First creates or loads log file and sets settings .Runs sequence where read data from buffer and run cheduled actions (move, rotate, 
 demag, measure) and send feedback to COM ports.
