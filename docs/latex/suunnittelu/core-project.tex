@@ -636,7 +636,7 @@
 \beginMethod{addStep(MeasurementStep)}
 \methodDeclaration{public synchronized void addStep(MeasurementStep step)}
 \methodComment{
-	Appends a step to this project's sequence. Only the stepValue will be copied from the specified step and added as new steps to this project.
+	Appends a step to this project's sequence. Only the stepValue will be copied from the specified step and added as a new step to this project.
 	
 	If isSequenceEditEnabled() is false, nothing will be done.
 }
@@ -647,7 +647,7 @@
 \beginMethod{addStep(int,MeasurementStep)}
 \methodDeclaration{public synchronized void addStep(int index, MeasurementStep step)}
 \methodComment{
-	Adds a step to the specified index of this project's sequence. Only the stepValue will be copied from the specified step and added as new steps to this project.
+	Adds a step to the specified index of this project's sequence. Only the stepValue will be copied from the specified step and added as a new step to this project.
 	
 	The index must be such, that the indices of the completed measurements will not change.
 	
