@@ -132,9 +132,8 @@ whose measuring ended.
         browserField = new JComboBox(getDirectoryHistory());
         browserField.setEditable(true);
         browserField.setBackground(Color.WHITE);
-        browserField.setPreferredSize(new Dimension(50, 20));
-        // browserField.getEditor().getEditorComponent().setFocusTraversalKeysEnabled(false);
         browserFieldEditor = (JTextField) browserField.getEditor().getEditorComponent();
+        // browserFieldEditor.setFocusTraversalKeysEnabled(false); // disable tab-exiting from browserField
 
         // scroll to the end of the combo box's text field
 //        SwingUtilities.invokeLater(new Runnable() {
@@ -187,7 +186,6 @@ whose measuring ended.
                     doAutoComplete();
 
                 } else if (e.getActionCommand().equals("comboBoxChanged")) {
-
 
 //                    System.out.println(browserField.getSelectedItem());
 //
@@ -249,9 +247,7 @@ whose measuring ended.
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     // when the popup is hidden before showing, it will be automatically resized
-                    // -- but, it flickers awkwardly; also don't know what you mean by that autoresize?
-                    // if (browserField.isPopupVisible()) browserField.hidePopup();
-
+                    if (browserField.isPopupVisible()) browserField.hidePopup();
                     browserFieldNextPopupAutocomplete = true;
                     browserField.showPopup();
                 }
@@ -315,15 +311,15 @@ whose measuring ended.
         else return dirhist;
     }
 
-//    /**
-//     * Attemps to add given directory into dir history.
-//     *
-//     * @param dir directory to add.
-//     * @deprecated This is done in MainViewPanel
-//     */
-//    private void updateDirectoryHistory(File dir) {
-//        Settings.instance().updateDirectoryHistory(dir);
-//    }
+    /**
+     * Attemps to add given directory into dir history.
+     *
+     * @param dir directory to add.
+     * @deprecated This is done in MainViewPanel
+     */
+    private void updateDirectoryHistory(File dir) {
+        Settings.instance().updateDirectoryHistory(dir);
+    }
 
     /**
      * Reads matching directories from given directory name's parent.
