@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Executes Runnable objects in a private worker thread after a pre-defined delay. The worker thread will terminate
- * automatically when there are no runnables to be executed. Optionally executes only the last inserted runnables. All
+ * automatically when there are no runnables to be executed. Optionally executes only the last inserted runnable. All
  * operations are thread-safe.
  * <p/>
  * This class can be used for example in connection with a "continuous search" invoked by a series of GUI events (such
