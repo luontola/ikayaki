@@ -230,10 +230,15 @@ public class Settings {
      * Associates the specified value with the specified key. Will invoke autosaving.
      *
      * @param key   key with which the specified value is to be associated.
-     * @param value value to be associated with the specified key.
+     * @param value value to be associated with the specified key, or null to remove the value.
+     * @throws NullPointerException if key is null.
      */
     private synchronized void setProperty(String key, String value) {
-        properties.setProperty(key, value);
+        if (value == null) {
+            properties.remove(key);
+        } else {
+            properties.setProperty(key, value);
+        }
         propertiesModified = true;
         save();
     }
@@ -499,8 +504,12 @@ public class Settings {
         }
 
         // save as properties
-        for (int i = 0; i < directoryHistory.size(); i++) {
-            setProperty("history.dir." + i, directoryHistory.get(i).getAbsolutePath());
+        for (int i = 0; i < Math.max(directoryHistory.size(), DIRECTORY_HISTORY_SIZE); i++) {
+            if (i < directoryHistory.size()) {
+                setProperty("history.dir." + i, directoryHistory.get(i).getAbsolutePath());
+            } else {
+                setProperty("history.dir." + i, null);
+            }
         }
         return true;
     }
@@ -546,8 +555,12 @@ public class Settings {
         }
 
         // save as properties
-        for (int i = 0; i < projectHistory.size(); i++) {
-            setProperty("history.project." + i, projectHistory.get(i).getAbsolutePath());
+        for (int i = 0; i < Math.max(projectHistory.size(), PROJECT_HISTORY_SIZE); i++) {
+            if (i < projectHistory.size()) {
+                setProperty("history.project." + i, projectHistory.get(i).getAbsolutePath());
+            } else {
+                setProperty("history.project." + i, null);
+            }
         }
         return true;
     }
