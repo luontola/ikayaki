@@ -1,6 +1,6 @@
 \beginClass{ProjectComponent}
 \classComment{
-	Generic gui component which uses Project and listens MeasurementEvents and ProjectEvents.
+	Common superclass for components which use a Project and listen to MeasurementEvents and ProjectEvents.
 }
 \classPackage{ikayaki.gui}
 \classDeclaration{public class ProjectComponent}
@@ -25,12 +25,14 @@
 
 \beginMethod{ProjectComponent()}
 \methodDeclaration{public ProjectComponent()}
-\methodComment{Initializes this ProjectComponent with no project (one probably arrives shortly with setProject(Project)).}
+\methodComment{Initializes this ProjectComponent with no project.}
 \closeMethod
 
 \beginMethod{getProject()}
 \methodDeclaration{public Project getProject()}
-\methodReturn{the active project, or null if no project is active.}
+\methodComment{
+	Returns the active project, or null if no project is active.
+}
 \closeMethod
 
 \beginMethod{setProject(Project)}

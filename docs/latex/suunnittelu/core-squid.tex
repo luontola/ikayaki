@@ -1,51 +1,48 @@
 \beginClass{Squid}
 \classComment{
-	offers Squid interface for project-class that controls SQUID-system. It reads Settings-class for settings and creates classes degausser, handler and magnetometer and offers handlers for them.
+	Offers an interface for controlling the SQUID system. Reads settings from the Settings class. Creates instances of the degausser, handler and magnetometer interfaces and offers handlers for them.
 }
 \classPackage{ikayaki.squid}
 \classDeclaration{public class Squid}
-\classExtends{}
-\classImplements{}
 \classCreatedBy{MainViewPanel}
 \classUses{Settings}
-\classSubclass{Degausser}
-\classSubclass{Handler}
-\classSubclass{Magnetometer}
-\classPatterns{This class is singleton, there will be always only one instance of it and its created when class is needed first time.}
+\classUses{Degausser}
+\classUses{Handler}
+\classUses{Magnetometer}
+\classPatterns{Singleton}
 \closeClass
 
 \beginField{owner}
 \fieldDeclaration{private Project owner}
-\fieldComment{project currently using squid-interface}
+\fieldComment{The project that is currently using the Squid, or null if no project is using it.}
 \closeField
 
 \beginField{degausser}
 \fieldDeclaration{private Degausser degausser}
-\fieldComment{class for commanding degausser}
+\fieldComment{Instance of the degausser interface.}
 \closeField
 
 \beginField{handler}
 \fieldDeclaration{private Handler handler}
-\fieldComment{class for commanding handler}
+\fieldComment{Instance of the handler interface.}
 \closeField
 
 \beginField{magnetometer}
 \fieldDeclaration{private Magnetometer magnetometer}
-\fieldComment{class for commanding magnetometer}
+\fieldComment{Instance of the magnetometer interface.}
 \closeField
 
 \beginMethod{getDegausser()}
 \methodDeclaration{public Degausser getDegausser()}
 \methodComment{
-    Gives handler for Degausser.
+    Returns an interface for controlling the degausser.
 }
-\methodReturn{Degausser object if its not busy}
 \closeMethod
 
 \beginMethod{getHandler()}
 \methodDeclaration{public Handler getHandler()}
 \methodComment{
-    Gives handler for Degausser.
+    Returns an interface for controlling the handler.
 }
 \methodReturn{Handler object.}
 \closeMethod
