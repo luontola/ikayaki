@@ -196,7 +196,8 @@ whose measuring ended.
         directory = new File(dir);
         files = getProjectFiles(directory);
 
-        if (explorerTableModel != null) explorerTableModel.fireTableStructureChanged();
+        // update table with new directory
+        if (explorerTableModel != null) explorerTableModel.fireTableDataChanged();
 
         return true;
     }
