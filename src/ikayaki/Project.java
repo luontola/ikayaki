@@ -174,6 +174,11 @@ project listeners.
     private EventListenerList listenerList = new EventListenerList();
 
     /**
+     * true if the project has been modified, otherwise false.
+     */
+    private boolean modified = false;
+
+    /**
      * Scheduler for automatically writing the modified project to file after a short delay.
      */
     private LastExecutor autosaveQueue = new LastExecutor(500, true);
@@ -311,9 +316,9 @@ project listeners.
 
     /**
      * Ensures that the project file is saved and frees the resources taken by the project. A project should not be used
-     * after it has been closed – any further use of the object is undefined (probably will create
-     * NullPointerExceptions). The closed project is removed from the projectCache. A project can not be closed if it
-     * has a measurement running.
+     * after it has been closed – any further use of the object is undefined (will create an IllegalStateException if
+     * somebody tries to modify it). The closed project is removed from the projectCache. A project can not be closed if
+     * it has a measurement running.
      *
      * @param project project to be closed.
      * @return true if the project has been closed, false if a measurement is running and the project can not be
@@ -337,18 +342,14 @@ project listeners.
             }
             projectCache.remove(project.getFile());
 
-            // clear the project's data stuctures to prevent further use
-            project.autosaveQueue = null;
-            project.autosaveRunnable = null;
-            project.currentStep = null;
-            project.file = null;
-//          project.listenerList = null; <-- this could cause NullPointerExceptions in ProjectComponent.setProject()
-            project.properties = null;
-            project.sampleType = null;
-            project.sequence = null;
+            // mark the project as closed
             project.state = null;
-            project.transform = null;
-            project.type = null;
+            project.autosaveRunnable = new Runnable() {
+                public void run() {
+                    assert false : "This should never have been executed. Maybe something set the state to non-null?";
+                    throw new IllegalStateException("The project is closed");
+                }
+            };
         }
         return true;
     }
@@ -434,6 +435,7 @@ project listeners.
         this.file = file;
         this.type = type;
         updateTransforms();
+        modified = true;
     }
 
     /**
@@ -530,6 +532,7 @@ project listeners.
         } else {
             throw new IllegalArgumentException("Unknown version: " + version);
         }
+        modified = false;   // prevent the automatic save() operations that the importing created
     }
 
     /**
@@ -579,28 +582,58 @@ project listeners.
     }
 
     /**
-     * Invokes autosaving. This method will schedule a saving operation and return. After this method has not been
-     * called for a short while, the project will be written to file.
+     * Tells whether the project has been modified and it needs to be saved.
+     */
+    public synchronized boolean isModified() {
+        return modified;
+    }
+
+    /**
+     * Invokes autosaving. This method will mark the project as modified and schedule a saving operation. After this
+     * method has not been called for a short while, the project will be written to file.
+     *
+     * @throws IllegalStateException if this project has already been closed.
      */
     public synchronized void save() {
+        if (getState() == null) {
+            throw new IllegalStateException("The project is closed");
+        }
+        modified = true;
         autosaveQueue.execute(autosaveRunnable);
     }
 
     /**
      * Writes this project to its project file and waits for the operation to complete. Clears any delaying autosave
-     * operations.
+     * operations. Will do nothing if the project file has already been saved.
      *
-     * @return true if the file was successfully written, otherwise false.
+     * @return true if the file has been saved, otherwise false.
+     * @throws IllegalStateException if this project has already been closed.
      */
     public boolean saveNow() {
+        if (getState() == null) {
+            throw new IllegalStateException("The project is closed");
+        }
         File file;
         Document document;
         synchronized (this) {
-            this.autosaveQueue.clear();     // clear any delaying autosave operations
-            file = this.getFile();
-            document = this.getDocument();
+            // clear any delaying autosave operations
+            autosaveQueue.clear();
+//            try {
+//                System.out.println("1");
+//                autosaveQueue.join();   // make sure that we do not interrupt an operation in progress
+//                System.out.println("2");
+//            } catch (InterruptedException e) {
+//            }
+
+            // do not save if this has already been saved
+            if (!isModified()) {
+                return true;
+            }
+            file = getFile();
+            document = getDocument();
         }
         if (DocumentUtilities.storeToXML(file, document)) {
+            modified = false;
             fireProjectEvent(FILE_SAVED);
             return true;
         } else {
@@ -657,6 +690,8 @@ project listeners.
 
     /**
      * Returns the current measurement state of this project.
+     *
+     * @return the state of the project, or null if the project has been closed.
      */
     public synchronized State getState() {
         return state;
@@ -664,6 +699,7 @@ project listeners.
 
     /**
      * Sets the state of this project. Fires state change events.
+     *
      * @param state the new state to change to.
      */
     private void setState(State state) {
