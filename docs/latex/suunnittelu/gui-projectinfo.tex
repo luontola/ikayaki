@@ -5,9 +5,9 @@
 \classCreatedBy{MainViewPanel}
 \classComment{Allows inserting and editing project information.}
 \classEvent{On change of contest in textfield}{Notify project about
-change in project information and tell MeasurementSequencePanel to recalculate if strike,
-dip or volume changed.}
-\classEvent{On change of project}{Update textfields to correspond new project.}
+change in project information.}
+\classEvent{On project event}{Update textfields to correspond new
+project information.}
 \closeClass
 
 \beginField{operatorLabel}
@@ -95,12 +95,20 @@ dip or volume changed.}
 \fieldDeclaration{private JTextFiels dipTextField}
 \closeField
 
-\beginField{dateLabel}
-\fieldDeclaration{private JLabel dateLabel}
+\beginField{volumeLabel}
+\fieldDeclaration{private JLabel volumeLabel}
 \closeField
 
 \beginField{volumeTextField}
 \fieldDeclaration{private JTextFiels volumeTextField}
+\closeField
+
+\beginField{massLabel}
+\fieldDeclaration{private JLabel massLabel}
+\closeField
+
+\beginField{massTextField}
+\fieldDeclaration{private JTextFiels massTextField}
 \closeField
 
 \beginField{sampleType}
@@ -124,4 +132,10 @@ dip or volume changed.}
 \beginMethod{ProjectInformationPanel(Project)}
 \methodDeclaration{public ProjectInformationPanel(Project project)}
 \methodComment{Creates ProjectInformationPanel with information taken from project.}
+\closeMethod
+
+\beginMethod{setProject(Project)}
+\methodDeclaration{private void setProject(Project project)}
+\methodComment{Calls super.setProject(project) and updates textfield
+with new projects data.}
 \closeMethod

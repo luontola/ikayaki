@@ -12,13 +12,18 @@ painting or ctrl-clicking. Allows dragging rows to different order. Has three
 textfields for inserting new sequences, first field for start value,
 second for step and third for stop value. Clicking Add sequence-button
 appends sequence into table. Saved sequences can be loaded from dropdown menu.}
-\classEvent{On SequenceTable mouse right-click}{create a MeasurementSequencePopupMenu.}
-\classEvent{On addSequence mouseclick}{add measurement sequence to end
+\classEvent{On SequenceTable mouse right-click}{Create a MeasurementSequencePopupMenu.}
+\classEvent{On addSequence mouseclick}{Add measurement sequence to end
 of table and tell MeasurementSequenceTableModel to update itself.}
-\classEvent{On sequenceSelector mouseclick}{bring dropdown menu for
+\classEvent{On sequenceSelector mouseclick}{Bring dropdown menu for
 selecting premade sequence.}
-\classEvent{On selecting sequence from dropdown menu}{add measurement
+\classEvent{On selecting sequence from dropdown menu}{Add measurement
 sequence to table and tell MeasurementSequenceTableModel to update itself.}
+\classEvent{On Project event}{Update contest of table to correspond
+projects state.}
+\classEvent{On Measurement event}{If measurement step is finished, add
+measurement data to appropriate row and if row being measured was
+selected select next row unless measurement sequence ended.}
 \closeClass
 
 \beginField{addSequence}
@@ -51,15 +56,13 @@ sequence to table and tell MeasurementSequenceTableModel to update itself.}
 
 \beginMethod{MeasurementSequencePanel()}
 \methodDeclaration{public MeasurementSequencePanel()}
-\methodComment{Creates MeasurementSequencePanel with default (AF?) columns.}
+\methodComment{Creates default MeasurementSequencePanel.}
 \closeMethod
 
 \beginMethod{MeasurementSequencePanel(Project)}
 \methodDeclaration{public MeasurementSequencePanel(Project project)}
-\methodComment{Creates MeasurementSequencePanel with columns determined
-by project and calculate shown data from project's measurement data.
-Higlight right row (Project should know higlighted row and tell it to
-MeasurementDeatails also).}
+\methodComment{Creates MeasurementSequencePanel and calculates shown
+data from project's measurement data. Higlights right row.}
 \closeMethod
 
 \beginMethod{addSequence()}
@@ -67,17 +70,11 @@ MeasurementDeatails also).}
 \methodComment{Adds sequence determined by textfields to end of table.}
 \closeMethod
 
-\beginMethod{saveSequence()}
-\methodDeclaration{private? void saveSequence()}
-\methodComment{Saves current sequence into dropdown menu. (Popup-menu
-for name?)}
+\beginMethod{setProject(Project)}
+\methodDeclaration{private void setProject(Project project)}
+\methodComment{Calls super.setProject(project), clears table and calculates shown
+data from project's measurement data. Higlights right row.}
 \closeMethod
-
-\beginMethod{recalculate()}
-\methodDeclaration{public void recalculate()}
-\methodComment{Recalculates measurement data.}
-\closeMethod
-
 
 \beginClass{MeasurementSequenceTableModel}
 \classPackage{ikayaki.gui}
@@ -120,15 +117,27 @@ for name?)}
 \classDeclaration{public class MeasurementSequencePopupMenu}
 \classExtends{JPopupMenu}
 \classCreatedBy{MeasurementSequencePanel}
-\classComment{Allows selection of columns shown in table.}
+\classComment{Allows selection if volume is shown in table and saving sequence.}
 \closeClass
 
-\beginField{step}
-\fieldDeclaration{private JCheckBox step}
+\beginField{volume}
+\fieldDeclaration{private JCheckBox volume}
 \closeField
-//TODO: Add all other selectable columns.
+
+\beginField{nameLabel}
+\fieldDeclaration{private JLabel nameLabel}
+\closeField
+
+\beginField{nameTextField}
+\fieldDeclaration{private JCheckBox nameTextField}
+\closeField
 
 beginMethod{MeasurementSequencePopupMenu()}
 \methodDeclaration{public MeasurementSequencePopupMenu()}
 \methodComment{Creates SequencePopupMenu.}
+\closeMethod
+
+\beginMethod{saveSequence()}
+\methodDeclaration{private void saveSequence()}
+\methodComment{Saves current sequence into dropdown menu.}
 \closeMethod

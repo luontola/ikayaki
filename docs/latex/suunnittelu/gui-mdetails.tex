@@ -5,12 +5,11 @@
 \classCreatedBy{MainViewPanel}
 \classComment{Shows details of measurement selected in
 MeasurementSequencePanel.}
-\classEvent{On change of project}{Update tables to correspond new
-project.}
-\classEvent{n change of selected row in MeasurementSequencePanel}{Change
+\classEvent{On project event}{Update tables to correspond projects new state.}
+\classEvent{On change of selected row in MeasurementSequencePanel}{Change
 tables to correspond selected row.}
-\classEvent{On new measurement data from SQUID}{If row corresponding to
-ongoing measurement is selected in MeasurementSequencePanel update tables with new
+\classEvent{On measurement event}{If row corresponding to ongoing measurement
+is selected in MeasurementSequencePanel update tables with new
 measurement data.}
 \closeClass
 
@@ -37,4 +36,10 @@ measurement data.}
 \methodDeclaration{public MeasurementDetails(Project project)}
 \methodComment{Creates MeasurementDetailsPanel with measurement details taken
 from project.}
+\closeMethod
+
+\beginMethod{setProject(Project)}
+\methodDeclaration{private void setProject(Project project)}
+\methodComment{Calls super.setProject(project), clears tables and
+shows new projects measurement details.}
 \closeMethod
