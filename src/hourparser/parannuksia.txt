@@ -1,0 +1,15 @@
+
+HELPPOJA TOTEUTTAA:
+
+- suoraan nimestä vois olla linkki henkilön omiin työtunteihin
+
+
+LIIAN HANKALIA:
+
+- txt-tiedostossa voisi sallia vuodettomatkin päiväykset kun ei se vuosi edes 
+vaihdu ikinä (oletuksena vaikkapa nykyinen vuosi, tai edellinen käytetty vuosi) 
+ja ehkä saman tien kuukaudettomatkin päiväykset
+
+- kun on samalle päivälle monta merkintää, ne voisi saada syötettyä yhdellä 
+päivämäärällä, vaikkapa niin että whitespacella (tai jollain loitsumerkinnällä) 
+alkavat rivit ovat samaa päivää kuin edellinen rivi.
