@@ -1,5 +1,5 @@
 /*
-* SettingsPanel.java
+* SettingsDialog.java
 *
 * Copyright (C) 2005 Project SQUID, http://www.cs.helsinki.fi/group/squid/
 *
@@ -22,23 +22,23 @@
 
 package ikayaki.gui;
 
-import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 /**
  * Creates its components and updats changes to Settings and saves them in Configuration file
  *
  * @author Aki Korpua
  */
-public class SettingsPanel extends JDialog {
+public class SettingsDialog extends JDialog {
 /*
 Event A: On Save Clicked - saves current configuration to Settings-singleton and closes
 window
@@ -156,7 +156,7 @@ Event B: On Cancel Clicked - closes window (discarding changes)
     private JButton saveButton;
     private JButton cancelButton;
 
-    private SettingsPanel(Frame owner, String message) {
+    private SettingsDialog(Frame owner, String message) {
         super(owner, message, true);
         if (owner != null) {
             setLocationRelativeTo(owner);
@@ -171,17 +171,19 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         super.dialogInit();
 
         $$$setupUI$$$();
+        setResizable(false);
         setLayout(new BorderLayout());
         add(contentPane, BorderLayout.CENTER);
         pack();
 
-        addKeyListener(new KeyAdapter() {
-            @Override public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    closeWindow();
-                }
-            }
-        });
+//        contentPane.addKeyListener(new KeyAdapter() {
+//            @Override public void keyPressed(KeyEvent e) {
+//                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+//                    closeWindow();
+//                }
+//            }
+//        });
+        getRootPane().setDefaultButton(saveButton);
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 saveSettings();
@@ -195,7 +197,7 @@ Event B: On Cancel Clicked - closes window (discarding changes)
     }
 
     public static void showSettingsDialog(Frame owner, String message) {
-        SettingsPanel d = new SettingsPanel(owner, message);
+        SettingsDialog d = new SettingsDialog(owner, message);
         d.setVisible(true);
     }
 

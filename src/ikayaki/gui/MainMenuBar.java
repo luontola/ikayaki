@@ -51,7 +51,7 @@ Event E: On exportToSRM Clicked - Opens File chooser and tells Project to export
 selected file
 */
 /*
-Event F: On configuration Clicked - Opens SettingsPanel (frame)
+Event F: On configuration Clicked - Opens SettingsDialog (frame)
 */
 /*
 Event G: On helpItem Clicked - Opens Help dialog (own frame?)
@@ -103,7 +103,7 @@ Event I: On exit Clicked - closes program
         }
 
         public void actionPerformed(ActionEvent e) {
-            SettingsPanel.showSettingsDialog(main.getParentFrame(),
+            SettingsDialog.showSettingsDialog(main.getParentFrame(),
                     "Configuration");
         }
     }
