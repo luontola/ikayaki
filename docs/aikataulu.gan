@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SQUID" company="Helsingin yliopisto" webLink="http://www.cs.helsinki.fi/group/squid/" view-date="1/2/2005" view-zoom="2" version="1.10.3">
+<!-- -->    <description>    </description>
+
+    <tasks color="#8cb6ce">
+    </tasks>
+
+    <resources>
+    </resources>
+
+    <allocations>
+    </allocations>
+
+
+<roles roleset-name="Default"/>
+</project>
