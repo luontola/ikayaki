@@ -24,12 +24,12 @@ package ikayaki.util;
 
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 /**
- * Executes Runnable objects in a private worker thread after a pre-defined delay. The worker thread will terminate
- * automatically when there are no runnables to be executed. Optionally executes only the last inserted runnable. All
+ * Executes the last Runnable tasks of a series of tasks after a delay. The worker thread will terminate automatically
+ * when there are no runnables to be executed. Optionally executes all of the tasks and not only the last one. All
  * operations are thread-safe.
  * <p/>
  * This class can be used for example in connection with a "continuous search" invoked by a series of GUI events (such
@@ -63,19 +63,19 @@ public class LastExecutor implements Executor {
     private Thread workerThread = null;
 
     /**
-     * Creates an empty LastExecutor with a delay of 0 and execOnlyLast set to false.
+     * Creates an empty LastExecutor with a delay of 0 and execOnlyLast set to true.
      */
     public LastExecutor() {
-        this(0, false);
+        this(0, true);
     }
 
     /**
-     * Creates an empty LastExecutor with execOnlyLast set to false.
+     * Creates an empty LastExecutor with execOnlyLast set to true.
      *
      * @param delayMillis the length of execution delay in milliseconds; if less than 0, then 0 will be used.
      */
     public LastExecutor(int delayMillis) {
-        this(delayMillis, false);
+        this(delayMillis, true);
     }
 
     /**
@@ -151,7 +151,7 @@ public class LastExecutor implements Executor {
         }
         queue.offer(new RunDelayed(command, delayMillis)); // always successful
         if (workerThread == null) {
-            workerThread = new RunQueueThread();
+            workerThread = new LastExecutorThread();
             workerThread.start();
         }
     }
@@ -169,15 +169,15 @@ public class LastExecutor implements Executor {
     }
 
     /**
-     * Keeps on checking the LastExecutor.queue to see if there are Runnables to be executed. If there is one, execute it
-     * and proceed to the next one. If an uncaught Throwable is thrown during the execution, prints an error message and
-     * stack trace to stderr. If the queue is empty, this thread will set RunDelayed.workerThread to null and terminate
-     * itself.
+     * Keeps on checking the LastExecutor.queue to see if there are Runnables to be executed. If there is one, execute
+     * it and proceed to the next one. If an uncaught Throwable is thrown during the execution, prints an error message
+     * and stack trace to stderr. If the queue is empty, this thread will set LastExecutor.workerThread to null and
+     * terminate itself.
      */
-    private class RunQueueThread extends Thread {
+    private class LastExecutorThread extends Thread {
         public void run() {
             // DEBUG:
-//            System.out.println("new RunQueueThread started");
+//            System.out.println("new LastExecutorThread started");
             while (true) {
                 synchronized (LastExecutor.this) {
                     if (queue.size() == 0) {
@@ -245,7 +245,7 @@ public class LastExecutor implements Executor {
         }
 
         /**
-         * Compares this object with the specified object for order.  Returns a negative integer, zero, or a positive
+         * Compares this object with the specified object for order. Returns a negative integer, zero, or a positive
          * integer as this object is less than, equal to, or greater than the specified object.
          *
          * @param delayed the Delayed to be compared.
