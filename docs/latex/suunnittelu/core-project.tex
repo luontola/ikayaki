@@ -231,7 +231,7 @@
 \methodParam{file}{path for this project file. The file should be the same from which document was read and be writable, but this constructor will not check it.}
 \methodParam{document}{the document from which this project will be created.}
 \methodReturn{the created project.}
-\methodThrows{IllegalArgumentException}{if the import data was not in the right format.}
+\methodThrows{IllegalArgumentException}{if the document was not in the right format.}
 \closeMethod
 
 \beginMethod{getDocument()}
@@ -706,8 +706,9 @@
 
 \beginField{name}
 \fieldDeclaration{private String name}
-\fieldValue{}
+\fieldValue{null}
 \fieldComment{
+	Name of the sequence or null if it has no name.
 }
 \closeField
 
@@ -715,109 +716,114 @@
 \fieldDeclaration{private List<MeasurementStep>}
 \fieldValue{new ArrayList<MeasurementStep>()}
 \fieldComment{
+	The measurement steps of this sequence.
 }
 \closeField
 
 \beginMethod{MeasurementSequence()}
 \methodDeclaration{public MeasurementSequence()}
 \methodComment{
+	Creates an empty sequence with no name.
 }
-\methodReturn{}
-\methodThrows{}{}
+\methodReturn{the created sequence.}
 \closeMethod
 
 \beginMethod{MeasurementSequence(String)}
 \methodDeclaration{public MeasurementSequence(String name)}
 \methodComment{
+	Creates an empty sequence with the specified name.
 }
-\methodParam{name}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{name}{name of the sequence.}
+\methodReturn{the created sequence.}
 \closeMethod
 
 \beginMethod{MeasurementSequence(Element)}
 \methodDeclaration{public MeasurementSequence(Element import)}
 \methodComment{
+	Creates a sequence from the specified element.
 }
-\methodParam{import}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{import}{the element from which this sequence will be created.}
+\methodReturn{the created sequence.}
+\methodThrows{IllegalArgumentException}{if the element was not in the right format.}
 \closeMethod
 
 \beginMethod{MeasurementSequence(Element,Project)}
 \methodDeclaration{public MeasurementSequence(Element import, Project project)}
 \methodComment{
+	Creates a sequence from the specified element for a project.
 }
-\methodParam{import}{}
-\methodParam{project}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{import}{the element from which this sequence will be created.}
+\methodParam{project}{the project whose sequence this will be. Needed for importing the measurement steps correctly.}
+\methodReturn{the created sequence.}
+\methodThrows{IllegalArgumentException}{if the element was not in the right format.}
 \closeMethod
 
 \beginMethod{getElement()}
 \methodDeclaration{public synchronized Element getElement()}
 \methodComment{
+	Exports this sequence to a DOM element.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getName()}
 \methodDeclaration{public synchronized String getName()}
 \methodComment{
+	Returns the name of this sequence.
 }
-\methodReturn{}
-\methodThrows{}{}
+\methodReturn{the name, or null if it has no name}
 \closeMethod
 
 \beginMethod{setName(String)}
 \methodDeclaration{public synchronized void setName(String name)}
 \methodComment{
+	Sets the name of this sequence.
 }
-\methodParam{name}{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getSteps()}
 \methodDeclaration{public synchronized int getSteps()}
 \methodComment{
+	Returns the number of steps in this sequence.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getStep(int)}
 \methodDeclaration{public synchronized MeasurementStep getStep(int index)}
 \methodComment{
+	Returns the specified step from this sequence.
 }
-\methodParam{index}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{index}{the index of the step.}
+\methodReturn{the specified step.}
+\methodThrows{IndexOutOfBoundsException}{if the index is out of range (index < 0 || index >= getSteps()).}
 \closeMethod
 
 \beginMethod{addStep(MeasurementStep)}
 \methodDeclaration{public synchronized void addStep(MeasurementStep step)}
 \methodComment{
+	Appends a step to this sequence.
 }
-\methodParam{step}{}
-\methodThrows{}{}
+\methodParam{step}{the measurement step to be added.}
+\methodThrows{NullPointerException}{if step is null.}
 \closeMethod
 
 \beginMethod{addStep(int,MeasurementStep)}
 \methodDeclaration{public synchronized void addStep(int index, MeasurementStep step)}
 \methodComment{
+	Adds a step to the specified index of this sequence.
 }
-\methodParam{index}{}
-\methodParam{step}{}
-\methodThrows{}{}
+\methodParam{index}{the index to which the step will be added.}
+\methodParam{step}{the measurement step to be added.}
+\methodThrows{IndexOutOfBoundsException}{if the index is out of range (index < 0 || index > getSteps()).}
+\methodThrows{NullPointerException}{if step is null.}
 \closeMethod
 
 \beginMethod{removeStep(int)}
 \methodDeclaration{public synchronized void removeStep(int index)}
 \methodComment{
+	Removes a step from this sequence.
 }
-\methodParam{index}{}
-\methodThrows{}{}
+\methodParam{index}{the index of the step to be removed.}
+\methodThrows{IndexOutOfBoundsException}{if the index is out of range (index < 0 || index >= getSteps()).}
 \closeMethod
 
 
@@ -828,7 +834,7 @@
 \classUses{Project}
 \classUses{MeasurementResult}
 \classComment{
-	A single step in a measurement sequence. Each step can include multiple measurements for improved measurement precision. A step can have a different volume and mass than the related project, but by default the volume and mass of the project will be used. Only the project may change the state and results of a measurement step.
+	A single step in a measurement sequence. Each step can include multiple measurements for improved precision. A step can have a different volume and mass than the related project, but by default the volume and mass of the project will be used. Only the project may change the state and results of a measurement step.
 	
 	All operations are thread-safe.
 }
@@ -836,7 +842,9 @@
 
 \beginField{project}
 \fieldDeclaration{private Project project}
+\fieldValue{null}
 \fieldComment{
+	The project that owns this step, or null if there is no owner.
 }
 \closeField
 
@@ -844,12 +852,15 @@
 \fieldDeclaration{private State state}
 \fieldValue{READY}
 \fieldComment{
+	Tells if this step has been completed or not, or if a measurement is still running.
 }
 \closeField
 
 \beginField{timestamp}
 \fieldDeclaration{private Date timestamp}
+\fieldValue{null}
 \fieldComment{
+	The time the measurements were completed, or null if that has not yet happened.
 }
 \closeField
 
@@ -857,6 +868,7 @@
 \fieldDeclaration{private double stepValue}
 \fieldValue{-1.0}
 \fieldComment{
+	The AF/Thermal value of this step, or a negative number if it has not been specified.
 }
 \closeField
 
@@ -864,6 +876,7 @@
 \fieldDeclaration{private double mass}
 \fieldValue{-1.0}
 \fieldComment{
+	The mass of this step's sample, or a negative number to use the project's default mass.
 }
 \closeField
 
@@ -871,6 +884,7 @@
 \fieldDeclaration{private double volume}
 \fieldValue{-1.0}
 \fieldComment{
+	The volume of this step's sample, or a negative number to use the project's default volume.
 }
 \closeField
 
@@ -878,163 +892,158 @@
 \fieldDeclaration{private List<MeasurementResult> results}
 \fieldValue{new ArrayList<MeasurementResult>()}
 \fieldComment{
+	The individual measurement results that are part of this measurement step.
 }
 \closeField
 
 \beginMethod{MeasurementStep()}
 \methodDeclaration{public MeasurementStep()}
 \methodComment{
+	Creates a blank measurement step.
 }
-\methodReturn{}
-\methodThrows{}{}
+\methodReturn{the created measurement step.}
 \closeMethod
 
 \beginMethod{MeasurementStep(Project)}
 \methodDeclaration{public MeasurementStep(Project project)}
 \methodComment{
+	Creates a blank measurement step for a project.
 }
-\methodParam{project}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{project}{the project who is the owner of this step.}
+\methodReturn{the created measurement step.}
 \closeMethod
 
 \beginMethod{MeasurementStep(Element)}
 \methodDeclaration{public MeasurementStep(Element import)}
 \methodComment{
+	Creates a measurement step from the specified element.
 }
-\methodParam{import}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{import}{the element from which this step will be created.}
+\methodReturn{the created measurement step.}
+\methodThrows{IllegalArgumentException}{if the element was not in the right format.}
 \closeMethod
 
 \beginMethod{MeasurementStep(Element,Project)}
 \methodDeclaration{public MeasurementStep(Element import, Project project)}
 \methodComment{
+	Creates a measurement step from the specified element for a project.
 }
-\methodParam{import}{}
-\methodParam{project}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{import}{the element from which this step will be created.}
+\methodParam{project}{the project who is the owner of this step.}
+\methodReturn{the created measurement step.}
+\methodThrows{IllegalArgumentException}{if the element was not in the right format.}
 \closeMethod
 
 \beginMethod{getElement()}
 \methodDeclaration{public synchronized Element getElement()}
 \methodComment{
+	Exports this step to a DOM element.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getProject()}
 \methodDeclaration{public synchronized Project getProject()}
 \methodComment{
+	Returns the owner project of this step, or null if there is no owner.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getState()}
 \methodDeclaration{public synchronized State getState()}
 \methodComment{
+	Tells if this step has been completed or not, or if a measurement is still running.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{setState}
 \methodDeclaration{void synchronized setState(State state)}
 \methodComment{
+	Sets the completion status of this step. Only the owner project may set the state.
 }
-\methodParam{state}{}
-\methodThrows{}{}
+\methodThrows{NullPointerException}{if state is null.}
 \closeMethod
 
 \beginMethod{getTimestamp()}
 \methodDeclaration{public synchronized Date getTimestamp()}
 \methodComment{
+	Returns the time the measurements were completed, or null if that has not yet happened.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getStepValue()}
 \methodDeclaration{public synchronized double getStepValue()}
 \methodComment{
+	Returns the AF/Thermal value of this step, or a negative number if it has not been specified.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{setStepValue(double)}
 \methodDeclaration{public synchronized void setStepValue(double stepValue)}
 \methodComment{
+	Sets the value of this step. A negative value will clear it.
 }
-\methodParam{stepValue}{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getMass()}
 \methodDeclaration{public synchronized double getMass()}
 \methodComment{
+	Returns the mass of this step's sample, or a negative number to use the project's default mass.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{setMass(double)}
 \methodDeclaration{public synchronized void setMass(double mass)}
 \methodComment{
+	Sets the mass of this step's sample. A negative value will clear it.
 }
-\methodParam{mass}{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getVolume()}
 \methodDeclaration{public synchronized double getVolume()}
 \methodComment{
+	Returns the volume of this step's sample, or a negative number to use the project's default volume.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{setVolume(double)}
 \methodDeclaration{public synchronized void setVolume(double volume)}
 \methodComment{
+	Sets the volume of this step's sample. A negative value will clear it.
 }
-\methodParam{volume}{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{updateTransforms()}
 \methodDeclaration{synchronized void updateTransforms()}
 \methodComment{
+	Updates all of the measurement results with the owner project's transformation matrix.
 }
-\methodThrows{}{}
+\methodThrows{NullPointerException}{if this step is not owned by a project.}
 \closeMethod
 
 \beginMethod{getResults()}
 \methodDeclaration{public synchronized int getResults()}
 \methodComment{
+	Returns the number of results in this step.
 }
-\methodReturn{}
-\methodThrows{}{}
 \closeMethod
 
 \beginMethod{getResult(int)}
 \methodDeclaration{public synchronized MeasurementResult getResult(int index)}
 \methodComment{
+	Returns a results from this step.
 }
-\methodParam{index}{}
-\methodReturn{}
-\methodThrows{}{}
+\methodParam{index}{the index of the result.}
+\methodReturn{the specified result.}
+\methodThrows{IndexOutOfBoundsException}{if the index is out of range (index < 0 || index >= getResults()).}
 \closeMethod
 
 \beginMethod{addResult(MeasurementResult)}
 \methodDeclaration{public synchronized void addResult(MeasurementResult result)}
 \methodComment{
+	Appends a measurement result to this step. The transformation matrix of the result will be updated automatically.
 }
-\methodParam{result}{}
-\methodThrows{}{}
+\methodParam{result}{the result to be added.}
+\methodThrows{NullPointerException}{if result is null.}
 \closeMethod
 
 
