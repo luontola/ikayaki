@@ -88,7 +88,7 @@ whose measuring ended.
     /**
      * LastExecutor for scheduling autocomplete results to separate thread (disk access and displaying).
      */
-    private LastExecutor autocompleteExecutor = new LastExecutor(200, true);
+    private LastExecutor autocompleteExecutor = new LastExecutor(300, true);
 
     /**
      * Currently open directory.
@@ -132,9 +132,18 @@ whose measuring ended.
         // browserField.getEditor().getEditorComponent().setFocusTraversalKeysEnabled(false);
 
         // scroll to the end of the combo box's text field
-        JTextField browserTextField = (JTextField) browserField.getEditor().getEditorComponent();
-        browserTextField.setCaretPosition(browserTextField.getDocument().getLength());
-        // TODO: scroll the caret to be visible when the program starts
+        final JTextField browserTextField = (JTextField) browserField.getEditor().getEditorComponent();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                /* HACK:
+                 * This hack will work only if we are currently in the event-dispatching thread.
+                 * Otherwise the setCaretPosition will be executed before the GUI is visible,
+                 * and the JTextField will not scroll automatically to show the caret.
+                 */
+                // scroll the caret to be visible when the program starts
+                browserTextField.setCaretPosition(browserTextField.getDocument().getLength());
+            }
+        });
 
         // browse button
         browseButton = new JButton("Browse...");
@@ -212,6 +221,10 @@ whose measuring ended.
                             // gui updating must be done from event-dispatching thread
                             SwingUtilities.invokeLater(new Runnable() {
                                 public void run() {
+                                    if (browserField.isPopupVisible()) {
+                                        // when the popup is hidden before showing, it will be automatically resized
+                                        browserField.hidePopup();
+                                    }
                                     browserFieldNextPopupAutocomplete = true;
                                     browserField.showPopup();
                                 }

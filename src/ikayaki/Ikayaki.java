@@ -135,6 +135,15 @@ be closed.
                 project = Project.loadProject(file);
             }
         }
-        new Ikayaki(project);
+
+        /* HACK:
+         * ProjectExplorerPanel requires that the program is started in the event-dispatching thread.
+         */
+        final Project p = project;
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new Ikayaki(p);
+            }
+        });
     }
 }
