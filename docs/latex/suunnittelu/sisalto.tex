@@ -97,6 +97,8 @@ Package ikayaki holds generic data classes, ikayaki.squid holds classes loosely 
 
 Responsible for holding all the measurement data and controlling the SQUID. Most of the GUI classes use the Project class. When the state of the project changes, the Project class fires ProjectEvents and MeasurementEvents to the GUI classes, which in turn will call the Project class to get the changed information.
 
+The classes Project, MeasurementSequence, MeasurementStep, MeasurementResult and MeasurementValue are shown in Figure~\ref{fig:core}.
+
 \subsubsection{Squid interface}
 \insertdia{core-squid}
 
@@ -117,6 +119,8 @@ SerialIO and classes related to it takes care of the harware layer of serial com
 \subsubsection{Global settings}
 
 Global properties that are used all around the program. The Settings class provides a global point for retrieving and modifying the properties.
+
+The class Settings is shown in Figure~\ref{fig:core} and details of all the properties are in the documentation.
 
 \subsubsection{Utilities}
 \label{sec:utilities}
