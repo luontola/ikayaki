@@ -23,11 +23,15 @@
 package ikayaki.squid;
 
 import java.util.Stack;
+import javax.comm.PortInUseException;
+import javax.comm.NoSuchPortException;
+import ikayaki.Settings;
+import java.util.concurrent.SynchronousQueue;
 
 /**
  * Offers an interface for controlling the magnetometer."
  *
- * @author
+ * @author Aki Korpua
  */
 public class Magnetometer implements SerialIOListener {
 /*
@@ -40,6 +44,12 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     private Stack messageBuffer;
 
     /**
+     * Synchronous queue for waiting result message from magnetometer
+     */
+    private SynchronousQueue queue;
+
+
+    /**
      * Magnetometer’s current status.
      */
     private String status;
@@ -49,12 +59,15 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     private SerialIO serialIO;
 
+    private boolean waitingForMessage = false;
+
+
     /**
      * Creates a new magnetometer interface. Opens connection to Magnetometer COM port (if its not open already) and
      * reads settings from the Setting class.
      */
-    public Magnetometer() {
-        return; // TODO
+    public Magnetometer() throws PortInUseException, NoSuchPortException {
+        this.serialIO = new SerialIO(new SerialParameters(Settings.instance().getMagnetometerPort(),1200,0,0,8,1,0));
     }
 
     /**
@@ -70,8 +83,17 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      *
      * @param axis x,y,z or a (all). In lower case.
      */
-    private String reset(char axis) {
-        return null; // TODO
+    private void reset(char axis) {
+        //they should be upper case, duh :)
+        if(axis == 'x') axis = 'X';
+        else if (axis == 'y') axis = 'Y';
+        else if (axis == 'z') axis = 'Z';
+        else if (axis == 'a') axis = 'A';
+        try {
+            this.serialIO.writeMessage(axis + "R<CR>");
+        } catch (PortInUseException ex) {
+        } catch (NoSuchPortException ex) {
+        }
     }
 
     /**
@@ -80,7 +102,17 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @param axis x,y,z or a (all). In lower case.
      */
     private void resetCounter(char axis) {
-        return; // TODO
+        //they should be upper case, duh :)
+        if (axis == 'x') axis = 'X';
+        else if (axis == 'y') axis = 'Y';
+        else if (axis == 'z') axis = 'Z';
+        else if (axis == 'a') axis = 'A';
+
+        try {
+            this.serialIO.writeMessage(axis + "RC<CR>");
+        } catch (PortInUseException ex) {
+        } catch (NoSuchPortException ex) {
+        }
     }
 
     /**
@@ -101,7 +133,16 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @param option     see data values from subcommands.
      */
     private void configure(char axis, char subcommand, char option) {
-        return; // TODO
+        //they should be upper case, duh :)
+        if (axis == 'x') axis = 'X';
+        else if (axis == 'y') axis = 'Y';
+        else if (axis == 'z') axis = 'Z';
+        else if (axis == 'a') axis = 'A';
+        try {
+            this.serialIO.writeMessage(axis + "C" + subcommand + option + "<CR>");
+        } catch (PortInUseException ex) {
+        } catch (NoSuchPortException ex) {
+        }
     }
 
     /**
@@ -110,7 +151,16 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @param axis x,y,z or a (all). In lower case.
      */
     private void latchAnalog(char axis) {
-        return; // TODO
+        //they should be upper case, duh :)
+        if (axis == 'x') axis = 'X';
+        else if (axis == 'y') axis = 'Y';
+        else if (axis == 'z') axis = 'Z';
+        else if (axis == 'a') axis = 'A';
+        try {
+            this.serialIO.writeMessage(axis + "LD<CR>");
+        } catch (PortInUseException ex) {
+        } catch (NoSuchPortException ex) {
+        }
     }
 
     /**
@@ -119,7 +169,16 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @param axis x,y,z or a (all). In lower case.
      */
     private void latchCounter(char axis) {
-        return; // TODO
+        //they should be upper case, duh :)
+        if (axis == 'x') axis = 'X';
+        else if (axis == 'y') axis = 'Y';
+        else if (axis == 'z') axis = 'Z';
+        else if (axis == 'a') axis = 'A';
+        try {
+            this.serialIO.writeMessage(axis + "LC<CR>");
+        } catch (PortInUseException ex) {
+        } catch (NoSuchPortException ex) {
+        }
     }
 
     /**
@@ -136,42 +195,92 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @return Returns data wanted, see command and datavalue
      */
     private String getData(char axis, char command, String datavalues) {
-        return null; // TODO
+        if (axis == 'x') axis = 'X';
+        else if (axis == 'y') axis = 'Y';
+        else if (axis == 'z') axis = 'Z';
+        else return null; // invalid axis
+        if (command == 'D' || command == 'C')
+            try {
+                this.serialIO.writeMessage(axis + "S" + command + "<CR>");
+            } catch (PortInUseException ex) {
+            } catch (NoSuchPortException ex) {
+            }
+        else if( command == 'S')
+            try {
+                this.serialIO.writeMessage(axis + "S" + command + datavalues + "<CR>");
+            } catch (PortInUseException ex) {
+            } catch (NoSuchPortException ex) {
+            }
+        else return null;
+        waitingForMessage = true;
+        String answer = (String)queue.poll();
+        waitingForMessage = false;
+        return answer;
     }
 
     /**
-     * Pulse reset and opens feedback loop for axis. Need to be done to all axes before measuring.
+     * Pulse reset and opens feedback loop for axis. Need to be done before measuring.
      *
      * @param axis x,y,z or a (all). In lower case.
      */
     public void openLoop(char axis) {
-        return; // TODO
+        this.configure(axis,'L','P');
     }
 
     /**
-     * Clears flux counter for axis. Need to be done to all axes before measuring.
+     * Clears flux counter for axis. Need to be done measuring.
      *
      * @param axis x,y,z or a (all). In lower case.
      */
     public void clearFlux(char axis) {
-        return; // TODO
+        this.resetCounter(axis);
+        ///return; // TODO
     }
 
     /**
      * Waits for magnetometer to settle down. Blocking.
      */
     public void join() {
-        return; // TODO
+        //mm.. this is in vain.
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+        }
     }
 
     /**
-     * Calls first openLoop(a) and clearFlux(a). Latches axes, reads counters and analog. Calculates data from them and
+     *  Latches axes, reads counters and analog. Calculates data from them and
      * returns them.
      *
      * @return Returns 3 double values in following order: (x,y,z)
      */
     public Double[] readData() {
-        return null; // TODO
+        //should be done only before measurement cycle? Oh yeah..
+        //this.clearFlux('a');
+        //this.resetCounter('a');
+
+        this.latchCounter('a');
+
+        //read all latched counter values
+        Double counterX = Double.parseDouble(this.getData('x','C',""));
+        Double counterY = Double.parseDouble(this.getData('y','C',""));
+        Double counterZ = Double.parseDouble(this.getData('z','C',""));
+
+        this.latchAnalog('a');
+
+        //read all latched analog values
+        Double analogX = Double.parseDouble(this.getData('x','D',""));
+        Double analogY = Double.parseDouble(this.getData('y','D',""));
+        Double analogZ = Double.parseDouble(this.getData('z','D',""));
+
+        Double[] result = new Double[3];
+
+        //when to use flux counting and when not? TODO
+        result[0] = (counterX+analogX)*Settings.instance().getMagnetometerXAxisCalibration();
+        result[1] = (counterY+analogY)*Settings.instance().getMagnetometerYAxisCalibration();
+        result[2] = (counterZ+analogZ)*Settings.instance().getMagnetometerZAxisCalibration();
+
+        return result;
     }
 
     /**
@@ -181,7 +290,14 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      *         Ten Hertz Filter; 10 Hz <br/>"H" One hundred Hertz Filter; 100 Hz <br/>"W" Wide band filter; WB
      */
     public char[] getFilters() {
-        return null; // TODO
+        char[] data = new char[3];
+        String answer = this.getData('X','S',"F");
+        data[0] = answer.charAt(1);
+        answer = this.getData('Y','S',"F");
+        data[1] = answer.charAt(1);
+        answer = this.getData('Z','S',"F");
+        data[2] = answer.charAt(1);
+        return data;
     }
 
     /**
@@ -191,16 +307,31 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      *         times range; 10x <br/>"H" One hundred times range; 100x <br/>"E" Extended range; 1000x
      */
     public char[] getRange() {
-        return null; // TODO
+        char[] data = new char[3];
+        String answer = this.getData('X', 'S', "R");
+        data[0] = answer.charAt(1);
+        answer = this.getData('Y', 'S', "R");
+        data[1] = answer.charAt(1);
+        answer = this.getData('Z', 'S', "R");
+        data[2] = answer.charAt(1);
+        return data;
+
     }
 
     /**
      * Returns Fast Slew options value. Blocking.
      *
-     * @return true if Fast Slew is on, false if not
+     * @return true if Fast Slew is on, false if not. In order (x,y,z).
      */
-    public boolean getSlew() {
-        return false; // TODO
+    public boolean[] getSlew() {
+        boolean[] data = new boolean[3];
+        String answer = this.getData('X','S',"S");
+        data[0] = (!answer.equals("SD"));
+        answer = this.getData('Y','S',"S");
+        data[1] = (!answer.equals("SD"));
+        answer = this.getData('Z','S',"S");
+        data[2] = (!answer.equals("SD"));
+        return data;
     }
 
     /**
@@ -209,7 +340,14 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @return return Loop status for all axis in order (x,y,z). Values true = on, false = off.
      */
     public boolean[] getLoop() {
-        return null; // TODO
+        boolean[] data = new boolean[3];
+        String answer = this.getData('X', 'S', "L");
+        data[0] = (answer.equals("LO"));
+        answer = this.getData('Y', 'S', "L");
+        data[1] = (answer.equals("LO"));
+        answer = this.getData('Z', 'S', "L");
+        data[2] = (answer.equals("LO"));
+        return data;
     }
 
     /**
@@ -218,10 +356,23 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @return true if ok.
      */
     public boolean isOK() {
-        return false; // TODO
+        if(serialIO != null)
+            return true;
+        return false;
     }
 
     public void serialIOEvent(SerialIOEvent event) {
-        // TODO
+        //problem when Degausser and Magnetometer uses same port :/
+        if (waitingForMessage) {
+            try {
+                queue.put(event.getMessage());
+            } catch (InterruptedException e) {
+                System.err.println("Interrupted Degausser message event");
+            } catch (NullPointerException e) {
+                System.err.println("Null from SerialEvent in Degausser");
+            }
+        }
+        messageBuffer.add(event.getMessage());
+
     }
 }
