@@ -25,6 +25,13 @@
 \classEvent{On declination/inclination/volume changed}{The updated transformation matrix will be applied to all measurements and a ProjectEvent will be fired to all project listeners.}
 \closeClass
 
+\beginField{projectCache}
+\fieldDeclaration{private static Hashtable<File,Project> projectCache}
+\fieldComment{
+	Caches the created and loaded Project objects to make sure that no more than one object will be created for each physical file.
+}
+\closeField
+
 \beginField{file}
 \fieldDeclaration{private File file}
 \fieldComment{
@@ -51,7 +58,7 @@
 \fieldDeclaration{private Squid squid}
 \fieldValue{null}
 \fieldComment{
-	Pointer to the SQUID device interface, or null if this project is not allowed to access it.
+	Pointer to the SQUID device interface, or null if this project is not its owner.
 }
 \closeField
 
@@ -97,7 +104,7 @@
 \fieldDeclaration{private Matrix3d transform}
 \fieldValue{new Matrix3d()}
 \fieldComment{
-	Matrix for correcting the sample's orientation. The matrix will be updated whenever the strike, dip or sampleType is changed. After that updated matrix will be applied to all measurements.
+	Matrix for correcting the sample's orientation. The matrix will be updated whenever the strike, dip or sampleType is changed. After that the updated matrix will be applied to all measurements.
 }
 \closeField
 
@@ -141,15 +148,6 @@
 }
 \closeField
 
-\beginMethod{loadProject(File)}
-\methodDeclaration{public static Project loadProject(File file)}
-\methodComment{
-	Loads a saved project file.
-}
-\methodParam{file}{project file to be loaded.}
-\methodReturn{the loaded project, or null if file is not a valid project file or it was not readable.}
-\closeMethod
-
 \beginMethod{createCalibrationProject(File)}
 \methodDeclaration{public static Project createCalibrationProject(File file)}
 \methodComment{
@@ -189,11 +187,30 @@
 \beginMethod{createProject(File,Type)}
 \methodDeclaration{private static Project createProject(File file, Type type)}
 \methodComment{
-	Creates a project file of the specified type.
+	Creates a project file of the specified type. Ensures that the project file has been written to disk. Adds the created Project object to projectCache.
 }
 \methodParam{file}{path for the new project file.}
 \methodParam{type}{type of the project.}
 \methodReturn{the created project, or null if file was not writable.}
+\closeMethod
+
+\beginMethod{loadProject(File)}
+\methodDeclaration{public static Project loadProject(File file)}
+\methodComment{
+	Loads a saved project file. If the file has already been loaded, will return a reference to the existing Project object.
+}
+\methodParam{file}{project file to be loaded.}
+\methodReturn{the loaded project, or null if file is not a valid project file or it was not readable.}
+\closeMethod
+
+\beginMethod{closeProject(Project)}
+\methodDeclaration{public static boolean closeProject(Project project)}
+\methodComment{
+	Ensures that the project file is saved and frees the resources taken by the project. A project should not be used after it has been closed -- any further use of the object is undefined (probably will create NullPointerExceptions). The closed project is removed from the projectCache. A project can not be closed if it has a measurement running.
+}
+\methodParam{project}{project to be closed.}
+\methodReturn{true if the project has been closed, false if a measurement is running and the project can not be closed.}
+\methodThrows{NullPointerException}{if the project is null.}
 \closeMethod
 
 \beginMethod{Project(File,Type)}
@@ -206,21 +223,21 @@
 \methodReturn{the created project.}
 \closeMethod
 
-\beginMethod{Project(File,Element)}
-\methodDeclaration{private Project(File file, Element import)}
+\beginMethod{Project(File,Document)}
+\methodDeclaration{private Project(File file, Document document)}
 \methodComment{
-	Creates a new project from the specified import data. This constructor will assume that the specified file is the same from which the import data was read.
+	Creates a new project from the specified document. This constructor will assume that the specified file is the same from which the document was read.
 }
-\methodParam{file}{path for this project file. The file should be the same from which import data was read and be writable, but this constructor will not check it.}
-\methodParam{import}{import data from which this project will be created.}
+\methodParam{file}{path for this project file. The file should be the same from which document was read and be writable, but this constructor will not check it.}
+\methodParam{document}{the document from which this project will be created.}
 \methodReturn{the created project.}
 \methodThrows{IllegalArgumentException}{if the import data was not in the right format.}
 \closeMethod
 
-\beginMethod{export()}
-\methodDeclaration{public synchronized Element export()}
+\beginMethod{getDocument()}
+\methodDeclaration{public synchronized Document getDocument()}
 \methodComment{
-	Exports this project to a DOM element.
+	Exports this project to a DOM document.
 }
 \closeMethod
 
@@ -291,7 +308,7 @@
 	Only one project may own the Squid at a time. The Squid must be first detached with "setSquid(null)" from its owner before it can be given to another project. Detaching the Squid is possible only when the project's state is IDLE.
 }
 \methodParam{squid}{pointer to the SQUID interface, or null to detach this project from it.}
-\methodReturn{true if the operation was completed, otherwise false (in which case nothing was changed).}
+\methodReturn{true if the operation was completed, false if the Squid has another owner or a measurement is running (in which case nothing was changed).}
 \closeMethod
 
 \beginMethod{getProperty(String)}
@@ -352,12 +369,13 @@
 \methodComment{
 	Sets the type of the sample and calls updateTransforms().
 }
+\methodThrows{NullPointerException}{if sampleType is null.}
 \closeMethod
 
 \beginMethod{getTransform()}
 \methodDeclaration{synchronized Matrix3d getTransform()}
 \methodComment{
-	Returns the current transformation matrix for the sample. For performance reasons, this method returns a reference to the internal data structure and not a copy.
+	Returns the current transformation matrix for the sample. For performance reasons, this method returns a reference to the internal data structure and not a copy of it.
 	
 	WARNING!!! Absolutely NO modification of the data contained in this matrix should be made -- if any such manipulation is necessary, it should be done on a copy of the matrix returned rather than the matrix itself.
 }
@@ -460,6 +478,7 @@
 	If isSequenceEditEnabled() is false, nothing will be done.
 }
 \methodParam{sequence}{the measurement sequence to be added.}
+\methodThrows{NullPointerException}{if sequence is null.}
 \closeMethod
 
 \beginMethod{copySequence(int,int)}
@@ -470,6 +489,7 @@
 \methodParam{start}{index of the first step in the sequence.}
 \methodParam{end}{index of the last step in the sequence. If end < start, then an empty sequence will be returned.}
 \methodReturn{copy of the sequence with only stepValues and no results.}
+\methodThrows{IndexOutOfBoundsException}{if the index is out of range (start < 0 || end >= getSteps()).}
 \closeMethod
 
 \beginMethod{addStep(MeasurementStep)}
@@ -480,20 +500,22 @@
 	If isSequenceEditEnabled() is false, nothing will be done.
 }
 \methodParam{step}{the measurement step to be added.}
+\methodThrows{NullPointerException}{if step is null.}
 \closeMethod
 
 \beginMethod{addStep(int,MeasurementStep)}
 \methodDeclaration{public synchronized void addStep(int index, MeasurementStep step)}
 \methodComment{
-	Appends a step to this project's sequence to the specified index. Only the stepValue will be copied from the specified step and added as new steps to this project.
+	Adds a step to the specified index of this project's sequence. Only the stepValue will be copied from the specified step and added as new steps to this project.
 	
-	The index must be such, that the order of the completed measurements will not change.
+	The index must be such, that the indices of the completed measurements will not change.
 	
 	If isSequenceEditEnabled() is false, nothing will be done.
 }
 \methodParam{index}{the index to which the step will be added.}
 \methodParam{step}{the measurement step to be added.}
 \methodThrows{IndexOutOfBoundsException}{if the index is out of range (index < getCompletedSteps() || index > getSteps()).}
+\methodThrows{NullPointerException}{if step is null.}
 \closeMethod
 
 \beginMethod{removeStep(int)}
@@ -552,13 +574,14 @@
 \closeMethod
 
 \beginMethod{getValue(int,MeasurementValue)}
-\methodDeclaration{public synchronized <A> A getValue(int step, MeasurementValue<A> value)}
+\methodDeclaration{public synchronized <A> A getValue(int step, MeasurementValue<A> algorithm)}
 \methodComment{
 	Calculates and returns a value from a measurement step. The specified MeasurementValue's algorithm will be used and the results returned.
 }
 \methodParam{step}{the measurement step from which the value is calculated.}
-\methodParam{value}{the algorithm for calculating the desired value.}
-\methodReturn{the value returned by the algorithm.}
+\methodParam{algorithm}{the algorithm for calculating the desired value.}
+\methodReturn{the value returned by the algorithm, or null if it was not possible to calculate it.}
+\methodThrows{NullPointerException}{if algorithm is null.}
 \closeMethod
 
 \beginMethod{isDegaussingEnabled()}
@@ -613,9 +636,9 @@
 \beginMethod{doAutoStep()}
 \methodDeclaration{public synchronized boolean doAutoStep()}
 \methodComment{
-	Begins an auto step measurement. Will do nothing if isAutoStepEnabled() is false.
+	Starts an auto step measurement. Will do nothing if isAutoStepEnabled() is false.
 	
-	The measurement will run its own thread, and this method will not wait for it to finish.
+	The measurement will run in its own thread, and this method will not wait for it to finish.
 }
 \methodReturn{true if the measurement was started, otherwise false.}
 \closeMethod
@@ -623,9 +646,9 @@
 \beginMethod{doSingleStep()}
 \methodDeclaration{public synchronized boolean doSingleStep()}
 \methodComment{
-	Begins a single step measurement. Will do nothing if isSingleStepEnabled() is false.
+	Starts a single step measurement. Will do nothing if isSingleStepEnabled() is false.
 	
-	The measurement will run its own thread, and this method will not wait for it to finish.
+	The measurement will run in its own thread, and this method will not wait for it to finish.
 }
 \methodReturn{true if the measurement was started, otherwise false.}
 \closeMethod
@@ -731,8 +754,8 @@
 \methodThrows{}{}
 \closeMethod
 
-\beginMethod{export()}
-\methodDeclaration{public synchronized Element export()}
+\beginMethod{getElement()}
+\methodDeclaration{public synchronized Element getElement()}
 \methodComment{
 }
 \methodReturn{}
@@ -894,8 +917,8 @@
 \methodThrows{}{}
 \closeMethod
 
-\beginMethod{export()}
-\methodDeclaration{public synchronized Element export()}
+\beginMethod{getElement()}
+\methodDeclaration{public synchronized Element getElement()}
 \methodComment{
 }
 \methodReturn{}
@@ -1074,8 +1097,8 @@
 \methodThrows{}{}
 \closeMethod
 
-\beginMethod{export()}
-\methodDeclaration{public Element export()}
+\beginMethod{getElement()}
+\methodDeclaration{public Element getElement()}
 \methodComment{
 }
 \methodReturn{}
