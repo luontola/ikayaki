@@ -23,6 +23,7 @@
 package ikayaki;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,8 +88,10 @@ public class MeasurementSequence {
 
     /**
      * Exports this sequence to a DOM element.
+     *
+     * @param document the document that will contain this element.
      */
-    public synchronized Element getElement() {
+    public synchronized Element getElement(Document document) {
         return null; // TODO
     }
 

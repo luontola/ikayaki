@@ -123,20 +123,18 @@ public class MeasurementResult {
 
     /**
      * Exports this result to a DOM element.
+     *
+     * @param document the document that will contain this element.
      */
-    public Element getElement() {
-        try {
-            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            Element element = document.createElement("result");
-            element.setAttribute("type", type.toString());
-            element.setAttribute("x", Double.toString(rawVector.x));
-            element.setAttribute("y", Double.toString(rawVector.y));
-            element.setAttribute("z", Double.toString(rawVector.z));
-            return element;
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public Element getElement(Document document) {
+        Element element = document.createElement("result");
+
+        element.setAttribute("type", type.toString());
+        element.setAttribute("x", Double.toString(rawVector.x));
+        element.setAttribute("y", Double.toString(rawVector.y));
+        element.setAttribute("z", Double.toString(rawVector.z));
+
+        return element;
     }
 
     /**
@@ -278,17 +276,24 @@ public class MeasurementResult {
     }
 
     public static void main(String[] args) {
+        Document document = null;
+        try {
+            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+
         MeasurementResult r = new MeasurementResult(DEG90, 1, 2.15019801981090189109019091098, 3);
         System.out.println(r);
-        System.out.println(new MeasurementResult(r.getElement()));
+        System.out.println(new MeasurementResult(r.getElement(document)));
 
         for (int j = 0; j < 10; j++) {
             long time = System.currentTimeMillis();
-            for (int i = 0; i < 1000; i++) {
-                r.getElement();
+            for (int i = 0; i < 10000; i++) {
+                r.getElement(document);
             }
             time = System.currentTimeMillis() - time;
-            System.out.println("getElement(): " + time / 1000.0 + " ms/call");
+            System.out.println("getElement(): " + time / 10000.0 + " ms/call");
         }
     }
 }

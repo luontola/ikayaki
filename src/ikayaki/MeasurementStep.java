@@ -22,12 +22,18 @@
 
 package ikayaki;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import javax.vecmath.Matrix3d;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static ikayaki.MeasurementStep.State.*;
 
 /**
  * A single step in a measurement sequence. Each step can include multiple measurements for improved precision. A step
@@ -51,7 +57,8 @@ public class MeasurementStep {
     private State state = State.READY;
 
     /**
-     * The time the measurements were completed, or null if that has not yet happened.
+     * The time the measurements were completed, or null if that has not yet happened. This equals the time of the
+     * latest measurement result.
      */
     private Date timestamp = null;
 
@@ -92,7 +99,7 @@ public class MeasurementStep {
     }
 
     /**
-     * Creates a measurement step from the specified element.
+     * Creates a measurement step from the specified element. Will update the transformation matrices.
      *
      * @param element the element from which this step will be created.
      * @throws NullPointerException     if element is null.
@@ -103,7 +110,7 @@ public class MeasurementStep {
     }
 
     /**
-     * Creates a measurement step from the specified element for a project.
+     * Creates a measurement step from the specified element for a project. Will update the transformation matrices.
      *
      * @param element the element from which this step will be created.
      * @param project the project who is the owner of this step.
@@ -116,14 +123,91 @@ public class MeasurementStep {
         }
         this.project = project;
 
-        return; // TODO
+        // verify tag name
+        if (!element.getTagName().equals("step")) {
+            throw new IllegalArgumentException("Invalid tag name: " + element.getTagName());
+        }
+
+        // get state
+        if (element.getAttribute("done").equals("1")) {
+            state = DONE;
+        } else {
+            state = READY;
+        }
+
+        // get timestamp
+        String s = element.getAttribute("timestamp");
+        if (s.equals("")) {
+            timestamp = null;
+        } else {
+            try {
+                timestamp = new Date(Long.parseLong(s));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid timestamp: " + s);
+            }
+        }
+
+        // get stepValue, mass, volume
+        s = element.getAttribute("stepvalue");
+        try {
+            setStepValue(Double.parseDouble(s));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid stepvalue: " + s);
+        }
+        s = element.getAttribute("mass");
+        try {
+            setMass(Double.parseDouble(s));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid mass: " + s);
+        }
+        s = element.getAttribute("volume");
+        try {
+            setVolume(Double.parseDouble(s));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid volume: " + s);
+        }
+
+        // get results
+        NodeList results = element.getChildNodes();
+        for (int i = 0; i < results.getLength(); i++) {
+            Element result = (Element) results.item(i);
+            this.results.add(new MeasurementResult(result));
+        }
+
+        // check that state, timestamp and results are consistent
+        if (state.isDone()) {
+            if (timestamp == null || this.results.size() == 0) {
+                throw new IllegalArgumentException("Inconsistent state");
+            }
+        } else {
+            if (timestamp != null || this.results.size() > 0) {
+                throw new IllegalArgumentException("Inconsistent state");
+            }
+        }
+
+        // finalize
+        updateTransforms();
     }
 
     /**
      * Exports this step to a DOM element.
+     *
+     * @param document the document that will contain this element.
      */
-    public synchronized Element getElement() {
-        return null; // TODO
+    public synchronized Element getElement(Document document) {
+        Element element = document.createElement("step");
+
+        element.setAttribute("done", state.isDone() ? "1" : "0");
+        element.setAttribute("timestamp", timestamp == null ? "" : Long.toString(timestamp.getTime()));
+        element.setAttribute("stepvalue", Double.toString(stepValue));
+        element.setAttribute("mass", Double.toString(mass));
+        element.setAttribute("volume", Double.toString(volume));
+
+        for (MeasurementResult result : results) {
+            element.appendChild(result.getElement(document));
+        }
+
+        return element;
     }
 
     /**
@@ -140,23 +224,27 @@ public class MeasurementStep {
         return state;
     }
 
-    /**
-     * Sets the completion status of this step. Only the owner project may set the state.
-     *
-     * @throws NullPointerException if state is null.
-     */
-    synchronized void setState(State state) {
-        if (state == null) {
-            throw new NullPointerException();
-        }
-        this.state = state;
-    }
+//    /**
+//     * Sets the completion status of this step. Only the owner project may set the state.
+//     *
+//     * @throws NullPointerException if state is null.
+//     */
+//    synchronized void setState(State state) {
+//        if (state == null) {
+//            throw new NullPointerException();
+//        }
+//        this.state = state;
+//    }
 
     /**
      * Returns the time the measurements were completed, or null if that has not yet happened.
      */
     public synchronized Date getTimestamp() {
-        return timestamp;
+        if (timestamp == null) {
+            return null;
+        } else {
+            return (Date) timestamp.clone();
+        }
     }
 
     /**
@@ -246,8 +334,11 @@ public class MeasurementStep {
     }
 
     /**
-     * Appends a measurement result to this step. The transformation matrix of the result will be updated
-     * automatically.
+     * Appends a measurement result to this step. This method may be called only for a steps whose state is READY or
+     * MEASURING, otherwise nothing will be changed.
+     * <p/>
+     * Sets the timestamp to the current time. Sets the state to MEASURING. The transformation matrix of the result will
+     * be updated automatically.
      *
      * @param result the result to be added.
      * @throws NullPointerException if result is null.
@@ -256,14 +347,102 @@ public class MeasurementStep {
         if (result == null) {
             throw new NullPointerException();
         }
-        results.add(result);
-        updateTransforms();
+        if (state == READY || state == MEASURING) {
+            results.add(result);
+            if (timestamp == null) {
+                timestamp = new Date();
+            }
+            timestamp.setTime(System.currentTimeMillis());
+            state = MEASURING;
+            updateTransforms();
+        }
+    }
+
+    /**
+     * Called after all results have been added. Sets the step's status to DONE_RECENTLY and prevents the adding of
+     * further results. If the state is already DONE or DONE_RECENTLY, then nothing will be changed.
+     */
+    public synchronized void setResultsDone() {
+        if (state != DONE && state != DONE_RECENTLY) {
+            state = DONE_RECENTLY;
+        }
+    }
+
+    @Override public String toString() {
+        StringBuffer sb = new StringBuffer();
+
+        sb.append("[step");
+        sb.append(" state=" + state);
+        sb.append(" timestamp=" + (timestamp == null ? "null" : "" + timestamp.getTime()));
+        sb.append(" stepvalue=" + stepValue);
+        sb.append(" mass=" + mass);
+        sb.append(" volume=" + volume);
+
+        sb.append(" results=(");
+        boolean first = true;
+        for (MeasurementResult result : results) {
+            if (!first) {
+                sb.append(",");
+            } else {
+                first = false;
+            }
+            sb.append(result.toString());
+        }
+        sb.append(")]");
+
+        return sb.toString();
     }
 
     /**
      * The state of a measurement step.
      */
     public enum State {
-        READY, MEASURING, DONE_RECENTLY, DONE
+        READY(false), MEASURING(true), DONE_RECENTLY(true), DONE(true);
+
+        private boolean done;
+
+        private State(boolean done) {
+            this.done = done;
+        }
+
+        public boolean isDone() {
+            return done;
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        Document document = null;
+        try {
+            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        MeasurementStep step = new MeasurementStep();
+        System.out.println(step);
+        Thread.sleep(100);
+        step.addResult(new MeasurementResult(MeasurementResult.Type.BG, 1, 2, 3));
+        System.out.println(step);
+        Thread.sleep(100);
+        step.addResult(new MeasurementResult(MeasurementResult.Type.DEG0, 1, 2, 3));
+        System.out.println(step);
+        Thread.sleep(100);
+        step.addResult(new MeasurementResult(MeasurementResult.Type.DEG90, 1, 2, 3));
+        System.out.println(step);
+        Thread.sleep(100);
+        step.addResult(new MeasurementResult(MeasurementResult.Type.DEG180, 1, 2, 3));
+        System.out.println(step);
+        Thread.sleep(100);
+        step.addResult(new MeasurementResult(MeasurementResult.Type.DEG270, 1, 2, 3));
+        System.out.println(step);
+        Thread.sleep(100);
+        step.addResult(new MeasurementResult(MeasurementResult.Type.BG, 1, 2, 3));
+        System.out.println(step);
+        Thread.sleep(100);
+        step.setResultsDone();
+        System.out.println(step);
+
+        step = new MeasurementStep(step.getElement(document));
+        System.out.println(step);
     }
 }
