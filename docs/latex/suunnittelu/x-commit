@@ -2,9 +2,11 @@
 
 # super-commit-all-script; run with no arguments for help
 # Samuli Kaipiainen / 17.3.2005
-# 2005-03-17 v1.0 first version
-# 2005-03-17 v1.1 added name inserting to versio.tex
-# 2005-03-17 v1.2 added \\ to versio.tex
+
+# 2005-03-17  v1.0  first version
+# 2005-03-17  v1.1  added name inserting to versio.tex
+# 2005-03-17  v1.15 added \\ to versio.tex
+# 2005-03-18  v1.2  file checking into for loop, some optimizations
 
 hourfile=/home/group/squid/public_html/$USER/hours.txt
 verfile=./versio.tex
@@ -14,7 +16,7 @@ if [ -z "$1" ]; then
 	echo "1) appends date, phase code, hours and message to"
 	echo "   $hourfile"
 	echo "2) appends message and name to $verfile;"
-	echo "   name is read from the first line of hours.txt"
+	echo "   name is read from the first line of ${hourfile##*/}"
 	echo "3) executes 'cvs commit -m \"message\"'"
 	echo
 	echo usage: $0 "message" [hours] [phase code]
@@ -22,15 +24,10 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 
-if [ ! -w $hourfile ]; then
-	echo $0: \'$hourfile\' missing or not writable > /dev/stderr
+for file in $hourfile $verfile; do if [ ! -w $file ]; then
+	echo $0: \'$file\' missing or not writable > /dev/stderr
 	exit 2
-fi
-
-if [ ! -w $verfile ]; then
-	echo $0: \'$verfile\' missing or not writable > /dev/stderr
-	exit 2
-fi
+fi done
 
 name=$(head -1 $hourfile)
 date=$(date +%-d.%-m.%Y)
@@ -39,5 +36,5 @@ hours=$2
 msg=$1
 
 echo $date$'\t'$code$'\t'$hours$'\t'$msg >> $hourfile &&
-echo $'\t\t'\&\& $msg \($name\) \\\\ >> $verfile &&
+echo $'\t\t&&' $msg \($name\) \\\\ >> $verfile &&
 cvs commit -m "$msg"
