@@ -164,6 +164,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
             autoStepAction.putValue(Action.NAME, "Measure");
             //autoStepAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_M);
             autoStepAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.CTRL_MASK));
+            autoStepAction.putValue(Action.SMALL_ICON, new ImageIcon(ClassLoader.getSystemResource("resources/play.png")));
         }
         return autoStepAction;
     }
@@ -182,6 +183,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
             //singleStepAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_I);
             singleStepAction.putValue(Action.ACCELERATOR_KEY,
                     KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_MASK));
+            singleStepAction.putValue(Action.SMALL_ICON, new ImageIcon(ClassLoader.getSystemResource("resources/step.png")));
         }
         return singleStepAction;
     }
@@ -199,6 +201,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
             pauseAction.putValue(Action.NAME, "Pause");
             //pauseAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_P);
             pauseAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK));
+            pauseAction.putValue(Action.SMALL_ICON, new ImageIcon(ClassLoader.getSystemResource("resources/pause.png")));
         }
         return pauseAction;
     }
@@ -216,6 +219,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
             abortAction.putValue(Action.NAME, "Stop Now!");
             //abortAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_T);
             abortAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_MASK));
+            abortAction.putValue(Action.SMALL_ICON, new ImageIcon(ClassLoader.getSystemResource("resources/stop.png")));
         }
         return abortAction;
     }

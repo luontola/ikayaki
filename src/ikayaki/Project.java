@@ -1382,6 +1382,14 @@ project listeners.
                 return false;
             }
 
+            // if there are no unmeasured steps, add one for a measurement without demagnetization
+            if (getSteps() == getCompletedSteps()) {
+                addStep(new MeasurementStep(this));
+                // TODO: do a bit more for testing purposes
+                addStep(new MeasurementStep(this));
+                addStep(new MeasurementStep(this));
+            }
+
             new Thread() {
                 @Override public void run() {
                     System.out.println("Measurement started");
