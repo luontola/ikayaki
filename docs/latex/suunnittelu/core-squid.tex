@@ -428,11 +428,12 @@ factory for half stepping.}
 }
 \closeMethod
 
-\beginMethod{moveToDegausser()}
-\methodDeclaration{public void moveToDegausser()}
+\beginMethod{moveToDegausser(char position)}
+\methodDeclaration{public void moveToDegausser(char position)}
 \methodComment{
     Commands the holder to move to degauss position.
 }
+methodParam{position}{tells which position to translate handler (x,y,z)}
 \closeMethod
 
 \beginMethod{moveToMeasurement()}
