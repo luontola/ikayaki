@@ -41,27 +41,27 @@ First you need to download JUnit from http://sourceforge.net/project/showfiles.p
 Then you must write test class for every class to be tested. Test classes extend TestCase. They will have test methods, one for each Test Case. Test class also need suite()-method and Main for run. Sample test class:
 
 {\tt
-  import java.util.*;\\
-  import junit.framework.*;\\
+&  import java.util.*;\\
+&  import junit.framework.*;\\
   
-  public class SimpleTest extends TestCase \{\\
+&  public class SimpleTest extends TestCase \{\\
 
-  //Simple Test Case\\
+&  //Simple Test Case\\
 
-  public void testEmptySimple() \{\\
-	Simple simple = new Simple();\\
-	//New Simple must be empty\\
-        assertTrue(simple.isEmpty());\\
+&  public void testEmptySimple() \{\\
+&&	Simple simple = new Simple();\\
+&&	//New Simple must be empty\\
+&&        assertTrue(simple.isEmpty());\\
 
-  \}\\
+&  \}\\
 
-  public static Test suite() \{\\
-        return new TestSuite(SimpleTest.class);\\
-  \}\\
+&  public static Test suite() \{\\
+&&        return new TestSuite(SimpleTest.class);\\
+&  \}\\
 
-  public static void main(String args[]) \{\\
-        junit.textui.TestRunner.run(suite());\\
-  \}\\
+&  public static void main(String args[]) \{\\
+&&        junit.textui.TestRunner.run(suite());\\
+&  \}\\
 \}\\
 }
 Type "java junit.swingui.TestRunner SimpleTest" to run test cases for Simple.
