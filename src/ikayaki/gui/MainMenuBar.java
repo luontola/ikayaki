@@ -29,7 +29,7 @@ import java.awt.event.KeyEvent;
 /**
  * Creates Menu items for Menubar and makes action listeners for them
  *
- * @author
+ * @author Esko Luontola
  */
 public class MainMenuBar extends JMenuBar {
 /*
