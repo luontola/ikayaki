@@ -392,6 +392,7 @@ Use case format:
 \newcommand{\ReqName}[1]{\textbf{Name:} #1\\}
 \newcommand{\ReqDesc}[1]{\textbf{Description:} #1\\}
 \newcommand{\ReqPrio}[1]{\textbf{Priority:} #1\\}
+\newcommand{\ReqSet}[1]{\textbf{Set by:} #1\\}
 \newcommand{\ReqUc}[1]{\textbf{Use Cases:} #1\\}
 
 Goals of the software set by client, project team and environment.
@@ -406,6 +407,13 @@ least the requirements with priorities 1 and 2. Requirements with
 priority 3 will be fulfilled only if time permits, and priority 4's will
 propably be left out.
 
+\ReqId{Requirements identifier}
+\ReqName{Name of the requirement}
+\ReqDesc{Description of the requirement.}
+\ReqPrio{Requirements priority from 1(most important) to 4(least important)}
+\ReqSet{Who set the requirement}
+\ReqUc{Use cases derived from the requirement}
+
 
 \subsection{Functional requirements}
 
@@ -417,6 +425,7 @@ Define the services which the software offers and how the software behaves, incl
 \ReqName{SQUID control and usage}
 \ReqDesc{Able to control Squid-magnetometer and make measurements with it.}
 \ReqPrio{1}
+\ReqSet{Customer}
 \ReqUc{UC1, UC2, UC3, UC4, UC5, UC6, UC7, UC8, UC9, UC10, UC11}
 
 \ReqId{R2}
@@ -424,12 +433,14 @@ Define the services which the software offers and how the software behaves, incl
 \ReqDesc{Able to operate the magnetometer manually. User can move and
 rotate sample handler and measure and demagnetize sample.}
 \ReqPrio{3}
+\ReqSet{Customer}
 \ReqUc{UC11, UC12}
 
 \ReqId{R3}
 \ReqName{Calibration reminder}
 \ReqDesc{Magnetometer must be calibrated every 24 hours. The program will remind the user when it would be time to do calibration.}
 \ReqPrio{2}
+\ReqSet{Customer}
 \ReqUc{UC8, UC9, UC10}
 
 \ReqId{R4}
@@ -437,6 +448,7 @@ rotate sample handler and measure and demagnetize sample.}
 \ReqDesc{Program should warn user with alarm signal if magnetic field
 remains on for too long.}
 \ReqPrio{1}
+\ReqSet{Customer}
 \ReqUc{UC2, UC3}
 
 
@@ -446,12 +458,14 @@ remains on for too long.}
 \ReqName{Create project}
 \ReqDesc{Create a new project file which will include the measurement sequence, measurement results and information about the sample. The file format will be custom made for this program.}
 \ReqPrio{1}
+\ReqSet{Customer}
 \ReqUc{UC19}
 
 \ReqId{R6}
 \ReqName{Autosave project}
 \ReqDesc{Program will save measurement data and project information after every measurement step and modification.}
 \ReqPrio{1}
+\ReqSet{Customer}
 \ReqUc{UC1, UC2, UC3, UC6, UC7, UC8, UC9, UC10, UC11, UC18, UC22, UC23,
 UC24, UC25, UC26}
 
@@ -459,30 +473,35 @@ UC24, UC25, UC26}
 \ReqName{Load project}
 \ReqDesc{Saved projects can be loaded into program.}
 \ReqPrio{1}
+\ReqSet{Customer}
 \ReqUc{UC20}
 
 \ReqId{R8}
 \ReqName{Edit project}
 \ReqDesc{Ability edit project information and measurement data afterwards. (TODO: which data fields?)}
 \ReqPrio{2}
+\ReqSet{Customer}
 \ReqUc{UC22}
 
 \ReqId{R9}
 \ReqName{Recalculate derived measurement data}
 \ReqDesc{When the measurement data or the mass/volume of the specimen is changed, recalculate all numbers that have been derived from the modified data.}
 \ReqPrio{2}
+\ReqSet{Customer}
 \ReqUc{UC22}
 
 \ReqId{R10}
 \ReqName{Append project}
 \ReqDesc{New measurements can be added to existing projects.}
 \ReqPrio{2}
+\ReqSet{Customer}
 \ReqUc{UC1, UC2, UC3, UC6, UC7, UC11, UC18, UC20}
 
 \ReqId{R11}
 \ReqName{Export to other file formats}
 \ReqDesc{Measurements can be saved in .dat, .tdt and .srm files.}
 \ReqPrio{1}
+\ReqSet{Customer}
 \ReqUc{UC13, UC14, UC15}
 
 
@@ -492,42 +511,49 @@ UC24, UC25, UC26}
 \ReqName{Create a measurement sequence}
 \ReqDesc{Able to create AF and Thellier measurement sequences with several different sized steps.}
 \ReqPrio{2}
+\ReqSet{Customer}
 \ReqUc{UC23, UC24}
 
 \ReqId{R13}
 \ReqName{Automatic sequence}
 \ReqDesc{Do all the measurement steps automatically.}
 \ReqPrio{2}
+\ReqSet{Customer}
 \ReqUc{UC3}
 
 \ReqId{R14}
 \ReqName{Single step sequence}
 \ReqDesc{Do only one measurement step at a time.}
 \ReqPrio{2}
+\ReqSet{Customer}
 \ReqUc{UC1, UC2, UC6, UC7}
 
 \ReqId{R15}
 \ReqName{Pause automatic sequence}
 \ReqDesc{Able to stop the measurement sequence after current step. After being stopped, the user can make modifications to the sequence and continue from where the sequence was left.}
 \ReqPrio{2}
+\ReqSet{Customer}
 \ReqUc{UC4}
 
 \ReqId{R16}
 \ReqName{Panic abort}
 \ReqDesc{Able to stop any measurement immediately. The demagnetizer will be turned off and the sample holder will stop where it is. The current measurement data will be discarded.}
 \ReqPrio{1}
+\ReqSet{Customer}
 \ReqUc{UC5}
 
 \ReqId{R17}
 \ReqName{Numeric presentation of measurements}
 \ReqDesc{Program shows measurement data in numbers. Measurement data will be displayed using scientic notation (1.23e4).}
 \ReqPrio{1}
+\ReqSet{Customer}
 \ReqUc{UC1, UC2, UC3, UC6, UC7, UC8, UC9, UC10, UC11, UC16}
 
 \ReqId{R18}
 \ReqName{Graphic presentation of measurements}
 \ReqDesc{Program draws graphs from measurement data. Available graph types are: Stereo Plot, Intensity, Zijderveld, Difference Vectors, Susteptibility, O63, Great Circles. (TODO: what are the definitions of these graphs? priorities per graph?)}
 \ReqPrio{4}
+\ReqSet{Customer}
 \ReqUc{UC1, UC2, UC3, UC6, UC7, UC8, UC9, UC10, UC11, UC17}
 
 
@@ -537,11 +563,13 @@ UC24, UC25, UC26}
 \ReqName{Hotkeys}
 \ReqDesc{The program has hotkeys for the most often used operations.}
 \ReqPrio{3}
+\ReqSet{Customer}
 
 \ReqId{R20}
 \ReqName{Change hotkeys}
 \ReqDesc{Possibility to change hotkey assignments.}
 \ReqPrio{4}
+\ReqSet{Customer}
 
 
 \subsection{Quality requirements}
@@ -550,26 +578,31 @@ UC24, UC25, UC26}
 \ReqName{Error free}
 \ReqDesc{The program should not crash. All the functions need to work as documented. The calculations that the program makes from measurements must be done right.}
 \ReqPrio{1}
+\ReqSet{Customer}
 
 \ReqId{QR2}
 \ReqName{Ease of use}
 \ReqDesc{Program should be easy to use for first time users after it has been explained to them how to take measurements with the magnetometer.}
 \ReqPrio{1}
+\ReqSet{Customer}
 
 \ReqId{QR3}
 \ReqName{Quality of documentation}
 \ReqDesc{The documentation must be so good that other teams can easily continue the development. Program should have good help pages for the end-users.}
 \ReqPrio{2}
+\ReqSet{Group}
 
 \ReqId{QR4}
 \ReqName{Performance}
 \ReqDesc{The program must keep up with the SQUID hardware. The user interface should not freeze for periods of over 0,5 seconds.}
 \ReqPrio{2}
+\ReqSet{Group}
 
 \ReqId{QR5}
 \ReqName{Expandable architecture}
 \ReqDesc{It should be possible to expand the program to process the measurement data in more ways.}
 \ReqPrio{2}
+\ReqSet{Group}
 
 
 \subsection{Environment}
