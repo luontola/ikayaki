@@ -1,72 +1,433 @@
-
 \beginClass{Squid}
 \classPackage{ikayaki.squid}
-\classDeclaration{}
+\classDeclaration{public class Squid}
 \classExtends{}
 \classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
-\classComment{
+\classCreatedBy{MainViewPanel}
+\classUses{Settings}
+\classSubclass{Degausser}
+\classSubclass{Handler}
+\classSubclass{Magnetometer}
+\classComment{offers Squid interface for project-class that controls SQUID-system. It reads Settings-class for settings and creates classes degausser, handler and magnetometer and offers handlers for them.
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
+\classPatterns{This class is singleton, there will be always only one instance of it and its created when class is needed first time.}
 \closeClass
 
+\beginField{degausser}
+\fieldDeclaration{private Degausser degausser}
+\fieldComment{class for commanding degausser}
+\closeField
+
+\beginField{handler}
+\fieldDeclaration{private Handler handler}
+\fieldComment{class for commanding handler}
+\closeField
+
+\beginField{magnetometer}
+\fieldDeclaration{private Magnetometer magnetometer}
+\fieldComment{class for commanding magnetometer}
+\closeField
+
+\beginMethod{getDegausser()}
+\methodDeclaration{public Degausser getDegausser()}
+\methodComment{
+    Gives handler for Degausser.
+}
+\closeMethod
+
+\beginMethod{getHandler}
+\methodDeclaration{public Handler getHandler()}
+\methodComment{
+    Gives handler for Degausser.
+}
+\closeMethod
+
+\beginMethod{getMagnetometer}
+\methodDeclaration{public Magnetometer getMagnetometer()}
+\methodComment{
+    Gives handler for Magnetometer
+}
+\closeMethod
+
+\beginMethod{updateSettings}
+\methodDeclaration{public void updateSettings()}
+\methodComment{
+    When settings are saved, update all settings in subclasses.
+}
+\closeMethod
+
+\beginMethod{Squid()}
+\methodDeclaration{private Squid()}
+\methodComment{
+    Creates instances of Degausser, Handler and Magnetometer.
+}
+\closeMethod
+
+\beginMethod{instance()}
+\methodDeclaration{public Settings instance()}
+\methodComment{
+    creates Squid, if not yet created, and return it.
+}
+\closeMethod
 
 \beginClass{Degausser}
 \classPackage{ikayaki.squid}
-\classDeclaration{}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
-\classComment{
+\classDeclaration{public class Degausser}
+\classCreatedBy{Squid}
+\classUses{Settings}
+\classUses{SerialIO}
+\classComment{ Controls Degausser (demagnetizer). Sets it up and offers Interface to control it. Because the data link is implemented in the degausser by a single board computer running a small basic program, the response time of the degausser to commands is slow. Suitable wait loops will have to be used in the external computer code to prevent unreliable communications. }
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
+\classEvent{On New IO Message }{reads message and puts it in Buffer}
 \closeClass
+
+\beginField{messageBuffer}
+\fieldDeclaration{private Stack messageBuffer}
+\fieldComment{buffer for incoming messages, readed when needed.}
+\closeField
+
+\beginField{status}
+\fieldDeclaration{private String status}
+\fieldComment{Degaussers current status}
+\closeField
+
+\beginField{comPort}
+\fieldDeclaration{private String comPort}
+\fieldComment{COM port for communication}
+\closeField
+
+\beginField{degausserCoil}
+\fieldDeclaration{private int degausserCoil}
+\fieldComment{(X, Y, Z) = (0,1,2) default axis Z}
+\closeField
+
+\beginField{degausserAmplitude}
+\fieldDeclaration{private int degausserAmplitude}
+\fieldComment{0->3000 default amp 0}
+\closeField
+
+\beginField{degausserDelay}
+\fieldDeclaration{private int degausserDelay}
+\fieldComment{1-9 seconds default delay 1 second}
+\closeField
+
+\beginField{degausserRamp}
+\fieldDeclaration{private int degausserRamp}
+\fieldComment{(3, 5, 7, 9) default 3}
+\closeField
+
+\beginField{degausserStatus}
+\fieldDeclaration{private char degausserRamp}
+\fieldComment{Z=Zero, T=Tracking, ?=Unknown}
+\closeField
+
+\beginMethod{setCoil(char coil)}
+\methodDeclaration{public void setCoil(char coil)}
+\methodComment{
+    Sets coil X,Y,Z.
+}
+\closeMethod
+
+\beginMethod{setAmplitude(int amplitude)}
+\methodDeclaration{public void setAmplitude(int amplitude)}
+\methodComment{
+    Sets amplitude to ramp, range 0 to 3000.
+}
+\closeMethod
+
+\beginMethod{executeRampUp()}
+\methodDeclaration{public void executeRampUp()}
+\methodComment{
+    Performs Ramp up.
+}
+\closeMethod
+
+\beginMethod{executeRampDown()}
+\methodDeclaration{public void executeRampDown()}
+\methodComment{
+    Brings Ramp down.
+}
+\closeMethod
+
+\beginMethod{executeRampCycle()}
+\methodDeclaration{public void executeRampCycle()}
+\methodComment{
+    Performs Ramp up and down.
+}
+\closeMethod
+
+\beginMethod{getStatus()}
+\methodDeclaration{public String getStatus()}
+\methodComment{
+    Gives configuration and ramp status.
+}
+\closeMethod
+
+\beginMethod{updateSettings()}
+\methodDeclaration{public void updateSettings()}
+\methodComment{
+    Squid tells if settings are changed, update all settings.
+}
+\closeMethod
+
+\beginMethod{Degausser()}
+\methodDeclaration{public Degausser()}
+\methodComment{
+    Opens connection to Degausser COM port (if not open yet) and read settings to fields from Setting-class.
+}
+\closeMethod
 
 
 \beginClass{Handler}
 \classPackage{ikayaki.squid}
-\classDeclaration{}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
-\classComment{
+\classDeclaration{public class Handler}
+\classCreatedBy{Squid}
+\classUses{Settings}
+\classUses{SerialIO}
+\classComment{ Controls Sample Handler and sets it up, offering interface for it.}
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
+\classEvent{On New IO Message }{reads message and puts it in Buffer}
 \closeClass
+
+\beginField{messageBuffer}
+\fieldDeclaration{private Stack messageBuffer}
+\fieldComment{buffer for incoming messages, readed when needed.}
+\closeField
+
+\beginField{status}
+\fieldDeclaration{private String status}
+\fieldComment{Handlers current status}
+\closeField
+
+\beginField{comPort}
+\fieldDeclaration{private String comPort}
+\fieldComment{COM port for communication}
+\closeField
+
+\beginField{acceleration}
+\fieldDeclaration{private int acceleration}
+\fieldComment{value between 0 and 127 default 5. Settings in the
+20-50 range are usually employed.}
+\closeField
+
+\beginField{deceleration}
+\fieldDeclaration{private int deceleration}
+\fieldComment{value between 0 and 127 default 10. Settings in the
+20-50 range are usually employed.}
+\closeField
+
+\beginField{velocity}
+\fieldDeclaration{private int velocity}
+\fieldComment{value between 50 and 12 000. The
+decimal number issued is 10 times the actual pulse rate to the motor. Since the
+motor requires 200 pulses (full step) or 400 pulses (half step) per revolution,
+a speed setting of M10000 sets the motor to revolve at 5 revolutions per second
+in full step or 2.5 revolutions in half step. This rate is one-half the sample
+rate rotation due to the pulley ratios. The sample handler is set up at the
+factory for half stepping.}
+\closeField
+
+\beginField{measurementVelocity}
+\fieldDeclaration{private int measurementVelocity}
+\fieldComment{speed in measurement, should be small}
+\closeField
+
+\beginField{handlerStatus}
+\fieldDeclaration{private String handlerStatus}
+\fieldComment{5 end of move, previous G command complete, 7 hard limit stop, G motor is currently indexing}
+\closeField
+
+\beginField{currentPosition}
+\fieldDeclaration{private int currentPosition}
+\fieldComment{value between 1 and 16,777,215}
+\closeField
+
+\beginField{homePosition}
+\fieldDeclaration{private int homePosition}
+\fieldComment{value between 1 and 16,777,215}
+\closeFiel
+
+\beginField{transverseYAFPosition}
+\fieldDeclaration{private int transverseYAFPosition}
+\fieldComment{AF demag position for transverse}
+\closeField
+
+\beginField{axialAFPosition}
+\fieldDeclaration{private int axialAFPosition}
+\fieldComment{axial AF demag position in steps, must be divisible by 10. Relative to Home.}
+\closeField
+
+\beginField{backgroundPosition}
+\fieldDeclaration{private int backgroundPosition}
+\fieldComment{Position in steps, must be divisible by 10. Relative to Home.}
+\closeField
+
+\beginField{measurementPosition}
+\fieldDeclaration{private int measurementPosition}
+\fieldComment{Position in steps, must be divisible by 10. Relative to Home.}
+\closeField
+
+\beginField{currentRotation}
+\fieldDeclaration{private int currentRotation}
+\fieldComment{angles are between 0 (0) and 2000 (360)}
+\closeField
+
+\beginMethod{updateSettings}
+\methodDeclaration{public void updateSettings()}
+\methodComment{
+    Squid tells if settings are changed, update all settings.
+}
+\closeMethod
+
+\beginMethod{getStatus()}
+\methodDeclaration{public String getStatus()}
+\methodComment{
+    Returns current status on Sample Handler.
+}
+\closeMethod
+
+\beginMethod{moveToHome()}
+\methodDeclaration{public void moveToHome()}
+\methodComment{
+    Send command to sample holder to move home
+}
+\closeMethod
+
+\beginMethod{moveToDegausser()}
+\methodDeclaration{public void moveToHome()}
+\methodComment{
+    Send handler to Degaus position
+}
+\closeMethod
+
+\beginMethod{moveToMeasurement()}
+\methodDeclaration{public void moveToMeasurement()}
+\methodComment{
+   Send handler to Measure position
+}
+\closeMethod
+
+\beginMethod{moveToBackground()}
+\methodDeclaration{public void moveToBackground()}
+\methodComment{
+   Send handler to Background position
+}
+\closeMethod
+
+\beginMethod{moveToPos(int pos)}
+\methodDeclaration{public bool moveToPos(int pos)}
+\methodComment{
+    Value must be between 1 and 16,777,215. return true if good pos-value and moves handler there.
+}
+\closeMethod
+
+\beginMethod{stop()}
+\methodDeclaration{public void stop()}
+\methodComment{
+    Tells handler to stop its curren job.
+}
+\closeMethod
+
+\beginMethod{rotateTo(int angle)}
+\methodDeclaration{public void rotateTo(int angler)}
+\methodComment{
+    Value is in degrees, remainder of divided by 360. Rotates handler that much.
+}
+\closeMethod
+
+\beginMethod{Handler()}
+\methodDeclaration{public Handler()}
+\methodComment{
+    Opens connection to Handler COM port and read settings to fields from Setting-class.
+}
+\closeMethod
 
 
 \beginClass{Magnetometer}
 \classPackage{ikayaki.squid}
-\classDeclaration{}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
-\classComment{
+\classDeclaration{public class Magnetometer}
+\classCreatedBy{Squid}
+\classUses{Settings}
+\classUses{SerialIO}
+\classComment{ Controls Magnetometer and sets it up, offering interface for it. Commands are at most five characters in length including a carriage return <CR>. The syntax is as follows: "<device><command><subcommand><data><CR>"
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
+\classEvent{On New IO Message }{reads message and puts it in Buffer}
 \closeClass
 
+\beginField{messageBuffer}
+\fieldDeclaration{private Stack messageBuffer}
+\fieldComment{buffer for incoming messages, readed when needed.}
+\closeField
+
+\beginField{status}
+\fieldDeclaration{private String status}
+\fieldComment{Magnetometers current status}
+\closeField
+
+\beginField{comPort}
+\fieldDeclaration{private String comPort}
+\fieldComment{COM port for communication}
+\closeField
+
+\beginMethod{updateSettings()}
+\methodDeclaration{public void updateSettings()}
+\methodComment{
+    Squid tells if settings are changed, update all settings.
+}
+\closeMethod
+
+\beginMethod{reset(char axis)}
+\methodDeclaration{public String reset(char axis)}
+\methodComment{
+   axis is x,y,x or a (all).
+}
+\closeMethod
+
+\beginMethod{resetCounter(char axis)}
+\methodDeclaration{public String resetCounter(char axis)}
+\methodComment{
+   axis is x,y,x or a (all).
+}
+\closeMethod
+
+\beginMethod{configure(char axis,char subcommand,char option)}
+\methodDeclaration{public String configure(char axis,char subcommand,char option)}
+\methodComment{
+   axis is x,y,x or a (all). The CONFIGURE subcommands follow: "F" Set filter configuration. The data subfield sets the filter to the indicated range. The four possible data values are: "1" One Hertz Filter; 1 Hz "T" Ten Hertz Filter; 10 Hz "H" One hundred Hertz Filter; 100 Hz "W" Wide band filter; WB "R" Set DC SQUID electronic range. The data subfield selects the range desired. The four possible data values are: "1" One time range; 1x "T" Ten times range; 10x "H" One hundred times range; 100x "E" Extended range; 1000x "S" Set/Reset the fast-slew option. Two data values are possible: "E" Enable the fast-slew; turn it on. "D" Disable the fast-slew; turn it off. "L" This subcommand opens or closes the SQUID feedback loop or resets the analog signal to +/- 1/2 flux quantum about zero. The three possible data values are: "O" Open the feedback loop. (This command also zeros the flux counter) "C" Close the feedback loop. "P" Pulse-reset (open then close) the feedback loop. (This command also zeros the flux counter)
+}
+\closeMethod
+
+\beginMethod{latchAnalog(char axis)}
+\methodDeclaration{public void latchAnalog(char axis)}
+\methodComment{
+    axis is x,y,x or a (all).
+}
+\closeMethod
+
+\beginMethod{latchCounter(char axis)}
+\methodDeclaration{public void latchCounter(char axis)}
+\methodComment{
+    axis is x,y,x or a (all).
+}
+\closeMethod
+
+\beginMethod{getData(char axis, char command, string datavalues)}
+\methodDeclaration{public String latchCounter(char axis)}
+\methodComment{
+    axis is x,y or x. Command: "D" Send back the analog data last captured with the LATCH command. The <data> field is not required. "C" Send back the counter value last captured with the LATCH command. The <data> field is not required. "S" Send back status. Various pieces of status can be sent by the magnetometer electronics. Datavalues one or more: "A" Send back all status. "F" Send back all filter status. "R" Send back all range status. "S" Send back slew status. "L" Send back SQUID feedback loop status. Return feedback, waiting time?
+}
+\closeMethod
+
+\beginMethod{getStatus()}
+\methodDeclaration{public String getStatus()}
+\methodComment{
+    Returns current status on Sample Handler.
+}
+\closeMethod
+
+\beginMethod{Magnetometer()}
+\methodDeclaration{public Magnetometer()}
+\methodComment{
+    Opens connection to Magnetometer COM port (if its not open already) and read settings to fields from Setting-class.
+}
+\closeMethod

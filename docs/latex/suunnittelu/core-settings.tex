@@ -1,110 +1,103 @@
 \beginClass{Settings}
 \classPackage{ikayaki}
 \classDeclaration{public class Settings}
-\classComment{
-    Singleton class for holding all global settings. It also holds saved sequences.
-}
+\classExtends{}
+\classCreatedBy{Ikayaki}
+\classComment{This singleton class has all necessary settings for Squid and program to run. It also holds sequences.}
+\classPatterns{This class is singleton, there will be always only one instance of it and its created when class is needed first time.}
+
 \closeClass
 
 \beginField{properties}
 \fieldDeclaration{private Properties properties}
-\fieldValue{new Properties()}
-\fieldComment{All properties in a map}
+\fieldComment{All properties in Map: magnetometerPort,demagnetizer,PorthandlerPort,xAxisCalibration,yAxisCalibration,zAxisCalibration,demagRamp,demagDelay,acceleration,deceleration,velocity,measurementVelocity,transverseYPosition,axialPosition,sampleLoadPosition,backgroundPosition,measurementPosition,rotation,handlerRightLimit}
 \closeField
 
 \beginField{propertiesFile}
 \fieldDeclaration{private File propertiesFile}
-\fieldComment{File where the properties will be saved in XML format}
-\closeField
-
-\beginField{propertiesModified}
-\fieldDeclaration{private boolean propertiesModified}
-\fieldComment{true if the properties have been modified, otherwise false}
+\fieldComment{filename for properties (xml)}
 \closeField
 
 \beginField{sequences}
-\fieldDeclaration{private List<MeasurementSequence> sequences}
-\fieldValue{new ArrayList<MeasurementSequence>()}
-\fieldComment{All saved sequences}
-\closeField
-
-\beginField{sequencesFile}
-\fieldDeclaration{private File sequencesFile}
-\fieldComment{File where the sequences will be saved in XML format}
+\fieldDeclaration{private List sequences}
+\fieldComment{all saved sequences}
 \closeField
 
 \beginField{sequencesModified}
 \fieldDeclaration{private bool sequencesModified}
-\fieldComment{true if the sequences have been modified, otherwise false}
+\fieldComment{we save them only if they have been modified}
+\closeField
+
+\beginField{sequencesFile}
+\fieldDeclaration{private File sequencesFile}
+\fieldComment{filename for properties (xml)}
 \closeField
 
 \beginField{autoSaveQueue}
 \fieldDeclaration{private RunQueue autoSaveQueue}
-\fieldComment{Queue for scheduling save operations after properties/sequences have been changed}
+\fieldComment{autosave once a while}
 \closeField
-
-\beginMethod{instance()}
-\methodDeclaration{public static Settings instance()}
-\methodReturn{Pointer to the global Settings object. If not yet created, will first create a new Settings object.}
-\closeMethod
 
 \beginMethod{Settings()}
 \methodDeclaration{private Settings()}
 \methodComment{
-    Loads settings from configuration files.
+    loads settings from config-file.
 }
 \closeMethod
 
-\beginMethod{save()}
-\methodDeclaration{public void save()}
+\beginMethod{instance()}
+\methodDeclaration{public Settings instance()}
 \methodComment{
-    Saves the settings after a while when no changes have come.
-}
-\closeMethod
-
-\beginMethod{saveNow()}
-\methodDeclaration{public void saveNow()}
-\methodComment{
-    Saves the settings and keeps waiting until its done.
+    creates Settings, if not yet created, and return it.
 }
 \closeMethod
 
 \beginMethod{getProperty(String)}
 \methodDeclaration{public String getProperty(String key)}
 \methodComment{
-    Returns the value that maps to the specified key.
+    returns value with key, or null if not exists.
 }
-\methodParam{key}{key whose associated value is to be returned.}
-\methodReturn{Value associated with key, or an empty string if none exists.}
 \closeMethod
 
 \beginMethod{setProperty(String,String)}
 \methodDeclaration{public void setProperty(String key, String value)}
 \methodComment{
-    Associates the specified value with the specified key. Will invoke autosaving.
+    adds pair to properties.
 }
-\methodParam{key}{key with which the specified value is to be associated.}
-\methodParam{value}{value to be associated with the specified key.}
 \closeMethod
 
 \beginMethod{getSequences()}
 \methodDeclaration{public MeasurementSequence[] getSequences()}
 \methodComment{
-    Returns all saved Sequences.
+    returns all Sequences.
 }
 \closeMethod
 
 \beginMethod{addSequence(MeasurementSequence sequence)}
-\methodDeclaration{public void addSequence(MeasurementSequence sequence)}
+\methodDeclaration{public bool addSequence(MeasurementSequence sequence)}
 \methodComment{
-    Adds a sequence to the sequence list.
+    add sequence to sequence list, return true on success.
 }
 \closeMethod
 
 \beginMethod{removeSequence(MeasurementSequence sequence)}
 \methodDeclaration{public void removeSequence(MeasurementSequence sequence)}
 \methodComment{
-    Removes a sequence from the sequence list. If the specified sequence is not in the list, it will be ignored.
+    add sequence to sequence list, return true on success.
+}
+\closeMethod
+
+\beginMethod{save()}
+\methodDeclaration{public void save()}
+\methodComment{
+    saves after a while when no changes have come.
+}
+\closeMethod
+
+\beginMethod{saveNow()}
+\methodDeclaration{public void saveNow()}
+\methodComment{
+    saves and keeps waiting until its done.
 }
 \closeMethod
 

@@ -4,6 +4,7 @@
 \classExtends{JFrame}
 \classCreatedBy{MainStatusBar}
 \classUses{Settings}
+\classUses{Squid}
 \classComment{Creates its components and updats changes to Settings and saves them in Configuration file}
 
 \classEvent{On Save Clicked}{saves current configuration to Settings-singleton and closes window}
@@ -71,32 +72,39 @@
 \fieldComment{speed in measurement, should be small}
 \closeField
 
-\beginField{transverseYPosition}
-\fieldDeclaration{private JTextField transverseYPosition}
+\beginField{transverseYAFPosition}
+\fieldDeclaration{private JTextField transverseYAFPosition}
+\fieldComment{AF demag position for transverse}
 \closeField
 
-\beginField{axialPosition}
-\fieldDeclaration{private JTextField axialPosition}
+\beginField{axialAFPosition}
+\fieldDeclaration{private JTextField axialAFPosition}
+\fieldComment{axial AF demag position in steps, must be divisible by 10. Relative to Home.}
 \closeField
 
 \beginField{sampleLoadPosition}
 \fieldDeclaration{private JTextField sampleLoadPosition}
+\fieldComment{Position in steps, must be divisible by 10. Relative to Home. (same as Home?)}
 \closeField
 
 \beginField{backgroundPosition}
 \fieldDeclaration{private JTextField backgroundPosition}
+\fieldComment{Position in steps, must be divisible by 10. Relative to Home.}
 \closeField
 
 \beginField{measurementPosition}
 \fieldDeclaration{private JTextField measurementPosition}
+\fieldComment{Position in steps, must be divisible by 10. Relative to Home.}
 \closeField
 
 \beginField{rotation}
 \fieldDeclaration{private JTextField rotation}
+\fieldComment{steps to perform full rotation, must be clockwise, determined by sign}
 \closeField
 
 \beginField{handlerRightLimit}
 \fieldDeclaration{private JComboBox handlerRightLimit}
+\fieldComment{Refers to right limit switch on translation axis. And usually sample holder motion toward right limit is posivitive direction (default).}
 \closeField
 
 \beginField{saveButton}
@@ -125,6 +133,6 @@
 \beginMethod{saveSettings()}
 \methodDeclaration{public void saveSettings()}
 \methodComment{
-    Saves all settings to Settings-singleton and calls closeWindow().
+    Saves all settings to Settings-singleton, and tells Squid to update it self(?) and calls closeWindow().
 }
 \closeMethod
