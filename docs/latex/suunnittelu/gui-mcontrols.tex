@@ -74,35 +74,71 @@
 
 
 \beginClass{ManualControlsPanel}
-\classComment{Magnetometer manual control radiobuttons.}
+\classComment{Magnetometer manual controls. MeasurementControlsPanel disables these whenever a normal measurement step is going.}
 \classPackage{ikayaki.gui}
 \classDeclaration{public class ManualControlsPanel}
 \classExtends{JPanel}
 \classCreatedBy{MeasurementControlsPanel}
 \classUses{Project}
-\classEvent{On xxxN click}{call project.xxxN(). Or something like that. I shouldn't care.}
+\classEvent{On xxxN click}{call project.xxxN()...}
 \closeClass
 
-\beginField{demagX}
-\fieldDeclaration{private JRadioButton demagX}
+\beginField{moveButtonGroup}
+\fieldDeclaration{private ButtonGroup moveButtonGroup}
+\fieldComment{Groups together all sample holder moving radiobuttons (moveXXX).}
 \closeField
 
-\beginField{demagY}
-\fieldDeclaration{private JRadioButton demagY}
+\beginField{moveHome}
+\fieldDeclaration{private JRadioButton moveHome}
+\fieldComment{Moves sample holder to home position.}
 \closeField
 
-\beginField{demagZ}
-\fieldDeclaration{private JRadioButton demagZ}
+\beginField{moveDemagZ}
+\fieldDeclaration{private JRadioButton moveDemagZ}
+\fieldComment{Moves sample holder to demagnetize-Z position.}
 \closeField
 
-\beginField{measureX}
-\fieldDeclaration{private JRadioButton measureX}
+\beginField{moveDemagY}
+\fieldDeclaration{private JRadioButton moveDemagY}
+\fieldComment{Moves sample holder to demagnetize-Y position.}
 \closeField
 
-\beginField{measureY}
-\fieldDeclaration{private JRadioButton measureY}
+\beginField{moveBG}
+\fieldDeclaration{private JRadioButton moveBG}
+\fieldComment{Moves sample holder to background position.}
 \closeField
 
-\beginField{measureZ}
-\fieldDeclaration{private JRadioButton measureZ}
+\beginField{moveMeasure}
+\fieldDeclaration{private JRadioButton moveMeasure}
+\fieldComment{Moves sample holder to measurement position.}
+\closeField
+
+\beginField{rotateButtonGroup}
+\fieldDeclaration{private ButtonGroup rotateButtonGroup}
+\fieldComment{Groups together all sample holder rotating radiobuttons (rotateXXX).}
+\closeField
+
+\beginField{rotateX}
+\fieldDeclaration{private JRadioButton rotateX}
+\fieldComment{Rotates sample holder to angle X, where X is 0, 90, 180 or 270.}
+\closeField
+
+\beginField{measureAllButton}
+\fieldDeclaration{private JButton measureAllButton}
+\fieldComment{Measures X, Y and Z (at current sample holder position) by calling project.doMeasureXYZ().}
+\closeField
+
+\beginField{resetAllButton}
+\fieldDeclaration{private JButton resetAllButton}
+\fieldComment{Resets X, Y and Z? Does what?}
+\closeField
+
+\beginField{demagZButton}
+\fieldDeclaration{private JButton demagZButton}
+\fieldComment{Demagnetizes in Z (at current sample holder position) by calling project.doDemagZ().}
+\closeField
+
+\beginField{demagYButton}
+\fieldDeclaration{private JButton demagYButton}
+\fieldComment{Demagnetizes in Y (at current sample holder position) by calling project.doDemagY().}
 \closeField

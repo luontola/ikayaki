@@ -20,8 +20,6 @@ The document serves as an internal guide to the project team for aiding implemen
 \par Section~\ref{sec:arch} describes planned architecture at lower abstarction, including class diagrams and a short description of each subsystem.
 \par Section~\ref{sec:data} describes planned data classes.
 \par Section~\ref{sec:gui} describes planned gui classes.
-\par Section~\ref{sec:pack} describes planned package hierarchy.
-\par Section~\ref{sec:bibl} has bibliography references (which we wont be having any).
 
 \subsection{Glossary}
 
@@ -67,7 +65,7 @@ Software is plitted in two main parts in this document. Data section includes fi
 
 \begin{figure}
 \begin{center}
-\includegraphics[angle=90,width=14cm]{class-diagram-part1.eps}
+\hspace{-2cm}\includegraphics[angle=90,width=16cm]{class-diagram-part1.eps}
 \caption{Squid class diagram: central classes}
 \label{fig:classdiagram1}
 \end{center}
@@ -75,13 +73,13 @@ Software is plitted in two main parts in this document. Data section includes fi
 
 \begin{figure}
 \begin{center}
-\includegraphics[angle=90,width=14cm]{class-diagram-part2.eps}
+\includegraphics[angle=90,width=12cm]{class-diagram-part2.eps}
 \caption{Squid class diagram: GUI classes}
 \label{fig:classdiagram2}
 \end{center}
 \end{figure}
 
-See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
+Class diagrams for the whole system are in Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 
 
 \subsection{Data classes and methods}
@@ -94,7 +92,6 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 
 \subsubsection{Serial communication}
 
-SerialIO:\par
 SerialIO and classes related to it takes care of the harware layer of serial communication. Using these classes Ikayaki communicates with the Degausser, Samplehandler and Magnetometer. SerialIO represents one serial port and when it's created it reserves the port to itself. SerialProperties class includes all the configuration data for the serial port.
 
 \subsubsection{Global settings}
@@ -124,7 +121,6 @@ SerialIO and classes related to it takes care of the harware layer of serial com
 
 \subsubsection{Graphs}
 
-Graphs:\par
 Graph panels visualice the measurement data. They are located at the lower right corner in the UI. MeasurementGraphsPanel listens to MeasurementEvents to update the measurement data in plots. AbstractPlot is an abstract class which implements all the general features of graph plots. IntensityPlot and StereoPlot extend the functionality of AbstractPlot and implement their special drawing features accordingly.
 
 
@@ -184,4 +180,3 @@ Graph panels visualice the measurement data. They are located at the lower right
 
 \subsection{Graphs}
 \input{gui-graphs}
-

@@ -34,7 +34,7 @@ Tarkastettu tuotos
 	Yhteensä 21-28 sivua ilman 5.1, +20 sen kanssa
 
 Tarkistuslista
-	S1  Viittaukset ovat oikein, ei puuttuvia viittauksia "(??)"
+	S1  Viittaukset ovat oikein, ei puuttuvia viittauksia "??"
 	S2  Suunnittelu on yhtenäistä (~samalla abstraktiotasolla?)
 	S3  Vaatimukset vastaavat suunnittelua
 	S4  Kaikki käyttötapaukset voidaan suorittaa
@@ -45,7 +45,7 @@ Tarkistuslista
 	SL3 Luokkien kaikki ei-triviaalit tapahtumat (eventit) on kuvattu
 	SL4 Luokan ei-triviaaleilla kentillä on kuvaus
 	SL5 Jokaisella metodilla on kuvaus
-	SL6 Ei-triviaaleilla metodin parametreilla on kuvaus
+	SL6 Ei-triviaaleilla (vai kaikilla?) metodin parametreilla on kuvaus
 	SL7 Ei-triviaali virheenkäsittely on kuvattu
 
 Tyyppimerkinnät
