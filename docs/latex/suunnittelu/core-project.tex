@@ -25,6 +25,81 @@
 \classEvent{On declination/inclination/volume changed}{The updated transformation matrix will be applied to all measurements and a ProjectEvent will be fired to all project listeners.}
 \closeClass
 
+\beginToc
+\tocMethod{createCalibrationProject(File)}
+\tocMethod{createAFProject(File)}
+\tocMethod{createThellierProject(File)}
+\tocMethod{createThermalProject(File)}
+\tocMethod{createProject(File,Type)}
+\tocMethod{loadProject(File)}
+\tocMethod{closeProject(Project)}
+\tocMethod{Project(File,Type)}
+\tocMethod{Project(File,Document)}
+\tocMethod{getDocument()}
+\tocMethod{save()}
+\tocMethod{saveNow()}
+\tocMethod{exportToDAT(File)}
+\tocMethod{exportToSRM(File)}
+\tocMethod{exportToTDT(File)}
+\tocMethod{getFile()}
+\tocMethod{getType()}
+\tocMethod{getState()}
+\tocMethod{getName()}
+\tocMethod{getTimestamp()}
+\tocMethod{getSquid()}
+\tocMethod{setSquid(Squid)}
+\tocMethod{getProperty(String)}
+\tocMethod{setProperty(String,String)}
+\tocMethod{getStrike()}
+\tocMethod{setStrike(double)}
+\tocMethod{getDip()}
+\tocMethod{setDip(double)}
+\tocMethod{getSampleType()}
+\tocMethod{setSampleType(SampleType)}
+\tocMethod{getTransform()}
+\tocMethod{updateTransforms()}
+\tocMethod{getMass()}
+\tocMethod{setMass(double)}
+\tocMethod{getVolume()}
+\tocMethod{setVolume(double)}
+\tocMethod{addProjectListener(ProjectListener)}
+\tocMethod{removeProjectListener(ProjectListener)}
+\tocMethod{fireProjectEvent(ProjectEvent.Type)}
+\tocMethod{addMeasurementListener(MeasurementListener)}
+\tocMethod{removeMeasurementListener(MeasurementListener)}
+\tocMethod{fireMeasurementEvent(MeasurementStep,MeasurementEvent.Type)}
+\closeToc
+
+\beginToc
+\tocMethod{addSequence(MeasurementSequence)}
+\tocMethod{copySequence(int,int)}
+\tocMethod{addStep(MeasurementStep)}
+\tocMethod{addStep(int,MeasurementStep)}
+\tocMethod{removeStep(int)}
+\tocMethod{removeStep(int,int)}
+\tocMethod{getSteps()}
+\tocMethod{getCompletedSteps()}
+\tocMethod{getStep(int)}
+\tocMethod{getCurrentStep()}
+\tocMethod{getValue(int,MeasurementValue)}
+\tocMethod{isDegaussingEnabled()}
+\tocMethod{isSequenceEditEnabled()}
+\tocMethod{isManualControlEnabled()}
+\tocMethod{isAutoStepEnabled()}
+\tocMethod{isSingleStepEnabled()}
+\tocMethod{isPauseEnabled()}
+\tocMethod{isAbortEnabled()}
+\tocMethod{doAutoStep()}
+\tocMethod{doSingleStep()}
+\tocMethod{doPause()}
+\tocMethod{doAbort()}
+\tocMethod{doManualMove(int)}
+\tocMethod{doManualRotate(int)}
+\tocMethod{doManualMeasure()}
+\tocMethod{doManualDemagZ(double)}
+\tocMethod{doManualDemagY(double)}
+\closeToc
+
 \beginField{projectCache}
 \fieldDeclaration{private static Hashtable<File,Project> projectCache}
 \fieldComment{
@@ -788,6 +863,21 @@
 \classUses{MeasurementStep}
 \closeClass
 
+\beginToc
+\tocMethod{MeasurementSequence()}
+\tocMethod{MeasurementSequence(String)}
+\tocMethod{MeasurementSequence(Element)}
+\tocMethod{MeasurementSequence(Element,Project)}
+\tocMethod{getElement()}
+\tocMethod{getName()}
+\tocMethod{setName(String)}
+\tocMethod{getSteps()}
+\tocMethod{getStep(int)}
+\tocMethod{addStep(MeasurementStep)}
+\tocMethod{addStep(int,MeasurementStep)}
+\tocMethod{removeStep(int)}
+\closeToc
+
 \beginField{name}
 \fieldDeclaration{private String name}
 \fieldValue{null}
@@ -926,6 +1016,28 @@
 \classUses{Project}
 \classUses{MeasurementResult}
 \closeClass
+
+\beginToc
+\tocMethod{MeasurementStep()}
+\tocMethod{MeasurementStep(Project)}
+\tocMethod{MeasurementStep(Element)}
+\tocMethod{MeasurementStep(Element,Project)}
+\tocMethod{getElement()}
+\tocMethod{getProject()}
+\tocMethod{getState()}
+\tocMethod{setState}
+\tocMethod{getTimestamp()}
+\tocMethod{getStepValue()}
+\tocMethod{setStepValue(double)}
+\tocMethod{getMass()}
+\tocMethod{setMass(double)}
+\tocMethod{getVolume()}
+\tocMethod{setVolume(double)}
+\tocMethod{updateTransforms()}
+\tocMethod{getResults()}
+\tocMethod{getResult(int)}
+\tocMethod{addResult(MeasurementResult)}
+\closeToc
 
 \beginField{project}
 \fieldDeclaration{private Project project}
@@ -1153,6 +1265,20 @@
 \classCreatedBy{Magnetometer}
 \closeClass
 
+\beginToc
+\tocMethod{MeasurementResult(Type,double,double,double)}
+\tocMethod{MeasurementResult(Element)}
+\tocMethod{getElement()}
+\tocMethod{setTransform(Matrix3d)}
+\tocMethod{getType()}
+\tocMethod{getX()}
+\tocMethod{getY()}
+\tocMethod{getZ()}
+\tocMethod{getRawX()}
+\tocMethod{getRawY()}
+\tocMethod{getRawZ()}
+\closeToc
+
 \beginField{type}
 \fieldDeclaration{private Type type}
 \fieldComment{
@@ -1273,6 +1399,12 @@
 \classDeclaration{public enum Type}
 \closeClass
 
+\beginToc
+\tocMethod{getName()}
+\tocMethod{rotate(Tuple3d)}
+\tocMethod{rotate(Tuple3d,Tuple3d)}
+\closeToc
+
 \beginMethod{getName()}
 \methodDeclaration{public String getName()}
 \methodReturn{"BG", "0", "90", "180" or "270"}
@@ -1307,6 +1439,14 @@
 \classUses{MeasurementStep}
 \classPatterns{Strategy}
 \closeClass
+
+\beginToc
+\tocMethod{MeasurementValue(String,String,String)}
+\tocMethod{getValue(MeasurementStep)}
+\tocMethod{getCaption()}
+\tocMethod{getUnit()}
+\tocMethod{getDescription()}
+\closeToc
 
 \beginField{X}
 \fieldDeclaration{public static final MeasurementValue<Double> X}
@@ -1446,6 +1586,12 @@
 \classCreatedBy{Project}
 \closeClass
 
+\beginToc
+\tocMethod{ProjectEvent(Project,Type)}
+\tocMethod{getProject()}
+\tocMethod{getType()}
+\closeToc
+
 \beginField{project}
 \fieldDeclaration{private Project project}
 \fieldComment{
@@ -1504,6 +1650,10 @@
 \classExtends{EventListener}
 \closeClass
 
+\beginToc
+\tocMethod{projectUpdated(ProjectEvent)}
+\closeToc
+
 \beginMethod{projectUpdated(ProjectEvent)}
 \methodDeclaration{public void projectUpdated(ProjectEvent event)}
 \methodComment{
@@ -1522,6 +1672,13 @@
 \classExtends{EventObject}
 \classCreatedBy{Project}
 \closeClass
+
+\beginToc
+\tocMethod{MeasurementEvent(Project,MeasurementStep,Type)}
+\tocMethod{getProject()}
+\tocMethod{getStep()}
+\tocMethod{getType()}
+\closeToc
 
 \beginField{project}
 \fieldDeclaration{private Project project}
@@ -1595,6 +1752,10 @@
 \classDeclaration{public interface MeasurementListener}
 \classExtends{EventListener}
 \closeClass
+
+\beginToc
+\tocMethod{measurementUpdated(MeasurementEvent)}
+\closeToc
 
 \beginMethod{measurementUpdated(MeasurementEvent)}
 \methodDeclaration{public void measurementUpdated(MeasurementEvent event)}

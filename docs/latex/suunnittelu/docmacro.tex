@@ -65,6 +65,22 @@
 \newcommand{\isFirstMethod}[0]{}
 
 
+% MACROS FOR CLASS TABLE OF CONTENTS
+\newcommand{\beginToc}[0] {
+	\begin{hyphenrules}{nohyphenation}
+	%\begin{tabular*}{14cm}{lr}
+	\begin{tabular*}{14cm}{@{\extracolsep{\fill}}lr}
+	\textbf{Method} & \textbf{Page} \\
+}
+\newcommand{\tocMethod}[1] {
+	#1 & \pageref{method:\getClass.#1} \\
+}
+\newcommand{\closeToc}[0] {
+	\end{tabular*}\\
+	\end{hyphenrules}
+}
+
+
 % MACROS FOR FIELD DOCUMENTATION
 \newcommand{\getField}[0]{}
 \newcommand{\beginField}[1] {
