@@ -105,12 +105,12 @@ Use case format:
   \ucpre{Ongoing measuring sequence (UC\ref{uc:autoseq}).}
   \ucpost{Measure sequence halts after current step is done, results on screen.}
   \ucerror{Program tells if sequence can't be paused (and something has gone terribly wrong).}
-  \ucgd{\ref{seq:gduc3}, Tomas pauses the sequence as the meteor demagnetizes too rapidly.}
+  \ucgd{\ref{seq:gduc3}, Thomas pauses the sequence as the meteor demagnetizes too rapidly.}
   \ucreq{R1, R14}
   \ucend
 
   \uctitle{Abort automatic measuring sequence}
-  \ucscenario{While measure sequence is running or paused, click "Stop immediately".}
+  \ucscenario{While measure sequence is running or paused, click "Stop now!".}
   \ucpre{Ongoing or paused measuring sequence (UC\ref{uc:autoseq}).}
   \ucpost{Measure sequence halts immediately \ucnotein{and program enters "fully manual" mode?}}
   \ucerror{Program tells if sequence can't be aborted (and something has gone terribly wrong).}
@@ -160,7 +160,7 @@ Use case format:
 \ucend
 
 \uctitle{Fully manual measuring}
-\ucnote{2005-02-25 still not clear how fully manual is supposed to work; Tomas will be back on tuesday 1.3. and might tell us.}
+\ucnote{2005-02-25 still not clear how fully manual is supposed to work; Thomas will be back on tuesday 1.3. and might tell us.}
 \ucscenario{Click any of the manual control components.}
 \ucpre{Manual mode enabled.}
 \ucpost{Manual action done, result on screen \ucnotein{and appended to current project? draw graphplots?}.}
@@ -243,7 +243,6 @@ Use case format:
 \ucsecdesc{As in project files, which store all measurement results.}
 
 \uctitle{Automatically save all measurement cycles in project file}
-\ucnote{Propably more of a requirement than use case and shall be removed from here.}
 \ucscenario{Make any measurement action (see section~\ref{seq:ucmeasuring} for those).}
 \ucpre{Project file open.}
 \ucpost{After measurement (step) is done, new results appended to project file.}
@@ -261,30 +260,28 @@ Use case format:
 
 \uctitle{Load project}
 \ucscenario{Click any filename in project explorer.}
-\ucpre{Project explorer in desired directory (UC\ref{uc:choosedir}).}
+\ucpre{Project explorer in desired directory (UC\ref{uc:choosedir}). A measurement can be running at the same time (it will be highlighted in the project explorer).}
 \ucpost{Existing project loaded and selected.}
 \ucgd{\ref{seq:gduc2} all samples already as project files.}
-\ucscenario{Click "Browse..." in project explorer, use standard [Java] file chooser to select project file to be opened.}
-\ucpre{None.}
-\ucpost{Existing project loaded and selected, project explorer in opened project's directory.}
 \ucreq{R6, R9}
 \ucend
 
 \uctitle{Change project explorer directory}
-\ucscenario{Click into current directory textbox in project explorer, write directory to change to, press enter.}
+\ucscenario{Click into current directory textbox in project explorer, write directory to change to. If the typed directory exists, the program will open it automatically. \ucnotein{Or will a push of Enter be anyway required to change directory? Should we try both before deciding?}}
 \ucscenario{Click into current directory textbox in project explorer, start writing directory; when autocomplete-results appear below, use up/down+enter or mouseclick to select the directory.}
 \ucscenario{Click the down-arrow on the right side of current directory textbox in project explorer, choose desired directory from appearing directory history.}
 \ucscenario{Click "Browse..." in project explorer, use standard [Java] file chooser to select directory to change to.}
-\ucpre{Project explorer in desired directory.}
-\ucpost{New project created and selected.}
+\ucpre{There is no measurement running right now (to prevent the user from getting lost).}
+\ucpost{The contents of the chosen directory are shown in the project explorer. The newest project file in the directory will be selected and loaded.}
+\ucerror{If the user has typed an invalid directory, then a "No such directory" message will be displayed in place of the autocomplete-results.}
 \ucgd{\ref{seq:gduc1}, \ref{seq:gduc2}, \ref{seq:gduc3}.}
 \ucend
 \label{uc:choosedir}
 
 \uctitle{Insert/edit project data}
 \ucscenario{Click any of the project data checkboxes, or textboxes and enter value.}
-\ucpre{Open project (usually just created it).}
-\ucpost{Project data changed, measuring results recalculated, saved automatically to project file.}
+\ucpre{Project file open (usually just created it).}
+\ucpost{Project data changed, measuring results recalculated, saved automatically to project file. Saving can happen after a short delay to avoid unnecessary file system access.}
 \ucgd{\ref{seq:gduc1} after creating new project.}
 \ucreq{R5, R7, R8}
 \ucend
@@ -304,10 +301,11 @@ Use case format:
 \ucend
 
 \uctitle{Insert sequence with start-step-stop values}
-\ucscenario{Click "Start" textbox, insert start value, click "Step" textbox, insert step value, click "Stop" checkbox, insert stop value, click "Add sequence" or press enter.}
-\ucscenario{Click "Start" textbox, insert start value, press tab, insert step value, press tab, insert stop value, press enter or click "Add sequence".}
+\ucscenario{Click "Start" textfield, insert start value (default value is the last value of the Tesla/Temp column), click "Step" textfield, insert step value, click "Stop" textfield, insert stop value, click "Add sequence" or press enter.}
+\ucscenario{Click "Start" textfield, insert start value (default value is the last value of the Tesla/Temp column), press tab, insert step value, press tab, insert stop value, press enter or click "Add sequence".}
 \ucpre{An open project.}
-\ucpost{Sequence from {\it start} to {\it stop}, increasing by {\it step} for every step, appended to measurement result table, selected, and appended to current project.}
+\ucpost{Sequence from {\it start} to {\it stop}, increasing by {\it step} for every step, appended to measurement result table of the current project. Value of "Start" textfield is the previous value of "Stop". "Step" and "Stop" textfields are empty. "Step" textfield has focus.}
+\ucerror{If the last value in the old sequence (excluding completed measurements) is equal to the {\it start} value of this new sequence, then start the new sequence from {\it start + step}.}
 \ucgd{\ref{seq:gduc3} after creating new project and entering manual values.}
 \ucreq{R5, R11}
 \ucend
@@ -330,7 +328,7 @@ Use case format:
 \ucpre{Unmeasured lines in current project's measurement result table (note that measuring sequence can be going on).}
 \ucpost{Editing committed, saved to current project.}
 \ucerror{Editing or screwing up measured lines won't be allowed.}
-\ucgd{\ref{seq:gduc3}, when sequence demagnetizes too rapidly, Tomas deletes unmeasured lines.}
+\ucgd{\ref{seq:gduc3}, when sequence demagnetizes too rapidly, Thomas deletes unmeasured lines.}
 \ucreq{R5}
 \ucend
 \label{uc:editseq}
@@ -531,9 +529,9 @@ Define the services which the software offers and how the software behaves, incl
 
 \subsection{Environment}
 
-[{\it Define requirements for the software which origin from the environment 
+{\it Define requirements for the software which origin from the environment
 in which the sowtware will be working, and which the software must satisfy for 
-being able to work in its environment.}]
+being able to work in its environment.}
 
 Program will be used in normal PC which is connected to magnetometer. The 
 computer that will run this program will be equal or better to 1GHz CPU, 256MB 
@@ -571,7 +569,7 @@ Overview of UI described here..
 \subsubsection{Goal-derived use case 2: Fabio...}
 \label{seq:gduc2}
 
-\subsubsection{Goal-derived use case 3: Tomas...}
+\subsubsection{Goal-derived use case 3: Thomas...}
 \label{seq:gduc3}
 
 
