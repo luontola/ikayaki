@@ -2,8 +2,6 @@
 \classPackage{ikayaki.gui}
 \classDeclaration{public class ProjectComponent}
 \classExtends{JPanel}
-\classImplements{ProjectListener}
-\classImplements{MeasurementListener}
 \classCreatedBy{MainViewPanel}
 \classUses{Project}
 \classSubclass{ProjectInformationPanel}
@@ -26,10 +24,15 @@
 \methodComment{Initializes this ProjectComponent with no Project (one probably arrives shortly with setProject(Project)).}
 \closeMethod
 
+\beginMethod{getProject()}
+\methodDeclaration{public Project getProject()}
+\methodReturn{this.project.}
+\closeMethod
+
 \beginMethod{setProject(Project)}
 \methodDeclaration{public void setProject(Project project)}
 \methodComment{
-	Unregisters MeasurementListener and ProjectListener from old project, saves new Project to project, registers MeasurementListener and ProjectListener to new project.
+	Sets the new project for this ProjectComponent, unregisters MeasurementListener and ProjectListener from old project, saves new Project to project, registers MeasurementListener and ProjectListener to new project.
 }
-\methodParam{project}{project to be registered, or null to just unregister the old one.}
+\methodParam{project}{new active project.}
 \closeMethod
