@@ -22,16 +22,37 @@
 
 package ikayaki;
 
+import ikayaki.gui.Ikayaki;
 import ikayaki.squid.Squid;
 import ikayaki.util.LastExecutor;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
+import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import javax.vecmath.Matrix3d;
-import java.io.File;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Properties;
+
+import static ikayaki.ProjectEvent.Type.DATA_CHANGED;
+import static ikayaki.ProjectEvent.Type.STATE_CHANGED;
+import static ikayaki.ProjectEvent.Type.FILE_SAVED;
+import static ikayaki.MeasurementStep.State.DONE;
+import static ikayaki.MeasurementStep.State.DONE_RECENTLY;
+import static ikayaki.Project.State.*;
+import static ikayaki.Project.Type.*;
+import static ikayaki.Project.SampleType.*;
 
 /**
  * Represents a measurement project file. Project is responsible for managing and storing the data that is recieved from
@@ -86,7 +107,7 @@ project listeners.
      * Current state of the measurements. If no measurement is running, then state is IDLE. Only one measurement may be
      * running at a time.
      */
-    private State state = State.IDLE;
+    private State state = IDLE;
 
     /**
      * Pointer to the SQUID device interface, or null if this project is not its owner.
@@ -118,7 +139,7 @@ project listeners.
     /**
      * Type of the sample. Will be used to create the transform matrix.
      */
-    private SampleType sampleType = SampleType.CORE;
+    private SampleType sampleType = CORE;
 
     /**
      * Orientation of the sample. true if the sample orientation is +Z, or false if it is -Z. Will be used to create the
@@ -170,44 +191,44 @@ project listeners.
      * Creates a calibration project file.
      *
      * @param file path for the new project file.
-     * @return the created project, or null if file was not writable.
+     * @return the created project, or null if file was not writable or it already existed.
      * @throws NullPointerException if file is null.
      */
     public static Project createCalibrationProject(File file) {
-        return createProject(file, Type.CALIBRATION);
+        return createProject(file, CALIBRATION);
     }
 
     /**
      * Creates an AF project file.
      *
      * @param file path for the new project file.
-     * @return the created project, or null if file was not writable.
+     * @return the created project, or null if file was not writable or it already existed.
      * @throws NullPointerException if file is null.
      */
     public static Project createAFProject(File file) {
-        return createProject(file, Type.AF);
+        return createProject(file, AF);
     }
 
     /**
      * Creates a thellier project file.
      *
      * @param file path for the new project file.
-     * @return the created project, or null if file was not writable.
+     * @return the created project, or null if file was not writable or it already existed.
      * @throws NullPointerException if file is null.
      */
     public static Project createThellierProject(File file) {
-        return createProject(file, Type.THELLIER);
+        return createProject(file, THELLIER);
     }
 
     /**
      * Creates a thermal project file.
      *
      * @param file path for the new project file.
-     * @return the created project, or null if file was not writable.
+     * @return the created project, or null if file was not writable or it already existed.
      * @throws NullPointerException if file is null.
      */
     public static Project createThermalProject(File file) {
-        return createProject(file, Type.THERMAL);
+        return createProject(file, THERMAL);
     }
 
     /**
@@ -216,14 +237,30 @@ project listeners.
      *
      * @param file path for the new project file.
      * @param type type of the project.
-     * @return the created project, or null if file was not writable.
+     * @return the created project, or null if file was not writable or it already existed.
      * @throws NullPointerException if file or type is null.
      */
-    private static Project createProject(File file, Type type) {
+    private static synchronized Project createProject(File file, Type type) {
         if (file == null || type == null) {
             throw new NullPointerException();
         }
-        return null; // TODO
+
+        // create a new file, do not overwrite an old one
+        try {
+            if (!file.createNewFile()) {
+                return null;
+            }
+        } catch (IOException e) {
+            return null;
+        }
+
+        // create project, write to file and add to cache
+        Project project = new Project(file, type);
+        if (!project.saveNow()) {
+            return null;
+        }
+        projectCache.put(file, project);
+        return project;
     }
 
     /**
@@ -234,8 +271,36 @@ project listeners.
      * @return the loaded project, or null if file is not a valid project file or it was not readable.
      * @throws NullPointerException if file is null.
      */
-    public static Project loadProject(File file) {
-        return null; // TODO
+    public static synchronized Project loadProject(File file) {
+        if (file == null) {
+            throw new NullPointerException();
+        }
+        if (!file.canRead() || !file.isFile()) {
+            return null;
+        }
+
+        // check cache
+        Project project = projectCache.get(file);
+        if (project != null) {
+            return project;
+        }
+
+        // load file and add to cache
+        try {
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document document = builder.parse(file);
+            project = new Project(file, document);
+            projectCache.put(file, project);
+        } catch (SAXException e) {
+            return null;
+        } catch (ParserConfigurationException e) {
+            return null;
+        } catch (IOException e) {
+            return null;
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        return project;
     }
 
     /**
@@ -249,8 +314,35 @@ project listeners.
      *         closed.
      * @throws NullPointerException if the project is null.
      */
-    public static boolean closeProject(Project project) {
-        return false; // TODO
+    public static synchronized boolean closeProject(Project project) {
+        if (project == null) {
+            throw new NullPointerException();
+        }
+
+        synchronized (project) {
+            // save the project to file and remove it from cache
+            if (project.getState() != IDLE) {
+                return false;
+            }
+            if (!project.setSquid(null) || !project.saveNow()) {
+                return false;
+            }
+            projectCache.remove(project.getFile());
+
+            // clear the project's data stuctures to prevent further use
+            project.autosaveQueue = null;
+            project.autosaveRunnable = null;
+            project.currentStep = null;
+            project.file = null;
+            project.listenerList = null;
+            project.properties = null;
+            project.sampleType = null;
+            project.sequence = null;
+            project.state = null;
+            project.transform = null;
+            project.type = null;
+        }
+        return true;
     }
 
     /**
@@ -308,13 +400,41 @@ project listeners.
     }
 
     /**
-     * Writes this project to its project file and waits for the operation to complete. (NOTE: Synchronizing is done
-     * inside the method)
+     * Writes this project to its project file and waits for the operation to complete.
      *
      * @return true if the file was successfully written, otherwise false.
      */
     public boolean saveNow() {
-        return false; // TODO
+        try {
+            FileOutputStream out;
+            Document document;
+            synchronized (this) {
+                out = new FileOutputStream(this.getFile());
+                document = this.getDocument();
+            }
+
+            TransformerFactory tf = TransformerFactory.newInstance();
+            tf.setAttribute("indent-number", new Integer(2));
+
+            Transformer t = tf.newTransformer();
+            t.setOutputProperty(OutputKeys.INDENT, "yes");
+
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(new OutputStreamWriter(out, "utf-8"));
+            t.transform(source, result);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (TransformerException e) {
+            e.printStackTrace();
+            return false;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return false;
+        }
+        fireProjectEvent(FILE_SAVED);
+        return true;
     }
 
     /**
@@ -354,36 +474,49 @@ project listeners.
      * Returns the project file of this project.
      */
     public synchronized File getFile() {
-        return null; // TODO
+        return file;
     }
 
     /**
      * Returns the type of this project.
      */
     public synchronized Type getType() {
-        return null; // TODO
+        return type;
     }
 
     /**
      * Returns the current measurement state of this project.
      */
     public synchronized State getState() {
-        return null; // TODO
+        return state;
     }
 
     /**
      * Returns the name of this project. The name is equal to the name of the project file without the file extension.
      */
     public synchronized String getName() {
-        return null; // TODO
+        String name = getFile().getName();
+        if (name.endsWith(Ikayaki.FILE_TYPE)) {
+            name = name.substring(0, name.length() - Ikayaki.FILE_TYPE.length());
+        }
+        return name;
     }
 
     /**
      * Returns the timestamp of the last completed measurement. This is usually less than the last modified date of the
      * file, because this is not affected by changing the project’s properties.
+     *
+     * @return the timestamp of the last measurement, or null if no measurements are completed.
      */
     public synchronized Date getTimestamp() {
-        return null; // TODO
+        Date last = null;
+        for (int i = 0; i < sequence.getSteps(); i++) {
+            Date d = sequence.getStep(i).getTimestamp();
+            if (d != null && (last == null || d.after(last))) {
+                last = d;
+            }
+        }
+        return last;
     }
 
     /**
@@ -393,7 +526,7 @@ project listeners.
      * moving but not control it?)
      */
     private synchronized Squid getSquid() {
-        return null; // TODO
+        return squid;
     }
 
     /**
@@ -408,17 +541,52 @@ project listeners.
      *         which case nothing was changed).
      */
     public synchronized boolean setSquid(Squid squid) {
-        return false; // TODO
+        // detach the squid from this project
+        if (squid == null) {
+            if (getSquid() == null) {
+                return true;
+            }
+            if (getState() == IDLE && getSquid().setOwner(null)) {
+                this.squid = null;
+                fireProjectEvent(STATE_CHANGED);
+                return true;
+            }
+            return false;
+        }
+
+        // attach the squid to this project
+        synchronized (squid) {
+            if (squid.getOwner() == this) {
+                return true;
+            }
+            if (squid.getOwner() == null && squid.setOwner(this)) {
+                this.squid = squid;
+                fireProjectEvent(STATE_CHANGED);
+                return true;
+            }
+            return false;
+        }
     }
 
     /**
      * Returns a project information property.
      *
      * @param key the key which is associated with the property.
-     * @return the specified property, or an empty String if the property is not set.
+     * @return the specified property, or null if the property is not set.
      */
     public synchronized String getProperty(String key) {
-        return null; // TODO
+        return properties.getProperty(key);
+    }
+
+    /**
+     * Returns a project information property.
+     *
+     * @param key          the key which is associated with the property.
+     * @param defaultValue a default value
+     * @return the specified property, or defaultValue if the property is not set.
+     */
+    public synchronized String getProperty(String key, String defaultValue) {
+        return properties.getProperty(key, defaultValue);
     }
 
     /**
@@ -428,42 +596,49 @@ project listeners.
      * @param value new value for the property, or null to remove the property.
      */
     public synchronized void setProperty(String key, String value) {
-        return; // TODO
+        properties.setProperty(key, value);
+        save();
     }
 
     /**
      * Returns the strike of the sample.
      */
     public synchronized double getStrike() {
-        return 0.0; // TODO
+        return strike;
     }
 
     /**
      * Sets the strike of the sample and calls updateTransforms().
      */
     public synchronized void setStrike(double strike) {
-        return; // TODO
+        this.strike = strike;
+        updateTransforms();
+        fireProjectEvent(DATA_CHANGED);
+        save();
     }
 
     /**
      * Returns the dip of the sample.
      */
     public synchronized double getDip() {
-        return 0.0; // TODO
+        return dip;
     }
 
     /**
      * Sets the dip of the sample and calls updateTransforms().
      */
     public synchronized void setDip(double dip) {
-        return; // TODO
+        this.dip = dip;
+        updateTransforms();
+        fireProjectEvent(DATA_CHANGED);
+        save();
     }
 
     /**
      * Returns the type of the sample.
      */
     public synchronized SampleType getSampleType() {
-        return null; // TODO
+        return sampleType;
     }
 
     /**
@@ -472,7 +647,13 @@ project listeners.
      * @throws NullPointerException if sampleType is null.
      */
     public synchronized void setSampleType(SampleType sampleType) {
-        return; // TODO
+        if (sampleType == null) {
+            throw new NullPointerException();
+        }
+        this.sampleType = sampleType;
+        updateTransforms();
+        fireProjectEvent(DATA_CHANGED);
+        save();
     }
 
     /**
@@ -481,7 +662,7 @@ project listeners.
      * @return true if the sample orientation is +Z, or false if it is -Z.
      */
     public synchronized boolean getOrientation() {
-        return false; // TODO
+        return orientation;
     }
 
     /**
@@ -490,7 +671,10 @@ project listeners.
      * @param orientation true if the sample orientation is +Z, or false if it is -Z.
      */
     public synchronized void setOrientation(boolean orientation) {
-        return; // TODO
+        this.orientation = orientation;
+        updateTransforms();
+        fireProjectEvent(DATA_CHANGED);
+        save();
     }
 
     /**
@@ -503,7 +687,7 @@ project listeners.
      * @return reference to the transformation matrix.
      */
     synchronized Matrix3d getTransform() {
-        return null; // TODO
+        return transform;
     }
 
     /**
@@ -520,7 +704,7 @@ project listeners.
      * @return mass of the sample, or a negative number if no mass is specified.
      */
     public synchronized double getMass() {
-        return 0.0; // TODO
+        return mass;
     }
 
     /**
@@ -529,7 +713,12 @@ project listeners.
      * @param mass mass of the sample, or a negative number to clear it.
      */
     public synchronized void setMass(double mass) {
-        return; // TODO
+        if (mass < 0.0) {
+            mass = -1.0;
+        }
+        this.mass = mass;
+        fireProjectEvent(DATA_CHANGED);
+        save();
     }
 
     /**
@@ -538,7 +727,7 @@ project listeners.
      * @return volume of the sample, or a negative number if no volume is specified.
      */
     public synchronized double getVolume() {
-        return 0.0; // TODO
+        return volume;
     }
 
     /**
@@ -547,7 +736,12 @@ project listeners.
      * @param volume volume of the sample, or a negative number to clear it.
      */
     public synchronized void setVolume(double volume) {
-        return; // TODO
+        if (volume < 0.0) {
+            volume = -1.0;
+        }
+        this.volume = volume;
+        fireProjectEvent(DATA_CHANGED);
+        save();
     }
 
     /**
@@ -556,7 +750,7 @@ project listeners.
      * @param l the listener to be added.
      */
     public synchronized void addProjectListener(ProjectListener l) {
-        return; // TODO
+        listenerList.add(ProjectListener.class, l);
     }
 
     /**
@@ -565,7 +759,7 @@ project listeners.
      * @param l the listener to be removed
      */
     public synchronized void removeProjectListener(ProjectListener l) {
-        return; // TODO
+        listenerList.remove(ProjectListener.class, l);
     }
 
     /**
@@ -574,7 +768,19 @@ project listeners.
      * @param type type of the event.
      */
     private synchronized void fireProjectEvent(ProjectEvent.Type type) {
-        return; // TODO
+        final ProjectEvent event = new ProjectEvent(this, type);
+        final ProjectListener[] listeners = listenerList.getListeners(ProjectListener.class);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                for (ProjectListener l : listeners) {
+                    try {
+                        l.projectUpdated(event);
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -583,7 +789,7 @@ project listeners.
      * @param l the listener to be added.
      */
     public synchronized void addMeasurementListener(MeasurementListener l) {
-        return; // TODO
+        listenerList.add(MeasurementListener.class, l);
     }
 
     /**
@@ -592,7 +798,7 @@ project listeners.
      * @param l the listener to be removed
      */
     public synchronized void removeMeasurementListener(MeasurementListener l) {
-        return; // TODO
+        listenerList.remove(MeasurementListener.class, l);
     }
 
     /**
@@ -602,7 +808,19 @@ project listeners.
      * @param type the type of the event.
      */
     private synchronized void fireMeasurementEvent(MeasurementStep step, MeasurementEvent.Type type) {
-        return; // TODO
+        final MeasurementEvent event = new MeasurementEvent(this, step, type);
+        final MeasurementListener[] listeners = listenerList.getListeners(MeasurementListener.class);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                for (MeasurementListener l : listeners) {
+                    try {
+                        l.measurementUpdated(event);
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -611,12 +829,25 @@ project listeners.
      * <p/>
      * If isSequenceEditEnabled() is false, nothing will be done.
      *
-     * @param sequence the measurement sequence to be added.
+     * @param append the measurement sequence to be appended.
      * @return true if the steps were added, or false if isSequenceEditEnabled() was false.
      * @throws NullPointerException if sequence is null.
      */
-    public synchronized boolean addSequence(MeasurementSequence sequence) {
-        return false; // TODO
+    public synchronized boolean addSequence(MeasurementSequence append) {
+        if (append == null) {
+            throw new NullPointerException();
+        }
+        if (!isSequenceEditEnabled()) {
+            return false;
+        }
+        for (int i = 0; i < append.getSteps(); i++) {
+            MeasurementStep step = new MeasurementStep(this);
+            step.setStepValue(append.getStep(i).getStepValue());
+            sequence.addStep(step);
+        }
+        fireProjectEvent(DATA_CHANGED);
+        save();
+        return true;
     }
 
     /**
@@ -629,7 +860,16 @@ project listeners.
      * @throws IndexOutOfBoundsException if the index is out of range (start < 0 || end >= getSteps()).
      */
     public synchronized MeasurementSequence copySequence(int start, int end) {
-        return null; // TODO
+        if (start < 0 || end >= getSteps()) {
+            throw new IndexOutOfBoundsException();
+        }
+        MeasurementSequence copy = new MeasurementSequence();
+        for (int i = start; i <= end; i++) {
+            MeasurementStep step = new MeasurementStep();
+            step.setStepValue(sequence.getStep(i).getStepValue());
+            copy.addStep(step);
+        }
+        return copy;
     }
 
     /**
@@ -643,7 +883,20 @@ project listeners.
      * @throws NullPointerException if step is null.
      */
     public synchronized boolean addStep(MeasurementStep step) {
-        return false; // TODO
+        if (step == null) {
+            throw new NullPointerException();
+        }
+        if (!isSequenceEditEnabled()) {
+            return false;
+        }
+        double stepValue = step.getStepValue();
+        step = new MeasurementStep(this);
+        step.setStepValue(stepValue);
+        sequence.addStep(step);
+
+        fireProjectEvent(DATA_CHANGED);
+        save();
+        return true;
     }
 
     /**
@@ -662,7 +915,23 @@ project listeners.
      * @throws NullPointerException      if step is null.
      */
     public synchronized boolean addStep(int index, MeasurementStep step) {
-        return false; // TODO
+        if (step == null) {
+            throw new NullPointerException();
+        }
+        if (index < getCompletedSteps() || index > getSteps()) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (!isSequenceEditEnabled()) {
+            return false;
+        }
+        double stepValue = step.getStepValue();
+        step = new MeasurementStep(this);
+        step.setStepValue(stepValue);
+        sequence.addStep(index, step);
+
+        fireProjectEvent(DATA_CHANGED);
+        save();
+        return true;
     }
 
     /**
@@ -676,7 +945,17 @@ project listeners.
      *                                   getSteps()).
      */
     public synchronized boolean removeStep(int index) {
-        return false; // TODO
+        if (index < getCompletedSteps() || index >= getSteps()) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (!isSequenceEditEnabled()) {
+            return false;
+        }
+        sequence.removeStep(index);
+
+        fireProjectEvent(DATA_CHANGED);
+        save();
+        return true;
     }
 
     /**
@@ -691,14 +970,25 @@ project listeners.
      *                                   getSteps()).
      */
     public synchronized boolean removeStep(int start, int end) {
-        return false; // TODO
+        if (start < getCompletedSteps() || end >= getSteps()) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (!isSequenceEditEnabled()) {
+            return false;
+        }
+        for (int i = end; i >= start; i--) {
+            sequence.removeStep(i);
+        }
+        fireProjectEvent(DATA_CHANGED);
+        save();
+        return true;
     }
 
     /**
      * Returns the number of steps in this project.
      */
     public synchronized int getSteps() {
-        return 0; // TODO
+        return sequence.getSteps();
     }
 
     /**
@@ -706,7 +996,16 @@ project listeners.
      * this count. Completed steps are always first in the sequence.
      */
     public synchronized int getCompletedSteps() {
-        return 0; // TODO
+        int i;
+        for (i = 0; i < sequence.getSteps(); i++) {
+            MeasurementStep.State state = sequence.getStep(i).getState();
+            if (state == DONE || state == DONE_RECENTLY) {
+                continue;
+            } else {
+                break;
+            }
+        }
+        return i;
     }
 
     /**
@@ -717,7 +1016,7 @@ project listeners.
      * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= getSteps()).
      */
     public synchronized MeasurementStep getStep(int index) {
-        return null; // TODO
+        return sequence.getStep(index);
     }
 
     /**
@@ -726,20 +1025,21 @@ project listeners.
      * @return the currently measured step, or null if no measurement is active.
      */
     public synchronized MeasurementStep getCurrentStep() {
-        return null; // TODO
+        return currentStep;
     }
 
     /**
      * Calculates and returns a value from a measurement step. The specified MeasurementValue’s algorithm will be used
      * and the results returned.
      *
-     * @param step      the measurement step from which the value is calculated.
+     * @param index     the measurement step from which the value is calculated.
      * @param algorithm the algorithm for calculating the desired value.
      * @return the value returned by the algorithm, or null if it was not possible to calculate it.
-     * @throws NullPointerException if algorithm is null.
+     * @throws NullPointerException      if algorithm is null.
+     * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= getSteps()).
      */
-    public synchronized <A> A getValue(int step, MeasurementValue<A> algorithm) {
-        return null; // TODO
+    public synchronized <A> A getValue(int index, MeasurementValue<A> algorithm) {
+        return algorithm.getValue(sequence.getStep(index));
     }
 
     /**
@@ -747,7 +1047,13 @@ project listeners.
      * state of this project.
      */
     public synchronized boolean isDegaussingEnabled() {
-        return false; // TODO
+        if (type == CALIBRATION || type == THELLIER || type == THERMAL) {
+            return false;
+        } else if (type == AF) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -755,7 +1061,13 @@ project listeners.
      * project.
      */
     public synchronized boolean isSequenceEditEnabled() {
-        return false; // TODO
+        if (type == CALIBRATION) {
+            return false;
+        } else if (type == AF || type == THELLIER || type == THERMAL) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -763,7 +1075,17 @@ project listeners.
      * this project.
      */
     public synchronized boolean isManualControlEnabled() {
-        return false; // TODO
+        if (type == CALIBRATION) {
+            return false;
+        } else if (type == AF || type == THELLIER || type == THERMAL) {
+            if (state == IDLE) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -771,7 +1093,17 @@ project listeners.
      * this project.
      */
     public synchronized boolean isAutoStepEnabled() {
-        return false; // TODO
+        if (type == CALIBRATION || type == THELLIER || type == THERMAL) {
+            return false;
+        } else if (type == AF) {
+            if (state == IDLE) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -779,7 +1111,15 @@ project listeners.
      * this project.
      */
     public synchronized boolean isSingleStepEnabled() {
-        return false; // TODO
+        if (type == CALIBRATION || type == AF || type == THELLIER || type == THERMAL) {
+            if (state == IDLE) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -787,7 +1127,17 @@ project listeners.
      * project.
      */
     public synchronized boolean isPauseEnabled() {
-        return false; // TODO
+        if (type == CALIBRATION || type == THELLIER || type == THERMAL) {
+            return false;
+        } else if (type == AF) {
+            if (state == MEASURING) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -795,7 +1145,11 @@ project listeners.
      * project.
      */
     public synchronized boolean isAbortEnabled() {
-        return false; // TODO
+        if (state == MEASURING || state == PAUSED) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -917,7 +1271,7 @@ project listeners.
      * The state of the project’s measurements.
      */
     public enum State {
-        IDLE, MEASURING, PAUSED,ABORTED
+        IDLE, MEASURING, PAUSED, ABORTED
     }
 
     /**

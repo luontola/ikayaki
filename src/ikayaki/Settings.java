@@ -189,9 +189,19 @@ public class Settings {
     /**
      * Returns the value that maps to the specified key.
      *
+     * @param key key whose associated value is to be returned.
+     * @return the value associated with key, or null if none exists.
+     */
+    private synchronized String getProperty(String key) {
+        return properties.getProperty(key);
+    }
+
+    /**
+     * Returns the value that maps to the specified key.
+     *
      * @param key          key whose associated value is to be returned.
      * @param defaultValue a default value
-     * @return Value associated with key, or an empty string if none exists.
+     * @return the value associated with key, or defaultValue if none exists.
      */
     private synchronized String getProperty(String key, String defaultValue) {
         return properties.getProperty(key, defaultValue);
