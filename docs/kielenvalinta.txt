@@ -10,10 +10,10 @@ Java (rajapinta vanhaan koodiin JNI:ll‰)
   esim. Jbuilderin k‰likehittimell‰ -- verrattuna johonkin Visual C:n 
   k‰lieditoriin). Vai onko jollain toista n‰kemyst‰?
 + Toinen n‰kemys (Esko):
-     T‰ss‰ on kuinka IDEA:n UI Designer toimii. Sill‰ tuntuu olevan nopeaa
-     tehd‰ GridBag-tyylisi‰ layoutteja ja k‰sin koodattavaksi j‰‰
-     ainoastaan toiminnallisuuden tekeminen. Lukekaa ensimm‰isest‰ linkist‰
-     vaikka "Building GUI Forms" ja "Making GUI Forms Function".
+     N‰ist‰ linkeist‰ selvi‰‰ kuinka IDEA:n UI Designer toimii. Sill‰ tuntuu olevan
+     nopeaa tehd‰ GridBag-tyylisi‰ layoutteja ja k‰sin koodattavaksi j‰‰ ainoastaan
+     toiminnallisuuden tekeminen. Lukekaa ensimm‰isest‰ linkist‰ vaikka "Building 
+     GUI Forms" ja "Making GUI Forms Function".
      http://www.jetbrains.com/idea/docs/help/uidesigner/
      http://www.intellij.org/twiki/bin/view/Main/IntelliJUIDesignerGuide
 
