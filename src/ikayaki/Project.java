@@ -642,7 +642,7 @@ project listeners.
     }
 
     /**
-     * Writes the project to a file in DAT format.
+     * Writes the project to a file in DAT format. Will overwrite the file if it already exists.
      *
      * @param file the file to save to.
      * @return true if the file was successfully written, otherwise false.
@@ -653,7 +653,7 @@ project listeners.
     }
 
     /**
-     * Writes the project to a file in SRM format.
+     * Writes the project to a file in SRM format. Will overwrite the file if it already exists.
      *
      * @param file the file to save to.
      * @return true if the file was successfully written, otherwise false.
@@ -664,7 +664,7 @@ project listeners.
     }
 
     /**
-     * Writes the project to a file in TDT format.
+     * Writes the project to a file in TDT format. Will overwrite the file if it already exists.
      *
      * @param file the file to save to.
      * @return true if the file was successfully written, otherwise false.

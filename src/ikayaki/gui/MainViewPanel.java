@@ -29,7 +29,6 @@ import ikayaki.Settings;
 import ikayaki.squid.Squid;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -75,8 +74,6 @@ public class MainViewPanel extends ProjectComponent {
     private MeasurementControlsPanel measurementControlsPanel;
     private MeasurementDetailsPanel measurementDetailsPanel;
     private MeasurementGraphsPanel measurementGraphsPanel;
-
-    private FileFilter projectFileFilter;
 
     /* Swing Actions */
     private Action newProjectAction;
@@ -227,8 +224,9 @@ public class MainViewPanel extends ProjectComponent {
             if (Project.closeProject(this.project)) {
                 this.project = null;
             } else {
-                JOptionPane.showMessageDialog(this, "Unable to close the project " + this.project.getName(), "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Unable to close the project " + this.project.getName(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
@@ -302,7 +300,8 @@ public class MainViewPanel extends ProjectComponent {
                         measuringProject = null;
                         project.setSquid(squid);
                     } else {
-                        JOptionPane.showMessageDialog(this, "Unable to close the project " + measuringProject.getName(),
+                        JOptionPane.showMessageDialog(this,
+                                "Unable to close the project " + measuringProject.getName(),
                                 "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
@@ -391,6 +390,60 @@ public class MainViewPanel extends ProjectComponent {
         }
     }
 
+    /**
+     * Opens a file chooser and exports the active project to a different file format.
+     *
+     * @param type the type of file to export from the current project.
+     * @throws NullPointerException     if type or the current project is null.
+     * @throws IllegalArgumentException if type is not "dat", "tdt" or "srm".
+     */
+    public void exportProject(String type) {
+        type = type.toLowerCase();
+        JFileChooser chooser = new JFileChooser(Settings.instance().getLastDirectory());
+        chooser.setFileFilter(new GenericFileFilter(type.toUpperCase() + " File", type));
+
+        do {
+            int returnVal = chooser.showSaveDialog(MainViewPanel.this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+
+                if (!file.getName().toLowerCase().endsWith("." + type)) {
+                    file = new File(file.getAbsolutePath() + "." + type);
+                }
+
+                // overwrite old file?
+                if (file.exists()) {
+                    returnVal = JOptionPane.showConfirmDialog(MainViewPanel.this,
+                            "Overwrite the file " + file + "?",
+                            "Confirm", JOptionPane.YES_NO_CANCEL_OPTION);
+                    if (returnVal == JOptionPane.NO_OPTION) {
+                        continue; // retry
+                    } else if (returnVal == JOptionPane.CANCEL_OPTION) {
+                        break; // cancel
+                    }
+                }
+
+                // write new file
+                boolean ok;
+                if (type.equals("dat")) {
+                    ok = getProject().exportToDAT(chooser.getSelectedFile());
+                } else if (type.equals("tdt")) {
+                    ok = getProject().exportToTDT(chooser.getSelectedFile());
+                } else if (type.equals("srm")) {
+                    ok = getProject().exportToSRM(chooser.getSelectedFile());
+                } else {
+                    throw new IllegalArgumentException("Unkown export type: " + type);
+                }
+                if (!ok) {
+                    JOptionPane.showMessageDialog(MainViewPanel.this,
+                            "Unable to write the file " + file,
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            break;
+        } while (true);
+    }
+
     /* Getters for GUI Components */
 
     public MainMenuBar getMenuBar() {
@@ -463,25 +516,6 @@ public class MainViewPanel extends ProjectComponent {
         return projectExplorerPanel;
     }
 
-    private FileFilter getProjectFileFilter() {
-        if (projectFileFilter == null) {
-            projectFileFilter = new FileFilter() {
-                public boolean accept(File f) {
-                    if (f.isDirectory() || f.getName().endsWith(Ikayaki.FILE_TYPE)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-
-                public String getDescription() {
-                    return Ikayaki.FILE_DESCRIPTION + " (*" + Ikayaki.FILE_TYPE + ")";
-                }
-            };
-        }
-        return projectFileFilter;
-    }
-
     /* Getters for Swing Actions */
 
     public Action getNewProjectAction() {
@@ -489,13 +523,14 @@ public class MainViewPanel extends ProjectComponent {
             newProjectAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     NewProjectFileChooser chooser = new NewProjectFileChooser(Settings.instance().getLastDirectory());
-                    chooser.setFileFilter(getProjectFileFilter());
+                    chooser.setFileFilter(new GenericFileFilter(Ikayaki.FILE_DESCRIPTION, Ikayaki.FILE_TYPE));
                     int returnVal = chooser.showSaveDialog(MainViewPanel.this);
 
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         File file = chooser.getSelectedFile();
                         Project.Type type = chooser.getProjectType();
-                        if (!file.getName().endsWith(Ikayaki.FILE_TYPE)) {
+
+                        if (!file.getName().toLowerCase().endsWith(Ikayaki.FILE_TYPE)) {
                             file = new File(file.getAbsolutePath() + Ikayaki.FILE_TYPE);
                         }
                         createProject(file, type);
@@ -510,53 +545,12 @@ public class MainViewPanel extends ProjectComponent {
         return newProjectAction;
     }
 
-    /**
-     * Customized JFileChooser for the use of getNewProjectAction(). Has controls for selecting the project's type.
-     */
-    private class NewProjectFileChooser extends JFileChooser {
-
-        private JComboBox projectType;
-
-        public NewProjectFileChooser(File currentDirectory) {
-            super(currentDirectory);
-            projectType = new JComboBox(Project.Type.values());
-            projectType.setSelectedItem(Project.Type.AF);
-        }
-
-        protected JDialog createDialog(Component parent) throws HeadlessException {
-            JDialog dialog = super.createDialog(parent);
-            Container origCP = dialog.getContentPane();
-            JPanel newCP = new JPanel(new BorderLayout(0, 0));
-
-            newCP.add(origCP, "Center");
-            newCP.add(createExtraButtons(), "South");
-            dialog.setContentPane(newCP);
-
-            Dimension d = dialog.getSize();
-            dialog.setSize((int) d.getWidth(), (int) d.getHeight() + 70);
-
-            return dialog;
-        }
-
-        private Component createExtraButtons() {
-            Box b = new Box(BoxLayout.X_AXIS);
-            b.setBorder(BorderFactory.createEmptyBorder(0, 12, 11, 11));
-            b.add(new JLabel("Type of Project: "));
-            b.add(projectType);
-            return b;
-        }
-
-        public Project.Type getProjectType() {
-            return (Project.Type) projectType.getSelectedItem();
-        }
-    }
-
     public Action getOpenProjectAction() {
         if (openProjectAction == null) {
             openProjectAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     JFileChooser chooser = new JFileChooser(Settings.instance().getLastDirectory());
-                    chooser.setFileFilter(getProjectFileFilter());
+                    chooser.setFileFilter(new GenericFileFilter(Ikayaki.FILE_DESCRIPTION, Ikayaki.FILE_TYPE));
                     int returnVal = chooser.showOpenDialog(MainViewPanel.this);
 
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -576,7 +570,7 @@ public class MainViewPanel extends ProjectComponent {
         if (exportProjectToDATAction == null) {
             exportProjectToDATAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    // TODO
+                    exportProject("dat");
                 }
             };
             exportProjectToDATAction.putValue(Action.NAME, "DAT File...");
@@ -589,7 +583,7 @@ public class MainViewPanel extends ProjectComponent {
         if (exportProjectToDTDAction == null) {
             exportProjectToDTDAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    // TODO
+                    exportProject("tdt");
                 }
             };
             exportProjectToDTDAction.putValue(Action.NAME, "TDT File...");
@@ -602,7 +596,7 @@ public class MainViewPanel extends ProjectComponent {
         if (exportProjectToSRMAction == null) {
             exportProjectToSRMAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    // TODO
+                    exportProject("srm");
                 }
             };
             exportProjectToSRMAction.putValue(Action.NAME, "SRM File...");
@@ -666,7 +660,6 @@ public class MainViewPanel extends ProjectComponent {
                             "Esko Luontola\n" +
                             "Aki Sysmäläinen",
                             "About " + Ikayaki.APP_NAME, JOptionPane.INFORMATION_MESSAGE,
-                            // TODO: add some nice picture here :)
                             new ImageIcon(ClassLoader.getSystemResource("resources/ikayaki.png")));
                 }
             };
@@ -674,5 +667,46 @@ public class MainViewPanel extends ProjectComponent {
             aboutAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
         }
         return aboutAction;
+    }
+
+    /**
+     * Customized JFileChooser for the use of getNewProjectAction(). Has controls for selecting the project's type.
+     */
+    private class NewProjectFileChooser extends JFileChooser {
+
+        private JComboBox projectType;
+
+        public NewProjectFileChooser(File currentDirectory) {
+            super(currentDirectory);
+            projectType = new JComboBox(Project.Type.values());
+            projectType.setSelectedItem(Project.Type.AF);
+        }
+
+        protected JDialog createDialog(Component parent) throws HeadlessException {
+            JDialog dialog = super.createDialog(parent);
+            Container origCP = dialog.getContentPane();
+            JPanel newCP = new JPanel(new BorderLayout(0, 0));
+
+            newCP.add(origCP, "Center");
+            newCP.add(createExtraButtons(), "South");
+            dialog.setContentPane(newCP);
+
+            Dimension d = dialog.getSize();
+            dialog.setSize((int) d.getWidth(), (int) d.getHeight() + 70);
+
+            return dialog;
+        }
+
+        private Component createExtraButtons() {
+            Box b = new Box(BoxLayout.X_AXIS);
+            b.setBorder(BorderFactory.createEmptyBorder(0, 12, 11, 11));
+            b.add(new JLabel("Type of Project: "));
+            b.add(projectType);
+            return b;
+        }
+
+        public Project.Type getProjectType() {
+            return (Project.Type) projectType.getSelectedItem();
+        }
     }
 }
