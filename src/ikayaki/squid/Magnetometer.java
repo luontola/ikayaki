@@ -367,12 +367,11 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
             try {
                 queue.put(event.getMessage());
             } catch (InterruptedException e) {
-                System.err.println("Interrupted Degausser message event");
+                System.err.println("Interrupted Magnetometer message event");
             } catch (NullPointerException e) {
-                System.err.println("Null from SerialEvent in Degausser");
+                System.err.println("Null from SerialEvent in Magnetometer");
             }
         }
         messageBuffer.add(event.getMessage());
-
     }
 }

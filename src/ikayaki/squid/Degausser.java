@@ -123,7 +123,25 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * class.
      */
     public void updateSettings() {
-        return; // TODO
+        // No check, only two options. Doesnt matter.
+        this.degausserDelay = Settings.instance().getDegausserDelay();
+        this.degausserRamp = Settings.instance().getDegausserRamp();
+        waitSecond();
+        try {
+            this.serialIO.writeMessage("DCD " + this.degausserDelay);
+        } catch (PortInUseException ex1) {
+            System.err.println("Error using port in degausser:" + ex1);
+        } catch (NoSuchPortException ex1) {
+            System.err.println("Error using port in degausser:" + ex1);
+        }
+        waitSecond();
+        try {
+            this.serialIO.writeMessage("DCR " + this.degausserRamp);
+        } catch (PortInUseException ex1) {
+            System.err.println("Error using port in degausser:" + ex1);
+        } catch (NoSuchPortException ex1) {
+            System.err.println("Error using port in degausser:" + ex1);
+        }
     }
 
     /**
@@ -164,7 +182,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     }
 
     /**
-     * Performs Ramp up.
+     * Performs Ramp up. If this is used, make sure you Ramp down in less than 10 seconds because it can damage coil
      */
     private void executeRampUp() {
         waitSecond();
@@ -201,7 +219,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
 
     /**
      *
-     * Waits 1 second between command
+     * Waits 1 second between command, neccessary because Degausser is slow :)
      *
      */
     private void waitSecond() {

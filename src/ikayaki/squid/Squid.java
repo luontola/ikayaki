@@ -68,8 +68,10 @@ public class Squid {
             try {
                 instance = new Squid();
             } catch (PortInUseException ex) {
+                System.err.println(ex);
                 throw new IOException();
             } catch (NoSuchPortException ex) {
+                System.err.println(ex);
                 throw new IOException();
             }
         return instance;
