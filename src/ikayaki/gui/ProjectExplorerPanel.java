@@ -88,7 +88,7 @@ whose measuring ended.
     /**
      * LastExecutor for scheduling autocomplete results to separate thread (disk access and displaying).
      */
-    private LastExecutor autocompleteExecutor = new LastExecutor(10, true);
+    private LastExecutor autocompleteExecutor = new LastExecutor(200, true);
 
     /**
      * Currently open directory.
