@@ -1,0 +1,282 @@
+\section{Introduction}
+
+The Geophysics Department of the University of Helsinki uses a SQUID magnetometer for measuring the magnetism of rocks and meteorites. There is already a program for using the machine, but its usability could be better. The source code of the existing program is available.
+
+The goal of this project is to improve the existing program by making a better user interface for it. A secondary goal is to link the measurements produced by the program to desired after-processing programs.
+
+
+\section{Organization}
+
+Name: Mikko Jormalainen \\
+Role: Member of the project team \\
+E-Mail: mtjormal@cc.helsinki.fi \\
+Phone: 040 545 6249
+
+Name: Samuli Kaipiainen \\
+Role: Member of the project team \\
+E-Mail: samuli.kaipiainen@cs.helsinki.fi \\
+Phone: 050 357 0359
+
+Name: Aki Korpua \\
+Role: Member of the project team \\
+E-Mail: aki.korpua@cs.helsinki.fi \\
+Phone: 044 339 5375
+
+Name: Esko Luontola \\
+Role: Member of the project team \\
+E-Mail: esko.luontola@cs.helsinki.fi \\
+Phone: 041 507 1474
+
+Name: Aki Sysmäläinen \\
+Role: Member of the project team \\
+E-Mail: aki.sysmalainen@helsinki.fi \\
+Phone: 0400 603 416
+
+Name: Lauri J. Pesonen \\
+Role: Client \\
+E-Mail: lauri.pesonen@helsinki.fi
+
+Name: Tomas Kohout \\
+Role: Client \\
+E-Mail: tomas.kohout@helsinki.fi
+
+Name: Fabio Donadini \\
+Role: Client \\
+E-Mail: fabio.donadini@helsinki.fi
+
+Name: Juha Taina \\
+Role: Course manager \\
+E-Mail: taina@cs.helsinki.fi \\
+Phone: 09 191 51311
+
+Name: Jenni Valorinta \\
+Role: Instructor \\
+E-Mail: valorint@cs.helsinki.fi \\
+Phone: 09 191 51165, 040 540 2846
+
+	
+\subsection{Responsibilities}
+
+\begin{figure}[h]
+\begin{tabular}{ll}
+Field of Responsibility & Person \\
+\hline
+Project Manager & Esko Luontola \\
+Secretary & Mikko Jormalainen, Samuli Kaipiainen, \\& Aki Korpua, Aki Sysmäläinen \\
+CVS Manager & Aki Korpua \\
+HTML Manager & Esko Luontola \\
+Measurement Manager & Aki Sysmäläinen \\
+Project Plan, Final Report & Esko Luontola \\
+Requirements Document & Aki Sysmäläinen, Aki Korpua \\
+Design Document & Mikko Jormalainen, Samuli Kaipiainen \\
+Testing Plan, Testing Report & Aki Korpua, Mikko Jormalainen \\
+User Manual, Realization Document & Aki Sysmäläinen, Samuli Kaipiainen
+\end{tabular}
+\end{figure}
+
+
+\section{General Description of the Product}
+
+The equipment of the SQUID magnetometer is build out of three units: measurement unit, demagnetizing unit and sample holder. The computer guides their operation through COM ports. The existing source code will be used to control the machine on a low level, and on top of it will be built a new user interface.
+
+The program must be able to control the machine, gather measurements from the samples, show them to the user and save the results on disk for later use. The program will be used on a modern PC running Windows. The old program has been written in Visual C. The new program will be written either in C and Java, or in C++.
+
+The name of the program will be Ikayaki (dried, grilled squid - a Japanese seafood).
+
+
+\section{Estimated Size}
+
+The size of the old source code is about 12,000 lines of code. Taking into account, that part of the old source will be reused, and that the new program will be more complex than the old one, it can be estimated that we will need to write about 10,000 lines of code (+-30\%). A better estimation will be made when the program requirements are known better.
+
+
+\section{Workflow}
+
+\subsection{Main Process: GUI and producing the program}
+
+The process for creating the new user interface will follow a linear waterfall model. The output of the previous phase will be the input of the next one.
+
+\subsubsection{Definition}
+
+Requirements analysis will be done with the client and the program requirements will be listed. The client will guide the project team in using the existing program and magnetometer. The results will be requirements document and user interface prototype.
+
+\subsubsection{Design}
+
+The user interface and structure of the program will be designed. The expertise of the client will be needed during this phase. Designing will be made so accurately that producing the program will be as simple as possible. The results will be design document and testing plan.
+
+\subsubsection{Production}
+
+The program will be written according to the design document. Each programmer will take care of the unit testing of his own code. The result will be program code.
+
+\subsubsection{Testing}
+
+The program will be tested according to the test plan and the found errors will be corrected. Uncorrected errors will be documented. User manual will be written. The results will be testing report, user manual and realization document.
+
+\subsubsection{Installing}
+
+The program will be given to the client and installed in the laboratory. Documentations will be tweaked and final report written.
+
+
+\subsection{Sub Process: analyzing the old source code}
+
+Analyzing the old source code, designing a suitable interface for using the SQUID and building it will be executed concurrently with the main process. The interface needs to be defined before the main process will need the information in its design phase.
+
+The sub process will utilize 1-2 persons.
+
+\subsubsection{Design}
+
+Getting to know the old source code and finding out how the program works. An interface for using the magnetometer will be designed. The result will be interface design document and test plan, which will be attached to the actual design document and test plan.
+
+\subsubsection{Production}
+
+The interface will be built according to the design plan.
+
+\subsubsection{Testing}
+
+The interface will be tested with real equipment according to the test plan. If the interface is completed much before the user interface is ready, it might be necessary to build a simple user interface for testing purposes only. Otherwise the interface will be tested with the rest of the program.
+
+\subsection{Schedule}
+
+The length of the project is about 14 weeks, starting 25.1.2005 and ending latest 6.5.2005. The lengths of the phases are shown in the following diagram.
+
+TODO
+
+Kuvaa, miten projekti jakaantuu pienempiin osiin. Osien välisiä suhteita on
+syytä selventää ns. GANTT-kaavion avulla. Aikataulua laadittaessa kannattaa
+ottaa huomioon kaikki mahdolliset ennalta tiedettävät tapahtumat,
+esimerkiksi eri tuotosten eräpäivät, seurantakokousten päivämäärät,
+projektiryhmän jäsenten mahdolliset poissaolot, kaikille projekteille
+yhteinen demotilaisuus jne.
+
+Kun aikataulun esittää tarkasti, projektin seuranta on helppoa.
+Osallistujien välisen työnjaon voi esittää tässä.
+
+
+\section{Conventions}
+
+Meetings will be held every Tuesday at 10-12 and Thursday at 10-12 in Exactum class A219. The secretary will write a record and publish it as soon as possible after the meeting.
+
+TODO: kokouskäytännöt
+
+Work sessions will be held on Wednesdays at 14-18 when necessary. The team will meet in the Exactum lobby by default.
+
+Communication outside the meetings will be through e-mail and the mailing list ohtuk05-squid-list@cs.helsinki.fi. All e-mail messages should be prefixed with (squid). The project has an IRC channel \#squid-project at IRCnet.
+
+The material produced in the project will be managed with CVS. The CVSROOT is \\
+/home/group/squid/.cvsroot
+
+Every team member should write what he is doing currently to a text file so that it could be viewed from the web site: \\
+/group/home/squid/public\_html/username/status.txt
+
+The team uses the locker 1 in room A307.
+
+
+\section{Documentation}
+
+During the project the following documents will be published. They will be made with LaTeX and published in PDF format. Documents will be stored in the CVS during the project.
+
+\begin{itemize}
+\item Project plan
+\item Requirements Document
+\item Design Document
+\item Testing Plan
+\item User Manual
+\item Testing Report
+\item Final Report
+\item Realization Document
+\item Meeting Records (in Finnish)
+\end{itemize}
+
+
+\section{Risk Analysis}
+
+\subsection{Team}
+
+{\bf Risk:} Communication in a foreign language causes problems. \\
+{\bf Propability:} Low \\
+{\bf Seriousness:} Medium \\
+{\bf Countermeasures:} Those who known English better, will be used to communicate with the client.
+
+{\bf Risk:} A team member gets sick and his work is not being done. \\
+{\bf Propability:} Medium \\
+{\bf Seriousness:} Medium \\
+{\bf Countermeasures:} The rest of the team should be informed as soon as possible, so that others can share the work when necessary.
+
+{\bf Risk:} A team member quits the project. \\
+{\bf Propability:} Low \\
+{\bf Seriousness:} High \\
+{\bf Countermeasures:} Maintain a happy and encouraging atmosphere.
+
+\subsection{Project Management}
+
+{\bf Risk:} The estimations (size of work, skills) are incorrect. \\
+{\bf Propability:} High \\
+{\bf Seriousness:} Medium \\
+{\bf Countermeasures:} Keep and eye on the project plan and update it as necessary.
+
+{\bf Risk:} The work will not stay in schedule. \\
+{\bf Propability:} High \\
+{\bf Seriousness:} High \\
+{\bf Countermeasures:} Look at the schedule at the end of every week to notice problems as soon as possible. Adjust the schedule when necessary. Drop secondary features off the program (do not neglect testing!).
+
+\subsection{Technology}
+
+{\bf Risk:} The old source code is not being understood well enough and complications in reuse occur. \\
+{\bf Propability:} Medium \\
+{\bf Seriousness:} High \\
+{\bf Countermeasures:} Allocate more people to have a look at the source code. Discard the old source and start from a scratch, if the inclusion of legacy code proves to be too risky.
+
+{\bf Risk:} If some need to learn a new programming language, their code will have more bugs and they will write it slower. \\
+{\bf Propability:} High \\
+{\bf Seriousness:} Medium \\
+{\bf Countermeasures:} Utilize the existing knowledge of the individuals as much as possible. Avoid the need to learn new stuff.
+
+{\bf Risk:} If some need to learn using new tools, they will be slow in using them. \\
+{\bf Propability:} Medium \\
+{\bf Seriousness:} Low \\
+{\bf Countermeasures:} Take the learning curve into consideration and adjust the schedule. Avoid the need to learn new stuff.
+
+{\bf Risk:} Somebody sucks at coding. \\
+{\bf Propability:} Low \\
+{\bf Seriousness:} Low \\
+{\bf Countermeasures:} Make that person do the testing.
+
+\subsection{Client}
+
+{\bf Risk:} The project team will not understand how the magnetometer is being used. \\
+{\bf Propability:} Medium \\
+{\bf Seriousness:} High \\
+{\bf Countermeasures:} Check all decisions concerning the program design with the client. Build an accurate prototype of the system before writing code. 
+
+{\bf Risk:} The client you tried to contact can not be reached. \\
+{\bf Propability:} Low \\
+{\bf Seriousness:} Medium \\
+{\bf Countermeasures:} Try to do other things that do not require the client while waiting. Make the client unnecessary after the beginning of the project.
+
+{\bf Risk:} The client will not be satisfied with the finished product and the product will be useless. \\
+{\bf Propability:} Medium \\
+{\bf Seriousness:} High \\
+{\bf Countermeasures:} Do the designing very carefully and build prototypes that will be accepted by the client. Test the program thoroughly.
+
+{\bf Risk:} \\
+{\bf Propability:} \\
+{\bf Seriousness:} \\
+{\bf Countermeasures:} 
+
+
+
+\section{Muuta muistettavaa}
+
+TODO
+
+Sopivissa kohdissa projektisuunnitelmaa voi ottaa kantaa seuraaviin
+asioihin.
+
+\begin{itemize}
+\item Laadunvalvonta projektin aikana.
+\item Projektin kriittinen polku.
+\item Tarkastukset ja katselmukset.
+\item Sihteerivuorot, jos sihteerin tehtävä on kiertävä.
+\item Yhteenveto tuotettavista dokumenteista.
+\item Yhteenveto muista osatuotoksista, jos niitä on.
+\item Asiakkaan vastuulla olevat asiat.
+\end{itemize}

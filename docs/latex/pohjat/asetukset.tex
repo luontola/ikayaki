@@ -1,0 +1,37 @@
+%
+% Tässä esimerkkipohjassa oletetaan, että projektiryhmän nimi on esim.
+% Muuta tiedostoa vastaamaan projektisi tietoja.
+%
+
+% Times-pakkaus on hyödyllinen, koska sen avulla tulee siistä PDF:ää.
+\usepackage{times}
+
+% Seuraavaan pitää muuttaa projektiryhmän nimi.
+\defprojectgroup{SQUID}
+
+% Ryhmän jäsenet. Viimeisen jäsenen jälkeen ei tule \\-merkintää
+\defgroupmembers{
+  \membername{Mikko Jormalainen}\\
+  \membername{Samuli Kaipiainen}\\
+  \membername{Aki Korpua}\\
+  \membername{Esko Luontola}\\
+  \membername{Aki Sysmäläinen}
+}
+
+% Projektin asiakkaan nimi. Jos asiakkaita on useita, nimetään heistä yksi
+% ensisijaiseksi asiakaskontaktiksi.
+\defprojectclient{Lauri J. Pesonen}
+
+% Projektiryhmän kotisivu.
+\defprojecthomepage{http://www.cs.helsinki.fi/group/squid/}
+
+% Projektin johtoryhmä eli vastuuhenkilöt.
+\defprojectmasters{
+  \mastername{Juha Taina}\\
+  \mastername{Jenni Valorinta}
+}
+
+%
+% Omat, kaikille projektin dokumenteille yhteiset asetukset voi laittaa
+% tänne.
+%
