@@ -64,157 +64,32 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 \section{Classes and methods}
 
 
-\subsection{Main view and menu}
+\subsection{Generic GUI components}
 
-
-\subsection{Configuration window}
-
-
-\subsection{Project Explorer}
-
-
-\beginClass{ProjectExplorerPanel}
+\beginClass{ProjectComponent}
 \classPackage{ikayaki.gui}
-\classDeclaration{public class ProjectExplorerPanel}
+\classDeclaration{public class ProjectComponent}
 \classExtends{JPanel}
 \classCreatedBy{MainViewPanel}
-\classUses{ProjectExplorerTableModel}
-\classUses{ProjectExplorerPopupMenu}
-\classComment{
-	Creates a history/autocomplete field (browserField) for choosing the project directory, a listing of project files in that directory (explorerTable) and in that listing a line for creating new project, which has a textbox for project name, an AF/TH ComboBox and a "Create new" button for actuating the creation. Also has a right-click popup menu for exporting project files.
-}
-\classEvent{On browserField change}{send browserField's text to RunQueue which schedules disk access and autocomplete. (This could be in a separate BrowserFieldComponent class)}
-\classEvent{On explorerTable mouse right-click}{create a ProjectExplorerPopupMenu for right-clicked project file. (This could be in ProjectExplorerTableModel class)}
-\classEvent{On createNewProject mouseclick}{create a new project, set it active and tell ProjectExplorerTableMode to update itself.}
-\classEvent{On browseButton mouseclick}{open a FileChooser dialog for choosing the directory.}
+\classUses{Project}
+\classSubclass{ProjectInformationPanel}
+\classSubclass{MeasurementSequencePanel}
+\classSubclass{MeasurementDetailsPanel}
+\classSubclass{MeasurementControlsPanel}
+\classSubclass{MeasurementGraphsPanel}
+\classSubclass{ProjectExplorerPanel}
+\classSubclass{CalibrationPanel}
+\classComment{Generic gui component which uses Project and listens MeasurementEvents and ProjectEvents.}
 \closeClass
 
-\beginField{browserField}
-\fieldDeclaration{private BrowserFieldComponent browserField}
-\fieldComment{
-(need a separate class for this?)
-}
-\closeField
-
-\beginField{explorerTable}
-\fieldDeclaration{private ProjectExplorerTableModel explorerTable}
-\closeField
-
-\beginField{createNewProject}
-\fieldDeclaration{private JButton createNewProject}
-\closeField
-
-\beginField{browseButton}
-\fieldDeclaration{private JButton browseButton}
-\closeField
-
-\beginField{newProject}
-\fieldDeclaration{private JTextField newProject}
-\closeField
-
-\beginField{JComboBox newProjectType}
-\fieldDeclaration{private JComboBox newProjectType}
-\closeField
-
-\beginMethod{ProjectExplorerPanel()}
-\methodDeclaration{public ProjectExplorerPanel()}
-\methodComment{
-	Creates its components, places them and sets the last project folder as current project folder.
-}
-\closeMethod
-
-\beginMethod{createNewProject()}
-\methodDeclaration{public void createNewProject()}
-\methodComment{
-	Creates a new project, sets it active, sends it to MainViewPanel, tells explorerTable to reset newProject and newProjectType fields.
-}
-\closeMethod
-
-\beginMethod{doBrowse()}
-\methodDeclaration{public void doBrowse()}
-\methodComment{
-	Creates a FileChooser dialog and tells explorerTable and browserField to change to directory returned by it.
-}
+\beginMethod{ProjectComponent(Project)}
+\methodDeclaration{public ProjectComponent(Project project)}
+\methodComment{Registers MeasurementListener and ProjectListener to project.}
 \closeMethod
 
 
-\beginClass{ProjectExplorerTableModel}
-\classPackage{ikayaki.gui}
-\classDeclaration{public class ProjectExplorerTableModel}
-\classExtends{AbstractTableModel}
-\classCreatedBy{ProjectExplorerPanel}
-\classUses{MainViewPanel}
-\classComment{
-	Creates a list of project files in directory. Handles loading selected projects and executing export choice.
-}
-\classEvent{On newDirectoryEvent}{updates list of project files on JTable}
-\classEvent{On selectTable MouseEvent}{sets new Project active}
-\closeClass
+\subsection{Main view and menu}
 
-\beginField{directory}
-\fieldDeclaration{private File directory}
-\fieldValue{null}
-\fieldComment{
-	Currently opened directory
-}
-\closeField
-
-\beginField{files}
-\fieldDeclaration{private Vector<File> files}
-\fieldValue{new Vector<File>()}
-\fieldComment{
-	Project files in the current directory.
-}
-\closeField
-
-\beginMethod{ProjectExplorerTableModel()}
-\methodDeclaration{public ProjectExplorerTableModel()}
-\methodComment{
-	Reads the contents of the default directory and initializes the file list.
-}
-\closeMethod
-
-\beginMethod{ProjectExplorerTableModel(String)}
-\methodDeclaration{public ProjectExplorerTableModel(String directory)}
-\methodComment{
-	Reads the contents of the given directory and initializes the file list.
-}
-\methodParam{directory}{path to the directory to be opened}
-\closeMethod
-
-\beginMethod{loadDirectory(String)}
-\methodDeclaration{public void loadDirectory(String directory)}
-\methodComment{
-	Update list to show given directory.
-}
-\methodParam{directory}{path to the directory to be opened}
-\closeMethod
-
-\beginMethod{loadProject()}
-\methodDeclaration{public void loadProject()}
-\methodComment{
-	Gets the selected line from the file list and sends the file to MainViewPanel.
-}
-\closeMethod
-
-
-\beginClass{ProjectExplorerPopupMenu}
-\classPackage{ikayaki.gui}
-\classDeclaration{public class ProjectExplorerPopupMenu}
-\classExtends{JPopupMenu}
-\classCreatedBy{ProjectExplorerPanel}
-\classComment{
-	Shows choices to export: AF, Thellier, Thermal and executes selected
-}
-\classEvent{On selectItem mouseEvent}{tells selected Project to create selected file from it's self}
-\closeClass
-
-\beginMethod{ProjectExplorerTableModel()}
-\methodDeclaration{public ProjectExplorerTableModel()}
-\methodComment{
-	Builds the menu items
-}
-\closeMethod
 
 \beginClass{MainViewPanel}
 \classPackage{ikayaki.gui}
@@ -302,7 +177,6 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 \classExtends{JMenuBar}
 \classCreatedBy{MainViewPanel}
 \classComment{Creates Menu items for Menubar and makes action listeners for them}
-
 \classEvent{On newProject Clicked}{Opens File chooser and opens new file in selected folder}
 \classEvent{On openProject Clicked}{Opens File chooser and opens selected file}
 \classEvent{On exportToDAT Clicked}{Opens File chooser and tells Project to export in selected file}
@@ -312,7 +186,6 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 \classEvent{On helpItem Clicked}{Opens Help dialog (own frame?)}
 \classEvent{On about Clicked}{Opens dialog with credits and version number}
 \classEvent{On exit Clicked}{closes program}
-
 \closeClass
 
 \beginField{file}
@@ -374,56 +247,8 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 }
 \closeMethod
 
-\beginClass{MainStatusBar}
-\classPackage{ikayaki.gui}
-\classDeclaration{public class MainStatusBar}
-\classExtends{ProjectComponent}
-\classCreatedBy{MainViewPanel}
-\classComment{Creates its components and listens project events on status change and calculates estimated time for measurement}
 
-\classEvent{On Measurement Event}{recalculates progress and updates status for current measurement}
-\closeClass
-
-\beginField{measurementStatus}
-\fieldDeclaration{private JLabel measurementStatus}
-\fieldComment{text comment of current status(moving,measurement,demagnetization)}
-\closeField
-
-\beginField{measurementProgress}
-\fieldDeclaration{private JProgressBar measurementProgress}
-\fieldComment{progress of sequence/measurement as per cent of whole process}
-\closeField
-
-\beginField{currentSequence}
-\fieldDeclaration{private int[] currentSequence}
-\fieldComment{current projects sequence}
-\closeField
-
-\beginField{projectType}
-\fieldDeclaration{private int projectType}
-\fieldComment{current projects type (we know if we are doing demagnetization or not)}
-\closeField
-
-\beginMethod{MainStatusBar()}
-\methodDeclaration{public MainStatusBar()}
-\methodComment{
-    Creates all components with default settings and sets Listener for MeasurementEvent.
-}
-\closeMethod
-
-\beginMethod{calculateStatus(int sequenceStep,int currentStep)}
-\methodDeclaration{private void calculateStatus(String phase,int sequenceStep,int currentStep)}
-\methodComment{
-    Recalculates current progress and updates status.
-}
-\closeMethod
-
-\beginMethod{setMeasurement(int projectType,int[] sequence)}
-\methodDeclaration{{private void setMeasurement(int projectType,int[] sequence)}
-\methodComment{
-    Formats status and creates new measurement status values.
-}
-\closeMethod
+\subsection{Configuration window}
 
 \beginClass{SettingsPanel}
 \classPackage{ikayaki.gui}
@@ -432,10 +257,8 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 \classCreatedBy{MainStatusBar}
 \classUses{Settings}
 \classComment{Creates its components and updats changes to Settings and saves them in Configuration file}
-
 \classEvent{On Save Clicked}{saves current configuration to Settings-singleton and closes window}
 \classEvent{On Cancel Clicked}{closes window (discarding changes)}
-
 \closeClass
 
 \beginField{magnetometerPort}
@@ -534,7 +357,6 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 \fieldDeclaration{private JButton cancelButton}
 \closeField
 
-
 \beginMethod{SettingsPanel()}
 \methodDeclaration{public SettingsPanel()}
 \methodComment{
@@ -557,7 +379,171 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 \closeMethod
 
 
+\subsection{Project Explorer}
+
+\beginClass{ProjectExplorerPanel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class ProjectExplorerPanel}
+\classExtends{ProjectComponent}
+\classCreatedBy{MainViewPanel}
+\classUses{MainViewPanel}
+\classUses{ProjectExplorerTableModel}
+\classUses{ProjectExplorerPopupMenu}
+\classComment{
+	Creates a history/autocomplete field (browserField) for choosing the project directory, a listing of project files in that directory (explorerTable) and in that listing a line for creating new project, which has a textbox for project name, an AF/TH ComboBox and a "Create new" button (createNewProjectButton) for actuating the creation. Also has a right-click popup menu for exporting project files.
+}
+\classEvent{On browserField change}{send browserField's text to RunQueue which schedules disk access and autocomplete. (This could be in a separate BrowserFieldComponent class?)}
+\classEvent{On explorerTable mouse right-click}{create a ProjectExplorerPopupMenu for right-clicked project file. (This could be in ProjectExplorerTableModel class?)}
+\classEvent{On createNewProjectButton click}{call Project.createXXXProject(File) with filename from newProjectField, send returned Project to MainViewPanel?, tell explorerTable to reset newProjectField and newProjectType.}
+\classEvent{On browseButton click}{open a FileChooser dialog for choosing the directory.}
+\classEvent{On MeasurementEvent}{hilight project whose measuring started, or unhilight one whose measuring ended.}
+\classEvent{On ProjectEvent}{hilight selected project, or unhilight unselected project.}
+\closeClass
+
+\beginField{browserField}
+\fieldDeclaration{private BrowserFieldComponent browserField}
+\fieldComment{(need a separate class for this?)}
+\closeField
+
+\beginField{browseButton}
+\fieldDeclaration{private JButton browseButton}
+\closeField
+
+\beginField{explorerTable}
+\fieldDeclaration{private ProjectExplorerTableModel explorerTable}
+\closeField
+
+\beginField{newProjectField}
+\fieldDeclaration{private JTextField newProject}
+\closeField
+
+\beginField{JComboBox newProjectType}
+\fieldDeclaration{private JComboBox newProjectType}
+\fieldValue{AF/Thellier/Thermal}
+\closeField
+
+\beginField{createNewProjectButton}
+\fieldDeclaration{private JButton createNewProjectButton}
+\closeField
+
+\beginMethod{ProjectExplorerPanel(Project)}
+\methodDeclaration{public ProjectExplorerPanel(Project project)}
+\methodComment{
+	Creates all its components, sets the last open project folder as current project folder.
+}
+\closeMethod
+
+\beginMethod{doBrowse()}
+\methodDeclaration{public void doBrowse()}
+\methodComment{Creates a FileChooser dialog and tells explorerTable and browserField to change to directory returned by it.}
+\closeMethod
+
+
+\beginClass{ProjectExplorerTableModel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class ProjectExplorerTableModel}
+\classExtends{AbstractTableModel}
+\classCreatedBy{ProjectExplorerPanel}
+\classUses{MainViewPanel}
+\classComment{
+	Creates a list of project files in directory. Handles loading selected projects and executing export choice.
+}
+\classEvent{On newDirectoryEvent}{updates list of project files on JTable}
+\classEvent{On selectTable MouseEvent}{sets new Project active}
+\closeClass
+
+\beginField{directory}
+\fieldDeclaration{private File directory}
+\fieldValue{null}
+\fieldComment{
+	Currently opened directory
+}
+\closeField
+
+\beginField{files}
+\fieldDeclaration{private Vector<File> files}
+\fieldValue{new Vector<File>()}
+\fieldComment{
+	Project files in the current directory.
+}
+\closeField
+
+\beginMethod{ProjectExplorerTableModel()}
+\methodDeclaration{public ProjectExplorerTableModel()}
+\methodComment{
+	Reads the contents of the default directory and initializes the file list.
+}
+\closeMethod
+
+\beginMethod{ProjectExplorerTableModel(String)}
+\methodDeclaration{public ProjectExplorerTableModel(String directory)}
+\methodComment{
+	Reads the contents of the given directory and initializes the file list.
+}
+\methodParam{directory}{path to the directory to be opened}
+\closeMethod
+
+\beginMethod{loadDirectory(String)}
+\methodDeclaration{public void loadDirectory(String directory)}
+\methodComment{
+	Update list to show given directory.
+}
+\methodParam{directory}{path to the directory to be opened}
+\closeMethod
+
+\beginMethod{loadProject()}
+\methodDeclaration{public void loadProject()}
+\methodComment{
+	Gets the selected line from the file list and sends the file to MainViewPanel.
+}
+\closeMethod
+
+
+\beginClass{ProjectExplorerPopupMenu}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class ProjectExplorerPopupMenu}
+\classExtends{JPopupMenu}
+\classCreatedBy{ProjectExplorerPanel}
+\classComment{
+	Shows choices to export: AF, Thellier, Thermal and executes selected
+}
+\classEvent{On selectItem mouseEvent}{tells selected Project to create selected file from it's self}
+\closeClass
+
+\beginMethod{ProjectExplorerTableModel()}
+\methodDeclaration{public ProjectExplorerTableModel()}
+\methodComment{
+	Builds the menu items
+}
+\closeMethod
+
+
 \subsection{Calibration}
+
+\beginClass{CalibrationPanel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class CalibrationPanel}
+\classExtends{ProjectComponent}
+\classCreatedBy{MainViewPanel}
+\classUses{MainViewPanel}
+\classUses{Project}
+\classComment{
+	Holds predefined "Holder noise" and "Standard sample" projects for calibration; they are in a technically same table as Project explorer files. Also has a "Calibrate" button, which executes selected calibration project, similarly to clicking "Single step" in normal projects.
+}
+\classEvent{On calibrateButton click}{call project.doSingleStep().}
+\classEvent{On calibrationProjectTable click}{call Project.loadProject(File) with clicked project file, send returned Project to MainViewPanel?}
+\classEvent{On MeasurementEvent}{hilight calibration project whose measuring started, or unhilight one whose measuring ended; enable/disable calibrateButton similarly.}
+\classEvent{On ProjectEvent}{hilight selected calibration project, or unhilight unselected calibration project.}
+\closeClass
+
+\beginField{calibrateButton}
+\fieldDeclaration{private JButton calibrateButton}
+\closeField
+
+\beginField{calibrationProjectTable}
+\fieldDeclaration{private JTable calibrationProjectTable}
+\fieldComment{Table for the two calibration projects; has "filename", "last modified" and "time" (time since last modification) columns.}
+\closeField
 
 
 \subsection{Project information}
@@ -593,10 +579,6 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 \classEvent{On ProjectEvent}{update buttons and manual controls according to project.isXXXEnabled().}
 \closeClass
 
-\beginField{project}
-\fieldDeclaration{private Project project}
-\closeField
-
 \beginField{measureButton}
 \fieldDeclaration{private JButton measureButton}
 \closeField
@@ -629,6 +611,7 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 \fieldDeclaration{private ManualControlsPanel manualControlsPanel}
 \closeField
 
+
 \beginClass{MagnetometerStatusPanel}
 \classPackage{ikayaki.gui}
 \classDeclaration{public class MagnetometerStatusPanel}
@@ -637,12 +620,18 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 \classComment{Picture of current magnetometer status, including sample holder position and rotation.}
 \closeClass
 
+\beginMethod{MagnetometerStatusPanel()}
+\methodDeclaration{public MagnetometerStatusPanel()}
+\methodComment{Sets magnetometer status to current position.}
+\closeMethod
+
 \beginMethod{updateStatus(int, int)}
 \methodDeclaration{public updateStatus(int position, int rotation)}
 \methodComment{Updates magnetometer status picture; called by MeasurementControlsPanel.}
 \methodParam{position}{sample holder position, from a to b?}
 \methodParam{rotation}{sample holder rotation; 0, 90, 180 or 270.}
 \closeMethod
+
 
 \beginClass{ManualControlsPanel}
 \classPackage{ikayaki.gui}
@@ -653,10 +642,6 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 \classUses{Project}
 \classEvent{On xxxN click}{call project.xxxN().}
 \closeClass
-
-\beginField{project}
-\fieldDeclaration{private Project project}
-\closeField
 
 \beginField{demagX}
 \fieldDeclaration{private JRadioButton demagX}
@@ -684,6 +669,57 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 
 
 \subsection{Status bar}
+
+\beginClass{MainStatusBar}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class MainStatusBar}
+\classExtends{ProjectComponent}
+\classCreatedBy{MainViewPanel}
+\classComment{Creates its components and listens project events on status change and calculates estimated time for measurement}
+
+\classEvent{On Measurement Event}{recalculates progress and updates status for current measurement}
+\closeClass
+
+\beginField{measurementStatus}
+\fieldDeclaration{private JLabel measurementStatus}
+\fieldComment{text comment of current status(moving,measurement,demagnetization)}
+\closeField
+
+\beginField{measurementProgress}
+\fieldDeclaration{private JProgressBar measurementProgress}
+\fieldComment{progress of sequence/measurement as per cent of whole process}
+\closeField
+
+\beginField{currentSequence}
+\fieldDeclaration{private int[] currentSequence}
+\fieldComment{current projects sequence}
+\closeField
+
+\beginField{projectType}
+\fieldDeclaration{private int projectType}
+\fieldComment{current projects type (we know if we are doing demagnetization or not)}
+\closeField
+
+\beginMethod{MainStatusBar()}
+\methodDeclaration{public MainStatusBar()}
+\methodComment{
+    Creates all components with default settings and sets Listener for MeasurementEvent.
+}
+\closeMethod
+
+\beginMethod{calculateStatus(int sequenceStep,int currentStep)}
+\methodDeclaration{private void calculateStatus(String phase,int sequenceStep,int currentStep)}
+\methodComment{
+    Recalculates current progress and updates status.
+}
+\closeMethod
+
+\beginMethod{setMeasurement(int projectType,int[] sequence)}
+\methodDeclaration{private void setMeasurement(int projectType,int[] sequence)}
+\methodComment{
+    Formats status and creates new measurement status values.
+}
+\closeMethod
 
 
 \subsection{Graphs}
