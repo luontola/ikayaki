@@ -13,7 +13,7 @@ import java.text.ParseException;
  * A row that starts with an alphabet will be used as the name of the person. Rows beginning with # will be concidered
  * empty lines.
  */
-public class Entry {
+public class Entry implements Comparable<Entry> {
 
     private enum State {
         EMPTY, NAME, RECORD
@@ -177,6 +177,17 @@ public class Entry {
             s.append(" Empty");
         }
         return s.toString();
+    }
+
+    /**
+     * Compares this Entry with the specified Entry for order.
+     *
+     * @param entry the Entry to be compared.
+     * @return the value 0 if the argument's date is equal to this; a value less than 0 if this is before the argument's
+     *         date; and a value greater than 0 if this is after the argument's date.
+     */
+    public int compareTo(Entry entry) {
+        return this.getDate().compareTo(entry.getDate());
     }
 
 }
