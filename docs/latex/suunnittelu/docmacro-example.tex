@@ -1,0 +1,78 @@
+
+
+% BASE:
+
+\beginClass{}
+\classPackage{}
+\classDeclaration{}
+\classExtends{}
+\classImplements{}
+\classCreatedBy{}
+\classUses{}
+\classUses{}
+\classSubclass{}
+\classSubclass{}
+\classComment{
+}
+\classPatterns{}
+\classEvent{}{}
+\classEvent{}{}
+\closeClass
+
+\beginField{}
+\fieldDeclaration{}
+\fieldValue{}
+\fieldComment{
+}
+\closeField
+
+\beginMethod{}
+\methodDeclaration{}
+\methodComment{
+}
+\methodParam{}{}
+\methodReturns{}
+\methodThrows{}{}
+\closeMethod
+
+
+
+% EXAMPLE:
+
+\beginClass{RunQueue}
+\classPackage{ikayaki.util}
+\classDeclaration{public class RunQueue}
+\classExtends{Object}
+\classImplements{FooBarInterface}
+\classCreatedBy{Project, Settings, ProjectExplorerTableModel}
+\classUses{-}
+\classSubclass{RunQueue}
+\classComment{
+	Executes Runnable objects in a private worker thread after a pre-defined delay. The worker thread will terminate automatically when there are no runnables to be executed. Optionally executes only the last inserted runnable. All operations are thread-safe.
+
+	This class can be used for example in connection with a "continuous search" invoked by a series of GUI events (such as a DocumentListener), but it is necessary to react to only the last event after a short period of user inactivity.
+}
+\classPatterns{Command, Strategy}
+\classEvent{on Runnable offered}{Starts a background worker thread if one is not already started}
+\classEvent{on Runnable offered}{Starts a background worker thread if one is not already started}
+\classEvent{on Runnable offered}{Starts a background worker thread if one is not already started}
+\closeClass
+
+\beginField{queue}
+\fieldDeclaration{private DelayQueue<RunDelayed> queue}
+\fieldValue{new DelayQueue<RunDelayed>()}
+\fieldComment{
+	Prioritized FIFO queue for containing the RunDelayed items that have not expired. If execOnlyLast is true, then this queue should never contain more than one item.
+}
+\closeField
+
+\beginMethod{offer}
+\methodDeclaration{public synchronized boolean offer(Runnable runnable)}
+\methodComment{
+	Inserts a Runnable object to the end of the queue. It will remain there until it is executed or another object replaces it. If execOnlyLast is set to true, the queue will be cleared before inserting this runnable to it. If there is no worker thread running, a new one will be spawned.
+}
+\methodParam{runnable}{the Runnable to be run after a pre-defined delay}
+\methodReturns{true}
+\methodThrows{NullPointerException}{if runnable is null}
+\closeMethod
+

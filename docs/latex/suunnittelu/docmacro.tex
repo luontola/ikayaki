@@ -1,27 +1,15 @@
-% macros for generating design documents and javadoc
 
-\newcommand{\ReqName}[2]{
-	\begin{tabular}{p{2.5cm}p{11.5cm}}
-	\multicolumn{2}{p{14cm}} {
-		\hspace{-0.32cm}
-		\textbf{#1: #2}
-	}\\
-}
-\newcommand{\ReqDesc}[1]{\textbf{Description} & #1\\}
-\newcommand{\ReqPrio}[1]{\textbf{Priority} & #1\\}
-\newcommand{\ReqSet}[1]{\textbf{Set by} & #1\\}
-\newcommand{\ReqUc}[1]{\textbf{Use Cases} & #1\\}
-\newcommand{\ReqEND}[0]{\end{tabular}}
-
+% Macros for generating design documents and .java files
 
 
 % MACROS FOR CLASS DOCUMENTATION
 \newcommand{\getClass}[0]{}
 \newcommand{\beginClass}[1] {
 	\subsection{#1}
-	\label{class:#1}
 	
 	\renewcommand{\getClass}[0]{#1}
+	\label{class:#1}
+	
 	\begin{tabular}{p{3cm}p{11cm}}
 }
 \newcommand{\classPackage}[1] {
@@ -36,8 +24,16 @@
 \newcommand{\classImplements}[1] {
 	\textbf{Implements} & #1 \\
 }
+\newcommand{\classCreatedBy}[1] {
+	\textbf{Created by} & #1 \\
+}
+\newcommand{\classUses}[1] {
+	\stepcounter{classUsesCounter}
+	\textbf{Uses \arabic{classUsesCounter}} & #1 (\ref{class:#1}) \\
+}
 \newcommand{\classSubclass}[1] {
-	\textbf{Subclass} & #1 (\ref{class:#1}) \\
+	\stepcounter{classSubclassCounter}
+	\textbf{Subclass \arabic{classSubclassCounter}} & #1 (\ref{class:#1}) \\
 }
 \newcommand{\classComment}[1] {
 	\multicolumn{2}{p{14cm}} {
@@ -45,10 +41,47 @@
 	}\\
 }
 \newcommand{\classPatterns}[1] {
-	\textbf{Design Patterns} & #1 \\
+	\textbf{Design patterns} & #1 \\
+}
+\newcommand{\classEvent}[2] {
+	\stepcounter{classEventCounter}
+	\textbf{Event \Alph{classEventCounter}} & \textit{#1} - #2 \\
 }
 \newcommand{\closeClass}[0] {
-	\end{tabular}
+	\end{tabular}\\
+	\setcounter{classUsesCounter}{0}
+	\setcounter{classSubclassCounter}{0}
+	\setcounter{classEventCounter}{0}
+}
+\newcounter{classUsesCounter}
+\newcounter{classSubclassCounter}
+\newcounter{classEventCounter}
+
+
+% MACROS FOR FIELD DOCUMENTATION
+\newcommand{\getField}[0]{}
+\newcommand{\beginField}[1] {
+	\renewcommand{\getField}[0]{#1}
+	\label{field:\getClass.#1}
+	
+	\begin{tabular}{p{3cm}p{11cm}}
+}
+\newcommand{\fieldDeclaration}[1] {
+	\multicolumn{2}{p{14cm}} {
+		\hspace{-0.32cm}
+		\texttt{#1}
+	}\\
+}
+\newcommand{\fieldValue}[1] {
+	\textbf{Default value} & #1 \\
+}
+\newcommand{\fieldComment}[1] {
+	\multicolumn{2}{p{14cm}} {
+		#1
+	}\\
+}
+\newcommand{\closeField}[1] {
+	\end{tabular}\\
 }
 
 
@@ -56,18 +89,15 @@
 \newcommand{\getMethod}[0]{}
 \newcommand{\beginMethod}[1] {
 	\renewcommand{\getMethod}[0]{#1}
+	\label{method:\getClass.#1}
+	
 	\begin{tabular}{p{3cm}p{11cm}}
-%	\multicolumn{2}{p{14cm}} {
-%		\hspace{-0.32cm}
-%		\textbf{Method: #1}
-%	}\\
 }
 \newcommand{\methodDeclaration}[1] {
 	\multicolumn{2}{p{14cm}} {
 		\hspace{-0.32cm}
 		\texttt{#1}
 	}\\
-%	\textbf{Declaration} &  \\
 }
 \newcommand{\methodComment}[1] {
 	\multicolumn{2}{p{14cm}} {
@@ -75,7 +105,8 @@
 	}\\
 }
 \newcommand{\methodParam}[2] {
-	\textbf{Parameter} & \textit{#1} - #2 \\
+	\stepcounter{methodParamCounter}
+	\textbf{Parameter \arabic{methodParamCounter}} & \textit{#1} - #2 \\
 }
 \newcommand{\methodReturns}[1] {
 	\textbf{Returns} & #1 \\
@@ -84,74 +115,8 @@
 	\textbf{Throws} & \textit{#1} - #2 \\
 }
 \newcommand{\closeMethod}[0] {
-	\end{tabular}
+	\end{tabular}\\
+	\setcounter{methodParamCounter}{0}
 }
-
-
-% MACROS FOR FIELD DOCUMENTATION
-\newcommand{\getField}[0]{}
-\newcommand{\beginField}[1] {
-	\renewcommand{\getField}[0]{#1}
-	\begin{tabular}{p{3cm}p{11cm}}
-%	\multicolumn{2}{p{14cm}} {
-%		\hspace{-0.32cm}
-%		\textbf{Field: #1}
-%	}\\
-}
-\newcommand{\fieldDeclaration}[1] {
-	\multicolumn{2}{p{14cm}} {
-		\hspace{-0.32cm}
-		\texttt{#1}
-	}\\
-%	\textbf{Declaration} & #1 \\
-}
-\newcommand{\fieldValue}[1] {
-	
-	\textbf{Default Value} & #1 \\
-}
-\newcommand{\fieldComment}[1] {
-	\multicolumn{2}{p{14cm}} {
-		#1
-	}\\
-}
-\newcommand{\closeField}[1] {
-	& (end of field \getField) \\
-	\end{tabular}
-}
-
-
-
-% EXAMPLE:
-
-\beginClass{RunQueue}
-\classPackage{ikayaki.util}
-\classDeclaration{public class RunQueue}
-\classExtends{Object}
-\classImplements{FooBarInterface}
-\classSubclass{RunQueue}
-\classComment{
-	Executes Runnable objects in a private worker thread after a pre-defined delay. The worker thread will terminate automatically when there are no runnables to be executed. Optionally executes only the last inserted runnable. All operations are thread-safe.
-
-	This class can be used for example in connection with a "continuous search" invoked by a series of GUI events (such as a DocumentListener), but it is necessary to react to only the last event after a short period of user inactivity.
-}
-\classPatterns{Command, Strategy}
-\closeClass
-
-\beginMethod{offer}
-\methodDeclaration{public synchronized boolean offer(Runnable runnable)}
-\methodComment{
-	Inserts a Runnable object to the end of the queue. It will remain there until it is executed or another object replaces it. If execOnlyLast is set to true, the queue will be cleared before inserting this runnable to it. If there is no worker thread running, a new one will be spawned.
-}
-\methodParam{runnable}{the Runnable to be run after a pre-defined delay}
-\methodReturns{true}
-\methodThrows{NullPointerException}{if runnable is null}
-\closeMethod
-
-\beginField{queue}
-\fieldDeclaration{private DelayQueue<RunDelayed> queue}
-\fieldValue{new DelayQueue<RunDelayed>()}
-\fieldComment{
-	Prioritized FIFO queue for containing the RunDelayed items that have not expired. If execOnlyLast is true, then this queue should never contain more than one item.
-}
-\closeField
+\newcounter{methodParamCounter}
 
