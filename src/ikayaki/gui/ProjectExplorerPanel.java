@@ -119,15 +119,15 @@ whose measuring ended.
      * directory. Will NOT send an event to MainViewPanel to open the project.
      *
      * @param parent  the parent component whose setProject() method will be called on opening a new project file.
-     * @param project the project whose directory is to be opened and which project is then selected, or null to use the
-     *                last known directory.
+     * @param project the project whose directory is to be opened and which project is then selected, or null to use
+     *                the last known directory.
      */
-    public ProjectExplorerPanel(ProjectComponent parent, Project project) {
+    public ProjectExplorerPanel(final ProjectComponent parent, Project project) {
         this.parent = parent;
 
-        // set project directory to browserField
-        if (project == null) setDirectory(getDirectoryHistory()[0].getAbsolutePath());
-        else setDirectory(project.getFile().getAbsoluteFile().getParent());
+        // set current directory to project directory, or latest directory history dir
+        if (project != null) setProject(project);
+        else setDirectory(getDirectoryHistory()[0]);
 
         // combo box / text field
         browserField = new JComboBox(getDirectoryHistory());
@@ -182,9 +182,8 @@ whose measuring ended.
                 fc.setDialogTitle("Change directory");
                 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-                if (fc.showOpenDialog(browseButton) == JFileChooser.APPROVE_OPTION) {
-                        setDirectory(fc.getSelectedFile().getPath());
-                }
+                if (fc.showOpenDialog(browseButton) == JFileChooser.APPROVE_OPTION)
+                        setDirectory(fc.getSelectedFile());
             }
         });
 
@@ -259,7 +258,7 @@ whose measuring ended.
 
         /**
          * Event A: On table click - call Project.loadProject(File) with clicked project file, call
-         * MainViewPanel.changeProject(Project) with returned Project unless null, on which case
+         * (MainViewPanel) parent.setProject(Project) with returned Project unless null, on which case
          * show error message and revert explorerTable selection to old project, if any.
          */
         explorerTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -267,17 +266,17 @@ whose measuring ended.
                 // we only want the actually selected row, and don't want to react to an already selected line
                 // (which could mean that there were load error, and that selection was reverted)
                 if (e.getValueIsAdjusting() || explorerTable.getSelectedRow() == selectedFile) return;
-                /*System.out.print("row " + explorerTable.getSelectedRow());
-                System.out.print("  listmin " + ((ListSelectionModel) e.getSource()).getMinSelectionIndex());
-                System.out.print("  e.first " + e.getFirstIndex());
-                System.out.println("  e.last " + e.getLastIndex());*/
 
-                Project loadproject = Project.loadProject(files[explorerTable.getSelectedRow()]);
+                Project project = Project.loadProject(files[explorerTable.getSelectedRow()]);
                 // load error, revert back ro old selection
-                if (loadproject == null) {
+                if (project == null) {
                     // TODO: flash selected row red for 100 ms, perhaps?
                     if (selectedFile == -1) explorerTable.clearSelection();
                     else explorerTable.setRowSelectionInterval(selectedFile, selectedFile);
+                } else {
+                    // TODO: setProject does too much, but can't call super.setProject from here :/
+                    setProject(project);
+                    parent.setProject(project);
                 }
             }
         });
@@ -286,52 +285,32 @@ whose measuring ended.
     }
 
     /**
-     * Updates autocomplete popup-menu.
-     */
-    private void doAutoComplete() {
-        File[] files = getAutocompleteFiles(browserField.getEditor().getItem().toString());
-        Arrays.sort(files);
-        setBrowserFieldPopup(files);
-
-        if (files.length > 0) {
-            // gui updating must be done from event-dispatching thread
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    // when the popup is hidden before showing, it will be automatically resized
-                    if (browserField.isPopupVisible()) browserField.hidePopup();
-                    browserFieldNextPopupAutocomplete = true;
-                    browserField.showPopup();
-                }
-            });
-        }
-    }
-
-    /**
      * Call super.setProject(project), hilight selected project, or unhilight unselected project.
      *
      * @param project project opened.
      */
     public void setProject(Project project) {
-        return; // TODO
+        super.setProject(project);
+        if (project != null) setDirectory(project.getFile().getParentFile());
+        else setDirectory(directory);
     }
 
     /**
      * Attempts to change to the given directory. Updates browserField and explorerTable with new directory.
      *
-     * @param dir directory to change to.
+     * @param directory directory to change to.
      * @return true if succesful, false otherwise.
      */
-    // TODO: this should probably be setDirectory(File), for consistency
-    private boolean setDirectory(String dir) {
-        if (dir == null || !new File(dir).isDirectory()) return false;
+    private boolean setDirectory(File directory) {
+        if (directory == null || !directory.isDirectory()) return false;
 
-        directory = new File(dir);
+        this.directory = directory;
         files = getProjectFiles(directory);
         // updateDirectoryHistory(directory); // this is already done in MainViewPanel when opening a project
-                                             // TODO: but should it be done when changing directory, too?
+                                             // TODO: but shouldn't it be done when changing directory, too?
 
         // update browserField and explorerTable with new directory
-        if (browserField != null) browserField.setSelectedItem(directory);
+        if (browserField != null) browserField.setSelectedItem(directory.getPath());
         if (explorerTableModel != null) explorerTableModel.fireTableDataChanged();
 
         return true;
@@ -375,7 +354,7 @@ whose measuring ended.
      * Attemps to add given directory into dir history.
      *
      * @param dir directory to add.
-     * @deprecated This is done in MainViewPanel
+     * @deprecated this is done in MainViewPanel.
      */
     private void updateDirectoryHistory(File dir) {
         Settings.instance().updateDirectoryHistory(dir);
@@ -405,6 +384,27 @@ whose measuring ended.
                 return (file.isDirectory() && file.getName().toLowerCase().startsWith(match.toLowerCase()));
             }
         });
+    }
+
+    /**
+     * Updates autocomplete popup-menu.
+     */
+    private void doAutoComplete() {
+        File[] files = getAutocompleteFiles(browserField.getEditor().getItem().toString());
+        Arrays.sort(files);
+        setBrowserFieldPopup(files);
+
+        if (files.length > 0) {
+            // gui updating must be done from event-dispatching thread
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    // when the popup is hidden before showing, it will be automatically resized
+                    if (browserField.isPopupVisible()) browserField.hidePopup();
+                    browserFieldNextPopupAutocomplete = true;
+                    browserField.showPopup();
+                }
+            });
+        }
     }
 
     /**
