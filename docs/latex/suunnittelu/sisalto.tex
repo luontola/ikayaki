@@ -47,17 +47,6 @@ Use case format: \nopagebreak
 \ucreq{Requirement(s) from which this use case derives; see section~\ref{seq:req}.}
 \ucend
 
-% kuvan lisäys ja siihen viittaus estetyllä rivinvaihdolla
-%\begin{figure}
-%\begin{center}
-%\includegraphics[angle=90,width=14cm]{classdiagram.eps}
-%\caption{}
-%\label{fig:classdiagram}
-%\end{center}
-%\end{figure}
-
-%See Figure~\ref{fig:classdiagram}.
-
 
 % esimerkkirakenne mukaillen kopioitu ekasta löytämästäni esimerkistä -> http://www.cs.helsinki.fi/group/assari/
 
@@ -66,14 +55,124 @@ Use case format: \nopagebreak
 \subsection{Meaning and structure of the document}
 \subsection{Glossary}
 
+
 \section{Overview of the system}
 
-Class diagram?
+% kuvan lisäys ja siihen viittaus estetyllä rivinvaihdolla
+\begin{figure}
+\begin{center}
+\includegraphics[angle=90,width=14cm]{class-diagram.eps}
+\caption{Squid class diagram}
+\label{fig:classdiagram}
+\end{center}
+\end{figure}
+
+See Figure~\ref{fig:classdiagram}.
+
 
 \section{Architecture description}
 
-\section{Some specific part to this system...}
-\section{Some other specific part to this system...}
+
+\section{Project Explorer}
+
+\subsection{ProjectExplorerPanel}
+
+Created by: MainViewPanel \\
+Uses: ProjectExplorerTableModel, ProjectExplorerPopupMenu
+
+Creates a history/autocomplete field (browserField) for choosing the project directory, a listing of project files in that directory (explorerTable) and in that listing a line for creating new project, which has a textbox for project name, an AF/TH ComboBox and a "Create new" button for actuating the creation. Also has a right-click popup menu for exporting project files.
+
+Events:
+
+- On browserField change: send browserField's text to RunQueue (singleton?) which schedules disk access and autocomplete. (This could be in a separate BrowserFieldComponent class...) \\
+- On explorerTable mouse right-click: create a ProjectExplorerPopupMenu for right-clicked project file (this could be in ProjectExplorerTableModel class). \\
+- On createNewProject mouseclick: create a new project, set it active and tell ProjectExplorerTableMode to update itself. \\
+- On browseButton mouseclick: open a FileChooser dialog for choosing the directory.
+
+Fields: (not all necessarily needed, most are also self explanatory) \\
+- BrowserFieldComponent browserField (need a separate class for this?) \\
+- ProjectExplorerTableModel explorerTable \\
+- JButton createNewProject \\
+- JButton browseButton \\
+- JTextField newProject \\
+- JComboBox newProjectType
+
+Constructors:
+
+- ProjectExplorerPanel()
+
+Creates its components, places them and sets the last project folder as current project folder.
+
+Methods:
+
+- public void createNewProject()
+
+Creates a new project, sets it active, sends it to MainViewPanel, tells explorerTable to reset newProject and newProjectType fields.
+
+- public void doBrowse()
+
+Creates a FileChooser dialog and tells explorerTable and browserField to change to directory returned by it.
+
+\subsection{ProjectExplorerTableModel}
+
+Created by: ProjectExplorerPanel
+
+Creates a list of project files in directory and handles changes the selected project and executing export choice.
+
+Events:
+
+- On newDirectoryEvent: updates list of project files on JTable \\
+- On selectTable MouseEvent: sets new Project active
+
+Fields: \\
+- JTable projectFiles
+
+Constructors:
+
+- ProjectExplorerTableModel()
+
+Creates projectFiles and gets its content from default directory
+
+- ProjectExplorerTableModel(String directory)
+
+Creates projectFiles and gets its content from given directory
+
+Methods:
+
+- public void loadDirectory(String directory)
+
+Update list to show given directory.
+
+- public void loadProject()
+
+gets selected line from list and send it to MainViewPanel.
+
+\subsection{ProjectExplorerPopupMenu}
+
+Created by: ProjectExplorerPanel
+
+Shows choices to export: AF, Thellier, Thermal and executes selected
+
+Events:
+
+- On selectItem mouseEvent: tells selected Project to create selected file from it's self
+
+Fields:
+
+Constructors:
+
+- ProjectExplorerTableModel()
+
+Creates itself
+
+Methods:
+
+- public void export(int type)
+
+Tells current project to export itself to selected type.
+
+
+\section{Some other specific part (subsystem) to this system...}
 
 \section{Package structure}
 
