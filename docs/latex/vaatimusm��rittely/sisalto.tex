@@ -330,17 +330,38 @@ Overview of UI described here..
 
 \section{Architecture overview}
 
+
 \section{External interfaces}
 
-Interface to existing software and use of it described here..
+Interfaces to existing software and hardware is described here.
 
-\subsection{Hardware control protoocls}
+\subsection{Existing program}
 
-\subsubsection{Handler control protocol}
+The existing software for using the SQUID is "2G Enterprises Data Acquisition". 
+We have access to the source code for version 2.99.3 of the program. From the 
+old source code we will reuse basically only the SerialIO component. We will 
+build an interface for communicating with the SQUID hardware by using Java and 
+JNI (Java Native Interface).
 
-\subsubsection{Measurement reading protocol}
+\subsection{Hardware control protocols}
 
-\subsubsection{Demagnetizer control protocol}
+The SQUID consists of three independent units:
+
+\begin{itemize}
+\item Automated Sample Handler System (MODEL 2G800)
+\item Automatic Sample Degaussing System (MODEL 2G600)
+\item Superconducting Rock Magnetometer (MODEL 755R or 760R)
+\end{itemize}
+
+Automated Sample Handler System controls the movement and rotation of the sample 
+holder. Its protocol is described in Appendix 1.
+
+Automatic Sample Degaussing System controls the demagnetizer. Its protocol is 
+described in Appendix 2.
+
+Superconducting Rock Magnetometer reads the measurements from the magnetometer. 
+Its protocol is described in Appendix 3.
+
 
 \section{Validation}
 
