@@ -1,20 +1,25 @@
 #!/bin/bash
+
 # super-commit-all-script; run with no arguments for help
+# Samuli Kaipiainen / 17.3.2005
+# 2005-03-17 v1.0 first version
+# 2005-03-17 v1.1 added name inserting to versio.tex
+
+hourfile=/home/group/squid/public_html/$USER/hours.txt
+verfile=./versio.tex
 
 if [ -z "$1" ]; then
 	echo "super-commit-all-script, does the following:"
 	echo "1) appends date, phase code, hours and message to"
-	echo "   /home/group/squid/public_html/$USER/hours.txt"
-	echo "2) appends message to ./versio.tex (without version or date)"
+	echo "   $hourfile"
+	echo "2) appends message and name to $verfile; name is read"
+	echo "   from the first line of hours.txt"
 	echo "3) executes 'cvs commit -m \"message\"'"
 	echo
 	echo usage: $0 "message" [hours] [phase code]
 	echo exmpl: $0 \"added some stuff\" 2,5 SU
 	exit 1
 fi
-
-hourfile=/home/group/squid/public_html/$USER/hours.txt
-verfile=./versio.tex
 
 if [ ! -w $hourfile ]; then
 	echo $0: \'$hourfile\' missing or not writable > /dev/stderr
@@ -26,11 +31,12 @@ if [ ! -w $verfile ]; then
 	exit 2
 fi
 
+name=$(head -1 $hourfile)
 date=$(date +%-d.%-m.%Y)
 code=$3
 hours=$2
 msg=$1
 
 echo $date$'\t'$code$'\t'$hours$'\t'$msg >> $hourfile &&
-echo $'\t\t'\&\& $msg >> $verfile &&
+echo $'\t\t'\&\& $msg \($name\) >> $verfile &&
 cvs commit -m "$msg"
