@@ -39,37 +39,6 @@ import java.io.File;
  * @author Esko Luontola
  */
 public class MainMenuBar extends JMenuBar {
-/*
-Event A: On newProject Clicked - Opens File chooser and opens new file in selected
-folder
-*/
-/*
-Event B: On openProject Clicked - Opens File chooser and opens selected file
-*/
-/*
-Event C: On exportToDAT Clicked - Opens File chooser and tells Project to export in
-selected file
-*/
-/*
-Event D: On exportToTDT Clicked - Opens File chooser and tells Project to export in
-selected file
-*/
-/*
-Event E: On exportToSRM Clicked - Opens File chooser and tells Project to export in
-selected file
-*/
-/*
-Event F: On configuration Clicked - Opens SettingsDialog (frame)
-*/
-/*
-Event G: On help Clicked - Opens Help dialog (own frame?)
-*/
-/*
-Event H: On about Clicked - Opens dialog with credits and version number
-*/
-/*
-Event I: On exit Clicked - closes program
-*/
 
     private MainViewPanel main;
 

@@ -510,6 +510,9 @@ public class MainViewPanel extends ProjectComponent {
         return newProjectAction;
     }
 
+    /**
+     * Customized JFileChooser for the use of getNewProjectAction(). Has controls for selecting the project's type.
+     */
     private class NewProjectFileChooser extends JFileChooser {
 
         private JComboBox projectType;
