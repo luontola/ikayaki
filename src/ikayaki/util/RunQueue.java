@@ -1,3 +1,25 @@
+/*
+ * RunQueue.java
+ *
+ * Copyright (C) 2005 University of Helsinki, www.cs.helsinki.fi
+ *
+ * This file is part of Ikayaki.
+ *
+ * Ikayaki is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Ikayaki is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Ikayaki; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
 package ikayaki.util;
 
 import java.util.concurrent.DelayQueue;
@@ -12,7 +34,8 @@ import java.util.concurrent.TimeUnit;
  * This class can be used for example in connection with a "continuous search" invoked by a series of GUI events (such
  * as a DocumentListener), but it is necessary to react to only the last event after a short period of user inactivity.
  *
- * @author Esko Luontola, 2005-03-05
+ * @author Esko Luontola
+ * @version 2005-03-05
  */
 public class RunQueue {
 
