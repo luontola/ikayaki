@@ -22,16 +22,37 @@ Poissa
 
 Tarkastettu tuotos
 	Suunnitteludokumentti 0.x, luvut:
-	1   Introduction			1 sivu
-	3   Overview of the system [?]		1 sivu
-	4   Architecture description		2-4 sivua
-	5.1 Project data [vain osa?]		20+ sivua
-	5.2 Squid interface			8 sivua
-	5.3 Squid emulator			2-4 sivua
-	5.4 Serial communication		1-4 sivua
-	6.6 Project Explorer [?]		3 sivua
+
+	1   Introduction			0,5 sivua
+		Kokonaan
+
+	3   Overview of the system		0,5 sivua
+		Kokonaan
+
+	4   Architecture description		8 sivua
+		Kokonaan
+
+	5.1 Project data			7 sivua
+		Project-luokan kuvaus, tiedostojen luonti/lataus/tallennus, 
+		mittausaskeleiden lisäys/poisto/luku, arvojen lukeminen, 
+		mittauksen kontrollointi
+	
+	5.2 Squid interface			3 sivua
+		Julkiset metodit
+
+	5.3 Squid emulator			0,5 sivua
+		Luokkakuvaus, metodit
+
+	5.4 Serial communication		3 sivua
+		Kokonaan
+
+	6.6 Project Explorer [?]		3,5 sivua
+		
+
 	6.9 Sequence and measurement data	3 sivua
-	Yhteensä 21-28 sivua ilman 5.1, +20 sen kanssa
+		Kokonaan
+
+	Yhteensä 25-29 sivua
 
 Tarkistuslista
 	S1  Viittaukset ovat oikein, ei puuttuvia viittauksia "??"
