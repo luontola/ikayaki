@@ -5,9 +5,12 @@ import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Executes Runnable objects in their own thread after a pre-defined delay. Optionally executes only the last inserted
- * object. This class can be used for example in connection with a "continuous search" invoked by lots of GUI events,
- * but it is necessary to react to only the last event.
+ * Executes Runnable objects in a private worker thread after a pre-defined delay. The worker thread will terminate
+ * automatically when there are no runnables to be executed. Optionally executes only the last inserted runnables. All
+ * operations are thread-safe.
+ * <p/>
+ * This class can be used for example in connection with a "continuous search" invoked by a series of GUI events (such
+ * as a DocumentListener), but it is necessary to react to only the last event after a short period of user inactivity.
  *
  * @author Esko Luontola, 2005-03-05
  */
