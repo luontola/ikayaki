@@ -83,11 +83,6 @@ public class MainViewPanel extends ProjectComponent {
         // TODO: if project == null, load the last open project from settings
 
         /* Init SQUID interface */
-        try {
-            squid = Squid.instance();
-        } catch (IOException ex) {
-            System.err.println("Squid failed!");
-        }
         // TODO: needs to catch an exception?
         // squid = Squid.instance();
 
