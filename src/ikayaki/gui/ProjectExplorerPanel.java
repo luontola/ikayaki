@@ -82,6 +82,12 @@ whose measuring ended.
 
     private JScrollPane explorerTableScrollPane;
 
+    /**
+     * -1==undefined, 0==filename, 1==type, 2==last modified
+     */
+    // TODO: enum?
+    private int explorerTableSortColumn = -1;
+
     private NewProjectPanel newProjectPanel;
 
     /**
@@ -154,6 +160,7 @@ whose measuring ended.
         browsePanel.add(browseButton, BorderLayout.EAST);
 
         // project file table (and its table model)
+        // TODO: these should be in inner class ProjectExplorerTable
         explorerTableModel = new ProjectExplorerTableModel();
         explorerTable = new JTable(explorerTableModel);
         explorerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -249,7 +256,22 @@ whose measuring ended.
             }
         });
 
+        /**
+         * Table sorting.
+         */
+        explorerTable.getTableHeader().addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTableHeader th = (JTableHeader) e.getSource();
+                TableColumnModel cm = th.getColumnModel();
+                int viewColumn = cm.getColumnIndexAtX(e.getX());
+                explorerTableSortColumn = cm.getColumn(viewColumn).getModelIndex();
+                // TODO: add proper table sorting here
+                System.out.println("sort " + cm.getColumn(viewColumn).getHeaderValue());
+            }
+        });
+
         // ProjectExplorerTable events
+        // TODO: these should be in inner class ProjectExplorerTable
 
         /*
              Event B: On table mouse right-click - create a ProjectExplorerPopupMenu for rightclicked
@@ -275,7 +297,9 @@ whose measuring ended.
                     else explorerTable.setRowSelectionInterval(selectedFile, selectedFile);
                 } else {
                     // TODO: setProject does too much, but can't call super.setProject from here :/
-                    setProject(project);
+                    // setProject(project);
+                    // TODO: can't test if this works, stupid JBuilder got confused again
+                    ProjectExplorerPanel.super.setProject(project);
                     parent.setProject(project);
                 }
             }
@@ -328,7 +352,16 @@ whose measuring ended.
                 return (file.isFile() && file.getName().endsWith(/*Ikayaki.FILE_TYPE*/ ""));
             }
         });
-        Arrays.sort(files);
+
+        // TODO: sort according to explorerTableSortColumn (although this is a wrong way for sorting JTable, see
+        // http://java.sun.com/docs/books/tutorial/uiswing/components/table.html for the right one).
+        // Arrays.sort(files);
+        switch (explorerTableSortColumn) {
+            case 0: // filename
+            case 1: // type
+            case 2: // last modified
+            default: // -1, no sort
+        }
 
         // set current project file index to selectedFile
         selectedFile = -1;
@@ -391,7 +424,7 @@ whose measuring ended.
      */
     private void doAutoComplete() {
         File[] files = getAutocompleteFiles(browserField.getEditor().getItem().toString());
-        Arrays.sort(files);
+        //Arrays.sort(files); // filesystem sorts them nicely
         setBrowserFieldPopup(files);
 
         if (files.length > 0) {
