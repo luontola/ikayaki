@@ -32,46 +32,38 @@ If Rita testing utility is easy enough to use it will be used in testing. Tests 
 \subsection{Unit Testing}
 \label{unit}
 
-Unit Testing is done for each class separately. Every class has it's own ClassNameTest.java class in test-directory. They should be done before and during coding class. All test cases must be executable after classes are ready.
+Unit Testing is done for each class separately. Every class has it's own ClassNameTest.java class in test-directory. They should be done before and during coding class. All test cases must be executable after classes are ready. Every class should be tested succesfully before integration tests.
 
 JUnit is simple java-based framework for testing your java classes. We use it in this project for Unit Testing. For more information visit http://junit.sourceforge.net/.
 
 First you need to download JUnit from http://sourceforge.net/project/showfiles.php?group \_id=15278 and extract it to directory (different than java directory) and set classpath for it.
 
 Then you must write test class for every class to be tested. Test classes extend TestCase. They will have test methods, one for each Test Case. Test class also need suite()-method and Main for run. Sample test class:
-	      
-  import java.util.*;
 
-  import junit.framework.*;
+{\tt
+  import java.util.*;\\
+  import junit.framework.*;\\
   
-  public class SimpleTest extends TestCase \{ 
+  public class SimpleTest extends TestCase \{\\
 
-  //Simple Test Case
+  //Simple Test Case\\
 
-  public void testEmptySimple() \{
+  public void testEmptySimple() \{\\
+	Simple simple = new Simple();\\
+	//New Simple must be empty\\
+        assertTrue(simple.isEmpty());\\
 
-	Simple simple = new Simple();
+  \}\\
 
-	//New Simple must be empty
+  public static Test suite() \{\\
+        return new TestSuite(SimpleTest.class);\\
+  \}\\
 
-        assertTrue(simple.isEmpty());
-
-  \} 
-
-  public static Test suite() \{ 
-
-        return new TestSuite(SimpleTest.class);
-
-  \}
-
-  public static void main(String args[]) \{
-
-        junit.textui.TestRunner.run(suite());
-
-  \}
-
-\}
-
+  public static void main(String args[]) \{\\
+        junit.textui.TestRunner.run(suite());\\
+  \}\\
+\}\\
+}
 Type "java junit.swingui.TestRunner SimpleTest" to run test cases for Simple.
 
 All test cases are listed in section \ref{cases}.
