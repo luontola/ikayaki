@@ -14,24 +14,24 @@ appends sequence into table. Saved sequences can be loaded from dropdown menu.}
 \classUses{MeasurementSequenceTableModel}
 \classUses{MeasurementSequencePopupMenu}
 \classEvent{On SequenceTable mouse right-click}{Create a MeasurementSequencePopupMenu.}
-\classEvent{On addSequence mouseclick}{Add measurement sequence to end
-of table and tell MeasurementSequenceTableModel to update itself.}
+\classEvent{On addSequence mouseclick}{Add measurement sequence to
+project class and tell MeasurementSequenceTableModel to update itself.}
 \classEvent{On sequenceSelector mouseclick}{Bring dropdown menu for
 selecting premade sequence.}
 \classEvent{On selecting sequence from dropdown menu}{Add measurement
 sequence to table and tell MeasurementSequenceTableModel to update itself.}
 \classEvent{On Project event}{Update contest of table to correspond
 projects state.}
-\classEvent{On Measurement event}{If measurement step is finished, add
-measurement data to appropriate row and if row being measured was
+\classEvent{On Measurement event}{If measurement step is finished, get
+measurement data from project class and if row being measured was
 selected select next row unless measurement sequence ended.}
-\classEvent{On Drag event}{Tell MeasurementSequenceTableModel to update
-itself to correspond new row order.}
+\classEvent{On Drag event}{Change measurement sequences row order in project class and
+tell MeasurementSequenceTableModel to update itself to correspond new row
+order. Order of rows with measurement data cannot be changed.}
 \closeClass
 
 \beginToc
 \tocMethod{MeasurementSequencePanel()}
-\tocMethod{MeasurementSequencePanel(Project)}
 \tocMethod{addSequence()}
 \tocMethod{setProject(Project)}
 \closeToc
@@ -69,12 +69,6 @@ itself to correspond new row order.}
 \methodComment{Creates default MeasurementSequencePanel.}
 \closeMethod
 
-\beginMethod{MeasurementSequencePanel(Project)}
-\methodDeclaration{public MeasurementSequencePanel(Project project)}
-\methodComment{Creates MeasurementSequencePanel and calculates shown
-data from project's measurement data. Higlights right row.}
-\closeMethod
-
 \beginMethod{addSequence()}
 \methodDeclaration{private void addSequence()}
 \methodComment{Adds sequence determined by textfields to end of table.}
@@ -83,7 +77,7 @@ data from project's measurement data. Higlights right row.}
 \beginMethod{setProject(Project)}
 \methodDeclaration{private void setProject(Project project)}
 \methodComment{Calls super.setProject(project), clears table and calculates shown
-data from project's measurement data. Higlights right row.}
+data from project's measurement data.}
 \closeMethod
 
 \beginClass{MeasurementSequenceTableModel}
@@ -101,13 +95,8 @@ data from project's measurement data. Higlights right row.}
 \closeToc
 
 \beginField{shownColumns}
-\fieldDeclaration{private Vector<TableColumns> shownColumns}
-\fieldComment{Currently shown columns. }
-\closeField
-
-\beginField{allColumns}
-\fieldDeclaration{private Vector<TableColumns> allColumns}
-\fieldComment{All possible columns.}
+\fieldDeclaration{private boolean volume}
+\fieldComment{Tells if volume is shown in table.}
 \closeField
 
 \beginMethod{MeasurementSequenceTableModel()}
@@ -115,21 +104,23 @@ data from project's measurement data. Higlights right row.}
 \methodComment{Creates SequenceTableModel}
 \closeMethod
 
-\beginMethod{showColumn(String)}
-\methodDeclaration{public void showColumn(String name)}
+\beginMethod{showColumn(int)}
+\methodDeclaration{public void showColumn(int name)}
 \methodComment{Shows named column.}
-\methodParam{name}{name of the column to be shown}
+\methodParam{name}{name of the column to be shown. possible values VOLUME=0}
 \closeMethod
 
-\beginMethod{hideColumn(String)}
-\methodDeclaration{public void hideColumn(String name)}
+\beginMethod{hideColumn(int)}
+\methodDeclaration{public void hideColumn(int name)}
 \methodComment{Hides named column.}
-\methodParam{name}{name of the column to be hidden}
+\methodParam{name}{name of the column to be hidden. possible values VOLUME=0}
 \closeMethod
 
 
 \beginClass{MeasurementSequencePopupMenu}
-\classComment{Allows selection if volume is shown in table and saving sequence.}
+\classComment{Allows selection if volume is shown in table and saving
+sequence. Pops up when measurement sequence table is right-clicked.
+Allows saving selected sequence or whole sequence.}
 \classPackage{ikayaki.gui}
 \classDeclaration{public class MeasurementSequencePopupMenu}
 \classExtends{JPopupMenu}
@@ -143,6 +134,7 @@ data from project's measurement data. Higlights right row.}
 
 \beginField{volume}
 \fieldDeclaration{private JCheckBox volume}
+\fieldComment{If checked volume is shown in measurement sequence table.}
 \closeField
 
 \beginField{nameLabel}
@@ -151,6 +143,7 @@ data from project's measurement data. Higlights right row.}
 
 \beginField{nameTextField}
 \fieldDeclaration{private JCheckBox nameTextField}
+\fieldComment{Name of the sequence to be saved.}
 \closeField
 
 \beginMethod{MeasurementSequencePopupMenu()}
@@ -158,7 +151,18 @@ data from project's measurement data. Higlights right row.}
 \methodComment{Creates SequencePopupMenu.}
 \closeMethod
 
-\beginMethod{saveSequence()}
+\beginMethod{saveFullSequence()}
 \methodDeclaration{private void saveSequence()}
-\methodComment{Saves current sequence into dropdown menu.}
+\methodComment{Saves whole sequence into dropdown menu.}
+\closeMethod
+
+\beginMethod{saveSelectedSequence()}
+\methodDeclaration{private void saveSequence()}
+\methodComment{Saves selected sequence into dropdown menu.}
+\closeMethod
+
+\beginMethod{remove Rows()}
+\methodDeclaration{private void removeRows()}
+\methodComment{Removes selected rows. Rows with measurement data cannot
+be removed.}
 \closeMethod

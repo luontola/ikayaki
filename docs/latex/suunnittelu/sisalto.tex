@@ -185,7 +185,10 @@ CalibrationPanel holds predefined "Holder noise" and "Standard sample" projects 
 
 Located at lower left corner of main window.
 
-Contains and allows editing of basic inforamtion of sample.
+Contains and allows editing of basic information of sample. Includes
+such fields as volume, strike and dip, which are used to make
+calculations. Includes also fields whose information is only for users
+benefit.
 
 \subsubsection{Sequence and measurement data}
 \insertdia{gui-sequence}
@@ -193,14 +196,19 @@ Contains and allows editing of basic inforamtion of sample.
 Located at center of main window.
 
 Contains and allows editing of measurement sequence. Whenever
-measurement step is finished its data is added here.
+measurement step is finished its data is added here. This data is also
+recalculated whenever some field affecting it in project infromation is
+changed.
 
 \subsubsection{Measurement details}
 \insertdia{gui-mdetails}
 
 Located at middle bottom of main window.
 
-Contains details of ongoing measurement or row selected in measrurement sequence.
+Contains details of ongoing measurement or of row selected in measrurement
+sequence. If details of ongoing measurement is shown, they are updated
+whenever new measurement data is received and when measurement step is
+finished next steps details are shown.
 
 \subsubsection{Measurement controls}
 \insertdia{gui-mcontrols}
