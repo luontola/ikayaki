@@ -1,18 +1,18 @@
 /* @ Aki Korpua
-/* date: 6.3.2005
-/*
-/* Vaikee selkoinen XML-apuluokan raakile
-/* sis‰lt‰‰ metodit:
-/* public static Document buildDom() : luodaan DOM data-rakenne (esimerkki project-xml)
-/* public static Document loadDom(String filename) : ladataan XML-tiedosto DOM rakenteeseen
-/* public static void outputDom(Document document) : tulostetaan ruudulle DOM XML muodossa
-/* public static void saveXML(Document document,String filename) : Talletetaan DOM XML-tiedostoksi
-/* public static void readDocument(Document document) : k‰yd‰‰n v‰h‰n testiksi l‰pi DOM-rakennetta
-/* public static String nodeToString(Node domNode) : apuluokka Noden tulostamiseen
-/*
-/* Document tiedoston k‰pistelyyn tarvittava data: http://java.sun.com/xml/jaxp/dist/1.1/docs/api/org/w3c/dom/Document.html
-/*
-*/
+ * date: 6.3.2005
+ *
+ * Vaikee selkoinen XML-apuluokan raakile
+ * sis‰lt‰‰ metodit:
+ * public static Document buildDom() : luodaan DOM data-rakenne (esimerkki project-xml)
+ * public static Document loadDom(String filename) : ladataan XML-tiedosto DOM rakenteeseen
+ * public static void outputDom(Document document) : tulostetaan ruudulle DOM XML muodossa
+ * public static void saveXML(Document document,String filename) : Talletetaan DOM XML-tiedostoksi
+ * public static void readDocument(Document document) : k‰yd‰‰n v‰h‰n testiksi l‰pi DOM-rakennetta
+ * public static String nodeToString(Node domNode) : apuluokka Noden tulostamiseen
+ *
+ * Document tiedoston k‰pistelyyn tarvittava data: http://java.sun.com/xml/jaxp/dist/1.1/docs/api/org/w3c/dom/Document.html
+ *
+ */
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
