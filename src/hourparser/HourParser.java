@@ -1,12 +1,12 @@
 package hourparser;
 
 import java.io.*;
-import java.util.Vector;
-import java.util.Locale;
-import java.text.NumberFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.Vector;
 
 /**
  * Reads log files that include how many hours each person has made work and creates reports from them. Takes the file
@@ -174,11 +174,15 @@ public class HourParser {
         System.out.println("  --header-file=FILE      header for the output files");
         System.out.println("  --footer-file=FILE      footer for the output files");
         System.out.println("  --base-url=URL          base url for the html links (default: " + getBaseUrl() + ")");
-        System.out.println("  --output-dir=DIR        directory where the output files are saved (default: " + getOutputDir() + ")");
+        System.out.println("  --output-dir=DIR        directory where the output files are saved (default: "
+                + getOutputDir() + ")");
         System.out.println("  --plain-index           generate only a plain index for inclusion");
-        System.out.println("  --name-prefix=STRING    prefix for the output file names (default: " + getNamePrefix() + ")");
-        System.out.println("  --name-suffix=STRING    suffix for the output file names (default: " + getNameSuffix() + ")");
-        System.out.println("  --date-format=FORMAT    format of the dates in input files (default: " + dateFormat + ")");
+        System.out.println("  --name-prefix=STRING    prefix for the output file names (default: "
+                + getNamePrefix() + ")");
+        System.out.println("  --name-suffix=STRING    suffix for the output file names (default: "
+                + getNameSuffix() + ")");
+        System.out.println("  --date-format=FORMAT    format of the dates in input files (default: "
+                + dateFormat + ")");
         System.out.println("  --locale=LOCALE         sets the system locale (default: " + getLocale() + ")");
         System.out.println("  --help                  display this help and exit");
         System.out.println("  --version               output version information and exit");

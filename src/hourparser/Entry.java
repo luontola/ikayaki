@@ -1,9 +1,9 @@
 package hourparser;
 
-import java.util.Scanner;
-import java.util.Date;
-import java.util.Calendar;
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Scanner;
 
 /**
  * Represents one row in a log file. The format of the log file is like this:

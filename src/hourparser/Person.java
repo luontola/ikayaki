@@ -1,8 +1,8 @@
 package hourparser;
 
 import java.io.*;
-import java.util.Vector;
 import java.util.Date;
+import java.util.Vector;
 
 /**
  * Represents a person who has a personal log file.

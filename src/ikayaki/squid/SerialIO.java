@@ -30,7 +30,7 @@ import javax.comm.SerialPortEventListener;
 /**
  * This class represents hardware layer to serial port communications.
  *
- * @author  Aki Sysmäläinen
+ * @author Aki Sysmäläinen
  */
 public class SerialIO implements SerialPortEventListener {
 /*

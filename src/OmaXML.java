@@ -27,7 +27,6 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.nio.charset.Charset;
 
 class OmaXML {
     // An array of names for DOM node-types
