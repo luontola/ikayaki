@@ -99,7 +99,7 @@ Use case format: \nopagebreak
 
 \setcounter{ucnum}{-1}
 \uctitle{Use case identifier and title}
-\ucnote{Possible temporary note here for project group; shall be removed from final version.}
+\ucnote{Possible temporary note here for project group; shall be removed from final version... Or maybe not.}
 \ucscenario{First scenario for doing the use case.}
 \ucscenario{Second scenario for doing the use case. ...}
 \ucpre{Preconditions for use case.}
@@ -171,7 +171,7 @@ Use case format: \nopagebreak
 \ucend
 
 \uctitle{Thermal measuring}
-\ucnotein{2005-03-02 Otherwise same as Thellier, except with Thermal all notes are ".00".}
+\ucnote{2005-03-02 Otherwise same as Thellier, except with Thermal all notes are ".00".}
 \ucscenario{Enter temperature. Click "Single step".}
 \ucpre{TH project open, sample in sample holder.}
 \ucpost{Sample measured, results on screen and appended to current project.}
@@ -209,9 +209,9 @@ Use case format: \nopagebreak
 \ucend
 
 \uctitle{Fully manual measuring}
-\ucnote{2005-02-25 Still not clear how fully manual is supposed to work; Tomas will be back on tuesday 1.3. and might tell us.}
+\ucnote{2005-03-02 Even still not clear how fully manual is supposed to work...}
 \ucscenario{Click any of the manual control components.}
-\ucpre{Manual mode enabled.}
+\ucpre{No ongoing measuring action (so that manual measuring components are enabled).}
 \ucpost{Manual action done, result on screen \ucnotein{and appended to current project? draw graphplots?}.}
 \ucerror{-}
 \ucgd{-}
@@ -233,8 +233,7 @@ Use case format: \nopagebreak
 \label{seq:ucexport}
 
 \ucsecdesc{As in exporting measurement results to another file format for other programs to use.}
-
-\ucnote{2005-03-02 The file format details will be specified later.}
+\ucnotein{2005-03-02 The file format details will be specified later.}
 
 \uctitle{Export project data into .dat file}
 \ucscenario{In project explorer file list, right-click on desired project file, click "Export .dat in current directory".}
