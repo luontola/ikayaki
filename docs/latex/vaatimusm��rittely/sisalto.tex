@@ -6,6 +6,10 @@ University of Helsinki at the Computer Science Department. The clients is  Lauri
 Pesonen with his assistants Fabio Donadini and Tomas Kohout from the Department 
 of Geophysics.
 
+The purpose of this project is to make a new user friendly Windows based 
+software program to perform the measurements, to outline the data for the 
+operator and to provide the outputs in a proper format for further processing.
+
 This document serves as a contract between client and the project group about 
 the implemented functions of the program. Particulary the use cases and 
 requirements sections of this document describes those functions.
@@ -14,32 +18,34 @@ requirements sections of this document describes those functions.
 
 \section{Overview}
 
-Department of Geophysics uses a magnetometer that works in SQUID 
-(superconducting quantum interference device) principle to measure magnetization 
-of minerals and rocks. Magnetometer is controlled by a computer software that 
-controls and reads electric components that control the device itself.
+Department of Geophysics uses a SQUID magnetometer (Superconducting Quantum 
+Interference Device) to measure magnetization of minerals and rocks. The 
+magnetometer is controlled by a computer software that controls the electric 
+components that control the device itself.
 
-The use of the present magnetometer software is complicated and unnecessarily 
-burdens the users work memory with complicated work phases and divergent 
-operation in many use cases. The work flow now requires the use of various 
-programs in different phases of the measurement, which is quite complicated and 
-slow. The functions of those programs could be combined to one. The present 
-programs are also hard to learn and teach which limits the group of users.
+The use of the present magnetometer software (2G Enterprises Data Acquisition) 
+is complicated and unnecessarily burdens the users work memory with complicated 
+work phases and divergent operation in many use cases. Currently the work flow 
+requires the use of various programs in different phases of the measurement, 
+which is quite complicated and slow. The functions of those programs could be 
+combined in to one. The present programs are also hard to learn and teach which 
+limits the group of users.
 
-User of the device must know clearly what its state is and which operation is 
-being performed at the moment. The device is delicate and expensive, so a 
-misfunction of it must be noticed early to prevent any damage. For example 
-faulty state of demagnetizer can damage the device if it's not shut down 
-manually in time.
+The user of the device must know clearly what its state is and which operation 
+is being performed at the moment. The device is delicate and expensive, so a 
+misfunction must be noticed early to prevent any damage. For example, faulty 
+state of demagnetizer can damage the device if it's not shut down manually in 
+time.
  
-The device and program are used to carry out long measurement sequences, 
-involving several stages. It's important that these sequences can be performed 
-flexibly and fast. User must be able to follow the measuring procedure and to 
-stop it and modify the sequence if there are unexpected changes in the results.
+The device and the program are used to carry out long and often variable 
+measurement sequences, involving several stages. It's important that the 
+operation sequences can be performed flexibly and fast. User must be able to 
+follow the measuring procedure and to stop it and modify the sequence if there 
+are unexpected changes in the results.
 
 Further processing and analyzing of the results occurs in various other programs 
-which use a standard file format. So the new program has to be able to export 
-these formats.
+which use a standard file format. Therefore the new program has to be able to 
+export these formats.
 
 
 
@@ -119,9 +125,9 @@ Use case format: \nopagebreak
 \ucend
 
 \uctitle{Single step measuring with (AF) demagnetization}
-\ucscenario{Enter as next AF demag step anything greater than zero, and click "Single step".}
+\ucscenario{Enter as next AF demag step a value in range of [1.1, 170.0] with steps of 0.1, and click "Single step".}
 \ucpre{AF project open, sample in sample holder.}
-\ucpost{Sample demagnetized (possibly ruined) and measured, results on screen and appended to current project.}
+\ucpost{Sample demagnetized and measured, results on screen and appended to current project.}
 \ucerror{The program shall let the user know if something went wrong, and, should the demagnetization field not be coming down, warn user with an alarm sound.}
 \ucgd{-}
 \ucreq{R1, R4, R6, R10, R14, R17, R18}
@@ -130,7 +136,7 @@ Use case format: \nopagebreak
 \uctitle{Automatic demagnetization-measuring sequence (AF sequence)}
 \ucscenario{Enter the AF sequence (see section~\ref{seq:ucseq} for ways to enter it) and click "Measure".}
 \ucpre{AF project open, sample in sample holder.}
-\ucpost{Sample demagnetized according to entered AF sequence (possibly ruined) and measured after each demagnetization, results on screen and appended to current project.}
+\ucpost{Sample demagnetized according to entered AF sequence and measured after each demagnetization, results on screen and appended to current project.}
 \ucerror{The program shall let the user know if something went wrong, and, should the demagnetization field not be coming down, warn user with an alarm sound.}
 \ucgd{\ref{seq:gduc1} whole sequence, \ref{seq:gduc3} sequence after few single steps at the beginning.}
 \ucreq{R1, R4, R6, R10, R13, R17, R18}
@@ -141,7 +147,7 @@ Use case format: \nopagebreak
   \ucscenario{While measure sequence is running, click "Pause".}
   \ucpre{Ongoing measuring sequence (UC\ref{uc:autoseq}).}
   \ucpost{Measure sequence halts after current step is done, results on screen.}
-  \ucerror{Program tells if sequence can't be paused (and something has gone terribly wrong).}
+  \ucerror{-}
   \ucgd{\ref{seq:gduc3}, Tomas pauses the sequence as the meteor demagnetizes too rapidly.}
   \ucreq{R1, R15}
   \ucend
@@ -149,14 +155,14 @@ Use case format: \nopagebreak
   \uctitle{Abort automatic measuring sequence}
   \ucscenario{While measure sequence is running or paused, click "Stop now!".}
   \ucpre{Ongoing measuring sequence (UC\ref{uc:autoseq}).}
-  \ucpost{Measure sequence halts immediately \ucnotein{and program enters "fully manual" mode?}}
+  \ucpost{Measure sequence halts immediately and program enters "fully manual" mode. The results of the interrupted measuring step might be left incomplete and the user must decide what he will do with them.}
   \ucerror{Program tells if sequence can't be aborted (and something has gone terribly wrong).}
   \ucgd{-}
   \ucreq{R1, R16}
   \ucend
 
 \uctitle{Thellier measuring}
-\ucscenario{Click "Single step".}
+\ucscenario{Enter notes about the current measurement step. \ucnotein{2005-03-02 Not in current UI prototype. Details will be specified later.} Enter temperature. Click "Single step".}
 \ucpre{TH project open, sample in sample holder.}
 \ucpost{Sample measured, results on screen and appended to current project.}
 \ucerror{As usual.}
@@ -165,8 +171,8 @@ Use case format: \nopagebreak
 \ucend
 
 \uctitle{Thermal measuring}
-\ucnote{Exactly the same as thellier?}
-\ucscenario{Click "Single step". (Temperature can be entered later, as it won't affect measuring.)}
+\ucnotein{2005-03-02 Otherwise same as Thellier, except with Thermal all notes are ".00".}
+\ucscenario{Enter temperature. Click "Single step".}
 \ucpre{TH project open, sample in sample holder.}
 \ucpost{Sample measured, results on screen and appended to current project.}
 \ucerror{As usual.}
@@ -175,7 +181,7 @@ Use case format: \nopagebreak
 \ucend
 
 \uctitle{Measure magnetometer ground noise}
-\ucnote{2005-02-23 not in current UI proto, nor planned for implementation.}
+\ucnote{2005-02-23 Not in current UI proto, nor planned for implementation.}
 \ucscenario{Click "Ground noise" and "Calibrate".}
 \ucpre{No ongoing measurements.}
 \ucpost{Ground noise measured, results on screen and appended to "Ground noise" project.}
@@ -213,7 +219,7 @@ Use case format: \nopagebreak
 \ucend
 
 \uctitle{Enable manual mode}
-\ucnote{2005-03-01 Deleted use case, still here to remind it existed, and, to keep references working :)}
+\ucnote{2005-03-01 Deleted use case, still here to remind it existed, and, to keep references working. :) Manual mode will be enabled always when no automatic measurement is running.}
 \ucscenario{Click "Manual" checkbox above the manual control components.}
 \ucpre{No ongoing measurement.}
 \ucpost{Manual mode enabled.}
@@ -227,6 +233,8 @@ Use case format: \nopagebreak
 \label{seq:ucexport}
 
 \ucsecdesc{As in exporting measurement results to another file format for other programs to use.}
+
+\ucnote{2005-03-02 The file format details will be specified later.}
 
 \uctitle{Export project data into .dat file}
 \ucscenario{In project explorer file list, right-click on desired project file, click "Export .dat in current directory".}
@@ -351,7 +359,7 @@ Use case format: \nopagebreak
 \ucsecdesc{As in automatic demagnetization-measuring sequences (AF sequences), or, thellier temperature sequences.}
 
 \uctitle{Insert sequence manually}
-\ucscenario{Click "Tesla" or "Temp" \ucnotein{Some better names for these?} column in the last line (which is empty) of measurement result table, enter value; press down, [tab?] or enter to advance to a new line, enter value; and so on.}
+\ucscenario{Click "Tesla" (actually millitesla) or "Temp" \ucnotein{Some better names for these?} column in the last line (which is empty) of measurement result table, enter value; press down, [tab?] or enter to advance to a new line, enter value; and so on.}
 \ucpre{An open project.}
 \ucpost{Sequence appended to measurement result table and current project.}
 \ucerror{-}
@@ -482,31 +490,31 @@ Overview of requirements is presented in Table~\ref{tab:requirements}.
 {\bf Identifier} & {\bf Name} & {\bf Priority} & {\bf Set by} \\
 \hline
 % regexp-generated table of requiremnts [28.2.2005 @ 17:50] // Samuli
-R1 & SQUID control and usage 		& 1 	& Customer \\
-R2 & Manual control 			& 3 	& Customer \\
-R3 & Calibration reminder 		& 2 	& Customer \\
-R4 & Warning signal 			& 3 	& Customer \\
-R5 & Create project 			& 1 	& Customer \\
-R6 & Autosave project 			& 1 	& Customer \\
-R7 & Load project 			& 1 	& Customer \\
-R8 & Edit project 			& 2 	& Customer \\
-R9 & Recalculate derived measurement data & 2 	& Customer \\
-R10 & Append project 			& 2 	& Customer \\
-R11 & Export to other file formats 	& 1 	& Customer \\
-R12 & Create a measurement sequence 	& 2 	& Customer \\
-R13 & Automatic sequence 		& 2 	& Customer \\
-R14 & Single step sequence 		& 2 	& Customer \\
-R15 & Pause automatic sequence 		& 2 	& Customer \\
-R16 & Panic abort 			& 1 	& Customer \\
-R17 & Numeric presentation of measurements & 1 	& Customer \\
-R18 & Graphic presentation of measurements & 4 	& Customer \\
-R19 & Hotkeys 				& 3 	& Customer \\
-R20 & Change hotkeys 			& 4 	& Customer \\
-QR1 & Error free 			& 1 	& Customer \\
-QR2 & Ease of use 			& 1 	& Customer \\
-QR3 & Quality of documentation 		& 2 	& Group \\
-QR4 & Performance 			& 2 	& Group \\
-QR5 & Expandable architecture 		& 2 	& Group \\
+R1 & SQUID control and usage 		& 1 	& Client \\
+R2 & Manual control 			& 3 	& Client \\
+R3 & Calibration reminder 		& 2 	& Client \\
+R4 & Warning signal 			& 3 	& Client \\
+R5 & Create project 			& 1 	& Client \\
+R6 & Autosave project 			& 1 	& Client \\
+R7 & Load project 			& 1 	& Client \\
+R8 & Edit project 			& 2 	& Client \\
+R9 & Recalculate derived measurement data & 2 	& Client \\
+R10 & Append project 			& 2 	& Client \\
+R11 & Export to other file formats 	& 1 	& Client \\
+R12 & Create a measurement sequence 	& 2 	& Client \\
+R13 & Automatic sequence 		& 2 	& Client \\
+R14 & Single step sequence 		& 2 	& Client \\
+R15 & Pause automatic sequence 		& 2 	& Client \\
+R16 & Panic abort 			& 1 	& Client \\
+R17 & Numeric presentation of measurements & 1 	& Client \\
+R18 & Graphic presentation of measurements & 3 	& Client \\
+R19 & Hotkeys 				& 3 	& Client \\
+R20 & Change hotkeys 			& 4 	& Client \\
+QR1 & Error free 			& 1 	& Client \\
+QR2 & Ease of use 			& 1 	& Client \\
+QR3 & Quality of documentation 		& 2 	& Project Team \\
+QR4 & Performance 			& 2 	& Project Team \\
+QR5 & Expandable architecture 		& 2 	& Project Team \\
 \end{tabular}
 \caption{Requirements summary}
 \label{tab:requirements}
@@ -531,9 +539,9 @@ including error handling. May also define things the software shall not do.}
 \subsubsection{Magnetometer}
 
 \ReqName{R1}{SQUID control and usage}
-\ReqDesc{Able to control Squid-magnetometer and make measurements with it.}
+\ReqDesc{Able to control Squid-magnetometer and make measurements with it. Includes the magnetometer configuration settings.}
 \ReqPrio{1}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC1, UC2, UC3, UC4, UC5, UC6, UC7, UC8, UC9, UC10, UC11}
 \ReqEND
 
@@ -541,21 +549,21 @@ including error handling. May also define things the software shall not do.}
 \ReqDesc{Able to operate the magnetometer manually. User can move and
 rotate sample handler and measure and demagnetize sample.}
 \ReqPrio{3}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC11, UC12}
 \ReqEND
 
 \ReqName{R3}{Calibration reminder}
 \ReqDesc{Magnetometer must be calibrated every 24 hours. The program will remind the user when it would be time to do calibration.}
 \ReqPrio{2}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC8, UC9, UC10}
 \ReqEND
 
 \ReqName{R4}{Warning signal}
 \ReqDesc{Program should warn user with alarm signal if magnetic field remains on for too long. The implementation depends on if the Degaussing System's protocol makes it possible.}
 \ReqPrio{3}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC2, UC3}
 \ReqEND
 
@@ -565,49 +573,49 @@ rotate sample handler and measure and demagnetize sample.}
 \ReqName{R5}{Create project}
 \ReqDesc{Create a new project file which will include the measurement sequence, measurement results and information about the sample. The file format will be custom made for this program.}
 \ReqPrio{1}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC19}
 \ReqEND
 
 \ReqName{R6}{Autosave project}
 \ReqDesc{Program will save measurement data and project information after every measurement step and modification.}
 \ReqPrio{1}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC1, UC2, UC3, UC6, UC7, UC8, UC9, UC10, UC11, UC18, UC22, UC23, UC24, UC25, UC26}
 \ReqEND
 
 \ReqName{R7}{Load project}
 \ReqDesc{Saved projects can be loaded into program.}
 \ReqPrio{1}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC20}
 \ReqEND
 
 \ReqName{R8}{Edit project}
-\ReqDesc{Ability edit project information and measurement data afterwards. \ucnotein{2005-02-28 Which data fields?}}
+\ReqDesc{Ability edit project information and measurement data afterwards. \ucnotein{2005-03-02 The editable data fields will be decided later.}}
 \ReqPrio{2}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC22}
 \ReqEND
 
 \ReqName{R9}{Recalculate derived measurement data}
 \ReqDesc{When the measurement data or the mass/volume of the specimen is changed, recalculate all numbers that have been derived from the modified data.}
 \ReqPrio{2}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC22}
 \ReqEND
 
 \ReqName{R10}{Append project}
 \ReqDesc{New measurements can be added to existing projects.}
 \ReqPrio{2}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC1, UC2, UC3, UC6, UC7, UC11, UC18, UC20}
 \ReqEND
 
 \ReqName{R11}{Export to other file formats}
-\ReqDesc{Measurements can be saved in .dat, .tdt and .srm files. \ucnotein{2005-03-01 We don't yet have their format specifications so we can't do this!}}
+\ReqDesc{Measurements can be saved in .dat, .tdt and .srm files. \ucnotein{2005-03-02 File format specifications will be recieved later.}}
 \ReqPrio{1}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC13, UC14, UC15}
 \ReqEND
 
@@ -615,51 +623,51 @@ rotate sample handler and measure and demagnetize sample.}
 \subsubsection{Measurements}
 
 \ReqName{R12}{Create a measurement sequence}
-\ReqDesc{Able to create AF and Thellier measurement sequences with several different sized steps.}
+\ReqDesc{Able to create AF, Thermal and Thellier measurement sequences with several different sized steps.}
 \ReqPrio{2}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC23, UC24}
 \ReqEND
 
 \ReqName{R13}{Automatic sequence}
-\ReqDesc{Do all the measurement steps automatically.}
+\ReqDesc{Do all the measurement steps automatically. Pause after all steps have been completed.}
 \ReqPrio{2}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC3}
 \ReqEND
 
 \ReqName{R14}{Single step sequence}
 \ReqDesc{Do only one measurement step at a time.}
 \ReqPrio{2}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC1, UC2, UC6, UC7}
 \ReqEND
 
 \ReqName{R15}{Pause automatic sequence}
 \ReqDesc{Able to stop the measurement sequence after current step. After being stopped, the user can make modifications to the sequence and continue from where the sequence was left.}
 \ReqPrio{2}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC4}
 \ReqEND
 
 \ReqName{R16}{Panic abort}
-\ReqDesc{Able to stop any measurement immediately. The demagnetizer will be turned off and the sample holder will stop where it is. The current measurement data will be discarded.}
+\ReqDesc{Able to stop any measurement immediately. The demagnetizer will be forced to zero and the sample holder will stop where it is. The current measurement step's data might be discarded.}
 \ReqPrio{1}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC5}
 \ReqEND
 
 \ReqName{R17}{Numeric presentation of measurements}
-\ReqDesc{Program shows measurement data in numbers. Measurement data will be displayed using scientic notation (1.23e4). \ucnotein{2005-03-01 What are all the numbers that need to be calculated? How are they calculated?}}
+\ReqDesc{Program shows measurement data in a table as numbers. Measurement data will be displayed using either scientic notation (1.23e4) or decimal numbers. \ucnotein{2005-03-02 The data fields (if different from the UI proto) will be decided later. The client will tell how they are calculated.}}
 \ReqPrio{1}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{UC1, UC2, UC3, UC6, UC7, UC8, UC9, UC10, UC11, UC16}
 \ReqEND
 
 \ReqName{R18}{Graphic presentation of measurements}
-\ReqDesc{Program draws graphs from measurement data. Available graph types are: Stereo Plot, Intensity, Zijderveld, Difference Vectors, Susteptibility, O63, Great Circles. \ucnotein{2005-02-28 What are the definitions of these graphs? Priorities per graph?}}
-\ReqPrio{4}
-\ReqSet{Customer}
+\ReqDesc{Program draws graphs from measurement data. The most important graph types are Stereo Plot and Intensity. Low priority are Zijderveld and Difference Vectors. Lowest priority are Susteptibility, O63 (not needed) and Great Circles (not needed). \ucnotein{2005-03-02 The client will tell the graph specifications as necessary.}}
+\ReqPrio{3}
+\ReqSet{Client}
 \ReqUc{UC1, UC2, UC3, UC6, UC7, UC8, UC9, UC10, UC11, UC17}
 \ReqEND
 
@@ -669,14 +677,14 @@ rotate sample handler and measure and demagnetize sample.}
 \ReqName{R19}{Hotkeys}
 \ReqDesc{The program has hotkeys for the most often used operations.}
 \ReqPrio{3}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{-}
 \ReqEND
 
 \ReqName{R20}{Change hotkeys}
 \ReqDesc{Possibility to change hotkey assignments.}
 \ReqPrio{4}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{-}
 \ReqEND
 
@@ -686,35 +694,35 @@ rotate sample handler and measure and demagnetize sample.}
 \ReqName{QR1}{Error free}
 \ReqDesc{The program should not crash. All the functions need to work as documented. The calculations that the program makes from measurements must be done right.}
 \ReqPrio{1}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{-}
 \ReqEND
 
 \ReqName{QR2}{Ease of use}
 \ReqDesc{Program should be easy to use for first time users after it has been explained to them how to take measurements with the magnetometer.}
 \ReqPrio{1}
-\ReqSet{Customer}
+\ReqSet{Client}
 \ReqUc{-}
 \ReqEND
 
 \ReqName{QR3}{Quality of documentation}
 \ReqDesc{The documentation must be so good that other teams can easily continue the development. Program should have good help pages for the end-users.}
 \ReqPrio{2}
-\ReqSet{Group}
+\ReqSet{Project Team}
 \ReqUc{-}
 \ReqEND
 
 \ReqName{QR4}{Performance}
-\ReqDesc{The program must keep up with the SQUID hardware. The user interface should not freeze for periods of over 0,5 seconds.}
+\ReqDesc{The program must keep up with the SQUID hardware (which is very slow compared to a PC). The user interface should not freeze for periods of over 0,5 seconds.}
 \ReqPrio{2}
-\ReqSet{Group}
+\ReqSet{Project Team}
 \ReqUc{-}
 \ReqEND
 
 \ReqName{QR5}{Expandable architecture}
-\ReqDesc{It should be possible to expand the program to process the measurement data in more ways.}
+\ReqDesc{The program structure should be modular and easy to develop further. It should be possible to expand the program to process the measurement data in more ways.}
 \ReqPrio{2}
-\ReqSet{Group}
+\ReqSet{Project Team}
 \ReqUc{-}
 \ReqEND
 
@@ -742,10 +750,10 @@ The SQUID hardware and communication with it are described in the section
 \subsection{Maintainability}
 
 It must be possible to continue the development of the program. The 
-documentation must be complete so that other teams can quickly continue the 
-development even if they have not studied user interface designing. It must be 
-possible to add new graph types to the program and export the measurement data 
-to other programs.
+documentation must be complete enough so that other teams can quickly continue 
+the development even if they have not studied user interface designing. It must 
+be possible to add new graph types to the program and export the measurement 
+data to other programs.
 
 
 
@@ -864,8 +872,8 @@ To get some idea how meteor rocks are magnetised.
 \section{Architecture overview}
 
 The program architecture can be divided into three parts: SQUID interface, 
-measurement project and user interface. The program will also communicate with 
-the SQUID hardware and local file system. A graphical representation of the 
+measurement project and user interface. The program will communicate with the 
+SQUID hardware and local file system. A graphical representation of the 
 architecture can be seen in Figure~\ref{fig:architecture}.
 
 \begin{figure}
@@ -904,9 +912,9 @@ will send commands from the user to the program.
 
 The existing software for using the SQUID is "2G Enterprises Data Acquisition". 
 We have access to the source code for version 2.99.3 of the program. From the 
-old source code we will reuse basically only the SerialIO component. We will 
-build an interface for communicating with the SQUID hardware by using Java and 
-JNI (Java Native Interface).
+old source code we will reuse basically only the SerialIO component and build an 
+interface for communicating with the SQUID hardware by using Java and JNI (Java 
+Native Interface).
 
 \subsection{Hardware control protocols}
 
