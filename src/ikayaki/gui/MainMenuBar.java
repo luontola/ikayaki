@@ -99,8 +99,8 @@ Event I: On exit Clicked - closes program
         }
 
         public void actionPerformed(ActionEvent e) {
-            SettingsPanel c = new SettingsPanel();
-            c.setVisible(true);
+            SettingsPanel.showPasswordDialog(null,
+                    "Configuration");
         }
     }
 
