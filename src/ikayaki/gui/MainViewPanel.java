@@ -540,7 +540,7 @@ public class MainViewPanel extends ProjectComponent {
 
         private Component createExtraButtons() {
             Box b = new Box(BoxLayout.X_AXIS);
-            b.setBorder(BorderFactory.createEmptyBorder(0, 11, 11, 11));
+            b.setBorder(BorderFactory.createEmptyBorder(0, 12, 11, 11));
             b.add(new JLabel("Type of Project: "));
             b.add(projectType);
             return b;
