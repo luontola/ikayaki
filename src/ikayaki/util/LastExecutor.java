@@ -169,6 +169,17 @@ public class LastExecutor implements Executor {
     }
 
     /**
+     * Removes all of the elements from the execution queue. The queue will be empty after this call returns. Will
+     * interrupt the execution thread if it happens to be running.
+     */
+    public synchronized void clear() {
+        queue.clear();
+        if (workerThread != null) {
+            workerThread.interrupt();
+        }
+    }
+
+    /**
      * Keeps on checking the LastExecutor.queue to see if there are Runnables to be executed. If there is one, execute
      * it and proceed to the next one. If an uncaught Throwable is thrown during the execution, prints an error message
      * and stack trace to stderr. If the queue is empty, this thread will set LastExecutor.workerThread to null and

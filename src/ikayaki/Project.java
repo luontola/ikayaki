@@ -24,14 +24,15 @@ package ikayaki;
 
 import ikayaki.gui.Ikayaki;
 import ikayaki.squid.Squid;
+import ikayaki.util.DocumentUtilities;
 import ikayaki.util.LastExecutor;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import javax.vecmath.Matrix3d;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -41,9 +42,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.Properties;
+import java.util.*;
 
 import static ikayaki.ProjectEvent.Type.DATA_CHANGED;
 import static ikayaki.ProjectEvent.Type.STATE_CHANGED;
@@ -287,17 +286,15 @@ project listeners.
 
         // load file and add to cache
         try {
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document document = builder.parse(file);
+            Document document = DocumentUtilities.loadFromXML(file);
+            if (document == null) {
+                return null;
+            }
             project = new Project(file, document);
             projectCache.put(file, project);
-        } catch (SAXException e) {
-            return null;
-        } catch (ParserConfigurationException e) {
-            return null;
-        } catch (IOException e) {
-            return null;
+
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             return null;
         }
         return project;
@@ -320,6 +317,9 @@ project listeners.
         }
 
         synchronized (project) {
+            // prevent any delaying autosave operations
+            project.autosaveQueue.clear();
+
             // save the project to file and remove it from cache
             if (project.getState() != IDLE) {
                 return false;
@@ -378,10 +378,85 @@ project listeners.
             throw new NullPointerException();
         }
         this.file = file;
+        String s = null;
 
-        // TODO: load all Project data from the document
+        // verify project file's version
+        Element root = document.getDocumentElement();
+        if (!root.getTagName().equals("project")) {
+            throw new IllegalArgumentException("Invalid tag name: " + root.getTagName());
+        }
+        String version = root.getAttribute("version");
+        if (version.equals("1.0")) {
 
-        updateTransforms();
+            // get type
+            s = root.getAttribute("type");
+            try {
+                type = Type.valueOf(s);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Unknown project type: " + s);
+            }
+
+            // get properties element
+            NodeList propertiesList = root.getElementsByTagName("properties");
+            if (propertiesList.getLength() != 1) {
+                throw new IllegalArgumentException("One properties required, found " + propertiesList.getLength());
+            }
+            Element properties = (Element) propertiesList.item(0);
+
+            // get default properties
+            s = properties.getAttribute("strike");
+            try {
+                strike = Double.parseDouble(s);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid strike: " + s);
+            }
+            s = properties.getAttribute("dip");
+            try {
+                dip = Double.parseDouble(s);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid dip: " + s);
+            }
+            s = properties.getAttribute("mass");
+            try {
+                mass = Double.parseDouble(s);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid mass: " + s);
+            }
+            s = properties.getAttribute("volume");
+            try {
+                volume = Double.parseDouble(s);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid volume: " + s);
+            }
+            s = properties.getAttribute("sampletype");
+            try {
+                sampleType = SampleType.valueOf(s);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid sampletype: " + s);
+            }
+            s = properties.getAttribute("orientation");
+            orientation = s.equals("1") ? true : false;
+
+            // get custom properties
+            NodeList propertyList = properties.getElementsByTagName("property");
+            for (int i = 0; i < propertyList.getLength(); i++) {
+                Element property = (Element) propertyList.item(i);
+                this.properties.put(property.getAttribute("key"), property.getAttribute("value"));
+            }
+
+            // get sequence
+            NodeList sequenceList = root.getElementsByTagName("sequence");
+            if (sequenceList.getLength() != 1) {
+                throw new IllegalArgumentException("One sequence required, found " + sequenceList.getLength());
+            }
+            updateTransforms();     // transforms must be updated before running MeasurementSequence's constructor
+            sequence = new MeasurementSequence((Element) sequenceList.item(0), this);
+
+//      } else if (version.equals("x.y")) {
+//          ... importing of file version x.y ...
+        } else {
+            throw new IllegalArgumentException("Unknown version: " + version);
+        }
     }
 
     /**
@@ -397,8 +472,36 @@ project listeners.
             return null;
         }
 
-        // TODO
+        // create document's root element
+        Element root = document.createElement("project");
+        root.setAttribute("version", "1.0");
+        root.setAttribute("type", type.name());
 
+        // create default properties
+        Element properties = document.createElement("properties");
+        properties.setAttribute("strike", Double.toString(strike));
+        properties.setAttribute("dip", Double.toString(dip));
+        properties.setAttribute("mass", Double.toString(mass));
+        properties.setAttribute("volume", Double.toString(volume));
+        properties.setAttribute("sampletype", sampleType.name());
+        properties.setAttribute("orientation", orientation ? "1" : "0");
+
+        // create custom properties
+        Set<Map.Entry<Object, Object>> entries = this.properties.entrySet();
+        for (Map.Entry<Object, Object> entry : entries) {
+            Element property = document.createElement("property");
+            property.setAttribute("key", entry.getKey().toString());
+            property.setAttribute("value", entry.getValue().toString());
+            properties.appendChild(property);
+        }
+
+        // create sequence
+        Element sequence = this.sequence.getElement(document);
+
+        // put all together
+        root.appendChild(properties);
+        root.appendChild(sequence);
+        document.appendChild(root);
         return document;
     }
 
@@ -416,6 +519,7 @@ project listeners.
      * @return true if the file was successfully written, otherwise false.
      */
     public boolean saveNow() {
+        System.out.println("saveNow");
         try {
             FileOutputStream out;
             Document document;
@@ -1290,5 +1394,28 @@ project listeners.
      */
     public enum SampleType {
         CORE, HAND
+    }
+
+    public static void main(String[] args) {
+        File file = new File("test.ika");
+        file.delete();
+
+        Project p;
+        p = Project.createThermalProject(file);
+        System.out.println("created");
+        System.out.println("load from cache: " + (p == Project.loadProject(file)));
+
+        p.setProperty("testProperty", "hulabaloo1");
+        p.setProperty("testProperty", "hulabaloo2");
+        p.setProperty("testProperty3", "hulabaloo3");
+
+        System.out.println("begin close");
+        Project.closeProject(p);
+        System.out.println("end close");
+
+        System.out.println("load from cache: " + (p == Project.loadProject(file)));
+
+        p = Project.loadProject(file);
+        p.saveNow();
     }
 }

@@ -22,6 +22,7 @@
 
 package ikayaki;
 
+import ikayaki.util.DocumentUtilities;
 import ikayaki.util.LastExecutor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -124,24 +125,21 @@ public class Settings {
 
         // load saved sequences
         if (sequencesFile.exists()) {
-            Document document;
+            Document document = null;
             try {
                 DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
                 document = builder.parse(sequencesFile);
-
-                Element root = document.getDocumentElement();
-                NodeList items = root.getChildNodes();
-                for (int i = 0; i < items.getLength(); i++) {
-                    System.out.println(items.item(i));
-                    // TODO: load MeasurementSequence objects from the document and put them to the sequences list
-                }
-
             } catch (SAXException e) {
                 e.printStackTrace();
             } catch (ParserConfigurationException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+            Element root = document.getDocumentElement();
+            NodeList sequenceList = root.getChildNodes();
+            for (int i = 0; i < sequenceList.getLength(); i++) {
+                sequences.add(new MeasurementSequence((Element) sequenceList.item(i)));
             }
         }
     }
@@ -169,6 +167,7 @@ public class Settings {
                 properties.storeToXML(out, null);
                 out.close();
                 propertiesModified = false;
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 ok = false;
@@ -180,8 +179,37 @@ public class Settings {
 
         // save sequences to file
         if (sequencesModified) {
-            // TODO: save the sequences to an XML file understood by the Settings() constructor
-            sequencesModified = false;
+
+            try {
+//                FileOutputStream out = new FileOutputStream(sequencesFile);
+                Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+
+                // TODO: lisää sequencet documenttiin
+
+                if (DocumentUtilities.storeToXML(sequencesFile, document)) {
+                    sequencesModified = false;
+                } else {
+                    ok = false;
+                }
+
+//                TransformerFactory tf = TransformerFactory.newInstance();
+//                tf.setAttribute("indent-number", new Integer(2));
+//
+//                Transformer t = tf.newTransformer();
+//                t.setOutputProperty(OutputKeys.INDENT, "yes");
+//
+//                DOMSource source = new DOMSource(document);
+//                StreamResult result = new StreamResult(new OutputStreamWriter(out, "utf-8"));
+//                t.transform(source, result);
+
+
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//                ok = false;
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+                ok = false;
+            }
         }
         return ok;
     }
