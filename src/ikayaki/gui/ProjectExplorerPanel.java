@@ -129,12 +129,7 @@ whose measuring ended.
         // browserFieldEditor.setFocusTraversalKeysEnabled(false); // disable tab-exiting from browserField
 
         // scroll to the end of the combo box's text field
-        setBrowserFieldCursorToEnd();       /* Requires a hack in the class Ikayaki:
-                                             * The caret should be visible when the program starts.
-                                             * This requires that we are currently in the event dispatch thread.
-                                             * Otherwise the setCaretPosition will be executed before the GUI is visible,
-                                             * and the JTextField will not scroll automatically to show the caret.
-                                             */
+        setBrowserFieldCursorToEnd();
 
         // browse button
         browseButton = new JButton("Browse...");
@@ -345,12 +340,6 @@ whose measuring ended.
 
         this.directory = directory;
         files = getProjectFiles(directory);
-        // updateDirectoryHistory(directory); // this is already done in MainViewPanel when opening a project
-                                              // TODO: but shouldn't it be done when changing directory, too?
-                                              // - No. Otherwise you would end up with the dropdown menu full of directories
-                                              //   that you would never use, because they contain no projects. The history
-                                              //   dropdown menu is meant for a quick access to folders with project files.
-                                              // - OK. Next TODO: remove all these superfluous comments x)
 
         // update browserField and explorerTable with new directory
         if (browserField != null) browserField.setSelectedItem(directory.getPath());
@@ -405,16 +394,6 @@ whose measuring ended.
 
         if (dirhist == null || dirhist.length == 0) return new File[] { new File("").getAbsoluteFile() };
         else return dirhist;
-    }
-
-    /**
-     * Attemps to add given directory into dir history.
-     *
-     * @param dir directory to add.
-     * @deprecated this is done in MainViewPanel.
-     */
-    private void updateDirectoryHistory(File dir) {
-        Settings.instance().updateDirectoryHistory(dir);
     }
 
     /**
