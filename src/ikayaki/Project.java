@@ -35,13 +35,8 @@ import javax.swing.event.EventListenerList;
 import javax.vecmath.Matrix3d;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import static ikayaki.ProjectEvent.Type.DATA_CHANGED;
@@ -519,37 +514,18 @@ project listeners.
      * @return true if the file was successfully written, otherwise false.
      */
     public boolean saveNow() {
-        System.out.println("saveNow");
-        try {
-            FileOutputStream out;
-            Document document;
-            synchronized (this) {
-                out = new FileOutputStream(this.getFile());
-                document = this.getDocument();
-            }
-
-            TransformerFactory tf = TransformerFactory.newInstance();
-            tf.setAttribute("indent-number", new Integer(2));
-
-            Transformer t = tf.newTransformer();
-            t.setOutputProperty(OutputKeys.INDENT, "yes");
-
-            DOMSource source = new DOMSource(document);
-            StreamResult result = new StreamResult(new OutputStreamWriter(out, "utf-8"));
-            t.transform(source, result);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        } catch (TransformerException e) {
-            e.printStackTrace();
-            return false;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        File file;
+        Document document;
+        synchronized (this) {
+            file = this.getFile();
+            document = this.getDocument();
+        }
+        if (DocumentUtilities.storeToXML(file, document)) {
+            fireProjectEvent(FILE_SAVED);
+            return true;
+        } else {
             return false;
         }
-        fireProjectEvent(FILE_SAVED);
-        return true;
     }
 
     /**

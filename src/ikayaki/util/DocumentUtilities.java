@@ -24,7 +24,7 @@ public class DocumentUtilities {
     /**
      * Emits an XML document representing the specified DOM document.
      *
-     * @param file      the file on which to emit the XML document.
+     * @param file     the file on which to emit the XML document.
      * @param document the document to be emitted.
      * @return true if the operation was successful, otherwise false.
      */
@@ -101,5 +101,4 @@ public class DocumentUtilities {
         }
         return null;
     }
-
 }

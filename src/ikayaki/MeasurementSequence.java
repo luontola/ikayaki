@@ -113,7 +113,7 @@ public class MeasurementSequence {
         Element element = document.createElement("sequence");
 
         element.setAttribute("name", name == null ? "" : name);
-        
+
         for (MeasurementStep step : steps) {
             element.appendChild(step.getElement(document));
         }

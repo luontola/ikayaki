@@ -167,7 +167,6 @@ public class Settings {
                 properties.storeToXML(out, null);
                 out.close();
                 propertiesModified = false;
-
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 ok = false;
@@ -179,33 +178,18 @@ public class Settings {
 
         // save sequences to file
         if (sequencesModified) {
-
             try {
-//                FileOutputStream out = new FileOutputStream(sequencesFile);
                 Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-
-                // TODO: lis‰‰ sequencet documenttiin
+                Element root = document.createElement("sequences");
+                for (MeasurementSequence sequence : sequences) {
+                    root.appendChild(sequence.getElement(document));
+                }
 
                 if (DocumentUtilities.storeToXML(sequencesFile, document)) {
                     sequencesModified = false;
                 } else {
                     ok = false;
                 }
-
-//                TransformerFactory tf = TransformerFactory.newInstance();
-//                tf.setAttribute("indent-number", new Integer(2));
-//
-//                Transformer t = tf.newTransformer();
-//                t.setOutputProperty(OutputKeys.INDENT, "yes");
-//
-//                DOMSource source = new DOMSource(document);
-//                StreamResult result = new StreamResult(new OutputStreamWriter(out, "utf-8"));
-//                t.transform(source, result);
-
-
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//                ok = false;
             } catch (ParserConfigurationException e) {
                 e.printStackTrace();
                 ok = false;

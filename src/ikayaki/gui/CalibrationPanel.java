@@ -58,7 +58,7 @@ or disable if measuring has started.
      * columns.
      */
     private JTable calibrationProjectTable;
-    
+
     /**
      * TableModel which holds the data for calibration projects. Unnamed inner class.
      */
