@@ -92,7 +92,7 @@ public class MainViewPanel extends ProjectComponent {
         setProject(project);
 
         /* lay out GUI components */
-        
+
         return; // TODO
     }
 
@@ -187,5 +187,6 @@ public class MainViewPanel extends ProjectComponent {
                 return;
             }
         }
+        System.exit(0);
     }
 }
