@@ -120,12 +120,8 @@ whose measuring ended.
         this.parent = parent;
 
         // set current directory to latest directory history dir
-        File[] dirHistory = getDirectoryHistory();
-        if (dirHistory.length > 0) {
-            setDirectory(dirHistory[0]);
-        } else {
-            setDirectory(new File(""));
-        }
+        // note: getDirectoryHistory() always returns at least one dir (as File[0])
+        setDirectory(getDirectoryHistory()[0]);
 
         // combo box / text field
         browserField = new JComboBox(getDirectoryHistory());
@@ -282,23 +278,41 @@ whose measuring ended.
          * Event B: On table mouse right-click - create a ProjectExplorerPopupMenu for rightclicked
          * project file.
          */
-        explorerTable.add(new PopupMenu("heppa"));
-        /*explorerTable.addMouseListener(new MouseAdapter() {
+        explorerTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 // only right-click brings popup menu
-                if (e.getButton() != MouseEvent.BUTTON2) return;
+                if (e.getButton() != MouseEvent.BUTTON3) return;
+
+                int row = explorerTable.rowAtPoint(e.getPoint());
+
+                // construct the popupmenu for every click
+                JPopupMenu explorerTablePopup = new JPopupMenu("Export");
+                JMenuItem exportDAT = new JMenuItem("Export '" + files[row].getName() + "' to DAT file...");
+                JMenuItem exportTDT = new JMenuItem("Export '" + files[row].getName() + "' to TDT file...");
+                JMenuItem exportSRM = new JMenuItem("Export '" + files[row].getName() + "' to SRM file...");
+                explorerTablePopup.add(exportDAT);
+                explorerTablePopup.add(exportTDT);
+                explorerTablePopup.add(exportSRM);
+
+                // TODO
+
+                explorerTablePopup.show(explorerTable, e.getX(), e.getY());
             }
-        });*/
+        });
 
         /**
          * ExplorerTable sorting.
          */
         explorerTable.getTableHeader().addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
+                // only left-click changes sorting
+                if (e.getButton() != MouseEvent.BUTTON1) return;
+
                 JTableHeader th = (JTableHeader) e.getSource();
                 TableColumnModel cm = th.getColumnModel();
                 int viewColumn = cm.getColumnIndexAtX(e.getX());
                 explorerTableSortColumn = cm.getColumn(viewColumn).getModelIndex();
+                // TODO: update table header somehow (to show the new sort column)
                 // TODO: add proper table sorting here
                 System.out.println("sort " + cm.getColumn(viewColumn).getHeaderValue());
             }
@@ -409,9 +423,7 @@ whose measuring ended.
      */
     private File[] getAutocompleteFiles(String dirmatch) {
         File dirfile = new File(dirmatch);
-        if (!dirfile.isAbsolute()) {
-            return File.listRoots();
-        }
+        if (!dirfile.isAbsolute()) return File.listRoots();
         File dir = dirfile.isDirectory() ? dirfile : dirfile.getParentFile();
 
         // protect against no-parent-null and invalid-dir-list-null
@@ -488,7 +500,7 @@ whose measuring ended.
         private final String[] columns = { "filename", "type", "last modified" };
 
         public String getColumnName(int column) {
-            return columns[column];
+            return columns[column] + (column == explorerTableSortColumn ? " *" : "");
         }
 
         public int getRowCount() {

@@ -243,13 +243,13 @@ public class MainViewPanel extends ProjectComponent {
             getProjectInformationPanel().setBorder(
                     BorderFactory.createTitledBorder(project.getName() + " (" + project.getType() + " Project)"));
             getExportProjectToDATAction().setEnabled(true);
-            getExportProjectToDTDAction().setEnabled(true);
+            getExportProjectToTDTAction().setEnabled(true);
             getExportProjectToSRMAction().setEnabled(true);
         } else {
             // update GUI components
             getProjectInformationPanel().setBorder(BorderFactory.createTitledBorder("Project Information"));
             getExportProjectToDATAction().setEnabled(false);
-            getExportProjectToDTDAction().setEnabled(false);
+            getExportProjectToTDTAction().setEnabled(false);
             getExportProjectToSRMAction().setEnabled(false);
         }
         this.project = project;
@@ -449,14 +449,14 @@ public class MainViewPanel extends ProjectComponent {
         return exportProjectToDATAction;
     }
 
-    public Action getExportProjectToDTDAction() {
+    public Action getExportProjectToTDTAction() {
         if (exportProjectToDTDAction == null) {
             exportProjectToDTDAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     // TODO
                 }
             };
-            exportProjectToDTDAction.putValue(Action.NAME, "DTD File...");
+            exportProjectToDTDAction.putValue(Action.NAME, "TDT File...");
             exportProjectToDTDAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_T);
         }
         return exportProjectToDTDAction;

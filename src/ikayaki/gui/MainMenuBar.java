@@ -183,7 +183,7 @@ Event I: On exit Clicked - closes program
         newProject = main.getNewProjectAction();
         openProject = main.getOpenProjectAction();
         exportProjectToDAT = main.getExportProjectToDATAction();
-        exportProjectToDTD = main.getExportProjectToDTDAction();
+        exportProjectToDTD = main.getExportProjectToTDTAction();
         exportProjectToSRM = main.getExportProjectToSRMAction();
         exit = main.getExitAction();
 
