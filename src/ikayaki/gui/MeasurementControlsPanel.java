@@ -160,6 +160,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
     public void projectUpdated(ProjectEvent event)
     {
         // TODO: set names also?
+        // TODO: measureButton changes to a pause button when a measurement is running
         measureButton.setEnabled(project.isAutoStepEnabled());
         stepButton.setEnabled(project.isSingleStepEnabled());
         stopButton.setEnabled(project.isAbortEnabled());

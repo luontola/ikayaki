@@ -1,1 +1,0 @@
-"D:\Program Files\Java\jdk1.5.0_02\bin\javah" -classpath classes JNITest
