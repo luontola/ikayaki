@@ -79,7 +79,7 @@ Use case format:
 \ucpost{Sample measured, results on screen and appended to current project.}
 \ucerror{The program shall let the user know if something went wrong.}
 \ucgd{\ref{seq:gduc3}, first few steps.}
-\ucreq{R1, R5, R9, R13, R16, R17}
+\ucreq{R1, R6, R10, R14, R17, R18}
 \ucend
 
 \uctitle{Single step measuring with (AF) demagnetization}
@@ -87,7 +87,7 @@ Use case format:
 \ucpre{AF project open, sample in sample holder.}
 \ucpost{Sample demagnetized (possibly ruined) and measured, results on screen and appended to current project.}
 \ucerror{The program shall let the user know if something went wrong, and, should the demagnetization field not be coming down, warn user with an alarm sound :)}
-\ucreq{R1, R5, R9, R13, R16, R17}
+\ucreq{R1, R4, R6, R10, R14, R17, R18}
 \ucend
 
 \uctitle{Automatic demagnetization-measuring sequence (AF sequence)}
@@ -96,7 +96,7 @@ Use case format:
 \ucpost{Sample demagnetized according to entered AF sequence (possibly ruined) and measured after each demagnetization, results on screen and appended to current project.}
 \ucerror{The program shall let the user know if something went wrong, and, should the demagnetization field be uncalm, warn user with an alarm sound x)}
 \ucgd{\ref{seq:gduc1} whole sequence, \ref{seq:gduc3} sequence after few single steps at the beginning.}
-\ucreq{R1, R5, R9, R12, R16, R17}
+\ucreq{R1, R4, R6, R10, R13, R17, R18}
 \ucend
 \label{uc:autoseq}
 
@@ -106,7 +106,7 @@ Use case format:
   \ucpost{Measure sequence halts after current step is done, results on screen.}
   \ucerror{Program tells if sequence can't be paused (and something has gone terribly wrong).}
   \ucgd{\ref{seq:gduc3}, Tomas pauses the sequence as the meteor demagnetizes too rapidly.}
-  \ucreq{R1, R14}
+  \ucreq{R1, R15}
   \ucend
 
   \uctitle{Abort automatic measuring sequence}
@@ -114,7 +114,7 @@ Use case format:
   \ucpre{Ongoing or paused measuring sequence (UC\ref{uc:autoseq}).}
   \ucpost{Measure sequence halts immediately \ucnotein{and program enters "fully manual" mode?}}
   \ucerror{Program tells if sequence can't be aborted (and something has gone terribly wrong).}
-  \ucreq{R1, R15}
+  \ucreq{R1, R16}
   \ucend
 
 \uctitle{Thellier measuring}
@@ -123,7 +123,7 @@ Use case format:
 \ucpost{Sample measured, results on screen and appended to current project.}
 \ucerror{As usual.}
 \ucgd{\ref{seq:gduc2}, temperatures already entered, one step at 380 °C.}
-\ucreq{R1, R5, R9, R13, R16, R17}
+\ucreq{R1, R6, R10, R14, R17, R18}
 \ucend
 
 \uctitle{Thermal measuring}
@@ -132,7 +132,7 @@ Use case format:
 \ucpre{TH project open, sample in sample holder.}
 \ucpost{Sample measured, results on screen and appended to current project.}
 \ucerror{As usual.}
-\ucreq{R1, R5, R9, R13, R16, R17}
+\ucreq{R1, R6, R10, R14, R17, R18}
 \ucend
 
 \uctitle{Measure magnetometer ground noise}
@@ -140,7 +140,7 @@ Use case format:
 \ucscenario{Click "Ground noise" and "Calibrate".}
 \ucpre{No ongoing measurements.}
 \ucpost{Ground noise measured, results on screen and appended to "Ground noise" project.}
-\ucreq{R1, R3, R5, R16, R17}
+\ucreq{R1, R3, R6, R17, R18}
 \ucend
 
 \uctitle{Measure empty sample holder noise}
@@ -148,7 +148,7 @@ Use case format:
 \ucpre{No ongoing measurements, empty sample holder.}
 \ucpost{Holder noise measured, results on screen and appended to "Holder noise" project.}
 \ucgd{\ref{seq:gduc1}, calibration at the beginning.}
-\ucreq{R1, R3, R5, R16, R17}
+\ucreq{R1, R3, R6, R17, R18}
 \ucend
 
 \uctitle{Measure standard sample}
@@ -156,7 +156,7 @@ Use case format:
 \ucpre{No ongoing measurements, standard sample in sample holder.}
 \ucpost{Standard sample measured, results on screen and appended to "Standard sample" project, and, predefined .std file.}
 \ucpost{Holder noise measured, results on screen and appended to "Standard sample" project.}
-\ucreq{R1, R3, R5, R16, R17}
+\ucreq{R1, R3, R6, R17, R18}
 \ucend
 
 \uctitle{Fully manual measuring}
@@ -164,7 +164,7 @@ Use case format:
 \ucscenario{Click any of the manual control components.}
 \ucpre{Manual mode enabled.}
 \ucpost{Manual action done, result on screen \ucnotein{and appended to current project? draw graphplots?}.}
-\ucreq{R1, R2, R5, R9, R16, R17}
+\ucreq{R1, R2, R6, R10, R17, R18}
 \ucend
 
 \uctitle{Enable manual mode}
@@ -188,7 +188,7 @@ Use case format:
 \ucpre{At least 1 project file in current (selected) directory.}
 \ucpost{Project data exported to .dat file.}
 \ucerror{Notify if file error occurs (such as no disk in A: drive).}
-\ucreq{R10}
+\ucreq{R11}
 \ucend
 
 \uctitle{Export (thellier) project data into .tdt file}
@@ -199,7 +199,7 @@ Use case format:
 \ucpre{At least 1 project file in current (selected) directory.}
 \ucpost{Project data exported to .tdt file.}
 \ucerror{Notify if file error occurs (such as no disk in A: drive).}
-\ucreq{R10}
+\ucreq{R11}
 \ucend
 
 \uctitle{Export single measurement details into .srm file}
@@ -210,7 +210,7 @@ Use case format:
 \ucpre{At least 1 measurement result in current project.}
 \ucpost{Measurement details exported to .srm file.}
 \ucerror{Notify if file error occurs (such as no disk in A: drive).}
-\ucreq{R10}
+\ucreq{R11}
 \ucend
 
 
@@ -225,7 +225,7 @@ Use case format:
 \ucpre{Open project.}
 \ucpost{Measurement results printed via [Java] standard printing window.}
 \ucerror{Let know if printing error occurs.}
-\ucreq{R16}
+\ucreq{R17}
 \ucend
 
 \uctitle{Print graph sheet (with 7 different graphs; described elsewhere)}
@@ -233,7 +233,7 @@ Use case format:
 \ucpre{Open project.}
 \ucpost{Measurement results printed via [Java] standard printing window.}
 \ucerror{Let know if printing error occurs.}
-\ucreq{R17}
+\ucreq{R18}
 \ucend
 
 
@@ -247,7 +247,7 @@ Use case format:
 \ucpre{Project file open.}
 \ucpost{After measurement (step) is done, new results appended to project file.}
 \ucgd{\ref{seq:gduc1}, \ref{seq:gduc2}, \ref{seq:gduc3}.}
-\ucreq{R5, R9}
+\ucreq{R6, R10}
 \ucend
 
 \uctitle{Create new project}
@@ -255,7 +255,7 @@ Use case format:
 \ucpre{Project explorer in desired directory (UC\ref{uc:choosedir}).}
 \ucpost{New project created and selected.}
 \ucgd{\ref{seq:gduc1} after calibration, \ref{seq:gduc3} at the beginning.}
-\ucreq{R4}
+\ucreq{R5}
 \ucend
 
 \uctitle{Load project}
@@ -263,7 +263,7 @@ Use case format:
 \ucpre{Project explorer in desired directory (UC\ref{uc:choosedir}). A measurement can be running at the same time (it will be highlighted in the project explorer).}
 \ucpost{Existing project loaded and selected.}
 \ucgd{\ref{seq:gduc2} all samples already as project files.}
-\ucreq{R6, R9}
+\ucreq{R7, R10}
 \ucend
 
 \uctitle{Change project explorer directory}
@@ -283,7 +283,7 @@ Use case format:
 \ucpre{Project file open (usually just created it).}
 \ucpost{Project data changed, measuring results recalculated, saved automatically to project file. Saving can happen after a short delay to avoid unnecessary file system access.}
 \ucgd{\ref{seq:gduc1} after creating new project.}
-\ucreq{R5, R7, R8}
+\ucreq{R6, R8, R9}
 \ucend
 
 
@@ -297,7 +297,7 @@ Use case format:
 \ucpre{An open project.}
 \ucpost{Sequence appended to measurement result table and current project.}
 \ucgd{\ref{seq:gduc3} after creating new project.}
-\ucreq{R5, R11}
+\ucreq{R6, R12}
 \ucend
 
 \uctitle{Insert sequence with start-step-stop values}
@@ -307,7 +307,7 @@ Use case format:
 \ucpost{Sequence from {\it start} to {\it stop}, increasing by {\it step} for every step, appended to measurement result table of the current project. Value of "Start" textfield is the previous value of "Stop". "Step" and "Stop" textfields are empty. "Step" textfield has focus.}
 \ucerror{If the last value in the old sequence (excluding completed measurements) is equal to the {\it start} value of this new sequence, then start the new sequence from {\it start + step}.}
 \ucgd{\ref{seq:gduc3} after creating new project and entering manual values.}
-\ucreq{R5, R11}
+\ucreq{R6, R12}
 \ucend
 
 \uctitle{Load sequence}
@@ -315,7 +315,7 @@ Use case format:
 \ucpre{An open project, at least 1 saved sequence.}
 \ucpost{Selected sequence appended and selected to measurement result table, and appended to current project.}
 \ucgd{\ref{seq:gduc1}, after typing project data, load "Basalt" set; \ref{seq:gduc2} set already loaded for each project file (when created).}
-\ucreq{R5}
+\ucreq{R6}
 \ucend
 \label{uc:loadseq}
 
@@ -329,7 +329,7 @@ Use case format:
 \ucpost{Editing committed, saved to current project.}
 \ucerror{Editing or screwing up measured lines won't be allowed.}
 \ucgd{\ref{seq:gduc3}, when sequence demagnetizes too rapidly, Tomas deletes unmeasured lines.}
-\ucreq{R5}
+\ucreq{R6}
 \ucend
 \label{uc:editseq}
 
@@ -412,9 +412,9 @@ rotate sample handler and measure and demagnetize sample.}
 
 \ReqId{R4}
 \ReqName{Warning signal}
-\ReqDesc{Program should warn user if magnetic field remains on for too
-long time by noise and graphic signal.}
-\ReqPrio{3}
+\ReqDesc{Program should warn user with alarm signal if magnetic field
+remains on for too long.}
+\ReqPrio{1}
 
 
 \subsubsection{Project files}
