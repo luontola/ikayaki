@@ -1,87 +1,66 @@
 
 \beginClass{Project}
 \classPackage{ikayaki}
-\classDeclaration{}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
+\classDeclaration{public class Project}
+\classCreatedBy{ProjectExplorerPanel}
+\classUses{MeasurementSequence}
+\classUses{MeasurementStep}
+\classUses{MeasurementResult}
+\classUses{MeasurementValue}
+\classUses{Squid}
+\classUses{RunQueue}
+\classUses{ProjectEvent}
+\classUses{MeasurementEvent}
 \classComment{
+	Represents a measurement project file. Project is responsible for managing and storing the data that is recieved from the magnetometer measurements. Any changes made to the project will be written to file regularly (autosave).
+	
+	Project is responsible for controlling the magnetometer through the SQUID API. Controlling the SQUID will be done in a private worker thread. Only one project at a time may access the SQUID. 
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
+\classPatterns{Facade}
+\classEvent{On property change}{Autosaving will be invoked and the project written to file after a short delay.}
+\classEvent{On measurement started/ended/paused/aborted}{ProjectEvent will be fired to all project listeners.}
+\classEvent{On measurement subphase started/completed}{MeasurementEvent will be fired to all measurement listeners.}
+\classEvent{On declination/inclination/volume changed}{The updated transformation matrix will be applied to all measurements and a ProjectEvent will be fired to all project listeners.}
 \closeClass
 
 
 \beginClass{Project.Type}
 \classPackage{ikayaki}
-\classDeclaration{}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
+\classDeclaration{public enum Type}
 \classComment{
+	The type of the project. Options are CALIBRATION, AF, THELLIER and THERMAL.
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
 \closeClass
 
 
 \beginClass{Project.State}
 \classPackage{ikayaki}
-\classDeclaration{}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
+\classDeclaration{public enum State}
 \classComment{
+	The state of the project's measurements. Options are IDLE, MEASURING, PAUSED, ABORTED.
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
 \closeClass
 
 
 \beginClass{MeasurementSequence}
 \classPackage{ikayaki}
-\classDeclaration{}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
+\classDeclaration{public class MeasurementSequence}
+\classCreatedBy{Project}
+\classUses{MeasurementStep}
 \classComment{
+	A list of measurement steps. Steps can be added or removed from the sequence.
 }
-\classPatterns{}
-\classEvent{}{}
-\classEvent{}{}
 \closeClass
 
 
 \beginClass{MeasurementStep}
 \classPackage{ikayaki}
-\classDeclaration{}
-\classExtends{}
-\classImplements{}
-\classCreatedBy{}
-\classUses{}
-\classUses{}
-\classSubclass{}
-\classSubclass{}
+\classDeclaration{public class MeasurementStep}
+\classCreatedBy{Project, MeasurementSequencePanel}
+\classUses{Project}
+\classUses{MeasurementResult}
 \classComment{
+	
 }
 \classPatterns{}
 \classEvent{}{}
