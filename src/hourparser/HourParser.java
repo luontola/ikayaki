@@ -2,6 +2,7 @@ package hourparser;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 
 /**
  * Reads log files that include how many hours each person has made work and creates reports from them. Takes the file
@@ -9,7 +10,7 @@ import java.io.IOException;
  */
 public class HourParser {
 
-    private static Person[] persons;
+    private static Vector<Person> persons;
 
     public static void main(String[] args) {
         if (args.length == 0) {
@@ -18,16 +19,19 @@ public class HourParser {
         }
 
         // read all the files given as program parameters
-        persons = new Person[args.length];
+        persons = new Vector<Person>();
         for (int i = 0; i < args.length; i++) {
             try {
-                persons[i] = new Person(new File(args[i]));
+                persons.add(new Person(new File(args[i])));
             } catch (IOException e) {
                 System.err.println("Error reading file " + args[i]);
                 e.printStackTrace();
                 System.exit(1);
             }
         }
+
+        // build reports
+        // TODO
     }
 
     private static void printHelp() {
