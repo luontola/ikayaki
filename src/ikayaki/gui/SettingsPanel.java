@@ -154,7 +154,7 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         add(contentPane, BorderLayout.CENTER);
 
         setTitle("SQUID Configuration");
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
 
 
