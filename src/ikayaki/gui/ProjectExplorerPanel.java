@@ -332,7 +332,10 @@ whose measuring ended.
         this.directory = directory;
         files = getProjectFiles(directory);
         // updateDirectoryHistory(directory); // this is already done in MainViewPanel when opening a project
-                                             // TODO: but shouldn't it be done when changing directory, too?
+                                              // TODO: but shouldn't it be done when changing directory, too?
+                                              // - No. Otherwise you would end up with the dropdown menu full of directories
+                                              //   that you would never use, because they contain no projects. The history
+                                              //   dropdown menu is meant for a quick access to folders with project files.
 
         // update browserField and explorerTable with new directory
         if (browserField != null) browserField.setSelectedItem(directory.getPath());
