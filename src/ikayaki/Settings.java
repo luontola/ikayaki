@@ -237,7 +237,7 @@ public class Settings {
      * @return Value associated with key
      */
     public synchronized Object getXXX() {
-        return null; // TODO
+        return null;
     }
 
     /**
@@ -246,7 +246,7 @@ public class Settings {
      * @return true if value was correct, otherwise false.
      */
     public synchronized boolean setXXX(Object value) {
-        return false; // TODO
+        return false;
     }
 
     public synchronized String getMagnetometerPort() {
@@ -255,7 +255,7 @@ public class Settings {
 
     public synchronized boolean setMagnetometerPort(String value) {
         setProperty("squid.magnetometer.port", value);
-        return false; // TODO
+        return true;
     }
 
     public synchronized String getHandlerPort() {
@@ -263,7 +263,8 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerPort(String value) {
-        return false; // TODO
+        setProperty("squid.handler.port", value);
+        return true;
     }
 
     public synchronized String getDegausserPort() {
@@ -271,7 +272,8 @@ public class Settings {
     }
 
     public synchronized boolean setDegausserPort(String value) {
-        return false; // TODO
+        setProperty("squid.degausser.port", value);
+        return true;
     }
 
     public synchronized double getMagnetometerXAxisCalibration() {
@@ -279,7 +281,8 @@ public class Settings {
     }
 
     public synchronized boolean setMagnetometerXAxisCalibration(double value) {
-        return false; // TODO
+        setProperty("squid.magnetometer.xaxiscalibration", Double.toString(value));
+        return true;
     }
 
     public synchronized double getMagnetometerYAxisCalibration() {
@@ -287,7 +290,8 @@ public class Settings {
     }
 
     public synchronized boolean setMagnetometerYAxisCalibration(double value) {
-        return false; // TODO
+        setProperty("squid.magnetometer.yaxiscalibration", Double.toString(value));
+        return true;
     }
 
     public synchronized double getMagnetometerZAxisCalibration() {
@@ -295,7 +299,8 @@ public class Settings {
     }
 
     public synchronized boolean setMagnetometerZAxisCalibration(double value) {
-        return false; // TODO
+        setProperty("squid.magnetometer.zaxiscalibration", Double.toString(value));
+        return true;
     }
 
     public synchronized int getDegausserRamp() {
@@ -303,7 +308,8 @@ public class Settings {
     }
 
     public synchronized boolean setDegausserRamp(int value) {
-        return false; // TODO
+        setProperty("squid.degausser.ramp", Integer.toString(value));
+        return true;
     }
 
     public synchronized int getDegausserDelay() {
@@ -311,7 +317,8 @@ public class Settings {
     }
 
     public synchronized boolean setDegausserDelay(int value) {
-        return false; // TODO
+        setProperty("squid.degausser.delay", Integer.toString(value));
+        return true;
     }
 
     public synchronized int getHandlerAcceleration() {
@@ -319,7 +326,8 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerAcceleration(int value) {
-        return false; // TODO
+        setProperty("squid.handler.acceleration", Integer.toString(value));
+        return true;
     }
 
     public synchronized int getHandlerDeceleration() {
@@ -327,7 +335,8 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerDeceleration(int value) {
-        return false; // TODO
+        setProperty("squid.handler.deceleration", Integer.toString(value));
+        return true;
     }
 
     public synchronized int getHandlerVelocity() {
@@ -335,7 +344,8 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerVelocity(int value) {
-        return false; // TODO
+        setProperty("squid.handler.velocity", Integer.toString(value));
+        return true;
     }
 
     public synchronized int getHandlerMeasurementVelocity() {
@@ -343,7 +353,8 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerMeasurementVelocity(int value) {
-        return false; // TODO
+        setProperty("squid.handler.measurementvelocity", Integer.toString(value));
+        return true;
     }
 
     public synchronized int getHandlerTransverseYAFPosition() {
@@ -351,7 +362,8 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerTransverseYAFPosition(int value) {
-        return false; // TODO
+        setProperty("squid.handler.pos.transverseyaf", Integer.toString(value));
+        return true;
     }
 
     public synchronized int getHandlerAxialAFPosition() {
@@ -359,7 +371,8 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerAxialAFPosition(int value) {
-        return false; // TODO
+        setProperty("squid.handler.pos.axialaf", Integer.toString(value));
+        return true;
     }
 
     public synchronized int getHandlerSampleLoadPosition() {
@@ -367,7 +380,8 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerSampleLoadPosition(int value) {
-        return false; // TODO
+        setProperty("squid.handler.pos.sampleload", Integer.toString(value));
+        return true;
     }
 
     public synchronized int getHandlerBackgroundPosition() {
@@ -375,7 +389,8 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerBackgroundPosition(int value) {
-        return false; // TODO
+        setProperty("squid.handler.pos.background", Integer.toString(value));
+        return true;
     }
 
     public synchronized int getHandlerMeasurementPosition() {
@@ -383,15 +398,8 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerMeasurementPosition(int value) {
-        return false; // TODO
-    }
-
-    public synchronized int getHandlerRotation() {
-        return Integer.parseInt(getProperty("squid.handler.rotation", "0"));
-    }
-
-    public synchronized boolean setHandlerRotation(int value) {
-        return false; // TODO
+        setProperty("squid.handler.pos.measurement", Integer.toString(value));
+        return true;
     }
 
     public synchronized int getHandlerRightLimit() {
@@ -399,7 +407,17 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerRightLimit(int value) {
-        return false; // TODO
+        setProperty("squid.handler.pos.rightlimit", Integer.toString(value));
+        return true;
+    }
+
+    public synchronized int getHandlerRotation() {
+        return Integer.parseInt(getProperty("squid.handler.rotation", "0"));
+    }
+
+    public synchronized boolean setHandlerRotation(int value) {
+        setProperty("squid.handler.rotation", Integer.toString(value));
+        return true;
     }
 
     /**
