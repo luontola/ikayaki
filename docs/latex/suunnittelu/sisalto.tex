@@ -81,22 +81,23 @@ Note that the structure of this section is exactly the same as sections \ref{sec
 
 Class diagram of data classes is in Figure~\ref{fig:classdiagram1}.
 
-Data classes are in package ikayaki, ikayaki.squid or ikayaki.util.
+Data classes are in packages ikayaki, ikayaki.squid and ikayaki.util.
 
-Package ikayaki holds generic data classes, ikayaki.squid holds classes loosely related to squid interface, and ikayaki.util has utilities (\ref{sec:utilities}).
+Package ikayaki holds generic data classes, ikayaki.squid holds classes loosely related to the squid interface, and ikayaki.util has utilities (\ref{sec:utilities}).
 
 \subsubsection{Project data}
 
+Responsible for holding all the measurement data and controlling the SQUID. Most of the GUI classes use the Project class. When the state of the project changes, the Project class fires ProjectEvents and MeasurementEvents to the GUI classes, which in turn will call the Project class to get the changed information.
+
 \subsubsection{Squid interface}
 
-Squid Interface offers Project class interface to safely control SQUID magnetometer. It holds three subclasses that 
-handle communication to to three separate parts of SQUID (Handler,Degausser,Magnetometer).
+Squid Interface offers the Project class an interface to safely control the SQUID magnetometer. It holds three subclasses that handle communication to to three separate parts of the SQUID (Handler, Degausser and Magnetometer).
 
 Classes are Squid, Handler, Magnetometer, Degausser.
 
 \subsubsection{Squid emulator}
 
-This is separate from other and is used only for testing Squid Interface that it works correctly.
+This is separate from other and is used only for testing the Squid Interface that it works correctly.
 
 \subsubsection{Serial communication}
 
@@ -104,8 +105,12 @@ SerialIO and classes related to it takes care of the harware layer of serial com
 
 \subsubsection{Global settings}
 
+Global properties that are used all around the program. The Settings class provides a global point for retrieving and modifying the properties.
+
 \subsubsection{Utilities}
 \label{sec:utilities}
+
+Miscellaneous classes that are used nowhere in particular.
 
 
 \subsection{GUI classes and methods}
