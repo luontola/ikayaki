@@ -28,7 +28,12 @@ import org.w3c.dom.NodeList;
 
 import javax.vecmath.Matrix3d;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -412,13 +417,8 @@ public class MeasurementStep {
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        Document document = null;
-        try {
-            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
+    public static void main(String[] args) throws Exception {
+        Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 
         MeasurementStep step = new MeasurementStep();
         System.out.println(step);
@@ -444,7 +444,20 @@ public class MeasurementStep {
         step.setDone();
         System.out.println(step);
 
-        step = new MeasurementStep(step.getElement(document));
+        Element element = step.getElement(document);
+        document.appendChild(element);
+
+        step = new MeasurementStep(element);
         System.out.println(step);
+
+        TransformerFactory tf = TransformerFactory.newInstance();
+        tf.setAttribute("indent-number", new Integer(2));
+
+        Transformer t = tf.newTransformer();
+        t.setOutputProperty(OutputKeys.INDENT, "yes");
+
+        DOMSource source = new DOMSource(document);
+        StreamResult result = new StreamResult(new OutputStreamWriter(System.out, "utf-8"));
+        t.transform(source, result);
     }
 }

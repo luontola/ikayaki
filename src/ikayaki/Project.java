@@ -386,11 +386,20 @@ project listeners.
 
     /**
      * Exports this project to a DOM document.
-     * 
+     *
      * @return the exported document, or null if there was a error.
      */
     public synchronized Document getDocument() {
-        return null; // TODO
+        Document document = null;
+        try {
+            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        } catch (ParserConfigurationException e) {
+            return null;
+        }
+
+        // TODO
+
+        return document;
     }
 
     /**
