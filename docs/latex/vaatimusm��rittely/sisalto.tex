@@ -14,9 +14,12 @@ Expected readership of this document here..
 
 Technical terms here..
 
+
+
 \section{Overview}
 
 A brief overview of the problem domain..
+
 
 
 \section{Use cases}
@@ -316,6 +319,7 @@ Use case format:
 \ucend
 
 
+
 \section{User requirements}
 \label{seq:req}
 
@@ -329,97 +333,139 @@ Goals of the software set by client..
 
 \subsection{Functional requirements}
 
+\subsubsection{Magnetometer}
+
 \ReqId{R1}
-\ReqName{Basic}
+\ReqName{SQUID control and usage}
 \ReqDesc{Able to control Squid-magnetometer and make measurements with it.}
 \ReqPrio{1}
 
 \ReqId{R2}
-\ReqName{Saving}
-\ReqDesc{Measurements can be saved in .dat, .dtd and .srm files.}
-\ReqPrio{1}
+\ReqName{Manual control}
+\ReqDesc{Able to operate the magnetometer manually. (TODO: what this means?)}
+\ReqPrio{2}
 
 \ReqId{R3}
-\ReqName{Auto saving}
-\ReqDesc{Program will save mesurement data after every measurement step.}
-\ReqPrio{1}
+\ReqName{Calibration reminder}
+\ReqDesc{Magnetometer must be calibrated every 24 hours. The program will remind the user when it would be time to do calibration.}
+\ReqPrio{2}
+
+
+\subsubsection{Project files}
 
 \ReqId{R4}
-\ReqName{Loading}
-\ReqDesc{Saved mesurement date can be loaded into program.}
-\ReqPrio{2}
-
-\ReqId{R5}
-\ReqName{Filemanagement}
-\ReqDesc{New data can be added to existing datafiles.}
-\ReqPrio{2}
-
-\ReqId{R6}
-\ReqName{Numeric presentation of data}
-\ReqDesc{Program shows measurement data in numbers.}
+\ReqName{Create project}
+\ReqDesc{Create a new project file which will include the measurement sequence, measurement results and information about the sample. The file format will be custom made for this program.}
 \ReqPrio{1}
 
+\ReqId{R5}
+\ReqName{Autosave project}
+\ReqDesc{Program will save measurement data and project information after every measurement step and modification.}
+\ReqPrio{1}
+
+\ReqId{R6}
+\ReqName{Load project}
+\ReqDesc{Saved projects can be loaded into program.}
+\ReqPrio{2}
+
 \ReqId{R7}
-\ReqName{Graphic presentation of data}
-\ReqDesc{Program draws graphs from measurement data.}
-\ReqPrio{3}
+\ReqName{Edit project}
+\ReqDesc{Ability edit project information and measurement data afterwards. (TODO: which data fields?)}
+\ReqPrio{2}
 
 \ReqId{R8}
-\ReqName{Editing}
-\ReqDesc{Ability edit data afterwards.}
+\ReqName{Recalculate derived measurement data}
+\ReqDesc{When the measurement data or the mass/volume of the specimen is changed, recalculate all numbers that have been derived from the modified data.}
 \ReqPrio{2}
 
 \ReqId{R9}
-\ReqName{Recalculation}
-\ReqDesc{Recalculate based on changed data.}
+\ReqName{Append project}
+\ReqDesc{New measurements can be added to existing projects.}
 \ReqPrio{2}
 
 \ReqId{R10}
-\ReqName{Control}
-\ReqDesc{Ability to stop any action immediately.}
+\ReqName{Export to other file formats}
+\ReqDesc{Measurements can be saved in .dat, .dtd and .srm files.}
 \ReqPrio{1}
 
+
+\subsubsection{Measurements}
+
 \ReqId{R11}
-\ReqName{Sequence}
-\ReqDesc{Able to create measuring sequences with several different sized steps.}
+\ReqName{Create a measurement sequence}
+\ReqDesc{Able to create AF and Thellier measurement sequences with several different sized steps.}
 \ReqPrio{2}
 
 \ReqId{R12}
-\ReqName{Sequence control}
-\ReqDesc{Able to stop sequence after current step.}
+\ReqName{Automatic sequence}
+\ReqDesc{Do all the measurement steps automatically.}
 \ReqPrio{2}
 
 \ReqId{R13}
-\ReqName{Hotkeys}
-\ReqDesc{Possibility to create and change hotkeys.}
-\ReqPrio{4}
+\ReqName{Single step sequence}
+\ReqDesc{Do only one measurement step at a time.}
+\ReqPrio{2}
 
 \ReqId{R14}
-\ReqName{Manual}
-\ReqDesc{Able to operate magnetometer manually.}
+\ReqName{Pause automatic sequence}
+\ReqDesc{Able to stop the measurement sequence after current step. After being stopped, the user can make modifications to the sequence and continue from where the sequence was left.}
 \ReqPrio{2}
 
-ReqId{R15}
-\ReqName{Calibration}
-\ReqDesc{Magnetometer must be calibrated every 24h..}
-\ReqPrio{2}
+\ReqId{R15}
+\ReqName{Panic abort}
+\ReqDesc{Able to stop any measurement immediately. The demagnetizer will be turned off and the sample holder will stop where it is. The current measurement data will be discarded.}
+\ReqPrio{1}
 
-ReqId{RXX}
+\ReqId{R16}
+\ReqName{Numeric presentation of measurements}
+\ReqDesc{Program shows measurement data in numbers. Measurement data will be displayed using scientic notation (1.23e4).}
+\ReqPrio{1}
+
+\ReqId{R17}
+\ReqName{Graphic presentation of measurements}
+\ReqDesc{Program draws graphs from measurement data. Available grap types are: Stereo Plot, Intensity, Zijderveld, Difference Vectors, Susteptibility, O63, Great Circles. (TODO: what are the definitions of these graphs? priorities per graph?)}
+\ReqPrio{3}
+
+
+\subsubsection{Others}
+
+\ReqId{R18}
+\ReqName{Hotkeys}
+\ReqDesc{The program has hotkeys for the most often used operations.}
+\ReqPrio{3}
+
+\ReqId{R19}
+\ReqName{Change hotkeys}
+\ReqDesc{Possibility to change hotkey assignments.}
+\ReqPrio{4}
+
+\ReqId{RXX}
 \ReqName{}
 \ReqDesc{}
 \ReqPrio{}
 
+
 \subsection{Quality requirements}
 
 \ReqId{QR1}
+\ReqName{Accuracy of measurements}
+\ReqDesc{The calculations that the program makes from measurements, must be done right.}
+\ReqPrio{1}
+
+\ReqId{QR2}
 \ReqName{Ease of use}
 \ReqDesc{Program should be easy to use for first time users.}
 \ReqPrio{1}
 
-\ReqId{QR2}
-\ReqName{Help pages}
+\ReqId{QR3}
+\ReqName{User guide}
 \ReqDesc{Program should have good help pages.}
 \ReqPrio{3}
+
+\ReqId{QRXX}
+\ReqName{}
+\ReqDesc{}
+\ReqPrio{}
 
 
 \subsection{Environment}
@@ -429,8 +475,13 @@ The computer that will run this program will be equal or better to 1GHz CPU,
 hardware and communication with it is described in the section "External 
 interfaces".
 
-
 \subsection{Maintainability}
+
+It must be possible to continue the development of the program. The 
+documentation must be complete so that other teams can quickly continue the 
+development even if they have not studied user interface designing. It must be 
+possible to add new grap types to the program and export the measurement data to 
+other programs.
 
 
 \subsection{Restrictions}
@@ -443,11 +494,13 @@ We need not prepare to changing of magnetometer, as new
 magnenetometer will probably have its own program.
 
 
+
 \section{System requirements / Functions}
 
 Specific explanation of the functions to be implemented
 
 \subsection{System restrictions}
+
 
 
 \section{User interface}
@@ -467,6 +520,7 @@ Overview of UI described here..
 \label{seq:gduc3}
 
 
+
 \section{Architecture overview}
 
 \begin{figure}
@@ -476,6 +530,27 @@ Overview of UI described here..
 \label{fig:architecture}
 \end{center}
 \end{figure}
+
+The program architecture can be divided into three parts: SQUID interface, 
+measurement project and user interface. The program will also communicate with 
+the SQUID hardware and local file system.
+
+SQUID interface is responsible for controlling the hardware in an orderly 
+manner. It will provide high- and low-level controls for using the hardware. 
+Communication with the hardware is done via COM ports. The SQUID interface will 
+hide the protocol-level commands from the programmer and prevent illegal use of 
+the hardware.
+
+Measurement project is responsible for managing the project information, 
+measurement sequence and measurement data. It will recieve commands from the 
+user interface and notify the UI when the state of the project changes. It will 
+send commands to the SQUID interface, recieve measurement data and save it. When 
+the internal data of the project changes, the copy on the local file system will 
+be automatically synchronized after a short delay (1 second or less).
+
+User interface is responsible for communicating with the user of the program. It 
+will update itself whenever the state of the measurement project is changed. It 
+will send commands from the user to the program.
 
 
 \section{External interfaces}
@@ -508,6 +583,7 @@ described in Appendix 2.
 
 Superconducting Rock Magnetometer reads the measurements from the magnetometer. 
 Its protocol is described in Appendix 3.
+
 
 
 \section{Validation}
