@@ -111,7 +111,7 @@
 
 \beginClass{Degausser}
 \classComment{
-    Offers an interface for controlling the degausser (demagnetizer). Because the data link is implemented in the degausser by a single board computer running a small basic program, the response time of the degausser to commands is slow. This class will make sure that would calls are not made faster than the device can handle.
+    Offers an interface for controlling the degausser (demagnetizer). Because the data link is implemented in the degausser by a single board computer running a small basic program, the response time of the degausser to commands is slow. This class will make sure that commands are not sent faster than the device can handle.
 }
 \classPackage{ikayaki.squid}
 \classDeclaration{public class Degausser}
@@ -216,7 +216,7 @@
 \beginMethod{demagnetize(int)}
 \methodDeclaration{public boolean demagnetize(int amplitude)}
 \methodComment{
-    Performs full sequence to demagnetize with given amplitude. Blocking method.
+    Performs full sequence to demagnetize all axels with the given amplitude. Blocking method.
 }
 \methodParam{amplitude}{amplitude to demag.}
 \methodReturn{true if process was sended succesfully, otherwise false.}
@@ -232,9 +232,9 @@
 \beginMethod{isOK()}
 \methodDeclaration{public boolean isOK()}
 \methodComment{
-    checks if connection is ok.
+    Checks if connection is ok.
 }
-\methodReturn{True if ok}
+\methodReturn{true if ok.}
 \closeMethod
 
 
@@ -248,39 +248,39 @@
 \classCreatedBy{Squid}
 \classUses{Settings}
 \classUses{SerialIO}
-\classEvent{On New IO Message }{reads message and puts it in Buffer}
+\classEvent{On new IO message}{reads message and puts it in a buffer}
 \closeClass
 
 \beginField{messageBuffer}
 \fieldDeclaration{private Stack messageBuffer}
-\fieldComment{buffer for incoming messages, readed when needed.}
+\fieldComment{Buffer for incoming messages, readed when needed.}
 \closeField
 
 \beginField{status}
 \fieldDeclaration{private String status}
-\fieldComment{Handlers current status}
+\fieldComment{Handlers current status.}
 \closeField
 
 \beginField{comPort}
 \fieldDeclaration{private String comPort}
-\fieldComment{COM port for communication}
+\fieldComment{COM port for communication.}
 \closeField
 
 \beginField{acceleration}
 \fieldDeclaration{private int acceleration}
-\fieldComment{value between 0 and 127 default 5. Settings in the
+\fieldComment{Value between 0 and 127 default 5. Settings in the
 20-50 range are usually employed.}
 \closeField
 
 \beginField{deceleration}
 \fieldDeclaration{private int deceleration}
-\fieldComment{value between 0 and 127 default 10. Settings in the
+\fieldComment{Value between 0 and 127 default 10. Settings in the
 20-50 range are usually employed.}
 \closeField
 
 \beginField{velocity}
 \fieldDeclaration{private int velocity}
-\fieldComment{value between 50 and 12 000. The
+\fieldComment{Value between 50 and 12 000. The
 decimal number issued is 10 times the actual pulse rate to the motor. Since the
 motor requires 200 pulses (full step) or 400 pulses (half step) per revolution,
 a speed setting of M10000 sets the motor to revolve at 5 revolutions per second
@@ -291,32 +291,32 @@ factory for half stepping.}
 
 \beginField{measurementVelocity}
 \fieldDeclaration{private int measurementVelocity}
-\fieldComment{speed in measurement, should be small}
+\fieldComment{Speed in measurement, should be small.}
 \closeField
 
 \beginField{handlerStatus}
 \fieldDeclaration{private String handlerStatus}
-\fieldComment{5 end of move, previous G command complete, 7 hard limit stop, G motor is currently indexing}
+\fieldComment{5 end of move, previous G command complete, 7 hard limit stop, G motor is currently indexing.}
 \closeField
 
 \beginField{currentPosition}
 \fieldDeclaration{private int currentPosition}
-\fieldComment{value between 1 and 16,777,215}
+\fieldComment{Value between 1 and 16,777,215.}
 \closeField
 
 \beginField{homePosition}
 \fieldDeclaration{private int homePosition}
-\fieldComment{value between 1 and 16,777,215}
+\fieldComment{Value between 1 and 16,777,215.}
 \closeField
 
 \beginField{transverseYAFPosition}
 \fieldDeclaration{private int transverseYAFPosition}
-\fieldComment{AF demag position for transverse}
+\fieldComment{AF demag position for transverse.}
 \closeField
 
 \beginField{axialAFPosition}
 \fieldDeclaration{private int axialAFPosition}
-\fieldComment{axial AF demag position in steps, must be divisible by 10. Relative to Home.}
+\fieldComment{Axial AF demag position in steps, must be divisible by 10. Relative to Home.}
 \closeField
 
 \beginField{backgroundPosition}
@@ -331,7 +331,7 @@ factory for half stepping.}
 
 \beginField{currentRotation}
 \fieldDeclaration{private int currentRotation}
-\fieldComment{angles are between 0 (0) and 2000 (360)}
+\fieldComment{Angles are between 0 (0) and 2000 (360).}
 \closeField
 
 \beginMethod{Handler()}
