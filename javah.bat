@@ -1,1 +1,1 @@
-"D:\Program Files\Java\jdk1.5.0_01\bin\javah" -classpath classes JNITest
+"D:\Program Files\Java\jdk1.5.0_02\bin\javah" -classpath classes JNITest

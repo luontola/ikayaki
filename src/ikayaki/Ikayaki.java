@@ -24,15 +24,14 @@ package ikayaki;
 
 import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
-import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
-import com.jgoodies.looks.plastic.theme.DesertBluer;
-import com.jgoodies.looks.plastic.theme.DesertBlue;
 import com.jgoodies.looks.plastic.theme.SkyBlue;
-import com.jgoodies.looks.plastic.theme.SkyBluer;
 import ikayaki.gui.MainViewPanel;
+import jutil.JUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -64,6 +63,7 @@ be closed.
     public Ikayaki(Project project) throws HeadlessException {
         super(APP_NAME + " " + APP_VERSION);
 
+
         PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
         try {
             UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
@@ -79,12 +79,39 @@ be closed.
         add(main.getStatusBar(), "South");
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        setLocationByPlatform(true);
         pack();
-        setSize(800, 600);
 
+        // restore size and position
+        setSize(Settings.instance().getWindowWidth(), Settings.instance().getWindowHeight());
+        setVisible(true);
+
+        if (Settings.instance().getWindowMaximized() && System.getProperty("os.name").startsWith("Windows")) {
+            // native code for maximizing the window
+            try {
+                int hwnd = JUtil.getHwnd(getTitle());
+                JUtil.setWindowMaximized(hwnd);
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        } else {
+            setLocationByPlatform(true);
+        }
+
+        addComponentListener(new ComponentAdapter() {
+            @Override public void componentResized(ComponentEvent e) {
+                if ((getExtendedState() & MAXIMIZED_BOTH) == 0) {
+                    Settings.instance().setWindowWidth(getWidth());
+                    Settings.instance().setWindowHeight(getHeight());
+                }
+            }
+        });
         addWindowListener(new WindowAdapter() {
             @Override public void windowClosing(WindowEvent e) {
+                if ((getExtendedState() & MAXIMIZED_BOTH) != 0) {
+                    Settings.instance().setWindowMaximized(true);
+                } else {
+                    Settings.instance().setWindowMaximized(false);
+                }
                 main.exitProgram();
             }
         });
@@ -104,7 +131,6 @@ be closed.
                 project = Project.loadProject(file);
             }
         }
-        Ikayaki ikayaki = new Ikayaki(project);
-        ikayaki.setVisible(true);
+        new Ikayaki(project);
     }
 }
