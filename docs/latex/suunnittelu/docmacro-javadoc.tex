@@ -1,5 +1,11 @@
 
-% Macros for generating design documents and .java files
+% Macros for generating .java files with javadoc
+
+\pagestyle{empty}
+
+\newcommand{\getMemA}[0]{}
+\newcommand{\getMemB}[0]{}
+\newcommand{\getMemC}[0]{}
 
 % MACROS FOR CLASS DOCUMENTATION
 \newcommand{\getClass}[0]{}
@@ -10,53 +16,79 @@
 	\label{class:#1}
 	
 	\begin{hyphenrules}{nohyphenation}
-	\begin{tabular}{p{3cm}p{11cm}}
+
+/*\\
+ \symbol{42} #1.java\\
+ \symbol{42}\\
+ \symbol{42} Copyright (C) 2005 Project SQUID, http://www.cs.helsinki.fi/group/squid/\\
+ \symbol{42}\\
+ \symbol{42} This file is part of Ikayaki.\\
+ \symbol{42}\\
+ \symbol{42} Ikayaki is free software; you can redistribute it and/or modify\\
+ \symbol{42} it under the terms of the GNU General Public License as published by\\
+ \symbol{42} the Free Software Foundation; either version 2 of the License, or\\
+ \symbol{42} (at your option) any later version.\\
+ \symbol{42}\\
+ \symbol{42} Ikayaki is distributed in the hope that it will be useful,\\
+ \symbol{42} but WITHOUT ANY WARRANTY; without even the implied warranty of\\
+ \symbol{42} MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\\
+ \symbol{42} GNU General Public License for more details.\\
+ \symbol{42}\\
+ \symbol{42} You should have received a copy of the GNU General Public License\\
+ \symbol{42} along with Ikayaki; if not, write to the Free Software\\
+ \symbol{42} Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\\
+ \symbol{42}/\\
 }
 \newcommand{\classComment}[1] {
-	\multicolumn{2}{p{14cm}} {
-		#1
-	}\\
+	\renewcommand{\getMemA}[0]{#1}
 }
 \newcommand{\classPackage}[1] {
-	\textbf{Package} & #1 \\
+	\renewcommand{\getMemB}[0]{#1}
 }
 \newcommand{\classDeclaration}[1] {
-	\textbf{Declaration} & #1 \\
+	package \getMemB;\\
+	\\
+	/**\\
+	\symbol{42} \getMemA\\
+	\symbol{42} \\
+	\symbol{42} @author\\
+	\symbol{42}/\\
+	#1
 }
 \newcommand{\classExtends}[1] {
-	\textbf{Extends} & #1 \\
+	extends #1
 }
 \newcommand{\classImplements}[1] {
-	\textbf{Implements} & #1 \\
+	implements #1
 }
-\newcommand{\classCreatedBy}[1] {
-	\textbf{Created by} & #1 (\ref{class:#1}) \\
-}
+\newcommand{\classCreatedBy}[1] {}
 \newcommand{\classUses}[1] {
 	\stepcounter{classUsesCounter}
-	\textbf{Uses \arabic{classUsesCounter}} & #1 (\ref{class:#1}) \\
 }
 \newcommand{\classSubclass}[1] {
 	\stepcounter{classSubclassCounter}
-	\textbf{Subclass \arabic{classSubclassCounter}} & #1 (\ref{class:#1}) \\
 }
-\newcommand{\classPatterns}[1] {
-	\textbf{Design patterns} & #1 \\
-}
+\newcommand{\classPatterns}[1] {}
 \newcommand{\classEvent}[2] {
 	\stepcounter{classEventCounter}
-	\textbf{Event \Alph{classEventCounter}} & \textit{#1} - #2 \\
+	\\
+	/*\\
+	Event \Alph{classEventCounter}: #1 - #2\\
+	\symbol{42}/\\
 }
 \newcommand{\closeClass}[0] {
-	\end{tabular}\\
 	\end{hyphenrules}
 	
 	\setcounter{classUsesCounter}{0}
 	\setcounter{classSubclassCounter}{0}
 	\setcounter{classEventCounter}{0}
 	
-	\renewcommand{\isFirstField}[0]{ \large\textbf{Fields of \getClass}\normalsize }
-	\renewcommand{\isFirstMethod}[0]{ \large\textbf{Methods of \getClass}\normalsize }
+	\renewcommand{\getMemA}[0]{}
+	\renewcommand{\getMemB}[0]{}
+	\renewcommand{\getMemC}[0]{}
+	
+	\renewcommand{\isFirstField}[0]{}
+	\renewcommand{\isFirstMethod}[0]{}
 }
 \newcounter{classUsesCounter}
 \newcounter{classSubclassCounter}
@@ -66,19 +98,9 @@
 
 
 % MACROS FOR CLASS TABLE OF CONTENTS
-\newcommand{\beginToc}[0] {
-	\begin{hyphenrules}{nohyphenation}
-	%\begin{tabular*}{14cm}{lr}
-	\begin{tabular*}{14cm}{@{\extracolsep{\fill}}lr}
-	\textbf{Method} & \textbf{Page} \\
-}
-\newcommand{\tocMethod}[1] {
-	#1 & \pageref{method:\getClass.#1} \\
-}
-\newcommand{\closeToc}[0] {
-	\end{tabular*}\\
-	\end{hyphenrules}
-}
+\newcommand{\beginToc}[0] {}
+\newcommand{\tocMethod}[1] {}
+\newcommand{\closeToc}[0] {}
 
 
 % MACROS FOR FIELD DOCUMENTATION
@@ -91,26 +113,27 @@
 	\label{field:\getClass.#1}
 	
 	\begin{hyphenrules}{nohyphenation}
-	\begin{tabular}{p{3cm}p{11cm}}
+	
 }
 \newcommand{\fieldDeclaration}[1] {
-	\multicolumn{2}{p{14cm}} {
-		\hspace{-0.32cm}
-%		\large{\textsf{#1}}
-		\textsf{#1}
-	}\\
+	\renewcommand{\getMemA}[0]{#1}
 }
 \newcommand{\fieldValue}[1] {
-	\textbf{Default value} & #1 \\
+	\renewcommand{\getMemB}[0]{ = #1}
 }
 \newcommand{\fieldComment}[1] {
-	\multicolumn{2}{p{14cm}} {
-		#1
-	}\\
+	/**\\
+	\symbol{42} #1\\
+	\symbol{42}/\\
 }
 \newcommand{\closeField}[0] {
-	\end{tabular}\\
+	\getMemA\getMemB;\\
+	
 	\end{hyphenrules}
+	
+	\renewcommand{\getMemA}[0]{}
+	\renewcommand{\getMemB}[0]{}
+	\renewcommand{\getMemC}[0]{}
 }
 
 
@@ -124,34 +147,36 @@
 	\label{method:\getClass.#1}
 	
 	\begin{hyphenrules}{nohyphenation}
-	\begin{tabular}{p{3cm}p{11cm}}
+	/**\\
 }
 \newcommand{\methodDeclaration}[1] {
-	\multicolumn{2}{p{14cm}} {
-		\hspace{-0.32cm}
-%		\large{\textsf{#1}}
-		\textsf{#1}
-	}\\
+	\renewcommand{\getMemA}[0]{#1}
 }
 \newcommand{\methodComment}[1] {
-	\multicolumn{2}{p{14cm}} {
-		#1
-	}\\
+	\symbol{42} #1\\
 }
 \newcommand{\methodParam}[2] {
 	\stepcounter{methodParamCounter}
-	\textbf{Parameter \arabic{methodParamCounter}} & \textit{#1} - #2 \\
+	\symbol{42} @param #1 #2 \\
 }
 \newcommand{\methodReturn}[1] {
-	\textbf{Returns} & #1 \\
+	\symbol{42} @return #1 \\
 }
 \newcommand{\methodThrows}[2] {
-	\textbf{Throws} & \textit{#1} - #2 \\
+	\symbol{42} @throws #1 #2 \\
 }
 \newcommand{\closeMethod}[0] {
-	\end{tabular}\\
+	\symbol{42}/\\
+	\getMemA \{\\
+	return null; // TODO\\
+	\}\\
+	
 	\end{hyphenrules}
 	\setcounter{methodParamCounter}{0}
+	
+	\renewcommand{\getMemA}[0]{}
+	\renewcommand{\getMemB}[0]{}
+	\renewcommand{\getMemC}[0]{}
 }
 \newcounter{methodParamCounter}
 

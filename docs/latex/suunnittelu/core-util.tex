@@ -111,12 +111,11 @@
 \closeMethod
 
 \beginMethod{execute(Runnable)}
-\methodDeclaration{public synchronized boolean execute(Runnable command)}
+\methodDeclaration{public synchronized void execute(Runnable command)}
 \methodComment{
 	Inserts a Runnable object to the end of the queue. It will remain there until it is executed or another object replaces it. If execOnlyLast is set to true, the queue will be cleared before inserting this runnable to it. If there is no worker thread running, a new one will be spawned.
 }
 \methodParam{command}{the runnable task to be executed after a pre-defined delay.}
-\methodReturn{true}
 \methodThrows{NullPointerException}{if command is null.}
 \closeMethod
 
