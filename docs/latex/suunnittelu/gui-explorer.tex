@@ -40,8 +40,8 @@
 \fieldDeclaration{private NewProjectPanel newProjectPanel}
 \closeField
 
-\beginField{autocompleteQueue}
-\fieldDeclaration{private LastExecutor autocompleteQueue}
+\beginField{autocompleteExecutor}
+\fieldDeclaration{private LastExecutor autocompleteExecutor}
 \fieldValue{new LastExecutor(100, true)}
 \fieldComment{LastExecutor for scheduling autocomplete results to separate thread (disk access and displaying).}
 \closeField
@@ -117,11 +117,11 @@
 
 \beginClass{ProjectExplorerPopupMenu}
 \classComment{
-	Shows popup menu with export choices: AF (.dat), Thellier (.tdt) and Thermal (.tdt), and executes selected.
+	Shows popup menu with export choices: AF (.dat), Thellier (.tdt) and Thermal (.tdt), and for each, "to current directory", "to disk drive A:" and "...", which opens a standard file chooser for selecting dir and file to export to. Executes selected export command.
 }
 \classPackage{ikayaki.gui}
 \classDeclaration{public class ProjectExplorerPopupMenu}
 \classExtends{JPopupMenu}
 \classCreatedBy{ProjectExplorerPanel}
-\classEvent{On menu click}{call project.exportXXX() according to selected menu item; if false is returned, show error message.}
+\classEvent{On menu click}{call project.exportToXXX(File) according to selected menu item; if false is returned, show error message.}
 \closeClass

@@ -5,10 +5,12 @@
 \input{docmacro}
 
 % nopsa pikkuluokkakaavioiden lis‰ysmakro
-\newcommand{\insertdia}[3] {
+% pois figuren sis‰lt‰ niin kuvat tulee minne pit‰‰kin, ilman kuvateksti‰ ja kuvanumerointia tosin
+\newcommand{\insertdia}[2] {
 	% \begin{figure}[h]
 	\begin{center}
 	\includegraphics[width=#2]{dia/#1.eps}
+	% \includegraphics{dia/#1.eps}
 	% \caption{#3}
 	% \label{fig:#1}
 	\end{center}
@@ -78,9 +80,8 @@ Note that the structure of this section is exactly the same as sections \ref{sec
 
 \begin{figure}
 \begin{center}
-%\hspace{-2cm}\includegraphics[angle=90,width=16cm]{dia/core.eps}
-\includegraphics[width=17cm]{dia/core.eps}
-\caption{Squid class diagram: central classes}
+\hspace{-2cm}\includegraphics[width=17cm]{dia/core.eps}
+\caption{Squid class diagram: data classes}
 \label{fig:core}
 \end{center}
 \end{figure}
@@ -96,19 +97,19 @@ Package ikayaki holds generic data classes, ikayaki.squid holds classes loosely 
 Responsible for holding all the measurement data and controlling the SQUID. Most of the GUI classes use the Project class. When the state of the project changes, the Project class fires ProjectEvents and MeasurementEvents to the GUI classes, which in turn will call the Project class to get the changed information.
 
 \subsubsection{Squid interface}
-\insertdia{core-squid}{12cm}{Squid interface}
+\insertdia{core-squid}{12cm}
 
 Squid Interface offers the Project class an interface to safely control the SQUID magnetometer. It holds three subclasses that handle communication to to three separate parts of the SQUID (Handler, Degausser and Magnetometer).
 
 Classes are Squid, Handler, Magnetometer, Degausser.
 
 \subsubsection{Squid emulator}
-\insertdia{core-squidemu}{10cm}{Squid emulator}
+\insertdia{core-squidemu}{10cm}
 
 This is separate from other and is used only for testing the Squid Interface that it works correctly.
 
 \subsubsection{Serial communication}
-\insertdia{core-serial}{12cm}{Serial communication}
+\insertdia{core-serial}{12cm}
 
 SerialIO and classes related to it takes care of the harware layer of serial communication. Using these classes Ikayaki communicates with the Degausser, Samplehandler and Magnetometer. SerialIO represents one serial port and when it's created it reserves the port to itself. SerialProperties class includes all the configuration data for the serial port.
 
@@ -141,12 +142,12 @@ All gui classes are in package ikayaki.gui.
 ProjectComponent, a generic gui base class which handles registering Project- and MeasurementListeners to new projects, and which every gui component subclasses.
 
 \subsubsection{Main window}
-\insertdia{gui-main}{12cm}{Main window}
+\insertdia{gui-main}{12cm}
 
 \subsubsection{Configuration window}
 
 \subsubsection{Project Explorer}
-\insertdia{gui-explorer}{10cm}{Project Explorer}
+\insertdia{gui-explorer}{10cm}
 
 Located at middle left side of main window.
 
@@ -159,7 +160,7 @@ ProjectExplorerTable is a JTable with the project file listing, including "filen
 ProjectExplorerPopupMenu has options for exporting project files into different formats.
 
 \subsubsection{Calibration}
-\insertdia{gui-calibration}{5cm}{Calibration}
+\insertdia{gui-calibration}{5cm}
 
 Located at upper left corner of main window.
 
@@ -172,7 +173,7 @@ CalibrationPanel holds predefined "Holder noise" and "Standard sample" projects 
 \subsubsection{Measurement details}
 
 \subsubsection{Measurement controls}
-\insertdia{gui-mcontrols}{10cm}{Measurement controls}
+\insertdia{gui-mcontrols}{10cm}
 
 Located at upper right corner of main window.
 
@@ -183,7 +184,7 @@ MagnetometerStatusPanel shows an image of current magnetometer status, as in sam
 ManualControlsPanel has controls for fully manual measuring, which are enabled when no "normal" measurements are happening.
 
 \subsubsection{Graphs}
-\insertdia{gui-graphs}{10cm}{Graphs}
+\insertdia{gui-graphs}{10cm}
 
 Graph panels visualize the measurement data. They are located at the lower right corner in the UI. MeasurementGraphsPanel listens to MeasurementEvents to update the measurement data in plots. AbstractPlot is an abstract class which implements all the general features of graph plots. IntensityPlot and StereoPlot extend the functionality of AbstractPlot and implement their special drawing features accordingly.
 

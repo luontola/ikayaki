@@ -1,6 +1,7 @@
 \beginClass{MeasurementControlsPanel}
 \classComment{
-	Has "Measure"/"Pause", "Single step" and "Stop now!" buttons for controlling measurements; "+z/-z" radiobuttons for changing sample orientation, help picture for inserting sample, picture of current magnetometer status, and, manual controls.
+	Has "Measure"/"Pause", "Single step" and "Stop now!" buttons for controlling measurements; "+z/-z" radiobuttons for changing sample orientation used in calculations, help picture for inserting sample, picture of current magnetometer status, and, manual controls.
+
 	Listens MeasurementEvents and ProjectEvents, and updates buttons and magnetometer status accordingly.
 }
 \classPackage{ikayaki.gui}
@@ -13,6 +14,7 @@
 \classEvent{On measureButton click}{call project.doAutoStep() or project.doPause(), depending on current button status. Show error message if false is returned.}
 \classEvent{On singlestepButton click}{call project.doSingleStep(); show error message if false is returned.}
 \classEvent{On stopButton click}{call project.doAbort(); show critical error message if false is returned.}
+\classEvent{On z{Plus,Minus}RadioButton click}{call project.setOrientation(boolean) where Plus is true and Minus is false.}
 \classEvent{On ProjectEvent}{update buttons and manual controls according to project.isXXXEnabled().}
 \classEvent{On MeasurementEvent}{call magnetometerStatusPanel.updateStatus(int, int) with the right values from MeasurementEvent.}
 \closeClass
@@ -37,15 +39,17 @@
 
 \beginField{zPlusRadioButton}
 \fieldDeclaration{private JRadioButton zPlusRadioButton}
+\fieldComment{Changes sample orientation to +Z.}
 \closeField
 
 \beginField{zMinusRadioButton}
 \fieldDeclaration{private JRadioButton zMinusRadioButton}
+\fieldComment{Changes sample orientation to -Z.}
 \closeField
 
 \beginField{sampleInsertPanel}
 \fieldDeclaration{private JPanel sampleInsertPanel}
-\fieldComment{Draws a help image for sample inserting.}
+\fieldComment{Draws a help image and text for sample inserting: "Put sample in holder arrow up."}
 \closeField
 
 \beginField{magnetometerStatusPanel}
@@ -90,7 +94,12 @@
 \classExtends{JPanel}
 \classCreatedBy{MeasurementControlsPanel}
 \classUses{Project}
-\classEvent{On XXX click}{call Project.doManualXXX()...}
+\classEvent{On moveXXX click}{call project.doManualMove(int) with clicked position. If false is returned, show small error message. Position values are found from Settings; demagZ is Settings.instance().getAxialAFPosition() and demagY is Settings.instance().getTransverseYAFPosition().}
+\classEvent{On rotateXXX click}{call project.doManualRotate(int) with clicked angle. If false is returned, show small error message.}
+\classEvent{On measureAllButton click}{call project.doManualMeasure(). If false is returned, show small error message.}
+\classEvent{On resetAllButton click}{call project.doManualReset()? If false is returned, show small error message.}
+\classEvent{On DemagZButton click}{call project.doManualDemagZ(double) with value from demagAmplitudeField. If false is returned, show small error message.}
+\classEvent{On DemagYButton click}{call project.doManualDemagY(double) with value from demagAmplitudeField. If false is returned, show small error message.}
 \closeClass
 
 \beginField{moveButtonGroup}
@@ -150,20 +159,25 @@
 
 \beginField{measureAllButton}
 \fieldDeclaration{private JButton measureAllButton}
-\fieldComment{Measures X, Y and Z (at current sample holder position) by calling project.doMeasureXYZ().}
+\fieldComment{Measures X, Y and Z (at current sample holder position) by calling project.doManualMeasure().}
 \closeField
 
 \beginField{resetAllButton}
 \fieldDeclaration{private JButton resetAllButton}
-\fieldComment{Resets X, Y and Z? Does what?}
+\fieldComment{Resets X, Y and Z by calling project.doManualReset()? Does what?}
+\closeField
+
+\beginField{demagAmplitudeField}
+\fieldDeclaration{private JTextField demagAmplitudeField}
+\fieldComment{Demagnetization amplitude in mT, used when demag{Z,Y}Button is clicked.}
 \closeField
 
 \beginField{demagZButton}
 \fieldDeclaration{private JButton demagZButton}
-\fieldComment{Demagnetizes in Z (at current sample holder position) by calling project.doDemagZ().}
+\fieldComment{Demagnetizes in Z (at current sample holder position) by calling project.doManualDemagZ(double).}
 \closeField
 
 \beginField{demagYButton}
 \fieldDeclaration{private JButton demagYButton}
-\fieldComment{Demagnetizes in Y (at current sample holder position) by calling project.doDemagY().}
+\fieldComment{Demagnetizes in Y (at current sample holder position) by calling project.doManualDemagY(double).}
 \closeField
