@@ -174,7 +174,7 @@ project listeners.
      * @throws NullPointerException if file is null.
      */
     public static Project createCalibrationProject(File file) {
-        return null; // TODO
+        return createProject(file, Type.CALIBRATION);
     }
 
     /**
@@ -185,7 +185,7 @@ project listeners.
      * @throws NullPointerException if file is null.
      */
     public static Project createAFProject(File file) {
-        return null; // TODO
+        return createProject(file, Type.AF);
     }
 
     /**
@@ -196,7 +196,7 @@ project listeners.
      * @throws NullPointerException if file is null.
      */
     public static Project createThellierProject(File file) {
-        return null; // TODO
+        return createProject(file, Type.THELLIER);
     }
 
     /**
@@ -207,7 +207,7 @@ project listeners.
      * @throws NullPointerException if file is null.
      */
     public static Project createThermalProject(File file) {
-        return null; // TODO
+        return createProject(file, Type.THERMAL);
     }
 
     /**
@@ -217,9 +217,12 @@ project listeners.
      * @param file path for the new project file.
      * @param type type of the project.
      * @return the created project, or null if file was not writable.
-     * @throws NullPointerException if file is null.
+     * @throws NullPointerException if file or type is null.
      */
     private static Project createProject(File file, Type type) {
+        if (file == null || type == null) {
+            throw new NullPointerException();
+        }
         return null; // TODO
     }
 

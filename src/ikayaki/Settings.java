@@ -156,20 +156,26 @@ public class Settings {
 
     /**
      * Saves the settings and keeps waiting until its done. If no settings have been modified, will do nothing.
+     *
+     * @return true if there were no errors in writing the files or everything was already saved. Otherwise false.
      */
-    public synchronized void saveNow() {
+    public synchronized boolean saveNow() {
+        boolean ok = true;
+
         // save properties to file
         if (propertiesModified) {
             try {
                 OutputStream out = new FileOutputStream(propertiesFile);
                 properties.storeToXML(out, null);
                 out.close();
+                propertiesModified = false;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                ok = false;
             } catch (IOException e) {
                 e.printStackTrace();
+                ok = false;
             }
-            propertiesModified = false;
         }
 
         // save sequences to file
@@ -177,6 +183,7 @@ public class Settings {
             // TODO: save the sequences to an XML file understood by the Settings() constructor
             sequencesModified = false;
         }
+        return ok;
     }
 
     /**
