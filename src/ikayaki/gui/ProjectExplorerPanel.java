@@ -22,9 +22,7 @@
 
 package ikayaki.gui;
 
-import ikayaki.Project;
-import ikayaki.Settings;
-import ikayaki.Ikayaki;
+import ikayaki.*;
 import ikayaki.util.LastExecutor;
 
 import java.awt.*;
@@ -329,7 +327,10 @@ whose measuring ended.
      */
     public void setProject(Project project) {
         super.setProject(project);
-        if (project != null) setDirectory(project.getFile().getParentFile());
+        if (project != null) {
+            setDirectory(project.getFile().getParentFile());
+            project.addProjectListener(explorerTableModel);
+        }
         else setDirectory(directory);
     }
 
@@ -497,7 +498,7 @@ whose measuring ended.
     /**
      * TableModel which handles data from files (in upper-class ProjectExplorerPanel).
      */
-    private class ProjectExplorerTableModel extends AbstractTableModel {
+    private class ProjectExplorerTableModel extends AbstractTableModel implements ProjectListener {
         private final String[] columns = { "filename", "type", "last modified" };
 
         public String getColumnName(int column) {
@@ -518,6 +519,21 @@ whose measuring ended.
                 case 1: return Project.getType(files[row]);
                 case 2: return DateFormat.getInstance().format(files[row].lastModified());
                 default: assert false; return null;
+            }
+        }
+
+        /**
+         * Updates the file list when a project file has been saved.
+         */
+        public void projectUpdated(ProjectEvent event) {
+            if (event.getType() == ProjectEvent.Type.FILE_SAVED) {
+                File saved = event.getProject().getFile();
+                for (int i = 0; i < files.length; i++) {
+                    if (files[i].equals(saved)) {
+                        fireTableRowsUpdated(i, i);
+                        return;
+                    }
+                }
             }
         }
     }
