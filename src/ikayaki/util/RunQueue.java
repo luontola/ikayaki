@@ -35,7 +35,7 @@ public class RunQueue {
 
     /**
      * The worker thread that will run the inserted runnables. If the thread has no more work to do, it will set
-     * workerThread to null and quit.
+     * workerThread to null and terminate itself.
      */
     private Thread workerThread = null;
 
@@ -137,11 +137,14 @@ public class RunQueue {
 
     /**
      * Keeps on checking the RunQueue.queue to see if there are Runnables to be executed. If there is one, execute it
-     * and proceed to the next one. If an Throwable is being thrown during the execution, print stack trace to strerr.
-     * If the queue is empty, this thread will set RunDelayed.workerThread to null and quit.
+     * and proceed to the next one. If an uncaught Exception is thrown during the execution, prints an error message and
+     * stack trace to stderr. If the queue is empty, this thread will set RunDelayed.workerThread to null and terminate
+     * itself.
      */
     private class RunQueueThread extends Thread {
         public void run() {
+            // DEBUG:
+//            System.out.println("new RunQueueThread started");
             while (true) {
                 synchronized (RunQueue.this) {
                     if (queue.size() == 0) {
@@ -149,11 +152,13 @@ public class RunQueue {
                         return;
                     }
                 }
+                RunDelayed delayed = null;
                 try {
-                    RunDelayed delayed = queue.take();
+                    delayed = queue.take();
                     delayed.getRunnable().run();
-                } catch (Throwable t) {
-                    t.printStackTrace();
+                } catch (Exception e) {
+                    System.err.println("Exception thrown by " + delayed.getRunnable());
+                    e.printStackTrace();
                 }
             }
         }
@@ -244,5 +249,25 @@ public class RunQueue {
             });
             Thread.sleep(50 * i);
         }
+
+        // test that the RunQueue will catch the Exception
+        // and the same thread will continue to execute the next Runnable
+        q.offer(new Runnable() {
+            public void run() {
+                System.out.println("C");
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                throw new NullPointerException();
+            }
+        });
+        Thread.sleep(300);
+        q.offer(new Runnable() {
+            public void run() {
+                System.out.println("D");
+            }
+        });
     }
 }
