@@ -28,7 +28,7 @@ import ikayaki.Project;
  * Offers an interface for controlling the SQUID system. Reads settings from the Settings class. Creates instances of
  * the degausser, handler and magnetometer classes and offers handles for them.
  *
- * @author
+ * @author Aki Korpua
  */
 public class Squid {
 
@@ -61,14 +61,19 @@ public class Squid {
      * Returns a reference to the Squid. If it has not yet been created, will create one.
      */
     public static synchronized Squid instance() {
-        return null; // TODO
+        if(instance == null)
+            instance = new Squid();
+        return instance;
     }
 
     /**
      * Initializes the Squid interface. Creates instances of Degausser, Handler and Magnetometer.
      */
     private Squid() {
-        return; // TODO
+        owner = null;
+        degausser = new Degausser();
+        handler = new Handler();
+        magnetometer = new Magnetometer();
     }
 
     /**
@@ -77,7 +82,7 @@ public class Squid {
      * @return Handler for Degausser if available
      */
     public Degausser getDegausser() {
-        return null; // TODO
+        return this.degausser;
     }
 
     /**
@@ -86,7 +91,7 @@ public class Squid {
      * @return Handler for Handler if available
      */
     public Handler getHandler() {
-        return null; // TODO
+        return this.handler;
     }
 
     /**
@@ -95,7 +100,7 @@ public class Squid {
      * @return Handler for Magnetometer if available
      */
     public Magnetometer getMagnetometer() {
-        return null; // TODO
+        return this.magnetometer;
     }
 
     /**
@@ -107,7 +112,7 @@ public class Squid {
      * a short period of time will update the settings only once.
      */
     public synchronized void updateSettings() {
-        return; // TODO
+        // TODO
     }
 
     /**
@@ -116,7 +121,10 @@ public class Squid {
      * @return true if everything is correct, otherwise false.
      */
     public synchronized boolean isOK() {
-        return false; // TODO
+        if(degausser != null && handler != null && magnetometer != null)
+            if(degausser.isOK() && handler.isOK() && magnetometer.isOK())
+                return true;
+        return false;
     }
 
     /**
@@ -127,7 +135,23 @@ public class Squid {
      * @return true if successful, false if the existing owner had a running measurement.
      */
     public synchronized boolean setOwner(Project owner) {
-        return false; // TODO
+        // is it first time?
+        if(this.owner == null) {
+            this.owner = owner;
+            return true;
+        }
+        // checks that handler,magnetometer and degausser status is not busy
+        if(this.degausser != null)
+            if(this.degausser.getRampStatus() != 'Z')
+                return false;
+        // no good way for handler.. yet.
+        /*
+        if(this.handler != null)
+            if(this.handler.getStatus() !=
+        */
+       // no good way for magnetometer either
+        this.owner = owner;
+            return true;
     }
 
     /**
@@ -136,6 +160,6 @@ public class Squid {
      * @return the project, or null if none is using the Squid.
      */
     public synchronized Project getOwner() {
-        return null; // TODO
+        return this.owner;
     }
 }

@@ -22,6 +22,7 @@
 
 package ikayaki.squid;
 
+import ikayaki.Settings;
 import java.util.Stack;
 
 /**
@@ -29,7 +30,7 @@ import java.util.Stack;
  * degausser by a single board computer running a small basic program, the response time of the degausser to commands is
  * slow. This class will make sure that commands are not sent faster than the device can handle.
  *
- * @author
+ * @author Aki Korpua
  */
 public class Degausser implements SerialIOListener {
 /*
@@ -75,13 +76,23 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * Z=Zero, T=Tracking, ?=Unknown
      */
     private char degausserStatus;
+    private long lastCommandTime;
 
     /**
      * Creates a new degausser interface. Opens connection to degausser COM port (if not open yet) and reads settings
      * from the Setting class.
      */
     public Degausser() {
-        return; // TODO
+        this.serialIO = new SerialIO(new SerialParameters(Settings.instance().getDegausserPort(),1200,0,0,8,1,0));
+        this.degausserDelay = Settings.instance().getDegausserDelay();
+        this.degausserRamp = Settings.instance().getDegausserRamp();
+        lastCommandTime = System.currentTimeMillis();
+        //needs to call new functions setDelay() and setRamp(). TODO
+        waitSecond();
+        this.serialIO.writeMessage("DCD " + this.degausserDelay);
+        waitSecond();
+        this.serialIO.writeMessage("DCR " + this.degausserRamp);
+
     }
 
     /**
@@ -98,7 +109,9 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @param coil coil to set on.
      */
     private void setCoil(char coil) {
-        return; // TODO
+        waitSecond();
+        if(coil == 'X' || coil == 'Y' || coil == 'X')
+            this.serialIO.writeMessage("DCC " + coil);
     }
 
     /**
@@ -107,28 +120,56 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @param amplitude amplitude to demag.
      */
     private void setAmplitude(int amplitude) {
-        return; // TODO
+        waitSecond();
+        if(amplitude>=0 && amplitude<=3000) {
+            if(amplitude<10)
+                this.serialIO.writeMessage("DCA 000" + amplitude);
+            else if(amplitude<100)
+                this.serialIO.writeMessage("DCA 00" + amplitude);
+            else if(amplitude<1000)
+                this.serialIO.writeMessage("DCA 0" + amplitude);
+        }
     }
 
     /**
      * Performs Ramp up.
      */
     private void executeRampUp() {
-        return; // TODO
+        waitSecond();
+        this.serialIO.writeMessage("DERU");
     }
 
     /**
      * Brings Ramp down.
      */
     private void executeRampDown() {
-        return; // TODO
+        waitSecond();
+        this.serialIO.writeMessage("DERD");
     }
 
     /**
      * Performs Ramp up and down.
      */
     private void executeRampCycle() {
-        return; // TODO
+        waitSecond();
+        this.serialIO.writeMessage("DERC");
+    }
+
+    /**
+     *
+     * Waits 1 second between command
+     *
+     */
+    private void waitSecond() {
+        long waitTime = 1000 - (System.currentTimeMillis() - lastCommandTime);
+        if(waitTime>0) {
+            try
+            {
+                Thread.sleep(waitTime);
+            }
+            catch(InterruptedException e) { }
+        }
+        lastCommandTime = System.currentTimeMillis();
     }
 
     /**
@@ -138,7 +179,12 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @return true if process was sended succesfully, otherwise false.
      */
     public boolean demagnetizeZ(int amplitude) {
-        return false; // TODO
+        this.setCoil('Z');
+        this.setAmplitude(amplitude);
+        this.executeRampCycle();
+        //we need to poll for DONE message or TRACK ERROR message
+        //some observer system?
+        return true;
     }
 
     /**
@@ -148,7 +194,13 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @return true if process was sended succesfully, otherwise false.
      */
     public boolean demagnetizeY(int amplitude) {
-        return false; // TODO
+        this.setCoil('Y');
+        this.setAmplitude(amplitude);
+        this.executeRampCycle();
+        //we need to poll for DONE message or TRACK ERROR message
+        //some observer system?
+        return true;
+
     }
 
     /**
@@ -157,7 +209,9 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @return Z=Zero, T=Tracking, ?=Unknown
      */
     public char getRampStatus() {
-        return 0; // TODO
+        this.serialIO.writeMessage("DSS");
+        //need to poll for answer
+        return 'c';
     }
 
     /**
