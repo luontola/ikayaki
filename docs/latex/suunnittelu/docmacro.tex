@@ -5,7 +5,7 @@
 % MACROS FOR CLASS DOCUMENTATION
 \newcommand{\getClass}[0]{}
 \newcommand{\beginClass}[1] {
-	\subsection{#1}
+	\subsubsection{#1}
 	
 	\renewcommand{\getClass}[0]{#1}
 	\label{class:#1}
@@ -108,7 +108,7 @@
 	\stepcounter{methodParamCounter}
 	\textbf{Parameter \arabic{methodParamCounter}} & \textit{#1} - #2 \\
 }
-\newcommand{\methodReturns}[1] {
+\newcommand{\methodReturn}[1] {
 	\textbf{Returns} & #1 \\
 }
 \newcommand{\methodThrows}[2] {
