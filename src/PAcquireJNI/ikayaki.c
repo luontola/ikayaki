@@ -16,7 +16,8 @@ JNIEXPORT void JNICALL Java_JNITest_helloC
 	printf("Hello C!\n");
 	flushall();
 
-	cls = (*env)->FindClass(env, "ikayaki/core/JNITest");
+//	cls = (*env)->FindClass(env, "ikayaki/core/JNITest");
+	cls = (*env)->FindClass(env, "JNITest");
 //    if (cls == NULL) {
 //        return;
 //    }

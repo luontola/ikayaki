@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="1.0" type="af">
+    <properties>
+        <operator value="Erkki"/>
+        <date value="14.6.1997 13:02"/>
+        <ismanual value="false"/>
+        <rocktype value="Basalt"/>
+        <sampletype value="hand"/>
+        <site value="Antarctis, 1134, Utpostane"/>
+        <comment value="Dike 10m tos, fine grained, altered?"/>
+        <latitude value="344"/>
+        <longitude value="-74"/>
+        <strike value="280"/>
+        <dip value="14"/>
+        <mass value="10"/>
+        <volume value=""/>
+    </properties>
+    <sequence name="Basalt">
+        <step timestamp="2005-02-08 14:43:21" stepvalue="0" mass="" volume="">
+            <measurement rotation="BG" x="0.000008625" y="0.000007290" z="-0.000006977"/>
+            <measurement rotation="0" x="0.0001309" y="0.0003192" z="-0.0001098"/>
+            <measurement rotation="90" x="-0.0003098" y="0.0001174" z="-0.0001102"/>
+            <measurement rotation="180" x="-0.0003454" y="-0.0002457" z="-0.0001454"/>
+            <measurement rotation="270" x="0.0001654" y="-0.0003454" z="-0.0001457"/>
+            <measurement rotation="BG" x="0.000008625" y="0.000007290" z="-0.000006977"/>
+        </step>
+        <step timestamp="" stepvalue="50" mass="" volume=""></step>
+        <step timestamp="" stepvalue="100" mass="" volume=""></step>
+        <step timestamp="" stepvalue="200" mass="" volume=""></step>
+        <step timestamp="" stepvalue="300" mass="" volume=""></step>
+        <step timestamp="" stepvalue="400" mass="" volume=""></step>
+        <step timestamp="" stepvalue="500" mass="" volume=""></step>
+        <step timestamp="" stepvalue="600" mass="" volume=""></step>
+        <step timestamp="" stepvalue="700" mass="" volume=""></step>
+        <step timestamp="" stepvalue="800" mass="" volume=""></step>
+    </sequence>
+</project>
