@@ -31,7 +31,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Creates the main view panels (split panels) and Squid and Project components. It also tells everybody if the current
@@ -80,11 +83,21 @@ public class MainViewPanel extends ProjectComponent {
      */
     public MainViewPanel(Project project) {
 
-        // TODO: if project == null, load the last open project from settings
+        // if project is null, load the last open project
+        if (project == null) {
+            File[] projectHistory = Settings.instance().getProjectHistory();
+            if (projectHistory.length > 0) {
+                project = Project.loadProject(projectHistory[0]);
+            }
+        }
 
         /* Init SQUID interface */
-        // TODO: needs to catch an exception?
-        // squid = Squid.instance();
+        try {
+            squid = Squid.instance();
+        } catch (IOException e) {
+            // TODO: what should be done now? give error message?
+            e.printStackTrace();
+        }
 
         /* Init GUI components */
         menuBar = new MainMenuBar(this);
@@ -164,10 +177,22 @@ public class MainViewPanel extends ProjectComponent {
         splitPane.setBorder(null);
         splitPane.setDividerSize(0);
 
+        // HACK: prevent the left tab from being resized automatically
+        left.addComponentListener(new ComponentAdapter() {
+            @Override public void componentResized(ComponentEvent e) {
+                if (splitPane.getDividerLocation() > DIVIDER_DEFAULT_LOCATION) {
+                    splitPane.setDividerLocation(DIVIDER_DEFAULT_LOCATION);
+                }
+            }
+        });
+//        Dimension leftMax = left.getMaximumSize();
+//        leftMax.width = DIVIDER_DEFAULT_LOCATION;
+//        left.setMaximumSize(leftMax);
+
         // button for hiding the tabs
         Box tabControls = new Box(BoxLayout.Y_AXIS);
-        final Icon tabButtonDown = new ImageIcon("resources/projectExplorerTabDown.png");
-        final Icon tabButtonUp = new ImageIcon("resources/projectExplorerTabUp.png");
+        final Icon tabButtonDown = new ImageIcon(ClassLoader.getSystemResource("resources/projectExplorerTabDown.png"));
+        final Icon tabButtonUp = new ImageIcon(ClassLoader.getSystemResource("resources/projectExplorerTabUp.png"));
         final JButton tabButton = new JButton(tabButtonDown);
         tabButton.setContentAreaFilled(false);
         tabButton.setBorder(null);
@@ -229,7 +254,7 @@ public class MainViewPanel extends ProjectComponent {
 
         // register the new project
         if (project != null) {
-            // TODO: save this project's path to settings as the last open project
+            Settings.instance().updateProjectHistory(project.getFile());
             project.addProjectListener(this);
             project.setSquid(squid);        // will do nothing if another project has a measurement running
             projectInformation.setBorder(
