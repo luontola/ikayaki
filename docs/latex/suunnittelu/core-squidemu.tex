@@ -2,6 +2,7 @@
 \classPackage{ikayaki.squid}
 \classDeclaration{public class SquidEmulation}
 \classExtends{Thread}
+\classImplements{SerialIOListener}
 \classCreatedBy{}
 \classUses{SerialIO}
 \classComment{
@@ -111,10 +112,12 @@ factory for half stepping.}
 \closeMethod
 
 \beginMethod{writeMessage(String,int)}
-\methodDeclaration{public void writeMessage(String,int))}
+\methodDeclaration{public void writeMessage(String message ,int port))}
 \methodComment{
     send message to SerialIO to be sented.
 }
+\methodParam{message}{any message reply we are sending back}
+\methodParam{port}{port number to be sent}
 \closeMethod
 
 \beginMethod{run()}

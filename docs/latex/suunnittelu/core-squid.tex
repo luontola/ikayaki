@@ -13,6 +13,11 @@
 \classPatterns{This class is singleton, there will be always only one instance of it and its created when class is needed first time.}
 \closeClass
 
+\beginField{owner}
+\fieldDeclaration{private Project owner}
+\fieldComment{project currently using squid-interface}
+\closeField
+
 \beginField{degausser}
 \fieldDeclaration{private Degausser degausser}
 \fieldComment{class for commanding degausser}
@@ -33,23 +38,26 @@
 \methodComment{
     Gives handler for Degausser.
 }
+\methodReturn{Degausser object if its not busy}
 \closeMethod
 
-\beginMethod{getHandler}
+\beginMethod{getHandler()}
 \methodDeclaration{public Handler getHandler()}
 \methodComment{
     Gives handler for Degausser.
 }
+\methodReturn{Handler object.}
 \closeMethod
 
-\beginMethod{getMagnetometer}
+\beginMethod{getMagnetometer()}
 \methodDeclaration{public Magnetometer getMagnetometer()}
 \methodComment{
     Gives handler for Magnetometer
 }
+\methodReturn{Magnetometer object.}
 \closeMethod
 
-\beginMethod{updateSettings}
+\beginMethod{updateSettings()}
 \methodDeclaration{public void updateSettings()}
 \methodComment{
     When settings are saved, update all settings in subclasses.
@@ -70,9 +78,35 @@
 }
 \closeMethod
 
+\beginMethod{isOK()}
+\methodDeclaration{public boolean isOK()}
+\methodComment{
+    checks all subclasses if they are set and online.
+}
+\methodReturn{True if ok}
+\closeMethod
+
+\beginMethod{setOwner(Project owner)}
+\methodDeclaration{public boolean setOwner(Project owner)}
+\methodComment{
+    Sets owner to new project, and only this project can call interface. Check if Squid is currently busy.
+}
+\methodParam{owner}{Project that we want to use Squid now.}
+\methodReturn{True if success, false if Squid was busy.}
+\closeMethod
+
+\beginMethod{getOwner()}
+\methodDeclaration{public Project getOwner()}
+\methodComment{
+    Returns Project currently using Squid-interface.
+}
+\methodReturn{Project, or null if none is using Squid.}
+\closeMethod
+
 \beginClass{Degausser}
 \classPackage{ikayaki.squid}
 \classDeclaration{public class Degausser}
+\classImplements{SerialIOListener}
 \classCreatedBy{Squid}
 \classUses{Settings}
 \classUses{SerialIO}
@@ -127,6 +161,7 @@
 \methodComment{
     Sets coil X,Y,Z.
 }
+\methodParam{coil}{coil to set on.}
 \closeMethod
 
 \beginMethod{setAmplitude(int)}
@@ -134,6 +169,7 @@
 \methodComment{
     Sets amplitude to ramp, range 0 to 3000.
 }
+\methodParam{amplitude}{amplitude to demag.}
 \closeMethod
 
 \beginMethod{executeRampUp()}
@@ -157,11 +193,28 @@
 }
 \closeMethod
 
+\beginMethod{demagnetize(int amplitude)}
+\methodDeclaration{public boolean demagnetize(int amplitude)}
+\methodComment{
+    Performs full sequence to demagnetize with given amplitude.
+}
+\methodParam{amplitude}{amplitude to demag.}
+\methodReturn{If process was sended succesfully, true.}
+\closeMethod
+
 \beginMethod{getStatus()}
 \methodDeclaration{public String getStatus()}
 \methodComment{
     Gives configuration and ramp status.
 }
+\closeMethod
+
+\beginMethod{isOK()}
+\methodDeclaration{public boolean isOK()}
+\methodComment{
+    checks if connection is ok.
+}
+\methodReturn{True if ok}
 \closeMethod
 
 \beginMethod{updateSettings()}
@@ -182,6 +235,7 @@
 \beginClass{Handler}
 \classPackage{ikayaki.squid}
 \classDeclaration{public class Handler}
+\classImplements{SerialIOListener}
 \classCreatedBy{Squid}
 \classUses{Settings}
 \classUses{SerialIO}
@@ -274,7 +328,7 @@ factory for half stepping.}
 \fieldComment{angles are between 0 (0) and 2000 (360)}
 \closeField
 
-\beginMethod{updateSettings}
+\beginMethod{updateSettings()}
 \methodDeclaration{public void updateSettings()}
 \methodComment{
     Squid tells if settings are changed, update all settings.
@@ -286,6 +340,14 @@ factory for half stepping.}
 \methodComment{
     Returns current status on Sample Handler.
 }
+\closeMethod
+
+\beginMethod{isOK()}
+\methodDeclaration{public boolean isOK()}
+\methodComment{
+    checks if connection is ok.
+}
+\methodReturn{True if ok}
 \closeMethod
 
 \beginMethod{moveToHome()}
@@ -321,6 +383,8 @@ factory for half stepping.}
 \methodComment{
     Value must be between 1 and 16,777,215. return true if good pos-value and moves handler there.
 }
+\methodParam{pos}{Position where handler are sent}
+\methodReturn{if given position was ok, true.}
 \closeMethod
 
 \beginMethod{stop()}
@@ -331,10 +395,11 @@ factory for half stepping.}
 \closeMethod
 
 \beginMethod{rotateTo(int)}
-\methodDeclaration{public void rotateTo(int angler)}
+\methodDeclaration{public void rotateTo(int angle)}
 \methodComment{
     Value is in degrees, remainder of divided by 360. Rotates handler that much.
 }
+\methodParam{angle}{Angle in degrees to rotate handler.}
 \closeMethod
 
 \beginMethod{Handler()}
@@ -348,6 +413,7 @@ factory for half stepping.}
 \beginClass{Magnetometer}
 \classPackage{ikayaki.squid}
 \classDeclaration{public class Magnetometer}
+\classImplements{SerialIOListener}
 \classCreatedBy{Squid}
 \classUses{Settings}
 \classUses{SerialIO}
@@ -381,22 +447,26 @@ factory for half stepping.}
 \beginMethod{reset(char)}
 \methodDeclaration{public String reset(char axis)}
 \methodComment{
-   axis is x,y,x or a (all).
+   Reset settings on axis
 }
+\methodParam{axis}{x,y,x or a (all)}
 \closeMethod
 
 \beginMethod{resetCounter(char)}
 \methodDeclaration{public String resetCounter(char axis)}
 \methodComment{
-   axis is x,y,x or a (all).
+   Reset counter for axis.
 }
+\methodParam{axis}{x,y,x or a (all)}
 \closeMethod
 
 \beginMethod{configure(char,char,char)}
 \methodDeclaration{public String configure(char axis, char subcommand, char option)}
 \methodComment{
-   axis is x,y,x or a (all). The CONFIGURE subcommands follow: "F" Set filter configuration. The data subfield sets the filter to the indicated range. The four possible data values are: "1" One Hertz Filter; 1 Hz "T" Ten Hertz Filter; 10 Hz "H" One hundred Hertz Filter; 100 Hz "W" Wide band filter; WB "R" Set DC SQUID electronic range. The data subfield selects the range desired. The four possible data values are: "1" One time range; 1x "T" Ten times range; 10x "H" One hundred times range; 100x "E" Extended range; 1000x "S" Set/Reset the fast-slew option. Two data values are possible: "E" Enable the fast-slew; turn it on. "D" Disable the fast-slew; turn it off. "L" This subcommand opens or closes the SQUID feedback loop or resets the analog signal to +/- 1/2 flux quantum about zero. The three possible data values are: "O" Open the feedback loop. (This command also zeros the flux counter) "C" Close the feedback loop. "P" Pulse-reset (open then close) the feedback loop. (This command also zeros the flux counter)
 }
+\methodParam{axis}{x,y,x or a (all)}
+\methodParam{subcommand}{The CONFIGURE subcommands follow: "F" Set filter configuration. The data subfield sets the filter to the indicated range. The four possible data values are: "1" One Hertz Filter; 1 Hz "T" Ten Hertz Filter; 10 Hz "H" One hundred Hertz Filter; 100 Hz "W" Wide band filter; WB "R" Set DC SQUID electronic range. The data subfield selects the range desired. The four possible data values are: "1" One time range; 1x "T" Ten times range; 10x "H" One hundred times range; 100x "E" Extended range; 1000x "S" Set/Reset the fast-slew option. Two data values are possible: "E" Enable the fast-slew; turn it on. "D" Disable the fast-slew; turn it off. "L" This subcommand opens or closes the SQUID feedback loop or resets the analog signal to +/- 1/2 flux quantum about zero. The three possible data values are: "O" Open the feedback loop. (This command also zeros the flux counter) "C" Close the feedback loop. "P" Pulse-reset (open then close) the feedback loop. (This command also zeros the flux counter)}
+\methodParam{option}{see data values from subcommands.}
 \closeMethod
 
 \beginMethod{latchAnalog(char)}
@@ -404,6 +474,7 @@ factory for half stepping.}
 \methodComment{
     axis is x,y,x or a (all).
 }
+\methodParam{axis}{x,y,x or a (all)}
 \closeMethod
 
 \beginMethod{latchCounter(char)}
@@ -411,13 +482,25 @@ factory for half stepping.}
 \methodComment{
     axis is x,y,x or a (all).
 }
+\methodParam{axis}{x,y,x or a (all)}
+\closeMethod
+
+\beginMethod{measure(char)}
+\methodDeclaration{public void measure(char axis)}
+\methodComment{
+    Performs full sequence to measure axis.
+}
+\methodParam{axis}{x,y,x.}
 \closeMethod
 
 \beginMethod{getData(char,char,String)}
 \methodDeclaration{public String getData(char axis, char command, String datavalues)}
 \methodComment{
-    axis is x,y or x. Command: "D" Send back the analog data last captured with the LATCH command. The <data> field is not required. "C" Send back the counter value last captured with the LATCH command. The <data> field is not required. "S" Send back status. Various pieces of status can be sent by the magnetometer electronics. Datavalues one or more: "A" Send back all status. "F" Send back all filter status. "R" Send back all range status. "S" Send back slew status. "L" Send back SQUID feedback loop status. Return feedback, waiting time?
+	Generic send message sender, use with cautios and knowledge. Check if commands are good.
 }
+\methodParam{axis}{x,y,x}
+\methodParam{command}{"D" Send back the analog data last captured with the LATCH command. The <data> field is not required. "C" Send back the counter value last captured with the LATCH command. The <data> field is not required. "S" Send back status. Various pieces of status can be sent by the magnetometer electronics.}
+\methodParam{axis}{Datavalues one or more: "A" Send back all status. "F" Send back all filter status. "R" Send back all range status. "S" Send back slew status. "L" Send back SQUID feedback loop status. Return feedback, waiting time?}
 \closeMethod
 
 \beginMethod{getStatus()}
@@ -425,6 +508,14 @@ factory for half stepping.}
 \methodComment{
     Returns current status on Sample Handler.
 }
+\closeMethod
+
+\beginMethod{isOK()}
+\methodDeclaration{public boolean isOK()}
+\methodComment{
+    checks if connection is ok.
+}
+\methodReturn{True if ok}
 \closeMethod
 
 \beginMethod{Magnetometer()}

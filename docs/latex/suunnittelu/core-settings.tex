@@ -10,7 +10,7 @@
 \beginField{properties}
 \fieldDeclaration{private Properties properties}
 \fieldValue{new Properties()}
-\fieldComment{All properties in a map. Keys are: magnetometerPort, demagnetizer, PorthandlerPort, xAxisCalibration, yAxisCalibration, zAxisCalibration, demagRamp, demagDelay, acceleration, deceleration, velocity, measurementVelocity, transverseYPosition, axialPosition, sampleLoadPosition, backgroundPosition, measurementPosition, rotation, handlerRightLimit}
+\fieldComment{All properties in a map. Keys are: magnetometerPort(String), demagnetizerPort(String), PorthandlerPort(String), xAxisCalibration(double), yAxisCalibration(double), zAxisCalibration(double), demagRamp(int), demagDelay(int), acceleration(int), deceleration(int), velocity(int), measurementVelocity(int), transverseYPosition(int), axialPosition(int), sampleLoadPosition(int), backgroundPosition(int), measurementPosition(int), rotation(int), handlerRightLimit(boolean)}
 \closeField
 
 \beginField{propertiesFile}
@@ -71,7 +71,7 @@
 \closeMethod
 
 \beginMethod{getProperty(String)}
-\methodDeclaration{public String getProperty(String key)}
+\methodDeclaration{private String getProperty(String key)}
 \methodComment{
     Returns the value that maps to the specified key.
 }
@@ -80,12 +80,28 @@
 \closeMethod
 
 \beginMethod{setProperty(String,String)}
-\methodDeclaration{public void setProperty(String key, String value)}
+\methodDeclaration{private void setProperty(String key, String value)}
 \methodComment{
     Associates the specified value with the specified key. Will invoke autosaving.
 }
 \methodParam{key}{key with which the specified value is to be associated.}
 \methodParam{value}{value to be associated with the specified key.}
+\closeMethod
+
+\beginMethod{getPropertyXXX()}
+\methodDeclaration{public Type getPropertyXXX()}
+\methodComment{
+    Generic accessor for all properties. Returns the value from Properties in appropriate type.
+}
+\methodReturn{Value associated with key}
+\closeMethod
+
+\beginMethod{setPropertyXXX(Type value)}
+\methodDeclaration{public boolean setProperty(Type value)}
+\methodComment{
+    Generic accessor for all properties. Invoke autosave. Checks if value is ok and sets it.
+}
+\methodReturn{True if value was ok.}
 \closeMethod
 
 \beginMethod{getSequences()}
