@@ -159,6 +159,18 @@ public class RunQueue {
     }
 
     /**
+     * Waits for the queue to become empty.
+     *
+     * @throws InterruptedException if another thread has interrupted the current thread. The interrupted status of the
+     *                              current thread is cleared when this exception is thrown.
+     */
+    public synchronized void join() throws InterruptedException {
+        while (workerThread != null) {
+            wait();
+        }
+    }
+
+    /**
      * Keeps on checking the RunQueue.queue to see if there are Runnables to be executed. If there is one, execute it
      * and proceed to the next one. If an uncaught Throwable is thrown during the execution, prints an error message and
      * stack trace to stderr. If the queue is empty, this thread will set RunDelayed.workerThread to null and terminate
@@ -172,6 +184,7 @@ public class RunQueue {
                 synchronized (RunQueue.this) {
                     if (queue.size() == 0) {
                         workerThread = null;
+                        RunQueue.this.notifyAll(); // notify all who wait in RunQueue.join()
                         return;
                     }
                 }
@@ -262,7 +275,8 @@ public class RunQueue {
             //Thread.sleep(30 * i);
         }
 
-        Thread.sleep(1000);
+        q.join();
+        //Thread.sleep(1000);
 
         for (int i = 0; i < 10; i++) {
             final int j = i;

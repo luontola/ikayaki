@@ -106,6 +106,14 @@
 \methodThrows{NullPointerException}{if runnable is null}
 \closeMethod
 
+\beginMethod{join()}
+\methodDeclaration{public synchronized void join()}
+\methodComment{
+	Waits for the queue to become empty.
+}
+\methodThrows{InterruptedException}{if another thread has interrupted the current thread. The interrupted status of the current thread is cleared when this exception is thrown.}
+\closeMethod
+
 
 \beginClass{RunQueue.RunQueueThread}
 \classPackage{ikayaki.util}
