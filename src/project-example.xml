@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="1.0" type="af">
     <properties>
-        <operator value="Erkki"/>
-        <date value="14.6.1997 13:02"/>
-        <ismanual value="false"/>
-        <rocktype value="Basalt"/>
-        <sampletype value="hand"/>
-        <site value="Antarctis, 1134, Utpostane"/>
-        <comment value="Dike 10m tos, fine grained, altered?"/>
-        <latitude value="344"/>
-        <longitude value="-74"/>
-        <strike value="280"/>
-        <dip value="14"/>
-        <mass value="10"/>
-        <volume value=""/>
+        <operator>Erkki</operator>
+        <date>14.6.1997 13:02</date>
+        <ismanual>false</ismanual>
+        <rocktype>Basalt</rocktype>
+        <sampletype>hand</sampletype>
+        <site>Antarctis, 1134, Utpostane</site>
+        <comment>Dike 10m tos, fine grained, altered?</comment>
+        <latitude>344</latitude>
+        <longitude>-74</longitude>
+        <strike>280</strike>
+        <dip>14</dip>
+        <mass>10</mass>
+        <volume></volume>
     </properties>
     <sequence name="Basalt">
         <step timestamp="2005-02-08 14:43:21" stepvalue="0" mass="" volume="">
