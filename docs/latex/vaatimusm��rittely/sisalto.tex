@@ -1,13 +1,13 @@
 \section{Introduction}
 
-This document describes client requirements and system 
-requirements for a SQUID magnetometer program that will be designed and 
-implemented as a software engineering student project at University of 
-Helsinki at the Computer Science Department. The client is the Department 
-of Geophysics.
+This document describes client requirements and system requirements for a SQUID 
+magnetometer program that will be designed and implemented as a software 
+engineering student project at University of Helsinki at the Computer Science 
+Department. The client is the Department of Geophysics.
 
-This document serves as a contract between client and us about the implemented functions of the program. Particulary the 
-requirements part of this document describes them.
+This document serves as a contract between client and us about the implemented 
+functions of the program. Particulary the requirements part of this document 
+describes them.
 
 Expected readership of this document here..
 
@@ -20,25 +20,31 @@ Technical terms here..
 
 \section{Overview}
 
-Department of Geophysics uses a magnetometer that works in SQUID (superconducting quantum interference device) 
-principle to measure magnetization of minerals and rocks. Magnetometer is controlled by a computer software 
-that controls and reads electric components that control the device itself.
+Department of Geophysics uses a magnetometer that works in SQUID 
+(superconducting quantum interference device) principle to measure magnetization 
+of minerals and rocks. Magnetometer is controlled by a computer software that 
+controls and reads electric components that control the device itself.
 
-The use of the present magnetometer software is complicated and unnecessarily burdens the users work memory 
-with complicated work phases and divergent operation in different use cases. The device is now controlled with 
-two various program. Functions of those two program can be combined to one. Now the programs are hard to learn and 
-teach which restricts the group of users.
+The use of the present magnetometer software is complicated and unnecessarily 
+burdens the users work memory with complicated work phases and divergent 
+operation in different use cases. The device is now controlled with two various 
+program. Functions of those two program can be combined to one. Now the programs 
+are hard to learn and teach which restricts the group of users.
 
-User of the device must know clearly what is the state of it and which operation is being performed at the 
-moment. The device is delicate and expensive, so a misfunction of it must be noticed early to prevent damage. 
-For example faulty state of demagnetizer can damage the device if it's not shut down manually in time.
+User of the device must know clearly what is the state of it and which operation 
+is being performed at the moment. The device is delicate and expensive, so a 
+misfunction of it must be noticed early to prevent damage. For example faulty 
+state of demagnetizer can damage the device if it's not shut down manually in 
+time.
  
-Device and program are used to carry out long, several stages involving measurement sequeances. It's 
-important that these sequences can be performed flexibly and fast. User must be able to follow the 
-measuring procedure and to stop and modify sequence if there is unexpected changes in results.
+Device and program are used to carry out long, several stages involving 
+measurement sequeances. It's important that these sequences can be performed 
+flexibly and fast. User must be able to follow the measuring procedure and to 
+stop and modify sequence if there is unexpected changes in results.
 
-Further process and analyze of the results occurs in various other programs which use a standard file format. 
-So the new program has to export these formats.
+Further process and analyze of the results occurs in various other programs 
+which use a standard file format. So the new program has to export these 
+formats.
 
 \section{Use cases}
 
@@ -58,7 +64,10 @@ So the new program has to export these formats.
 \newcounter{ucsce}[ucnum]
 \hbadness=10000 % estämmä ihme "underfull \hbox (badness 10000)" -varoitukset (ei hajua mistä tulevat)
 
-Describes planned use cases for the program. Use cases are derived from user interface prototype and requirements. All use cases are perfomed by any ordinary user and in program main screen. A simplified use case diagram is presented in Figure~\ref{fig:usecases}.
+Describes planned use cases for the program. Use cases are derived from user 
+interface prototype and requirements. All use cases are perfomed by any ordinary 
+user and in program main screen. A simplified use case diagram is presented in 
+Figure~\ref{fig:usecases}.
 
 \begin{figure}
 \begin{center}
@@ -68,7 +77,8 @@ Describes planned use cases for the program. Use cases are derived from user int
 \end{center}
 \end{figure}
 
-Use cases are divided to different sections, grouping logically similar use cases together.
+Use cases are divided to different sections, grouping logically similar use 
+cases together.
 
 Use case format:
 
@@ -395,17 +405,16 @@ Use case format:
 \newcommand{\ReqSet}[1]{\textbf{Set by:} #1\\}
 \newcommand{\ReqUc}[1]{\textbf{Use Cases:} #1\\}
 
-Goals of the software set by client, project team and environment.
-Requirements were collected from 1) powerpoint slides received from
-client, 2) lectures given by client, 3) user observations held at the
-squid lab with client (used to collect goal-derived use cases), and 4)
-user interface prototype demonstrations given to client, after which the
-client gave suggestions and corrections to prototype functions.
+Goals of the software set by client, project team and environment. Requirements 
+were collected from 1) powerpoint slides received from client, 2) lectures given 
+by client, 3) user observations held at the squid lab with client (used to 
+collect goal-derived use cases), and 4) user interface prototype demonstrations 
+given to client, after which the client gave suggestions and corrections to 
+prototype functions.
 
-Priorities are from 1 (highest) to 4 (lowest). Our goal is to fulfill at
-least the requirements with priorities 1 and 2. Requirements with
-priority 3 will be fulfilled only if time permits, and priority 4's will
-propably be left out.
+Priorities are from 1 (highest) to 4 (lowest). Our goal is to fulfill at least 
+the requirements with priorities 1 and 2. Requirements with priority 3 will be 
+fulfilled only if time permits, and priority 4's will propably be left out.
 
 Overview of requirements is presented in Table~\ref{tab:requirements}.
 
@@ -464,7 +473,8 @@ Requirement format:
 
 \subsection{Functional requirements}
 
-{\it Define the services which the software offers and how the software behaves, including error handling. May also define things the software shall not do.}
+{\it Define the services which the software offers and how the software behaves, 
+including error handling. May also define things the software shall not do.}
 
 \subsubsection{Magnetometer}
 
@@ -492,9 +502,8 @@ rotate sample handler and measure and demagnetize sample.}
 
 \ReqId{R4}
 \ReqName{Warning signal}
-\ReqDesc{Program should warn user with alarm signal if magnetic field
-remains on for too long.}
-\ReqPrio{1}
+\ReqDesc{Program should warn user with alarm signal if magnetic field remains on for too long. The implementation depends on if the Degaussing System's protocol makes it possible.}
+\ReqPrio{3}
 \ReqSet{Customer}
 \ReqUc{UC2, UC3}
 
@@ -656,8 +665,8 @@ UC24, UC25, UC26}
 
 \subsection{Environment}
 
-{\it Define requirements for the software which origin from the environment
-in which the sowtware will be working, and which the software must satisfy for 
+{\it Define requirements for the software which origin from the environment in 
+which the sowtware will be working, and which the software must satisfy for 
 being able to work in its environment.}
 
 Program will be used in normal PC which is connected to magnetometer. The 
@@ -667,8 +676,8 @@ RAM, 1280x1024 resolution. The current computer is running Windows XP.
 Taking into account rapid phase of computer evolution it is possible that 
 computer in which program is used can change, accordingly the program should be 
 installable by outsiders. We need not prepare to changing of magnetometer, as 
-new magnenetometer will probably have its own program. Program doesn't
-control temparature of magnetometer.
+new magnenetometer will probably have its own program. Program doesn't control 
+the temparature of the magnetometer.
 
 The SQUID hardware and communication with it is described in the section 
 "External interfaces".
@@ -771,9 +780,9 @@ Its protocol is described in Appendix 3.
 
 \section{Validation}
 
-In validation it is shown that program meets requirements set by user.
-Project documents are validated in reviews. Program code is validated by
-testing. In reviews it will be established that requirement document and
-design document are in line with user requirements and will lead
-to production of program which meets these requirements. Testing shows
-that program actually works as specified by design document.
+In validation it is shown that program meets requirements set by user. Project 
+documents are validated in reviews. Program code is validated by testing. In 
+reviews it will be established that requirement document and design document are 
+in line with user requirements and will lead to production of program which 
+meets these requirements. Testing shows that program actually works as specified 
+by design document.
