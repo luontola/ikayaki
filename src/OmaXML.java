@@ -73,8 +73,7 @@ class OmaXML {
             DocumentBuilder builder = factory.newDocumentBuilder();
             document = builder.newDocument();
 
-            //Esimerkki mahdollisesta projektitiedostosta
-
+            // Esimerkki mahdollisesta projektitiedostosta
             Element root =
                     (Element) document.createElement("project");
             document.appendChild(root);
@@ -164,7 +163,7 @@ class OmaXML {
             return document;
 
         } catch (SAXException sxe) {
-            // Error generated during parsing)
+            // Error generated during parsing
             Exception x = sxe;
             if (sxe.getException() != null) {
                 x = sxe.getException();
@@ -230,6 +229,7 @@ class OmaXML {
     public static void saveXML(Document document, String filename) {
         try {
             FileOutputStream uloste = new FileOutputStream(filename);
+
             // Muunnetaan DOM XML:ksi apuluokalla
             TransformerFactory tFactory =
                     TransformerFactory.newInstance();
@@ -275,9 +275,11 @@ class OmaXML {
         NodeList list = document.getElementsByTagName("Pohja");
         Node node = list.item(0);
         System.out.println(nodeToString(node));
+
         // Otetaan "pohja"-elementin eka lapsonen k‰sittelyyn.
         Node subNode = node.getFirstChild();
         System.out.println(nodeToString(subNode));
+
         //k‰yd‰‰n kaikki l‰pi
         NodeList children = node.getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
@@ -300,6 +302,7 @@ class OmaXML {
             } else {
                 s += ": ";
             }
+            
             // Trim the value to get rid of NL's at the front
             String t = domNode.getNodeValue().trim();
             int x = t.indexOf("\n");
