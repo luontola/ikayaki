@@ -2,6 +2,7 @@ package hourparser;
 
 import java.util.Scanner;
 import java.util.Date;
+import java.util.Locale;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;

@@ -3,6 +3,8 @@ package hourparser;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Reads log files that include how many hours each person has made work and creates reports from them. Takes the file
@@ -10,20 +12,15 @@ import java.util.Vector;
  */
 public class HourParser {
 
-    private static Vector<Person> persons;
-
     private static String headerFile = null;
     private static String footerFile = null;
     private static String namePrefix = "hours";
     private static String nameSuffix = ".html";
     private static String dateFormat = "d.M.yyyy";
+    private static Locale locale = Locale.getDefault();
 
     public static void main(String[] args) {
-        if (args.length == 0) {
-            printHelp();
-            return;
-        }
-
+        // parse the command line parameters
         int arg;
         for (arg = 0; arg < args.length; arg++) {
             if (args[arg].startsWith("--help")) {
@@ -47,14 +44,17 @@ public class HourParser {
             } else if (args[arg].startsWith("--date-format=")) {
                 String param = args[arg].substring("--date-format=".length());
                 setDateFormat(param);
+            } else if (args[arg].startsWith("--locale=")) {
+                String param = args[arg].substring("--locale=".length());
+                setLocale(param);
             } else {
-                // start processing files
+                // beginning of input file parameters
                 break;
             }
         }
 
-        // read all the files given as program parameters
-        persons = new Vector<Person>();
+        // read all the input files given as parameters
+        Vector<Person> persons = new Vector<Person>();
         for (; arg < args.length; arg++) {
             try {
                 persons.add(new Person(new File(args[arg])));
@@ -65,8 +65,29 @@ public class HourParser {
             }
         }
 
-        // build reports
+        // print help if there were no input files
+        if (persons.size() == 0) {
+            printHelp();
+            return;
+        }
+
+        // find out the beginning and end of the statistics
+        Date start = persons.get(0).getStart();
+        Date end = persons.get(0).getEnd();
+        for (Person p : persons) {
+            Date date;
+            date = p.getStart();
+            if (date.before(start)) {
+                start = date;
+            }
+            date = p.getEnd();
+            if (date.after(end)) {
+                end = date;
+            }
+        }
+
         
+
         // TODO
     }
 
@@ -76,9 +97,10 @@ public class HourParser {
         System.out.println();
         System.out.println("  --header-file=FILE      header for the output files");
         System.out.println("  --footer-file=FILE      footer for the output files");
-        System.out.println("  --name-prefix=STRING    prefix for the output file names (default: hours)");
-        System.out.println("  --name-suffix=STRING    suffix for the output file names (default: .html)");
-        System.out.println("  --date-format=FORMAT    format of the dates in input files (default: d.M.yyyy)");
+        System.out.println("  --name-prefix=STRING    prefix for the output file names (default: " + getNamePrefix() + ")");
+        System.out.println("  --name-suffix=STRING    suffix for the output file names (default: " + getNameSuffix() + ")");
+        System.out.println("  --date-format=FORMAT    format of the dates in input files (default: " + getDateFormat() + ")");
+        System.out.println("  --locale=LOCALE         locale for reading the hours (default: " + getLocale() + ")");
         System.out.println("  --help                  display this help and exit");
         System.out.println("  --version               output version information and exit");
     }
@@ -126,5 +148,24 @@ public class HourParser {
 
     public static void setDateFormat(String dateFormat) {
         HourParser.dateFormat = dateFormat;
+    }
+
+    public static Locale getLocale() {
+        return locale;
+    }
+
+    public static void setLocale(String code) {
+        String[] s = code.split("_");
+        if (s.length == 1) {
+            HourParser.locale = new Locale(s[0]);
+        } else if (s.length == 2) {
+            HourParser.locale = new Locale(s[0], s[1]);
+        } else if (s.length == 3) {
+            HourParser.locale = new Locale(s[0], s[1], s[2]);
+        } else {
+            System.err.println("Invalid locale: " + code);
+            System.exit(1);
+        }
+        Locale.setDefault(HourParser.locale);
     }
 }
