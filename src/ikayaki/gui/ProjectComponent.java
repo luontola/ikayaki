@@ -25,6 +25,7 @@ package ikayaki.gui;
 import ikayaki.*;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Common superclass for components which use a Project and listen to MeasurementEvents and ProjectEvents.
@@ -69,6 +70,21 @@ public class ProjectComponent extends JPanel implements ProjectListener, Measure
             project.addMeasurementListener(this);
         }
         this.project = project;
+    }
+
+    /**
+     * Returns the parent Frame of this component.
+     */
+    public Frame getParentFrame() {
+        Container c = getParent();
+        do {
+            if (c == null) {
+                return null;
+            } else {
+                c = c.getParent();
+            }
+        } while (!(c instanceof Frame));
+        return (Frame) c;
     }
 
     /**

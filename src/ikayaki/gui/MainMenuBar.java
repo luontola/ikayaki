@@ -63,6 +63,8 @@ Event H: On about Clicked - Opens dialog with credits and version number
 Event I: On exit Clicked - closes program
 */
 
+    private MainViewPanel main;
+
     private JMenu file;
     private JMenu options;
     private JMenu help;
@@ -80,7 +82,9 @@ Event I: On exit Clicked - closes program
     /**
      * Creates all components and makes menu and sets ActionListeners.
      */
-    public MainMenuBar() {
+    public MainMenuBar(MainViewPanel main) {
+        this.main = main;
+
         add(new JMenu("Menu bar"));
         options = new JMenu("Options");
         add(options);
@@ -99,7 +103,7 @@ Event I: On exit Clicked - closes program
         }
 
         public void actionPerformed(ActionEvent e) {
-            SettingsPanel.showPasswordDialog(null,
+            SettingsPanel.showSettingsDialog(main.getParentFrame(),
                     "Configuration");
         }
     }

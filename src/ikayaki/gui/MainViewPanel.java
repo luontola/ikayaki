@@ -87,7 +87,7 @@ public class MainViewPanel extends ProjectComponent {
         // squid = Squid.instance();
 
         /* Init GUI components */
-        menuBar = new MainMenuBar();
+        menuBar = new MainMenuBar(this);
         statusBar = new MainStatusBar();
 
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
