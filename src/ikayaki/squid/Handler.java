@@ -24,6 +24,9 @@ package ikayaki.squid;
 
 import java.util.Stack;
 import ikayaki.Settings;
+import javax.comm.PortInUseException;
+import javax.comm.NoSuchPortException;
+import java.util.concurrent.SynchronousQueue;
 
 /**
  * Offers an interface for controlling the sample handler.
@@ -39,6 +42,12 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * Buffer for incoming messages, readed when needed.
      */
     private Stack messageBuffer;
+
+    /**
+     * Synchronous queue for waiting result message from handler
+     */
+    private SynchronousQueue queue;
+
 
     /**
      * Handlers current status.
@@ -114,11 +123,13 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     private int currentRotation = 0;
 
+    private boolean waitingForMessage = false;
+
     /**
      * Creates a new handler interface. Opens connection to handler COM port and reads settings from the Settings
      * class.
      */
-    public Handler() {
+    public Handler() throws PortInUseException, NoSuchPortException {
         this.serialIO = new SerialIO(new SerialParameters(Settings.instance().getHandlerPort(),1200,0,0,8,1,0));
         this.acceleration = Settings.instance().getHandlerAcceleration();
         this.deceleration = Settings.instance().getHandlerDeceleration();
@@ -161,7 +172,17 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *         notice pending.
      */
     public char getStatus() {
-        return 0; // TODO
+        try {
+            this.serialIO.writeMessage("%");
+        } catch (PortInUseException ex) {
+        } catch (NoSuchPortException ex) {
+        }
+        waitingForMessage = true;
+        String answer = (String)queue.poll();
+        waitingForMessage = false;
+        return answer.charAt(0);
+
+
     }
 
     /**
@@ -170,7 +191,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @return Value between 1 and 16,777,215
      */
     public int getPosition() {
-        return 0; // TODO
+        return this.currentPosition;
+
     }
 
     /**
@@ -179,7 +201,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @return Value between 0 and 2000
      */
     public int getRotation() {
-        return 0; // TODO
+        return this.currentRotation;
     }
 
     /**
@@ -188,7 +210,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @return True if ok
      */
     public boolean isOK() {
-        return false; // TODO
+        if(serialIO != null)
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -196,23 +221,40 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * finished.
      */
     public void moveToHome() {
-        return; // TODO
+        try {
+            this.serialIO.writeMessage("H1");
+        } catch (PortInUseException ex) {
+        } catch (NoSuchPortException ex) {
+        }
     }
 
     /**
-     * Commands the holder to move to degauss position. Only starts movement, needs to poll with join() when movement is
+     * Commands the holder to move to degauss Z position. Only starts movement, needs to poll with join() when movement is
      * finished.
      */
-    public void moveToDegausser() {
-        return; // TODO
+    public void moveToDegausserZ() {
+        moveToPos(this.axialAFPosition);
+        this.go();
     }
+
+    /**
+     * Commands the holder to move to degauss Y (and X) position. Only starts movement, needs to poll with join() when movement is
+     * finished.
+     */
+    public void moveToDegausserY() {
+        moveToPos(this.transverseYAFPosition);
+        this.go();
+    }
+
 
     /**
      * Commands the holder to move to measure position. Only starts movement, needs to poll with join() when movement is
      * finished.
      */
     public void moveToMeasurement() {
-        return; // TODO
+        moveToPos(this.measurementPosition);
+        this.go();
+
     }
 
     /**
@@ -220,7 +262,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * is finished.
      */
     public void moveToBackground() {
-        return; // TODO
+        moveToPos(this.backgroundPosition);
+        this.go();
     }
 
     /**
@@ -232,14 +275,30 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @return true if given position was ok, otherwise false.
      */
     public boolean moveToPos(int pos) {
-        return false; // TODO
+        if(pos<0 || pos>16777215)
+            return false;
+        try {
+            //first need to set translate active
+            this.serialIO.writeMessage("O1,0");
+            this.serialIO.writeMessage("P" + pos);
+            this.go();
+            return true;
+        } catch (PortInUseException ex) {
+        } catch (NoSuchPortException ex) {
+        }
+        return false;
     }
 
     /**
      * Commands the handler to stop its current job.
      */
     public void stop() {
-        return; // TODO
+        try {
+            this.serialIO.writeMessage("Q");
+        } catch (PortInUseException ex) {
+        } catch (NoSuchPortException ex) {
+        }
+
     }
 
     /**
@@ -249,14 +308,27 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @param angle the angle in degrees to rotate the handler to.
      */
     public void rotateTo(int angle) {
-        return; // TODO
+        angle = angle%360;
+        angle = ((double)angle)/360.0 * Settings.instance().getHandlerRotation();
+        try {
+            //first set rotation active
+            this.serialIO.writeMessage("O1,1");
+            this.serialIO.writeMessage("P" + angle);
+        } catch (PortInUseException ex) {
+        } catch (NoSuchPortException ex) {
+        }
     }
 
     /**
      * Sends message to handler go online (@0).
      */
     private void setOnline() {
-        return; // TODO
+        try {
+            this.serialIO.writeMessage("@0");
+        } catch (PortInUseException ex) {
+        } catch (NoSuchPortException ex) {
+        }
+
     }
 
     /**
@@ -265,7 +337,13 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @param a Acceleration is a number from 0 to 127
      */
     private void setAcceleration(int a) {
-        return; // TODO
+        if (a >= 0 && a < 128) {
+            try {
+                this.serialIO.writeMessage("A"+a);
+            } catch (PortInUseException ex) {
+            } catch (NoSuchPortException ex) {
+            }
+        }
     }
 
     /**
@@ -274,7 +352,13 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @param d Deceleration is a number from 0 to 127
      */
     private void setDeceleration(int d) {
-        return; // TODO
+        if (d >= 0 && d < 128) {
+             try {
+                 this.serialIO.writeMessage("D"+d);
+             } catch (PortInUseException ex) {
+             } catch (NoSuchPortException ex) {
+             }
+         }
     }
 
     /**
@@ -293,7 +377,14 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @param v Velocity range is 50 to 20,000
      */
     private void setVelocity(int v) {
-        return; // TODO
+        if (v >= 50 && v < 20001) {
+            try {
+                this.serialIO.writeMessage("M"+v);
+            } catch (PortInUseException ex) {
+            } catch (NoSuchPortException ex) {
+            }
+        }
+
     }
 
     /**
@@ -332,7 +423,11 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * command. (S).
      */
     private void performSlew() {
-        return; // TODO
+        try {
+            this.serialIO.writeMessage("S");
+        } catch (PortInUseException ex) {
+        } catch (NoSuchPortException ex) {
+        }
     }
 
     /**
@@ -371,7 +466,11 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * Send handler on move (G).
      */
     private void go() {
-        return; // TODO
+        try {
+            this.serialIO.writeMessage("G");
+        } catch (PortInUseException ex) {
+        } catch (NoSuchPortException ex) {
+        }
     }
 
     /**
@@ -383,7 +482,11 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * stop is with a reset or a hard limit switch input.
      */
     private void join() {
-        return; // TODO
+        try {
+            this.serialIO.writeMessage("F");
+        } catch (PortInUseException ex) {
+        } catch (NoSuchPortException ex) {
+        }
     }
 
     /**
@@ -421,10 +524,25 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *         notice pending
      */
     private char pollMessage() {
-        return 0; // TODO
+        waitingForMessage = true;
+        String answer = (String)queue.poll();
+        waitingForMessage = false;
+        return answer.charAt(0);
     }
 
     public void serialIOEvent(SerialIOEvent event) {
-        // TODO
+        if(waitingForMessage) {
+            try {
+                queue.put(event.getMessage());
+            }
+            catch (InterruptedException e) {
+                System.err.println("Interrupted Degausser message event");
+            }
+            catch (NullPointerException e) {
+                System.err.println("Null from SerialEvent in Degausser");
+            }
+        }
+        messageBuffer.add(event.getMessage());
+
     }
 }
