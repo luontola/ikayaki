@@ -365,7 +365,8 @@ whose measuring ended.
             switch (column) {
                 case 0: return files[row].getName();
                 // TODO: how to get the type?
-                case 1: return "type"; //Project.loadProject(files[row]).getType().name();
+//                case 1: return "type"; //Project.loadProject(files[row]).getType().name();
+                case 1: return Project.getType(files[row]);
                 case 2: return DateFormat.getInstance().format(files[row].lastModified());
                 default: assert(false); return null;
             }

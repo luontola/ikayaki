@@ -34,8 +34,7 @@ import javax.swing.event.EventListenerList;
 import javax.vecmath.Matrix3d;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import static java.lang.Math.sin;
@@ -88,6 +87,12 @@ project listeners.
      * physical file.
      */
     private static Hashtable<File, Project> projectCache = new Hashtable<File, Project>();
+
+    /**
+     * Caches the types of the project files, as read by getType(Project). The value is a Type for valid project files,
+     * or an Object for invalid or unknown files.
+     */
+    private static Hashtable<File, Object> projectTypeCache = new Hashtable<File, Object>();
 
     /**
      * Location of the project file in the local file system. Autosaving will save the project to this file.
@@ -336,6 +341,70 @@ project listeners.
             project.type = null;
         }
         return true;
+    }
+
+    /**
+     * Returns the type of a project file. Reads the type of the project from the specified file quickly, without fully
+     * loading the Project. The first request for each file reads from the file system, but after that the results are
+     * cached for an unspecified time.
+     *
+     * @param file the path of the project file.
+     * @return the type of the project, or null if the file was not a project file or it was not possible to read it.
+     * @throws NullPointerException if file is null.
+     */
+    public static Type getType(File file) {
+        if (file == null) {
+            throw new NullPointerException();
+        }
+
+        // check the cache
+        Object value = projectTypeCache.get(file);
+        if (value != null) {
+            if (value instanceof Type) {
+                return (Type) value;
+            } else {
+                return null;
+            }
+        }
+
+        Type type = null;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+
+            // check that it is a XML file
+            String line = reader.readLine();
+            if (line.indexOf("<?xml") < 0) {
+                return null;
+            }
+
+            // the second line of the file should be something like:
+            // <project type="TYPE" version="1.0">
+            line = reader.readLine();
+            int start = line.indexOf("<project type=\"");
+            if (start < 0) {
+                return null;
+            }
+            start += 15;
+            int end = line.indexOf("\"", start);
+            if (end < 0) {
+                return null;
+            }
+            type = Type.valueOf(line.substring(start, end));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+
+        // save the results to cache
+        if (type != null) {
+            projectTypeCache.put(file, type);
+        } else {
+            projectTypeCache.put(file, new Object());
+        }
+        return type;
     }
 
     /**
