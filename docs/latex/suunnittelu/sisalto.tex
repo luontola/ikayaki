@@ -5,8 +5,6 @@
 \input{docmacro}
 
 
-% esimerkkirakenne mukaillen kopioitu ekasta löytämästäni esimerkistä -> http://www.cs.helsinki.fi/group/assari/
-
 \section{Introduction}
 
 \subsection{Meaning and structure of the document}
@@ -236,6 +234,114 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 
 \subsection{Measurement controls}
 
+\beginClass{MeasurementControlsPanel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class MeasurementControlsPanel}
+\classExtends{ProjectComponent}
+\classCreatedBy{MainViewPanel}
+\classUses{Project}
+\classUses{MagnetometerStatusPanel}
+\classUses{ManualControlsPanel}
+\classComment{
+	Has "Measure"/"Pause", "Single step" and "Stop now!" buttons for controlling measurements; "+z/-z" radiobuttons for changing sample orientation, help picture for inserting sample, picture of current magnetometer status, and, manual controls.
+	Listens MeasurementEvents and ProjectEvents, and updates buttons and magnetometer status accordingly.
+}
+\classEvent{On measureButton click}{call project.doAutoStep() or project.doPause(), depending on current button status.}
+\classEvent{On singlestepButton click}{call project.doSingleStep().}
+\classEvent{On stopButton click}{call project.doAbort().}
+\classEvent{On MeasurementEvent}{call magnetometerStatusPanel.updateStatus(int, int).}
+\classEvent{On ProjectEvent}{update buttons and manual controls according to project.isXXXEnabled().}
+\closeClass
+
+\beginField{project}
+\fieldDeclaration{private Project project}
+\closeField
+
+\beginField{measureButton}
+\fieldDeclaration{private JButton measureButton}
+\closeField
+
+\beginField{singlestepButton}
+\fieldDeclaration{private JButton singlestepButton}
+\closeField
+
+\beginField{stopButton}
+\fieldDeclaration{private JButton stopButton}
+\closeField
+
+\beginField{zPlusRadioButton}
+\fieldDeclaration{private JRadioButton zPlusRadioButton}
+\closeField
+
+\beginField{zMinusRadioButton}
+\fieldDeclaration{private JRadioButton zMinusRadioButton}
+\closeField
+
+\beginField{sampleInsertImage}
+\fieldDeclaration{private JImage? sampleInsertImage}
+\closeField
+
+\beginField{magnetometerStatusPanel}
+\fieldDeclaration{private MagnetometerStatusPanel magnetometerStatusPanel}
+\closeField
+
+\beginField{manualControlsPanel}
+\fieldDeclaration{private ManualControlsPanel manualControlsPanel}
+\closeField
+
+\beginClass{MagnetometerStatusPanel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class MagnetometerStatusPanel}
+\classExtends{JPanel}
+\classCreatedBy{MeasurementControlsPanel}
+\classComment{Picture of current magnetometer status, including sample holder position and rotation.}
+\closeClass
+
+\beginMethod{updateStatus(int, int)}
+\methodDeclaration{public updateStatus(int position, int rotation)}
+\methodComment{Updates magnetometer status picture; called by MeasurementControlsPanel.}
+\methodParam{position}{sample holder position, from a to b?}
+\methodParam{rotation}{sample holder rotation; 0, 90, 180 or 270.}
+\closeMethod
+
+\beginClass{ManualControlsPanel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class ManualControlsPanel}
+\classExtends{JPanel}
+\classCreatedBy{MeasurementControlsPanel}
+\classComment{Magnetometer manual control radiobuttons.}
+\classUses{Project}
+\classEvent{On xxxN click}{call project.xxxN().}
+\closeClass
+
+\beginField{project}
+\fieldDeclaration{private Project project}
+\closeField
+
+\beginField{demagX}
+\fieldDeclaration{private JRadioButton demagX}
+\closeField
+
+\beginField{demagY}
+\fieldDeclaration{private JRadioButton demagY}
+\closeField
+
+\beginField{demagZ}
+\fieldDeclaration{private JRadioButton demagZ}
+\closeField
+
+\beginField{measureX}
+\fieldDeclaration{private JRadioButton measureX}
+\closeField
+
+\beginField{measureY}
+\fieldDeclaration{private JRadioButton measureY}
+\closeField
+
+\beginField{measureZ}
+\fieldDeclaration{private JRadioButton measureZ}
+\closeField
+
 
 \subsection{Status bar}
 
@@ -437,8 +543,6 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 \methodReturn{a negative integer, zero, or a positive integer as this delay is less than, equal to, or greater than the specified delay.}
 \closeMethod
 
-
-\subsection{Some other specific part (subsystem) to this system...}
 
 \section{Package structure}
 
