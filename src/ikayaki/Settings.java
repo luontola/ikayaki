@@ -535,6 +535,15 @@ public class Settings {
 
     private List<File> directoryHistory = new LinkedList<File>();
 
+    public synchronized File getLastDirectory() {
+        File[] dirs = getDirectoryHistory();
+        if (dirs.length > 0) {
+            return dirs[0];
+        } else {
+            return new File("").getAbsoluteFile();
+        }
+    }
+
     public synchronized File[] getDirectoryHistory() {
         return directoryHistory.toArray(new File[directoryHistory.size()]);
     }

@@ -53,6 +53,7 @@ be closed.
     public static final String APP_VERSION = "0.1 CVS";
     public static final String APP_HOME_PAGE = "http://www.cs.helsinki.fi/group/squid/";
     public static final String FILE_TYPE = ".ika";
+    public static final String FILE_DESCRIPTION = "Measurement Project";
 
     /**
      * Starts the program Ikayaki.

@@ -29,6 +29,7 @@ import ikayaki.Settings;
 import ikayaki.squid.Squid;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -74,6 +75,8 @@ public class MainViewPanel extends ProjectComponent {
     private MeasurementControlsPanel measurementControlsPanel;
     private MeasurementDetailsPanel measurementDetailsPanel;
     private MeasurementGraphsPanel measurementGraphsPanel;
+
+    private FileFilter projectFileFilter;
 
     /* Swing Actions */
     private Action newProjectAction;
@@ -347,6 +350,47 @@ public class MainViewPanel extends ProjectComponent {
         System.exit(0);
     }
 
+    /**
+     * Loads a project file and tries to set it as the active project. Will show an error dialog if operation failed.
+     *
+     * @param file the project file to be loaded.
+     * @throws NullPointerException if file is null.
+     */
+    public void loadProject(File file) {
+        if (file == null) {
+            throw new NullPointerException();
+        }
+        Project project = Project.loadProject(file);
+        if (project != null) {
+            setProject(project);
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Unable to open the file " + file,
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Creates a project file and tries to set it as the active project. Will show an error dialog if operation failed.
+     *
+     * @param file the project file to be created.
+     * @param type the type of the project.
+     * @throws NullPointerException if file or type is null.
+     */
+    public void createProject(File file, Project.Type type) {
+        if (file == null || type == null) {
+            throw new NullPointerException();
+        }
+        Project project = Project.createProject(file, type);
+        if (project != null) {
+            setProject(project);
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Unable to create the file " + file,
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     /* Getters for GUI Components */
 
     public MainMenuBar getMenuBar() {
@@ -419,13 +463,43 @@ public class MainViewPanel extends ProjectComponent {
         return projectExplorerPanel;
     }
 
+    private FileFilter getProjectFileFilter() {
+        if (projectFileFilter == null) {
+            projectFileFilter = new FileFilter() {
+                public boolean accept(File f) {
+                    if (f.isDirectory() || f.getName().endsWith(Ikayaki.FILE_TYPE)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+
+                public String getDescription() {
+                    return Ikayaki.FILE_DESCRIPTION + " (*" + Ikayaki.FILE_TYPE + ")";
+                }
+            };
+        }
+        return projectFileFilter;
+    }
+
     /* Getters for Swing Actions */
 
     public Action getNewProjectAction() {
         if (newProjectAction == null) {
             newProjectAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    // TODO
+                    NewProjectFileChooser chooser = new NewProjectFileChooser(Settings.instance().getLastDirectory());
+                    chooser.setFileFilter(getProjectFileFilter());
+                    int returnVal = chooser.showSaveDialog(MainViewPanel.this);
+
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        File file = chooser.getSelectedFile();
+                        Project.Type type = chooser.getProjectType();
+                        if (!file.getName().endsWith(Ikayaki.FILE_TYPE)) {
+                            file = new File(file.getAbsolutePath() + Ikayaki.FILE_TYPE);
+                        }
+                        createProject(file, type);
+                    }
                 }
             };
             newProjectAction.putValue(Action.NAME, "New...");
@@ -436,11 +510,55 @@ public class MainViewPanel extends ProjectComponent {
         return newProjectAction;
     }
 
+    private class NewProjectFileChooser extends JFileChooser {
+
+        private JComboBox projectType;
+
+        public NewProjectFileChooser(File currentDirectory) {
+            super(currentDirectory);
+            projectType = new JComboBox(Project.Type.values());
+            projectType.setSelectedItem(Project.Type.AF);
+        }
+
+        protected JDialog createDialog(Component parent) throws HeadlessException {
+            JDialog dialog = super.createDialog(parent);
+            Container origCP = dialog.getContentPane();
+            JPanel newCP = new JPanel(new BorderLayout(0, 0));
+
+            newCP.add(origCP, "Center");
+            newCP.add(createExtraButtons(), "South");
+            dialog.setContentPane(newCP);
+
+            Dimension d = dialog.getSize();
+            dialog.setSize((int) d.getWidth(), (int) d.getHeight() + 70);
+
+            return dialog;
+        }
+
+        private Component createExtraButtons() {
+            Box b = new Box(BoxLayout.X_AXIS);
+            b.setBorder(BorderFactory.createEmptyBorder(0, 11, 11, 11));
+            b.add(new JLabel("Type of Project: "));
+            b.add(projectType);
+            return b;
+        }
+
+        public Project.Type getProjectType() {
+            return (Project.Type) projectType.getSelectedItem();
+        }
+    }
+
     public Action getOpenProjectAction() {
         if (openProjectAction == null) {
             openProjectAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    // TODO
+                    JFileChooser chooser = new JFileChooser(Settings.instance().getLastDirectory());
+                    chooser.setFileFilter(getProjectFileFilter());
+                    int returnVal = chooser.showOpenDialog(MainViewPanel.this);
+
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        loadProject(chooser.getSelectedFile());
+                    }
                 }
             };
             openProjectAction.putValue(Action.NAME, "Open...");

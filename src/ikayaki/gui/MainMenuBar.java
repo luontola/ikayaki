@@ -157,7 +157,7 @@ Event I: On exit Clicked - closes program
                         JMenuItem item = new JMenuItem(file.getAbsolutePath());
                         item.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
-                                openProject(file);
+                                MainMenuBar.this.main.loadProject(file);
                             }
                         });
                         openRecentProjectMenu.add(item);
@@ -166,9 +166,11 @@ Event I: On exit Clicked - closes program
             }
 
             public void menuDeselected(MenuEvent e) {
+                // DO NOTHING
             }
 
             public void menuCanceled(MenuEvent e) {
+                // DO NOTHING
             }
         });
     }
@@ -200,23 +202,4 @@ Event I: On exit Clicked - closes program
         help = main.getHelpAction();
         about = main.getAboutAction();
     }
-
-    /**
-     * Loads a project file and tries to set it as the active project.
-     *
-     * @param file the project file to be loaded.
-     * @throws NullPointerException if file is null.
-     */
-    public void openProject(File file) {
-        if (file == null) {
-            throw new NullPointerException();
-        }
-        Project project = Project.loadProject(file);
-        if (project != null) {
-            main.setProject(project);
-        } else {
-            JOptionPane.showMessageDialog(this, "Unable to open the file " + file, "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
 }

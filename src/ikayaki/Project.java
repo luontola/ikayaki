@@ -245,7 +245,7 @@ project listeners.
      * @return the created project, or null if file was not writable or it already existed.
      * @throws NullPointerException if file or type is null.
      */
-    private static synchronized Project createProject(File file, Type type) {
+    public static synchronized Project createProject(File file, Type type) {
         if (file == null || type == null) {
             throw new NullPointerException();
         }
@@ -432,7 +432,7 @@ project listeners.
         if (file == null || type == null) {
             throw new NullPointerException();
         }
-        this.file = file;
+        this.file = file.getAbsoluteFile();
         this.type = type;
         updateTransforms();
         modified = true;
@@ -452,7 +452,7 @@ project listeners.
         if (file == null || document == null) {
             throw new NullPointerException();
         }
-        this.file = file;
+        this.file = file.getAbsoluteFile();
         String s = null;
 
         // verify project file's version
@@ -1497,6 +1497,7 @@ project listeners.
                         }
 
                         if (Project.this.getState() == PAUSED) {
+                            System.out.println("Measurement ended (paused)");
                             setState(IDLE);
                             return;
                         }

@@ -271,7 +271,7 @@ whose measuring ended.
 
                 // load error, revert back to old selection
                 if (project == null) {
-                    // TODO: flash selected row red for 100 ms, perhaps?
+                    // TODO: flash selected row red for 100 ms, perhaps? - might require a custom cell renderer
                     if (selectedFile == -1) explorerTable.clearSelection();
                     else explorerTable.setRowSelectionInterval(selectedFile, selectedFile);
                 } else {
