@@ -227,7 +227,7 @@ class OmaXML {
 
             // Muunnetaan DOM XML:ksi apuluokalla
             TransformerFactory tf = TransformerFactory.newInstance();
-            tf.setAttribute("indent-number", new Integer(4));
+            tf.setAttribute("indent-number", new Integer(2));
 
             Transformer t = tf.newTransformer();
             t.setOutputProperty(OutputKeys.INDENT, "yes");
