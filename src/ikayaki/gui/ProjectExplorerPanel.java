@@ -71,6 +71,7 @@ whose measuring ended.
      * clicked.
      */
     private JComboBox browserField;
+    private JTextField browserFieldEditor;
 
     /**
      * Tells whether the next-to-be-shown popup menu will be autocomplete list (and not directory history).
@@ -132,9 +133,9 @@ whose measuring ended.
         browserField.setEditable(true);
         browserField.setBackground(Color.WHITE);
         // browserField.getEditor().getEditorComponent().setFocusTraversalKeysEnabled(false);
+        browserFieldEditor = (JTextField) browserField.getEditor().getEditorComponent();
 
         // scroll to the end of the combo box's text field
-        final JTextField browserTextField = (JTextField) browserField.getEditor().getEditorComponent();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 /* HACK:
@@ -143,7 +144,7 @@ whose measuring ended.
                  * and the JTextField will not scroll automatically to show the caret.
                  */
                 // scroll the caret to be visible when the program starts
-                browserTextField.setCaretPosition(browserTextField.getDocument().getLength());
+                browserFieldEditor.setCaretPosition(browserFieldEditor.getDocument().getLength());
             }
         });
 
@@ -215,9 +216,13 @@ whose measuring ended.
          * to LastExecutor via autocompleteExecutor.execute(Runnable), which schedules disk access and
          * displaying autocomplete results in browserField’s popup window.
          */
-        browserField.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+        browserFieldEditor.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 if (e.getKeyChar() == KeyEvent.VK_ESCAPE || e.getKeyChar() == KeyEvent.VK_ENTER) {
+                    return;
+                } else if ((e.getModifiers() & KeyEvent.ALT_MASK) != 0 || (e.getModifiers() & KeyEvent.CTRL_MASK) != 0) {
+                    // avoid the popup menu from showing, when the Project Explorer tab is hidden with ALT+P
+                    browserField.hidePopup();
                     return;
                 } else {
                     autocompleteExecutor.execute(new Runnable() {
@@ -350,7 +355,6 @@ whose measuring ended.
      */
     private void setBrowserFieldPopup(File[] files) {
         // purkkaillaan -- some hardcore bubblegum stitching
-        JTextField browserFieldEditor = (JTextField) browserField.getEditor().getEditorComponent();
         String browserFieldEditorText = browserFieldEditor.getText();
         int browserFieldEditorCursorPosition = browserFieldEditor.getCaretPosition();
 

@@ -114,8 +114,8 @@ public class MainViewPanel extends ProjectComponent {
         measurementGraphs = new MeasurementGraphsPanel();
 
         /* Lay out GUI components */
-        JPanel left = new JPanel(new GridBagLayout());
-        JPanel right = new JPanel(new GridBagLayout());
+        final JPanel left = new JPanel(new GridBagLayout());
+        final JPanel right = new JPanel(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
         gc.fill = GridBagConstraints.BOTH;
 
