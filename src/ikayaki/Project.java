@@ -29,7 +29,6 @@ import org.w3c.dom.Document;
 import javax.swing.event.EventListenerList;
 import javax.vecmath.Matrix3d;
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -72,7 +71,7 @@ project listeners.
      * Caches the created and loaded Project objects to make sure that no more than one object will be created for each
      * physical file.
      */
-    private static Hashtable<File, Project> projectCache;
+    private static Hashtable<File, Project> projectCache = new Hashtable<File, Project>();
 
     /**
      * Location of the project file in the local file system. Autosaving will save the project to this file.
@@ -98,13 +97,13 @@ project listeners.
      * Custom properties of this project stored in a map. The project is not interested in what properties are stored;
      * it only saves them.
      */
-    private Properties properties;
+    private Properties properties = new Properties();
 
     /**
      * Measurement sequence of this project. In the beginning are all completed measurement steps, and in the end are
      * planned measurement steps. Completed measurements may NOT be deleted.
      */
-    private MeasurementSequence sequence;
+    private MeasurementSequence sequence = new MeasurementSequence();
 
     /**
      * Strike of the sample. Will be used to create the transform matrix.
@@ -131,7 +130,7 @@ project listeners.
      * Matrix for correcting the sample’s orientation. The matrix will be updated whenever the strike, dip, sampleType
      * or orientation is changed. After that the updated matrix will be applied to all measurements.
      */
-    private Matrix3d transform;
+    private Matrix3d transform = new Matrix3d();
 
     /**
      * Mass of the sample, or a negative value if no mass is defined.
@@ -157,6 +156,15 @@ project listeners.
      * Scheduler for automatically writing the modified project to file after a short delay.
      */
     private LastExecutor autosaveQueue = new LastExecutor(500, true);
+
+    /**
+     * Operation that will save the project to file.
+     */
+    private Runnable autosaveRunnable = new Runnable() {
+        public void run() {
+            saveNow();
+        }
+    };
 
     /**
      * Creates a calibration project file.
@@ -252,10 +260,12 @@ project listeners.
      * @throws NullPointerException if any of the parameters is null.
      */
     private Project(File file, Type type) {
-        transform = new Matrix3d();
-        transform.setIdentity();
-
-        return; // TODO
+        if (file == null || type == null) {
+            throw new NullPointerException();
+        }
+        this.file = file;
+        this.type = type;
+        updateTransforms();
     }
 
     /**
@@ -269,10 +279,14 @@ project listeners.
      * @throws IllegalArgumentException if the document was not in the right format.
      */
     private Project(File file, Document document) {
-        transform = new Matrix3d();
-        transform.setIdentity();
+        if (file == null || document == null) {
+            throw new NullPointerException();
+        }
+        this.file = file;
 
-        return; // TODO
+        // TODO: load all Project data from the document
+
+        updateTransforms();
     }
 
     /**
@@ -287,17 +301,17 @@ project listeners.
      * called for a short while, the project will be written to file.
      */
     public synchronized void save() {
-        return; // TODO
+        autosaveQueue.execute(autosaveRunnable);
     }
 
     /**
      * Writes this project to its project file and waits for the operation to complete. (NOTE: Synchronizing is done
      * inside the method)
      *
-     * @throws IOException if there was an error when writing to file.
+     * @return true if the file was successfully written, otherwise false.
      */
-    public void saveNow() throws IOException {
-        return; // TODO
+    public boolean saveNow() {
+        return false; // TODO
     }
 
     /**
