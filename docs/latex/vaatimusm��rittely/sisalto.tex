@@ -39,6 +39,8 @@ Further process and analyze of the results occurs in various other programs
 which use a standard file format. So the new program has to export these 
 formats.
 
+
+
 \section{Use cases}
 
 % super-makrot use caseille; huomaa että \uctitle aloittaa ja \ucend lopettaa, muuten tulee ongelma
@@ -621,8 +623,6 @@ UC24, UC25, UC26}
 
 \subsection{Quality requirements}
 
-[{\it Some definition/explanation here?}]
-
 \ReqId{QR1}
 \ReqName{Error free}
 \ReqDesc{The program should not crash. All the functions need to work as documented. The calculations that the program makes from measurements must be done right.}
@@ -676,8 +676,6 @@ The SQUID hardware and communication with it is described in the section
 
 \subsection{Maintainability}
 
-[{\it Some definition/explanation here too?}]
-
 It must be possible to continue the development of the program. The 
 documentation must be complete so that other teams can quickly continue the 
 development even if they have not studied user interface designing. It must be 
@@ -705,8 +703,14 @@ Interfaces II" at Department of Computer Science. For more info, see
 There were three user observations held, and those generated three goal-derived 
 use cases. The picture sequences of each use case are in the appendices.
 
+In the picture sequences is shown how the program is being used. Every mouse 
+click is indicated with a cursor; follow the white mouse. The typing of text is 
+shown in like manner. Details of the magnetometer measurement sequences have 
+been left out from most of the places to save trees. Only in the first use case, 
+in the first step of the measurement sequence, is shown all the phases.
 
-\subsubsection{Goal-derived use case 1: Erkki studies the movement of Antarctis}
+
+\subsubsection{Use case 1: Erkki studies the movement of Antarctis}
 \label{seq:gduc1}
 
 \textbf{Erkki's goal:} \\
@@ -742,7 +746,7 @@ Magn. decl: 289 + -9 = 280 \\
 Dip 14
 
 
-\subsubsection{Goal-derived use case 2: Anomaly in magnetic field at year 500}
+\subsubsection{Use case 2: Anomaly in magnetic field at year 500}
 \label{seq:gduc2}
 
 \textbf{Lauri's goal:} \\
@@ -767,7 +771,7 @@ Lauri has asked Fabio to study more samples from that time, to be sure about the
 - Fabio can't yet tell what kind of final results to expect
 
 
-\subsubsection{Goal-derived use case 3: Tomas studies meteor magnetism}
+\subsubsection{Use case 3: Tomas studies meteor magnetism}
 \label{seq:gduc3}
 
 \textbf{Tomas' goal:} \\
@@ -820,7 +824,7 @@ will send commands from the user to the program.
 
 \section{External interfaces}
 
-Interfaces to existing software and hardware are described here.
+{\it Interfaces to existing software and hardware.}
 
 \subsection{Existing program}
 
