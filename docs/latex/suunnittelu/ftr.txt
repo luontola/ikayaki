@@ -21,32 +21,36 @@ Poissa
 	Ei poissaolijoita.
 
 Tarkastettu tuotos
-	Suunnitteludokumentti 0.x, luvut:
-
-	1   Introduction			0,5 sivua
-		Kokonaan
-
-	3   Overview of the system		0,5 sivua
-		Kokonaan
+	Suunnitteludokumentti 0.8, luvut:
 
 	4   Architecture description		8 sivua
-		Kokonaan
+		Kokonaan (sivut 2-11)
 
-	5.1 Project data			7 sivua
-		Project-luokan kuvaus, tiedostojen luonti/lataus/tallennus, 
-		mittausaskeleiden lisäys/poisto/luku, arvojen lukeminen, 
-		mittauksen kontrollointi
+		Tarkastusvastuu: Aki S, Aki K
+
+	5.1 Project data			~8 sivua
+		Project-luokan kuvaus (sivu 12),
+		tiedostojen luonti/lataus/tallennus (sivut 16-18),
+		mittausaskeleiden lisäys/poisto/luku (sivut 21-22),
+		arvojen lukeminen (sivut 22 ja 33-34),
+		mittauksen kontrollointi (sivut 23-24)
 	
-	5.2 Squid interface			3 sivua
-		Julkiset metodit
+		Tarkastusvastuu: Samuli, Mikko
 
-	5.3 Squid emulator			0,5 sivua
-		Luokkakuvaus, metodit
+	5.2 Squid interface			~5 sivua
+		Luokkakuvaukset, julkiset metodit (sivut 38-49, ei private-tavaraa) 
+
+		Tarkastusvastuu: Esko, Samuli
+
+	5.3 Serial communication		3 sivua
+		Kokonaan (sivut 52-55)
+
+		Tarkastusvastuu: Mikko, Aki K
 
 	6.9 Sequence and measurement data	3 sivua
-		Kokonaan
+		Kokonaan (sivut 76-78)
 
-	Yhteensä noin 23 sivua
+		Tarkastusvastuu: Esko, Aki S
 
 Tarkistuslista
 	S1  Viittaukset ovat oikein, ei puuttuvia viittauksia "??"
