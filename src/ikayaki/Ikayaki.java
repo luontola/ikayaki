@@ -20,9 +20,9 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-package ikayaki.gui;
+package ikayaki;
 
-import ikayaki.Project;
+import ikayaki.gui.MainViewPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +33,7 @@ import java.io.File;
 /**
  * Starts the program. Lays out MainViewPanel, MainMenuBar and MainStatusBar in a JFrame.
  *
- * @author
+ * @author Esko Luontola
  */
 public class Ikayaki extends JFrame {
 /*

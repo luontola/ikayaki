@@ -22,7 +22,6 @@
 
 package ikayaki;
 
-import ikayaki.gui.Ikayaki;
 import ikayaki.squid.Squid;
 import ikayaki.util.DocumentUtilities;
 import ikayaki.util.LastExecutor;

@@ -96,6 +96,14 @@ public class MainViewPanel extends ProjectComponent {
         return; // TODO
     }
 
+    public MainMenuBar getMenuBar() {
+        return menuBar;
+    }
+
+    public MainStatusBar getStatusBar() {
+        return statusBar;
+    }
+
     /**
      * Loads a new project to all GUI components. This method will be called by the Project Explorer and Calibration
      * panels.
@@ -132,6 +140,16 @@ public class MainViewPanel extends ProjectComponent {
     }
 
     /**
+     * Deprecates a method from the super class.
+     *
+     * @return null
+     * @deprecated access the project variable directly.
+     */
+    @Deprecated @Override public Project getProject() {
+        return null;
+    }
+
+    /**
      * Keeps track of which project has a measurement running.
      */
     @Override public void projectUpdated(ProjectEvent event) {
@@ -158,14 +176,6 @@ public class MainViewPanel extends ProjectComponent {
                 measuringProject = project;
             }
         }
-    }
-
-    public MainMenuBar getMenuBar() {
-        return menuBar;
-    }
-
-    public MainStatusBar getStatusBar() {
-        return statusBar;
     }
 
     /**
