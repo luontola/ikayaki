@@ -216,6 +216,346 @@ See Figure~\ref{fig:classdiagram1} and Figure~\ref{fig:classdiagram2}.
 }
 \closeMethod
 
+\beginClass{MainViewPanel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class MainViewPanel}
+\classExtends{JPanel}
+\classCreatedBy{Ikayaki}
+\classUses{ProjectExplorerPanel}
+\classUses{CalibrationPanel}
+\classUses{Squid}
+\classUses{MainMenuBar}
+\classUses{MainStatusBar}
+\classUses{ProjectInformationPanel}
+\classUses{MeasurementSequencePanel}
+\classUses{MeasurementDetailsPanel}
+\classUses{MeasurementControlsPanel}
+\classUses{MeasurementGraphsPanel}
+\classComment{
+    Creates the main view panels (split panels) and Squid and Project components. It also tells everybody if project file is changed. 
+}
+\closeClass
+
+\beginField{projectExplorer}
+\fieldDeclaration{private ProjectExplorerPanel projectExplorer}
+\closeField
+
+\beginField{calibration}
+\fieldDeclaration{private CalibrationPanel calibration}
+\closeField
+
+\beginField{squid}
+\fieldDeclaration{private Squid squid}
+\closeField
+
+\beginField{project}
+\fieldDeclaration{private ProjectComponent project}
+\fieldComment{currently active project}
+\closeField
+
+\beginField{menuBar}
+\fieldDeclaration{private MainMenuBar menuBar}
+\closeField
+
+\beginField{statusBar}
+\fieldDeclaration{private MainStatusBar statusBar}
+\closeField
+
+\beginField{projectInformation}
+\fieldDeclaration{private ProjectInformationPanel projectInformation}
+\closeField
+
+\beginField{measurementSequence}
+\fieldDeclaration{private MeasurementSequencePanel measurementSequence}
+\closeField
+
+\beginField{measurementControls}
+\fieldDeclaration{private MeasurementControlsPanel measurementControls}
+\closeField
+
+\beginField{measurementDetails}
+\fieldDeclaration{private MeasurementDetailsPanel measurementDetails}
+\closeField
+
+\beginField{measurementGraphs}
+\fieldDeclaration{private MeasurementGraphsPanel measurementGraphs}
+\closeField
+
+\beginMethod{MainViewPanel()}
+\methodDeclaration{public MainViewPanel()}
+\methodComment{
+    Loads default view and creates all components and panels. Splitpanel between Calibration,Explorer,Information and rest.
+}
+\closeMethod
+
+\beginMethod{changeProject(String filename)}
+\methodDeclaration{public bool changeProject(String filename)}
+\methodComment{
+    Looks for file with filename, if not exist creates new other wise opens it. Then updates current project and tells Panels new project is opened.
+}
+\closeMethod
+
+
+\beginClass{MainMenuBar}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class MainMenuBar}
+\classExtends{JMenuBar}
+\classCreatedBy{MainViewPanel}
+\classComment{Creates Menu items for Menubar and makes action listeners for them}
+
+\classEvent{On newProject Clicked}{Opens File chooser and opens new file in selected folder}
+\classEvent{On openProject Clicked}{Opens File chooser and opens selected file}
+\classEvent{On exportToDAT Clicked}{Opens File chooser and tells Project to export in selected file}
+\classEvent{On exportToDTDT Clicked}{Opens File chooser and tells Project to export in selected file}
+\classEvent{On exportToSRM Clicked}{Opens File chooser and tells Project to export in selected file}
+\classEvent{On configuration Clicked}{Opens SettingsPanel (frame)}
+\classEvent{On helpItem Clicked}{Opens Help dialog (own frame?)}
+\classEvent{On about Clicked}{Opens dialog with credits and version number}
+\classEvent{On exit Clicked}{closes program}
+
+\closeClass
+
+\beginField{file}
+\fieldDeclaration{private JMenu file}
+\closeField
+
+\beginField{options}
+\fieldDeclaration{private JMenu options}
+\closeField
+
+\beginField{help}
+\fieldDeclaration{private JMenu help}
+\closeField
+
+\beginField{newProject}
+\fieldDeclaration{private JMenuItem newProject}
+\closeField
+
+\beginField{openProject}
+\fieldDeclaration{private JMenuItem openProject}
+\closeField
+
+\beginField{exportProject}
+\fieldDeclaration{private JMenu exportProject}
+\closeField
+
+\beginField{exportProjectToDAT}
+\fieldDeclaration{private JMenuItem exportProjectToDAT}
+\closeField
+
+\beginField{exportProjectToTDT}
+\fieldDeclaration{private JMenuItem exportProjectToDTD}
+\closeField
+
+\beginField{exportProjectToSRM}
+\fieldDeclaration{private JMenuItem exportProjectToSRM}
+\closeField
+
+\beginField{exit}
+\fieldDeclaration{private JMenuItem exit}
+\closeField
+
+\beginField{configuration}
+\fieldDeclaration{private JMenuItem configuration}
+\closeField
+
+\beginField{helpItem}
+\fieldDeclaration{private JMenuItem helpItem}
+\closeField
+
+\beginField{about}
+\fieldDeclaration{private JMenuItem about}
+\closeField
+
+\beginMethod{MainMenuBar()}
+\methodDeclaration{public MainMenuBar()}
+\methodComment{
+    Creates all components and makes menu and sets ActionListeners.
+}
+\closeMethod
+
+\beginClass{MainStatusBar}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class MainStatusBar}
+\classExtends{ProjectComponent}
+\classCreatedBy{MainViewPanel}
+\classComment{Creates its components and listens project events on status change and calculates estimated time for measurement}
+
+\classEvent{On Measurement Event}{recalculates progress and updates status for current measurement}
+\closeClass
+
+\beginField{measurementStatus}
+\fieldDeclaration{private JLabel measurementStatus}
+\fieldComment{text comment of current status(moving,measurement,demagnetization)}
+\closeField
+
+\beginField{measurementProgress}
+\fieldDeclaration{private JProgressBar measurementProgress}
+\fieldComment{progress of sequence/measurement as per cent of whole process}
+\closeField
+
+\beginField{currentSequence}
+\fieldDeclaration{private int[] currentSequence}
+\fieldComment{current projects sequence}
+\closeField
+
+\beginField{projectType}
+\fieldDeclaration{private int projectType}
+\fieldComment{current projects type (we know if we are doing demagnetization or not)}
+\closeField
+
+\beginMethod{MainStatusBar()}
+\methodDeclaration{public MainStatusBar()}
+\methodComment{
+    Creates all components with default settings and sets Listener for MeasurementEvent.
+}
+\closeMethod
+
+\beginMethod{calculateStatus(int sequenceStep,int currentStep)}
+\methodDeclaration{private void calculateStatus(String phase,int sequenceStep,int currentStep)}
+\methodComment{
+    Recalculates current progress and updates status.
+}
+\closeMethod
+
+\beginMethod{setMeasurement(int projectType,int[] sequence)}
+\methodDeclaration{{private void setMeasurement(int projectType,int[] sequence)}
+\methodComment{
+    Formats status and creates new measurement status values.
+}
+\closeMethod
+
+\beginClass{SettingsPanel}
+\classPackage{ikayaki.gui}
+\classDeclaration{public class SettingsPanel}
+\classExtends{JFrame}
+\classCreatedBy{MainStatusBar}
+\classUses{Settings}
+\classComment{Creates its components and updats changes to Settings and saves them in Configuration file}
+
+\classEvent{On Save Clicked}{saves current configuration to Settings-singleton and closes window}
+\classEvent{On Cancel Clicked}{closes window (discarding changes)}
+
+\closeClass
+
+\beginField{magnetometerPort}
+\fieldDeclaration{private JComboBox magnetometerPort}
+\fieldComment{COM port for magnetometer}
+\closeField
+
+\beginField{demagnetizerPort}
+\fieldDeclaration{private JComboBox demagnetizerPort}
+\fieldComment{COM port for demagnetizer, can be sharing same port with magnetometer}
+\closeField
+
+\beginField{handlerPort}
+\fieldDeclaration{private JComboBox handlerPort}
+\fieldComment{COM port for sample handler}
+\closeField
+
+\beginField{xAxisCalibration}
+\fieldDeclaration{private JTextField xAxisCalibration}
+\fieldComment{Calibration constants with polarization (factory set?)}
+\closeField
+
+\beginField{yAxisCalibration}
+\fieldDeclaration{private JTextField yAxisCalibration}
+\fieldComment{Calibration constants with polarization (factory set?)}
+\closeField
+
+\beginField{zAxisCalibration}
+\fieldDeclaration{private JTextField zAxisCalibration}
+\fieldComment{Calibration constants with polarization (factory set?)}
+\closeField
+
+\beginField{demagRamp}
+\fieldDeclaration{private JComboBox demagRamp}
+\fieldComment{how fast demagnetization goes}
+\closeField
+
+\beginField{demagDelay}
+\fieldDeclaration{private JComboBox demagDelay}
+\fieldComment{?}
+\closeField
+
+\beginField{acceleration}
+\fieldDeclaration{private JTextField acceleration}
+\fieldComment{Handler acceleration}
+\closeField
+
+\beginField{deceleration}
+\fieldDeclaration{private JTextField deceleration}
+\fieldComment{Handler deceleration}
+\closeField
+
+\beginField{velocity}
+\fieldDeclaration{private JTextField velocity}
+\fieldComment{Handler Max speed}
+\closeField
+
+\beginField{measurementVelocity}
+\fieldDeclaration{private JTextField measurementVelocity}
+\fieldComment{speed in measurement, should be small}
+\closeField
+
+\beginField{transverseYPosition}
+\fieldDeclaration{private JTextField transverseYPosition}
+\closeField
+
+\beginField{axialPosition}
+\fieldDeclaration{private JTextField axialPosition}
+\closeField
+
+\beginField{sampleLoadPosition}
+\fieldDeclaration{private JTextField sampleLoadPosition}
+\closeField
+
+\beginField{backgroundPosition}
+\fieldDeclaration{private JTextField backgroundPosition}
+\closeField
+
+\beginField{measurementPosition}
+\fieldDeclaration{private JTextField measurementPosition}
+\closeField
+
+\beginField{rotation}
+\fieldDeclaration{private JTextField rotation}
+\closeField
+
+\beginField{handlerRightLimit}
+\fieldDeclaration{private JComboBox handlerRightLimit}
+\closeField
+
+\beginField{saveButton}
+\fieldDeclaration{private JButton saveButton}
+\closeField
+
+\beginField{cancelButton}
+\fieldDeclaration{private JButton cancelButton}
+\closeField
+
+
+\beginMethod{SettingsPanel()}
+\methodDeclaration{public SettingsPanel()}
+\methodComment{
+    Creates all components and puts them in right places. Labels are created only here (no global fields). Creates ActionListeners for buttons.
+}
+\closeMethod
+
+\beginMethod{closeWindow()}
+\methodDeclaration{public void closeWindow()}
+\methodComment{
+    Closes window, no changes saved.
+}
+\closeMethod
+
+\beginMethod{saveSettings()}
+\methodDeclaration{public void saveSettings()}
+\methodComment{
+    Saves all settings to Settings-singleton and calls closeWindow().
+}
+\closeMethod
+
 
 \subsection{Calibration}
 
