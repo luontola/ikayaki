@@ -59,7 +59,7 @@ public class Entry implements Comparable<Entry> {
 
             // parse date
             String s = sc.next();
-            DateFormat df = new SimpleDateFormat("d.M.yyyy");
+            DateFormat df = new SimpleDateFormat(HourParser.getDateFormat());
             try {
                 date = df.parse(s);
             } catch (ParseException e) {
