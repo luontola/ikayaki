@@ -97,7 +97,7 @@ whose measuring ended.
     /**
      * Project files in current directory.
      */
-    private File[] files = null;
+    private File[] files = new File[0];
 
     /**
      * Selected project file index, or -1 if none selected in current directory.
