@@ -29,6 +29,8 @@ import ikayaki.squid.Squid;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Creates the main view panels (split panels) and Squid and Project components. It also tells everybody if the current
@@ -95,9 +97,6 @@ public class MainViewPanel extends ProjectComponent {
         setProject(project);
 
         /* lay out GUI components */
-        setLayout(new BorderLayout());
-        add(splitPane, "Center");
-
         JPanel left = new JPanel(new GridBagLayout());
         JPanel right = new JPanel(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
@@ -137,6 +136,37 @@ public class MainViewPanel extends ProjectComponent {
         splitPane.setResizeWeight(0.0);
         splitPane.setLeftComponent(left);
         splitPane.setRightComponent(right);
+        splitPane.setEnabled(false);
+        splitPane.setBorder(null);
+        splitPane.setDividerSize(0);
+
+        // button for hiding the tabs
+        Box tabControls = new Box(BoxLayout.Y_AXIS);
+        final Icon tabButtonDown = new ImageIcon(ClassLoader.getSystemResource("resources/projectExplorerTabDown.png"));
+        final Icon tabButtonUp = new ImageIcon(ClassLoader.getSystemResource("resources/projectExplorerTabUp.png"));
+        final JButton tabButton = new JButton(tabButtonDown);
+        tabButton.setContentAreaFilled(false);
+        tabButton.setBorder(null);
+        tabButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (splitPane.getDividerLocation() == 0) {
+                    // show tab
+                    splitPane.setDividerLocation(splitPane.getLastDividerLocation());
+                    tabButton.setIcon(tabButtonDown);
+                } else {
+                    // hide tab
+                    splitPane.setDividerLocation(0);
+                    tabButton.setIcon(tabButtonUp);
+                }
+            }
+        });
+        tabControls.add(tabButton);
+        tabControls.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+        setLayout(new BorderLayout());
+        add(splitPane, "Center");
+        add(tabControls, "West");
+        setBackground(new Color(247, 243, 239));
 
         return;
     }

@@ -80,6 +80,7 @@ Event I: On exit Clicked - closes program
      * Creates all components and makes menu and sets ActionListeners.
      */
     public MainMenuBar() {
+        add(new JMenu("Menu bar"));
         return; // TODO
     }
 }

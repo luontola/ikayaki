@@ -59,6 +59,7 @@ measurement
      * Creates all components with default settings and sets Listener for MeasurementEvent.
      */
     public MainStatusBar() {
+        add(new JLabel("Status bar"));
         return; // TODO
     }
 
