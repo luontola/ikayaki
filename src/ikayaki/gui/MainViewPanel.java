@@ -229,17 +229,27 @@ public class MainViewPanel extends ProjectComponent {
             }
         }
 
-        // register the new project
         if (project != null) {
+            // update history logs
             Settings.instance().updateProjectHistory(project.getFile());
             Settings.instance().updateDirectoryHistory(project.getFile().getAbsoluteFile().getParentFile());
 
+            // register the new project
             project.addProjectListener(this);
             project.setSquid(squid);        // will do nothing if another project has a measurement running
+
+            // update GUI components
             getProjectInformationPanel().setBorder(
                     BorderFactory.createTitledBorder(project.getName() + " (" + project.getType() + " Project)"));
+            getExportProjectToDATAction().setEnabled(true);
+            getExportProjectToDTDAction().setEnabled(true);
+            getExportProjectToSRMAction().setEnabled(true);
         } else {
+            // update GUI components
             getProjectInformationPanel().setBorder(BorderFactory.createTitledBorder("Project Information"));
+            getExportProjectToDATAction().setEnabled(false);
+            getExportProjectToDTDAction().setEnabled(false);
+            getExportProjectToSRMAction().setEnabled(false);
         }
         this.project = project;
         getProjectExplorerPanel().setProject(project);
@@ -404,7 +414,8 @@ public class MainViewPanel extends ProjectComponent {
             };
             newProjectAction.putValue(Action.NAME, "New...");
             newProjectAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
-            newProjectAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_MASK));
+            newProjectAction.putValue(Action.ACCELERATOR_KEY,
+                    KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_MASK));
         }
         return newProjectAction;
     }
@@ -418,7 +429,8 @@ public class MainViewPanel extends ProjectComponent {
             };
             openProjectAction.putValue(Action.NAME, "Open...");
             openProjectAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_O);
-            openProjectAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK));
+            openProjectAction.putValue(Action.ACCELERATOR_KEY,
+                    KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK));
         }
         return openProjectAction;
     }
