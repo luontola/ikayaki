@@ -1,4 +1,3 @@
-package ikayaki.core;
 
 public class JNITest {
 

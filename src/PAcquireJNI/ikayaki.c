@@ -1,14 +1,14 @@
 
 #include <jni.h>
 #include <stdio.h>
-#include "ikayaki_core_JNITest.h"
+#include "JNITest.h"
 
 /*
- * Class:     ikayaki_core_JNITest
+ * Class:     JNITest
  * Method:    helloC
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_ikayaki_core_JNITest_helloC
+JNIEXPORT void JNICALL Java_JNITest_helloC
 (JNIEnv *env, jclass obj) {
 	jclass cls;
 	jmethodID mid;
@@ -31,22 +31,22 @@ JNIEXPORT void JNICALL Java_ikayaki_core_JNITest_helloC
 
 
 /*
- * Class:     ikayaki_core_JNITest
+ * Class:     JNITest
  * Method:    getDouble
  * Signature: ()D
  */
-JNIEXPORT jdouble JNICALL Java_ikayaki_core_JNITest_getDouble
+JNIEXPORT jdouble JNICALL Java_JNITest_getDouble
 (JNIEnv *env, jclass obj) {
 	jdouble d = 1.23;
 	return d;
 }
 
 /*
- * Class:     ikayaki_core_JNITest
+ * Class:     JNITest
  * Method:    getArray
  * Signature: ([D)V
  */
-JNIEXPORT void JNICALL Java_ikayaki_core_JNITest_getArray
+JNIEXPORT void JNICALL Java_JNITest_getArray
 (JNIEnv *env, jclass obj, jdoubleArray arr) {
 	jsize len = (*env)->GetArrayLength(env, arr);
 	jdouble *arrBody = (*env)->GetDoubleArrayElements(env, arr, 0);

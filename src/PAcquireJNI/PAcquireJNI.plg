@@ -6,21 +6,13 @@
 --------------------Configuration: PAcquireJNI - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\TEMP\RSP1D9.tmp" with contents
-[
-/nologo /MT /W3 /GX /O2 /I "D:\Program Files\Java\jdk1.5.0_01\include" /I "D:\Program Files\Java\jdk1.5.0_01\include\win32" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "PACQUIREJNI_EXPORTS" /Fp"Release/PAcquireJNI.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
-"E:\DOCUMENTS\ORFJackal\PROGRAMS\OMAT\SQUID\dev\src\PAcquireJNI\ikayaki.c"
-]
-Creating command line "cl.exe @C:\TEMP\RSP1D9.tmp" 
-Creating temporary file "C:\TEMP\RSP1DA.tmp" with contents
+Creating temporary file "C:\TEMP\RSP65.tmp" with contents
 [
 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:no /pdb:"Release/PAcquireJNI.pdb" /machine:I386 /out:"Release/PAcquireJNI.dll" /implib:"Release/PAcquireJNI.lib" 
 .\Release\ikayaki.obj
 ]
-Creating command line "link.exe @C:\TEMP\RSP1DA.tmp"
+Creating command line "link.exe @C:\TEMP\RSP65.tmp"
 <h3>Output Window</h3>
-Compiling...
-ikayaki.c
 Linking...
    Creating library Release/PAcquireJNI.lib and object Release/PAcquireJNI.exp
 

@@ -1,4 +1,3 @@
-package ikayaki;
 
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.GridConstraints;
