@@ -362,7 +362,7 @@ Use case format:
 \ucscenario{Click "Load set" combo box, enter new sequence name, click "Save set". \ucnotein{2005-02-25 not in current (almost final) UI prototype! Remove this scenario or decide later?}}
 \ucscenario{Right-click any line in measurement result table, choose "Save full sequence...", enter name, press enter.}
 \ucscenario{Select any lines in measurement result table with shift-clicks and ctrl-clicks, right-click on selected lines, choose "Save selected sequence...", enter name, press enter.}
-\ucpre{At least 1 line in measurement results table (although you propably don't want to save a sequence with only one step x).}
+\ucpre{At least 1 line in measurement results table (although you probably don't want to save a sequence with only one step x).}
 \ucpost{New sequence set saved to predefined sequence file and available from "Load set" combo box.}
 \ucerror{Ask whether to overwrite, if sequence with the same name already exists (allow to enter new name if choose not to overwrite).}
 \ucend
@@ -411,7 +411,7 @@ prototype functions.
 
 Priorities are from 1 (highest) to 4 (lowest). Our goal is to fulfill at least 
 the requirements with priorities 1 and 2. Requirements with priority 3 will be 
-fulfilled only if time permits, and priority 4's will propably be left out.
+fulfilled only if time permits, and priority 4's will probably be left out.
 
 Overview of requirements is presented in Table~\ref{tab:requirements}.
 
@@ -529,7 +529,7 @@ UC24, UC25, UC26}
 
 \ReqId{R8}
 \ReqName{Edit project}
-\ReqDesc{Ability edit project information and measurement data afterwards. (TODO: which data fields?)}
+\ReqDesc{Ability edit project information and measurement data afterwards. \ucnotein{2005-02-28 Which data fields?}}
 \ReqPrio{2}
 \ReqSet{Customer}
 \ReqUc{UC22}
@@ -595,7 +595,7 @@ UC24, UC25, UC26}
 
 \ReqId{R17}
 \ReqName{Numeric presentation of measurements}
-\ReqDesc{Program shows measurement data in numbers. Measurement data will be displayed using scientic notation (1.23e4).}
+\ReqDesc{Program shows measurement data in numbers. Measurement data will be displayed using scientic notation (1.23e4). \ucnotein{2005-03-01 What are all the numbers that need to be calculated? How are they calculated?}}
 \ReqPrio{1}
 \ReqSet{Customer}
 \ReqUc{UC1, UC2, UC3, UC6, UC7, UC8, UC9, UC10, UC11, UC16}
@@ -658,21 +658,21 @@ UC24, UC25, UC26}
 
 \subsection{Environment}
 
-{\it Define requirements for the software which origin from the environment in 
-which the sowtware will be working, and which the software must satisfy for 
-being able to work in its environment.}
+{\it This section defines requirements for the software which originate from the 
+environment in which the software will be working, and which the software must 
+satisfy for being able to work in its environment.}
 
 Program will be used in normal PC which is connected to magnetometer. The 
 computer that will run this program will be equal or better to 1GHz CPU, 256MB 
 RAM, 1280x1024 resolution. The current computer is running Windows XP.
 
-Taking into account rapid phase of computer evolution it is possible that 
-computer in which program is used can change, accordingly the program should be 
-installable by outsiders. We need not prepare to changing of magnetometer, as 
-new magnenetometer will probably have its own program. Program doesn't control 
-the temparature of the magnetometer.
+Taking into account the rapid speed of computer evolution it is possible that 
+the computer in which the program is used can change. Accordingly, the program 
+should be installable by outsiders. We need not prepare to the changing of the 
+magnetometer, as a new magnenetometer will probably have its own program. This 
+program does not control the temparature of the magnetometer.
 
-The SQUID hardware and communication with it is described in the section 
+The SQUID hardware and communication with it are described in the section 
 "External interfaces".
 
 
@@ -722,7 +722,7 @@ To measure where Antarctis was 180 miljon years ago.
 - Now is Tue 8.2.2005 at 14:27 \\
 - Erkki is in laboratory at Physicum
 
-\textbf{Users knowledge:} \\
+\textbf{Erkki's knowledge:} \\
 - He has many samples from Antarctis, hand sample, drill's and logbook and data from earlier measurements. \\
 - He has available libra, waterpool and SQUID-equipment and continent draw program \\
 - He can assume good results because sample is Basalt and he knows how basalt usually is magnetised. \\
@@ -734,8 +734,8 @@ Site: Utpostane \\
 Map: 1134 \\
 X: \\
 Y: \\
-Lat: 344 \\
-Long: -74 \\
+Latitude: 344 \\
+Longitude: -74 \\
 Sample: UP-17 \\
 Core[ ]/Hand[x] \\
 Rock Tybe: Basalt \\
@@ -764,8 +764,8 @@ Lauri has asked Fabio to study more samples from that time, to be sure about the
 - Estonian samples have already been thellier-measured up to 350 Celsius demagnetization, next up is 380 Celsius. \\
 - Around 10 of the samples are in the oven cooling down from their 50 minute warming up, cooling also takes 50 minutes \\
 - As the other half of samples is cooling, the other is at the same time conveniently warming up \\
-- Results from previous temperatures are in one dat file per sample at the Squid-computer \\
-- All samples are supposed to go through the same cycle (which the already have followed up to 350 Celsius): warm up n degrees->cool down without field->measure->warm up n degrees (again)->cool down with field->measure->warm up n+m degrees... \\
+- Results from previous temperatures are in one project file per sample at the Squid-computer \\
+- All samples are supposed to go through the same cycle (which they already have followed up to 350 Celsius): warm up n degrees->cool down without field->measure->warm up n degrees (again)->cool down with field->measure->warm up n+m degrees... \\
 - First one in the next set appears to be sample "pd2-1a"
 
 \textbf{Fabio's knowledge:} \\
@@ -859,9 +859,11 @@ Its protocol is described in the appendices.
 
 \section{Validation}
 
-In validation it is shown that program meets requirements set by user. Project 
-documents are validated in reviews. Program code is validated by testing. In 
-reviews it will be established that requirement document and design document are 
-in line with user requirements and will lead to production of program which 
-meets these requirements. Testing shows that program actually works as specified 
-by design document.
+In validation it is being checked that a product meets the requirements set for 
+it. Sometimes the requirements have priorities and only the most important 
+requirements are demanded. In document reviews, held between the client and the 
+project team, it will be established that the requirements document and the 
+design document are in line with user requirements and will lead to the 
+production of a program which meets these requirements. Testing shows that the 
+program actually works as specified by the design document. Finally the finished 
+product will be checked against this requirements document.
