@@ -168,14 +168,14 @@ public class Report {
         }
 
         // table header
-        html.append("<table border=\"1\">\n");
+        html.append("<table border=\"0\">\n");
         html.append("<tr>\n");
-        html.append("   <th>Name / Week</th>\n");
+        html.append("   <th style=\"padding: 0ex 3ex 0ex 3ex;\">Name / Week</th>\n");
         for (Date week : weeks) {
             cal.setTime(week);
-            html.append("   <th width=\"30\">" + cal.get(Calendar.WEEK_OF_YEAR) + "</th>\n");
+            html.append("   <th style=\"width: 4.5ex;\">" + cal.get(Calendar.WEEK_OF_YEAR) + "</th>\n");
         }
-        html.append("   <th>Total</th>\n");
+        html.append("   <th style=\"padding: 0ex 1ex 0ex 1ex;\">Total</th>\n");
         html.append("</tr>\n");
 
         // each person's total hours for every week
