@@ -2,6 +2,8 @@
 \classPackage{ikayaki.gui}
 \classDeclaration{public class ProjectComponent}
 \classExtends{JPanel}
+\classImplements{ProjectListener}
+\classImplements{MeasurementListener}
 \classCreatedBy{MainViewPanel}
 \classUses{Project}
 \classSubclass{ProjectInformationPanel}
@@ -29,4 +31,5 @@
 \methodComment{
 	Unregisters MeasurementListener and ProjectListener from old project, saves new Project to project, registers MeasurementListener and ProjectListener to new project.
 }
+\methodParam{project}{project to be registered, or null to just unregister the old one.}
 \closeMethod
