@@ -12,7 +12,7 @@ OK - muuta "_plain" muotoon "-plain" tiedostonimien yhtenäistämiseksi
 OK - järjestä merkinnät automaattisesti (älä kuitenkaan sekoita saman päivän
 sisäistä järjestystä)
 
-- pääsivulle kaikkien henkilöiden tuntien summa viikkokohtaisesti 
+OK - pääsivulle kaikkien henkilöiden tuntien summa viikkokohtaisesti 
 
 
 KESKIVAIKEITA:
