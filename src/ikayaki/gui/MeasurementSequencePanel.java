@@ -83,7 +83,7 @@ Order of rows with measurement data cannot be changed.
     private JLabel stepValueType;
     private JButton addSequenceButton;
     private JComboBox loadSequenceBox;
-    
+
     private JPanel controlsPane;
 
     /**
@@ -119,14 +119,15 @@ Order of rows with measurement data cannot be changed.
      */
     public void setProject(Project project) {
         super.setProject(project);
+        // TODO
     }
 
     public void projectUpdated(ProjectEvent event) {
-        // DOES NOTHING
+        // TODO
     }
 
     public void measurementUpdated(MeasurementEvent event) {
-        // DOES NOTHING
+        // TODO
     }
 
     {
