@@ -36,6 +36,7 @@ public class GUITest extends JFrame {
     private JTextField textField5;
     private JTextField textField6;
     private JTextField textField7;
+    private JRadioButton textField111;
 
     public GUITest() throws HeadlessException {
         setLayout(new BorderLayout());
