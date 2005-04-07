@@ -66,12 +66,18 @@ whose measuring ended.
      * clicked.
      */
     private final JComboBox browserField;
-    private final JTextField browserFieldEditor;
+    private final JTextField browserFieldEditor; // WARNING: look-and-feel-dependant code
+    private final ComponentFlasher browserFieldFlasher;
 
     /**
      * Tells whether the next-to-be-shown popup menu will be autocomplete list (and not directory history).
      */
-    private boolean browserFieldNextPopupAutocomplete = false;
+    private boolean browserFieldNextPopupIsAutocomplete = false;
+
+    /**
+     * Tells whether browserField's popup menu list is being updated, and we don't want those ActionEvents.
+     */
+    boolean browserFieldUpdatingPopup = false;
 
     private final JButton browseButton;
 
@@ -126,11 +132,13 @@ whose measuring ended.
         setDirectory(Settings.instance().getLastDirectory());
 
         // combo box / text field
-        browserField = new JComboBox(getDirectoryHistory());
+        browserField = new JComboBox();
         browserField.setEditable(true);
         browserField.setBackground(Color.WHITE);
         browserFieldEditor = (JTextField) browserField.getEditor().getEditorComponent();
+        browserFieldFlasher = new ComponentFlasher(browserFieldEditor);
         // browserFieldEditor.setFocusTraversalKeysEnabled(false); // disable tab-exiting from browserField
+        setBrowserFieldPopup(getDirectoryHistory());
 
         // scroll to the end of the combo box's text field
         setBrowserFieldCursorToEnd();
@@ -149,6 +157,8 @@ whose measuring ended.
         explorerTableModel = new ProjectExplorerTableModel();
         explorerTable = new JTable(explorerTableModel);
         explorerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        explorerTable.getTableHeader().setReorderingAllowed(false);
+        // explorerTable.getTableHeader().setResizingAllowed(false);
         // TODO: the grid still shows up when selecting rows. must make a custom cell renderer to change that
         explorerTable.setShowGrid(false);
         explorerTableScrollPane = new JScrollPane(explorerTable);
@@ -181,7 +191,7 @@ whose measuring ended.
                 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
                 if (fc.showOpenDialog(browseButton) == JFileChooser.APPROVE_OPTION)
-                        setDirectory(fc.getSelectedFile());
+                    setDirectory(fc.getSelectedFile());
             }
         });
 
@@ -191,21 +201,23 @@ whose measuring ended.
          */
         browserField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (e.getActionCommand().equals("comboBoxEdited")) {
-                    // the user pressed enter in the text field or selected an item by pressing enter
-                    // TODO: causes problems for exapmle when clicking browse button
-                    // doAutoComplete();
+                // check if event is caused by popup menu update
+                if (browserFieldUpdatingPopup) return;
 
-                } else if (e.getActionCommand().equals("comboBoxChanged")) {
+                // JComboBox event types:
+                // Edited -- pressed enter in the text field or selected an item by pressing enter
+                // Changed -- cycled item list with up/down, selected item with mouse or pressed enter in text field
+                System.out.println(e.getActionCommand() + ": " + browserField.getSelectedItem());
 
-//                    System.out.println(browserField.getSelectedItem());
-//
-//                    // TODO: changing JComboBox popup-list content fires ActionEvents which we don't want... argh.
-//                    if (!setDirectory(new File((String) browserField.getSelectedItem()))) {
-//                        // TODO: how to display error?
-//                        browserField.getEditor().selectAll();
-//                    }
-                }
+                // we only want changed-events, not duplicate edited-events
+                if (!e.getActionCommand().equals("comboBoxChanged")) return;
+
+                // TODO: cycling through popup menu list with up/down keys changes directory;
+                // it shouldn't, but can't recognize those changed-events from mouse clicks
+
+                // try to set directory, flash browserField red if error
+                if (!setDirectory(new File((String) browserField.getSelectedItem())))
+                    browserFieldFlasher.flash();
             }
         });
 
@@ -213,13 +225,17 @@ whose measuring ended.
          * Event B: On browserField down-arrow-click - show directory history in browserField’s popup window.
          */
         browserField.addPopupMenuListener(new PopupMenuListener() {
-            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                if (browserFieldNextPopupAutocomplete) browserFieldNextPopupAutocomplete = false;
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                // set popup menu as directory history when closing popup, unless autocomplete-resize-closing
+                // (popupmenu directory history might lag when hidden)
+                if (browserFieldNextPopupIsAutocomplete) browserFieldNextPopupIsAutocomplete = false;
                 else setBrowserFieldPopup(getDirectoryHistory());
+                // TODO: browserField's text disappears when selectiog item with mouse, because of
+                // this stuff here instead of popupMenuWillBecomeVisible, but that caused other probrems
             }
 
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {}
-            public void popupMenuCanceled(PopupMenuEvent e) {}
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) { }
+            public void popupMenuCanceled(PopupMenuEvent e) { }
         });
 
         /**
@@ -229,7 +245,11 @@ whose measuring ended.
          */
         browserFieldEditor.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
-                if (e.getKeyChar() == KeyEvent.VK_ESCAPE || e.getKeyChar() == KeyEvent.VK_ENTER) return;
+                if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
+                    browserField.setSelectedItem(directory.getPath());
+                    browserField.getEditor().selectAll();
+                    return;
+                } else if (e.getKeyChar() == KeyEvent.VK_ENTER) return;
 
                 if (e.getModifiers() == KeyEvent.CTRL_MASK && e.getKeyChar() == KeyEvent.VK_DELETE) {
                     // delete one directory name at a time
@@ -246,7 +266,6 @@ whose measuring ended.
                     browserField.hidePopup();
                     return;
                 }
-
 
                 autocompleteExecutor.execute(new Runnable() {
                     public void run() {
@@ -380,8 +399,6 @@ whose measuring ended.
                 updateSelectedFile();
             }
         });
-
-        return; // TODO
     }
 
     /**
@@ -475,16 +492,15 @@ whose measuring ended.
      */
     private void doAutoComplete() {
         File[] files = getAutocompleteFiles(browserField.getEditor().getItem().toString());
-        //Arrays.sort(files); // filesystem sorts them nicely
         setBrowserFieldPopup(files);
 
         if (files.length > 0) {
             // gui updating must be done from event-dispatching thread
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
+                    browserFieldNextPopupIsAutocomplete = true;
                     // when the popup is hidden before showing, it will be automatically resized
                     if (browserField.isPopupVisible()) browserField.hidePopup();
-                    browserFieldNextPopupAutocomplete = true;
                     browserField.showPopup();
                 }
             });
@@ -508,7 +524,9 @@ whose measuring ended.
      * @param files list of files to set the list to.
      */
     private void setBrowserFieldPopup(File[] files) {
-        // purkkaillaan -- some hardcore bubblegum stitching
+        // purkkaillaan -- some hardcore bubblegum stitching (the whole method)
+        browserFieldUpdatingPopup = true;
+
         String browserFieldEditorText = browserFieldEditor.getText();
         int browserFieldEditorCursorPosition = browserFieldEditor.getCaretPosition();
 
@@ -518,6 +536,8 @@ whose measuring ended.
         browserField.setSelectedIndex(-1);
         browserFieldEditor.setText(browserFieldEditorText);
         browserFieldEditor.setCaretPosition(browserFieldEditorCursorPosition);
+
+        browserFieldUpdatingPopup = false;
     }
 
     /**
@@ -604,7 +624,7 @@ whose measuring ended.
         private final JComboBox newProjectType;
         private final JButton createNewProjectButton;
         private final JPanel flowPanel;
-        private final Timer newProjectNameFlasher;
+        private final ComponentFlasher newProjectNameFlasher;
 
         public NewProjectPanel() {
             super(new BorderLayout());
@@ -622,12 +642,7 @@ whose measuring ended.
             this.add(newProjectName, BorderLayout.CENTER);
             this.add(flowPanel, BorderLayout.EAST);
 
-            newProjectNameFlasher = new Timer(100, new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    newProjectName.setBackground(Color.WHITE);
-                }
-            });
-            newProjectNameFlasher.setRepeats(false);
+            newProjectNameFlasher = new ComponentFlasher(newProjectName);
 
             /**
              * Event A: On createNewProjectButton click - call Project.createProject(File, Type) with
@@ -649,11 +664,8 @@ whose measuring ended.
 
                     Project created = Project.createProject(file, type);
 
-                    if (created == null) {
-                        // flash text field red
-                        newProjectName.setBackground(Color.RED);
-                        newProjectNameFlasher.start();
-                    } else parent.setProject(created);
+                    if (created == null) newProjectNameFlasher.flash();
+                    else parent.setProject(created);
                 }
             });
 
@@ -665,6 +677,48 @@ whose measuring ended.
                     createNewProjectButton.doClick();
                 }
             });
+        }
+    }
+
+    /**
+     * Timer used for flashing a JComponent background light red (or given color), for 100 ms (or given time).
+     */
+    class ComponentFlasher extends Timer {
+
+        private final JComponent component;
+        private final Color componentBG;
+        private final Color flashcolor;
+        private static final Color defauldFlashColor = new Color(0xff8080);
+
+        public ComponentFlasher(JComponent component) {
+            this(component, defauldFlashColor, 100);
+        }
+
+        public ComponentFlasher(JComponent component, Color flashcolor) {
+            this(component, flashcolor, 100);
+        }
+
+        public ComponentFlasher(JComponent component, int flashtime) {
+            this(component, defauldFlashColor, flashtime);
+        }
+
+        public ComponentFlasher(JComponent component, Color flashcolor, int flashtime) {
+            super(flashtime, null);
+            this.component = component;
+            this.componentBG = component.getBackground();
+            this.flashcolor = flashcolor;
+            this.setRepeats(false);
+
+            this.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    ComponentFlasher.this.component.setBackground(componentBG);
+                }
+            });
+        }
+
+        public void flash() {
+            component.setBackground(flashcolor);
+            super.start();
         }
     }
 }
