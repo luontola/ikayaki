@@ -87,24 +87,16 @@ public class MeasurementControlsPanel extends ProjectComponent {
         measureButton = new JButton(getAutoStepAction());
         stepButton = new JButton(getSingleStepAction());
         abortButton = new JButton(getAbortAction());
-
-//        // prevent the measure button from being resized on action change
-//        measureButtonSize = measureButton.getPreferredSize();
-//        measureButton.setAction(getPauseAction());
-//        measureButtonSize.width = Math.max(measureButtonSize.width, measureButton.getPreferredSize().width);
-//        measureButton.setPreferredSize(measureButtonSize);
         updateActions();
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 2, 2)); // works fine, look a bit ugly
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 2, 2)); // prevents button resize, looks a bit ugly
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 4, 4, 4));
         buttonPanel.add(measureButton);
         buttonPanel.add(stepButton);
         buttonPanel.add(abortButton);
 
-        this.setLayout(new BorderLayout());
-        this.add(buttonPanel, BorderLayout.NORTH);
-
-        // TODO: sometimes when the buttons get resized, the abort button disappers from view. fix it!
+        setLayout(new BorderLayout());
+        add(buttonPanel, BorderLayout.NORTH);
 
         /*
         Event D: On zPlus,MinusRadioButton click - call project.setOrientation(boolean) where
