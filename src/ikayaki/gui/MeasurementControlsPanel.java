@@ -41,16 +41,13 @@ import java.awt.event.KeyEvent;
  * @author Samuli Kaipiainen
  */
 public class MeasurementControlsPanel extends ProjectComponent {
-    /**
-     * Holds all measuring buttons.
-     */
-    private JPanel buttonPanel = new JPanel();
 
     /**
      * Measure/pause -button; "Measure" when no measuring is being done, "Pause" when there is ongoing measuring
      * sequence.
      */
     private JButton measureButton;
+    private Dimension measureButtonSize;
 
     private JButton stepButton;
 
@@ -91,14 +88,15 @@ public class MeasurementControlsPanel extends ProjectComponent {
         stepButton = new JButton(getSingleStepAction());
         abortButton = new JButton(getAbortAction());
 
-        // prevent the measure button from being resized on action change
-        Dimension measureSize = measureButton.getPreferredSize();
-        measureButton.setAction(getPauseAction());
-        measureSize.width = Math.max(measureSize.width, measureButton.getPreferredSize().width);
-        measureButton.setPreferredSize(measureSize);
+//        // prevent the measure button from being resized on action change
+//        measureButtonSize = measureButton.getPreferredSize();
+//        measureButton.setAction(getPauseAction());
+//        measureButtonSize.width = Math.max(measureButtonSize.width, measureButton.getPreferredSize().width);
+//        measureButton.setPreferredSize(measureButtonSize);
         updateActions();
 
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 2, 2)); // works fine, look a bit ugly
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 4, 4, 4));
         buttonPanel.add(measureButton);
         buttonPanel.add(stepButton);
         buttonPanel.add(abortButton);
