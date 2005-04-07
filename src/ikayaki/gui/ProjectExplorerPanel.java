@@ -569,14 +569,9 @@ whose measuring ended.
     public class NewProjectPanel extends JPanel {
 
         private final JTextField newProjectName;
-
-        /** AF / Thellier / Thermal */
         private final JComboBox newProjectType;
-
         private final JButton createNewProjectButton;
-
-        private final JPanel flowPanel = new JPanel(new BorderLayout());
-
+        private final JPanel flowPanel;
         private final Timer newProjectNameFlasher;
 
         public NewProjectPanel() {
@@ -588,6 +583,7 @@ whose measuring ended.
             newProjectType.setBackground(Color.WHITE);
             createNewProjectButton = new JButton("Create new");
 
+            flowPanel = new JPanel(new BorderLayout());
             flowPanel.add(newProjectType, BorderLayout.WEST);
             flowPanel.add(createNewProjectButton, BorderLayout.EAST);
 
@@ -610,7 +606,7 @@ whose measuring ended.
             createNewProjectButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String name = newProjectName.getText();
-                    if (!name.toLowerCase().endsWith(".ika")) name += ".ika";
+                    if (!name.toLowerCase().endsWith(Ikayaki.FILE_TYPE)) name += Ikayaki.FILE_TYPE;
 
                     Project.Type type = (Project.Type) newProjectType.getSelectedItem();
 
