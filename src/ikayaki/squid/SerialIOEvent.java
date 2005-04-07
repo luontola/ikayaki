@@ -27,7 +27,7 @@ import java.util.EventObject;
 /**
  * An event that is generated when SerialIO receives data from serial port.
  *
- * @author
+ * @author Aki Sysmäläinen
  */
 public class SerialIOEvent extends EventObject {
 

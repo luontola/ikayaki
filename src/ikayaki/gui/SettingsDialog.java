@@ -195,7 +195,7 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         this.axialAFPosition.setText("" + Settings.instance().getHandlerAxialAFPosition());
         this.transverseYAFPosition.setText("" + Settings.instance().getHandlerTransverseYAFPosition());
         this.measurementPosition.setText("" + Settings.instance().getHandlerMeasurementPosition());
-        this.measurementVelocity.setText(""+ Settings.instance().getHandlerMeasurementVelocity());
+        this.measurementVelocity.setText("" + Settings.instance().getHandlerMeasurementVelocity());
         this.xAxisCalibration.setText("" + Settings.instance().getMagnetometerXAxisCalibration());
         this.yAxisCalibration.setText("" + Settings.instance().getMagnetometerYAxisCalibration());
         this.zAxisCalibration.setText("" + Settings.instance().getMagnetometerZAxisCalibration());
@@ -204,17 +204,20 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         this.demagRamp.addItem(7);
         this.demagRamp.addItem(9);
         int rampValue = Settings.instance().getDegausserRamp();
-        if(rampValue == 3)
-          this.demagRamp.setSelectedIndex(0);
-        else if(rampValue == 5)
-          this.demagRamp.setSelectedIndex(1);
-        if(rampValue == 7)
-          this.demagRamp.setSelectedIndex(2);
-        else
-          this.demagRamp.setSelectedIndex(3);
-        for(int i = 1;i<10;i++)
-          this.demagDelay.addItem(i);
-        this.demagRamp.setSelectedIndex(Settings.instance().getDegausserDelay()-1);
+        if (rampValue == 3) {
+            this.demagRamp.setSelectedIndex(0);
+        } else if (rampValue == 5) {
+            this.demagRamp.setSelectedIndex(1);
+        }
+        if (rampValue == 7) {
+            this.demagRamp.setSelectedIndex(2);
+        } else {
+            this.demagRamp.setSelectedIndex(3);
+        }
+        for (int i = 1; i < 10; i++) {
+            this.demagDelay.addItem(i);
+        }
+        this.demagRamp.setSelectedIndex(Settings.instance().getDegausserDelay() - 1);
         this.sampleLoadPosition.setText("" + Settings.instance().getHandlerSampleLoadPosition());
         this.backgroundPosition.setText("" + Settings.instance().getHandlerBackgroundPosition());
         this.rotation.setText("" + Settings.instance().getHandlerRotation());
@@ -225,25 +228,24 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         Enumeration ports = CommPortIdentifier.getPortIdentifiers();
 
         if (!ports.hasMoreElements()) {
-          System.err.println("No comm ports found!");
-          return;
-        }
-        else {
-          System.err.println("Comm ports found");
-          while (ports.hasMoreElements()) {
-            /*
-             *  Get the specific port
-             */
+            System.err.println("No comm ports found!");
+            return;
+        } else {
+            System.err.println("Comm ports found");
+            while (ports.hasMoreElements()) {
+                /*
+                 *  Get the specific port
+                 */
 
-            CommPortIdentifier portId = (CommPortIdentifier) ports.nextElement();
+                CommPortIdentifier portId = (CommPortIdentifier) ports.nextElement();
 
-            if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-                System.err.println("port found!: "+ portId.getName()); // Debug
-                this.magnetometerPort.addItem(portId.getName());
-                this.handlerPort.addItem(portId.getName());
-                this.demagnetizerPort.addItem(portId.getName());
+                if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+                    System.err.println("port found!: " + portId.getName()); // Debug
+                    this.magnetometerPort.addItem(portId.getName());
+                    this.handlerPort.addItem(portId.getName());
+                    this.demagnetizerPort.addItem(portId.getName());
+                }
             }
-          }
         }
 
         // TODO: this closes window with esc, so maybe something else as simple works too?
@@ -274,20 +276,21 @@ Event B: On Cancel Clicked - closes window (discarding changes)
 
         //TODO: need to check if values are ok, disable Save button if not.
         DocumentListener saveListener = new DocumentListener() {
-          public void insertUpdate(DocumentEvent e) {
-            if(correctValues())
-              getSaveAction().setEnabled(true);
-            else
-              getSaveAction().setEnabled(false);
-          }
+            public void insertUpdate(DocumentEvent e) {
+                if (correctValues()) {
+                    getSaveAction().setEnabled(true);
+                } else {
+                    getSaveAction().setEnabled(false);
+                }
+            }
 
-          public void removeUpdate(DocumentEvent e) {
-            getSaveAction().setEnabled(true);
-          }
+            public void removeUpdate(DocumentEvent e) {
+                getSaveAction().setEnabled(true);
+            }
 
-          public void changedUpdate(DocumentEvent e) {
-            getSaveAction().setEnabled(true);
-          }
+            public void changedUpdate(DocumentEvent e) {
+                getSaveAction().setEnabled(true);
+            }
         };
         acceleration.getDocument().addDocumentListener(saveListener);
 
@@ -310,77 +313,76 @@ Event B: On Cancel Clicked - closes window (discarding changes)
      * Saves all settings to Settings-singleton and calls closeWindow().
      */
     public void saveSettings() {
-      try{
-        //TODO: Comboboxes are like hell
-        //System.out.println(this.demagDelay.getSelectedIndex());
-        //Settings.instance().setDegausserDelay(Integer.parseInt( (String)this.demagDelay.getSelectedItem()));
-        //Settings.instance().setDegausserPort( (String)this.demagnetizerPort.getSelectedItem());
-        //Settings.instance().setDegausserRamp( Integer.parseInt((String)this.demagRamp.getSelectedItem()));
-        Settings.instance().setHandlerAcceleration( Integer.parseInt(this.acceleration.getText()));
-        Settings.instance().setHandlerAxialAFPosition( Integer.parseInt(this.axialAFPosition.getText()));
-        Settings.instance().setHandlerBackgroundPosition( Integer.parseInt(this.backgroundPosition.getText()));
-        Settings.instance().setHandlerDeceleration( Integer.parseInt(this.deceleration.getText()));
-        Settings.instance().setHandlerMeasurementPosition( Integer.parseInt(this.measurementPosition.getText()));
-        Settings.instance().setHandlerMeasurementVelocity( Integer.parseInt(this.velocity.getText()));
-        //Settings.instance().setHandlerPort( (String)this.handlerPort.getSelectedItem());
-        //Settings.instance().setHandlerRightLimit( Integer.parseInt((String)this.handlerRightLimit.getSelectedItem()));
-        Settings.instance().setHandlerRotation( Integer.parseInt(this.rotation.getText()));
-        Settings.instance().setHandlerSampleLoadPosition( Integer.parseInt(this.sampleLoadPosition.getText()));
-        Settings.instance().setHandlerTransverseYAFPosition( Integer.parseInt(this.transverseYAFPosition.getText()));
-        Settings.instance().setHandlerVelocity( Integer.parseInt(this.velocity.getText()));
-        //Settings.instance().setMagnetometerPort( (String)this.magnetometerPort.getSelectedItem());
-        Settings.instance().setMagnetometerXAxisCalibration( Integer.parseInt(this.xAxisCalibration.getText()));
-        Settings.instance().setMagnetometerYAxisCalibration( Integer.parseInt(this.yAxisCalibration.getText()));
-        Settings.instance().setMagnetometerZAxisCalibration( Integer.parseInt(this.zAxisCalibration.getText()));
-        closeWindow();
-      }
-      catch(Exception e) {
-          e.printStackTrace();
-      }
+        try {
+            //TODO: Comboboxes are like hell
+            //System.out.println(this.demagDelay.getSelectedIndex());
+            //Settings.instance().setDegausserDelay(Integer.parseInt( (String)this.demagDelay.getSelectedItem()));
+            //Settings.instance().setDegausserPort( (String)this.demagnetizerPort.getSelectedItem());
+            //Settings.instance().setDegausserRamp( Integer.parseInt((String)this.demagRamp.getSelectedItem()));
+            Settings.instance().setHandlerAcceleration(Integer.parseInt(this.acceleration.getText()));
+            Settings.instance().setHandlerAxialAFPosition(Integer.parseInt(this.axialAFPosition.getText()));
+            Settings.instance().setHandlerBackgroundPosition(Integer.parseInt(this.backgroundPosition.getText()));
+            Settings.instance().setHandlerDeceleration(Integer.parseInt(this.deceleration.getText()));
+            Settings.instance().setHandlerMeasurementPosition(Integer.parseInt(this.measurementPosition.getText()));
+            Settings.instance().setHandlerMeasurementVelocity(Integer.parseInt(this.velocity.getText()));
+            //Settings.instance().setHandlerPort( (String)this.handlerPort.getSelectedItem());
+            //Settings.instance().setHandlerRightLimit( Integer.parseInt((String)this.handlerRightLimit.getSelectedItem()));
+            Settings.instance().setHandlerRotation(Integer.parseInt(this.rotation.getText()));
+            Settings.instance().setHandlerSampleLoadPosition(Integer.parseInt(this.sampleLoadPosition.getText()));
+            Settings.instance().setHandlerTransverseYAFPosition(Integer.parseInt(this.transverseYAFPosition.getText()));
+            Settings.instance().setHandlerVelocity(Integer.parseInt(this.velocity.getText()));
+            //Settings.instance().setMagnetometerPort( (String)this.magnetometerPort.getSelectedItem());
+            Settings.instance().setMagnetometerXAxisCalibration(Integer.parseInt(this.xAxisCalibration.getText()));
+            Settings.instance().setMagnetometerYAxisCalibration(Integer.parseInt(this.yAxisCalibration.getText()));
+            Settings.instance().setMagnetometerZAxisCalibration(Integer.parseInt(this.zAxisCalibration.getText()));
+            closeWindow();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
     //TODO: check all values
     private boolean correctValues() {
-      try{
-        if(Integer.parseInt(this.acceleration.getText())<0 || Integer.parseInt(this.acceleration.getText())>127)
-          return false;
-      }
-      catch(Exception e) {
-        e.printStackTrace();
-        return false;
-      }
-      return true;
+        try {
+            if (Integer.parseInt(this.acceleration.getText()) < 0 || Integer.parseInt(this.acceleration.getText()) > 127) {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public Action getSaveAction() {
-      if (saveAction == null) {
-        saveAction = new AbstractAction() {
-          public void actionPerformed(ActionEvent e) {
-            saveSettings();
-          }
+        if (saveAction == null) {
+            saveAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    saveSettings();
+                }
 
-        };
-        saveAction.putValue(Action.NAME, "Save");
-      }
-      return saveAction;
+            };
+            saveAction.putValue(Action.NAME, "Save");
+        }
+        return saveAction;
     }
 
     public Action getCancelAction() {
-      if (cancelAction == null) {
-        cancelAction = new AbstractAction() {
-          public void actionPerformed(ActionEvent e) {
-            closeWindow();
-          }
+        if (cancelAction == null) {
+            cancelAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    closeWindow();
+                }
 
-        };
+            };
 
-        cancelAction.putValue(Action.NAME, "Cancel");
-        cancelAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
-        // TODO: doesn't work
-        cancelAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
-      }
-      return cancelAction;
+            cancelAction.putValue(Action.NAME, "Cancel");
+            cancelAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
+            // TODO: doesn't work
+            cancelAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+        }
+        return cancelAction;
     }
 
     {

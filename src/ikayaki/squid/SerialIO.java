@@ -27,7 +27,7 @@ import javax.comm.*;
 /**
  * This class represents hardware layer to serial port communications.
  *
- * @author  Aki Sysmäläinen
+ * @author Aki Sysmäläinen
  */
 public class SerialIO implements SerialPortEventListener {
 /*
@@ -61,35 +61,35 @@ message from serial port is received.
         try {
             portId = CommPortIdentifier.getPortIdentifier(parameters.getPortName());
         } catch (NoSuchPortException e) {
-            throw new SerialIOException("No such port exists");
+            throw new SerialIOException("No such port exists:" + parameters.getPortName());
         }
 
         // Open the port and give it a timeout of 4 seconds
         try {
-            sPort = (SerialPort)portId.open("SerialPort", 4000);
+            sPort = (SerialPort) portId.open("SerialPort", 4000);
         } catch (PortInUseException e) {
-            throw new SerialIOException("The port is already in use");
+            throw new SerialIOException("The port" + parameters.getPortName() + "is already in use");
         }
 
         // Set the parameters of the connection
         try {
-	    sPort.setSerialPortParams(parameters.getBaudRate(),
-				      parameters.getDatabits(),
-				      parameters.getStopbits(),
-				      parameters.getParity());
-	} catch (UnsupportedCommOperationException e) {
-	    sPort.close();
+            sPort.setSerialPortParams(parameters.getBaudRate(),
+                    parameters.getDatabits(),
+                    parameters.getStopbits(),
+                    parameters.getParity());
+        } catch (UnsupportedCommOperationException e) {
+            sPort.close();
             throw new SerialIOException("Unsupported parameter");
-	}
+        }
 
-	// Set flow control
-	try {
-	    sPort.setFlowControlMode(parameters.getFlowControlIn()
-			           | parameters.getFlowControlOut());
-	} catch (UnsupportedCommOperationException e) {
-	    sPort.close();
+        // Set flow control
+        try {
+            sPort.setFlowControlMode(parameters.getFlowControlIn()
+                    | parameters.getFlowControlOut());
+        } catch (UnsupportedCommOperationException e) {
+            sPort.close();
             throw new SerialIOException("Unsupported flow control");
-	}
+        }
 
         // TODO check this method..
 
@@ -124,5 +124,5 @@ message from serial port is received.
     public void serialEvent(SerialPortEvent event) {
         return; // TODO
     }
-        
+
 }
