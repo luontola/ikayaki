@@ -36,10 +36,10 @@ import java.util.List;
  *
  * @author Esko Luontola
  */
-public class MeasurementSequence {
+public class MeasurementSequence implements Comparable<MeasurementSequence> {
 
     /**
-     * Name of the sequence or null if it has no name.
+     * Name of the sequence. Empty string if it has no name.
      */
     private String name;
 
@@ -52,13 +52,14 @@ public class MeasurementSequence {
      * Creates an empty sequence with no name.
      */
     public MeasurementSequence() {
-        setName(null);
+        setName("");
     }
 
     /**
      * Creates an empty sequence with the specified name.
      *
      * @param name name of the sequence.
+     * @throws NullPointerException if name is null.
      */
     public MeasurementSequence(String name) {
         setName(name);
@@ -79,7 +80,8 @@ public class MeasurementSequence {
      * Creates a sequence from the specified element for a project.
      *
      * @param element the element from which this sequence will be created.
-     * @param project the project whose sequence this will be. Needed for importing the measurement steps correctly.
+     * @param project the project whose sequence this will be, or null if this is not owned by a project. Needed for
+     *                importing the measurement steps correctly.
      * @throws NullPointerException     if element is null.
      * @throws IllegalArgumentException if the element was not in the right format.
      */
@@ -94,12 +96,7 @@ public class MeasurementSequence {
         }
 
         // get name
-        String s = element.getAttribute("name");
-        if (s.equals("")) {
-            setName(null);
-        } else {
-            setName(s);
-        }
+        setName(element.getAttribute("name"));
 
         // get steps
         NodeList steps = element.getElementsByTagName("step");
@@ -116,31 +113,28 @@ public class MeasurementSequence {
      */
     public synchronized Element getElement(Document document) {
         Element element = document.createElement("sequence");
-
-        element.setAttribute("name", name == null ? "" : name);
-
+        element.setAttribute("name", name);
         for (MeasurementStep step : steps) {
             element.appendChild(step.getElement(document));
         }
-
         return element;
     }
 
     /**
      * Returns the name of this sequence.
-     *
-     * @return the name, or null if it has no name
      */
     public synchronized String getName() {
         return name;
     }
 
     /**
-     * Sets the name of this sequence. Use null or an empty String to clear the name.
+     * Sets the name of this sequence.
+     *
+     * @throws NullPointerException if name is null.
      */
     public synchronized void setName(String name) {
-        if (name != null && name.equals("")) {
-            name = null;
+        if (name == null) {
+            throw new NullPointerException();
         }
         this.name = name;
     }
@@ -199,5 +193,21 @@ public class MeasurementSequence {
      */
     public synchronized void removeStep(int index) {
         steps.remove(index);
+    }
+
+    /**
+     * Orders the sequences by their name. If two different sequences have the same name, one of them if always greater
+     * than the other.
+     *
+     * @param other the sequence to be compared to.
+     * @return less than 0 if this precedes other, or 0 if they are the same sequence, or else greater than 0.
+     */
+    public int compareTo(MeasurementSequence other) {
+        int val = this.getName().compareTo(other.getName());
+        if (val == 0) {
+            return this.hashCode() - other.hashCode();
+        } else {
+            return 0;
+        }
     }
 }
