@@ -109,7 +109,8 @@ public class MainViewPanel extends ProjectComponent {
             squid = Squid.instance();
         } catch (IOException e) {
             // TODO: what should be done now? give error message?
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.err.println("Unable to initialize the SQUID interface.");
         }
 
         /* Lay out GUI components */

@@ -22,16 +22,13 @@
 
 package ikayaki.gui;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
 import ikayaki.Project;
-import ikayaki.ProjectEvent;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-
-import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.Spacer;
 
 /**
  * Allows inserting and editing project information.
@@ -48,8 +45,8 @@ Event B: On project event - Update textfields to correspond new project informat
 
     /* Radio Button Groups */
     private ButtonGroup measurementType;
-    private JRadioButton measurementTypeManual;
     private JRadioButton measurementTypeAuto;
+    private JRadioButton measurementTypeManual;
 
     private ButtonGroup sampleType;
     private JRadioButton sampleTypeCore;
@@ -92,15 +89,60 @@ Event B: On project event - Update textfields to correspond new project informat
     }
 
     /**
+     * Sets whether or not this component is enabled. Affects all project information form fields.
+     *
+     * @param enabled true if this component should be enabled, false otherwise
+     */
+    @Override public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+
+        measurementTypeAuto.setEnabled(enabled);
+        measurementTypeManual.setEnabled(enabled);
+        sampleTypeCore.setEnabled(enabled);
+        sampleTypeHand.setEnabled(enabled);
+
+        operatorField.setEnabled(enabled);
+        dateField.setEnabled(enabled);
+        rockTypeField.setEnabled(enabled);
+        siteField.setEnabled(enabled);
+        commentField.setEnabled(enabled);
+
+        latitudeField.setEnabled(enabled);
+        longitudeField.setEnabled(enabled);
+        strikeField.setEnabled(enabled);
+        dipField.setEnabled(enabled);
+        massField.setEnabled(enabled);
+        volumeField.setEnabled(enabled);
+    }
+
+    /**
      * Calls super.setProject(project) and updates textfield with new projects data.
      */
     public void setProject(Project project) {
         super.setProject(project);
+        setEnabled(project != null);
 
         if (project != null) {
-            // TODO: enable all controls and get values from the project
+            // TODO: get values from the project
         } else {
-            // TODO: disable all controls and clear the values
+            // clear the form fields
+            measurementTypeAuto.setSelected(true);
+            measurementTypeManual.setSelected(false);
+            sampleTypeCore.setSelected(true);
+            sampleTypeHand.setSelected(false);
+
+            operatorField.setText("");
+            dateField.setText("");
+            rockTypeField.setText("");
+            siteField.setText("");
+            commentField.setText("");
+
+            latitudeField.setText("");
+            longitudeField.setText("");
+            strikeField.setText("");
+            dipField.setText("");
+            massField.setText("");
+            volumeField.setText("");
         }
     }
 

@@ -22,16 +22,15 @@
 
 package ikayaki.gui;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
+import ikayaki.MeasurementEvent;
 import ikayaki.Project;
 import ikayaki.ProjectEvent;
-import ikayaki.MeasurementEvent;
 
 import javax.swing.*;
 import java.awt.*;
-
-import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.Spacer;
 
 /**
  * Allows creating, editing and removing measurement sequences. Shows measurement data. Right-click brings popup menu
@@ -115,11 +114,26 @@ Order of rows with measurement data cannot be changed.
     }
 
     /**
+     * Sets whether or not this component is enabled. Affects all measurement sequence controls.
+     *
+     * @param enabled true if this component should be enabled, false otherwise
+     */
+    @Override public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        sequenceStartField.setEnabled(enabled);
+        sequenceStepField.setEnabled(enabled);
+        sequenceStopField.setEnabled(enabled);
+        addSequenceButton.setEnabled(enabled);
+        loadSequenceBox.setEnabled(enabled);
+    }
+
+    /**
      * Calls super.setProject(project), clears table and calculates shown data from project’s measurement data.
      */
     public void setProject(Project project) {
         super.setProject(project);
-        // TODO
+        sequenceTableModel.setProject(project);
+        setEnabled(project != null);
     }
 
     public void projectUpdated(ProjectEvent event) {
