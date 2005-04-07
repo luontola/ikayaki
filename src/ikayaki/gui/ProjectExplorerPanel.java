@@ -191,8 +191,6 @@ whose measuring ended.
          */
         browserField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //System.out.println(e.getActionCommand());
-
                 if (e.getActionCommand().equals("comboBoxEdited")) {
                     // the user pressed enter in the text field or selected an item by pressing enter
                     // TODO: causes problems for exapmle when clicking browse button
@@ -203,7 +201,7 @@ whose measuring ended.
 //                    System.out.println(browserField.getSelectedItem());
 //
 //                    // TODO: changing JComboBox popup-list content fires ActionEvents which we don't want... argh.
-//                    if (!setDirectory((String) browserField.getSelectedItem())) {
+//                    if (!setDirectory(new File((String) browserField.getSelectedItem()))) {
 //                        // TODO: how to display error?
 //                        browserField.getEditor().selectAll();
 //                    }
@@ -231,10 +229,9 @@ whose measuring ended.
          */
         browserFieldEditor.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
-                if (e.getKeyChar() == KeyEvent.VK_ESCAPE || e.getKeyChar() == KeyEvent.VK_ENTER) {
-                    return;
+                if (e.getKeyChar() == KeyEvent.VK_ESCAPE || e.getKeyChar() == KeyEvent.VK_ENTER) return;
 
-                } else if (e.getModifiers() == KeyEvent.CTRL_MASK && e.getKeyChar() == KeyEvent.VK_DELETE) {
+                if (e.getModifiers() == KeyEvent.CTRL_MASK && e.getKeyChar() == KeyEvent.VK_DELETE) {
                     // delete one directory name at a time
                     int pos = browserFieldEditor.getCaretPosition();
                     String text = browserFieldEditor.getText();
@@ -243,21 +240,19 @@ whose measuring ended.
                     textA = textA.substring(0, Math.max(0, textA.lastIndexOf(System.getProperty("file.separator"))));
                     browserFieldEditor.setText(textA + textB);
                     browserFieldEditor.setCaretPosition(textA.length());
-                    return;
 
-                } else if ((e.getModifiers() & KeyEvent.ALT_MASK) != 0 || (e.getModifiers() & KeyEvent.CTRL_MASK) != 0) {
+                } else if ( (e.getModifiers() & KeyEvent.ALT_MASK) != 0 || (e.getModifiers() & KeyEvent.CTRL_MASK) != 0) {
                     // avoid the popup menu from showing, when the Project Explorer tab is hidden with ALT+P
                     browserField.hidePopup();
                     return;
-
-                } else {
-                    autocompleteExecutor.execute(new Runnable() {
-                        public void run() {
-                            doAutoComplete();
-                        }
-                    });
-                    return;
                 }
+
+
+                autocompleteExecutor.execute(new Runnable() {
+                    public void run() {
+                        doAutoComplete();
+                    }
+                });
             }
         });
 
@@ -302,16 +297,53 @@ whose measuring ended.
 
                 int row = explorerTable.rowAtPoint(e.getPoint());
 
-                // construct the popupmenu for every click
-                JPopupMenu explorerTablePopup = new JPopupMenu("Export");
-                JMenuItem exportDAT = new JMenuItem("Export '" + files[row].getName() + "' to DAT file...");
-                JMenuItem exportTDT = new JMenuItem("Export '" + files[row].getName() + "' to TDT file...");
-                JMenuItem exportSRM = new JMenuItem("Export '" + files[row].getName() + "' to SRM file...");
-                explorerTablePopup.add(exportDAT);
-                explorerTablePopup.add(exportTDT);
-                explorerTablePopup.add(exportSRM);
+                String basename = files[row].getName();
+                if (basename.toLowerCase().endsWith(Ikayaki.FILE_TYPE))
+                    basename = basename.substring(0, basename.length() - Ikayaki.FILE_TYPE.length());
 
-                // TODO
+                // construct the popup menu for every click
+                JPopupMenu explorerTablePopup = new JPopupMenu();
+                JMenuItem filename = new JMenuItem("Export '" + files[row].getName() + "' to");
+                filename.setFont(filename.getFont().deriveFont(Font.BOLD));
+                filename.setEnabled(false);
+                explorerTablePopup.add(filename);
+
+                // TODO: some portable way to get a File for disk drive? Or maybe a Setting for export-dirs?
+                for (File dir : new File[] { null, directory, new File("A:/") }) {
+                    for (String type : new String[] {"dat", "tdt", "srm"}) {
+                        File exportFile = new File(dir, basename + "." + type);
+
+                        JMenuItem item;
+                        if (dir == null) item = new JMenuItem(type.toUpperCase() + " file...");
+                        else item = new JMenuItem(exportFile.toString());
+
+                        explorerTablePopup.add(item);
+
+                        item.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                String filename = e.getActionCommand();
+                                String filetype = filename.substring(filename.length() - 3);
+                                File file;
+
+                                if (filetype.equals("...")) {
+                                    filetype = filename.substring(0, 3).toLowerCase();
+                                    JFileChooser chooser = new JFileChooser(directory);
+                                    chooser.setFileFilter(new GenericFileFilter(filetype.toUpperCase() + " File", filetype));
+
+                                    if (chooser.showSaveDialog(explorerTable) == JFileChooser.APPROVE_OPTION)
+                                        file = chooser.getSelectedFile();
+
+                                } else file = new File(filename);
+
+                                // TODO: which one of these two?
+                                //Project.export(file, filetype);
+                                //Project.loadProject(file).export(filetype);
+
+                                // TODO: tell somehow if export was successful; statusbar perhaps?
+                            }
+                        });
+                    }
+                }
 
                 explorerTablePopup.show(explorerTable, e.getX(), e.getY());
             }
