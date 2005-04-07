@@ -111,6 +111,8 @@ Event B: On project event - Update textfields to correspond new project informat
         dipField.setFormatterFactory(factory);
         massField.setFormatterFactory(factory);
         volumeField.setFormatterFactory(factory);
+        
+        // TODO: add listeners for form fields to invoke autosaving
     }
 
     /**
