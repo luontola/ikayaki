@@ -47,10 +47,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
      * sequence.
      */
     private JButton measureButton;
-    private Dimension measureButtonSize;
-
     private JButton stepButton;
-
     private JButton abortButton;
 
     /**
