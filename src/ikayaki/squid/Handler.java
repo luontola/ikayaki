@@ -24,8 +24,6 @@ package ikayaki.squid;
 
 import java.util.Stack;
 import ikayaki.Settings;
-import javax.comm.PortInUseException;
-import javax.comm.NoSuchPortException;
 import java.util.concurrent.SynchronousQueue;
 
 /**
@@ -129,7 +127,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * Creates a new handler interface. Opens connection to handler COM port and reads settings from the Settings
      * class.
      */
-    public Handler() throws PortInUseException, NoSuchPortException {
+    public Handler() throws SerialIOException {
         this.serialIO = new SerialIO(new SerialParameters(Settings.instance().getHandlerPort(),1200,0,0,8,1,0));
         this.acceleration = Settings.instance().getHandlerAcceleration();
         this.deceleration = Settings.instance().getHandlerDeceleration();
@@ -188,10 +186,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         try {
             this.serialIO.writeMessage("%");
             this.serialIO.writeMessage(","); //execute command
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-            return 'E';
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
             return 'E';
         }
@@ -242,9 +237,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         try {
             this.serialIO.writeMessage("H1");
             this.serialIO.writeMessage(","); //execute command
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
     }
@@ -306,9 +299,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             //this.serialIO.writeMessage(","); //execute command
             this.go();
             return true;
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
         return false;
@@ -321,9 +312,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         try {
             this.serialIO.writeMessage("Q");
             this.serialIO.writeMessage(","); //execute command
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
 
@@ -343,9 +332,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             this.serialIO.writeMessage("O1,1");
             this.serialIO.writeMessage("P" + angle);
             this.serialIO.writeMessage(","); //execute command
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
     }
@@ -357,9 +344,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         try {
             this.serialIO.writeMessage("@0");
             this.serialIO.writeMessage(","); //execute command
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
 
@@ -375,9 +360,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             try {
                 this.serialIO.writeMessage("A"+a);
                 this.serialIO.writeMessage(","); //execute command
-            } catch (PortInUseException ex) {
-                System.err.println(ex);
-            } catch (NoSuchPortException ex) {
+            } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
         }
@@ -393,9 +376,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
              try {
                  this.serialIO.writeMessage("D"+d);
                  this.serialIO.writeMessage(","); //execute command
-             } catch (PortInUseException ex) {
-                 System.err.println(ex);
-             } catch (NoSuchPortException ex) {
+             } catch (SerialIOException ex) {
                  System.err.println(ex);
              }
          }
@@ -412,9 +393,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             try {
                 this.serialIO.writeMessage("B"+b);
                 this.serialIO.writeMessage(","); //execute command
-            } catch (PortInUseException ex) {
-                System.err.println(ex);
-            } catch (NoSuchPortException ex) {
+            } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
         }
@@ -431,9 +410,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             try {
                 this.serialIO.writeMessage("M"+v);
                 this.serialIO.writeMessage(","); //execute command
-            } catch (PortInUseException ex) {
-                System.err.println(ex);
-            } catch (NoSuchPortException ex) {
+            } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
         }
@@ -453,9 +430,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         try {
             this.serialIO.writeMessage("CH"+h);
             this.serialIO.writeMessage(","); //execute command
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
 
@@ -474,9 +449,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             try {
                 this.serialIO.writeMessage("CX" + cf);
                 this.serialIO.writeMessage(","); //execute command
-            } catch (PortInUseException ex) {
-                System.err.println(ex);
-            } catch (NoSuchPortException ex) {
+            } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
     }
@@ -489,9 +462,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         try {
             this.serialIO.writeMessage("Q");
             this.serialIO.writeMessage(","); //execute command
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
 
@@ -505,9 +476,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         try {
             this.serialIO.writeMessage("S");
             this.serialIO.writeMessage(","); //execute command
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
     }
@@ -518,9 +487,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private void setMotorPositive() {
         try {
             this.serialIO.writeMessage("+");
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
 
@@ -532,9 +499,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private void setMotorNegative() {
         try {
             this.serialIO.writeMessage("-");
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
 
@@ -550,9 +515,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             try {
                 this.serialIO.writeMessage("N" + s);
                 this.serialIO.writeMessage(","); //execute command
-            } catch (PortInUseException ex) {
-                System.err.println(ex);
-            } catch (NoSuchPortException ex) {
+            } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
     }
@@ -568,9 +531,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             //first need to set translate active
             this.serialIO.writeMessage("O1,0");
             this.serialIO.writeMessage("P" + p);
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
 
@@ -583,9 +544,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         try {
             this.serialIO.writeMessage("G");
             this.serialIO.writeMessage(","); //execute command
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
     }
@@ -602,9 +561,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         try {
             this.serialIO.writeMessage("F");
             this.serialIO.writeMessage(","); //execute command
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
     }
@@ -624,8 +581,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         try {
             this.serialIO.writeMessage("V"+v);
             this.serialIO.writeMessage(","); //execute command
-        } catch (PortInUseException ex) {
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
+            System.err.println(ex);
         }
         waitingForMessage = true;
         String answer = (String)queue.poll();
@@ -644,9 +601,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             try {
                 this.serialIO.writeMessage("Z" + r);
                 this.serialIO.writeMessage(","); //execute command
-            } catch (PortInUseException ex) {
-                System.err.println(ex);
-            } catch (NoSuchPortException ex) {
+            } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
     }
@@ -665,9 +620,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         try {
             this.serialIO.writeMessage("%");
             this.serialIO.writeMessage(","); //execute command
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
         waitingForMessage = true;

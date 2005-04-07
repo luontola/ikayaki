@@ -1,5 +1,5 @@
 /*
-* SerialIOListener.java
+* SerialIOEvent.java
 *
 * Copyright (C) 2005 Project SQUID, http://www.cs.helsinki.fi/group/squid/
 *
@@ -20,19 +20,23 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
+
 package ikayaki.squid;
 
 /**
- * If a class wants to receive SerialIOEvents it must implement this interface.
+ * Generic SeriaIO exception
  *
  * @author Aki Sysmäläinen
  */
-public interface SerialIOListener extends java.util.EventListener {
+public class SerialIOException extends Exception {
 
     /**
-     * Propagates serial port message event.
+     * Constructs a <code>SerialIOException</code>
+     * with the specified detail message.
      *
-     * @param event the event that happened.
+     * @param   str   the detail message.
      */
-    public void serialIOEvent(SerialIOEvent event);
+    public SerialIOException(String str) {
+        super(str);
+    }
 }

@@ -23,8 +23,6 @@
 package ikayaki.squid;
 
 import java.util.Stack;
-import javax.comm.PortInUseException;
-import javax.comm.NoSuchPortException;
 import ikayaki.Settings;
 import java.util.concurrent.SynchronousQueue;
 
@@ -67,10 +65,9 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * COM port (if its not open already) and reads settings from the Setting
      * class.
      *
-     * @throws PortInUseException
-     * @throws NoSuchPortException
+     * @throws SerialIOException
      */
-    public Magnetometer() throws PortInUseException, NoSuchPortException {
+    public Magnetometer() throws SerialIOException {
         this.serialIO = new SerialIO(new SerialParameters(Settings.instance().getMagnetometerPort(),1200,0,0,8,1,0));
     }
 
@@ -96,9 +93,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         try {
             //as a note: <CR> obviously means /r
             this.serialIO.writeMessage(axis + "R/r");
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
     }
@@ -117,9 +112,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
 
         try {
             this.serialIO.writeMessage(axis + "RC/r");
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
     }
@@ -149,9 +142,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         else if (axis == 'a') axis = 'A';
         try {
             this.serialIO.writeMessage(axis + "C" + subcommand + option + "/r");
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
     }
@@ -169,9 +160,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         else if (axis == 'a') axis = 'A';
         try {
             this.serialIO.writeMessage(axis + "LD/r");
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
     }
@@ -189,9 +178,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         else if (axis == 'a') axis = 'A';
         try {
             this.serialIO.writeMessage(axis + "LC/r");
-        } catch (PortInUseException ex) {
-            System.err.println(ex);
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
             System.err.println(ex);
         }
     }
@@ -217,20 +204,14 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         if (command == 'D' || command == 'C')
             try {
                 this.serialIO.writeMessage(axis + "S" + command + "/r");
-            } catch (PortInUseException ex) {
-                System.err.println(ex);
-                return null;
-            } catch (NoSuchPortException ex) {
+            } catch (SerialIOException ex) {
                 System.err.println(ex);
                 return null;
             }
         else if( command == 'S')
             try {
                 this.serialIO.writeMessage(axis + "S" + command + datavalues + "/r");
-            } catch (PortInUseException ex) {
-                System.err.println(ex);
-                return null;
-            } catch (NoSuchPortException ex) {
+            } catch (SerialIOException ex) {
                 System.err.println(ex);
                 return null;
             }

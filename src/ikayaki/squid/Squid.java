@@ -24,8 +24,6 @@ package ikayaki.squid;
 
 import ikayaki.Project;
 
-import javax.comm.NoSuchPortException;
-import javax.comm.PortInUseException;
 import java.io.IOException;
 
 /**
@@ -68,10 +66,7 @@ public class Squid {
         if (instance == null) {
             try {
                 instance = new Squid();
-            } catch (PortInUseException ex) {
-                System.err.println(ex);
-                throw new IOException();
-            } catch (NoSuchPortException ex) {
+            } catch (SerialIOException ex) {
                 System.err.println(ex);
                 throw new IOException();
             }
@@ -82,7 +77,7 @@ public class Squid {
     /**
      * Initializes the Squid interface. Creates instances of Degausser, Handler and Magnetometer.
      */
-    private Squid() throws NoSuchPortException, PortInUseException {
+    private Squid() throws SerialIOException {
         owner = null;
         degausser = new Degausser();
         handler = new Handler();

@@ -25,8 +25,6 @@ package ikayaki.squid;
 import ikayaki.Settings;
 import java.util.Stack;
 import java.util.concurrent.SynchronousQueue;
-import javax.comm.PortInUseException;
-import javax.comm.NoSuchPortException;
 
 /**
  * Offers an interface for controlling the degausser (demagnetizer). Because the data link is implemented in the
@@ -93,9 +91,9 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * Creates a new degausser interface. Opens connection to degausser COM port (if not open yet) and reads settings
      * from the Setting class.
      */
-    public Degausser() throws PortInUseException, NoSuchPortException {
+    public Degausser() throws SerialIOException {
         this.serialIO = new SerialIO(new SerialParameters(Settings.instance().
-                    getDegausserPort(), 1200, 0, 0, 8, 1, 0));
+                    getDegausserPort()));
         this.degausserDelay = Settings.instance().getDegausserDelay();
         this.degausserRamp = Settings.instance().getDegausserRamp();
         lastCommandTime = System.currentTimeMillis();
@@ -103,17 +101,13 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitSecond();
         try {
             this.serialIO.writeMessage("DCD " + this.degausserDelay);
-        } catch (PortInUseException ex1) {
-            System.err.println("Error using port in degausser:" + ex1);
-        } catch (NoSuchPortException ex1) {
+        } catch (SerialIOException ex1) {
             System.err.println("Error using port in degausser:" + ex1);
         }
         waitSecond();
         try {
             this.serialIO.writeMessage("DCR " + this.degausserRamp);
-        } catch (PortInUseException ex1) {
-            System.err.println("Error using port in degausser:" + ex1);
-        } catch (NoSuchPortException ex1) {
+        } catch (SerialIOException ex1) {
             System.err.println("Error using port in degausser:" + ex1);
         }
     }
@@ -129,17 +123,13 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitSecond();
         try {
             this.serialIO.writeMessage("DCD " + this.degausserDelay);
-        } catch (PortInUseException ex1) {
-            System.err.println("Error using port in degausser:" + ex1);
-        } catch (NoSuchPortException ex1) {
+        } catch (SerialIOException ex1) {
             System.err.println("Error using port in degausser:" + ex1);
         }
         waitSecond();
         try {
             this.serialIO.writeMessage("DCR " + this.degausserRamp);
-        } catch (PortInUseException ex1) {
-            System.err.println("Error using port in degausser:" + ex1);
-        } catch (NoSuchPortException ex1) {
+        } catch (SerialIOException ex1) {
             System.err.println("Error using port in degausser:" + ex1);
         }
     }
@@ -154,8 +144,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         if(coil == 'X' || coil == 'Y' || coil == 'X') {
             try {
                 this.serialIO.writeMessage("DCC " + coil);
-            } catch (PortInUseException ex) {
-            } catch (NoSuchPortException ex) {
+            } catch (SerialIOException ex) {
             }
         }
     }
@@ -175,8 +164,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
                     this.serialIO.writeMessage("DCA 00" + amplitude);
                 else if (amplitude < 1000)
                     this.serialIO.writeMessage("DCA 0" + amplitude);
-            } catch (PortInUseException ex) {
-            } catch (NoSuchPortException ex) {
+            } catch (SerialIOException ex) {
             }
         }
     }
@@ -188,8 +176,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitSecond();
         try {
             this.serialIO.writeMessage("DERU");
-        } catch (PortInUseException ex) {
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
         }
     }
 
@@ -200,8 +187,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitSecond();
         try {
             this.serialIO.writeMessage("DERD");
-        } catch (PortInUseException ex) {
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
         }
     }
 
@@ -212,8 +198,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitSecond();
         try {
             this.serialIO.writeMessage("DERC");
-        } catch (PortInUseException ex) {
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
         }
     }
 
@@ -283,8 +268,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public char getRampStatus() {
         try {
             this.serialIO.writeMessage("DSS");
-        } catch (PortInUseException ex) {
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
         }
         waitingForMessage = true;
         String answer = (String)queue.poll();
@@ -300,8 +284,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public int getRamp() {
         try {
             this.serialIO.writeMessage("DSS");
-        } catch (PortInUseException ex) {
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
         }
         waitingForMessage = true;
         String answer = (String)queue.poll();
@@ -318,8 +301,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public int getDelay() {
         try {
             this.serialIO.writeMessage("DSS");
-        } catch (PortInUseException ex) {
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
         }
         waitingForMessage = true;
         String answer = (String)queue.poll();
@@ -336,8 +318,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public char getCoil() {
         try {
             this.serialIO.writeMessage("DSS");
-        } catch (PortInUseException ex) {
-        } catch (NoSuchPortException ex) {
+        } catch (SerialIOException ex) {
         }
         waitingForMessage = true;
         String answer = (String)queue.poll();
@@ -354,8 +335,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public int getAmplitude() {
         try {
              this.serialIO.writeMessage("DSS");
-         } catch (PortInUseException ex) {
-         } catch (NoSuchPortException ex) {
+         } catch (SerialIOException ex) {
          }
          waitingForMessage = true;
          String answer = (String)queue.poll();

@@ -22,15 +22,12 @@
 
 package ikayaki.squid;
 
-import javax.comm.NoSuchPortException;
-import javax.comm.PortInUseException;
-import javax.comm.SerialPortEvent;
-import javax.comm.SerialPortEventListener;
+import javax.comm.*;
 
 /**
  * This class represents hardware layer to serial port communications.
  *
- * @author Aki Sysmäläinen
+ * @author  Aki Sysmäläinen
  */
 public class SerialIO implements SerialPortEventListener {
 /*
@@ -41,27 +38,73 @@ message from serial port is received.
     /**
      * contains last received message from the serial port that this SerialIO represents.
      */
-    private String lastMessge = null;
+    private String lastMessge;
+
+    /**
+     * parameters for serial port
+     */
+    private SerialParameters parameters;
+
+    private CommPortIdentifier portId;
+    private SerialPort sPort;
+    private boolean open;
 
     /**
      * Creates an instance of SerialIO which represents one serial port.
      *
      * @param parameters parameters for the serial port being opened.
-     * @throws NoSuchPortException if no such port is found.
-     * @throws PortInUseException  if the serial port is already in use.
+     * @throws SerialIOException if something goes wrong.
      */
-    public SerialIO(SerialParameters parameters) throws NoSuchPortException, PortInUseException {
-        return; // TODO
+    public SerialIO(SerialParameters parameters) throws SerialIOException {
+
+        // Check if given port exists, may throw NoSuchPortException
+        try {
+            portId = CommPortIdentifier.getPortIdentifier(parameters.getPortName());
+        } catch (NoSuchPortException e) {
+            throw new SerialIOException("No such port exists");
+        }
+
+        // Open the port and give it a timeout of 4 seconds
+        try {
+            sPort = (SerialPort)portId.open("SerialPort", 4000);
+        } catch (PortInUseException e) {
+            throw new SerialIOException("The port is already in use");
+        }
+
+        // Set the parameters of the connection
+        try {
+	    sPort.setSerialPortParams(parameters.getBaudRate(),
+				      parameters.getDatabits(),
+				      parameters.getStopbits(),
+				      parameters.getParity());
+	} catch (UnsupportedCommOperationException e) {
+	    sPort.close();
+            throw new SerialIOException("Unsupported parameter");
+	}
+
+	// Set flow control
+	try {
+	    sPort.setFlowControlMode(parameters.getFlowControlIn()
+			           | parameters.getFlowControlOut());
+	} catch (UnsupportedCommOperationException e) {
+	    sPort.close();
+            throw new SerialIOException("Unsupported flow control");
+	}
+
+        // TODO check this method..
+
+        return;
     }
 
     /**
      * Writes an ASCII format message to serial port.
      *
      * @param message message to be send
-     * @throws NoSuchPortException if no such port is found.
-     * @throws PortInUseException  if serial port is already in use.
+     * @throws SerialIOException if exception occurs.
      */
-    public void writeMessage(String message) throws NoSuchPortException, PortInUseException {
+    public void writeMessage(String message) throws SerialIOException {
+
+        // byte[] String.getBytes(String charsetName) to convert to ASCII..
         return; // TODO
     }
 
@@ -81,4 +124,5 @@ message from serial port is received.
     public void serialEvent(SerialPortEvent event) {
         return; // TODO
     }
+        
 }

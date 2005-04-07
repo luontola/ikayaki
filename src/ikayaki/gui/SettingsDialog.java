@@ -224,25 +224,26 @@ Event B: On Cancel Clicked - closes window (discarding changes)
 
         Enumeration ports = CommPortIdentifier.getPortIdentifiers();
 
-        // TODO cannot find COM-ports :/
-        if (ports == null) {
+        // TODO finds COM ports but the environment setup has to be correct..
+        if (!ports.hasMoreElements()) {
           System.err.println("No comm ports found!");
-
           return;
         }
         else {
-          System.err.println("Comm ports found " + ports.hasMoreElements());
+          System.err.println("Comm ports found");
           while (ports.hasMoreElements()) {
             /*
              *  Get the specific port
              */
 
-            CommPortIdentifier portId = (CommPortIdentifier)
-                ports.nextElement();
+            CommPortIdentifier portId = (CommPortIdentifier) ports.nextElement();
 
-            this.magnetometerPort.addItem(portId.getName());
-            this.handlerPort.addItem(portId.getName());
-            this.demagnetizerPort.addItem(portId.getName());
+            if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+                System.err.println("port found!: "+ portId.getName()); // Debug
+                this.magnetometerPort.addItem(portId.getName());
+                this.handlerPort.addItem(portId.getName());
+                this.demagnetizerPort.addItem(portId.getName());
+            }
           }
         }
 

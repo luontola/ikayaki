@@ -22,6 +22,8 @@
 
 package ikayaki.squid;
 
+import javax.comm.SerialPort;
+
 /**
  * Contains all the serial communication parameters which SerialIO uses when opening the port.
  *
@@ -84,5 +86,55 @@ public class SerialParameters {
         this.databits = databits;
         this.stopbits = stopbits;
         this.parity = parity;
+    }
+
+    /**
+     * Creates a SerialParameter object with default Serial settings for serial port communication.
+     * Default settings are:
+     *  Baudrate: 9600
+     *  Flowcontrol in: None
+     *  Flowcontrol out: None
+     *  Databits: 8
+     *  Stopbits: 1
+     *  Parity: None
+     *
+     * @param portName       The name of the serial port.
+     */
+    public SerialParameters(String portName) {
+        this.portName = portName;
+        this.baudRate = 9600;
+        this.flowControlIn = SerialPort.FLOWCONTROL_NONE;
+        this.flowControlOut = SerialPort.FLOWCONTROL_NONE;
+        this.databits = SerialPort.DATABITS_8;
+        this.stopbits = SerialPort.STOPBITS_1;
+        this.parity = SerialPort.PARITY_NONE;
+    }
+
+    public String getPortName() {
+        return portName;
+    }
+
+    public int getBaudRate() {
+        return baudRate;
+    }
+
+    public int getFlowControlIn() {
+        return flowControlIn;
+    }
+
+    public int getFlowControlOut() {
+        return flowControlOut;
+    }
+
+    public int getDatabits() {
+        return databits;
+    }
+
+    public int getStopbits() {
+        return stopbits;
+    }
+
+    public int getParity() {
+        return parity;
     }
 }
