@@ -36,7 +36,7 @@ import com.intellij.uiDesigner.core.Spacer;
 /**
  * Allows inserting and editing project information.
  *
- * @author Mikko Jormalainen
+ * @author Mikko Jormalainen, Esko Luontola
  */
 public class ProjectInformationPanel extends ProjectComponent {
 /*

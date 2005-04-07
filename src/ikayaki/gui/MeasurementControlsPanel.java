@@ -106,6 +106,8 @@ public class MeasurementControlsPanel extends ProjectComponent {
         this.setLayout(new BorderLayout());
         this.add(buttonPanel, BorderLayout.NORTH);
 
+        // TODO: sometimes when the buttons get resized, the abort button disappers from view. fix it!
+
         /*
         Event D: On zPlus,MinusRadioButton click - call project.setOrientation(boolean) where
         Plus is true and Minus is false.
