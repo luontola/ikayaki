@@ -248,7 +248,7 @@
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
-          <text value="Measurement type"/>
+          <text value="Measurement Type"/>
         </properties>
       </component>
       <grid id="611ed" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -288,11 +288,11 @@
       </grid>
       <component id="55da4" class="javax.swing.JLabel">
         <constraints>
-          <xy x="0" y="352" width="59" height="14"/>
+          <xy x="0" y="352" width="61" height="14"/>
           <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
-          <text value="Sample type"/>
+          <text value="Sample Type"/>
         </properties>
       </component>
     </children>

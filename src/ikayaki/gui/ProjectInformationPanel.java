@@ -250,7 +250,7 @@ Event B: On project event - Update textfields to correspond new project informat
                 new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
         final JLabel label12 = new JLabel();
-        label12.setText("Measurement type");
+        label12.setText("Measurement Type");
         contentPane.add(label12,
                 new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
@@ -276,7 +276,7 @@ Event B: On project event - Update textfields to correspond new project informat
                 new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
         final JLabel label13 = new JLabel();
-        label13.setText("Sample type");
+        label13.setText("Sample Type");
         contentPane.add(label13,
                 new GridConstraints(12, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
