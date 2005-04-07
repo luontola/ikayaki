@@ -413,6 +413,8 @@ project listeners.
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         } finally {
+
+            // close the file
             if (reader != null) {
                 try {
                     reader.close();
@@ -420,13 +422,13 @@ project listeners.
                     e.printStackTrace();
                 }
             }
-        }
 
-        // save the results to cache
-        if (type != null) {
-            projectTypeCache.put(file, type);
-        } else {
-            projectTypeCache.put(file, new Object());
+            // save the results to cache
+            if (type != null) {
+                projectTypeCache.put(file, type);
+            } else {
+                projectTypeCache.put(file, new Object());
+            }
         }
         return type;
     }

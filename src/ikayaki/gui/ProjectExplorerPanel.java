@@ -683,7 +683,7 @@ whose measuring ended.
     /**
      * Timer used for flashing a JComponent background light red (or given color), for 100 ms (or given time).
      */
-    class ComponentFlasher extends Timer {
+    private static class ComponentFlasher extends Timer {
 
         private final JComponent component;
         private final Color componentBG;
