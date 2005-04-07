@@ -606,7 +606,8 @@ whose measuring ended.
             createNewProjectButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String name = newProjectName.getText();
-                    if (!name.toLowerCase().endsWith(Ikayaki.FILE_TYPE)) name += Ikayaki.FILE_TYPE;
+                    if (name.length() > 0 && !name.toLowerCase().endsWith(Ikayaki.FILE_TYPE))
+                        name += Ikayaki.FILE_TYPE;
 
                     Project.Type type = (Project.Type) newProjectType.getSelectedItem();
 
@@ -621,6 +622,15 @@ whose measuring ended.
                         newProjectName.setBackground(Color.RED);
                         newProjectNameFlasher.start();
                     } else parent.setProject(created);
+                }
+            });
+
+            /**
+             * Pressing enter in newProjectName text field.
+             */
+            newProjectName.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    createNewProjectButton.doClick();
                 }
             });
         }
