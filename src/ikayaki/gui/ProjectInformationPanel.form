@@ -216,7 +216,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="e475f" class="javax.swing.JRadioButton" binding="measTypeAuto">
+          <component id="e475f" class="javax.swing.JRadioButton" binding="measurementTypeAuto">
             <constraints>
               <xy x="0" y="2" width="48" height="22"/>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0"/>
@@ -225,7 +225,7 @@
               <text value="Auto"/>
             </properties>
           </component>
-          <component id="b6a65" class="javax.swing.JRadioButton" binding="measTypeManual">
+          <component id="b6a65" class="javax.swing.JRadioButton" binding="measurementTypeManual">
             <constraints>
               <xy x="58" y="2" width="59" height="22"/>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0"/>

@@ -46,72 +46,30 @@ Event A: On change of contest in textfield - Notify project about change in proj
 Event B: On project event - Update textfields to correspond new project information.
 */
 
-    private JLabel operatorLabel;
-    private JTextField operatorTextField;
-
-    private JLabel dateLabel;
-    private JTextField dateTextField;
-
-    /**
-     * Groups autoMeasurement and manualMeasurement radiobuttons.
-     */
+    /* Radio Button Groups */
     private ButtonGroup measurementType;
-    private JRadioButton autoMeasurement;
-    private JRadioButton manualMeasurement;
-
-    private JLabel rocktypeLabel;
-    private JTextField rocktypeTextField;
-
-    private JLabel siteLabel;
-    private JTextField siteTextField;
-
-    private JLabel commentLabel;
-    private JTextField commentTextField;
-
-    private JLabel latitudeLabel;
-    private JTextField latitudeTextField;
-
-    private JLabel longLabel;
-    private JTextField longTextField;
-
-    private JLabel strikeLabel;
-    private JTextField strikeTextField;
-
-    private JLabel dipLabel;
-    private JTextField dipTextField;
-
-    private JLabel volumeLabel;
-    private JTextField volumeTextField;
-
-    private JLabel massLabel;
-    private JTextField massTextField;
-
-    /**
-     * Groups coreSample and handSample radiobuttons.
-     */
-    private ButtonGroup sampleType;
-    private JRadioButton coreSample;
-    private JRadioButton handSample;
-    private JTextField textField1;
-    private JFormattedTextField formattedTextField1;
-    private JRadioButton radioButton1;
     private JRadioButton measTypeManual;
-    private JRadioButton radioButton3;
-    private JRadioButton radioButton4;
     private JRadioButton measTypeAuto;
-    private JTextField dateField;
-    private JTextField operatorField;
+
+    private ButtonGroup sampleType;
     private JRadioButton sampleTypeCore;
     private JRadioButton sampleTypeHand;
-    private JFormattedTextField massField;
-    private JFormattedTextField volumeField;
-    private JFormattedTextField dipField;
+
+    /* Plain Text Fields */
+    private JTextField operatorField;
+    private JTextField dateField;
+    private JTextField rockTypeField;
+    private JTextField siteField;
+    private JTextField commentField;
+
+    /* Number-only Text Fields */
+    private JFormattedTextField latitudeField;
     private JFormattedTextField longitudeField;
     private JFormattedTextField strikeField;
-    private JFormattedTextField latitudeField;
-    private JTextField commentField;
-    private JTextField siteField;
-    private JTextField rockTypeField;
+    private JFormattedTextField dipField;
+    private JFormattedTextField massField;
+    private JFormattedTextField volumeField;
+
     private JPanel contentPane;
 
     /**
@@ -138,10 +96,12 @@ Event B: On project event - Update textfields to correspond new project informat
      */
     public void setProject(Project project) {
         super.setProject(project);
-    }
-
-    public void projectUpdated(ProjectEvent event) {
-        // DOES NOTHING
+        
+        if (project != null) {
+            // TODO: enable all controls and get values from the project
+        } else {
+            // TODO: disable all controls and clear the values
+        }
     }
 
     {
