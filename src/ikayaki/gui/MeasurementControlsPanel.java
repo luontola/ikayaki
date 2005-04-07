@@ -86,7 +86,8 @@ public class MeasurementControlsPanel extends ProjectComponent {
         abortButton = new JButton(getAbortAction());
         updateActions();
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 2, 2)); // prevents button resize, looks a bit ugly
+//        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 2, 2)); // prevents button resize, looks a bit ugly
+        JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 2, 2)); // prevents button resize, looks a bit ugly
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 4, 4, 4));
         buttonPanel.add(measureButton);
         buttonPanel.add(stepButton);
