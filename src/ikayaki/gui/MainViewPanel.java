@@ -655,7 +655,8 @@ public class MainViewPanel extends ProjectComponent {
             aboutAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     JOptionPane.showMessageDialog(MainViewPanel.this,
-                            Ikayaki.APP_NAME + " " + Ikayaki.APP_VERSION + " / purselo\n\n" +
+                            // TODO: how to add build date?
+                            Ikayaki.APP_NAME + " " + Ikayaki.APP_VERSION + " / purselo\n7.5.2005\n\n" +
                             Ikayaki.APP_HOME_PAGE + "\n\n" +
                             "Mikko Jormalainen\n" +
                             "Samuli Kaipiainen\n" +
