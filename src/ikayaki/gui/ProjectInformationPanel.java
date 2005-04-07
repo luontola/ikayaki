@@ -28,7 +28,12 @@ import com.intellij.uiDesigner.core.Spacer;
 import ikayaki.Project;
 
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
+import java.text.ParseException;
 
 /**
  * Allows inserting and editing project information.
@@ -42,6 +47,18 @@ Event A: On change of contest in textfield - Notify project about change in proj
 /*
 Event B: On project event - Update textfields to correspond new project information.
 */
+
+    /* Property names for saving values to Project */
+    private static final String MEASUREMENT_TYPE_PROPERTY = "measurementType";
+    private static final String MEASUREMENT_TYPE_AUTO_VALUE = "auto";
+    private static final String MEASUREMENT_TYPE_MANUAL_VALUE = "manual";
+    private static final String OPERATOR_PROPERTY = "operator";
+    private static final String DATE_PROPERTY = "date";
+    private static final String ROCK_TYPE_PROPERTY = "rockType";
+    private static final String SITE_PROPERTY = "site";
+    private static final String COMMENT_PROPERTY = "comment";
+    private static final String LATITUDE_PROPERTY = "latitude";
+    private static final String LONGITUDE_PROPERTY = "longitude";
 
     /* Radio Button Groups */
     private ButtonGroup measurementType;
@@ -77,6 +94,7 @@ Event B: On project event - Update textfields to correspond new project informat
         add(contentPane, "Center");
         contentPane.setBorder(BorderFactory.createEmptyBorder(0, 4, 8, 4));
 
+        /* Radio Button Groups */
         measurementType = new ButtonGroup();
         measurementType.add(measurementTypeAuto);
         measurementType.add(measurementTypeManual);
@@ -85,7 +103,14 @@ Event B: On project event - Update textfields to correspond new project informat
         sampleType.add(sampleTypeCore);
         sampleType.add(sampleTypeHand);
 
-        return; // TODO
+        /* Number-only Text Fields */
+        MyFormatterFactory factory = new MyFormatterFactory();
+        latitudeField.setFormatterFactory(factory);
+        longitudeField.setFormatterFactory(factory);
+        strikeField.setFormatterFactory(factory);
+        dipField.setFormatterFactory(factory);
+        massField.setFormatterFactory(factory);
+        volumeField.setFormatterFactory(factory);
     }
 
     /**
@@ -96,17 +121,20 @@ Event B: On project event - Update textfields to correspond new project informat
     @Override public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
 
+        /* Radio Button Groups */
         measurementTypeAuto.setEnabled(enabled);
         measurementTypeManual.setEnabled(enabled);
         sampleTypeCore.setEnabled(enabled);
         sampleTypeHand.setEnabled(enabled);
 
+        /* Plain Text Fields */
         operatorField.setEnabled(enabled);
         dateField.setEnabled(enabled);
         rockTypeField.setEnabled(enabled);
         siteField.setEnabled(enabled);
         commentField.setEnabled(enabled);
 
+        /* Number-only Text Fields */
         latitudeField.setEnabled(enabled);
         longitudeField.setEnabled(enabled);
         strikeField.setEnabled(enabled);
@@ -123,20 +151,48 @@ Event B: On project event - Update textfields to correspond new project informat
         setEnabled(project != null);
 
         if (project != null) {
-            // TODO: get values from the project
+            // get values from the project
+
+            /* Radio Button Groups */
+            measurementTypeAuto.setSelected(project.getProperty(MEASUREMENT_TYPE_PROPERTY, MEASUREMENT_TYPE_AUTO_VALUE)
+                    .equals(MEASUREMENT_TYPE_AUTO_VALUE));
+            measurementTypeManual.setSelected(project.getProperty(MEASUREMENT_TYPE_PROPERTY,
+                    MEASUREMENT_TYPE_AUTO_VALUE)
+                    .equals(MEASUREMENT_TYPE_MANUAL_VALUE));
+            sampleTypeCore.setSelected(project.getSampleType() == Project.SampleType.CORE);
+            sampleTypeHand.setSelected(project.getSampleType() == Project.SampleType.HAND);
+
+            /* Plain Text Fields */
+            operatorField.setText(project.getProperty(OPERATOR_PROPERTY, ""));
+            dateField.setText(project.getProperty(DATE_PROPERTY, ""));
+            rockTypeField.setText(project.getProperty(ROCK_TYPE_PROPERTY, ""));
+            siteField.setText(project.getProperty(SITE_PROPERTY, ""));
+            commentField.setText(project.getProperty(COMMENT_PROPERTY, ""));
+
+            /* Number-only Text Fields */
+            latitudeField.setValue(Double.parseDouble(project.getProperty(LATITUDE_PROPERTY, "-1.0")));
+            longitudeField.setValue(Double.parseDouble(project.getProperty(LONGITUDE_PROPERTY, "-1.0")));
+            strikeField.setValue(new Double(project.getStrike()));
+            dipField.setValue(new Double(project.getDip()));
+            massField.setValue(new Double(project.getMass()));
+            volumeField.setValue(new Double(project.getVolume()));
         } else {
             // clear the form fields
+
+            /* Radio Button Groups */
             measurementTypeAuto.setSelected(true);
             measurementTypeManual.setSelected(false);
             sampleTypeCore.setSelected(true);
             sampleTypeHand.setSelected(false);
 
+            /* Plain Text Fields */
             operatorField.setText("");
             dateField.setText("");
             rockTypeField.setText("");
             siteField.setText("");
             commentField.setText("");
 
+            /* Number-only Text Fields */
             latitudeField.setText("");
             longitudeField.setText("");
             strikeField.setText("");
@@ -169,12 +225,12 @@ Event B: On project event - Update textfields to correspond new project informat
         contentPane.add(operatorField,
                 new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(150, -1), null));
+                        new Dimension(70, -1), null));
         dateField = new JTextField();
         contentPane.add(dateField,
                 new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(150, -1), null));
+                        new Dimension(70, -1), null));
         final JLabel label2 = new JLabel();
         label2.setText("Mass");
         contentPane.add(label2,
@@ -224,17 +280,17 @@ Event B: On project event - Update textfields to correspond new project informat
         contentPane.add(commentField,
                 new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(150, -1), null));
+                        new Dimension(70, -1), null));
         rockTypeField = new JTextField();
         contentPane.add(rockTypeField,
                 new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(150, -1), null));
+                        new Dimension(70, -1), null));
         siteField = new JTextField();
         contentPane.add(siteField,
                 new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(150, -1), null));
+                        new Dimension(70, -1), null));
         final JLabel label11 = new JLabel();
         label11.setText("Date");
         contentPane.add(label11,
@@ -244,32 +300,32 @@ Event B: On project event - Update textfields to correspond new project informat
         contentPane.add(latitudeField,
                 new GridConstraints(6, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(150, -1), null));
+                        new Dimension(70, -1), null));
         massField = new JFormattedTextField();
         contentPane.add(massField,
                 new GridConstraints(11, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(150, -1), null));
+                        new Dimension(70, -1), null));
         volumeField = new JFormattedTextField();
         contentPane.add(volumeField,
                 new GridConstraints(10, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(150, -1), null));
+                        new Dimension(70, -1), null));
         dipField = new JFormattedTextField();
         contentPane.add(dipField,
                 new GridConstraints(9, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(150, -1), null));
+                        new Dimension(70, -1), null));
         longitudeField = new JFormattedTextField();
         contentPane.add(longitudeField,
                 new GridConstraints(7, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(150, -1), null));
+                        new Dimension(70, -1), null));
         strikeField = new JFormattedTextField();
         contentPane.add(strikeField,
                 new GridConstraints(8, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(150, -1), null));
+                        new Dimension(70, -1), null));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel1,
@@ -323,4 +379,151 @@ Event B: On project event - Update textfields to correspond new project informat
                 new GridConstraints(12, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
     }
+
+    /**
+     * Custom formatter factory for the JFormattedTextFields in this class.
+     */
+    private class MyFormatterFactory extends JFormattedTextField.AbstractFormatterFactory {
+        /**
+         * Returns an <code>AbstractFormatter</code> that can handle formatting of the passed in
+         * <code>JFormattedTextField</code>.
+         *
+         * @param tf JFormattedTextField requesting AbstractFormatter
+         * @return AbstractFormatter to handle formatting duties, a null return value implies the JFormattedTextField
+         *         should behave like a normal JTextField
+         */
+        public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf) {
+            if (tf == massField || tf == volumeField || tf == latitudeField || tf == longitudeField) {
+                // TODO: this one that I made sucks. try to customize javax.swing.text.NumberFormatter and use it.
+                return new PositiveNumberFormatter();
+            } else {
+                return new NumberFormatter();
+            }
+        }
+    }
+
+    /**
+     * Formatter for JFormattedTextField's that contain only positive numbers.
+     */
+    private static class PositiveNumberFormatter extends JFormattedTextField.AbstractFormatter {
+        /**
+         * Parses <code>text</code> returning an arbitrary Object. Some formatters may return null.
+         *
+         * @param text String to convert
+         * @return Object representation of text
+         * @throws java.text.ParseException if there is an error in the conversion
+         */
+        public Object stringToValue(String text) throws ParseException {
+            if (text.equals("")) {
+                return new Double(-1.0);
+            } else {
+                try {
+                    return new Double(Double.parseDouble(text));
+                } catch (NumberFormatException e) {
+                    throw new ParseException(text, 0);
+                }
+            }
+        }
+
+        /**
+         * Returns the string value to display for <code>value</code>.
+         *
+         * @param value Value to convert
+         * @return String representation of value
+         * @throws java.text.ParseException if there is an error in the conversion
+         */
+        public String valueToString(Object value) throws ParseException {
+            if (value instanceof Number) {
+                Number num = (Number) value;
+                double d = num.doubleValue();
+                if (d < 0.0) {
+                    return "";
+                } else {
+                    return Double.toString(d);
+                }
+            } else {
+                throw new ParseException("", 0);
+            }
+        }
+
+        /**
+         * Returns a DocumentFilter that allow only positive decimal numbers.
+         */
+        @Override protected DocumentFilter getDocumentFilter() {
+            return new DocumentFilter() {
+                /**
+                 * Allow inserting only positive decimal numbers.
+                 * <p/>
+                 * Invoked prior to insertion of text into the specified Document. Subclasses that want to conditionally
+                 * allow insertion should override this and only call supers implementation as necessary, or call
+                 * directly into the FilterBypass.
+                 *
+                 * @param fb     FilterBypass that can be used to mutate Document
+                 * @param offset the offset into the document to insert the content >= 0. All positions that track
+                 *               change at or after the given location will move.
+                 * @param string the string to insert
+                 * @param attr   the attributes to associate with the inserted content.  This may be null if there are
+                 *               no attributes.
+                 * @throws javax.swing.text.BadLocationException
+                 *          the given insert position is not a valid position within the document
+                 */
+                @Override public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                    string = string.replace(',', '.');
+                    if (isOK(fb, string)) {
+                        super.insertString(fb, offset, string, attr);
+                    }
+                }
+
+                /**
+                 * Allow inserting only positive decimal numbers.
+                 * <p/>
+                 * Invoked prior to replacing a region of text in the specified Document. Subclasses that want to
+                 * conditionally allow replace should override this and only call supers implementation as necessary, or
+                 * call directly into the FilterBypass.
+                 *
+                 * @param fb     FilterBypass that can be used to mutate Document
+                 * @param offset Location in Document
+                 * @param length Length of text to delete
+                 * @param text   Text to insert, null indicates no text to insert
+                 * @param attrs  AttributeSet indicating attributes of inserted text, null is legal.
+                 * @throws javax.swing.text.BadLocationException
+                 *          the given insert position is not a valid position within the document
+                 */
+                @Override public void replace(FilterBypass fb, int offset, int length, String text,
+                                              AttributeSet attrs) throws BadLocationException {
+                    text = text.replace(',', '.');
+                    if (isOK(fb, text)) {
+                        super.replace(fb, offset, length, text, attrs);
+                    }
+                }
+
+                /**
+                 * Checks whether the supplied string can be added to the document.
+                 */
+                private boolean isOK(FilterBypass fb, String text) {
+                    if (text != null) {
+                        for (int i = 0; i < text.length(); i++) {
+                            char c = text.charAt(i);
+                            if (!Character.isDigit(c) && c != '.') {
+                                return false;
+                            } else if (c == '.') {
+
+                                String doc = null;
+                                try {
+                                    doc = fb.getDocument().getText(0, fb.getDocument().getLength());
+                                } catch (BadLocationException e) {
+                                }
+                                if (doc.indexOf('.') >= 0) {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                    return true;
+                }
+
+            };
+        }
+    }
+
 }

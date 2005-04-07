@@ -20,18 +20,18 @@
       </component>
       <component id="14339" class="javax.swing.JTextField" binding="operatorField">
         <constraints>
-          <xy x="100" y="2" width="214" height="21"/>
+          <xy x="102" y="2" width="212" height="21"/>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-            <preferred-size width="150" height="-1"/>
+            <preferred-size width="70" height="-1"/>
           </grid>
         </constraints>
         <properties/>
       </component>
       <component id="3ce27" class="javax.swing.JTextField" binding="dateField">
         <constraints>
-          <xy x="100" y="32" width="214" height="21"/>
+          <xy x="102" y="32" width="212" height="21"/>
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-            <preferred-size width="150" height="-1"/>
+            <preferred-size width="70" height="-1"/>
           </grid>
         </constraints>
         <properties/>
@@ -119,27 +119,27 @@
       </component>
       <component id="b1b20" class="javax.swing.JTextField" binding="commentField">
         <constraints>
-          <xy x="100" y="151" width="214" height="21"/>
+          <xy x="102" y="151" width="212" height="21"/>
           <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-            <preferred-size width="150" height="-1"/>
+            <preferred-size width="70" height="-1"/>
           </grid>
         </constraints>
         <properties/>
       </component>
       <component id="976ca" class="javax.swing.JTextField" binding="rockTypeField">
         <constraints>
-          <xy x="100" y="93" width="214" height="21"/>
+          <xy x="102" y="93" width="212" height="21"/>
           <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-            <preferred-size width="150" height="-1"/>
+            <preferred-size width="70" height="-1"/>
           </grid>
         </constraints>
         <properties/>
       </component>
       <component id="e9a61" class="javax.swing.JTextField" binding="siteField">
         <constraints>
-          <xy x="100" y="122" width="214" height="21"/>
+          <xy x="102" y="122" width="212" height="21"/>
           <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-            <preferred-size width="150" height="-1"/>
+            <preferred-size width="70" height="-1"/>
           </grid>
         </constraints>
         <properties/>
@@ -155,54 +155,54 @@
       </component>
       <component id="e682f" class="javax.swing.JFormattedTextField" binding="latitudeField">
         <constraints>
-          <xy x="100" y="180" width="214" height="20"/>
+          <xy x="102" y="180" width="212" height="20"/>
           <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-            <preferred-size width="150" height="-1"/>
+            <preferred-size width="70" height="-1"/>
           </grid>
         </constraints>
         <properties/>
       </component>
       <component id="2df11" class="javax.swing.JFormattedTextField" binding="massField">
         <constraints>
-          <xy x="100" y="320" width="214" height="20"/>
+          <xy x="102" y="320" width="212" height="20"/>
           <grid row="11" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-            <preferred-size width="150" height="-1"/>
+            <preferred-size width="70" height="-1"/>
           </grid>
         </constraints>
         <properties/>
       </component>
       <component id="4bea2" class="javax.swing.JFormattedTextField" binding="volumeField">
         <constraints>
-          <xy x="100" y="292" width="214" height="20"/>
+          <xy x="102" y="292" width="212" height="20"/>
           <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-            <preferred-size width="150" height="-1"/>
+            <preferred-size width="70" height="-1"/>
           </grid>
         </constraints>
         <properties/>
       </component>
       <component id="16e3" class="javax.swing.JFormattedTextField" binding="dipField">
         <constraints>
-          <xy x="100" y="264" width="214" height="20"/>
+          <xy x="102" y="264" width="212" height="20"/>
           <grid row="9" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-            <preferred-size width="150" height="-1"/>
+            <preferred-size width="70" height="-1"/>
           </grid>
         </constraints>
         <properties/>
       </component>
       <component id="82849" class="javax.swing.JFormattedTextField" binding="longitudeField">
         <constraints>
-          <xy x="100" y="208" width="214" height="20"/>
+          <xy x="102" y="208" width="212" height="20"/>
           <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-            <preferred-size width="150" height="-1"/>
+            <preferred-size width="70" height="-1"/>
           </grid>
         </constraints>
         <properties/>
       </component>
       <component id="5af6a" class="javax.swing.JFormattedTextField" binding="strikeField">
         <constraints>
-          <xy x="100" y="236" width="214" height="20"/>
+          <xy x="102" y="236" width="212" height="20"/>
           <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-            <preferred-size width="150" height="-1"/>
+            <preferred-size width="70" height="-1"/>
           </grid>
         </constraints>
         <properties/>
@@ -210,7 +210,7 @@
       <grid id="6e05d" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <xy x="100" y="60" width="214" height="26"/>
+          <xy x="102" y="60" width="212" height="26"/>
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="0" fill="3"/>
         </constraints>
         <properties/>
@@ -236,7 +236,7 @@
           </component>
           <hspacer id="8d47e">
             <constraints>
-              <xy x="117" y="7" width="97" height="11"/>
+              <xy x="117" y="7" width="95" height="11"/>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1"/>
             </constraints>
           </hspacer>
@@ -244,7 +244,7 @@
       </grid>
       <component id="5c43" class="javax.swing.JLabel">
         <constraints>
-          <xy x="0" y="66" width="90" height="14"/>
+          <xy x="0" y="66" width="92" height="14"/>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
@@ -254,7 +254,7 @@
       <grid id="611ed" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <xy x="100" y="347" width="214" height="25"/>
+          <xy x="102" y="347" width="212" height="25"/>
           <grid row="12" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="0" fill="3"/>
         </constraints>
         <properties/>
@@ -280,7 +280,7 @@
           </component>
           <hspacer id="e0774">
             <constraints>
-              <xy x="108" y="7" width="106" height="11"/>
+              <xy x="108" y="7" width="104" height="11"/>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1"/>
             </constraints>
           </hspacer>
