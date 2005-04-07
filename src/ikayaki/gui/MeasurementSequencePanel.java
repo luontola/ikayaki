@@ -40,7 +40,7 @@ import com.intellij.uiDesigner.core.Spacer;
  * three textfields for inserting new sequences, first field for start value, second for step and third for stop value.
  * Clicking Add sequence-button appends sequence into table. Saved sequences can be loaded from dropdown menu.
  *
- * @author Mikko Jormalainen
+ * @author Mikko Jormalainen, Esko Luontola
  */
 public class MeasurementSequencePanel extends ProjectComponent {
 /*
