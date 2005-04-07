@@ -38,7 +38,7 @@ import java.text.ParseException;
 /**
  * Allows inserting and editing project information.
  *
- * @author Mikko Jormalainen, Esko Luontola
+ * @author Esko Luontola
  */
 public class ProjectInformationPanel extends ProjectComponent {
 /*
@@ -111,7 +111,7 @@ Event B: On project event - Update textfields to correspond new project informat
         dipField.setFormatterFactory(factory);
         massField.setFormatterFactory(factory);
         volumeField.setFormatterFactory(factory);
-        
+
         // TODO: add listeners for form fields to invoke autosaving
     }
 

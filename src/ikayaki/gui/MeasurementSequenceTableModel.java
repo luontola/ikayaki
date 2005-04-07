@@ -326,5 +326,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
 
     public enum SequenceColumn {
         COUNT, STEP, MASS, VOLUME, X, Y, Z, DECLINATION, INCLINATION, MOMENT, REMANENCE, RELATIVE_REMANENCE, THETA63;
+        
+        // TODO: methods for deciding what to do with each column
     }
 }
