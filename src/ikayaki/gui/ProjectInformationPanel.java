@@ -48,8 +48,8 @@ Event B: On project event - Update textfields to correspond new project informat
 
     /* Radio Button Groups */
     private ButtonGroup measurementType;
-    private JRadioButton measTypeManual;
-    private JRadioButton measTypeAuto;
+    private JRadioButton measurementTypeManual;
+    private JRadioButton measurementTypeAuto;
 
     private ButtonGroup sampleType;
     private JRadioButton sampleTypeCore;
@@ -81,8 +81,8 @@ Event B: On project event - Update textfields to correspond new project informat
         contentPane.setBorder(BorderFactory.createEmptyBorder(0, 4, 8, 4));
 
         measurementType = new ButtonGroup();
-        measurementType.add(measTypeAuto);
-        measurementType.add(measTypeManual);
+        measurementType.add(measurementTypeAuto);
+        measurementType.add(measurementTypeManual);
 
         sampleType = new ButtonGroup();
         sampleType.add(sampleTypeCore);
@@ -96,7 +96,7 @@ Event B: On project event - Update textfields to correspond new project informat
      */
     public void setProject(Project project) {
         super.setProject(project);
-        
+
         if (project != null) {
             // TODO: enable all controls and get values from the project
         } else {
@@ -233,15 +233,15 @@ Event B: On project event - Update textfields to correspond new project informat
         contentPane.add(panel1,
                 new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
-        measTypeAuto = new JRadioButton();
-        measTypeAuto.setText("Auto");
-        panel1.add(measTypeAuto,
+        measurementTypeAuto = new JRadioButton();
+        measurementTypeAuto.setText("Auto");
+        panel1.add(measurementTypeAuto,
                 new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        measTypeManual = new JRadioButton();
-        measTypeManual.setText("Manual");
-        panel1.add(measTypeManual,
+        measurementTypeManual = new JRadioButton();
+        measurementTypeManual.setText("Manual");
+        panel1.add(measurementTypeManual,
                 new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
