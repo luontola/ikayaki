@@ -145,20 +145,23 @@ Order of rows with measurement data cannot be changed.
         controlsPane = new JPanel();
         controlsPane.setLayout(new GridLayoutManager(2, 7, new Insets(0, 0, 0, 0), -1, -1));
         sequenceStartField = new JFormattedTextField();
+        sequenceStartField.setHorizontalAlignment(11);
         controlsPane.add(sequenceStartField,
                 new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(50, -1), null));
+                        new Dimension(30, -1), null));
         sequenceStepField = new JFormattedTextField();
+        sequenceStepField.setHorizontalAlignment(11);
         controlsPane.add(sequenceStepField,
                 new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(50, -1), null));
+                        new Dimension(30, -1), null));
         sequenceStopField = new JFormattedTextField();
+        sequenceStopField.setHorizontalAlignment(11);
         controlsPane.add(sequenceStopField,
                 new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(50, -1), null));
+                        new Dimension(30, -1), null));
         final JLabel label1 = new JLabel();
         label1.setText("Start");
         controlsPane.add(label1,
