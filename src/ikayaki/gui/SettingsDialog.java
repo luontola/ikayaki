@@ -224,7 +224,6 @@ Event B: On Cancel Clicked - closes window (discarding changes)
 
         Enumeration ports = CommPortIdentifier.getPortIdentifiers();
 
-        // TODO finds COM ports but the environment setup has to be correct..
         if (!ports.hasMoreElements()) {
           System.err.println("No comm ports found!");
           return;
