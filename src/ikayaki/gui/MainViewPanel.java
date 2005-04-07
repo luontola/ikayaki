@@ -45,6 +45,7 @@ import java.io.IOException;
 public class MainViewPanel extends ProjectComponent {
 
     private static final int DIVIDER_DEFAULT_LOCATION = 300;
+    private static final int DIVIDER_SIZE = 5;
 
     /**
      * Front-end for controlling the SQUID. Only one project at a time may have access to the SQUID.
@@ -167,7 +168,7 @@ public class MainViewPanel extends ProjectComponent {
         splitPane.setResizeWeight(0.0);
         //splitPane.setEnabled(false);
         splitPane.setBorder(null);
-        splitPane.setDividerSize(0);
+        splitPane.setDividerSize(DIVIDER_SIZE);
 
         // prevent the left tab from being resized when the window is resized
         Dimension d = left.getMinimumSize();
@@ -189,10 +190,12 @@ public class MainViewPanel extends ProjectComponent {
                 if (splitPane.getDividerLocation() == 0) {
                     // show tab
                     splitPane.setDividerLocation(splitPane.getLastDividerLocation());
+                    splitPane.setDividerSize(DIVIDER_SIZE);
                     tabButton.setIcon(tabButtonDown);
                 } else {
                     // hide tab
                     splitPane.setDividerLocation(0);
+                    splitPane.setDividerSize(0);
                     tabButton.setIcon(tabButtonUp);
                 }
             }
