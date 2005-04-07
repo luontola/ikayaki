@@ -123,8 +123,7 @@ whose measuring ended.
         this.parent = parent;
 
         // set current directory to latest directory history dir
-        // note: getDirectoryHistory() always returns at least one dir (as File[0])
-        setDirectory(getDirectoryHistory()[0]);
+        setDirectory(Settings.instance().getLastDirectory());
 
         // combo box / text field
         browserField = new JComboBox(getDirectoryHistory());
@@ -150,9 +149,10 @@ whose measuring ended.
         explorerTableModel = new ProjectExplorerTableModel();
         explorerTable = new JTable(explorerTableModel);
         explorerTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        explorerTable.setShowGrid(false); // TODO: the grid still shows up when selecting rows. must make a custom cell renderer to change that
+        // TODO: the grid still shows up when selecting rows. must make a custom cell renderer to change that
+        explorerTable.setShowGrid(false);
         explorerTableScrollPane = new JScrollPane(explorerTable);
-        explorerTableScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        // explorerTableScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         explorerTableScrollPane.getViewport().setBackground(Color.WHITE);
         // TODO: set column sizes somehow automatically, according to table contents?
         explorerTable.getColumnModel().getColumn(0).setPreferredWidth(130);
@@ -160,9 +160,13 @@ whose measuring ended.
         explorerTable.getColumnModel().getColumn(2).setPreferredWidth(80);
         explorerTable.setPreferredScrollableViewportSize(new Dimension(280, 400));
 
+        // new project panel
+        newProjectPanel = new NewProjectPanel();
+
         this.setLayout(new BorderLayout());
         this.add(browsePanel, BorderLayout.NORTH);
         this.add(explorerTableScrollPane, BorderLayout.CENTER);
+        this.add(newProjectPanel, BorderLayout.SOUTH);
 
         // ProjectExplorer events
 
@@ -325,7 +329,8 @@ whose measuring ended.
                 TableColumnModel cm = th.getColumnModel();
                 int viewColumn = cm.getColumnIndexAtX(e.getX());
 
-                // TODO: what the sick hell of chainsaw internals do I have to touch just to update table headers?
+                // TODO: what the sick hell of chainsaw internals do I have to touch just to update table headers?!?
+                // ... Hope it's at least correct, not that I care anymore
 
                 // reset all column header names
                 for (int col = 0; col < cm.getColumnCount(); col++)
@@ -401,15 +406,12 @@ whose measuring ended.
     }
 
     /**
-     * Reads current directory history from Settings. If directory history is empty, returns current directory instead.
+     * Reads current directory history from Settings.
      *
-     * @return current directory history, or if empty, only current directory (as File[0]).
+     * @return current directory history. Should never return null.
      */
     private File[] getDirectoryHistory() {
-        File[] dirhist = Settings.instance().getDirectoryHistory();
-
-        if (dirhist == null || dirhist.length == 0) return new File[] { new File("").getAbsoluteFile() };
-        else return dirhist;
+        return Settings.instance().getDirectoryHistory();
     }
 
     /**
@@ -558,6 +560,73 @@ whose measuring ended.
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Panel with components for creating a new project. This Panel will be somewhere below the project file listing...
+     */
+    public class NewProjectPanel extends JPanel {
+
+        private final JTextField newProjectName;
+
+        /** AF / Thellier / Thermal */
+        private final JComboBox newProjectType;
+
+        private final JButton createNewProjectButton;
+
+        private final JPanel flowPanel = new JPanel(new BorderLayout());
+
+        private final Timer newProjectNameFlasher;
+
+        public NewProjectPanel() {
+            super(new BorderLayout());
+
+            newProjectName = new JTextField();
+            newProjectType = new JComboBox(Project.Type.values());
+            newProjectType.setSelectedItem(Project.Type.AF);
+            newProjectType.setBackground(Color.WHITE);
+            createNewProjectButton = new JButton("Create new");
+
+            flowPanel.add(newProjectType, BorderLayout.WEST);
+            flowPanel.add(createNewProjectButton, BorderLayout.EAST);
+
+            this.add(newProjectName, BorderLayout.CENTER);
+            this.add(flowPanel, BorderLayout.EAST);
+
+            newProjectNameFlasher = new Timer(100, new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    newProjectName.setBackground(Color.WHITE);
+                }
+            });
+            newProjectNameFlasher.setRepeats(false);
+
+            /**
+             * Event A: On createNewProjectButton click - call Project.createProject(File, Type) with
+             * filename from newProjectField; if returns null, show error message and do nothing. Otherwise,
+             * update file listing, set new project active, tell explorerTable to reset newProjectField and
+             * newProjectType and call (MainViewPanel) parent.setProject(Project) with returned Project.
+             */
+            createNewProjectButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    String name = newProjectName.getText();
+                    if (!name.toLowerCase().endsWith(".ika")) name += ".ika";
+
+                    Project.Type type = (Project.Type) newProjectType.getSelectedItem();
+
+                    File file = new File(directory, name);
+
+                    // TODO: should we check here if the file is legitimate?
+
+                    Project created = Project.createProject(file, type);
+
+                    if (created == null) {
+                        // flash text field red
+                        newProjectName.setBackground(Color.RED);
+                        newProjectNameFlasher.start();
+                    } else parent.setProject(created);
+                }
+            });
         }
     }
 }
