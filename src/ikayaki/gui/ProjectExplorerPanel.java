@@ -428,8 +428,8 @@ whose measuring ended.
             this.getColumnModel().getColumn(2).setPreferredWidth(80);
             this.setPreferredScrollableViewportSize(new Dimension(280, 400));
 
-            // set files
-            updateFiles(xfiles);
+            // update table
+            updateFiles(this.files);
 
             // ProjectExplorerTable events
 
@@ -587,7 +587,9 @@ whose measuring ended.
         }
 
         /**
-         * Popup menu for ProjectExplorerTable export-options.
+         * Shows popup menu with export choices: AF (.dat), Thellier (.tdt) and Thermal (.tdt), and for each,
+         * "to current directory", "to disk drive A:" and "...", which opens a standard file chooser for selecting
+         * dir and file to export to. Executes selected export command.
          */
         private class ProjectExplorerPopupMenu extends JPopupMenu {
 
@@ -616,6 +618,10 @@ whose measuring ended.
 
                         this.add(exportitem);
 
+                        /**
+                         * Event A: On menu click - call project.exportToXXX(File) according to selected menu
+                         * item; if false is returned, show error message.
+                         */
                         exportitem.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
                                 String filename = e.getActionCommand();
@@ -707,48 +713,6 @@ whose measuring ended.
                     createNewProjectButton.doClick();
                 }
             });
-        }
-    }
-
-    /**
-     * Timer used for flashing a JComponent background light red (or given color), for 100 ms (or given time).
-     */
-    private static class ComponentFlasher extends Timer {
-
-        private final JComponent component;
-        private final Color componentBG;
-        private final Color flashcolor;
-        private static final Color defauldFlashColor = new Color(0xff8080);
-
-        public ComponentFlasher(JComponent component) {
-            this(component, defauldFlashColor, 100);
-        }
-
-        public ComponentFlasher(JComponent component, Color flashcolor) {
-            this(component, flashcolor, 100);
-        }
-
-        public ComponentFlasher(JComponent component, int flashtime) {
-            this(component, defauldFlashColor, flashtime);
-        }
-
-        public ComponentFlasher(JComponent component, Color flashcolor, int flashtime) {
-            super(flashtime, null);
-            this.component = component;
-            this.componentBG = component.getBackground();
-            this.flashcolor = flashcolor;
-            this.setRepeats(false);
-
-            this.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    ComponentFlasher.this.component.setBackground(componentBG);
-                }
-            });
-        }
-
-        public void flash() {
-            component.setBackground(flashcolor);
-            super.start();
         }
     }
 }
