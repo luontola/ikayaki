@@ -42,12 +42,6 @@ import java.text.DecimalFormat;
  * @author Esko Luontola
  */
 public class ProjectInformationPanel extends ProjectComponent {
-/*
-Event A: On change of contest in textfield - Notify project about change in project information.
-*/
-/*
-Event B: On project event - Update textfields to correspond new project information.
-*/
 
     /* Property names for saving values to Project */
     private static final String MEASUREMENT_TYPE_PROPERTY = "measurementType";
@@ -91,7 +85,7 @@ Event B: On project event - Update textfields to correspond new project informat
     private boolean parametersModified = false;
 
     /**
-     * Creates default ProjectInformationPanel.
+     * Creates default ProjectInformationPanel with no current project. Starts an autosaving thread.
      */
     public ProjectInformationPanel() {
         setLayout(new BorderLayout());
@@ -307,7 +301,7 @@ Event B: On project event - Update textfields to correspond new project informat
         if (!propertiesModified) {
             return;
         }
-        System.out.println("Properties saved");
+//        System.out.println("Properties saved");
 
         /* Radio Button Groups */
         if (measurementTypeAuto.isSelected()) {
@@ -341,7 +335,7 @@ Event B: On project event - Update textfields to correspond new project informat
         if (!parametersModified) {
             return;
         }
-        System.out.println("Parameters saved");
+//        System.out.println("Parameters saved");
 
         /* Radio Button Groups */
         if (sampleTypeCore.isSelected()) {
@@ -493,7 +487,8 @@ Event B: On project event - Update textfields to correspond new project informat
         panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel1,
                 new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null,
+                        null));
         measurementTypeAuto = new JRadioButton();
         measurementTypeAuto.setText("Auto");
         panel1.add(measurementTypeAuto,
@@ -519,7 +514,8 @@ Event B: On project event - Update textfields to correspond new project informat
         panel2.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel2,
                 new GridConstraints(12, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null,
+                        null));
         sampleTypeCore = new JRadioButton();
         sampleTypeCore.setText("Core");
         panel2.add(sampleTypeCore,
