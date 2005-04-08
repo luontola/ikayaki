@@ -36,6 +36,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Enumeration;
+import java.text.DecimalFormat;
+import javax.swing.text.NumberFormatter;
+import java.text.NumberFormat;
 
 /**
  * Creates its components and updats changes to Settings and saves them in Configuration file
@@ -162,8 +165,6 @@ Event B: On Cancel Clicked - closes window (discarding changes)
     private Action saveAction;
     private Action cancelAction;
 
-    private static SettingsDialog d;
-
     private SettingsDialog(Frame owner, String message) {
         super(owner, message, true);
         if (owner != null) {
@@ -184,13 +185,21 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         add(contentPane, BorderLayout.CENTER);
         pack();
 
-//        contentPane.addKeyListener(new KeyAdapter() {
-//            @Override public void keyPressed(KeyEvent e) {
-//                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-//                    closeWindow();
-//                }
-//            }
-//        });
+        /* Number-only Text Fields */
+        MyFormatterFactory factory = new MyFormatterFactory();
+        acceleration.setFormatterFactory(factory);
+        deceleration.setFormatterFactory(factory);
+        velocity.setFormatterFactory(factory);
+        measurementVelocity.setFormatterFactory(factory);
+        transverseYAFPosition.setFormatterFactory(factory);
+        axialAFPosition.setFormatterFactory(factory);
+        sampleLoadPosition.setFormatterFactory(factory);
+        backgroundPosition.setFormatterFactory(factory);
+        measurementPosition.setFormatterFactory(factory);
+        rotation.setFormatterFactory(factory);
+        xAxisCalibration.setFormatterFactory(factory);
+        yAxisCalibration.setFormatterFactory(factory);
+        zAxisCalibration.setFormatterFactory(factory);
 
         this.acceleration.setValue(Settings.instance().getHandlerAcceleration());
         this.deceleration.setValue(Settings.instance().getHandlerDeceleration());
@@ -199,11 +208,8 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         this.measurementPosition.setValue(Settings.instance().getHandlerMeasurementPosition());
         this.velocity.setValue(Settings.instance().getHandlerVelocity());
         this.measurementVelocity.setValue(Settings.instance().getHandlerMeasurementVelocity());
-        this.xAxisCalibration.setValue(0.0);
         this.xAxisCalibration.setValue(Settings.instance().getMagnetometerXAxisCalibration());
-        this.yAxisCalibration.setValue(0.0);
         this.yAxisCalibration.setValue(Settings.instance().getMagnetometerYAxisCalibration());
-        this.zAxisCalibration.setValue(0.0);
         this.zAxisCalibration.setValue(Settings.instance().getMagnetometerZAxisCalibration());
         this.demagRamp.addItem(3);
         this.demagRamp.addItem(5);
@@ -226,7 +232,7 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         this.demagRamp.setSelectedIndex(Settings.instance().getDegausserDelay() - 1);
         this.sampleLoadPosition.setValue(Settings.instance().getHandlerSampleLoadPosition());
         this.backgroundPosition.setValue(Settings.instance().getHandlerBackgroundPosition());
-        this.rotation.setValue("" + Settings.instance().getHandlerRotation());
+        this.rotation.setValue(Settings.instance().getHandlerRotation());
         this.handlerRightLimit.addItem("plus");
         this.handlerRightLimit.addItem("minus");
         this.handlerRightLimit.setSelectedIndex(Settings.instance().getHandlerRightLimit());
@@ -235,7 +241,6 @@ Event B: On Cancel Clicked - closes window (discarding changes)
 
         if (!ports.hasMoreElements()) {
             System.err.println("No comm ports found!");
-            return;
         } else {
             System.err.println("Comm ports found");
             while (ports.hasMoreElements()) {
@@ -270,16 +275,9 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         this.pack();
 
         getRootPane().setDefaultButton(saveButton);
-        d.saveButton.setAction(this.getSaveAction());
-        d.getSaveAction().setEnabled(correctValues());
-        d.cancelButton.setAction(this.getCancelAction());
-
-/*        cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                closeWindow();
-            }
-        });
-*/
+        saveButton.setAction(this.getSaveAction());
+        getSaveAction().setEnabled(false);
+        cancelButton.setAction(this.getCancelAction());
 
         //TODO: need to check if values are ok, disable Save button if not.
         DocumentListener saveListener = new DocumentListener() {
@@ -301,15 +299,23 @@ Event B: On Cancel Clicked - closes window (discarding changes)
             }
 
             public void changedUpdate(DocumentEvent e) {
-              if (correctValues()) {
-                  getSaveAction().setEnabled(true);
-              } else {
-                  getSaveAction().setEnabled(false);
-              }
-
             }
         };
 
+        ActionListener propertiesActionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+              if (correctValues()) {
+                getSaveAction().setEnabled(true);
+              }
+              else {
+                getSaveAction().setEnabled(false);
+              }
+            }
+        };
+
+        magnetometerPort.addActionListener(propertiesActionListener);
+        handlerPort.addActionListener(propertiesActionListener);
+        demagnetizerPort.addActionListener(propertiesActionListener);
         acceleration.getDocument().addDocumentListener(saveListener);
         deceleration.getDocument().addDocumentListener(saveListener);
         velocity.getDocument().addDocumentListener(saveListener);
@@ -323,10 +329,13 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         xAxisCalibration.getDocument().addDocumentListener(saveListener);
         yAxisCalibration.getDocument().addDocumentListener(saveListener);
         zAxisCalibration.getDocument().addDocumentListener(saveListener);
+
+
+
     }
 
     public static void showSettingsDialog(Frame owner, String message) {
-        d = new SettingsDialog(owner, message);
+        SettingsDialog d = new SettingsDialog(owner, message);
         d.setVisible(true);
     }
 
@@ -371,27 +380,9 @@ Event B: On Cancel Clicked - closes window (discarding changes)
     }
 
 
-    //TODO: check all values
+    //TODO: check COM ports
     private boolean correctValues() {
         try {
-          if((Integer)acceleration.getValue()<0 || (Integer)acceleration.getValue()>127)
-            return false;
-          if((Integer)deceleration.getValue()<0 || (Integer)deceleration.getValue()>127)
-            return false;
-          if((Integer)velocity.getValue()<50 || (Integer)velocity.getValue()>20000)
-            return false;
-          if((Integer)measurementVelocity.getValue()<50 || (Integer)measurementVelocity.getValue()>20000)
-            return false;
-          if((Integer)measurementPosition.getValue()<0 || (Integer)measurementPosition.getValue()>16777215)
-            return false;
-          if((Integer)sampleLoadPosition.getValue()<0 || (Integer)sampleLoadPosition.getValue()>16777215)
-            return false;
-          if((Integer)backgroundPosition.getValue()<0 || (Integer)backgroundPosition.getValue()>16777215)
-            return false;
-          if((Integer)axialAFPosition.getValue()<0 || (Integer)axialAFPosition.getValue()>16777215)
-            return false;
-          if((Integer)transverseYAFPosition.getValue()<0 || (Integer)transverseYAFPosition.getValue()>16777215)
-            return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -781,5 +772,53 @@ Event B: On Cancel Clicked - closes window (discarding changes)
                 new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
     }
+
+
+    /**
+ * Custom formatter factory for the JFormattedTextFields in this class.
+ */
+private class MyFormatterFactory extends JFormattedTextField.AbstractFormatterFactory {
+    /**
+     * Returns an <code>AbstractFormatter</code> that can handle formatting of the passed in
+     * <code>JFormattedTextField</code>.
+     *
+     * @param tf JFormattedTextField requesting AbstractFormatter
+     * @return AbstractFormatter to handle formatting duties, a null return value implies the JFormattedTextField
+     *         should behave like a normal JTextField
+     */
+    public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf) {
+        NumberFormatter formatter;
+
+        if (tf == xAxisCalibration || tf == yAxisCalibration || tf == zAxisCalibration) {
+            // show all numbers
+            DecimalFormat format = new DecimalFormat();
+            format.setGroupingUsed(true);
+            formatter = new NumberFormatter(format);
+        }
+        else {
+            // show Integer
+            NumberFormat format = NumberFormat.getIntegerInstance();
+            format.setGroupingUsed(true);
+            format.setMaximumFractionDigits(12);
+            formatter = new NumberFormatter(format);
+        }
+
+        // set value ranges
+        if (tf == acceleration || tf == deceleration) {
+            formatter.setMinimum(new Integer(0));
+            formatter.setMaximum(new Integer(127));
+        }
+        else if (tf == velocity || tf == measurementVelocity) {
+            formatter.setMinimum(new Integer(50));
+            formatter.setMaximum(new Integer(20000));
+        }
+        else if (tf == measurementPosition || tf == sampleLoadPosition || tf == backgroundPosition
+            || tf == axialAFPosition || tf == transverseYAFPosition || tf == measurementPosition) {
+            formatter.setMinimum(new Double(0));
+            formatter.setMaximum(new Double(16777215));
+        }
+        return formatter;
+    }
+}
 }
 
