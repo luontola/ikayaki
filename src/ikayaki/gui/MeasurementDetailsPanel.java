@@ -22,9 +22,7 @@
 
 package ikayaki.gui;
 
-import ikayaki.Project;
-import ikayaki.ProjectEvent;
-import ikayaki.MeasurementEvent;
+import ikayaki.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -70,26 +68,25 @@ in MeasurementSequencePanel update tables with new measurement data.
      * Creates default MeasurementDetailsPanel.
      */
     public MeasurementDetailsPanel() {
-        setLayout(new GridLayout(0, 1, 5, 5));
-        measurementModel = new DefaultTableModel(7, 4);
+        String[] detailNames = {"", "X", "y", "Z"};
+        measurementModel = new DefaultTableModel(detailNames, 6);
         measurementDetails = new JTable(measurementModel);
-        measurementModel.setValueAt("X", 0, 1);
-        measurementModel.setValueAt("Y", 0, 2);
-        measurementModel.setValueAt("Z", 0, 3);
-        measurementModel.setValueAt("BG", 1, 0);
-        measurementModel.setValueAt("0", 2, 0);
-        measurementModel.setValueAt("90", 3, 0);
-        measurementModel.setValueAt("180", 4, 0);
-        measurementModel.setValueAt("270", 5, 0);
-        measurementModel.setValueAt("BG", 6, 0);
-        add(measurementDetails);
-        errorModel = new DefaultTableModel(2, 4);
+        measurementDetails.setRowSelectionAllowed(false);
+        measurementDetails.setColumnSelectionAllowed(false);
+        measurementDetails.setValueAt("BG", 0, 0);
+        measurementDetails.setValueAt("0", 1, 0);
+        measurementDetails.setValueAt("90", 2, 0);
+        measurementDetails.setValueAt("180", 3, 0);
+        measurementDetails.setValueAt("270", 4, 0);
+        measurementDetails.setValueAt("BG", 5, 0);
+        add(BorderLayout.NORTH, measurementDetails);
+        String[] errorNames = {"", "S/D", "S/H", "S/N"};
+        errorModel = new DefaultTableModel(errorNames, 1);
         errorDetails = new JTable(errorModel);
-        errorModel.setValueAt("S/D", 0, 1);
-        errorModel.setValueAt("S/H", 0, 2);
-        errorModel.setValueAt("S/N", 0, 3);
-        errorModel.setValueAt("Error", 1, 0);
-        add(errorDetails);
+        errorDetails.setRowSelectionAllowed(false);
+        errorDetails.setColumnSelectionAllowed(false);
+        errorDetails.setValueAt("Error", 0, 0);
+        add(BorderLayout.SOUTH, errorDetails);
         rowSelected = true;
     }
 
@@ -98,6 +95,13 @@ in MeasurementSequencePanel update tables with new measurement data.
      */
     public void setProject(Project project) {
         super.setProject(project);
+        rowSelected = true;
+        clearTables();
+        if (project != null) {
+            setStep(project.getCurrentStep());
+        }
+        measurementDetails.repaint();
+        errorDetails.repaint();
     }
 
     public void projectUpdated(ProjectEvent event) {
@@ -111,23 +115,58 @@ in MeasurementSequencePanel update tables with new measurement data.
 
     public void measurementUpdated(MeasurementEvent event) {
         if (event.getType() == MeasurementEvent.Type.VALUE_MEASURED && rowSelected) {
-            // TODO
+            MeasurementResult result = null;
+            for (int i=0; i<getProject().getCurrentStep().getResults(); ++i) {
+                result = getProject().getCurrentStep().getResult(i);
+                measurementDetails.setValueAt(result.getType(), i, 0);
+                measurementDetails.setValueAt(result.getX(), i, 1);
+                measurementDetails.setValueAt(result.getY(), i, 2);
+                measurementDetails.setValueAt(result.getZ(), i, 3);
+            }
+            measurementDetails.repaint();
+            // TODO S/D S/H S/N calculation (what formulas?)
+            // TODO more than 2 BG ja 4 rotation measurements in step
         }
         else if (event.getType() == MeasurementEvent.Type.STEP_START && rowSelected) {
-            // TODO
+            clearTables();
+            measurementDetails.repaint();
+            errorDetails.repaint();
         }
     }
 
-    public void toggleSelected() {
-        if (rowSelected) {
-            rowSelected = false;
-        }
-        else {
+    public void setStep(MeasurementStep step) {
+        if (getProject().getCurrentStep() == step && !rowSelected) {
             rowSelected = true;
         }
+        else if (getProject().getCurrentStep() != step && rowSelected) {
+            rowSelected = false;
+        }
+        MeasurementResult result = null;
+        for (int i=0; i<step.getResults(); ++i) {
+            result = step.getResult(i);
+            measurementDetails.setValueAt(result.getType(), i, 0);
+            measurementDetails.setValueAt(result.getX(), i, 1);
+            measurementDetails.setValueAt(result.getY(), i, 2);
+            measurementDetails.setValueAt(result.getZ(), i, 3);
+        }
+        measurementDetails.repaint();
+        // TODO S/D S/H S/N calculation (what formulas?)
     }
 
-    public boolean getSelected() {
-        return rowSelected;
+    private void clearTables() {
+        measurementDetails.setValueAt("BG", 0, 0);
+        measurementDetails.setValueAt("0", 1, 0);
+        measurementDetails.setValueAt("90", 2, 0);
+        measurementDetails.setValueAt("180", 3, 0);
+        measurementDetails.setValueAt("270", 4, 0);
+        measurementDetails.setValueAt("BG", 5, 0);
+        for (int i=1; i<4; ++i) {
+            for (int j=0; j<6; ++j) {
+                measurementDetails.setValueAt("", j, i);
+            }
+        }
+        errorDetails.setValueAt("", 0, 1);
+        errorDetails.setValueAt("", 0, 2);
+        errorDetails.setValueAt("", 0, 3);
     }
 }
