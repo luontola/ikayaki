@@ -390,7 +390,7 @@ public class ProjectExplorerTable extends JTable {
 
                             // TODO: which one of these two?
                             //Project.export(exportfile, filetype);
-                            //Project.loadProject(exportfile).export(filetype);
+                            //Project.loadProject(exportfile).export(filetype);     // TODO <-- this one. There are no static export methods in Project class. Take a look at exportProject method in MainViewPanel. 
 
                             // TODO: tell somehow if export was successful; statusbar perhaps?
                         }
