@@ -25,6 +25,8 @@ package ikayaki.squid;
 import ikayaki.Project;
 
 import java.io.IOException;
+import javax.comm.*;
+import javax.comm.*;
 
 /**
  * Offers an interface for controlling the SQUID system. Reads settings from the Settings class. Creates instances of
@@ -79,9 +81,16 @@ public class Squid {
      */
     private Squid() throws SerialIOException {
         owner = null;
-        degausser = new Degausser();
-        handler = new Handler();
-        magnetometer = new Magnetometer();
+        try {
+          degausser = new Degausser();
+          handler = new Handler();
+          magnetometer = new Magnetometer();
+        }
+        catch (NoSuchPortException ex) {
+        }
+        catch (PortInUseException ex) {
+        }
+
     }
 
     /**
