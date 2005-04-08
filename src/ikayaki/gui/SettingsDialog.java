@@ -162,6 +162,8 @@ Event B: On Cancel Clicked - closes window (discarding changes)
     private Action saveAction;
     private Action cancelAction;
 
+    private static SettingsDialog d;
+
     private SettingsDialog(Frame owner, String message) {
         super(owner, message, true);
         if (owner != null) {
@@ -195,9 +197,13 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         this.axialAFPosition.setValue(Settings.instance().getHandlerAxialAFPosition());
         this.transverseYAFPosition.setValue(Settings.instance().getHandlerTransverseYAFPosition());
         this.measurementPosition.setValue(Settings.instance().getHandlerMeasurementPosition());
+        this.velocity.setValue(Settings.instance().getHandlerVelocity());
         this.measurementVelocity.setValue(Settings.instance().getHandlerMeasurementVelocity());
+        this.xAxisCalibration.setValue(0.0);
         this.xAxisCalibration.setValue(Settings.instance().getMagnetometerXAxisCalibration());
+        this.yAxisCalibration.setValue(0.0);
         this.yAxisCalibration.setValue(Settings.instance().getMagnetometerYAxisCalibration());
+        this.zAxisCalibration.setValue(0.0);
         this.zAxisCalibration.setValue(Settings.instance().getMagnetometerZAxisCalibration());
         this.demagRamp.addItem(3);
         this.demagRamp.addItem(5);
@@ -264,15 +270,16 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         this.pack();
 
         getRootPane().setDefaultButton(saveButton);
-        saveButton.setAction(this.getSaveAction());
-        getSaveAction().setEnabled(false);
-        cancelButton.setAction(this.getCancelAction());
+        d.saveButton.setAction(this.getSaveAction());
+        d.getSaveAction().setEnabled(correctValues());
+        d.cancelButton.setAction(this.getCancelAction());
 
-//        cancelButton.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                closeWindow();
-//            }
-//        });
+/*        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                closeWindow();
+            }
+        });
+*/
 
         //TODO: need to check if values are ok, disable Save button if not.
         DocumentListener saveListener = new DocumentListener() {
@@ -285,11 +292,21 @@ Event B: On Cancel Clicked - closes window (discarding changes)
             }
 
             public void removeUpdate(DocumentEvent e) {
-                getSaveAction().setEnabled(true);
+              if (correctValues()) {
+                  getSaveAction().setEnabled(true);
+              } else {
+                  getSaveAction().setEnabled(false);
+              }
+
             }
 
             public void changedUpdate(DocumentEvent e) {
-                getSaveAction().setEnabled(true);
+              if (correctValues()) {
+                  getSaveAction().setEnabled(true);
+              } else {
+                  getSaveAction().setEnabled(false);
+              }
+
             }
         };
 
@@ -309,7 +326,7 @@ Event B: On Cancel Clicked - closes window (discarding changes)
     }
 
     public static void showSettingsDialog(Frame owner, String message) {
-        SettingsDialog d = new SettingsDialog(owner, message);
+        d = new SettingsDialog(owner, message);
         d.setVisible(true);
     }
 
@@ -326,24 +343,24 @@ Event B: On Cancel Clicked - closes window (discarding changes)
      */
     public void saveSettings() {
         try {
-            //TODO: Comboboxes are like hell
-            //System.out.println(this.demagDelay.getSelectedIndex());
-            //Settings.instance().setDegausserDelay(Integer.parseInt( (String)this.demagDelay.getSelectedItem()));
-            //Settings.instance().setDegausserPort( (String)this.demagnetizerPort.getSelectedItem());
-            //Settings.instance().setDegausserRamp( Integer.parseInt((String)this.demagRamp.getSelectedItem()));
+            //TODO: cant get values?
+            System.out.println(this.demagDelay.getSelectedIndex());
+            Settings.instance().setDegausserDelay(Integer.parseInt( (String)this.demagDelay.getSelectedItem()));
+            Settings.instance().setDegausserPort( (String)this.demagnetizerPort.getSelectedItem());
+            Settings.instance().setDegausserRamp( Integer.parseInt((String)this.demagRamp.getSelectedItem()));
             Settings.instance().setHandlerAcceleration(Integer.parseInt(this.acceleration.getText()));
             Settings.instance().setHandlerAxialAFPosition(Integer.parseInt(this.axialAFPosition.getText()));
             Settings.instance().setHandlerBackgroundPosition(Integer.parseInt(this.backgroundPosition.getText()));
             Settings.instance().setHandlerDeceleration(Integer.parseInt(this.deceleration.getText()));
             Settings.instance().setHandlerMeasurementPosition(Integer.parseInt(this.measurementPosition.getText()));
             Settings.instance().setHandlerMeasurementVelocity(Integer.parseInt(this.velocity.getText()));
-            //Settings.instance().setHandlerPort( (String)this.handlerPort.getSelectedItem());
-            //Settings.instance().setHandlerRightLimit( Integer.parseInt((String)this.handlerRightLimit.getSelectedItem()));
+            Settings.instance().setHandlerPort( (String)this.handlerPort.getSelectedItem());
+            Settings.instance().setHandlerRightLimit( Integer.parseInt((String)this.handlerRightLimit.getSelectedItem()));
             Settings.instance().setHandlerRotation(Integer.parseInt(this.rotation.getText()));
             Settings.instance().setHandlerSampleLoadPosition(Integer.parseInt(this.sampleLoadPosition.getText()));
             Settings.instance().setHandlerTransverseYAFPosition(Integer.parseInt(this.transverseYAFPosition.getText()));
             Settings.instance().setHandlerVelocity(Integer.parseInt(this.velocity.getText()));
-            //Settings.instance().setMagnetometerPort( (String)this.magnetometerPort.getSelectedItem());
+            Settings.instance().setMagnetometerPort( (String)this.magnetometerPort.getSelectedItem());
             Settings.instance().setMagnetometerXAxisCalibration(Integer.parseInt(this.xAxisCalibration.getText()));
             Settings.instance().setMagnetometerYAxisCalibration(Integer.parseInt(this.yAxisCalibration.getText()));
             Settings.instance().setMagnetometerZAxisCalibration(Integer.parseInt(this.zAxisCalibration.getText()));
@@ -358,6 +375,22 @@ Event B: On Cancel Clicked - closes window (discarding changes)
     private boolean correctValues() {
         try {
           if((Integer)acceleration.getValue()<0 || (Integer)acceleration.getValue()>127)
+            return false;
+          if((Integer)deceleration.getValue()<0 || (Integer)deceleration.getValue()>127)
+            return false;
+          if((Integer)velocity.getValue()<50 || (Integer)velocity.getValue()>20000)
+            return false;
+          if((Integer)measurementVelocity.getValue()<50 || (Integer)measurementVelocity.getValue()>20000)
+            return false;
+          if((Integer)measurementPosition.getValue()<0 || (Integer)measurementPosition.getValue()>16777215)
+            return false;
+          if((Integer)sampleLoadPosition.getValue()<0 || (Integer)sampleLoadPosition.getValue()>16777215)
+            return false;
+          if((Integer)backgroundPosition.getValue()<0 || (Integer)backgroundPosition.getValue()>16777215)
+            return false;
+          if((Integer)axialAFPosition.getValue()<0 || (Integer)axialAFPosition.getValue()>16777215)
+            return false;
+          if((Integer)transverseYAFPosition.getValue()<0 || (Integer)transverseYAFPosition.getValue()>16777215)
             return false;
         } catch (Exception e) {
             e.printStackTrace();
