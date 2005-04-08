@@ -38,6 +38,7 @@ import static ikayaki.gui.MeasurementSequenceTableModel.SequenceColumn.*;
 public class MeasurementSequenceTableModel extends AbstractTableModel implements ProjectListener, MeasurementListener {
 
     private Project project = null;
+    private int lastStepCount;
 
     private List<SequenceColumn> visibleColumns = new ArrayList<SequenceColumn>();
     private List<SequenceColumn> possibleColumns = new ArrayList<SequenceColumn>();
@@ -72,8 +73,12 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         if (project != null) {
             project.addProjectListener(this);
             project.addMeasurementListener(this);
+            lastStepCount = project.getSteps();
+        } else {
+            lastStepCount = 0;
         }
         this.project = project;
+
 
         // reset columns to defaults
         possibleColumns.clear();
@@ -135,7 +140,13 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
     }
 
     public void projectUpdated(ProjectEvent event) {
-        // TODO
+        if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
+            if (project.getSteps() != lastStepCount) {
+                fireTableStructureChanged(); // TODO: use fireTableRowsInserted() instead?
+            } else {
+                fireTableDataChanged();
+            }
+        }
     }
 
     public void measurementUpdated(MeasurementEvent event) {
@@ -275,10 +286,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * @return	the value Object at the specified cell
      */
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (columnIndex < 0 || columnIndex >= getColumnCount() || rowIndex < 0 || rowIndex >= getRowCount()) {
-            return null;
-        }
-        return visibleColumns.get(columnIndex).getValue(rowIndex, project.getStep(rowIndex));
+        return visibleColumns.get(columnIndex).getValue(rowIndex, project);
     }
 
     /**
@@ -289,10 +297,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * @param	columnIndex the column whose value is to be queried
      */
     public void setValueAt(Object data, int rowIndex, int columnIndex) {
-        if (columnIndex < 0 || columnIndex >= getColumnCount() || rowIndex < 0 || rowIndex >= getRowCount()) {
-            return;
-        }
-        visibleColumns.get(columnIndex).setValue(data, rowIndex, project.getStep(rowIndex));
+        visibleColumns.get(columnIndex).setValue(data, rowIndex, project);
     }
 
     /**
@@ -303,10 +308,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * @return false
      */
     @Override public boolean isCellEditable(int rowIndex, int columnIndex) {
-        if (columnIndex < 0 || columnIndex >= getColumnCount() || rowIndex < 0 || rowIndex >= getRowCount()) {
-            return false;
-        }
-        return visibleColumns.get(columnIndex).isCellEditable(rowIndex, project.getStep(rowIndex));
+        return visibleColumns.get(columnIndex).isCellEditable(rowIndex, project);
     }
 
     /**
@@ -316,9 +318,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * @return a string containing the default name of column.
      */
     @Override public String getColumnName(int column) {
-        if (column < 0 || column >= getColumnCount()) {
-            return null;
-        }
         return visibleColumns.get(column).getColumnName();
     }
 
@@ -329,9 +328,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * @return the Object.class
      */
     @Override public Class<?> getColumnClass(int columnIndex) {
-        if (columnIndex < 0 || columnIndex >= getColumnCount()) {
-            return null;
-        }
         return visibleColumns.get(columnIndex).getColumnClass();
     }
 
@@ -340,10 +336,65 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      */
     public enum SequenceColumn {
 
-        COUNT("#"),
-        STEP("Tesla"),
-        MASS("Mass"),
-        VOLUME("Volume"),
+        COUNT("#") {
+            @Override public Object getValue(int rowIndex, Project project) {
+                return Integer.toString(rowIndex + 1);
+            }
+        },
+        STEP("Tesla"){
+            @Override public Object getValue(int rowIndex, Project project) {
+                if (rowIndex >= project.getSteps()) {
+                    return null;
+                }
+                double value = project.getStep(rowIndex).getStepValue();
+                if (value < 0.0) {
+                    return null;
+                }
+                return value;
+            }
+
+            @Override public void setValue(Object data, int rowIndex, Project project) {
+                if (project == null) {
+                    return;
+                }
+                if (!(data instanceof Number)) {
+                    return;
+                }
+                double stepValue = ((Number) data).doubleValue();
+
+                if (rowIndex >= project.getSteps()) {
+                    // add new row
+                    MeasurementStep step = new MeasurementStep(project);
+                    step.setStepValue(stepValue);
+                    project.addStep(step);
+                } else {
+                    // edit an existing row
+                    project.getStep(rowIndex).setStepValue(stepValue);
+                }
+            }
+
+            @Override public boolean isCellEditable(int rowIndex, Project project) {
+                if (rowIndex >= project.getSteps()) {
+                    return true;    // the last row
+                }
+                if (rowIndex < project.getCompletedSteps()) {
+                    return false;   // completed steps
+                }
+                return true;        // uncompleted steps
+            }
+
+            @Override public Class<?> getColumnClass() {
+                return Double.class;
+            }
+            
+            // TODO or not?
+        },
+        MASS("Mass"){
+            // TODO
+        },
+        VOLUME("Volume"){
+            // TODO
+        },
         X(MeasurementValue.X),
         Y(MeasurementValue.Y),
         Z(MeasurementValue.Z),
@@ -372,26 +423,61 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
             this.value = value;
         }
 
-        public Object getValue(int rowIndex, MeasurementStep step) {
+        /**
+         * Returns the value for this column's specified row. The default implementation is to use the algoritm of a
+         * MeasurementValue object. If no MeasurementValue has been provided, will return an empty string. Subclasses
+         * can override the default behaviour.
+         *
+         * @param rowIndex the index of the row. Can be greater than the number of measurement steps.
+         * @param project  the project whose value to get. Can be null.
+         * @return the value that should be shown in that cell.
+         */
+        public Object getValue(int rowIndex, Project project) {
             if (value != null) {
-                return step.getProject().getValue(rowIndex, value);
+                if (rowIndex >= project.getSteps()) {
+                    return null;
+                }
+                return project.getValue(rowIndex, value);
             } else {
-                return "";
+                return null;
             }
         }
 
-        public void setValue(Object data, int rowIndex, MeasurementStep step) {
+        /**
+         * Sets the value for this column's specified row. The default implementation does nothing. Subclasses can
+         * override the default behaviour.
+         *
+         * @param data     new value for the cell.
+         * @param rowIndex the index of the row. Can be greater than the number of measurement steps.
+         * @param project  the project whose value to set. Can be null.
+         */
+        public void setValue(Object data, int rowIndex, Project project) {
             // DO NOTHING
         }
 
-        public boolean isCellEditable(int rowIndex, MeasurementStep step) {
+        /**
+         * Tells whether the specified row in this column is editable. The default implementation returns always false.
+         * Subclasses can override the default behaviour.
+         *
+         * @param rowIndex the index of the row. Can be greater than the number of measurement steps.
+         * @param project  the project whose value to get. Can be null.
+         * @return should the cell be editable or not.
+         */
+        public boolean isCellEditable(int rowIndex, Project project) {
             return false;
         }
 
-        public String getColumnName() {
+        /**
+         * Returns the name of this column. The name will be shown in the header of the table.
+         */
+        public final String getColumnName() {
             return columnName;
         }
 
+        /**
+         * Returns the class of this column regardless of the row. The default implementation is to return Object.class.
+         * Subclasses can override the default behaviour.
+         */
         public Class<?> getColumnClass() {
             return Object.class;
         }
