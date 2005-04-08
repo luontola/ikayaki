@@ -28,12 +28,9 @@ import com.intellij.uiDesigner.core.Spacer;
 import ikayaki.Project;
 
 import javax.swing.*;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
-import java.text.ParseException;
+import java.text.DecimalFormat;
 
 /**
  * Allows inserting and editing project information.
@@ -395,136 +392,32 @@ Event B: On project event - Update textfields to correspond new project informat
          *         should behave like a normal JTextField
          */
         public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf) {
-            if (tf == massField || tf == volumeField || tf == latitudeField || tf == longitudeField) {
-                // TODO: this one that I made sucks. try to customize javax.swing.text.NumberFormatter and use it.
-                return new PositiveNumberFormatter();
+            NumberFormatter formatter;
+            DecimalFormat format;
+
+            if (tf == latitudeField || tf == longitudeField) {
+                // allow null values
+                format = new NullableDecimalFormat();
+            } else if (tf == massField || tf == volumeField) {
+                // show only positive numbers
+                format = new PositiveDecimalFormat();
             } else {
-                return new NumberFormatter();
+                // show all numbers
+                format = new DecimalFormat();
             }
-        }
-    }
+            format.setGroupingUsed(false);
+            format.setMaximumFractionDigits(3);
+            formatter = new NumberFormatter(format);
 
-    /**
-     * Formatter for JFormattedTextField's that contain only positive numbers.
-     */
-    private static class PositiveNumberFormatter extends JFormattedTextField.AbstractFormatter {
-        /**
-         * Parses <code>text</code> returning an arbitrary Object. Some formatters may return null.
-         *
-         * @param text String to convert
-         * @return Object representation of text
-         * @throws java.text.ParseException if there is an error in the conversion
-         */
-        public Object stringToValue(String text) throws ParseException {
-            if (text.equals("")) {
-                return new Double(-1.0);
-            } else {
-                try {
-                    return new Double(Double.parseDouble(text));
-                } catch (NumberFormatException e) {
-                    throw new ParseException(text, 0);
-                }
+            // set value ranges
+            if (tf == strikeField) {
+                formatter.setMinimum(new Double(0));
+                formatter.setMaximum(new Double(360));
+            } else if (tf == dipField) {
+                formatter.setMinimum(new Double(-90));
+                formatter.setMaximum(new Double(90));
             }
-        }
-
-        /**
-         * Returns the string value to display for <code>value</code>.
-         *
-         * @param value Value to convert
-         * @return String representation of value
-         * @throws java.text.ParseException if there is an error in the conversion
-         */
-        public String valueToString(Object value) throws ParseException {
-            if (value instanceof Number) {
-                Number num = (Number) value;
-                double d = num.doubleValue();
-                if (d < 0.0) {
-                    return "";
-                } else {
-                    return Double.toString(d);
-                }
-            } else {
-                throw new ParseException("", 0);
-            }
-        }
-
-        /**
-         * Returns a DocumentFilter that allow only positive decimal numbers.
-         */
-        @Override protected DocumentFilter getDocumentFilter() {
-            return new DocumentFilter() {
-                /**
-                 * Allow inserting only positive decimal numbers.
-                 * <p/>
-                 * Invoked prior to insertion of text into the specified Document. Subclasses that want to conditionally
-                 * allow insertion should override this and only call supers implementation as necessary, or call
-                 * directly into the FilterBypass.
-                 *
-                 * @param fb     FilterBypass that can be used to mutate Document
-                 * @param offset the offset into the document to insert the content >= 0. All positions that track
-                 *               change at or after the given location will move.
-                 * @param string the string to insert
-                 * @param attr   the attributes to associate with the inserted content.  This may be null if there are
-                 *               no attributes.
-                 * @throws javax.swing.text.BadLocationException
-                 *          the given insert position is not a valid position within the document
-                 */
-                @Override public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-                    string = string.replace(',', '.');
-                    if (isOK(fb, string)) {
-                        super.insertString(fb, offset, string, attr);
-                    }
-                }
-
-                /**
-                 * Allow inserting only positive decimal numbers.
-                 * <p/>
-                 * Invoked prior to replacing a region of text in the specified Document. Subclasses that want to
-                 * conditionally allow replace should override this and only call supers implementation as necessary, or
-                 * call directly into the FilterBypass.
-                 *
-                 * @param fb     FilterBypass that can be used to mutate Document
-                 * @param offset Location in Document
-                 * @param length Length of text to delete
-                 * @param text   Text to insert, null indicates no text to insert
-                 * @param attrs  AttributeSet indicating attributes of inserted text, null is legal.
-                 * @throws javax.swing.text.BadLocationException
-                 *          the given insert position is not a valid position within the document
-                 */
-                @Override public void replace(FilterBypass fb, int offset, int length, String text,
-                                              AttributeSet attrs) throws BadLocationException {
-                    text = text.replace(',', '.');
-                    if (isOK(fb, text)) {
-                        super.replace(fb, offset, length, text, attrs);
-                    }
-                }
-
-                /**
-                 * Checks whether the supplied string can be added to the document.
-                 */
-                private boolean isOK(FilterBypass fb, String text) {
-                    if (text != null) {
-                        for (int i = 0; i < text.length(); i++) {
-                            char c = text.charAt(i);
-                            if (!Character.isDigit(c) && c != '.') {
-                                return false;
-                            } else if (c == '.') {
-
-                                String doc = null;
-                                try {
-                                    doc = fb.getDocument().getText(0, fb.getDocument().getLength());
-                                } catch (BadLocationException e) {
-                                }
-                                if (doc.indexOf('.') >= 0) {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                    return true;
-                }
-
-            };
+            return formatter;
         }
     }
 
