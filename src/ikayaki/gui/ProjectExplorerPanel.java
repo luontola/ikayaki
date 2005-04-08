@@ -29,12 +29,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.table.*;
-import java.io.File;
 import java.io.*;
-import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.Comparator;
 
 /**
  * Creates a history/autocomplete field (browserField) for choosing the project directory, a listing of project files in
@@ -45,13 +40,14 @@ import java.util.Comparator;
  * @author Samuli Kaipiainen
  */
 public class ProjectExplorerPanel extends ProjectComponent {
-/*
-Event E: On ProjectEvent - hilight project whose measuring started, or unhilight one
-whose measuring ended.
-*/
+    // TODO:
+    /**
+     * Event E: On ProjectEvent - hilight project whose measuring started, or unhilight one
+     * whose measuring ended.
+     */
 
     /**
-     * The component whose setProject() method will be called on opening a new project file.
+     * The component (MainViewPanel) whose setProject() method will be called on opening a new project file.
      */
     private final ProjectComponent parent;
 
@@ -97,11 +93,6 @@ whose measuring ended.
     private File directory = null;
 
     /**
-     * Project files in current directory.
-     */
-    private File[] files = new File[0];
-
-    /**
      * Creates all components, sets directory as the last open directory, initializes files with files from that
      * directory.
      *
@@ -110,7 +101,7 @@ whose measuring ended.
     public ProjectExplorerPanel(ProjectComponent parent) {
         this.parent = parent;
 
-        // combo box / text field
+        // combo box / text field (built before setting directory for no apparent reason)
         browserField = new JComboBox();
         browserField.setEditable(true);
         browserField.setBackground(Color.WHITE);
@@ -135,7 +126,7 @@ whose measuring ended.
         browsePanel.add(browseButton, BorderLayout.EAST);
 
         // project file table and its ScrollPane
-        explorerTable = new ProjectExplorerTable(files);
+        explorerTable = new ProjectExplorerTable(this.parent);
         explorerTableScrollPane = new JScrollPane(explorerTable);
         // explorerTableScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         explorerTableScrollPane.getViewport().setBackground(Color.WHITE);
@@ -255,7 +246,8 @@ whose measuring ended.
         super.setProject(project);
         if (project != null) {
             setDirectory(project.getFile().getParentFile());
-            project.addProjectListener(explorerTable.explorerTableModel);
+            // TODO: add this...
+            // project.addProjectListener(explorerTable.explorerTableModel);
         } else setDirectory(directory);
     }
 
@@ -269,29 +261,12 @@ whose measuring ended.
         if (directory == null || !directory.isDirectory()) return false;
 
         this.directory = directory;
-        files = getProjectFiles(directory);
 
         // update browserField and explorerTable with new directory
         if (browserField != null) browserField.setSelectedItem(directory.getPath());
-        if (explorerTable != null) explorerTable.updateFiles(files);
+        if (explorerTable != null) explorerTable.setDirectory(this.directory);
 
         return true;
-    }
-
-    /**
-     * Reads project file listing from given directory.
-     *
-     * @param directory directory whose project file listing to read.
-     * @return project files in that directory.
-     */
-    private File[] getProjectFiles(File directory) {
-        return directory.listFiles(new FileFilter() {
-            public boolean accept(File file) {
-                // TODO: shouldn't this return only a list of valid project files? so why is Ikayaki.FILE_TYPE commented out?
-                // - for explorerTable testing, need some (working perhaps) project file expamples :)
-                return (file.isFile() && file.getName().endsWith(/*Ikayaki.FILE_TYPE*/ ""));
-            }
-        });
     }
 
     /**
@@ -375,281 +350,6 @@ whose measuring ended.
     private void setBrowserFieldCursorToEnd() {
         browserFieldEditor.setCaretPosition(browserFieldEditor.getDocument().getLength());
     }
-
-    /**
-     * Creates a list of project files in directory. Handles loading selected projects and showing export popup menu
-     * (ProjectExplorerPopupMenu). Inner class of ProjectExplorerPanel.
-     */
-    private class ProjectExplorerTable extends JTable {
-
-        private final ProjectExplorerTableModel explorerTableModel;
-
-        private final Comparator <File> explorerTableComparator = new ProjectExplorerTableComparator();
-
-        /**
-         * Files to show in table.
-         */
-        private File[] files;
-
-        /**
-         * Selected project file index, or -1 if none selected in current directory.
-         */
-        private int selectedFile = -1;
-
-        private int explorerTableSortColumn = COLUMN_FILENAME;
-
-        private static final int COLUMN_UNDEFINED = -1;
-        private static final int COLUMN_FILENAME = 0;
-        private static final int COLUMN_TYPE = 1;
-        private static final int COLUMN_LASTMOD = 2;
-        private static final String[] column_name = { "filename", "type", "last modified" };
-
-        /**
-         * Builds ProjectExplorerTable.
-         *
-         * @param xfiles files to show initially.
-         */
-        public ProjectExplorerTable(File[] xfiles) {
-            // must be set before creating table model
-            this.files = xfiles;
-
-            explorerTableModel = new ProjectExplorerTableModel();
-            this.setModel(explorerTableModel);
-
-            this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            this.getTableHeader().setReorderingAllowed(false);
-            // this.getTableHeader().setResizingAllowed(false);
-            // TODO: the grid still shows up when selecting rows. must make a custom cell renderer to change that
-            this.setShowGrid(false);
-
-            // TODO: set column sizes somehow automatically, according to table contents?
-            this.getColumnModel().getColumn(0).setPreferredWidth(130);
-            this.getColumnModel().getColumn(1).setPreferredWidth(50);
-            this.getColumnModel().getColumn(2).setPreferredWidth(80);
-            this.setPreferredScrollableViewportSize(new Dimension(280, 400));
-
-            // update table
-            updateFiles(this.files);
-
-            // ProjectExplorerTable events
-
-            /**
-             * Event A: On table click - call Project.loadProject(File) with clicked project file, call
-             * (MainViewPanel) parent.setProject(Project) with returned Project unless null, on which case
-             * show error message and revert explorerTable selection to old project, if any.
-             */
-            this.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-                public void valueChanged(ListSelectionEvent e) {
-                    // we only want the actually selected row, and don't want to react to an already selected line
-                    // (which could also mean that we had a load error, and that selection was reverted)
-                    if (e.getValueIsAdjusting() || getSelectedRow() == selectedFile) return;
-                    if (getSelectedRow() == -1) return; // otherwise will crash the program upon loading a file
-
-                    Project project = Project.loadProject(files[getSelectedRow()]);
-
-                    // if load error, revert back to old selection
-                    if (project == null) {
-                        // TODO: flash selected row red for 100 ms, perhaps? - might require a custom cell renderer
-                        if (selectedFile == -1) clearSelection();
-                        else setRowSelectionInterval(selectedFile, selectedFile);
-                    } else parent.setProject(project);
-                }
-            });
-
-            /**
-             * Event B: On table mouse right-click - create a ProjectExplorerPopupMenu for rightclicked
-             * project file.
-             */
-            this.addMouseListener(new MouseAdapter() {
-                public void mouseClicked(MouseEvent e) {
-                    // only right-click brings popup menu
-                    if (e.getButton() != MouseEvent.BUTTON3) return;
-
-                    int row = rowAtPoint(e.getPoint());
-
-                    // construct a new popup menu for every click
-                    ProjectExplorerPopupMenu explorerTablePopup = new ProjectExplorerPopupMenu(files[row]);
-                    explorerTablePopup.show(ProjectExplorerTable.this, e.getX(), e.getY());
-                }
-            });
-
-            /**
-             * ExplorerTable sorting.
-             */
-            this.getTableHeader().addMouseListener(new MouseAdapter() {
-                public void mouseClicked(MouseEvent e) {
-                    // only left-click changes sorting
-                    if (e.getButton() != MouseEvent.BUTTON1) return;
-
-                    JTableHeader th = (JTableHeader) e.getSource();
-                    TableColumnModel cm = th.getColumnModel();
-                    int viewColumn = cm.getColumnIndexAtX(e.getX());
-
-                    // TODO: what the sick hell of chainsaw internals do I have to touch just to update table headers?!?
-                    // ... Hope it's at least correct, not that I care anymore
-
-                    // reset all column header names
-                    for (int col = 0; col < cm.getColumnCount(); col++)
-                        cm.getColumn(col).setHeaderValue(column_name[cm.getColumn(col).getModelIndex()]);
-
-                    // set sort column header name
-                    explorerTableSortColumn = cm.getColumn(viewColumn).getModelIndex();
-                    cm.getColumn(viewColumn).setHeaderValue(column_name[explorerTableSortColumn] + " *");
-                    th.repaint();
-
-                    // update table with sorted data, update selected file and table selection
-                    updateFiles(files);
-                }
-            });
-        }
-
-        /**
-         * Updates table contents, sets selectedFile index and table selection to selected project file, or -1.
-         *
-         * @param xfiles files to display in this ProjectExplorerTable.
-         */
-        private void updateFiles(File[] xfiles) {
-            this.files = xfiles;
-
-            // sort files if needed before updating table
-            if (explorerTableSortColumn != COLUMN_UNDEFINED) {
-                files = files.clone();
-                Arrays.sort(files, explorerTableComparator);
-            }
-
-            explorerTableModel.fireTableDataChanged();
-
-            selectedFile = -1;
-            if (getProject() != null) for (int n = 0; n < files.length; n++)
-                if (getProject().getFile().equals(files[n])) selectedFile = n;
-
-            if (selectedFile != -1) setRowSelectionInterval(selectedFile, selectedFile);
-        }
-
-        /**
-         * TableModel which handles data from files (in upper-class ProjectExplorerPanel).
-         */
-        private class ProjectExplorerTableModel extends AbstractTableModel implements ProjectListener {
-
-            public String getColumnName(int column) {
-                return column_name[column] + (column == explorerTableSortColumn ? " *" : "");
-            }
-
-            public int getRowCount() {
-                return files.length;
-            }
-
-            public int getColumnCount() {
-                return column_name.length;
-            }
-
-            public Object getValueAt(int row, int column) {
-                switch (column) {
-                    case COLUMN_FILENAME: return files[row].getName();
-                    case COLUMN_TYPE: return Project.getType(files[row]);
-                    case COLUMN_LASTMOD: return DateFormat.getInstance().format(files[row].lastModified());
-                    default: assert false; return null;
-                }
-            }
-
-            /**
-             * Updates the file list when a project file has been saved.
-             *
-             * @param event ProjectEvent received.
-             */
-            public void projectUpdated(ProjectEvent event) {
-                if (event.getType() == ProjectEvent.Type.FILE_SAVED) {
-                    File saved = event.getProject().getFile();
-                    for (int i = 0; i < files.length; i++) {
-                        if (files[i].equals(saved)) {
-                            fireTableRowsUpdated(i, i);
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-
-        /**
-         * Comparator used for ProjectExplorerTable sorting.
-         */
-        private class ProjectExplorerTableComparator implements Comparator <File> {
-            public int compare(File a, File b) {
-                switch (explorerTableSortColumn) {
-                    case COLUMN_FILENAME: return a.compareTo(b);
-                    // WARNING: might chocke Project.getType(File)
-                    case COLUMN_TYPE: return Project.getType(a).compareTo(Project.getType(b));
-                    // TODO: int-cast changes sign if difference larger than maxint
-                    case COLUMN_LASTMOD: return (int) (a.lastModified() - b.lastModified());
-                    default: return 0;
-                }
-            }
-        }
-
-        /**
-         * Shows popup menu with export choices: AF (.dat), Thellier (.tdt) and Thermal (.tdt), and for each,
-         * "to current directory", "to disk drive A:" and "...", which opens a standard file chooser for selecting
-         * dir and file to export to. Executes selected export command.
-         */
-        private class ProjectExplorerPopupMenu extends JPopupMenu {
-
-            /**
-             * Builds the popup menu, but doesn't show it; use show(...) to do that.
-             *
-             * @param file file to show export menu for.
-             */
-            public ProjectExplorerPopupMenu(File file) {
-                String filename = file.getName();
-                String basename = filename;
-                if (basename.toLowerCase().endsWith(Ikayaki.FILE_TYPE))
-                    basename = basename.substring(0, basename.length() - Ikayaki.FILE_TYPE.length());
-
-                JMenuItem export = new JMenuItem("Export '" + filename + "' to");
-                export.setFont(export.getFont().deriveFont(Font.BOLD));
-                export.setEnabled(false);
-                this.add(export);
-
-                // TODO: some portable way to get a File for disk drive? Or maybe a Setting for export-dirs?
-                for (File dir : new File[] { null, file.getParentFile(), new File("A:/") }) {
-                    for (String type : new String[] {"dat", "tdt", "srm"}) {
-                        JMenuItem exportitem;
-                        if (dir == null) exportitem = new JMenuItem(type.toUpperCase() + " file...");
-                        else exportitem = new JMenuItem(new File(dir, basename + "." + type).toString());
-
-                        this.add(exportitem);
-
-                        /**
-                         * Event A: On menu click - call project.exportToXXX(File) according to selected menu
-                         * item; if false is returned, show error message.
-                         */
-                        exportitem.addActionListener(new ActionListener() {
-                            public void actionPerformed(ActionEvent e) {
-                                String filename = e.getActionCommand();
-                                String filetype = filename.substring(filename.length() - 3);
-                                File exportfile;
-
-                                if (filetype.equals("...")) {
-                                    filetype = filename.substring(0, 3).toLowerCase();
-                                    JFileChooser chooser = new JFileChooser(directory);
-                                    chooser.setFileFilter(new GenericFileFilter(filetype.toUpperCase() + " File", filetype));
-
-                                    if (chooser.showSaveDialog(ProjectExplorerTable.this) == JFileChooser.APPROVE_OPTION)
-                                        exportfile = chooser.getSelectedFile();
-
-                                } else exportfile = new File(filename);
-
-                                // TODO: which one of these two?
-                                //Project.export(exportfile, filetype);
-                                //Project.loadProject(exportfile).export(filetype);
-
-                                // TODO: tell somehow if export was successful; statusbar perhaps?
-                            }
-                        });
-                    }
-                }
-            }
-        }
-    } // NOTE: what a nice end-brace-fallout :)
 
     /**
      * Panel with components for creating a new project. This Panel will be somewhere below the project file listing...
