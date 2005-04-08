@@ -221,7 +221,7 @@ Event B: On project event - Update textfields to correspond new project informat
      */
     public void setProject(Project project) {
 
-        // save the old project
+        // save the old project's values
         saveProperties();
         saveParameters();
 
@@ -229,7 +229,7 @@ Event B: On project event - Update textfields to correspond new project informat
         setEnabled(project != null);
 
         if (project != null) {
-            // get values from the project
+            // get values from the new project
 
             /* Radio Button Groups */
             measurementTypeAuto.setSelected(project.getProperty(MEASUREMENT_TYPE_PROPERTY,
@@ -247,20 +247,8 @@ Event B: On project event - Update textfields to correspond new project informat
             commentField.setText(project.getProperty(COMMENT_PROPERTY, ""));
 
             /* Number-only Text Fields */
-            String lat = project.getProperty(LATITUDE_PROPERTY);
-            if (lat != null) {
-                latitudeField.setText(lat);
-                //latitudeField.setValue(Double.parseDouble(lat));
-            } else {
-                latitudeField.setText("");
-            }
-            String lon = project.getProperty(LONGITUDE_PROPERTY);
-            if (lon != null) {
-                // TODO: try if setText works for numbers. if it works, change all the rest fields as well.
-                longitudeField.setText(lon);
-            } else {
-                longitudeField.setText("");
-            }
+            latitudeField.setText(project.getProperty(LATITUDE_PROPERTY, ""));
+            longitudeField.setText(project.getProperty(LONGITUDE_PROPERTY, ""));
             strikeField.setValue(new Double(project.getStrike()));
             dipField.setValue(new Double(project.getDip()));
             massField.setValue(new Double(project.getMass()));
@@ -289,6 +277,10 @@ Event B: On project event - Update textfields to correspond new project informat
             massField.setText("");
             volumeField.setText("");
         }
+
+        // prevent the saving of unchanged values
+        propertiesModified = false;
+        parametersModified = false;
     }
 
     /**
@@ -358,47 +350,12 @@ Event B: On project event - Update textfields to correspond new project informat
 
         parametersModified = false;
     }
-//
-//    private LastExecutor autosaveProperties = new LastExecutor(200, true);
-//    private Runnable autosavePropertiesRunnable = new Runnable() {
-//        public void run() {
-//            try {
-//                SwingUtilities.invokeAndWait(new Runnable() {
-//                    public void run() {
-//                        saveProperties();
-//                    }
-//                });
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            } catch (InvocationTargetException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    };
-//
-//    private LastExecutor autosaveParameters = new LastExecutor(200, true);
-//    private Runnable autosaveParametersRunnable = new Runnable() {
-//        public void run() {
-//            try {
-//                SwingUtilities.invokeAndWait(new Runnable() {
-//                    public void run() {
-//                        saveParameters();
-//                    }
-//                });
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            } catch (InvocationTargetException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    };
-//
+
     /**
      * Schedules the running of saveProperties().
      */
     private void initSaveProperties() {
         propertiesModified = true;
-//        autosaveProperties.execute(autosavePropertiesRunnable);
     }
 
     /**
@@ -406,7 +363,6 @@ Event B: On project event - Update textfields to correspond new project informat
      */
     private void initSaveParameters() {
         parametersModified = true;
-//        autosaveParameters.execute(autosaveParametersRunnable);
     }
 
     {
@@ -613,8 +569,8 @@ Event B: On project event - Update textfields to correspond new project informat
                 // show all numbers
                 format = new DecimalFormat();
             }
-            format.setGroupingUsed(false);
-            format.setMaximumFractionDigits(3);
+            format.setGroupingUsed(true);
+            format.setMaximumFractionDigits(6);
             formatter = new NumberFormatter(format);
 
             // set value ranges
