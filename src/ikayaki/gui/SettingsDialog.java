@@ -814,8 +814,8 @@ private class MyFormatterFactory extends JFormattedTextField.AbstractFormatterFa
         }
         else if (tf == measurementPosition || tf == sampleLoadPosition || tf == backgroundPosition
             || tf == axialAFPosition || tf == transverseYAFPosition || tf == measurementPosition) {
-            formatter.setMinimum(new Double(0));
-            formatter.setMaximum(new Double(16777215));
+            formatter.setMinimum(new Integer(0));
+            formatter.setMaximum(new Integer(16777215));
         }
         return formatter;
     }
