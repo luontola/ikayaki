@@ -201,10 +201,6 @@ public class SettingsPanel
     this.demagRamp.addItem(5);
     this.demagRamp.addItem(7);
     this.demagRamp.addItem(9);
-
-    System.out.println("dialogInit:" + acceleration);
-    System.out.println("dialogInit:" + acceleration.hashCode());
-
     int rampValue = Settings.instance().getDegausserRamp();
     if (rampValue == 3) {
       this.demagRamp.setSelectedIndex(0);
@@ -288,7 +284,6 @@ public class SettingsPanel
     this.pack();
 */
 
-    //getRootPane().setDefaultButton(saveButton);
     saveButton.setAction(this.getSaveAction());
     getSaveAction().setEnabled(false);
     cancelButton.setAction(this.getCancelAction());
@@ -311,7 +306,6 @@ public class SettingsPanel
         else {
           getSaveAction().setEnabled(false);
         }
-
       }
 
       public void changedUpdate(DocumentEvent e) {
