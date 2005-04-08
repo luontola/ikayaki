@@ -34,7 +34,9 @@ import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.util.Date;
 
 /**
  * Allows inserting and editing project information.
@@ -101,7 +103,7 @@ public class ProjectInformationPanel extends ProjectComponent {
         sampleType.add(sampleTypeCore);
         sampleType.add(sampleTypeHand);
 
-        /* Number-only Text Fields */
+        /* Formatted Text Fields */
         MyFormatterFactory factory = new MyFormatterFactory();
         latitudeField.setFormatterFactory(factory);
         longitudeField.setFormatterFactory(factory);
@@ -201,7 +203,7 @@ public class ProjectInformationPanel extends ProjectComponent {
         siteField.setEnabled(enabled);
         commentField.setEnabled(enabled);
 
-        /* Number-only Text Fields */
+        /* Number Fields */
         latitudeField.setEnabled(enabled);
         longitudeField.setEnabled(enabled);
         strikeField.setEnabled(enabled);
@@ -235,12 +237,12 @@ public class ProjectInformationPanel extends ProjectComponent {
 
             /* Plain Text Fields */
             operatorField.setText(project.getProperty(OPERATOR_PROPERTY, ""));
-            dateField.setText(project.getProperty(DATE_PROPERTY, ""));
+            dateField.setText(project.getProperty(DATE_PROPERTY, DateFormat.getDateInstance().format(new Date())));
             rockTypeField.setText(project.getProperty(ROCK_TYPE_PROPERTY, ""));
             siteField.setText(project.getProperty(SITE_PROPERTY, ""));
             commentField.setText(project.getProperty(COMMENT_PROPERTY, ""));
 
-            /* Number-only Text Fields */
+            /* Number Fields */
             latitudeField.setText(project.getProperty(LATITUDE_PROPERTY, ""));
             longitudeField.setText(project.getProperty(LONGITUDE_PROPERTY, ""));
             strikeField.setValue(new Double(project.getStrike()));
@@ -263,7 +265,7 @@ public class ProjectInformationPanel extends ProjectComponent {
             siteField.setText("");
             commentField.setText("");
 
-            /* Number-only Text Fields */
+            /* Number Fields */
             latitudeField.setText("");
             longitudeField.setText("");
             strikeField.setText("");
@@ -318,7 +320,7 @@ public class ProjectInformationPanel extends ProjectComponent {
         getProject().setProperty(SITE_PROPERTY, siteField.getText());
         getProject().setProperty(COMMENT_PROPERTY, commentField.getText());
 
-        /* Number-only Text Fields */
+        /* Number Fields */
         getProject().setProperty(LATITUDE_PROPERTY, latitudeField.getText());
         getProject().setProperty(LONGITUDE_PROPERTY, longitudeField.getText());
 
