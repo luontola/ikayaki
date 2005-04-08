@@ -22,17 +22,27 @@
 
 package ikayaki.gui;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
+import ikayaki.Ikayaki;
+import ikayaki.Project;
+import ikayaki.ProjectEvent;
+import ikayaki.ProjectListener;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-
-import ikayaki.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileFilter;
+import java.text.DateFormat;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Creates a list of project files in directory. Handles loading selected projects and showing export popup menu
@@ -49,7 +59,7 @@ public class ProjectExplorerTable extends JTable {
 
     private final ProjectExplorerTableModel explorerTableModel;
 
-    private final Comparator <File> explorerTableComparator = new ProjectExplorerTableComparator();
+    private final Comparator<File> explorerTableComparator = new ProjectExplorerTableComparator();
 
     /**
      * Currently open directory.
@@ -72,7 +82,13 @@ public class ProjectExplorerTable extends JTable {
     private static final int COLUMN_FILENAME = 0;
     private static final int COLUMN_TYPE = 1;
     private static final int COLUMN_LASTMOD = 2;
-    private static final String[] column_name = { "filename", "type", "last modified" };
+    private static final String[] column_name = {"filename", "type", "last modified"};
+
+    /**
+     * Builds the project type cache for each directory. If the thread is still working when a new request arrives, the
+     * old thread should be interrupted.
+     */
+    private Thread projectTypeCacher = new Thread();
 
     /**
      * Builds ProjectExplorerTable.
@@ -116,9 +132,14 @@ public class ProjectExplorerTable extends JTable {
                 // if load error, revert back to old selection
                 if (project == null) {
                     // TODO: flash selected row red for 100 ms, perhaps? - might require a custom cell renderer
-                    if (selectedFile == -1) clearSelection();
-                    else setRowSelectionInterval(selectedFile, selectedFile);
-                } else ProjectExplorerTable.this.parent.setProject(project);
+                    if (selectedFile == -1) {
+                        clearSelection();
+                    } else {
+                        setRowSelectionInterval(selectedFile, selectedFile);
+                    }
+                } else {
+                    ProjectExplorerTable.this.parent.setProject(project);
+                }
             }
         });
 
@@ -155,8 +176,9 @@ public class ProjectExplorerTable extends JTable {
                 // ... Hope it's at least correct, not that I care anymore
 
                 // reset all column header names
-                for (int col = 0; col < cm.getColumnCount(); col++)
+                for (int col = 0; col < cm.getColumnCount(); col++) {
                     cm.getColumn(col).setHeaderValue(column_name[cm.getColumn(col).getModelIndex()]);
+                }
 
                 // set sort column header name
                 explorerTableSortColumn = cm.getColumn(viewColumn).getModelIndex();
@@ -179,13 +201,17 @@ public class ProjectExplorerTable extends JTable {
         this.files = getProjectFiles(this.directory);
 
         // sort files if needed before updating table
-        if (explorerTableSortColumn != COLUMN_UNDEFINED)
+        if (explorerTableSortColumn != COLUMN_UNDEFINED) {
             Arrays.sort(files, explorerTableComparator);
+        }
 
         // search if any file in current directory matches currently open project file
         selectedFile = -1;
-        if (parent.getProject() != null) for (int n = 0; n < files.length; n++)
-            if (parent.getProject().getFile().equals(files[n])) selectedFile = n;
+        if (parent.getProject() != null) {
+            for (int n = 0; n < files.length; n++) {
+                if (parent.getProject().getFile().equals(files[n])) selectedFile = n;
+            }
+        }
 
         // update table data and selected project file
         explorerTableModel.fireTableDataChanged();
@@ -199,11 +225,37 @@ public class ProjectExplorerTable extends JTable {
      * @return project files in that directory.
      */
     private File[] getProjectFiles(File directory) {
-        return directory.listFiles(new FileFilter() {
+        File[] files = directory.listFiles(new FileFilter() {
             public boolean accept(File file) {
                 return (file.isFile() && file.getName().endsWith(Ikayaki.FILE_TYPE));
             }
         });
+
+        // build project type cache
+        final File[] cacheFiles = new File[files.length];   // need a copy of the array to work on
+        for (int i = 0; i < files.length; i++) {
+            cacheFiles[i] = files[i];
+        }
+        projectTypeCacher.interrupt();      // stop the old thread before starting a new one
+        projectTypeCacher = new Thread() {
+            @Override public void run() {
+                int i = 0;
+                for (File file : cacheFiles) {
+                    if (interrupted()) {
+                        return;
+                    }
+                    if (file.canRead()) {
+                        Project.getType(file);
+                        if (++i % 10 == 0) {
+                            Thread.yield();
+                        }
+                    }
+                }
+            }
+        };
+        projectTypeCacher.start();
+
+        return files;
     }
 
     /**
@@ -225,10 +277,15 @@ public class ProjectExplorerTable extends JTable {
 
         public Object getValueAt(int row, int column) {
             switch (column) {
-                case COLUMN_FILENAME: return files[row].getName();
-                case COLUMN_TYPE: return Project.getType(files[row]);
-                case COLUMN_LASTMOD: return DateFormat.getInstance().format(files[row].lastModified());
-                default: assert false; return null;
+            case COLUMN_FILENAME:
+                return files[row].getName();
+            case COLUMN_TYPE:
+                return Project.getType(files[row]);
+            case COLUMN_LASTMOD:
+                return DateFormat.getInstance().format(files[row].lastModified());
+            default:
+                assert false;
+                return null;
             }
         }
 
@@ -253,23 +310,27 @@ public class ProjectExplorerTable extends JTable {
     /**
      * Comparator used for ProjectExplorerTable sorting.
      */
-    private class ProjectExplorerTableComparator implements Comparator <File> {
+    private class ProjectExplorerTableComparator implements Comparator<File> {
         public int compare(File a, File b) {
             switch (explorerTableSortColumn) {
-                case COLUMN_FILENAME: return a.compareTo(b);
+            case COLUMN_FILENAME:
+                return a.compareTo(b);
                 // WARNING: might chocke Project.getType(File)
-                case COLUMN_TYPE: return Project.getType(a).compareTo(Project.getType(b));
+            case COLUMN_TYPE:
+                return Project.getType(a).compareTo(Project.getType(b));
                 // TODO: int-cast changes sign if difference larger than maxint
-                case COLUMN_LASTMOD: return (int) (a.lastModified() - b.lastModified());
-                default: return 0;
+            case COLUMN_LASTMOD:
+                return (int) (a.lastModified() - b.lastModified());
+            default:
+                return 0;
             }
         }
     }
 
     /**
-     * Shows popup menu with export choices: AF (.dat), Thellier (.tdt) and Thermal (.tdt), and for each,
-     * "to current directory", "to disk drive A:" and "...", which opens a standard file chooser for selecting
-     * dir and file to export to. Executes selected export command.
+     * Shows popup menu with export choices: AF (.dat), Thellier (.tdt) and Thermal (.tdt), and for each, "to current
+     * directory", "to disk drive A:" and "...", which opens a standard file chooser for selecting dir and file to
+     * export to. Executes selected export command.
      */
     private class ProjectExplorerPopupMenu extends JPopupMenu {
 
@@ -282,8 +343,9 @@ public class ProjectExplorerTable extends JTable {
             final File directory = file.getParentFile();
             String filename = file.getName();
             String basename = filename;
-            if (basename.toLowerCase().endsWith(Ikayaki.FILE_TYPE))
+            if (basename.toLowerCase().endsWith(Ikayaki.FILE_TYPE)) {
                 basename = basename.substring(0, basename.length() - Ikayaki.FILE_TYPE.length());
+            }
 
             JMenuItem export = new JMenuItem("Export '" + filename + "' to");
             export.setFont(export.getFont().deriveFont(Font.BOLD));
@@ -291,11 +353,14 @@ public class ProjectExplorerTable extends JTable {
             this.add(export);
 
             // TODO: some portable way to get a File for disk drive? Or maybe a Setting for export-dirs?
-            for (File dir : new File[] { null, directory, new File("A:/") }) {
-                for (String type : new String[] {"dat", "tdt", "srm"}) {
+            for (File dir : new File[]{null, directory, new File("A:/")}) {
+                for (String type : new String[]{"dat", "tdt", "srm"}) {
                     JMenuItem exportitem;
-                    if (dir == null) exportitem = new JMenuItem(type.toUpperCase() + " file...");
-                    else exportitem = new JMenuItem(new File(dir, basename + "." + type).toString());
+                    if (dir == null) {
+                        exportitem = new JMenuItem(type.toUpperCase() + " file...");
+                    } else {
+                        exportitem = new JMenuItem(new File(dir, basename + "." + type).toString());
+                    }
 
                     this.add(exportitem);
 
@@ -312,12 +377,16 @@ public class ProjectExplorerTable extends JTable {
                             if (filetype.equals("...")) {
                                 filetype = filename.substring(0, 3).toLowerCase();
                                 JFileChooser chooser = new JFileChooser(directory);
-                                chooser.setFileFilter(new GenericFileFilter(filetype.toUpperCase() + " File", filetype));
+                                chooser.setFileFilter(
+                                        new GenericFileFilter(filetype.toUpperCase() + " File", filetype));
 
-                                if (chooser.showSaveDialog(ProjectExplorerTable.this) == JFileChooser.APPROVE_OPTION)
+                                if (chooser.showSaveDialog(ProjectExplorerTable.this) == JFileChooser.APPROVE_OPTION) {
                                     exportfile = chooser.getSelectedFile();
+                                }
 
-                            } else exportfile = new File(filename);
+                            } else {
+                                exportfile = new File(filename);
+                            }
 
                             // TODO: which one of these two?
                             //Project.export(exportfile, filetype);
