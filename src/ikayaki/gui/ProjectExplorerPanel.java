@@ -66,9 +66,14 @@ public class ProjectExplorerPanel extends ProjectComponent {
     private final ComponentFlasher browserFieldFlasher;
 
     /**
+     * Tells whether current popup menu is autocomplete list (and not directory history).
+     */
+    boolean browserFieldPopupIsAutocomplete = false;
+
+    /**
      * Tells whether the next-to-be-shown popup menu will be autocomplete list (and not directory history).
      */
-    private boolean browserFieldNextPopupIsAutocomplete = false;
+    // private boolean browserFieldNextPopupIsAutocomplete = false;
 
     /**
      * Tells whether browserField's popup menu list is being updated, and we don't want those ActionEvents.
@@ -101,20 +106,13 @@ public class ProjectExplorerPanel extends ProjectComponent {
     public ProjectExplorerPanel(ProjectComponent parent) {
         this.parent = parent;
 
-        // combo box / text field (built before setting directory for no apparent reason)
-        browserField = new JComboBox();
+        // combo box / text field
+        browserField = new JComboBox(getDirectoryHistory());
         browserField.setEditable(true);
         browserField.setBackground(Color.WHITE);
         browserFieldEditor = (JTextField) browserField.getEditor().getEditorComponent();
         browserFieldFlasher = new ComponentFlasher(browserFieldEditor);
         // browserFieldEditor.setFocusTraversalKeysEnabled(false); // disable tab-exiting from browserField
-        setBrowserFieldPopup(getDirectoryHistory());
-
-        // set current directory to latest directory history dir (also reads files in that directory)
-        setDirectory(Settings.instance().getLastDirectory());
-
-        // scroll to the end of the combo box's text field
-        setBrowserFieldCursorToEnd();
 
         // browse button
         browseButton = new JButton("Browse...");
@@ -138,6 +136,12 @@ public class ProjectExplorerPanel extends ProjectComponent {
         this.add(browsePanel, BorderLayout.NORTH);
         this.add(explorerTableScrollPane, BorderLayout.CENTER);
         this.add(newProjectPanel, BorderLayout.SOUTH);
+
+        // set current directory to latest directory history dir (also reads files in that directory)
+        setDirectory(Settings.instance().getLastDirectory());
+
+        // scroll to the end of the combo box's text field (after setting directory)
+        // setBrowserFieldCursorToEnd();
 
         // ProjectExplorer events
 
@@ -168,17 +172,20 @@ public class ProjectExplorerPanel extends ProjectComponent {
                 // JComboBox event types:
                 // Edited -- pressed enter in the text field or selected an item by pressing enter
                 // Changed -- cycled item list with up/down, selected item with mouse or pressed enter in text field
-                System.out.println(e.getActionCommand() + ": " + browserField.getSelectedItem());
+                // System.out.println(e.getActionCommand() + ": " + browserField.getSelectedItem());
 
                 // we only want changed-events, not duplicate edited-events
-                if (!e.getActionCommand().equals("comboBoxChanged")) return;
+                //if (!e.getActionCommand().equals("comboBoxChanged")) return;
 
                 // TODO: cycling through popup menu list with up/down keys changes directory;
                 // it shouldn't, but can't recognize those changed-events from mouse clicks
 
+                // item is File if selected from list, String if written to text field
+                Object item = browserField.getEditor().getItem();
+                File dir = item instanceof File ? (File) item : new File((String) item);
+
                 // try to set directory, flash browserField red if error
-                if (!setDirectory(new File((String) browserField.getSelectedItem())))
-                    browserFieldFlasher.flash();
+                if (!setDirectory(dir)) browserFieldFlasher.flash();
             }
         });
 
@@ -187,12 +194,14 @@ public class ProjectExplorerPanel extends ProjectComponent {
          */
         browserField.addPopupMenuListener(new PopupMenuListener() {
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                // set popup menu as directory history when closing popup, unless autocomplete-resize-closing
-                // (popupmenu directory history might lag when hidden)
-                if (browserFieldNextPopupIsAutocomplete) browserFieldNextPopupIsAutocomplete = false;
-                else setBrowserFieldPopup(getDirectoryHistory());
-                // TODO: browserField's text disappears when selectiog item with mouse, because of
-                // this stuff here instead of popupMenuWillBecomeVisible, but that caused other probrems
+                // set popup menu as directory history when closing popup, unless it's already dir history
+                if (browserFieldPopupIsAutocomplete) {
+                    browserFieldPopupIsAutocomplete = false;
+                    // TODO: when mouseclicking autocomplete list item, textfield gets cleared because of this
+                    //Object item = browserField.getSelectedItem();
+                    setBrowserFieldPopup(getDirectoryHistory());
+                    //browserField.setSelectedItem(item);
+                }
             }
 
             public void popupMenuWillBecomeVisible(PopupMenuEvent e) { }
@@ -208,7 +217,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
             public void keyTyped(KeyEvent e) {
                 if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
                     browserField.setSelectedItem(directory.getPath());
-                    browserField.getEditor().selectAll();
+                    // browserField.getEditor().selectAll();
                     return;
                 } else if (e.getKeyChar() == KeyEvent.VK_ENTER) return;
 
@@ -244,6 +253,11 @@ public class ProjectExplorerPanel extends ProjectComponent {
      */
     public void setProject(Project project) {
         super.setProject(project);
+
+        // update directory history, as it might have changed
+        browserField.hidePopup();
+        setBrowserFieldPopup(getDirectoryHistory());
+
         if (project != null) {
             setDirectory(project.getFile().getParentFile());
             // TODO: add this...
@@ -263,8 +277,8 @@ public class ProjectExplorerPanel extends ProjectComponent {
         this.directory = directory;
 
         // update browserField and explorerTable with new directory
-        if (browserField != null) browserField.setSelectedItem(directory.getPath());
-        if (explorerTable != null) explorerTable.setDirectory(this.directory);
+        browserField.setSelectedItem(this.directory);
+        explorerTable.setDirectory(this.directory);
 
         return true;
     }
@@ -306,20 +320,21 @@ public class ProjectExplorerPanel extends ProjectComponent {
      * Updates autocomplete popup-menu.
      */
     private void doAutoComplete() {
-        File[] files = getAutocompleteFiles(browserField.getEditor().getItem().toString());
-        setBrowserFieldPopup(files);
+        final File[] files = getAutocompleteFiles(browserField.getEditor().getItem().toString());
 
-        if (files.length > 0) {
-            // gui updating must be done from event-dispatching thread
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    browserFieldNextPopupIsAutocomplete = true;
-                    // when the popup is hidden before showing, it will be automatically resized
-                    if (browserField.isPopupVisible()) browserField.hidePopup();
-                    browserField.showPopup();
-                }
-            });
-        }
+        // gui updating must be done from event-dispatching thread
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                // when the popup is hidden before showing, it will be automatically resized
+                // (disable change-to-dirhistory-on-popup-hide for this)
+                browserFieldPopupIsAutocomplete = false;
+                browserField.hidePopup();
+
+                browserFieldPopupIsAutocomplete = true;
+                setBrowserFieldPopup(files);
+                if (files.length > 0) browserField.showPopup();
+            }
+        });
     }
 
     /**
@@ -335,7 +350,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
         int browserFieldEditorCursorPosition = browserFieldEditor.getCaretPosition();
 
         browserField.removeAllItems();
-        for (File file : files) browserField.addItem(file.getAbsolutePath());
+        for (File file : files) browserField.addItem(file);
 
         browserField.setSelectedIndex(-1);
         browserFieldEditor.setText(browserFieldEditorText);
@@ -346,6 +361,8 @@ public class ProjectExplorerPanel extends ProjectComponent {
 
     /**
      * Sets browserField's cursor to text field's (right) end.
+     *
+     * @deprecated not needed anymore; cursor seems to be there anyway?
      */
     private void setBrowserFieldCursorToEnd() {
         browserFieldEditor.setCaretPosition(browserFieldEditor.getDocument().getLength());

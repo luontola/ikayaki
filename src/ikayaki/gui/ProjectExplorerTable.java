@@ -200,9 +200,7 @@ public class ProjectExplorerTable extends JTable {
     private File[] getProjectFiles(File directory) {
         return directory.listFiles(new FileFilter() {
             public boolean accept(File file) {
-                // TODO: shouldn't this return only a list of valid project files? so why is Ikayaki.FILE_TYPE commented out?
-                // - for explorerTable testing, need some (working perhaps) project file expamples :)
-                return (file.isFile() && file.getName().endsWith(/*Ikayaki.FILE_TYPE*/ ""));
+                return (file.isFile() && file.getName().endsWith(Ikayaki.FILE_TYPE));
             }
         });
     }
