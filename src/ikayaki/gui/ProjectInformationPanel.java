@@ -28,8 +28,12 @@ import com.intellij.uiDesigner.core.Spacer;
 import ikayaki.Project;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 
 /**
@@ -83,6 +87,9 @@ Event B: On project event - Update textfields to correspond new project informat
 
     private JPanel contentPane;
 
+    private boolean propertiesModified = false;
+    private boolean parametersModified = false;
+
     /**
      * Creates default ProjectInformationPanel.
      */
@@ -109,7 +116,74 @@ Event B: On project event - Update textfields to correspond new project informat
         massField.setFormatterFactory(factory);
         volumeField.setFormatterFactory(factory);
 
-        // TODO: add listeners for form fields to invoke autosaving
+        /* Listeners for properties */
+        DocumentListener propertiesDocumentListener = new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                initSaveProperties();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                initSaveProperties();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                initSaveProperties();
+            }
+        };
+        ActionListener propertiesActionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                initSaveProperties();
+            }
+        };
+
+        measurementTypeAuto.addActionListener(propertiesActionListener);
+        measurementTypeManual.addActionListener(propertiesActionListener);
+
+        operatorField.getDocument().addDocumentListener(propertiesDocumentListener);
+        dateField.getDocument().addDocumentListener(propertiesDocumentListener);
+        rockTypeField.getDocument().addDocumentListener(propertiesDocumentListener);
+        siteField.getDocument().addDocumentListener(propertiesDocumentListener);
+        commentField.getDocument().addDocumentListener(propertiesDocumentListener);
+
+        latitudeField.getDocument().addDocumentListener(propertiesDocumentListener);
+        longitudeField.getDocument().addDocumentListener(propertiesDocumentListener);
+
+        /* Listeners for parameters */
+        DocumentListener parametersDocumentListener = new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                initSaveParameters();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                initSaveParameters();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                initSaveParameters();
+            }
+        };
+        ActionListener parametersActionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                initSaveParameters();
+            }
+        };
+
+        sampleTypeCore.addActionListener(parametersActionListener);
+        sampleTypeHand.addActionListener(parametersActionListener);
+
+        strikeField.getDocument().addDocumentListener(parametersDocumentListener);
+        dipField.getDocument().addDocumentListener(parametersDocumentListener);
+        massField.getDocument().addDocumentListener(parametersDocumentListener);
+        volumeField.getDocument().addDocumentListener(parametersDocumentListener);
+
+        /* Autosaving at regular intervals */
+        Timer autosave = new Timer(500, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveProperties();
+                saveParameters();
+            }
+        });
+        autosave.start();
     }
 
     /**
@@ -146,6 +220,11 @@ Event B: On project event - Update textfields to correspond new project informat
      * Calls super.setProject(project) and updates textfield with new projects data.
      */
     public void setProject(Project project) {
+
+        // save the old project
+        saveProperties();
+        saveParameters();
+
         super.setProject(project);
         setEnabled(project != null);
 
@@ -153,11 +232,10 @@ Event B: On project event - Update textfields to correspond new project informat
             // get values from the project
 
             /* Radio Button Groups */
-            measurementTypeAuto.setSelected(project.getProperty(MEASUREMENT_TYPE_PROPERTY, MEASUREMENT_TYPE_AUTO_VALUE)
-                    .equals(MEASUREMENT_TYPE_AUTO_VALUE));
+            measurementTypeAuto.setSelected(project.getProperty(MEASUREMENT_TYPE_PROPERTY,
+                    MEASUREMENT_TYPE_AUTO_VALUE).equals(MEASUREMENT_TYPE_AUTO_VALUE));
             measurementTypeManual.setSelected(project.getProperty(MEASUREMENT_TYPE_PROPERTY,
-                    MEASUREMENT_TYPE_AUTO_VALUE)
-                    .equals(MEASUREMENT_TYPE_MANUAL_VALUE));
+                    MEASUREMENT_TYPE_AUTO_VALUE).equals(MEASUREMENT_TYPE_MANUAL_VALUE));
             sampleTypeCore.setSelected(project.getSampleType() == Project.SampleType.CORE);
             sampleTypeHand.setSelected(project.getSampleType() == Project.SampleType.HAND);
 
@@ -171,7 +249,8 @@ Event B: On project event - Update textfields to correspond new project informat
             /* Number-only Text Fields */
             String lat = project.getProperty(LATITUDE_PROPERTY);
             if (lat != null) {
-                latitudeField.setValue(Double.parseDouble(lat));
+                latitudeField.setText(lat);
+                //latitudeField.setValue(Double.parseDouble(lat));
             } else {
                 latitudeField.setText("");
             }
@@ -210,6 +289,124 @@ Event B: On project event - Update textfields to correspond new project informat
             massField.setText("");
             volumeField.setText("");
         }
+    }
+
+    /**
+     * Saves to the project file those properties, that do not affect the measurement calculations. Will do nothing if
+     * propertiesModified is false.
+     *
+     * @throws NullPointerException if the current project is null.
+     */
+    private void saveProperties() {
+        if (!propertiesModified) {
+            return;
+        }
+        System.out.println("Properties saved");
+
+        /* Radio Button Groups */
+        if (measurementTypeAuto.isSelected()) {
+            getProject().setProperty(MEASUREMENT_TYPE_PROPERTY, MEASUREMENT_TYPE_AUTO_VALUE);
+        }
+        if (measurementTypeManual.isSelected()) {
+            getProject().setProperty(MEASUREMENT_TYPE_PROPERTY, MEASUREMENT_TYPE_MANUAL_VALUE);
+        }
+
+        /* Plain Text Fields */
+        getProject().setProperty(OPERATOR_PROPERTY, operatorField.getText());
+        getProject().setProperty(DATE_PROPERTY, dateField.getText());
+        getProject().setProperty(ROCK_TYPE_PROPERTY, rockTypeField.getText());
+        getProject().setProperty(SITE_PROPERTY, siteField.getText());
+        getProject().setProperty(COMMENT_PROPERTY, commentField.getText());
+
+        /* Number-only Text Fields */
+        getProject().setProperty(LATITUDE_PROPERTY, latitudeField.getText());
+        getProject().setProperty(LONGITUDE_PROPERTY, longitudeField.getText());
+
+        propertiesModified = false;
+    }
+
+    /**
+     * Saves to the project file those parameters, that affect the measurement calculations. Will do nothing if
+     * parametersModified is false.
+     *
+     * @throws NullPointerException if the current project is null.
+     */
+    private void saveParameters() {
+        if (!parametersModified) {
+            return;
+        }
+        System.out.println("Parameters saved");
+
+        /* Radio Button Groups */
+        if (sampleTypeCore.isSelected()) {
+            getProject().setSampleType(Project.SampleType.CORE);
+        }
+        if (sampleTypeHand.isSelected()) {
+            getProject().setSampleType(Project.SampleType.HAND);
+        }
+
+        /* Number-only Text Fields */
+        Number value;
+        value = (Number) strikeField.getValue();
+        getProject().setStrike(value.doubleValue());
+        value = (Number) dipField.getValue();
+        getProject().setDip(value.doubleValue());
+        value = (Number) massField.getValue();
+        getProject().setMass(value.doubleValue());
+        value = (Number) volumeField.getValue();
+        getProject().setVolume(value.doubleValue());
+
+        parametersModified = false;
+    }
+//
+//    private LastExecutor autosaveProperties = new LastExecutor(200, true);
+//    private Runnable autosavePropertiesRunnable = new Runnable() {
+//        public void run() {
+//            try {
+//                SwingUtilities.invokeAndWait(new Runnable() {
+//                    public void run() {
+//                        saveProperties();
+//                    }
+//                });
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            } catch (InvocationTargetException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    };
+//
+//    private LastExecutor autosaveParameters = new LastExecutor(200, true);
+//    private Runnable autosaveParametersRunnable = new Runnable() {
+//        public void run() {
+//            try {
+//                SwingUtilities.invokeAndWait(new Runnable() {
+//                    public void run() {
+//                        saveParameters();
+//                    }
+//                });
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            } catch (InvocationTargetException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    };
+//
+    /**
+     * Schedules the running of saveProperties().
+     */
+    private void initSaveProperties() {
+        propertiesModified = true;
+//        autosaveProperties.execute(autosavePropertiesRunnable);
+    }
+
+    /**
+     * Schedules the running of saveParameters().
+     */
+    private void initSaveParameters() {
+        parametersModified = true;
+//        autosaveParameters.execute(autosaveParametersRunnable);
     }
 
     {
