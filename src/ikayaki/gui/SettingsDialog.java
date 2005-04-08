@@ -69,17 +69,17 @@ Event B: On Cancel Clicked - closes window (discarding changes)
     /**
      * Calibration constants with polarization (factory set?)
      */
-    private JTextField xAxisCalibration;
+    private JFormattedTextField xAxisCalibration;
 
     /**
      * Calibration constants with polarization (factory set?)
      */
-    private JTextField yAxisCalibration;
+    private JFormattedTextField yAxisCalibration;
 
     /**
      * Calibration constants with polarization (factory set?)
      */
-    private JTextField zAxisCalibration;
+    private JFormattedTextField zAxisCalibration;
 
     /**
      * how fast demagnetization goes
@@ -94,52 +94,52 @@ Event B: On Cancel Clicked - closes window (discarding changes)
     /**
      * Handler acceleration
      */
-    private JTextField acceleration;
+    private JFormattedTextField acceleration;
 
     /**
      * Handler deceleration
      */
-    private JTextField deceleration;
+    private JFormattedTextField deceleration;
 
     /**
      * Handler Max speed
      */
-    private JTextField velocity;
+    private JFormattedTextField velocity;
 
     /**
      * speed in measurement, should be small
      */
-    private JTextField measurementVelocity;
+    private JFormattedTextField measurementVelocity;
 
     /**
      * AF demag position for transverse
      */
-    private JTextField transverseYAFPosition;
+    private JFormattedTextField transverseYAFPosition;
 
     /**
      * axial AF demag position in steps, must be divisible by 10. Relative to Home.
      */
-    private JTextField axialAFPosition;
+    private JFormattedTextField axialAFPosition;
 
     /**
      * Position in steps, must be divisible by 10. Relative to Home. (same as Home?)
      */
-    private JTextField sampleLoadPosition;
+    private JFormattedTextField sampleLoadPosition;
 
     /**
      * Position in steps, must be divisible by 10. Relative to Home.
      */
-    private JTextField backgroundPosition;
+    private JFormattedTextField backgroundPosition;
 
     /**
      * Position in steps, must be divisible by 10. Relative to Home.
      */
-    private JTextField measurementPosition;
+    private JFormattedTextField measurementPosition;
 
     /**
      * steps to perform full rotation, must be clockwise, determined by sign
      */
-    private JTextField rotation;
+    private JFormattedTextField rotation;
 
     /**
      * Refers to right limit switch on translation axis. And usually sample holder motion toward right limit is
@@ -190,15 +190,15 @@ Event B: On Cancel Clicked - closes window (discarding changes)
 //            }
 //        });
 
-        this.acceleration.setText("" + Settings.instance().getHandlerAcceleration());
-        this.deceleration.setText("" + Settings.instance().getHandlerDeceleration());
-        this.axialAFPosition.setText("" + Settings.instance().getHandlerAxialAFPosition());
-        this.transverseYAFPosition.setText("" + Settings.instance().getHandlerTransverseYAFPosition());
-        this.measurementPosition.setText("" + Settings.instance().getHandlerMeasurementPosition());
-        this.measurementVelocity.setText("" + Settings.instance().getHandlerMeasurementVelocity());
-        this.xAxisCalibration.setText("" + Settings.instance().getMagnetometerXAxisCalibration());
-        this.yAxisCalibration.setText("" + Settings.instance().getMagnetometerYAxisCalibration());
-        this.zAxisCalibration.setText("" + Settings.instance().getMagnetometerZAxisCalibration());
+        this.acceleration.setValue(Settings.instance().getHandlerAcceleration());
+        this.deceleration.setValue(Settings.instance().getHandlerDeceleration());
+        this.axialAFPosition.setValue(Settings.instance().getHandlerAxialAFPosition());
+        this.transverseYAFPosition.setValue(Settings.instance().getHandlerTransverseYAFPosition());
+        this.measurementPosition.setValue(Settings.instance().getHandlerMeasurementPosition());
+        this.measurementVelocity.setValue(Settings.instance().getHandlerMeasurementVelocity());
+        this.xAxisCalibration.setValue(Settings.instance().getMagnetometerXAxisCalibration());
+        this.yAxisCalibration.setValue(Settings.instance().getMagnetometerYAxisCalibration());
+        this.zAxisCalibration.setValue(Settings.instance().getMagnetometerZAxisCalibration());
         this.demagRamp.addItem(3);
         this.demagRamp.addItem(5);
         this.demagRamp.addItem(7);
@@ -218,9 +218,9 @@ Event B: On Cancel Clicked - closes window (discarding changes)
             this.demagDelay.addItem(i);
         }
         this.demagRamp.setSelectedIndex(Settings.instance().getDegausserDelay() - 1);
-        this.sampleLoadPosition.setText("" + Settings.instance().getHandlerSampleLoadPosition());
-        this.backgroundPosition.setText("" + Settings.instance().getHandlerBackgroundPosition());
-        this.rotation.setText("" + Settings.instance().getHandlerRotation());
+        this.sampleLoadPosition.setValue(Settings.instance().getHandlerSampleLoadPosition());
+        this.backgroundPosition.setValue(Settings.instance().getHandlerBackgroundPosition());
+        this.rotation.setValue("" + Settings.instance().getHandlerRotation());
         this.handlerRightLimit.addItem("plus");
         this.handlerRightLimit.addItem("minus");
         this.handlerRightLimit.setSelectedIndex(Settings.instance().getHandlerRightLimit());
@@ -292,8 +292,20 @@ Event B: On Cancel Clicked - closes window (discarding changes)
                 getSaveAction().setEnabled(true);
             }
         };
-        acceleration.getDocument().addDocumentListener(saveListener);
 
+        acceleration.getDocument().addDocumentListener(saveListener);
+        deceleration.getDocument().addDocumentListener(saveListener);
+        velocity.getDocument().addDocumentListener(saveListener);
+        measurementVelocity.getDocument().addDocumentListener(saveListener);
+        transverseYAFPosition.getDocument().addDocumentListener(saveListener);
+        axialAFPosition.getDocument().addDocumentListener(saveListener);
+        sampleLoadPosition.getDocument().addDocumentListener(saveListener);
+        backgroundPosition.getDocument().addDocumentListener(saveListener);
+        measurementPosition.getDocument().addDocumentListener(saveListener);
+        rotation.getDocument().addDocumentListener(saveListener);
+        xAxisCalibration.getDocument().addDocumentListener(saveListener);
+        yAxisCalibration.getDocument().addDocumentListener(saveListener);
+        zAxisCalibration.getDocument().addDocumentListener(saveListener);
     }
 
     public static void showSettingsDialog(Frame owner, String message) {
@@ -345,9 +357,8 @@ Event B: On Cancel Clicked - closes window (discarding changes)
     //TODO: check all values
     private boolean correctValues() {
         try {
-            if (Integer.parseInt(this.acceleration.getText()) < 0 || Integer.parseInt(this.acceleration.getText()) > 127) {
-                return false;
-            }
+          if((Integer)acceleration.getValue()<0 || (Integer)acceleration.getValue()>127)
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
