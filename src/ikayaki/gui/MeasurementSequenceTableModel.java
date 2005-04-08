@@ -150,7 +150,19 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
     }
 
     public void measurementUpdated(MeasurementEvent event) {
-        // TODO
+        if (event.getType() == MeasurementEvent.Type.VALUE_MEASURED
+                || event.getType() == MeasurementEvent.Type.STEP_START
+                || event.getType() == MeasurementEvent.Type.STEP_END
+                || event.getType() == MeasurementEvent.Type.STEP_ABORTED) {
+            MeasurementStep step = event.getStep();
+            for (int i = 0; i < project.getSteps(); i++) {
+                // TODO: test some time later that this works. the project does not yet fire MeasurementEvents...
+                if (project.getStep(i) == step) {
+                    fireTableRowsUpdated(i, i);
+                    return;
+                }
+            }
+        }
     }
 
     /**
@@ -386,7 +398,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
             @Override public Class<?> getColumnClass() {
                 return Double.class;
             }
-            
+
             // TODO or not?
         },
         MASS("Mass"){
