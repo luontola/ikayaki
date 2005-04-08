@@ -275,7 +275,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * @return	the value Object at the specified cell
      */
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return rowIndex + "," + columnIndex; // TODO
+        if (columnIndex < 0 || columnIndex >= getColumnCount() || rowIndex < 0 || rowIndex >= getRowCount()) {
+            return null;
+        }
+        return visibleColumns.get(columnIndex).getValue(rowIndex, project.getStep(rowIndex));
     }
 
     /**
@@ -286,7 +289,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * @param	columnIndex the column whose value is to be queried
      */
     public void setValueAt(Object data, int rowIndex, int columnIndex) {
-        // TODO
+        if (columnIndex < 0 || columnIndex >= getColumnCount() || rowIndex < 0 || rowIndex >= getRowCount()) {
+            return;
+        }
+        visibleColumns.get(columnIndex).setValue(data, rowIndex, project.getStep(rowIndex));
     }
 
     /**
@@ -297,7 +303,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * @return false
      */
     @Override public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return super.isCellEditable(rowIndex, columnIndex); // TODO
+        if (columnIndex < 0 || columnIndex >= getColumnCount() || rowIndex < 0 || rowIndex >= getRowCount()) {
+            return false;
+        }
+        return visibleColumns.get(columnIndex).isCellEditable(rowIndex, project.getStep(rowIndex));
     }
 
     /**
@@ -307,11 +316,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * @return a string containing the default name of column.
      */
     @Override public String getColumnName(int column) {
-        if (column < 0 || column >= visibleColumns.size()) {
-            return "-";
-        } else {
-            return visibleColumns.get(column).toString(); // TODO
+        if (column < 0 || column >= getColumnCount()) {
+            return null;
         }
+        return visibleColumns.get(column).getColumnName();
     }
 
     /**
@@ -321,12 +329,71 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * @return the Object.class
      */
     @Override public Class<?> getColumnClass(int columnIndex) {
-        return super.getColumnClass(columnIndex); // TODO
+        if (columnIndex < 0 || columnIndex >= getColumnCount()) {
+            return null;
+        }
+        return visibleColumns.get(columnIndex).getColumnClass();
     }
 
+    /**
+     * Represents a column in the measurement sequence table. Calculates the values of that column.
+     */
     public enum SequenceColumn {
-        COUNT, STEP, MASS, VOLUME, X, Y, Z, DECLINATION, INCLINATION, MOMENT, REMANENCE, RELATIVE_REMANENCE, THETA63;
-        
-        // TODO: methods for deciding what to do with each column
+
+        COUNT("#"),
+        STEP("Tesla"),
+        MASS("Mass"),
+        VOLUME("Volume"),
+        X(MeasurementValue.X),
+        Y(MeasurementValue.Y),
+        Z(MeasurementValue.Z),
+        DECLINATION(MeasurementValue.DECLINATION),
+        INCLINATION(MeasurementValue.INCLINATION),
+        MOMENT(MeasurementValue.MOMENT),
+        REMANENCE(MeasurementValue.REMANENCE),
+        RELATIVE_REMANENCE(MeasurementValue.RELATIVE_REMANENCE),
+        THETA63(MeasurementValue.THETA63);
+
+        private String columnName;
+
+        private MeasurementValue value;
+
+        private SequenceColumn(String columnName) {
+            this.columnName = columnName;
+            this.value = null;
+        }
+
+        private SequenceColumn(MeasurementValue value) {
+            if (value.getUnit().equals("")) {
+                this.columnName = value.getCaption();
+            } else {
+                this.columnName = value.getCaption() + " (" + value.getUnit() + ")";
+            }
+            this.value = value;
+        }
+
+        public Object getValue(int rowIndex, MeasurementStep step) {
+            if (value != null) {
+                return step.getProject().getValue(rowIndex, value);
+            } else {
+                return "";
+            }
+        }
+
+        public void setValue(Object data, int rowIndex, MeasurementStep step) {
+            // DO NOTHING
+        }
+
+        public boolean isCellEditable(int rowIndex, MeasurementStep step) {
+            return false;
+        }
+
+        public String getColumnName() {
+            return columnName;
+        }
+
+        public Class<?> getColumnClass() {
+            return Object.class;
+        }
     }
 }
