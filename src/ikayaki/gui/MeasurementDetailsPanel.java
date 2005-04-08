@@ -98,7 +98,9 @@ in MeasurementSequencePanel update tables with new measurement data.
         rowSelected = true;
         clearTables();
         if (project != null) {
-            setStep(project.getCurrentStep());
+            if (project.getCurrentStep() != null) {
+                setStep(project.getCurrentStep());
+            }
         }
         measurementDetails.repaint();
         errorDetails.repaint();
