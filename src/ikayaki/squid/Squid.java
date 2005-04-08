@@ -81,15 +81,10 @@ public class Squid {
      */
     private Squid() throws SerialIOException {
         owner = null;
-        try {
-          degausser = new Degausser();
-          handler = new Handler();
-          magnetometer = new Magnetometer();
-        }
-        catch (NoSuchPortException ex) {
-        }
-        catch (PortInUseException ex) {
-        }
+        degausser = new Degausser();
+        handler = new Handler();
+        magnetometer = new Magnetometer();
+
 
     }
 
