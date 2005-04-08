@@ -215,6 +215,10 @@ Event B: On Cancel Clicked - closes window (discarding changes)
         this.demagRamp.addItem(5);
         this.demagRamp.addItem(7);
         this.demagRamp.addItem(9);
+
+        System.out.println("dialogInit:"+ acceleration);
+        System.out.println("dialogInit:"+ acceleration.hashCode());
+
         int rampValue = Settings.instance().getDegausserRamp();
         if (rampValue == 3) {
             this.demagRamp.setSelectedIndex(0);
@@ -351,6 +355,8 @@ Event B: On Cancel Clicked - closes window (discarding changes)
      * Saves all settings to Settings-singleton and calls closeWindow().
      */
     public void saveSettings() {
+        System.out.println("saveSettings:"+ acceleration);
+        System.out.println("saveSettings:"+ acceleration.hashCode());
         try {
             //TODO: cant get values?
             System.out.println(this.demagDelay.getSelectedIndex());
