@@ -221,20 +221,6 @@ public class MainViewPanel extends ProjectComponent {
      * @param project the project to be opened, or null to close the previous one.
      */
     @Override public void setProject(Project project) {
-
-        // close the previous project if it has no measurements running
-        // (it will be closed by projectUpdated() if there is a measurement running)
-        if (this.project != null && this.project != measuringProject && this.project != project) {
-            if (Project.closeProject(this.project)) {
-                this.project = null;
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Unable to close the project " + this.project.getName(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-        }
-
         if (project != null) {
             // update history logs
             Settings.instance().updateProjectHistory(project.getFile());
@@ -272,7 +258,11 @@ public class MainViewPanel extends ProjectComponent {
             getExportProjectToTDTAction().setEnabled(false);
             getExportProjectToSRMAction().setEnabled(false);
         }
+
+        // switch to the new project
+        Project oldProject = this.project;
         this.project = project;
+
         getProjectExplorerPanel().setProject(project);
         getCalibrationPanel().setProject(project);
         getProjectInformationPanel().setProject(project);
@@ -280,6 +270,16 @@ public class MainViewPanel extends ProjectComponent {
         getMeasurementControlsPanel().setProject(project);
         getMeasurementDetailsPanel().setProject(project);
         getMeasurementGraphsPanel().setProject(project);
+
+        // close the previous project if it has no measurements running
+        // (it will be closed by projectUpdated() if there is a measurement running)
+        if (oldProject != null && oldProject != measuringProject && oldProject != project) {
+            if (!Project.closeProject(oldProject)) {
+                JOptionPane.showMessageDialog(this,
+                        "Unable to close the project " + oldProject.getName(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     /**
