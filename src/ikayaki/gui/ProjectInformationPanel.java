@@ -51,8 +51,8 @@ Event B: On project event - Update textfields to correspond new project informat
 
     /* Property names for saving values to Project */
     private static final String MEASUREMENT_TYPE_PROPERTY = "measurementType";
-    private static final String MEASUREMENT_TYPE_AUTO_VALUE = "auto";
-    private static final String MEASUREMENT_TYPE_MANUAL_VALUE = "manual";
+    private static final String MEASUREMENT_TYPE_AUTO_VALUE = "AUTO";
+    private static final String MEASUREMENT_TYPE_MANUAL_VALUE = "MANUAL";
     private static final String OPERATOR_PROPERTY = "operator";
     private static final String DATE_PROPERTY = "date";
     private static final String ROCK_TYPE_PROPERTY = "rockType";
@@ -284,6 +284,20 @@ Event B: On project event - Update textfields to correspond new project informat
     }
 
     /**
+     * Schedules the running of saveProperties().
+     */
+    private void initSaveProperties() {
+        propertiesModified = true;
+    }
+
+    /**
+     * Schedules the running of saveParameters().
+     */
+    private void initSaveParameters() {
+        parametersModified = true;
+    }
+
+    /**
      * Saves to the project file those properties, that do not affect the measurement calculations. Will do nothing if
      * propertiesModified is false.
      *
@@ -349,20 +363,6 @@ Event B: On project event - Update textfields to correspond new project informat
         getProject().setVolume(value.doubleValue());
 
         parametersModified = false;
-    }
-
-    /**
-     * Schedules the running of saveProperties().
-     */
-    private void initSaveProperties() {
-        propertiesModified = true;
-    }
-
-    /**
-     * Schedules the running of saveParameters().
-     */
-    private void initSaveParameters() {
-        parametersModified = true;
     }
 
     {
