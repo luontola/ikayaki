@@ -98,12 +98,22 @@ public class ProjectExplorerPanel extends ProjectComponent {
     private File directory = null;
 
     /**
-     * Creates all components, sets directory as the last open directory, initializes files with files from that
-     * directory.
+     * Call next constructor...
      *
      * @param parent the component whose setProject() method will be called on opening a new project file.
      */
     public ProjectExplorerPanel(ProjectComponent parent) {
+        this(parent, null);
+    }
+
+    /**
+     * Creates all components, sets directory as the last open directory or opened project's directory,
+     * initializes files with files from that directory.
+     *
+     * @param parent the component whose setProject() method will be called on opening a new project file.
+     * @param project project to load and whose directory to set as current directory
+     */
+    public ProjectExplorerPanel(ProjectComponent parent, Project project) {
         this.parent = parent;
 
         // combo box / text field
@@ -137,10 +147,11 @@ public class ProjectExplorerPanel extends ProjectComponent {
         this.add(explorerTableScrollPane, BorderLayout.CENTER);
         this.add(newProjectPanel, BorderLayout.SOUTH);
 
-        // set current directory to latest directory history dir (also reads files in that directory)
-        setDirectory(Settings.instance().getLastDirectory());
+        // set current directory to project dir or latest directory history dir
+        if (project != null) setDirectory(project.getFile().getParentFile());
+        else setDirectory(Settings.instance().getLastDirectory());
 
-        // scroll to the end of the combo box's text field (after setting directory)
+        // scroll to the end of the combo box's text field (after setting directory) -- seems to happen anyway
         // setBrowserFieldCursorToEnd();
 
         // ProjectExplorer events
@@ -258,11 +269,11 @@ public class ProjectExplorerPanel extends ProjectComponent {
         browserField.hidePopup();
         setBrowserFieldPopup(getDirectoryHistory());
 
-        if (project != null) {
-            setDirectory(project.getFile().getParentFile());
-            // TODO: add this...
-            // project.addProjectListener(explorerTable.explorerTableModel);
-        } else setDirectory(directory);
+        // update selected project in explorerTable
+        explorerTable.setDirectory(null);
+
+        // TODO: add this...
+        // if (project != null) project.addProjectListener(explorerTable.explorerTableModel);
     }
 
     /**

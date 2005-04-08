@@ -23,16 +23,18 @@
 package ikayaki.gui;
 
 import ikayaki.Project;
+import ikayaki.Settings;
 
+import java.awt.*;
 import javax.swing.*;
-import javax.swing.table.TableModel;
+import java.io.File;
 
 /**
  * Holds predefined "Holder noise" and "Standard sample" projects for calibration; they are in a technically same table
  * as Project explorer files. Also has a "Calibrate" button, which executes selected calibration project, similarly to
  * clicking "Single step" in normal projects.
  *
- * @author
+ * @author Samuli Kaipiainen
  */
 public class CalibrationPanel extends ProjectComponent {
 /*
@@ -56,18 +58,20 @@ or disable if measuring has started.
      */
     private ProjectComponent parent;
 
-    private JButton calibrateButton;
+    /**
+     * Directory where calibration projects reside.
+     */
+    private File directory;
 
     /**
      * Table for the two calibration projects; has "filename", "last modified" and "time" (time since last modification)
      * columns.
      */
-    private JTable calibrationProjectTable;
+    private ProjectExplorerTable calibrationProjectTable;
 
-    /**
-     * TableModel which holds the data for calibration projects. Unnamed inner class.
-     */
-    private TableModel calibrationProjectTableModel;
+    private JButton calibrateButton;
+
+    private JPanel calibratePanel;
 
     /**
      * Creates a new calibration panel. Loads the contents of the program's calibration file directory.
@@ -76,15 +80,32 @@ or disable if measuring has started.
      */
     public CalibrationPanel(ProjectComponent parent) {
         this.parent = parent;
-        add(new JLabel("Calibration"));
-        return; // TODO
+        // TODO: where to get calibration project directory?
+        this.directory = new File("").getAbsoluteFile();
+
+        calibrationProjectTable = new ProjectExplorerTable(this.parent);
+        calibrationProjectTable.setDirectory(this.directory);
+
+        calibrateButton = new JButton(((MainViewPanel) parent).getMeasurementControlsPanel().getSingleStepAction());
+        calibrateButton.setText("Calibrate");
+
+        calibratePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
+        calibratePanel.add(calibrateButton);
+
+        this.setLayout(new BorderLayout());
+        this.add(calibrationProjectTable.getTableHeader(), BorderLayout.NORTH);
+        this.add(calibrationProjectTable, BorderLayout.CENTER);
+        this.add(calibratePanel, BorderLayout.SOUTH);
     }
 
     /**
      * Call super.setProject(project), highlight selected calibration project, or unhighlight unselected calibration
      * project.
+     *
+     * @param project project opened.
      */
     public void setProject(Project project) {
-        return; // TODO
+        super.setProject(project);
+        calibrationProjectTable.setDirectory(null);
     }
 }

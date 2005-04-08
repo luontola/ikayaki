@@ -22,17 +22,17 @@
 
 package ikayaki.gui;
 
-import ikayaki.*;
+import java.io.*;
+import java.text.*;
+import java.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
-import java.io.*;
-import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.Comparator;
+
+import ikayaki.*;
 
 /**
  * Creates a list of project files in directory. Handles loading selected projects and showing export popup menu
@@ -182,12 +182,13 @@ public class ProjectExplorerTable extends JTable {
         if (explorerTableSortColumn != COLUMN_UNDEFINED)
             Arrays.sort(files, explorerTableComparator);
 
-        if (explorerTableModel != null) explorerTableModel.fireTableDataChanged();
-
+        // search if any file in current directory matches currently open project file
         selectedFile = -1;
         if (parent.getProject() != null) for (int n = 0; n < files.length; n++)
             if (parent.getProject().getFile().equals(files[n])) selectedFile = n;
 
+        // update table data and selected project file
+        explorerTableModel.fireTableDataChanged();
         if (selectedFile != -1) setRowSelectionInterval(selectedFile, selectedFile);
     }
 
@@ -241,7 +242,7 @@ public class ProjectExplorerTable extends JTable {
                 File saved = event.getProject().getFile();
                 for (int i = 0; i < files.length; i++) {
                     if (files[i].equals(saved)) {
-                        fireTableRowsUpdated(i, i);
+                        explorerTableModel.fireTableRowsUpdated(i, i);
                         return;
                     }
                 }
