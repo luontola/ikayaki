@@ -174,6 +174,7 @@ Event A: On New IO Message - reads message and puts it in Buffer
      * actions (move, rotate, demag, measure) and send feedback to COM ports.
      */
     public static void main(String[] args) {
+      System.out.println("Starting...");
     try {
         int samePort = Integer.parseInt(args[0]);
         handlerPort = new SerialIO(new SerialParameters(args[1]));
@@ -197,8 +198,13 @@ Event A: On New IO Message - reads message and puts it in Buffer
       }
 
       handler = new HandlerEmu();
+      handler.start();
       magnetometer = new MagnetometerEmu();
+      magnetometer.start();
       degausser = new DegausserEmu();
+      degausser.start();
+
+      System.out.println("System running...");
 
       try {
         //wait for signal to quit 8)
