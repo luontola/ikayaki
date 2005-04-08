@@ -65,8 +65,8 @@ be closed.
         PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
         try {
             UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            System.err.println(e);
         }
 
         final MainViewPanel main = new MainViewPanel(project);
