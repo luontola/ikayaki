@@ -157,7 +157,7 @@ Order of rows with measurement data cannot be changed.
      */
     private void $$$setupUI$$$() {
         controlsPane = new JPanel();
-        controlsPane.setLayout(new GridLayoutManager(2, 7, new Insets(0, 0, 0, 0), -1, -1));
+        controlsPane.setLayout(new GridLayoutManager(2, 7, new Insets(0, 0, 0, 0), 5, 0));
         sequenceStartField = new JFormattedTextField();
         sequenceStartField.setHorizontalAlignment(11);
         controlsPane.add(sequenceStartField,

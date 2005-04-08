@@ -374,7 +374,7 @@ public class ProjectInformationPanel extends ProjectComponent {
      */
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(13, 2, new Insets(0, 0, 0, 0), -1, -1));
+        contentPane.setLayout(new GridLayoutManager(13, 2, new Insets(0, 0, 0, 0), -1, 2));
         final JLabel label1 = new JLabel();
         label1.setText("Operator");
         contentPane.add(label1,
