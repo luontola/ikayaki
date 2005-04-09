@@ -271,7 +271,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
         setBrowserFieldPopup(getDirectoryHistory());
 
         // change directory, if not calibration project; in that case just update selected project in explorerTable
-        if (project.getType() != Project.Type.CALIBRATION) setDirectory(project.getFile().getParentFile());
+        if (project != null && project.getType() != Project.Type.CALIBRATION) setDirectory(project.getFile().getParentFile());
         else explorerTable.setDirectory(directory);
 
         // TODO: add this...
