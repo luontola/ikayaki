@@ -81,7 +81,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
     }
 
     private Project project = null;
-    private int lastStepCount;
 
     private List<SequenceColumn> visibleColumns = new ArrayList<SequenceColumn>();
     private List<SequenceColumn> possibleColumns = new ArrayList<SequenceColumn>();
@@ -114,9 +113,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         if (project != null) {
             project.addProjectListener(this);
             project.addMeasurementListener(this);
-            lastStepCount = project.getSteps();
-        } else {
-            lastStepCount = 0;
         }
         this.project = project;
 
