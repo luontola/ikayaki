@@ -166,11 +166,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
 
     public void projectUpdated(ProjectEvent event) {
         if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
-            if (project.getSteps() != lastStepCount) {
-                fireTableStructureChanged(); // TODO: use fireTableRowsInserted() instead?
-            } else {
-                fireTableDataChanged();
-            }
+            fireTableDataChanged();
         }
     }
 

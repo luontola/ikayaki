@@ -26,9 +26,9 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import ikayaki.MeasurementEvent;
+import ikayaki.MeasurementStep;
 import ikayaki.Project;
 import ikayaki.ProjectEvent;
-import ikayaki.MeasurementStep;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -159,10 +159,10 @@ Order of rows with measurement data cannot be changed.
     private void addSequence() {
         MeasurementStep step = new MeasurementStep();
         if (getProject() != null) {
-            if (getProject().isSequenceEditEnabled() && Double.valueOf((String)sequenceStepField.getValue())>0.09) {
-                for (double i=Double.valueOf((String)sequenceStartField.getValue()) ;
-                        i<Double.valueOf((String)sequenceStopField.getValue())+1;
-                        i=i+Double.valueOf((String)sequenceStepField.getValue())) {
+            if (getProject().isSequenceEditEnabled() && Double.valueOf((String) sequenceStepField.getValue()) > 0.09) {
+                for (double i = Double.valueOf((String) sequenceStartField.getValue());
+                     i < Double.valueOf((String) sequenceStopField.getValue()) + 1;
+                     i = i + Double.valueOf((String) sequenceStepField.getValue())) {
                     step.setStepValue(i);
                     getProject().addStep(step);
                     // TODO: adding to table
@@ -186,7 +186,8 @@ Order of rows with measurement data cannot be changed.
     }
 
     /**
-     * Calls super.setProject(project), clears table and calculates shown data from project’s measurement data.
+     * Sets the project whose sequence is shown in the table. Sets project listeners, enables or disables the sequence
+     * edit controls and updates the table data.
      */
     public void setProject(Project project) {
         super.setProject(project);
@@ -195,23 +196,30 @@ Order of rows with measurement data cannot be changed.
 //            sequenceTable.getSelectionModel().setSelectionInterval(project.getSteps() - 1, project.getSteps() - 1);
 //        }
         setEnabled(project != null);
-        scrollToEnd();
+        scrollToRow(sequenceTableModel.getRowCount() - 1);
     }
 
     /**
-     * Scrolls the table to show the last row.
+     * Scrolls the table to show the specified row.
      */
-    private void scrollToEnd() {
-        sequenceTable.scrollRectToVisible(sequenceTable.getCellRect(sequenceTableModel.getRowCount() - 1,
-                sequenceTableModel.getColumnCount() - 1, true));
+    private void scrollToRow(int rowIndex) {
+        sequenceTable.scrollRectToVisible(sequenceTable.getCellRect(rowIndex, rowIndex, true));
     }
 
     public void projectUpdated(ProjectEvent event) {
-        // TODO
+        // TODO ?
     }
 
     public void measurementUpdated(MeasurementEvent event) {
-        // TODO
+        // on measurement step start, scroll the row visible
+        if (event.getType() == MeasurementEvent.Type.STEP_START) {
+            for (int i = getProject().getSteps() - 1; i >= 0; i--) {
+                if (getProject().getStep(i) == event.getStep()) {
+                    scrollToRow(i);
+                    return;
+                }
+            }
+        }
     }
 
     {
