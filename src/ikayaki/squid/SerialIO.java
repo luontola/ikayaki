@@ -24,6 +24,7 @@ package ikayaki.squid;
 
 import javax.comm.*;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Vector;
@@ -39,16 +40,23 @@ Event A: On new SerialPortEvent - generates new SerialMessageArrivedEvent if a d
 message from serial port is received.
 */
 
+    private static Vector<SerialIO> openPorts = new Vector();
+
     /**
      * contains last received message from the serial port that this SerialIO represents.
      */
-    private static Vector<String> lastMessages;
+    private String lastMessage;
 
     /**
      * parameters for serial port
      */
 
-    private static Vector<SerialPort> openPorts;
+    private SerialPort sPort;
+
+    private OutputStream os;
+    private InputStream is;
+
+    private String portName;
 
     /**
      * Creates an instance of SerialIO which represents one serial port.
@@ -56,13 +64,10 @@ message from serial port is received.
      * @param parameters parameters for the serial port being opened.
      * @throws SerialIOException if something goes wrong.
      */
-    public SerialIO(SerialParameters parameters) throws SerialIOException {
-    }
-
-    public static void openPort(SerialParameters parameters) throws SerialIOException {
-        // Check if given port exists, may throw NoSuchPortException
+    private SerialIO(SerialParameters parameters) throws SerialIOException {
         CommPortIdentifier portId;
         SerialPort sPort;
+
         try {
             portId = CommPortIdentifier.getPortIdentifier(parameters.getPortName());
         } catch (NoSuchPortException e) {
@@ -96,11 +101,36 @@ message from serial port is received.
             throw new SerialIOException("Unsupported flow control");
         }
 
-        openPorts.add(sPort);
+        // open the stream
+        try {
+            this.os = sPort.getOutputStream();
+            this.is = sPort.getInputStream();
+        } catch (IOException e) {
+            sPort.close();
+            throw new SerialIOException("Error opening i/o streams");
+        }
 
-        // TODO check this method..
+        this.sPort = sPort;
+        this.portName = sPort.getName();
 
         return;
+    }
+
+    public static SerialIO openPort(SerialParameters parameters) throws SerialIOException {
+
+        SerialIO newPort = null;
+
+        // Check if given port is already open
+        // if it is then return it
+        for (int i = 0; i < openPorts.size(); i++) {
+            if (parameters.getPortName() == openPorts.elementAt(i).portName) {
+                return openPorts.elementAt(i);
+            }
+        }
+        newPort = new SerialIO(parameters);
+        openPorts.add(newPort);
+
+        return newPort;
     }
 
     /**
@@ -109,55 +139,35 @@ message from serial port is received.
      * @param message message to be send
      * @throws SerialIOException if exception occurs.
      */
-    public void writeMessage(String message, String portName) throws SerialIOException {
+    public void writeMessage(String message) throws SerialIOException {
 
-        OutputStream os;
         byte[] asciiMsg;
 
-        for (int i = 0; i <= openPorts.size(); i++) {
-            if (i > 0 && i == openPorts.size()) // no such port
-            {
-                throw new SerialIOException("No such port found");
-            }
-            if (openPorts.elementAt(i).getName() == portName) {
-
-                // convert message to ASCII
-                try {
-                    asciiMsg = message.getBytes("US-ASCII"); // TODO is this right??
-                } catch (UnsupportedEncodingException e) {
-                    throw new SerialIOException("ASCII charset not supported on!");
-                }
-                // get the outputstream of the port
-                try {
-                    os = openPorts.elementAt(i).getOutputStream();
-                } catch (IOException e) {
-                    throw new SerialIOException("Couldn't get the output stream of" + portName);
-                }
-                // send message to outputstream
-                try {
-                    os.write(asciiMsg);
-                    os.flush(); // TODO is this needed ??
-                } catch (IOException e) {
-                    throw new SerialIOException("Couldn't write to outputstream of" + portName);
-                }
-                // and break
-                break;
-            }
+        // convert message to ASCII
+        try {
+            asciiMsg = message.getBytes("US-ASCII"); // TODO is this right??
+        } catch (UnsupportedEncodingException e) {
+            throw new SerialIOException("ASCII charset not supported on!");
         }
 
-        return; // TODO
+        // send message to outputstream
+        try {
+            os.write(asciiMsg);
+            os.flush(); // TODO is this needed ??
+        } catch (IOException e) {
+            throw new SerialIOException("Couldn't write to outputstream of" + portName);
+        }
+
+
+        return;
     }
 
-    /**
-     * Writes an ASCII format message to serial port. SerialIO sends and SerialPortEvent if it gets answer to this
-     * message.
-     *
-     * @return last answer received from serial port or null if no last message is available.
-     */
-    public String getLastAnswer(String portName) {
 
-
-        return null; // TODO
+    public void closePort(String portName) throws SerialIOException {
+        // throw exception if it's not found
+        // make sure port is not null to avoid NPE
+        // close streams
+        // close port
     }
 
     /**
@@ -167,4 +177,8 @@ message from serial port is received.
         return; // TODO
     }
 
+    private String getName() {
+
+        return this.portName;
+    }
 }

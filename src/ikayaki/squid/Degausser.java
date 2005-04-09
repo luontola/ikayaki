@@ -23,6 +23,7 @@
 package ikayaki.squid;
 
 import ikayaki.Settings;
+
 import java.util.Stack;
 import java.util.concurrent.SynchronousQueue;
 
@@ -92,8 +93,8 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * from the Setting class.
      */
     public Degausser() throws SerialIOException {
-        this.serialIO = new SerialIO(new SerialParameters(Settings.instance().
-                    getDegausserPort()));
+        this.serialIO = SerialIO.openPort(new SerialParameters(Settings.instance().
+                getDegausserPort()));
         this.degausserDelay = Settings.instance().getDegausserDelay();
         this.degausserRamp = Settings.instance().getDegausserRamp();
         lastCommandTime = System.currentTimeMillis();
@@ -141,7 +142,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     private void setCoil(char coil) {
         waitSecond();
-        if(coil == 'X' || coil == 'Y' || coil == 'X') {
+        if (coil == 'X' || coil == 'Y' || coil == 'X') {
             try {
                 this.serialIO.writeMessage("DCC " + coil);
             } catch (SerialIOException ex) {
@@ -156,14 +157,15 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     private void setAmplitude(int amplitude) {
         waitSecond();
-        if(amplitude>=0 && amplitude<=3000) {
+        if (amplitude >= 0 && amplitude <= 3000) {
             try {
-                if (amplitude < 10)
+                if (amplitude < 10) {
                     this.serialIO.writeMessage("DCA 000" + amplitude);
-                else if (amplitude < 100)
+                } else if (amplitude < 100) {
                     this.serialIO.writeMessage("DCA 00" + amplitude);
-                else if (amplitude < 1000)
+                } else if (amplitude < 1000) {
                     this.serialIO.writeMessage("DCA 0" + amplitude);
+                }
             } catch (SerialIOException ex) {
             }
         }
@@ -203,18 +205,15 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     }
 
     /**
-     *
      * Waits 1 second between command, neccessary because Degausser is slow :)
-     *
      */
     private void waitSecond() {
         long waitTime = 1000 - (System.currentTimeMillis() - lastCommandTime);
-        if(waitTime>0) {
-            try
-            {
+        if (waitTime > 0) {
+            try {
                 Thread.sleep(waitTime);
+            } catch (InterruptedException e) {
             }
-            catch(InterruptedException e) { }
         }
         lastCommandTime = System.currentTimeMillis();
     }
@@ -231,12 +230,13 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         this.executeRampCycle();
         //we need to poll for DONE message or TRACK ERROR message
         waitingForMessage = true;
-        String answer = (String)queue.poll();
+        String answer = (String) queue.poll();
         waitingForMessage = false;
-        if(answer.equals("DONE"))
+        if (answer.equals("DONE")) {
             return true;
-        else
+        } else {
             return false;
+        }
 
     }
 
@@ -252,12 +252,13 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         this.executeRampCycle();
         //we need to poll for DONE message or TRACK ERROR message
         waitingForMessage = true;
-        String answer = (String)queue.poll();
+        String answer = (String) queue.poll();
         waitingForMessage = false;
-        if(answer.equals("DONE"))
+        if (answer.equals("DONE")) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     /**
@@ -271,7 +272,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         } catch (SerialIOException ex) {
         }
         waitingForMessage = true;
-        String answer = (String)queue.poll();
+        String answer = (String) queue.poll();
         waitingForMessage = false;
         return answer.charAt(1);
     }
@@ -287,9 +288,9 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         } catch (SerialIOException ex) {
         }
         waitingForMessage = true;
-        String answer = (String)queue.poll();
+        String answer = (String) queue.poll();
         waitingForMessage = false;
-        return (int)answer.charAt(4);
+        return (int) answer.charAt(4);
 
     }
 
@@ -304,9 +305,9 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         } catch (SerialIOException ex) {
         }
         waitingForMessage = true;
-        String answer = (String)queue.poll();
+        String answer = (String) queue.poll();
         waitingForMessage = false;
-        return (int)answer.charAt(7);
+        return (int) answer.charAt(7);
 
     }
 
@@ -321,7 +322,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         } catch (SerialIOException ex) {
         }
         waitingForMessage = true;
-        String answer = (String)queue.poll();
+        String answer = (String) queue.poll();
         waitingForMessage = false;
         return answer.charAt(10);
 
@@ -334,14 +335,14 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     public int getAmplitude() {
         try {
-             this.serialIO.writeMessage("DSS");
-         } catch (SerialIOException ex) {
-         }
-         waitingForMessage = true;
-         String answer = (String)queue.poll();
-         waitingForMessage = false;
+            this.serialIO.writeMessage("DSS");
+        } catch (SerialIOException ex) {
+        }
+        waitingForMessage = true;
+        String answer = (String) queue.poll();
+        waitingForMessage = false;
 
-         return Integer.parseInt(answer.substring(13,17));
+        return Integer.parseInt(answer.substring(13, 17));
     }
 
     /**
@@ -350,22 +351,21 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @return true if ok.
      */
     public boolean isOK() {
-        if(serialIO != null)
+        if (serialIO != null) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     public void serialIOEvent(SerialIOEvent event) {
         //TODO: problem when Degausser and Magnetometer uses same port :/
-        if(waitingForMessage) {
+        if (waitingForMessage) {
             try {
                 queue.put(event.getMessage());
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 System.err.println("Interrupted Degausser message event");
-            }
-            catch (NullPointerException e) {
+            } catch (NullPointerException e) {
                 System.err.println("Null from SerialEvent in Degausser");
             }
         }

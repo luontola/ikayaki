@@ -22,8 +22,9 @@
 
 package ikayaki.squid;
 
-import java.util.Stack;
 import ikayaki.Settings;
+
+import java.util.Stack;
 import java.util.concurrent.SynchronousQueue;
 
 /**
@@ -128,7 +129,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * class.
      */
     public Handler() throws SerialIOException {
-        this.serialIO = new SerialIO(new SerialParameters(Settings.instance().getHandlerPort(),1200,0,0,8,1,0));
+        this.serialIO = SerialIO.openPort(new SerialParameters(Settings.instance().getHandlerPort(), 1200, 0, 0, 8, 1,
+                0));
         this.acceleration = Settings.instance().getHandlerAcceleration();
         this.deceleration = Settings.instance().getHandlerDeceleration();
         this.axialAFPosition = Settings.instance().getHandlerAxialAFPosition();
@@ -191,7 +193,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             return 'E';
         }
         waitingForMessage = true;
-        String answer = (String)queue.poll();
+        String answer = (String) queue.poll();
         waitingForMessage = false;
         return answer.charAt(0);
 
@@ -223,10 +225,11 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @return True if ok
      */
     public boolean isOK() {
-        if(serialIO != null)
+        if (serialIO != null) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     /**
@@ -243,8 +246,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Commands the holder to move to degauss Z position. Only starts movement, needs to poll with join() when movement is
-     * finished.
+     * Commands the holder to move to degauss Z position. Only starts movement, needs to poll with join() when movement
+     * is finished.
      */
     public void moveToDegausserZ() {
         moveToPos(this.axialAFPosition);
@@ -252,8 +255,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Commands the holder to move to degauss Y (and X) position. Only starts movement, needs to poll with join() when movement is
-     * finished.
+     * Commands the holder to move to degauss Y (and X) position. Only starts movement, needs to poll with join() when
+     * movement is finished.
      */
     public void moveToDegausserY() {
         moveToPos(this.transverseYAFPosition);
@@ -289,8 +292,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @return true if given position was ok, otherwise false.
      */
     public boolean moveToPos(int pos) {
-        if(pos<0 || pos>16777215)
+        if (pos < 0 || pos > 16777215) {
             return false;
+        }
         try {
             //first need to set translate active
             this.serialIO.writeMessage("O1,0");
@@ -325,8 +329,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @param angle the angle in degrees to rotate the handler to.
      */
     public void rotateTo(int angle) {
-        angle = angle%360;
-        angle = (int)(((double)angle)/360.0 * Settings.instance().getHandlerRotation());
+        angle = angle % 360;
+        angle = (int) (((double) angle) / 360.0 * Settings.instance().getHandlerRotation());
         try {
             //first set rotation active
             this.serialIO.writeMessage("O1,1");
@@ -358,7 +362,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private void setAcceleration(int a) {
         if (a >= 0 && a < 128) {
             try {
-                this.serialIO.writeMessage("A"+a);
+                this.serialIO.writeMessage("A" + a);
                 this.serialIO.writeMessage(","); //execute command
             } catch (SerialIOException ex) {
                 System.err.println(ex);
@@ -373,13 +377,13 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     private void setDeceleration(int d) {
         if (d >= 0 && d < 128) {
-             try {
-                 this.serialIO.writeMessage("D"+d);
-                 this.serialIO.writeMessage(","); //execute command
-             } catch (SerialIOException ex) {
-                 System.err.println(ex);
-             }
-         }
+            try {
+                this.serialIO.writeMessage("D" + d);
+                this.serialIO.writeMessage(","); //execute command
+            } catch (SerialIOException ex) {
+                System.err.println(ex);
+            }
+        }
     }
 
     /**
@@ -391,7 +395,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private void setBaseSpeed(int b) {
         if (b >= 50 && b < 5001) {
             try {
-                this.serialIO.writeMessage("B"+b);
+                this.serialIO.writeMessage("B" + b);
                 this.serialIO.writeMessage(","); //execute command
             } catch (SerialIOException ex) {
                 System.err.println(ex);
@@ -408,7 +412,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private void setVelocity(int v) {
         if (v >= 50 && v < 20001) {
             try {
-                this.serialIO.writeMessage("M"+v);
+                this.serialIO.writeMessage("M" + v);
                 this.serialIO.writeMessage(","); //execute command
             } catch (SerialIOException ex) {
                 System.err.println(ex);
@@ -428,7 +432,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     private void setHoldTime(int h) {
         try {
-            this.serialIO.writeMessage("CH"+h);
+            this.serialIO.writeMessage("CH" + h);
             this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException ex) {
             System.err.println(ex);
@@ -437,21 +441,21 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Set the crystal frequency to the value of rrrrrr. The range of values is
-     * 4,000,000 to 8,000.000. This command does not check for out of range
-     * numbers. The crystal frequency is used by the chip for setting the base speed and maximum speed and for
-     * controlling the time for the wait command. (CX cf).
+     * Set the crystal frequency to the value of rrrrrr. The range of values is 4,000,000 to 8,000.000. This command
+     * does not check for out of range numbers. The crystal frequency is used by the chip for setting the base speed and
+     * maximum speed and for controlling the time for the wait command. (CX cf).
      *
      * @param cf frequence range is 4,000,000 to 8,000.000
      */
     private void setCrystalFrequence(int cf) {
-        if(cf>=4000000 && cf<=8000000)
+        if (cf >= 4000000 && cf <= 8000000) {
             try {
                 this.serialIO.writeMessage("CX" + cf);
                 this.serialIO.writeMessage(","); //execute command
             } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
+        }
     }
 
     /**
@@ -511,13 +515,14 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @param s steps range is 0 to 16,777,215
      */
     private void setSteps(int s) {
-        if(s>=0 && s<=16777216)
+        if (s >= 0 && s <= 16777216) {
             try {
                 this.serialIO.writeMessage("N" + s);
                 this.serialIO.writeMessage(","); //execute command
             } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
+        }
     }
 
     /**
@@ -526,13 +531,14 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @param p position range is 0 to 16,777,215
      */
     private void setPosition(int p) {
-        if(p>0 && p<16777215)
-        try {
-            //first need to set translate active
-            this.serialIO.writeMessage("O1,0");
-            this.serialIO.writeMessage("P" + p);
-        } catch (SerialIOException ex) {
-            System.err.println(ex);
+        if (p > 0 && p < 16777215) {
+            try {
+                //first need to set translate active
+                this.serialIO.writeMessage("O1,0");
+                this.serialIO.writeMessage("P" + p);
+            } catch (SerialIOException ex) {
+                System.err.println(ex);
+            }
         }
 
     }
@@ -579,13 +585,13 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     private String verify(char v) {
         try {
-            this.serialIO.writeMessage("V"+v);
+            this.serialIO.writeMessage("V" + v);
             this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
         waitingForMessage = true;
-        String answer = (String)queue.poll();
+        String answer = (String) queue.poll();
         waitingForMessage = false;
         return answer;
 
@@ -597,13 +603,14 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @param r position range is 0 to 16,777,215
      */
     private void setPositionRegister(int r) {
-        if (r > 0 && r < 16777215)
+        if (r > 0 && r < 16777215) {
             try {
                 this.serialIO.writeMessage("Z" + r);
                 this.serialIO.writeMessage(","); //execute command
             } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
+        }
     }
 
     /**
@@ -624,20 +631,18 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             System.err.println(ex);
         }
         waitingForMessage = true;
-        String answer = (String)queue.poll();
+        String answer = (String) queue.poll();
         waitingForMessage = false;
         return answer.charAt(0);
     }
 
     public void serialIOEvent(SerialIOEvent event) {
-        if(waitingForMessage) {
+        if (waitingForMessage) {
             try {
                 queue.put(event.getMessage());
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 System.err.println("Interrupted Handler message event");
-            }
-            catch (NullPointerException e) {
+            } catch (NullPointerException e) {
                 System.err.println("Null from SerialEvent in Handler");
             }
         }

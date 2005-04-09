@@ -32,16 +32,17 @@ import java.util.Stack;
  * opens COM-ports for them and adds SerialIO Listeners. Threads generates random data values or loaded values as
  * results and generates random error situations to see that program using real squid system does survive those. Uses
  * 2-3 COM ports. Usage SquidEmulator x z.. filename where x is 0 or 1 and indicates if Magnetometer and Demagnetizer
- * are on same COM port. z... values are COM ports (Handler,Magnetometer,Degausser). filename is name of log file we are using or it is existing log
- * file, which is used to generate same sequence used to verify that old and new program behaves same way.
+ * are on same COM port. z... values are COM ports (Handler,Magnetometer,Degausser). filename is name of log file we are
+ * using or it is existing log file, which is used to generate same sequence used to verify that old and new program
+ * behaves same way.
  *
  * @author Aki Korpua
  */
 public class SquidEmulator {
 
-  /*
-Event A: On New IO Message - reads message and puts it in Buffer
-*/
+    /*
+  Event A: On New IO Message - reads message and puts it in Buffer
+  */
 
     /**
      * indicates if system have been started
@@ -153,20 +154,18 @@ Event A: On New IO Message - reads message and puts it in Buffer
      * @param port    port number to be sent
      */
     public static void writeMessage(String message, SerialIO port) {
-      //writes log if indicated to do so
-      try {
-        logWriter.write("SEND:" + message);
-      }
-      catch(IOException e) {
-        System.err.println("Error on writing log file");
-      }
-      try {
-        port.writeMessage(message);
-      }
-      catch (SerialIOException ex) {
-        System.err.println(ex);
-      }
-      return;
+        //writes log if indicated to do so
+        try {
+            logWriter.write("SEND:" + message);
+        } catch (IOException e) {
+            System.err.println("Error on writing log file");
+        }
+        try {
+            port.writeMessage(message);
+        } catch (SerialIOException ex) {
+            System.err.println(ex);
+        }
+        return;
     }
 
     /**
@@ -174,123 +173,125 @@ Event A: On New IO Message - reads message and puts it in Buffer
      * actions (move, rotate, demag, measure) and send feedback to COM ports.
      */
     public static void main(String[] args) {
-      System.out.println("Starting...");
-    try {
-        int samePort = Integer.parseInt(args[0]);
-        handlerPort = new SerialIO(new SerialParameters(args[1]));
-        magnetometerPort = new SerialIO(new SerialParameters(args[2]));
-        if(samePort == 0)
-          degausserPort = new SerialIO(new SerialParameters(args[3]));
-        else
-          degausserPort = magnetometerPort;
-        if(samePort == 0)
-          logFile = new File(args[4]);
-        else
-          logFile = new File(args[5]);
-        //Only writing, TODO:switch to reading option
-        logWriter = new FileWriter(logFile);
-      }
-      catch (SerialIOException e) {
-        System.out.println(e);
-      }
-      catch(Exception e) {
-        System.out.println("Usage \"java SquidEmulator x z... filename\"");
-      }
+        System.out.println("Starting...");
+        try {
+            int samePort = Integer.parseInt(args[0]);
+            handlerPort = SerialIO.openPort(new SerialParameters(args[1]));
+            magnetometerPort = SerialIO.openPort(new SerialParameters(args[2]));
+            if (samePort == 0) {
+                degausserPort = SerialIO.openPort(new SerialParameters(args[3]));
+            } else {
+                degausserPort = magnetometerPort;
+            }
+            if (samePort == 0) {
+                logFile = new File(args[4]);
+            } else {
+                logFile = new File(args[5]);
+            }
+            //Only writing, TODO:switch to reading option
+            logWriter = new FileWriter(logFile);
+        } catch (SerialIOException e) {
+            System.out.println(e);
+        } catch (Exception e) {
+            System.out.println("Usage \"java SquidEmulator x z... filename\"");
+        }
 
-      handler = new HandlerEmu();
-      handler.start();
-      magnetometer = new MagnetometerEmu();
-      magnetometer.start();
-      degausser = new DegausserEmu();
-      degausser.start();
+        handler = new HandlerEmu();
+        handler.start();
+        magnetometer = new MagnetometerEmu();
+        magnetometer.start();
+        degausser = new DegausserEmu();
+        degausser.start();
 
-      System.out.println("System running...");
+        System.out.println("System running...");
 
-      try {
-        //wait for signal to quit 8)
-        System.in.read();
-      }
-      catch (IOException ex) {
-      }
+        try {
+            //wait for signal to quit 8)
+            System.in.read();
+        } catch (IOException ex) {
+        }
 
-      return;
+        return;
     }
 
 
-  /**
+    /**
      * Runs handler emulation process. Process incoming messages and sends data back. When message comes, process it
      * (wait if needed for a while), updates own status and sends result back.
      */
     private static class HandlerEmu extends Thread implements SerialIOListener {
 
 
-      //All recieved commands
-      private Stack commandStack;
+        //All recieved commands
+        private Stack commandStack;
 
-      //remainder of last command (commands are separated with ',')
-      private String lastMessagePart;
+        //remainder of last command (commands are separated with ',')
+        private String lastMessagePart;
 
-      public HandlerEmu() {
-        //Setlistener to handlePort
-        //handlerPort.set
-      }
+        public HandlerEmu() {
+            //Setlistener to handlePort
+            //handlerPort.set
+        }
 
         public void run() {
             // TODO
         }
 
-    public void serialIOEvent(SerialIOEvent event) {
-      int i;
-      String message = lastMessagePart + event.getMessage();
-      String[] commands = message.split(",");
-      for(i = 0;i<commands.length-1;i++) {
-        commandStack.add(commands[i]);
-      }
-      lastMessagePart = commands[i+1];
-    }
-  }
-
-  /**
-   * Runs magnetometer emulation process. Process incoming messages and sends data back. When message comes, process
-   * it (wait if needed for a while), updates own status and sends result back.
-   */
-  private static class MagnetometerEmu extends Thread implements SerialIOListener {
-    //All recieved commands
-    private Stack commandStack;
-
-    public void run() {
-      // TODO
+        public void serialIOEvent(SerialIOEvent event) {
+            int i;
+            String message = lastMessagePart + event.getMessage();
+            String[] commands = message.split(",");
+            for (i = 0; i < commands.length - 1; i++) {
+                commandStack.add(commands[i]);
+            }
+            lastMessagePart = commands[i + 1];
+        }
     }
 
-    public void serialIOEvent(SerialIOEvent event) {
-      String message = event.getMessage();
-      String[] commands = message.split("/r");
-      //we only accept first "part". And only if it starts with A,X,Y,Z
-      if(commands[0].charAt(0) == 'A' || commands[0].charAt(0) == 'X' || commands[0].charAt(0) == 'Y' || commands[0].charAt(0) == 'Z')
-        commandStack.add(commands[0]);
+    /**
+     * Runs magnetometer emulation process. Process incoming messages and sends data back. When message comes, process
+     * it (wait if needed for a while), updates own status and sends result back.
+     */
+    private static class MagnetometerEmu extends Thread implements SerialIOListener {
+        //All recieved commands
+        private Stack commandStack;
+
+        public void run() {
+            // TODO
+        }
+
+        public void serialIOEvent(SerialIOEvent event) {
+            String message = event.getMessage();
+            String[] commands = message.split("/r");
+            //we only accept first "part". And only if it starts with A,X,Y,Z
+            if (commands[0].charAt(0) == 'A' || commands[0].charAt(0) == 'X' || commands[0].charAt(0) == 'Y' || commands[0].charAt(
+                    0) == 'Z') {
+                commandStack.add(commands[0]);
+            }
+        }
     }
-  }
 
-  /**
-   * Runs degausser emulation process. Process incoming messages and sends data back. When message comes, process it
-   * (wait if needed for a while), updates own status and sends result back.
-   */
-  private static class DegausserEmu
-      extends Thread implements SerialIOListener {
+    /**
+     * Runs degausser emulation process. Process incoming messages and sends data back. When message comes, process it
+     * (wait if needed for a while), updates own status and sends result back.
+     */
+    private static class DegausserEmu
+            extends Thread implements SerialIOListener {
 
-    //All recieved commands
-    private Stack commandStack;
+        //All recieved commands
+        private Stack commandStack;
 
-    public void run() {
-      // TODO
+        public void run() {
+            // TODO
+        }
+
+        public void serialIOEvent(SerialIOEvent event) {
+            String message = event.getMessage();
+            String[] commands = message.split("/r");
+            //we only accept first "part". And only if it starts with D
+            if (commands[0].charAt(0) == 'D') {
+                commandStack.add(commands[0]);
+            }
+        }
     }
-
-    public void serialIOEvent(SerialIOEvent event) {
-      String message = event.getMessage();
-      String[] commands = message.split("/r");
-      //we only accept first "part". And only if it starts with D
-      if(commands[0].charAt(0) == 'D')
-        commandStack.add(commands[0]);
-    }
-  }
 }

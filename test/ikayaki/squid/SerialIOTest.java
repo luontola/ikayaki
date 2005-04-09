@@ -1,6 +1,5 @@
 package test.ikayaki.squid;
 
-import ikayaki.squid.SerialIO;
 import ikayaki.squid.SerialIOException;
 import ikayaki.squid.SerialParameters;
 
@@ -9,10 +8,10 @@ import ikayaki.squid.SerialParameters;
  *
  * @author Aki Sysmäläinen
  */
-public class SerialIOTest extends SerialIO {
+public class SerialIOTest {
 
     public SerialIOTest(SerialParameters parameters) throws SerialIOException {
-        super(parameters);
+        //super(parameters);
     }
 
     public void testSerialIO() {
