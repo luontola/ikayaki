@@ -109,7 +109,7 @@ public class MainViewPanel extends ProjectComponent {
         final Project p = project;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                setProject(p);
+                setProject(p); // TODO: causes the program flash at the start, but otherwise is good. sequence table scrolls nicely.
             }
         });
 
