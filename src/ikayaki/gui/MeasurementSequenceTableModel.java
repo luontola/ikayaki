@@ -25,6 +25,7 @@ package ikayaki.gui;
 import ikayaki.*;
 
 import javax.swing.table.AbstractTableModel;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,13 +38,37 @@ import static ikayaki.gui.MeasurementSequenceTableModel.SequenceColumn.*;
  */
 public class MeasurementSequenceTableModel extends AbstractTableModel implements ProjectListener, MeasurementListener {
 
+    private static final String VISIBLE_COLUMNS_PROPERTY = "visibleColumns";
+
+    private static final StyledTableCellRenderer.Wrapper defaultWrapper = new StyledTableCellRenderer.Wrapper();
+    private static final StyledTableCellRenderer.Wrapper measuringWrapper = new StyledTableCellRenderer.Wrapper();
+    private static final StyledTableCellRenderer.Wrapper doneRecentlyWrapper = new StyledTableCellRenderer.Wrapper();
+
+    static {
+        defaultWrapper.opaque = true;
+        defaultWrapper.background = new Color(0xFFFFFF);
+        defaultWrapper.selectedBackground = new Color(0xC3D4E8);
+        defaultWrapper.focusBackground = new Color(0xC3D4E8);
+        defaultWrapper.selectedFocusBackground = new Color(0xC3D4E8);
+
+        measuringWrapper.opaque = true;
+        measuringWrapper.background = new Color(0xEEBAEE);
+        measuringWrapper.selectedBackground = new Color(0xFFCCFF);
+        measuringWrapper.focusBackground = new Color(0xFFCCFF);
+        measuringWrapper.selectedFocusBackground = new Color(0xFFCCFF);
+
+        doneRecentlyWrapper.opaque = true;
+        doneRecentlyWrapper.background = new Color(0xBAEEBA);
+        doneRecentlyWrapper.selectedBackground = new Color(0xCCFFCC);
+        doneRecentlyWrapper.focusBackground = new Color(0xCCFFCC);
+        doneRecentlyWrapper.selectedFocusBackground = new Color(0xCCFFCC);
+    }
+
     private Project project = null;
     private int lastStepCount;
 
     private List<SequenceColumn> visibleColumns = new ArrayList<SequenceColumn>();
     private List<SequenceColumn> possibleColumns = new ArrayList<SequenceColumn>();
-
-    private static final String VISIBLE_COLUMNS_PROPERTY = "visibleColumns";
 
     /**
      * Creates SequenceTableModel
@@ -355,7 +380,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
 
         COUNT("#") {
             @Override public Object getValue(int rowIndex, Project project) {
-                return Integer.toString(rowIndex + 1);
+                return wrap(rowIndex + 1, rowIndex, project);
             }
         },
         STEP("Tesla"){
@@ -367,7 +392,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 if (value < 0.0) {
                     return null;
                 }
-                return value;
+                return wrap(value, rowIndex, project);
             }
 
             @Override public void setValue(Object data, int rowIndex, Project project) {
@@ -400,9 +425,9 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 return true;        // uncompleted steps
             }
 
-            @Override public Class<?> getColumnClass() {
-                return Double.class;
-            }
+//            @Override public Class<?> getColumnClass() {
+//                return Double.class;
+//            }
         },
         MASS("Mass"){
             @Override public Object getValue(int rowIndex, Project project) {
@@ -416,7 +441,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 if (value < 0.0) {
                     return null;
                 }
-                return value;
+                return wrap(value, rowIndex, project);
             }
 
             @Override public void setValue(Object data, int rowIndex, Project project) {
@@ -440,9 +465,9 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 return false;
             }
 
-            @Override public Class<?> getColumnClass() {
-                return Double.class;
-            }
+//            @Override public Class<?> getColumnClass() {
+//                return Double.class;
+//            }
         },
         VOLUME("Volume"){
             @Override public Object getValue(int rowIndex, Project project) {
@@ -456,7 +481,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 if (value < 0.0) {
                     return null;
                 }
-                return value;
+                return wrap(value, rowIndex, project);
             }
 
             @Override public void setValue(Object data, int rowIndex, Project project) {
@@ -480,9 +505,9 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 return false;
             }
 
-            @Override public Class<?> getColumnClass() {
-                return Double.class;
-            }
+//            @Override public Class<?> getColumnClass() {
+//                return Double.class;
+//            }
         },
         X(MeasurementValue.X),
         Y(MeasurementValue.Y),
@@ -513,6 +538,39 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         }
 
         /**
+         * Wraps the specified object to a styled renderer's wrapper according to the state of the measurement step.
+         *
+         * @param value    the object to be wrapped.
+         * @param rowIndex the index of the row. Can be greater than the number of measurement steps.
+         * @param project  the project whose value to get. Can be null.
+         * @return the wrapped object.
+         */
+        public Object wrap(Object value, int rowIndex, Project project) {
+            if (project == null || rowIndex >= project.getSteps()) {
+                return null;
+            }
+            StyledTableCellRenderer.Wrapper wrapper;
+            switch (project.getStep(rowIndex).getState()) {
+            case READY:
+            case DONE:
+                wrapper = defaultWrapper;
+                break;
+            case MEASURING:
+                wrapper = measuringWrapper;
+                break;
+            case DONE_RECENTLY:
+                wrapper = doneRecentlyWrapper;
+                break;
+            default:
+                assert false;
+                wrapper = null;
+                break;
+            }
+            wrapper.value = value;
+            return wrapper;
+        }
+
+        /**
          * Returns the value for this column's specified row. The default implementation is to use the algoritm of a
          * MeasurementValue object. If no MeasurementValue has been provided, will return an empty string. Subclasses
          * can override the default behaviour.
@@ -526,7 +584,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 if (rowIndex >= project.getSteps()) {
                     return null;
                 }
-                return project.getValue(rowIndex, value);
+                return wrap(project.getValue(rowIndex, value), rowIndex, project);
             } else {
                 return null;
             }
@@ -564,11 +622,11 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         }
 
         /**
-         * Returns the class of this column regardless of the row. The default implementation is to return Object.class.
-         * Subclasses can override the default behaviour.
+         * Returns the class of this column regardless of the row. The default implementation is to return
+         * StyledTableCellRenderer.Wrapper.class. Subclasses can override the default behaviour.
          */
         public Class<?> getColumnClass() {
-            return Object.class;
+            return StyledTableCellRenderer.Wrapper.class;
         }
     }
 }
