@@ -36,7 +36,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 import static ikayaki.gui.MeasurementSequenceTableModel.SequenceColumn.*;
 
@@ -147,6 +151,17 @@ Order of rows with measurement data cannot be changed.
                         return;
                     }
                 }
+            }
+        });
+
+        /* Add Sequence Controls */
+        MyFormatterFactory factory = new MyFormatterFactory();
+        sequenceStartField.setFormatterFactory(factory);
+        sequenceStepField.setFormatterFactory(factory);
+        sequenceStopField.setFormatterFactory(factory);
+        addSequenceButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addSequence();
             }
         });
 
@@ -293,5 +308,20 @@ Order of rows with measurement data cannot be changed.
         controlsPane.add(label4,
                 new GridConstraints(0, 6, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+    }
+
+    /**
+     * Sets the format for the JFormattedTextFields of this panel.
+     */
+    private class MyFormatterFactory extends JFormattedTextField.AbstractFormatterFactory {
+        public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf) {
+            NumberFormat format = NumberFormat.getIntegerInstance();
+            format.setGroupingUsed(false);
+
+            NumberFormatter formatter = new NumberFormatter(format);
+            formatter.setMinimum(0);
+
+            return formatter;
+        }
     }
 }
