@@ -25,7 +25,6 @@ package ikayaki.gui;
 import ikayaki.*;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.util.ArrayList;
@@ -46,8 +45,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
     private static final StyledWrapper measuringWrapper = new StyledWrapper();
     private static final StyledWrapper doneRecentlyWrapper = new StyledWrapper();
     private static final StyledWrapper headerWrapper = new StyledWrapper();
-    private static final Font countColumnFont = new JLabel("").getFont().deriveFont(Font.BOLD);
-    private static final Color countColumnForeground = Color.GRAY;
 
     static {
         defaultWrapper.opaque = true;
@@ -55,6 +52,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         defaultWrapper.selectedBackground = new Color(0xC3D4E8);
         defaultWrapper.focusBackground = new Color(0xC3D4E8);
         defaultWrapper.selectedFocusBackground = new Color(0xC3D4E8);
+//        defaultWrapper.border = null;
         defaultWrapper.horizontalAlignment = SwingConstants.TRAILING;
 
         measuringWrapper.opaque = true;
@@ -62,6 +60,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         measuringWrapper.selectedBackground = new Color(0xFFCCFF);
         measuringWrapper.focusBackground = new Color(0xFFCCFF);
         measuringWrapper.selectedFocusBackground = new Color(0xFFCCFF);
+//        measuringWrapper.border = null;
         measuringWrapper.horizontalAlignment = SwingConstants.TRAILING;
 
         doneRecentlyWrapper.opaque = true;
@@ -69,6 +68,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         doneRecentlyWrapper.selectedBackground = new Color(0xCCFFCC);
         doneRecentlyWrapper.focusBackground = new Color(0xCCFFCC);
         doneRecentlyWrapper.selectedFocusBackground = new Color(0xCCFFCC);
+//        doneRecentlyWrapper.border = null;
         doneRecentlyWrapper.horizontalAlignment = SwingConstants.TRAILING;
 
         headerWrapper.opaque = true;
@@ -76,7 +76,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         headerWrapper.selectedBackground = new Color(0xE1E1E1);
         headerWrapper.focusBackground = new Color(0xE1E1E1);
         headerWrapper.selectedFocusBackground = new Color(0xE1E1E1);
-        headerWrapper.border = BorderFactory.createEmptyBorder(0, 2, 0, 2);
+//        headerWrapper.border = BorderFactory.createEmptyBorder(0, 2, 0, 2);   // causes the text to move a couple of pixels when the row is selected, so let's not use it
         headerWrapper.horizontalAlignment = SwingConstants.TRAILING;
     }
 
@@ -394,9 +394,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
             @Override public Object getValue(int rowIndex, Project project) {
                 StyledWrapper wrapper = headerWrapper;
                 wrapper.value = new Integer(rowIndex + 1);
-//                StyledWrapper wrapper = wrap(rowIndex + 1, rowIndex, project);
-//                wrapper.font = countColumnFont;     // requires the font and foreground to be resetted in wrap()
-//                wrapper.foreground = countColumnForeground;
                 return wrapper;
             }
         },
@@ -573,8 +570,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 }
             }
             wrapper.value = value;
-            wrapper.font = null;    // TODO reset the font and foreground in case they were set by COUNT column
-            wrapper.foreground = null;
             return wrapper;
         }
 
