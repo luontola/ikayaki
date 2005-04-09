@@ -11,9 +11,9 @@
     <children>
       <component id="c4b4b" class="javax.swing.JFormattedTextField" binding="sequenceStartField">
         <constraints>
-          <xy x="0" y="26" width="30" height="20"/>
+          <xy x="0" y="26" width="35" height="20"/>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1">
-            <preferred-size width="30" height="-1"/>
+            <preferred-size width="35" height="-1"/>
           </grid>
         </constraints>
         <properties>
@@ -22,9 +22,9 @@
       </component>
       <component id="af537" class="javax.swing.JFormattedTextField" binding="sequenceStepField">
         <constraints>
-          <xy x="34" y="26" width="30" height="20"/>
+          <xy x="40" y="26" width="35" height="20"/>
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1">
-            <preferred-size width="30" height="-1"/>
+            <preferred-size width="35" height="-1"/>
           </grid>
         </constraints>
         <properties>
@@ -33,9 +33,9 @@
       </component>
       <component id="eae9f" class="javax.swing.JFormattedTextField" binding="sequenceStopField">
         <constraints>
-          <xy x="68" y="26" width="30" height="20"/>
+          <xy x="80" y="26" width="30" height="20"/>
           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1">
-            <preferred-size width="30" height="-1"/>
+            <preferred-size width="35" height="-1"/>
           </grid>
         </constraints>
         <properties>
@@ -53,7 +53,7 @@
       </component>
       <component id="10103" class="javax.swing.JLabel">
         <constraints>
-          <xy x="34" y="4" width="22" height="14"/>
+          <xy x="40" y="4" width="22" height="14"/>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
@@ -62,7 +62,7 @@
       </component>
       <component id="a27ae" class="javax.swing.JLabel">
         <constraints>
-          <xy x="68" y="4" width="22" height="14"/>
+          <xy x="80" y="4" width="22" height="14"/>
           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
@@ -71,7 +71,7 @@
       </component>
       <component id="fdf93" class="javax.swing.JButton" binding="addSequenceButton">
         <constraints>
-          <xy x="126" y="24" width="103" height="24"/>
+          <xy x="140" y="24" width="103" height="24"/>
           <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
         </constraints>
         <properties>
@@ -80,7 +80,7 @@
       </component>
       <component id="6013f" class="javax.swing.JLabel" binding="stepValueType">
         <constraints>
-          <xy x="102" y="29" width="14" height="14"/>
+          <xy x="115" y="29" width="14" height="14"/>
           <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
@@ -89,7 +89,7 @@
       </component>
       <hspacer id="94111">
         <constraints>
-          <xy x="233" y="30" width="30" height="11"/>
+          <xy x="248" y="30" width="30" height="11"/>
           <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="0" anchor="0" fill="1">
             <preferred-size width="30" height="-1"/>
           </grid>
@@ -97,14 +97,14 @@
       </hspacer>
       <component id="9a2e5" class="javax.swing.JComboBox" binding="loadSequenceBox">
         <constraints>
-          <xy x="263" y="24" width="195" height="23"/>
+          <xy x="278" y="24" width="180" height="23"/>
           <grid row="1" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1"/>
         </constraints>
         <properties/>
       </component>
       <component id="383f8" class="javax.swing.JLabel">
         <constraints>
-          <xy x="263" y="4" width="42" height="14"/>
+          <xy x="278" y="4" width="42" height="14"/>
           <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>

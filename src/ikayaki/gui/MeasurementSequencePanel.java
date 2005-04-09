@@ -38,8 +38,7 @@ import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.text.NumberFormat;
 
 import static ikayaki.gui.MeasurementSequenceTableModel.SequenceColumn.*;
@@ -159,11 +158,22 @@ Order of rows with measurement data cannot be changed.
         sequenceStartField.setFormatterFactory(factory);
         sequenceStepField.setFormatterFactory(factory);
         sequenceStopField.setFormatterFactory(factory);
+
         addSequenceButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addSequence();
             }
         });
+        KeyListener keyListener = new KeyAdapter() {
+            @Override public void keyTyped(KeyEvent e) {
+                if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+                    addSequence();
+                }
+            }
+        };
+        sequenceStartField.addKeyListener(keyListener);
+        sequenceStepField.addKeyListener(keyListener);
+        sequenceStopField.addKeyListener(keyListener);
 
         // TODO
     }
@@ -256,19 +266,19 @@ Order of rows with measurement data cannot be changed.
         controlsPane.add(sequenceStartField,
                 new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(30, -1), null));
+                        new Dimension(35, -1), null));
         sequenceStepField = new JFormattedTextField();
         sequenceStepField.setHorizontalAlignment(11);
         controlsPane.add(sequenceStepField,
                 new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(30, -1), null));
+                        new Dimension(35, -1), null));
         sequenceStopField = new JFormattedTextField();
         sequenceStopField.setHorizontalAlignment(11);
         controlsPane.add(sequenceStopField,
                 new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(30, -1), null));
+                        new Dimension(35, -1), null));
         final JLabel label1 = new JLabel();
         label1.setText("Start");
         controlsPane.add(label1,
@@ -320,7 +330,7 @@ Order of rows with measurement data cannot be changed.
 
             NumberFormatter formatter = new NumberFormatter(format);
             formatter.setMinimum(0);
-
+            formatter.setMaximum(9999);
             return formatter;
         }
     }
