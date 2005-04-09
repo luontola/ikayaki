@@ -250,7 +250,6 @@ public class SettingsPanel
       System.err.println("No comm ports found!");
     }
     else {
-      System.err.println("Comm ports found");
       while (ports.hasMoreElements()) {
         /*
          *  Get the specific port
@@ -259,13 +258,17 @@ public class SettingsPanel
         CommPortIdentifier portId = (CommPortIdentifier) ports.nextElement();
 
         if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-          System.err.println("port found!: " + portId.getName()); // Debug
           this.magnetometerPort.addItem(portId.getName());
           this.handlerPort.addItem(portId.getName());
           this.demagnetizerPort.addItem(portId.getName());
         }
       }
     }
+
+    this.magnetometerPort.setSelectedItem(Settings.instance().getMagnetometerPort());
+    this.handlerPort.setSelectedItem(Settings.instance().getHandlerPort());
+    this.demagnetizerPort.setSelectedItem(Settings.instance().getDegausserPort());
+
 
 /*
     // TODO: this closes window with esc, so maybe something else as simple works too?
@@ -288,7 +291,6 @@ public class SettingsPanel
     getSaveAction().setEnabled(false);
     cancelButton.setAction(this.getCancelAction());
 
-    //TODO: need to check if values are ok, disable Save button if not.
     DocumentListener saveListener = new DocumentListener() {
       public void insertUpdate(DocumentEvent e) {
         if (correctValues()) {
@@ -356,7 +358,6 @@ public class SettingsPanel
    */
   public void saveSettings() {
     try {
-      //TODO: cant get values?
       Settings.instance().setDegausserDelay(((Integer)this.
           demagDelay.getSelectedItem()));
       Settings.instance().setDegausserPort( (String)this.demagnetizerPort.
@@ -380,7 +381,7 @@ public class SettingsPanel
       Settings.instance().setHandlerRightLimit(this.
           handlerRightLimit.getSelectedIndex());
       Settings.instance().setHandlerRotation(((Integer)this.rotation.
-          getValue()));
+          getValue()).intValue());
       Settings.instance().setHandlerSampleLoadPosition(((Integer)this.
           sampleLoadPosition.getValue()));
       Settings.instance().setHandlerTransverseYAFPosition(((Integer)this.
