@@ -65,27 +65,43 @@ public class Squid {
      * Returns a reference to the Squid. If it has not yet been created, will create one.
      */
     public static synchronized Squid instance() throws IOException {
-        if (instance == null) {
-            try {
-                instance = new Squid();
-            } catch (SerialIOException ex) {
-                System.err.println(ex);
-                throw new IOException();
-            }
+      if (instance == null) {
+        try{
+        instance = new Squid();
         }
+        catch (IOException e) {
+          throw new IOException();
+        }
+      }
         return instance;
     }
 
     /**
      * Initializes the Squid interface. Creates instances of Degausser, Handler and Magnetometer.
      */
-    private Squid() throws SerialIOException {
+    private Squid() throws IOException {
         owner = null;
-        degausser = new Degausser();
-        handler = new Handler();
-        magnetometer = new Magnetometer();
-
-
+        try {
+          degausser = new Degausser();
+        }
+        catch (SerialIOException ex) {
+          System.out.println("Cannot create degausser: " + ex);
+          throw new IOException();
+        }
+        try {
+          handler = new Handler();
+        }
+        catch (SerialIOException ex1) {
+          System.out.println("Cannot create degausser: " + ex1);
+          throw new IOException();
+        }
+        try {
+          magnetometer = new Magnetometer();
+        }
+        catch (SerialIOException ex2) {
+          System.out.println("Cannot create degausser: " + ex2);
+          throw new IOException();
+        }
     }
 
     /**
