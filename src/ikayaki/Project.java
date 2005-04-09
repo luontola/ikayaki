@@ -266,8 +266,9 @@ project listeners.
         }
         projectCache.put(file, project);
 
-        // update history log
-        Settings.instance().updateProjectHistory(file);
+// TODO: this is done in MainViewPanel.setProject(), so remove from here?
+//        // update history log
+//        Settings.instance().updateProjectHistory(file);
         return project;
     }
 
@@ -290,8 +291,9 @@ project listeners.
         // check cache
         Project project = projectCache.get(file);
         if (project != null) {
-            // update history log
-            Settings.instance().updateProjectHistory(file);
+// TODO: this is done in MainViewPanel.setProject(), so remove from here?
+//            // update history log
+//            Settings.instance().updateProjectHistory(file);
             return project;
         }
 
@@ -309,8 +311,9 @@ project listeners.
             return null;
         }
 
-        // update history log
-        Settings.instance().updateProjectHistory(file);
+// TODO: this is done in MainViewPanel.setProject(), so remove from here?
+//        // update history log
+//        Settings.instance().updateProjectHistory(file);
         return project;
     }
 
