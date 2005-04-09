@@ -1137,19 +1137,14 @@ project listeners.
     /**
      * Appends a step to this project’s sequence. Only the stepValue will be copied from the specified step and added as
      * a new step to this project.
-     * <p/>
-     * If isSequenceEditEnabled() is false, nothing will be done.
      *
      * @param step the measurement step to be added.
-     * @return true if the step was added, or false if isSequenceEditEnabled() was false.
+     * @return true, it is always possible to append a step.
      * @throws NullPointerException if step is null.
      */
     public synchronized boolean addStep(MeasurementStep step) {
         if (step == null) {
             throw new NullPointerException();
-        }
-        if (!isSequenceEditEnabled()) {
-            return false;
         }
         double stepValue = step.getStepValue();
         step = new MeasurementStep(this);
@@ -1305,6 +1300,125 @@ project listeners.
     }
 
     /**
+     * Runs a measurement sequence until it is paused, aborted or there are no more steps to measure. The project must
+     * be in a non-IDLE state before starting a measurement with this method. The measurement should be run in a worker
+     * thread and only one at a time.
+     *
+     * @throws IllegalStateException if the project's state is IDLE.
+     */
+    private void runMeasurement() {
+        if (getState() == IDLE) {
+            throw new IllegalStateException("An idle project can not run a measurement.");
+        }
+
+        System.out.println("Measurement started");
+        for (int i = getCompletedSteps(); i < getSteps(); i++) {
+
+            System.out.println("Measuring step " + i + "...");
+            currentStep = getStep(i);
+            fireMeasurementEvent(currentStep, MeasurementEvent.Type.STEP_START);
+
+            try {
+                // measure BG (1)
+                Thread.sleep(500);
+                if (getState() == ABORTED) {
+                    System.out.println("Measurement aborted");
+                    setState(IDLE);
+                    return;
+                }
+                currentStep.addResult(new MeasurementResult(MeasurementResult.Type.BG,
+                        Math.random(), Math.random(), Math.random()));
+                System.out.println("Result added");
+                fireMeasurementEvent(currentStep, MeasurementEvent.Type.VALUE_MEASURED);
+
+                // measure DEG0
+                Thread.sleep(500);
+                if (getState() == ABORTED) {
+                    System.out.println("Measurement aborted");
+                    setState(IDLE);
+                    currentStep.setDone();
+                    return;
+                }
+                currentStep.addResult(new MeasurementResult(MeasurementResult.Type.DEG0,
+                        Math.random(), Math.random(), Math.random()));
+                System.out.println("Result added");
+                fireMeasurementEvent(currentStep, MeasurementEvent.Type.VALUE_MEASURED);
+
+                // measure DEG90
+                Thread.sleep(500);
+                if (getState() == ABORTED) {
+                    System.out.println("Measurement aborted");
+                    setState(IDLE);
+                    currentStep.setDone();
+                    return;
+                }
+                currentStep.addResult(new MeasurementResult(MeasurementResult.Type.DEG90,
+                        Math.random(), Math.random(), Math.random()));
+                System.out.println("Result added");
+                fireMeasurementEvent(currentStep, MeasurementEvent.Type.VALUE_MEASURED);
+
+                // measure DEG180
+                Thread.sleep(500);
+                if (getState() == ABORTED) {
+                    System.out.println("Measurement aborted");
+                    setState(IDLE);
+                    currentStep.setDone();
+                    return;
+                }
+                currentStep.addResult(new MeasurementResult(MeasurementResult.Type.DEG180,
+                        Math.random(), Math.random(), Math.random()));
+                System.out.println("Result added");
+                fireMeasurementEvent(currentStep, MeasurementEvent.Type.VALUE_MEASURED);
+
+                // measure DEG270
+                Thread.sleep(500);
+                if (getState() == ABORTED) {
+                    System.out.println("Measurement aborted");
+                    setState(IDLE);
+                    currentStep.setDone();
+                    return;
+                }
+                currentStep.addResult(new MeasurementResult(MeasurementResult.Type.DEG270,
+                        Math.random(), Math.random(), Math.random()));
+                System.out.println("Result added");
+                fireMeasurementEvent(currentStep, MeasurementEvent.Type.VALUE_MEASURED);
+
+                // measure BG (2)
+                Thread.sleep(500);
+                if (getState() == ABORTED) {
+                    System.out.println("Measurement aborted");
+                    setState(IDLE);
+                    currentStep.setDone();
+                    return;
+                }
+                currentStep.addResult(new MeasurementResult(MeasurementResult.Type.BG,
+                        Math.random(), Math.random(), Math.random()));
+                System.out.println("Result added");
+                fireMeasurementEvent(currentStep, MeasurementEvent.Type.VALUE_MEASURED);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                // complete step
+                currentStep.setDone();
+                System.out.println("Step " + i + " completed");
+                fireMeasurementEvent(currentStep, MeasurementEvent.Type.STEP_END);
+                currentStep = null;
+            }
+
+            if (getState() == PAUSED) {
+                System.out.println("Measurement ended (paused)");
+                setState(IDLE);
+                return;
+            }
+
+            // TODO
+        }
+        System.out.println("Measurement ended");
+        setState(IDLE);
+    }
+
+    /**
      * Tells whether it is allowed to use the degausser in this project. The returned value depends on the type and
      * state of this project.
      */
@@ -1416,7 +1530,8 @@ project listeners.
 
     /**
      * Starts an auto step measurement. If isAutoStepEnabled() is false but is isSingleStepEnabled() is true, will start
-     * a single step measurement. Will do nothing if both are false.
+     * a single step measurement. Will do nothing if both are false. If there are no unmeasured steps in the sequence,
+     * will add one for a measurement without demagnetization.
      * <p/>
      * The measurement will run in its own thread, and this method will not wait for it to finish.
      *
@@ -1435,91 +1550,11 @@ project listeners.
             // if there are no unmeasured steps, add one for a measurement without demagnetization
             if (getSteps() == getCompletedSteps()) {
                 addStep(new MeasurementStep(this));
-                // TODO: do a bit more for testing purposes
-                addStep(new MeasurementStep(this));
-                addStep(new MeasurementStep(this));
             }
 
             new Thread() {
                 @Override public void run() {
-                    System.out.println("Measurement started");
-                    for (int i = getCompletedSteps(); i < getSteps(); i++) {
-                        System.out.println("Measuring step " + i + "...");
-                        try {
-                            Thread.sleep(500);
-                            if (Project.this.getState() == ABORTED) {
-                                System.out.println("Measurement aborted");
-                                setState(IDLE);
-                                return;
-                            }
-                            getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.BG,
-                                    Math.random(), Math.random(), Math.random()));
-                            System.out.println("Result added");
-                            Thread.sleep(500);
-                            if (Project.this.getState() == ABORTED) {
-                                System.out.println("Measurement aborted");
-                                setState(IDLE);
-                                getStep(i).setDone();
-                                return;
-                            }
-                            getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.DEG0,
-                                    Math.random(), Math.random(), Math.random()));
-                            System.out.println("Result added");
-                            Thread.sleep(500);
-                            if (Project.this.getState() == ABORTED) {
-                                System.out.println("Measurement aborted");
-                                setState(IDLE);
-                                getStep(i).setDone();
-                                return;
-                            }
-                            getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.DEG90,
-                                    Math.random(), Math.random(), Math.random()));
-                            System.out.println("Result added");
-                            Thread.sleep(500);
-                            if (Project.this.getState() == ABORTED) {
-                                System.out.println("Measurement aborted");
-                                setState(IDLE);
-                                getStep(i).setDone();
-                                return;
-                            }
-                            getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.DEG180,
-                                    Math.random(), Math.random(), Math.random()));
-                            System.out.println("Result added");
-                            Thread.sleep(500);
-                            if (Project.this.getState() == ABORTED) {
-                                System.out.println("Measurement aborted");
-                                setState(IDLE);
-                                getStep(i).setDone();
-                                return;
-                            }
-                            getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.DEG270,
-                                    Math.random(), Math.random(), Math.random()));
-                            System.out.println("Result added");
-                            Thread.sleep(500);
-                            if (Project.this.getState() == ABORTED) {
-                                System.out.println("Measurement aborted");
-                                setState(IDLE);
-                                getStep(i).setDone();
-                                return;
-                            }
-                            getStep(i).addResult(new MeasurementResult(MeasurementResult.Type.BG,
-                                    Math.random(), Math.random(), Math.random()));
-                            System.out.println("Result added");
-                            Thread.sleep(500);
-                            getStep(i).setDone();
-                        } catch (InterruptedException e) {
-                        }
-
-                        if (Project.this.getState() == PAUSED) {
-                            System.out.println("Measurement ended (paused)");
-                            setState(IDLE);
-                            return;
-                        }
-
-                        // TODO
-                    }
-                    System.out.println("Measurement ended");
-                    setState(IDLE);
+                    runMeasurement();
                 }
             }.start();
             return true;
@@ -1538,11 +1573,6 @@ project listeners.
     public synchronized boolean doSingleStep() {
         if (!isSingleStepEnabled()) {
             return false;
-        }
-
-        // if there are no unmeasured steps, add one for a measurement without demagnetization
-        if (getSteps() == getCompletedSteps()) {
-            addStep(new MeasurementStep(this));
         }
 
         if (doAutoStep()) {

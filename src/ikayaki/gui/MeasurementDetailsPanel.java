@@ -118,8 +118,8 @@ in MeasurementSequencePanel update tables with new measurement data.
     public void measurementUpdated(MeasurementEvent event) {
         if (event.getType() == MeasurementEvent.Type.VALUE_MEASURED && rowSelected) {
             MeasurementResult result = null;
-            for (int i=0; i<getProject().getCurrentStep().getResults(); ++i) {
-                result = getProject().getCurrentStep().getResult(i);
+            for (int i=0; i<event.getStep().getResults(); ++i) {
+                result = event.getStep().getResult(i);
                 measurementDetails.setValueAt(result.getType(), i, 0);
                 measurementDetails.setValueAt(result.getX(), i, 1);
                 measurementDetails.setValueAt(result.getY(), i, 2);

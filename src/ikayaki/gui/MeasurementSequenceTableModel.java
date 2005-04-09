@@ -273,7 +273,11 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      */
     public int getRowCount() {
         if (project != null) {
-            return project.getSteps() + 1;
+            if (project.isSequenceEditEnabled()) {
+                return project.getSteps() + 1;
+            } else {
+                return project.getSteps();
+            }
         } else {
             return 0;
         }

@@ -223,8 +223,10 @@ public class MainViewPanel extends ProjectComponent {
     @Override public void setProject(Project project) {
         if (project != null) {
             // update history logs
-            Settings.instance().updateProjectHistory(project.getFile());
-            Settings.instance().updateDirectoryHistory(project.getFile().getAbsoluteFile().getParentFile());
+            if (project.getType() != Project.Type.CALIBRATION) {
+                Settings.instance().updateProjectHistory(project.getFile());
+                Settings.instance().updateDirectoryHistory(project.getFile().getAbsoluteFile().getParentFile());
+            }
 
             // register the new project
             project.addProjectListener(this);
