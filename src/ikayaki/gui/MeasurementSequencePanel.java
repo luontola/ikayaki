@@ -28,6 +28,7 @@ import com.intellij.uiDesigner.core.Spacer;
 import ikayaki.MeasurementEvent;
 import ikayaki.Project;
 import ikayaki.ProjectEvent;
+import ikayaki.MeasurementStep;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -156,7 +157,18 @@ Order of rows with measurement data cannot be changed.
      * Adds sequence determined by textfields to end of table.
      */
     private void addSequence() {
-        // TODO
+        MeasurementStep step = new MeasurementStep();
+        if (getProject() != null) {
+            if (getProject().isSequenceEditEnabled() && Double.valueOf((String)sequenceStepField.getValue())>0.09) {
+                for (double i=Double.valueOf((String)sequenceStartField.getValue()) ;
+                        i<Double.valueOf((String)sequenceStopField.getValue())+1;
+                        i=i+Double.valueOf((String)sequenceStepField.getValue())) {
+                    step.setStepValue(i);
+                    getProject().addStep(step);
+                    // TODO: adding to table
+                }
+            }
+        }
     }
 
     /**

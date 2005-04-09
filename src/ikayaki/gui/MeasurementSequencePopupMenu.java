@@ -42,13 +42,28 @@ public class MeasurementSequencePopupMenu extends JPopupMenu {
     /**
      * Name of the sequence to be saved.
      */
-    private JCheckBox nameTextField;
+    private JTextField nameTextField;
+
+    private JButton cancel;
+    private JButton saveFull;
+    private JButton saveSelected;
 
     /**
      * Creates SequencePopupMenu.
      */
     public MeasurementSequencePopupMenu() {
-        return; // TODO
+        volume = new JCheckBox("Volume", false);
+        add(volume);
+        nameLabel = new JLabel("Name of sequence");
+        add(nameLabel);
+        nameTextField = new JTextField(20);
+        add(nameTextField);
+        cancel = new JButton("cancel");
+        add(cancel);
+        saveFull = new JButton("Save entire sequence");
+        add(saveFull);
+        saveSelected = new JButton("Save selected sequence");
+        add(saveSelected);
     }
 
     /**
