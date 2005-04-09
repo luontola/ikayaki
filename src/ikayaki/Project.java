@@ -742,14 +742,21 @@ project listeners.
      * @return the timestamp of the last measurement, or null if no measurements are completed.
      */
     public synchronized Date getTimestamp() {
-        Date last = null;
-        for (int i = 0; i < sequence.getSteps(); i++) {
+        for (int i = sequence.getSteps() - 1; i >= 0; i--) {
             Date d = sequence.getStep(i).getTimestamp();
-            if (d != null && (last == null || d.after(last))) {
-                last = d;
+            if (d != null) {
+                return d;
             }
         }
-        return last;
+        return null;
+//        Date last = null;
+//        for (int i = 0; i < sequence.getSteps(); i++) {
+//            Date d = sequence.getStep(i).getTimestamp();
+//            if (d != null && (last == null || d.after(last))) {
+//                last = d;
+//            }
+//        }
+//        return last;
     }
 
     /**

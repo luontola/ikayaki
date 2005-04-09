@@ -274,8 +274,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
         if (project != null && project.getType() != Project.Type.CALIBRATION) setDirectory(project.getFile().getParentFile());
         else explorerTable.setDirectory(directory);
 
-        // TODO: add this...
-        // if (project != null) project.addProjectListener(explorerTable.explorerTableModel);
+        if (project != null) project.addProjectListener(explorerTable);
     }
 
     /**

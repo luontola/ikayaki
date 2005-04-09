@@ -257,6 +257,9 @@ public class MeasurementStep {
      * Returns the time the measurements were completed, or null if that has not yet happened.
      */
     public synchronized Date getTimestamp() {
+        if (state != DONE && state != DONE_RECENTLY) {
+            return null;
+        }
         if (timestamp == null) {
             return null;
         } else {
@@ -369,7 +372,6 @@ public class MeasurementStep {
             if (timestamp == null) {
                 timestamp = new Date();
             }
-            timestamp.setTime(System.currentTimeMillis());
             state = MEASURING;
             updateTransforms();
             save();

@@ -43,7 +43,7 @@ import java.util.Comparator;
  *
  * @author Samuli Kaipiainen
  */
-public class ProjectExplorerTable extends JTable {
+public class ProjectExplorerTable extends JTable implements ProjectListener {
 
     /**
      * The component (MainViewPanel) whose setProject() method will be called on opening a new project file.
@@ -283,6 +283,13 @@ public class ProjectExplorerTable extends JTable {
         projectTypeCacher.start();
 
         return files;
+    }
+
+    /**
+     * Forwards ProjectEvents to the table model.
+     */
+    public void projectUpdated(ProjectEvent event) {
+        explorerTableModel.projectUpdated(event);
     }
 
     /**

@@ -107,5 +107,7 @@ or disable if measuring has started.
     public void setProject(Project project) {
         super.setProject(project);
         calibrationProjectTable.setDirectory(this.directory);
+
+        if (project != null) project.addProjectListener(calibrationProjectTable);
     }
 }
