@@ -22,9 +22,7 @@
 
 package ikayaki.gui;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
+import ikayaki.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -32,7 +30,12 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 
-import ikayaki.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Creates a list of project files in directory. Handles loading selected projects and showing export popup menu
@@ -322,7 +325,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
              * Refresh the data at regular intervals (5 min) even if no other events would refresh it.
              * This is especially to update the time elapsed value of a calibration panel.
              */
-            new javax.swing.Timer(5*60*1000, new ActionListener() {
+            new Timer(5*60*1000, new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     ProjectExplorerTable.this.setDirectory(directory);
                 }
@@ -475,7 +478,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
          *
          * @param file file to show export menu for.
          */
-        public ProjectExplorerPopupMenu(File file) {
+        public ProjectExplorerPopupMenu(final File file) {
             final File directory = file.getParentFile();
             String filename = file.getName();
             String basename = filename;
@@ -514,15 +517,20 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
 
                                 if (chooser.showSaveDialog(ProjectExplorerTable.this) == JFileChooser.APPROVE_OPTION) {
                                     exportfile = chooser.getSelectedFile();
-                                }
+                                } else return;
 
                             } else exportfile = new File(filename);
 
-                            // TODO: which one of these two?
-                            //Project.export(exportfile, filetype);
-                            //Project.loadProject(exportfile).export(filetype);     // TODO <-- this one. There are no static export methods in Project class. Take a look at exportProject method in MainViewPanel.
+                            // execute export
+                            boolean ok = false;
+                            if (filetype.equals("dat")) ok = Project.loadProject(file).exportToDAT(exportfile);
+                            else if (filetype.equals("tdt")) ok = Project.loadProject(file).exportToTDT(exportfile);
+                            else if (filetype.equals("srm")) ok = Project.loadProject(file).exportToSRM(exportfile);
 
-                            // TODO: tell somehow if export was successful; statusbar perhaps?
+                            // TODO: tell somehow, not with popup, if export was successful; statusbar perhaps?
+                            if (!ok) JOptionPane.showMessageDialog(ProjectExplorerTable.this,
+                                "Unable to write to " + exportfile,
+                                "Error exporting file", JOptionPane.ERROR_MESSAGE);
                         }
                     });
                 }
