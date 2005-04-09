@@ -185,8 +185,9 @@ public class ProjectExplorerPanel extends ProjectComponent {
                 // Changed -- cycled item list with up/down, selected item with mouse or pressed enter in text field
                 // System.out.println(e.getActionCommand() + ": " + browserField.getSelectedItem());
 
-                // we only want changed-events, not duplicate edited-events
-                //if (!e.getActionCommand().equals("comboBoxChanged")) return;
+                // we only want changed-events, not duplicate edited-events -- actually, we want those too,
+                // so that multiple tries to change to an invalid directory with enter will flash text field
+                // if (!e.getActionCommand().equals("comboBoxChanged")) return;
 
                 // TODO: cycling through popup menu list with up/down keys changes directory;
                 // it shouldn't, but can't recognize those changed-events from mouse clicks
@@ -269,8 +270,9 @@ public class ProjectExplorerPanel extends ProjectComponent {
         browserField.hidePopup();
         setBrowserFieldPopup(getDirectoryHistory());
 
-        // update selected project in explorerTable
-        explorerTable.setDirectory(null);
+        // change directory, if not calibration project; in that case just update selected project in explorerTable
+        if (project.getType() != Project.Type.CALIBRATION) setDirectory(project.getFile().getParentFile());
+        else explorerTable.setDirectory(directory);
 
         // TODO: add this...
         // if (project != null) project.addProjectListener(explorerTable.explorerTableModel);

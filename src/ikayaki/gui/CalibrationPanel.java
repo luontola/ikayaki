@@ -81,9 +81,9 @@ or disable if measuring has started.
     public CalibrationPanel(ProjectComponent parent) {
         this.parent = parent;
         // TODO: where to get calibration project directory?
-        this.directory = new File("").getAbsoluteFile();
+        this.directory = Settings.instance().getLastDirectory();
 
-        calibrationProjectTable = new ProjectExplorerTable(this.parent);
+        calibrationProjectTable = new ProjectExplorerTable(this.parent, true);
         calibrationProjectTable.setDirectory(this.directory);
 
         calibrateButton = new JButton(((MainViewPanel) parent).getMeasurementControlsPanel().getSingleStepAction());
@@ -106,6 +106,6 @@ or disable if measuring has started.
      */
     public void setProject(Project project) {
         super.setProject(project);
-        calibrationProjectTable.setDirectory(null);
+        calibrationProjectTable.setDirectory(this.directory);
     }
 }
