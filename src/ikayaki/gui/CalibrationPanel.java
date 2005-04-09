@@ -102,12 +102,13 @@ or disable if measuring has started.
      * Call super.setProject(project), highlight selected calibration project, or unhighlight unselected calibration
      * project.
      *
-     * @param project project opened.
+     * @param project project opened, or null to open no project.
      */
     public void setProject(Project project) {
         super.setProject(project);
         calibrationProjectTable.setDirectory(this.directory);
 
+        // add calibrationProjectTable as a ProjectListener so it can update current project's timestamps
         if (project != null) project.addProjectListener(calibrationProjectTable);
     }
 }

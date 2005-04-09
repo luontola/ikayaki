@@ -22,7 +22,9 @@
 
 package ikayaki.gui;
 
-import ikayaki.*;
+import java.io.*;
+import java.text.*;
+import java.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -30,12 +32,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Arrays;
-import java.util.Comparator;
+import ikayaki.*;
 
 /**
  * Creates a list of project files in directory. Handles loading selected projects and showing export popup menu
@@ -71,7 +68,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
     private File directory;
 
     /**
-     * Project files to in current directory. Set to File[0] so that ProjectExplorerTableModel can be created.
+     * Project files to in current directory. Set to new File[0] so that ProjectExplorerTableModel can be created.
      */
     private File[] files = new File[0];
 
@@ -80,15 +77,29 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
      */
     private int selectedFile = -1;
 
-    private int explorerTableSortColumn = COLUMN_FILENAME;
+    /**
+     * Current sort column; must be set to an untranslated column index.
+     */
+    private int explorerTableSortColumn = 0;
 
+    // possible columns and their names
     private static final int COLUMN_UNDEFINED = -1;
-    private static final int COLUMN_FILENAME = 0;
-    private static final int COLUMN_TYPE = 1;
-    private static final int COLUMN_LASTMOD = 2;
-    private static final int COLUMN_LASTMEASURE = 3;
-    private static final int COLUMN_UNMEASURED = 4;
-    private static final String[] column_name = {"filename", "type", "last modified", "last measure", "time"};
+    public static final int COLUMN_FILENAME = 0;
+    public static final int COLUMN_TYPE = 1;
+    public static final int COLUMN_LASTMOD = 2;
+    public static final int COLUMN_LASTMEASURE = 3;
+    public static final int COLUMN_UNMEASURED = 4;
+    public static final String[] column_name = {"filename", "type", "last modified", "last measure", "time"};
+
+    // default column configurations for different table types
+    public static final int[] default_columns = { COLUMN_FILENAME, COLUMN_TYPE, COLUMN_LASTMOD};
+    public static final int[] calibration_columns = { COLUMN_FILENAME, COLUMN_LASTMEASURE, COLUMN_UNMEASURED};
+
+    /**
+     * Visible columns in this table (as in column translation table); can be set with setColumns(int[]).
+     * Initialized to new int[0] so that ProjectExplorerTableModel can be created.
+     */
+    private int[] columns = new int[0];
 
     /**
      * Builds ProjectExplorerTable for displaying all project files.
@@ -109,6 +120,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         this.parent = parent;
         this.isCalibration = isCalibration;
 
+        // create TableModel only after columns are set
         explorerTableModel = new ProjectExplorerTableModel();
         this.setModel(explorerTableModel);
 
@@ -120,28 +132,12 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         this.setShowGrid(false);
         this.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
 
-        // get each column for easier access...
-        TableColumn[] column = new TableColumn[this.getColumnModel().getColumnCount()];
-        for (int n = 0; n < this.getColumnModel().getColumnCount(); n++)
-            column[n] = this.getColumnModel().getColumn(n);
-
-        // TODO: set column sizes somehow automatically, according to table contents?
-        column[COLUMN_FILENAME].setPreferredWidth(130);
-        column[COLUMN_TYPE].setPreferredWidth(50);
-        column[COLUMN_LASTMOD].setPreferredWidth(80);
-        column[COLUMN_LASTMEASURE].setPreferredWidth(80);
-        column[COLUMN_UNMEASURED].setPreferredWidth(20);
+        // TODO: what should be here anyway?
         this.setPreferredScrollableViewportSize(new Dimension(280, 400));
 
-        // remove "type" and "last modified" columns for calibration project table,
-        // "last measure" and "unmeasured" for all projects table
-        if (this.isCalibration) {
-            this.getColumnModel().removeColumn(column[COLUMN_TYPE]);
-            this.getColumnModel().removeColumn(column[COLUMN_LASTMOD]);
-        } else {
-            this.getColumnModel().removeColumn(column[COLUMN_LASTMEASURE]);
-            this.getColumnModel().removeColumn(column[COLUMN_UNMEASURED]);
-        }
+        // set the right visible columns for table type
+        if (this.isCalibration) setColumns(calibration_columns);
+        else setColumns(default_columns);
 
         // ProjectExplorerTable events
 
@@ -195,27 +191,43 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                 // only left-click changes sorting
                 if (e.getButton() != MouseEvent.BUTTON1) return;
 
-                JTableHeader th = (JTableHeader) e.getSource();
-                TableColumnModel cm = th.getColumnModel();
+                TableColumnModel cm = getColumnModel();
                 int viewColumn = cm.getColumnIndexAtX(e.getX());
-
-                // TODO: what the sick hell of chainsaw internals do I have to touch just to update table headers?!?
-                // ... Hope it's at least correct, not that I care anymore
-
-                // reset all column header names
-                for (int col = 0; col < cm.getColumnCount(); col++) {
-                    cm.getColumn(col).setHeaderValue(column_name[cm.getColumn(col).getModelIndex()]);
-                }
-
-                // set sort column header name
                 explorerTableSortColumn = cm.getColumn(viewColumn).getModelIndex();
-                cm.getColumn(viewColumn).setHeaderValue(explorerTableModel.getColumnName(explorerTableSortColumn));
-                th.repaint();
+
+                // update all column headers and repaint header
+                for (int col = 0; col < getColumnCount(); col++)
+                    cm.getColumn(col).setHeaderValue(getColumnName(col));
+                getTableHeader().repaint();
 
                 // update table with sorted data, update selected file and table selection
                 setDirectory(directory);
             }
         });
+    }
+
+    /**
+     * Sets the columns displayed in this table.
+     *
+     * @param columns int-table with COLUMN_xxx values, or null to just update table.
+     */
+    public void setColumns(int [] columns) {
+        if (columns != null) this.columns = columns;
+
+        // StructureChanged resets columns' PreferredWidths, so they must be set again...
+        explorerTableModel.fireTableStructureChanged();
+
+        // TODO: set column sizes somehow automatically, according to table contents?
+        for (int col = 0; col < this.columns.length; col++) {
+            TableColumn column = this.getColumnModel().getColumn(col);
+            switch (this.columns[col]) {
+                case COLUMN_FILENAME: column.setPreferredWidth(130); break;
+                case COLUMN_TYPE: column.setPreferredWidth(50); break;
+                case COLUMN_LASTMOD: column.setPreferredWidth(80); break;
+                case COLUMN_LASTMEASURE: column.setPreferredWidth(80); break;
+                case COLUMN_UNMEASURED: column.setPreferredWidth(20); break;
+            }
+        }
     }
 
     /**
@@ -288,6 +300,8 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
 
     /**
      * Forwards ProjectEvents to the table model.
+     *
+     * @param event ProjectEvent received.
      */
     public void projectUpdated(ProjectEvent event) {
         explorerTableModel.projectUpdated(event);
@@ -308,15 +322,16 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
              * Refresh the data at regular intervals (5 min) even if no other events would refresh it.
              * This is especially to update the time elapsed value of a calibration panel.
              */
-            new Timer(5*60*1000, new ActionListener() {
+            new javax.swing.Timer(5*60*1000, new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    fireTableDataChanged();
+                    ProjectExplorerTable.this.setDirectory(directory);
                 }
             }).start();
         }
 
         public String getColumnName(int column) {
-            return column_name[column] + (column == explorerTableSortColumn ? " *" : "");
+            // translate visible column -> all columns for column_name, _not_ for sort column
+            return column_name[columns[column]] + (column == explorerTableSortColumn ? " *" : "");
         }
 
         public int getRowCount() {
@@ -324,13 +339,13 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         }
 
         public int getColumnCount() {
-            return column_name.length;
+            return columns.length;
         }
 
         public Object getValueAt(int row, int column) {
             File file = files[row];
             Object value;
-            switch (column) {
+            switch (columns[column]) { // translate visible column -> all columns
                 case COLUMN_FILENAME:
                     String filename = file.getName();
                     value = filename.substring(0, filename.length() - Ikayaki.FILE_TYPE.length());
@@ -406,15 +421,15 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
      */
     private class ProjectExplorerTableComparator implements Comparator<File> {
         public int compare(File a, File b) {
-            switch (explorerTableSortColumn) {
+            switch (columns[explorerTableSortColumn]) { // translate sort column
                 case COLUMN_FILENAME:
                     return a.compareTo(b);
                 case COLUMN_TYPE:
                     // WARNING: might choke Project.getType(File) with O(n log n) requests
                     Project.Type atype = Project.getType(a), btype = Project.getType(b);
-                    if (atype == null && btype == null)return 0;
-                    if (atype == null)return 1;
-                    if (btype == null)return -1;
+                    if (atype == null && btype == null) return 0;
+                    if (atype == null) return 1;
+                    if (btype == null) return -1;
                     // NOTE: calibration-projects appear first because of enum-compareTo, but that's just fine, right?
                     return atype.compareTo(btype);
                 case COLUMN_LASTMOD:

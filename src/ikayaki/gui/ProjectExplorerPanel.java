@@ -111,7 +111,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
      * initializes files with files from that directory.
      *
      * @param parent the component whose setProject() method will be called on opening a new project file.
-     * @param project project to load and whose directory to set as current directory
+     * @param project project to load and whose directory to set as current directory.
      */
     public ProjectExplorerPanel(ProjectComponent parent, Project project) {
         this.parent = parent;
@@ -261,7 +261,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
     /**
      * Call super.setProject(project), hilight selected project, or unhilight unselected project.
      *
-     * @param project project opened.
+     * @param project project opened, or null to open no project.
      */
     public void setProject(Project project) {
         super.setProject(project);
@@ -271,9 +271,11 @@ public class ProjectExplorerPanel extends ProjectComponent {
         setBrowserFieldPopup(getDirectoryHistory());
 
         // change directory, if not calibration project; in that case just update selected project in explorerTable
-        if (project != null && project.getType() != Project.Type.CALIBRATION) setDirectory(project.getFile().getParentFile());
-        else explorerTable.setDirectory(directory);
+        if (project != null && project.getType() != Project.Type.CALIBRATION) {
+            setDirectory(project.getFile().getParentFile());
+        } else explorerTable.setDirectory(directory);
 
+        // add explorerTable as a ProjectListener so it can update current project's timestamps
         if (project != null) project.addProjectListener(explorerTable);
     }
 
