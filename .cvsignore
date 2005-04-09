@@ -18,3 +18,5 @@ lib.library
 rcopy.bat
 testi.ika
 Miau.ika
+JUtil.dll
+win32com.dll
