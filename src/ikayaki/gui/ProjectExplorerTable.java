@@ -228,7 +228,7 @@ public class ProjectExplorerTable extends JTable {
     private File[] getProjectFiles(File directory) {
         File[] files = directory.listFiles(new FileFilter() {
             public boolean accept(File file) {
-                return (file.isFile() && file.getName().endsWith(Ikayaki.FILE_TYPE));
+                return (file.isFile() && file.getName().endsWith(""));//Ikayaki.FILE_TYPE));
             }
         });
 
@@ -317,13 +317,16 @@ public class ProjectExplorerTable extends JTable {
             switch (explorerTableSortColumn) {
             case COLUMN_FILENAME:
                 return a.compareTo(b);
-                // WARNING: might chocke Project.getType(File)
-                // TODO: Project.getType(File) can returns null for non-project files. Need to take care of that?
             case COLUMN_TYPE:
-                return Project.getType(a).toString().compareTo(Project.getType(b).toString());
-                // TODO: int-cast changes sign if difference larger than maxint
+                // WARNING: might chocke Project.getType(File) with O(n log n) requests
+                Project.Type atype = Project.getType(a), btype = Project.getType(b);
+                if (atype == null) return 1;
+                if (btype == null) return -1;
+                // NOTE: calibration-projects appear first because of enum-compareTo, but that's just fine, right?
+                return atype.compareTo(btype);
             case COLUMN_LASTMOD:
-                return (int) (a.lastModified() - b.lastModified());
+                long diff = a.lastModified() - b.lastModified();
+                return diff == 0 ? 0 : (diff < 0 ? -1 : 1);
             default:
                 return 0;
             }
