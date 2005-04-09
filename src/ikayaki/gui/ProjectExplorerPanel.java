@@ -398,6 +398,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
 
             newProjectName = new JTextField();
             newProjectType = new JComboBox(Project.Type.values());
+            newProjectType.removeItem(Project.Type.CALIBRATION); // calibratin projects are created from the File menu
             newProjectType.setSelectedItem(Project.Type.AF);
             newProjectType.setBackground(Color.WHITE);
             createNewProjectButton = new JButton("Create new");
