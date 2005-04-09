@@ -420,10 +420,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 if (project == null) {
                     return;
                 }
-                if (!(data instanceof Number)) {
+                if (data != null && !(data instanceof Number)) {
                     return;
                 }
-                double value = ((Number) data).doubleValue();
+                double value = data != null ? ((Number) data).doubleValue() : -1.0;
 
                 if (rowIndex < project.getSteps()) {
                     project.getStep(rowIndex).setMass(value);
@@ -460,10 +460,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 if (project == null) {
                     return;
                 }
-                if (!(data instanceof Number)) {
+                if (data != null && !(data instanceof Number)) {
                     return;
                 }
-                double value = ((Number) data).doubleValue();
+                double value = data != null ? ((Number) data).doubleValue() : -1.0;
 
                 if (rowIndex < project.getSteps()) {
                     project.getStep(rowIndex).setVolume(value);

@@ -30,10 +30,14 @@ import ikayaki.Project;
 import ikayaki.ProjectEvent;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.TableColumnModelEvent;
+import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.TableColumnModel;
-import javax.swing.event.TableModelListener;
-import javax.swing.event.TableModelEvent;
 import java.awt.*;
+
+import static ikayaki.gui.MeasurementSequenceTableModel.SequenceColumn.*;
 
 /**
  * Allows creating, editing and removing measurement sequences. Shows measurement data. Right-click brings popup menu
@@ -109,6 +113,40 @@ Order of rows with measurement data cannot be changed.
         setLayout(new BorderLayout());
         add(controlsPane, "North");
         add(scrollPane);
+
+        // resize the columns to be always the right size
+        sequenceTable.getColumnModel().addColumnModelListener(new TableColumnModelListener() {
+            public void columnAdded(TableColumnModelEvent e) {
+                updateColumns();
+            }
+
+            public void columnRemoved(TableColumnModelEvent e) {
+                updateColumns();
+            }
+
+            public void columnMoved(TableColumnModelEvent e) {
+                updateColumns();
+            }
+
+            public void columnMarginChanged(ChangeEvent e) {
+                // DO NOTHING
+            }
+
+            public void columnSelectionChanged(ListSelectionEvent e) {
+                // DO NOTHING
+            }
+
+            private void updateColumns() {
+                TableColumnModel columnModel = sequenceTable.getColumnModel();
+                for (int i = 0; i < columnModel.getColumnCount(); i++) {
+                    if (columnModel.getColumn(i).getHeaderValue().equals(COUNT.getColumnName())) {
+                        columnModel.getColumn(i).setMinWidth(25);
+                        columnModel.getColumn(i).setMaxWidth(25);
+                        return;
+                    }
+                }
+            }
+        });
 
         // TODO
     }
