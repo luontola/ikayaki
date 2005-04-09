@@ -92,7 +92,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
     public static final int COLUMN_LASTMOD = 2;
     public static final int COLUMN_LASTMEASURE = 3;
     public static final int COLUMN_UNMEASURED = 4;
-    public static final String[] column_name = {"filename", "type", "last modified", "last measure", "time"};
+    public static final String[] column_name = {"Name", "Type", "Last modified", "Last measure", "Elapsed"};
 
     // default column configurations for different table types
     public static final int[] default_columns = { COLUMN_FILENAME, COLUMN_TYPE, COLUMN_LASTMOD};
@@ -228,7 +228,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                 case COLUMN_TYPE: column.setPreferredWidth(50); break;
                 case COLUMN_LASTMOD: column.setPreferredWidth(80); break;
                 case COLUMN_LASTMEASURE: column.setPreferredWidth(80); break;
-                case COLUMN_UNMEASURED: column.setPreferredWidth(20); break;
+                case COLUMN_UNMEASURED: column.setPreferredWidth(40); break;
             }
         }
     }
@@ -334,7 +334,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
 
         public String getColumnName(int column) {
             // translate visible column -> all columns for column_name, _not_ for sort column
-            return column_name[columns[column]] + (column == explorerTableSortColumn ? " *" : "");
+            return column_name[columns[column]] /* + (column == explorerTableSortColumn ? " *" : "") */; // TODO: does this look better without the "*"?
         }
 
         public int getRowCount() {
