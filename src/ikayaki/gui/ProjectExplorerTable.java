@@ -316,8 +316,9 @@ public class ProjectExplorerTable extends JTable {
             case COLUMN_FILENAME:
                 return a.compareTo(b);
                 // WARNING: might chocke Project.getType(File)
+                // TODO: Project.getType(File) can returns null for non-project files. Need to take care of that?
             case COLUMN_TYPE:
-                return Project.getType(a).compareTo(Project.getType(b));
+                return Project.getType(a).toString().compareTo(Project.getType(b).toString());
                 // TODO: int-cast changes sign if difference larger than maxint
             case COLUMN_LASTMOD:
                 return (int) (a.lastModified() - b.lastModified());
