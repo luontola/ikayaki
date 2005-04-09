@@ -24,6 +24,7 @@ package ikayaki.gui;
 
 import ikayaki.Project;
 import ikayaki.Settings;
+import ikayaki.Ikayaki;
 
 import java.awt.*;
 import javax.swing.*;
@@ -80,8 +81,7 @@ or disable if measuring has started.
      */
     public CalibrationPanel(ProjectComponent parent) {
         this.parent = parent;
-        // TODO: where to get calibration project directory?
-        this.directory = Settings.instance().getLastDirectory();
+        this.directory = Ikayaki.CALIBRATION_PROJECT_DIR;
 
         calibrationProjectTable = new ProjectExplorerTable(this.parent, true);
         calibrationProjectTable.setDirectory(this.directory);

@@ -55,6 +55,11 @@ be closed.
     public static final String FILE_TYPE = ".ika";
     public static final String FILE_DESCRIPTION = "Measurement Project";
 
+    /* Application files and directories */
+    public static final File PROPERTIES_FILE = new File("ikayaki.config").getAbsoluteFile();
+    public static final File SEQUENCES_FILE = new File("ikayaki.sequences").getAbsoluteFile();
+    public static final File CALIBRATION_PROJECT_DIR = new File("calibration").getAbsoluteFile();
+
     /**
      * Starts the program Ikayaki.
      *
