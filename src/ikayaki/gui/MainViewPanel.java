@@ -102,7 +102,17 @@ public class MainViewPanel extends ProjectComponent {
                 project = Project.loadProject(projectHistory[0]);
             }
         }
-        setProject(project);    // the project must be set before doing the layout
+//        setProject(project);    // the project must be set before doing the layout
+
+        // TODO: testataan...
+        setProject(null);    // the project must be set before doing the layout
+        final Project p = project;
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                setProject(p);
+            }
+        });
+
 
         /* Init SQUID interface */
         try {

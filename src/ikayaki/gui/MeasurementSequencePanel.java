@@ -179,7 +179,19 @@ Order of rows with measurement data cannot be changed.
     public void setProject(Project project) {
         super.setProject(project);
         sequenceTableModel.setProject(project);
+//        if (project != null) {
+//            sequenceTable.getSelectionModel().setSelectionInterval(project.getSteps() - 1, project.getSteps() - 1);
+//        }
         setEnabled(project != null);
+        scrollToEnd();
+    }
+
+    /**
+     * Scrolls the table to show the last row.
+     */
+    private void scrollToEnd() {
+        sequenceTable.scrollRectToVisible(sequenceTable.getCellRect(sequenceTableModel.getRowCount() - 1,
+                sequenceTableModel.getColumnCount() - 1, true));
     }
 
     public void projectUpdated(ProjectEvent event) {
