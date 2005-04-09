@@ -30,6 +30,9 @@ import ikayaki.Project;
 import ikayaki.ProjectEvent;
 
 import javax.swing.*;
+import javax.swing.table.TableColumnModel;
+import javax.swing.event.TableModelListener;
+import javax.swing.event.TableModelEvent;
 import java.awt.*;
 
 /**
@@ -90,9 +93,13 @@ Order of rows with measurement data cannot be changed.
      */
     public MeasurementSequencePanel() {
 
+        /* Set up table */
         sequenceTableModel = new MeasurementSequenceTableModel();
         sequenceTable = new JTable(sequenceTableModel);
+        sequenceTable.getTableHeader().setReorderingAllowed(false);
+        sequenceTable.getTableHeader().setResizingAllowed(false);
 
+        /* Build layout */
         controlsPane.setBorder(BorderFactory.createEmptyBorder(0, 4, 4, 4));
         JScrollPane scrollPane = new JScrollPane(sequenceTable);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);

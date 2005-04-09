@@ -372,16 +372,16 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 if (!(data instanceof Number)) {
                     return;
                 }
-                double stepValue = ((Number) data).doubleValue();
+                double value = ((Number) data).doubleValue();
 
                 if (rowIndex >= project.getSteps()) {
                     // add new row
                     MeasurementStep step = new MeasurementStep(project);
-                    step.setStepValue(stepValue);
+                    step.setStepValue(value);
                     project.addStep(step);
                 } else {
-                    // edit an existing row
-                    project.getStep(rowIndex).setStepValue(stepValue);
+                    // edit an existing row (the editing of completed steps is prevented by isCellEditable)
+                    project.getStep(rowIndex).setStepValue(value);
                 }
             }
 
@@ -402,10 +402,84 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
             // TODO or not?
         },
         MASS("Mass"){
-            // TODO
+            @Override public Object getValue(int rowIndex, Project project) {
+                if (rowIndex >= project.getSteps()) {
+                    return null;
+                }
+                double value = project.getStep(rowIndex).getMass();
+                if (value < 0.0) {
+                    value = project.getMass();
+                }
+                if (value < 0.0) {
+                    return null;
+                }
+                return value;
+            }
+
+            @Override public void setValue(Object data, int rowIndex, Project project) {
+                if (project == null) {
+                    return;
+                }
+                if (!(data instanceof Number)) {
+                    return;
+                }
+                double value = ((Number) data).doubleValue();
+
+                if (rowIndex < project.getSteps()) {
+                    project.getStep(rowIndex).setMass(value);
+                }
+            }
+
+            @Override public boolean isCellEditable(int rowIndex, Project project) {
+                if (rowIndex < project.getSteps()) {
+                    return true;
+                }
+                return false;
+            }
+
+            @Override public Class<?> getColumnClass() {
+                return Double.class;
+            }
         },
         VOLUME("Volume"){
-            // TODO
+            @Override public Object getValue(int rowIndex, Project project) {
+                if (rowIndex >= project.getSteps()) {
+                    return null;
+                }
+                double value = project.getStep(rowIndex).getVolume();
+                if (value < 0.0) {
+                    value = project.getVolume();
+                }
+                if (value < 0.0) {
+                    return null;
+                }
+                return value;
+            }
+
+            @Override public void setValue(Object data, int rowIndex, Project project) {
+                if (project == null) {
+                    return;
+                }
+                if (!(data instanceof Number)) {
+                    return;
+                }
+                double value = ((Number) data).doubleValue();
+
+                if (rowIndex < project.getSteps()) {
+                    project.getStep(rowIndex).setVolume(value);
+                }
+            }
+
+            @Override public boolean isCellEditable(int rowIndex, Project project) {
+                if (rowIndex < project.getSteps()) {
+                    return true;
+                }
+                return false;
+            }
+
+            @Override public Class<?> getColumnClass() {
+                return Double.class;
+            }
         },
         X(MeasurementValue.X),
         Y(MeasurementValue.Y),
