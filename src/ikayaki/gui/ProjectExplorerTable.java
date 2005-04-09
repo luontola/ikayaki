@@ -43,6 +43,7 @@ import java.io.FileFilter;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.nio.channels.ClosedByInterruptException;
 
 /**
  * Creates a list of project files in directory. Handles loading selected projects and showing export popup menu
@@ -231,28 +232,29 @@ public class ProjectExplorerTable extends JTable {
             }
         });
 
-        // build project type cache
-        final File[] cacheFiles = new File[files.length];   // need a copy of the array to work on
-        for (int i = 0; i < files.length; i++) {
-            cacheFiles[i] = files[i];
-        }
-        projectTypeCacher.interrupt();      // stop the old thread before starting a new one
-        projectTypeCacher = new Thread() {
-            @Override public void run() {
-                int i = 0;
+        // build project type cache (Project caches those; we only need to call Project.getType(File) for each file)
+        // by doing this, scrolling in a big directory for the first time becomes smoother
+
+        // stop the old thread before messing with cacheFiles and starting a new thread
+        try {
+            projectTypeCacher.interrupt();
+            projectTypeCacher.join(); // wait for old thread to die
+        } catch (InterruptedException e) { }
+
+        // need a copy of files to work on, as they might get sorted any time in setDirectory(File)
+        final File[] cacheFiles = files.clone();
+
+        projectTypeCacher = new Thread(new Runnable() {
+            public void run() {
                 for (File file : cacheFiles) {
-                    if (interrupted()) {
-                        return;
-                    }
-                    if (file.canRead()) {
-                        Project.getType(file);
-                        if (++i % 10 == 0) {
-                            Thread.yield();
-                        }
-                    }
+                    if (Thread.interrupted()) return;
+                    if (file.canRead()) Project.getType(file);
                 }
             }
-        };
+        });
+
+        // start the worker thread
+        projectTypeCacher.setPriority(Thread.MIN_PRIORITY);
         projectTypeCacher.start();
 
         return files;
@@ -391,7 +393,7 @@ public class ProjectExplorerTable extends JTable {
 
                             // TODO: which one of these two?
                             //Project.export(exportfile, filetype);
-                            //Project.loadProject(exportfile).export(filetype);     // TODO <-- this one. There are no static export methods in Project class. Take a look at exportProject method in MainViewPanel. 
+                            //Project.loadProject(exportfile).export(filetype);     // TODO <-- this one. There are no static export methods in Project class. Take a look at exportProject method in MainViewPanel.
 
                             // TODO: tell somehow if export was successful; statusbar perhaps?
                         }
