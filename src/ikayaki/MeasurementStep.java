@@ -368,12 +368,23 @@ public class MeasurementStep {
             throw new NullPointerException();
         }
         if (state == READY || state == MEASURING) {
+            setMeasuring();
             results.add(result);
             if (timestamp == null) {
                 timestamp = new Date();
             }
-            state = MEASURING;
             updateTransforms();
+            save();
+        }
+    }
+
+    /**
+     * Called when the step's measurements are started. If the the step's current status is READY, will set it to
+     * MEASURING. Otherwise nothing will be changed.
+     */
+    public synchronized void setMeasuring() {
+        if (state == READY) {
+            state = MEASURING;
             save();
         }
     }

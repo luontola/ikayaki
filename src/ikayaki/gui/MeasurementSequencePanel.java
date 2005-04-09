@@ -50,7 +50,7 @@ import static ikayaki.gui.MeasurementSequenceTableModel.SequenceColumn.*;
  * three textfields for inserting new sequences, first field for start value, second for step and third for stop value.
  * Clicking Add sequence-button appends sequence into table. Saved sequences can be loaded from dropdown menu.
  *
- * @author Mikko Jormalainen, Esko Luontola
+ * @author Esko Luontola
  */
 public class MeasurementSequencePanel extends ProjectComponent {
 /*
@@ -143,10 +143,20 @@ Order of rows with measurement data cannot be changed.
 
             private void updateColumns() {
                 TableColumnModel columnModel = sequenceTable.getColumnModel();
-                for (int i = 0; i < columnModel.getColumnCount(); i++) {
-                    if (columnModel.getColumn(i).getHeaderValue().equals(COUNT.getColumnName())) {
-                        columnModel.getColumn(i).setMinWidth(25);
-                        columnModel.getColumn(i).setMaxWidth(25);
+                for (int col = 0; col < columnModel.getColumnCount(); col++) {
+                    if (columnModel.getColumn(col).getHeaderValue().equals(COUNT.getColumnName())) {
+
+                        // find out the column's preferred width using the actual cell contents
+                        int width = 20;
+                        Component comp;
+                        for (int row = 0; row < sequenceTable.getRowCount(); row++) {
+                            comp = sequenceTable.getCellRenderer(row, col).getTableCellRendererComponent(sequenceTable,
+                                    sequenceTable.getValueAt(row, col), false, false, row, col);
+                            width = Math.max(width, comp.getPreferredSize().width);
+                        }
+                        width += 5;
+                        columnModel.getColumn(col).setMinWidth(width);
+                        columnModel.getColumn(col).setMaxWidth(width);
                         return;
                     }
                 }

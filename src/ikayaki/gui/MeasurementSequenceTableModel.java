@@ -24,6 +24,8 @@ package ikayaki.gui;
 
 import ikayaki.*;
 
+import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.util.ArrayList;
@@ -43,6 +45,9 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
     private static final StyledWrapper defaultWrapper = new StyledWrapper();
     private static final StyledWrapper measuringWrapper = new StyledWrapper();
     private static final StyledWrapper doneRecentlyWrapper = new StyledWrapper();
+    private static final StyledWrapper headerWrapper = new StyledWrapper();
+    private static final Font countColumnFont = new JLabel("").getFont().deriveFont(Font.BOLD);
+    private static final Color countColumnForeground = Color.GRAY;
 
     static {
         defaultWrapper.opaque = true;
@@ -50,18 +55,29 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         defaultWrapper.selectedBackground = new Color(0xC3D4E8);
         defaultWrapper.focusBackground = new Color(0xC3D4E8);
         defaultWrapper.selectedFocusBackground = new Color(0xC3D4E8);
+        defaultWrapper.horizontalAlignment = SwingConstants.TRAILING;
 
         measuringWrapper.opaque = true;
         measuringWrapper.background = new Color(0xEEBAEE);
         measuringWrapper.selectedBackground = new Color(0xFFCCFF);
         measuringWrapper.focusBackground = new Color(0xFFCCFF);
         measuringWrapper.selectedFocusBackground = new Color(0xFFCCFF);
+        measuringWrapper.horizontalAlignment = SwingConstants.TRAILING;
 
         doneRecentlyWrapper.opaque = true;
         doneRecentlyWrapper.background = new Color(0xBAEEBA);
         doneRecentlyWrapper.selectedBackground = new Color(0xCCFFCC);
         doneRecentlyWrapper.focusBackground = new Color(0xCCFFCC);
         doneRecentlyWrapper.selectedFocusBackground = new Color(0xCCFFCC);
+        doneRecentlyWrapper.horizontalAlignment = SwingConstants.TRAILING;
+
+        headerWrapper.opaque = true;
+        headerWrapper.background = new Color(0xE1E1E1);
+        headerWrapper.selectedBackground = new Color(0xE1E1E1);
+        headerWrapper.focusBackground = new Color(0xE1E1E1);
+        headerWrapper.selectedFocusBackground = new Color(0xE1E1E1);
+        headerWrapper.border = BorderFactory.createEmptyBorder(0, 2, 0, 2);
+        headerWrapper.horizontalAlignment = SwingConstants.TRAILING;
     }
 
     private Project project = null;
@@ -376,7 +392,12 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
 
         COUNT("#") {
             @Override public Object getValue(int rowIndex, Project project) {
-                return wrap(rowIndex + 1, rowIndex, project);
+                StyledWrapper wrapper = headerWrapper;
+                wrapper.value = new Integer(rowIndex + 1);
+//                StyledWrapper wrapper = wrap(rowIndex + 1, rowIndex, project);
+//                wrapper.font = countColumnFont;     // requires the font and foreground to be resetted in wrap()
+//                wrapper.foreground = countColumnForeground;
+                return wrapper;
             }
         },
         STEP("Tesla"){
@@ -529,28 +550,31 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
          * @param project  the project whose value to get. Can be null.
          * @return the wrapped object.
          */
-        public Object wrap(Object value, int rowIndex, Project project) {
-            if (project == null || rowIndex >= project.getSteps()) {
-                return null;
-            }
+        public StyledWrapper wrap(Object value, int rowIndex, Project project) {
             StyledWrapper wrapper;
-            switch (project.getStep(rowIndex).getState()) {
-            case READY:
-            case DONE:
+            if (project == null || rowIndex >= project.getSteps()) {
                 wrapper = defaultWrapper;
-                break;
-            case MEASURING:
-                wrapper = measuringWrapper;
-                break;
-            case DONE_RECENTLY:
-                wrapper = doneRecentlyWrapper;
-                break;
-            default:
-                assert false;
-                wrapper = null;
-                break;
+            } else {
+                switch (project.getStep(rowIndex).getState()) {
+                case READY:
+                case DONE:
+                    wrapper = defaultWrapper;
+                    break;
+                case MEASURING:
+                    wrapper = measuringWrapper;
+                    break;
+                case DONE_RECENTLY:
+                    wrapper = doneRecentlyWrapper;
+                    break;
+                default:
+                    assert false;
+                    wrapper = null;
+                    break;
+                }
             }
             wrapper.value = value;
+            wrapper.font = null;    // TODO reset the font and foreground in case they were set by COUNT column
+            wrapper.foreground = null;
             return wrapper;
         }
 

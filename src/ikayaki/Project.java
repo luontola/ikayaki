@@ -1326,6 +1326,7 @@ project listeners.
 
             System.out.println("Measuring step " + i + "...");
             currentStep = getStep(i);
+            currentStep.setMeasuring();
             fireMeasurementEvent(currentStep, MeasurementEvent.Type.STEP_START);
 
             try {
