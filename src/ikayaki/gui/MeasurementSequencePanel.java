@@ -39,7 +39,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.*;
-import java.text.NumberFormat;
+import java.text.DecimalFormat;
 
 import static ikayaki.gui.MeasurementSequenceTableModel.SequenceColumn.*;
 
@@ -178,21 +178,76 @@ Order of rows with measurement data cannot be changed.
         // TODO
     }
 
+    private double getLastStepValue() {
+        double stepValue = -1.0;
+        for (int i = getProject().getSteps() - 1; i >= 0; i--) {
+            stepValue = getProject().getStep(i).getStepValue();
+            if (stepValue >= 0.0) {
+                break;
+            }
+        }
+        return stepValue;
+    }
+
     /**
-     * Adds sequence determined by textfields to end of table.
+     * Resets the values for the Start-Step-Stop fields.
+     */
+    private void resetAddSequence() {
+        sequenceStartField.setValue(null);
+        sequenceStepField.setValue(null);
+        sequenceStopField.setValue(null);
+        if (getProject() == null) {
+            return;
+        }
+
+        // set the latest step value to the Start field
+        double stepValue = getLastStepValue();
+        if (stepValue >= 0.0) {
+            sequenceStartField.setValue(new Double(stepValue));
+        }
+    }
+
+    /**
+     * Adds sequence determined by textfields to end of table. If successful, resets the values for the Start-Step-Stop
+     * fields and moves the focus to the Start field. If unsuccessful, indicates the invalid text fields by blinking.
      */
     private void addSequence() {
+        if (getProject() == null || !getProject().isSequenceEditEnabled()) {
+            return;
+        }
+        if (sequenceStartField.getValue() == null
+                || sequenceStepField.getValue() == null
+                || sequenceStopField.getValue() == null) {
+            System.out.println("1");
+            return;
+        }
+        // TODO: if there are invalid values in some fields, flash them red
+
         MeasurementStep step = new MeasurementStep();
-        if (getProject() != null) {
-            if (getProject().isSequenceEditEnabled() && Double.valueOf((String) sequenceStepField.getValue()) > 0.09) {
-                for (double i = Double.valueOf((String) sequenceStartField.getValue());
-                     i < Double.valueOf((String) sequenceStopField.getValue()) + 1;
-                     i = i + Double.valueOf((String) sequenceStepField.getValue())) {
-                    step.setStepValue(i);
-                    getProject().addStep(step);
-                    // TODO: adding to table
+        double startVal = ((Number) sequenceStartField.getValue()).doubleValue();
+        double stepVal = ((Number) sequenceStepField.getValue()).doubleValue();
+        double stopVal = ((Number) sequenceStopField.getValue()).doubleValue();
+
+        // add the steps to the sequence
+        if (stepVal > 0.09) {
+            for (double d = startVal; d <= stopVal; d += stepVal) {
+                if (Math.abs(d - getLastStepValue()) < 0.09) {
+                    continue;
                 }
+                step.setStepValue(d);
+                getProject().addStep(step);
             }
+
+            // finally reset the fields, move focus to the Start field and show the added steps
+            resetAddSequence();
+            sequenceStartField.grabFocus();
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    scrollToRow(sequenceTableModel.getRowCount() - 1);
+                    sequenceStartField.setSelectionStart(0);
+                    sequenceStartField.setSelectionEnd(sequenceStartField.getText().length());
+                }
+            });
         }
     }
 
@@ -221,6 +276,7 @@ Order of rows with measurement data cannot be changed.
 //            sequenceTable.getSelectionModel().setSelectionInterval(project.getSteps() - 1, project.getSteps() - 1);
 //        }
         setEnabled(project != null);
+        resetAddSequence();
         scrollToRow(sequenceTableModel.getRowCount() - 1);
     }
 
@@ -325,12 +381,14 @@ Order of rows with measurement data cannot be changed.
      */
     private class MyFormatterFactory extends JFormattedTextField.AbstractFormatterFactory {
         public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf) {
-            NumberFormat format = NumberFormat.getIntegerInstance();
+            //NumberFormat format = NumberFormat.getNumberInstance();
+            DecimalFormat format = new DecimalFormat();
             format.setGroupingUsed(false);
+            format.setMaximumFractionDigits(1);
 
             NumberFormatter formatter = new NumberFormatter(format);
-            formatter.setMinimum(0);
-            formatter.setMaximum(9999);
+            formatter.setMinimum(new Double(0.0));
+            formatter.setMaximum(new Double(9999.0));
             return formatter;
         }
     }
