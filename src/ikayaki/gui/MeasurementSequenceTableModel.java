@@ -1,24 +1,24 @@
 /*
-* MeasurementSequenceTableModel.java
-*
-* Copyright (C) 2005 Project SQUID, http://www.cs.helsinki.fi/group/squid/
-*
-* This file is part of Ikayaki.
-*
-* Ikayaki is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* Ikayaki is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Ikayaki; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*/
+ * MeasurementSequenceTableModel.java
+ *
+ * Copyright (C) 2005 Project SQUID, http://www.cs.helsinki.fi/group/squid/
+ *
+ * This file is part of Ikayaki.
+ *
+ * Ikayaki is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Ikayaki is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Ikayaki; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 
 package ikayaki.gui;
 
@@ -40,9 +40,9 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
 
     private static final String VISIBLE_COLUMNS_PROPERTY = "visibleColumns";
 
-    private static final StyledTableCellRenderer.Wrapper defaultWrapper = new StyledTableCellRenderer.Wrapper();
-    private static final StyledTableCellRenderer.Wrapper measuringWrapper = new StyledTableCellRenderer.Wrapper();
-    private static final StyledTableCellRenderer.Wrapper doneRecentlyWrapper = new StyledTableCellRenderer.Wrapper();
+    private static final StyledWrapper defaultWrapper = new StyledWrapper();
+    private static final StyledWrapper measuringWrapper = new StyledWrapper();
+    private static final StyledWrapper doneRecentlyWrapper = new StyledWrapper();
 
     static {
         defaultWrapper.opaque = true;
@@ -424,10 +424,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 }
                 return true;        // uncompleted steps
             }
-
-//            @Override public Class<?> getColumnClass() {
-//                return Double.class;
-//            }
         },
         MASS("Mass"){
             @Override public Object getValue(int rowIndex, Project project) {
@@ -464,10 +460,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 }
                 return false;
             }
-
-//            @Override public Class<?> getColumnClass() {
-//                return Double.class;
-//            }
         },
         VOLUME("Volume"){
             @Override public Object getValue(int rowIndex, Project project) {
@@ -504,10 +496,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 }
                 return false;
             }
-
-//            @Override public Class<?> getColumnClass() {
-//                return Double.class;
-//            }
         },
         X(MeasurementValue.X),
         Y(MeasurementValue.Y),
@@ -549,7 +537,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
             if (project == null || rowIndex >= project.getSteps()) {
                 return null;
             }
-            StyledTableCellRenderer.Wrapper wrapper;
+            StyledWrapper wrapper;
             switch (project.getStep(rowIndex).getState()) {
             case READY:
             case DONE:
@@ -626,7 +614,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
          * StyledTableCellRenderer.Wrapper.class. Subclasses can override the default behaviour.
          */
         public Class<?> getColumnClass() {
-            return StyledTableCellRenderer.Wrapper.class;
+            return StyledWrapper.class;
         }
     }
 }
