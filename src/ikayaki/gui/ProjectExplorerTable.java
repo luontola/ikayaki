@@ -118,6 +118,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         // this.getTableHeader().setResizingAllowed(false);
         // TODO: the grid still shows up when selecting rows. must make a custom cell renderer to change that
         this.setShowGrid(false);
+        this.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
 
         // get each column for easier access...
         TableColumn[] column = new TableColumn[this.getColumnModel().getColumnCount()];
@@ -297,6 +298,23 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
      */
     private class ProjectExplorerTableModel extends AbstractTableModel implements ProjectListener {
 
+        private final StyledWrapper defaultWrapper = new StyledWrapper();               // defaults
+        private final StyledWrapper calibrationNoticeWrapper = new StyledWrapper();     // bold text
+
+        public ProjectExplorerTableModel() {
+            calibrationNoticeWrapper.font = ProjectExplorerTable.this.getFont().deriveFont(Font.BOLD);
+
+            /*
+             * Refresh the data at regular intervals (5 min) even if no other events would refresh it.
+             * This is especially to update the time elapsed value of a calibration panel.
+             */
+            new Timer(5*60*1000, new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    fireTableDataChanged();
+                }
+            }).start();
+        }
+
         public String getColumnName(int column) {
             return column_name[column] + (column == explorerTableSortColumn ? " *" : "");
         }
@@ -311,26 +329,58 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
 
         public Object getValueAt(int row, int column) {
             File file = files[row];
+            Object value;
             switch (column) {
                 case COLUMN_FILENAME:
                     String filename = file.getName();
-                    return filename.substring(0, filename.length() - Ikayaki.FILE_TYPE.length());
+                    value = filename.substring(0, filename.length() - Ikayaki.FILE_TYPE.length());
+                    break;
                 case COLUMN_TYPE:
-                    return Project.getType(file);
+                    value = Project.getType(file);
+                    break;
                 case COLUMN_LASTMOD:
-                    return DateFormat.getInstance().format(file.lastModified());
+                    value = DateFormat.getInstance().format(file.lastModified());
+                    break;
                 case COLUMN_LASTMEASURE:
                     Date date = Project.loadProject(file).getTimestamp();
-                    if (date == null)return null;
-                    return DateFormat.getInstance().format(date);
+                    if (date == null) value = null;
+                    else value = DateFormat.getInstance().format(date);
+                    break;
                 case COLUMN_UNMEASURED:
                     date = Project.loadProject(file).getTimestamp();
-                    if (date == null)return null;
-                    return (new Date().getTime() - date.getTime()) / 3600000 + "h";
+                    if (date == null) value = null;
+                    else value = (new Date().getTime() - date.getTime()) / 3600000 + " h";
+                    break;
                 default:
                     assert false;
-                    return null;
+                    value = null;
+                    break;
             }
+
+            // wrap to the style
+            StyledWrapper wrapper;
+            if (isCalibration) {
+                Date date = Project.loadProject(file).getTimestamp();
+                if (date == null) {
+                    wrapper = calibrationNoticeWrapper;
+                } else {
+                    // alert the user if the calibration has not been done today
+                    int hoursElapsed = (int)(new Date().getTime() - date.getTime()) / 3600000;
+                    if (hoursElapsed >= 18) {
+                        wrapper = calibrationNoticeWrapper;
+                    } else {
+                        wrapper = defaultWrapper;
+                    }
+                }
+            } else {
+                wrapper = defaultWrapper;
+            }
+            wrapper.value = value;
+            return wrapper;
+        }
+
+        @Override public Class<?> getColumnClass(int columnIndex) {
+            return StyledWrapper.class;
         }
 
         /**
