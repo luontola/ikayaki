@@ -26,6 +26,7 @@ import ikayaki.Ikayaki;
 import ikayaki.Project;
 import ikayaki.ProjectEvent;
 import ikayaki.Settings;
+import ikayaki.squid.SerialIO;
 import ikayaki.squid.Squid;
 
 import javax.swing.*;
@@ -35,7 +36,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import ikayaki.squid.SerialIO;
 
 /**
  * Creates the main view panels (split panels) and Squid and Project components. It also tells everybody if the current
@@ -311,6 +311,11 @@ public class MainViewPanel extends ProjectComponent {
             // check if the last measurement has stopped
             if (measuringProject != null && measuringProject.getState() == Project.State.IDLE) {
 
+                /* TODO:
+                 * It might be better that if the measuring ends when measuringProject is not active,
+                 * it would not be closed. Otherwise it won't be possible for the user to see which of
+                 * the steps were just completed (green color).
+                 */
                 // close the project if it is not anymore open
                 if (measuringProject != project) {
                     if (Project.closeProject(measuringProject)) {

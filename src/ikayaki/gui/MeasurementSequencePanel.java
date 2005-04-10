@@ -288,7 +288,14 @@ Order of rows with measurement data cannot be changed.
 //        }
         setEnabled(project != null);
         resetAddSequence();
-        scrollToRow(sequenceTableModel.getRowCount() - 1);
+
+        // scroll the table so that as many measuments as possible are visible, plus a couple of empty rows
+        scrollToRow(0);
+        if (project != null) {
+            scrollToRow(Math.min(project.getCompletedSteps() + 5, sequenceTableModel.getRowCount() - 1));
+        } else {
+            scrollToRow(sequenceTableModel.getRowCount() - 1);
+        }
     }
 
     /**
