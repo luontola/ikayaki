@@ -86,22 +86,22 @@ project listeners.
      * Caches the created and loaded Project objects to make sure that no more than one object will be created for each
      * physical file.
      */
-    private static Hashtable<File, Project> projectCache = new Hashtable<File, Project>();
+    private static final Hashtable<File, Project> projectCache = new Hashtable<File, Project>();
 
     /**
      * Caches the types of the project files, as read by getType(Project). The value is a Type for valid project files,
      * or an Object for invalid or unknown files.
      */
-    private static Hashtable<File, Object> projectTypeCache = new Hashtable<File, Object>();
+    private static final Hashtable<File, Object> projectTypeCache = new Hashtable<File, Object>();
 
     /**
      * Location of the project file in the local file system. Autosaving will save the project to this file.
      */
-    private File file;
+    private final File file;
     /**
      * Type of the measurement project. This will affect which features of the project are enabled and disabled.
      */
-    private Type type;
+    private final Type type;
 
     /**
      * Current state of the measurements. If no measurement is running, then state is IDLE. Only one measurement may be
@@ -118,13 +118,13 @@ project listeners.
      * Custom properties of this project stored in a map. The project is not interested in what properties are stored;
      * it only saves them.
      */
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
 
     /**
      * Measurement sequence of this project. In the beginning are all completed measurement steps, and in the end are
      * planned measurement steps. Completed measurements may NOT be deleted.
      */
-    private MeasurementSequence sequence = new MeasurementSequence();
+    private MeasurementSequence sequence = new MeasurementSequence();   // this instance will be dumped by the constructor Project(File,Document)
 
     /**
      * Strike of the sample. Will be used to create the transform matrix.
@@ -171,7 +171,7 @@ project listeners.
     /**
      * Listeners for this project.
      */
-    private EventListenerList listenerList = new EventListenerList();
+    private final EventListenerList listenerList = new EventListenerList();
 
     /**
      * true if the project has been modified, otherwise false.
@@ -181,7 +181,7 @@ project listeners.
     /**
      * Scheduler for automatically writing the modified project to file after a short delay.
      */
-    private LastExecutor autosaveQueue = new LastExecutor(500, true);
+    private final LastExecutor autosaveQueue = new LastExecutor(500, true);
 
     /**
      * Operation that will save the project to file.
@@ -1314,11 +1314,14 @@ project listeners.
      * be in a non-IDLE state before starting a measurement with this method. The measurement should be run in a worker
      * thread and only one at a time.
      *
-     * @throws IllegalStateException if the project's state is IDLE.
+     * @throws IllegalStateException if the project's state is IDLE or it has no Squid.
      */
     private void runMeasurement() {
+        if (getSquid() == null) {
+            throw new IllegalStateException("Unable to run measurement, squid is: " + getSquid());
+        }
         if (getState() == IDLE) {
-            throw new IllegalStateException("An idle project can not run a measurement.");
+            throw new IllegalStateException("Unable to run measurement, state is: " + getState());
         }
 
         System.out.println("Measurement started");
@@ -1480,6 +1483,9 @@ project listeners.
      * this project.
      */
     public synchronized boolean isAutoStepEnabled() {
+        if (getSquid() == null) {
+            return false;
+        }
         if (type == CALIBRATION || type == THELLIER || type == THERMAL) {
             return false;
         } else if (type == AF) {
@@ -1498,6 +1504,9 @@ project listeners.
      * this project.
      */
     public synchronized boolean isSingleStepEnabled() {
+        if (getSquid() == null) {
+            return false;
+        }
         if (type == CALIBRATION || type == AF || type == THELLIER || type == THERMAL) {
             if (getState() == IDLE) {
                 return true;
@@ -1549,6 +1558,9 @@ project listeners.
      * @return true if the measurement was started, otherwise false.
      */
     public synchronized boolean doAutoStep() {
+        if (getSquid() == null) {
+            return false;
+        }
         if (getState() == IDLE) {
             if (isAutoStepEnabled()) {
                 setState(MEASURING);
