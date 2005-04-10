@@ -401,7 +401,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
             newProjectType.removeItem(Project.Type.CALIBRATION); // calibratin projects are created from the File menu
             newProjectType.setSelectedItem(Project.Type.AF);
             newProjectType.setBackground(Color.WHITE);
-            createNewProjectButton = new JButton("Create new");
+            createNewProjectButton = new JButton("Create New");
 
             flowPanel = new JPanel(new BorderLayout());
             flowPanel.add(newProjectType, BorderLayout.WEST);

@@ -92,7 +92,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
     public static final int COLUMN_LASTMOD = 2;
     public static final int COLUMN_LASTMEASURE = 3;
     public static final int COLUMN_UNMEASURED = 4;
-    public static final String[] column_name = {"Name", "Type", "Last modified", "Last measure", "Elapsed"};
+    public static final String[] column_name = {"Name", "Type", "Modified", "Measured", "Elapsed"};
 
     // default column configurations for different table types
     public static final int[] default_columns = { COLUMN_FILENAME, COLUMN_TYPE, COLUMN_LASTMOD};
