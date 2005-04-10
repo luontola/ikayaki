@@ -23,8 +23,8 @@
 package ikayaki.gui;
 
 import ikayaki.MeasurementEvent;
-import ikayaki.ProjectEvent;
 import ikayaki.Project;
+import ikayaki.ProjectEvent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,6 +77,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
     /* Swing Actions */
     private Action autoStepAction;
     private Action singleStepAction;
+    private Action calibrateAction;
     private Action pauseAction;
     private Action abortAction;
 
@@ -135,11 +136,14 @@ public class MeasurementControlsPanel extends ProjectComponent {
         if (getProject() != null) {
             getAutoStepAction().setEnabled(getProject().isAutoStepEnabled());
             getSingleStepAction().setEnabled(getProject().isSingleStepEnabled());
+            getCalibrateAction().setEnabled(getProject().isSingleStepEnabled()
+                    && getProject().getType() == Project.Type.CALIBRATION);
             getPauseAction().setEnabled(getProject().isPauseEnabled());
             getAbortAction().setEnabled(getProject().isAbortEnabled());
         } else {
             getAutoStepAction().setEnabled(false);
             getSingleStepAction().setEnabled(false);
+            getCalibrateAction().setEnabled(false);
             getPauseAction().setEnabled(false);
             getAbortAction().setEnabled(false);
         }
@@ -166,7 +170,8 @@ public class MeasurementControlsPanel extends ProjectComponent {
             autoStepAction.putValue(Action.NAME, "Measure");
             //autoStepAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_M);
             autoStepAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.CTRL_MASK));
-            autoStepAction.putValue(Action.SMALL_ICON, new ImageIcon(ClassLoader.getSystemResource("resources/play.png")));
+            autoStepAction.putValue(Action.SMALL_ICON,
+                    new ImageIcon(ClassLoader.getSystemResource("resources/play.png")));
         }
         return autoStepAction;
     }
@@ -185,9 +190,30 @@ public class MeasurementControlsPanel extends ProjectComponent {
             //singleStepAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_I);
             singleStepAction.putValue(Action.ACCELERATOR_KEY,
                     KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_MASK));
-            singleStepAction.putValue(Action.SMALL_ICON, new ImageIcon(ClassLoader.getSystemResource("resources/step.png")));
+            singleStepAction.putValue(Action.SMALL_ICON,
+                    new ImageIcon(ClassLoader.getSystemResource("resources/step.png")));
         }
         return singleStepAction;
+    }
+
+    public Action getCalibrateAction() {
+        if (calibrateAction == null) {
+            calibrateAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    if (!getProject().doSingleStep()) {
+                        JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
+                                "Unable to calibrate.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            };
+            calibrateAction.putValue(Action.NAME, "Calibrate");
+            //calibrateAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_I);
+            //calibrateAction.putValue(Action.ACCELERATOR_KEY,
+            //        KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_MASK));
+            calibrateAction.putValue(Action.SMALL_ICON,
+                    new ImageIcon(ClassLoader.getSystemResource("resources/step.png")));
+        }
+        return calibrateAction;
     }
 
     public Action getPauseAction() {
@@ -203,7 +229,8 @@ public class MeasurementControlsPanel extends ProjectComponent {
             pauseAction.putValue(Action.NAME, "Pause");
             //pauseAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_P);
             pauseAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK));
-            pauseAction.putValue(Action.SMALL_ICON, new ImageIcon(ClassLoader.getSystemResource("resources/pause.png")));
+            pauseAction.putValue(Action.SMALL_ICON,
+                    new ImageIcon(ClassLoader.getSystemResource("resources/pause.png")));
         }
         return pauseAction;
     }

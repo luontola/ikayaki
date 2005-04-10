@@ -86,8 +86,7 @@ or disable if measuring has started.
         calibrationProjectTable = new ProjectExplorerTable(this.parent, true);
         calibrationProjectTable.setDirectory(this.directory);
 
-        calibrateButton = new JButton(((MainViewPanel) parent).getMeasurementControlsPanel().getSingleStepAction());
-        calibrateButton.setText("Calibrate");
+        calibrateButton = new JButton(((MainViewPanel) parent).getMeasurementControlsPanel().getCalibrateAction());
 
         calibratePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
         calibratePanel.add(calibrateButton);
