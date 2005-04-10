@@ -107,6 +107,7 @@ Order of rows with measurement data cannot be changed.
         sequenceTable.getTableHeader().setReorderingAllowed(false);
         sequenceTable.getTableHeader().setResizingAllowed(false);
         sequenceTable.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
+        sequenceTable.setDefaultEditor(StyledWrapper.class, new StyledCellEditor(new JTextField()));
 
         /* Build layout */
         controlsPane.setBorder(BorderFactory.createEmptyBorder(0, 4, 4, 4));

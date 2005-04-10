@@ -26,7 +26,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * User: ORFJackal Date: 9.4.2005 Time: 18:42:46
+ * CellEditor to compliment StyledTableCellRenderer. Applies the horizontalAlignment, foreground and font styles to the
+ * component returned by another cell editor. Unless otherwise specified, uses a DefaultCellEditor.
  *
  * @author Esko Luontola
  */
@@ -64,7 +65,32 @@ public class StyledCellEditor extends DefaultCellEditor {
      */
     @Override public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected,
                                                           boolean expanded, boolean leaf, int row) {
-        return super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row); // TODO
+        // get the component as made by the default editor
+        if (!(value instanceof StyledWrapper)) {
+            return super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
+        }
+        StyledWrapper wrapper = (StyledWrapper) value;
+        Component comp = super.getTreeCellEditorComponent(tree, wrapper.value, isSelected, expanded, leaf, row);
+
+        // apply custom style to the component
+        if (comp instanceof JTextField) {
+            JTextField textField = (JTextField) comp;
+            textField.setHorizontalAlignment(wrapper.horizontalAlignment);
+            if (wrapper.foreground != null) textField.setForeground(wrapper.foreground);
+            if (wrapper.font != null) textField.setFont(wrapper.font);
+
+        } else if (comp instanceof JCheckBox) {
+            JCheckBox checkBox = (JCheckBox) comp;
+            checkBox.setHorizontalAlignment(wrapper.horizontalAlignment);
+            if (wrapper.foreground != null) checkBox.setForeground(wrapper.foreground);
+            if (wrapper.font != null) checkBox.setFont(wrapper.font);
+
+        } else if (comp instanceof JComboBox) {
+            JComboBox comboBox = (JComboBox) comp;
+            if (wrapper.foreground != null) comboBox.setForeground(wrapper.foreground);
+            if (wrapper.font != null) comboBox.setFont(wrapper.font);
+        }
+        return comp;
     }
 
     /**
@@ -72,7 +98,31 @@ public class StyledCellEditor extends DefaultCellEditor {
      */
     @Override public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
                                                            int column) {
-        return super.getTableCellEditorComponent(table, value, isSelected, row, column); // TODO
-    }
+        // get the component as made by the default editor
+        if (!(value instanceof StyledWrapper)) {
+            return super.getTableCellEditorComponent(table, value, isSelected, row, column);
+        }
+        StyledWrapper wrapper = (StyledWrapper) value;
+        Component comp = super.getTableCellEditorComponent(table, wrapper.value, isSelected, row, column);
 
+        // apply custom style to the component
+        if (comp instanceof JTextField) {
+            JTextField textField = (JTextField) comp;
+            textField.setHorizontalAlignment(wrapper.horizontalAlignment);
+            if (wrapper.foreground != null) textField.setForeground(wrapper.foreground);
+            if (wrapper.font != null) textField.setFont(wrapper.font);
+
+        } else if (comp instanceof JCheckBox) {
+            JCheckBox checkBox = (JCheckBox) comp;
+            checkBox.setHorizontalAlignment(wrapper.horizontalAlignment);
+            if (wrapper.foreground != null) checkBox.setForeground(wrapper.foreground);
+            if (wrapper.font != null) checkBox.setFont(wrapper.font);
+
+        } else if (comp instanceof JComboBox) {
+            JComboBox comboBox = (JComboBox) comp;
+            if (wrapper.foreground != null) comboBox.setForeground(wrapper.foreground);
+            if (wrapper.font != null) comboBox.setFont(wrapper.font);
+        }
+        return comp;
+    }
 }

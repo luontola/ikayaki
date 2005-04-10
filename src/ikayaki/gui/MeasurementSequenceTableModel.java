@@ -409,13 +409,24 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 if (project == null) {
                     return;
                 }
-                if (!(data instanceof Number)) {
-                    return;
+//                if (!(data instanceof Number)) {
+//                    return;
+//                }
+//                double value = ((Number) data).doubleValue();
+                if (data != null && !(data instanceof Number)) {
+                    if (data.toString().equals("")) {
+                        data = null;
+                    } else {
+                        data = new Double(data.toString());
+                    }
                 }
-                double value = ((Number) data).doubleValue();
+                double value = data != null ? ((Number) data).doubleValue() : -1.0;
 
                 if (rowIndex >= project.getSteps()) {
                     // add new row
+                    if (value < 0.0) {
+                        return;
+                    }
                     MeasurementStep step = new MeasurementStep(project);
                     step.setStepValue(value);
                     project.addStep(step);
@@ -455,7 +466,11 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                     return;
                 }
                 if (data != null && !(data instanceof Number)) {
-                    return;
+                    if (data.toString().equals("")) {
+                        data = null;
+                    } else {
+                        data = new Double(data.toString());
+                    }
                 }
                 double value = data != null ? ((Number) data).doubleValue() : -1.0;
 
@@ -491,7 +506,11 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                     return;
                 }
                 if (data != null && !(data instanceof Number)) {
-                    return;
+                    if (data.toString().equals("")) {
+                        data = null;
+                    } else {
+                        data = new Double(data.toString());
+                    }
                 }
                 double value = data != null ? ((Number) data).doubleValue() : -1.0;
 
