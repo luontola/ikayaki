@@ -27,6 +27,8 @@ import ikayaki.*;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -386,6 +388,9 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
 
         // TODO: define the presentation of all values
 
+        /**
+         * Showing ordinal number of the measurement step, starting from number 1.
+         */
         COUNT("#") {
             @Override public Object getValue(int rowIndex, Project project) {
                 StyledWrapper wrapper = headerWrapper;
@@ -393,7 +398,16 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 return wrapper;
             }
         },
+
+        /**
+         * Showing and editing the stepValue of the measurement step.
+         */
         STEP("Tesla"){
+            {
+                getNumberFormat().setGroupingUsed(false);
+                getNumberFormat().setMaximumFractionDigits(1);
+            }
+
             @Override public Object getValue(int rowIndex, Project project) {
                 if (rowIndex >= project.getSteps()) {
                     return null;
@@ -402,22 +416,22 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 if (value < 0.0) {
                     return null;
                 }
-                return wrap(value, rowIndex, project);
+                return wrap(getNumberFormat().format(value), rowIndex, project);
             }
 
             @Override public void setValue(Object data, int rowIndex, Project project) {
                 if (project == null) {
                     return;
                 }
-//                if (!(data instanceof Number)) {
-//                    return;
-//                }
-//                double value = ((Number) data).doubleValue();
                 if (data != null && !(data instanceof Number)) {
                     if (data.toString().equals("")) {
                         data = null;
                     } else {
-                        data = new Double(data.toString());
+                        try {
+                            data = getNumberFormat().parse(data.toString());
+                        } catch (ParseException e) {
+                            throw new NumberFormatException("For input string: \"" + data.toString() + "\"");
+                        }
                     }
                 }
                 double value = data != null ? ((Number) data).doubleValue() : -1.0;
@@ -446,6 +460,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 return true;        // uncompleted steps
             }
         },
+
+        /**
+         * Showing and editing the mass of the measurement step.
+         */
         MASS("Mass"){
             @Override public Object getValue(int rowIndex, Project project) {
                 if (rowIndex >= project.getSteps()) {
@@ -458,7 +476,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 if (value < 0.0) {
                     return null;
                 }
-                return wrap(value, rowIndex, project);
+                return wrap(getNumberFormat().format(value), rowIndex, project);
             }
 
             @Override public void setValue(Object data, int rowIndex, Project project) {
@@ -469,7 +487,12 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                     if (data.toString().equals("")) {
                         data = null;
                     } else {
-                        data = new Double(data.toString());
+//                        data = new Double(data.toString());
+                        try {
+                            data = getNumberFormat().parse(data.toString());
+                        } catch (ParseException e) {
+                            throw new NumberFormatException("For input string: \"" + data.toString() + "\"");
+                        }
                     }
                 }
                 double value = data != null ? ((Number) data).doubleValue() : -1.0;
@@ -486,6 +509,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 return false;
             }
         },
+
+        /**
+         * Showing and editing the volume of the measurement step.
+         */
         VOLUME("Volume"){
             @Override public Object getValue(int rowIndex, Project project) {
                 if (rowIndex >= project.getSteps()) {
@@ -498,7 +525,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 if (value < 0.0) {
                     return null;
                 }
-                return wrap(value, rowIndex, project);
+                return wrap(getNumberFormat().format(value), rowIndex, project);
             }
 
             @Override public void setValue(Object data, int rowIndex, Project project) {
@@ -509,7 +536,12 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                     if (data.toString().equals("")) {
                         data = null;
                     } else {
-                        data = new Double(data.toString());
+//                        data = new Double(data.toString());
+                        try {
+                            data = getNumberFormat().parse(data.toString());
+                        } catch (ParseException e) {
+                            throw new NumberFormatException("For input string: \"" + data.toString() + "\"");
+                        }
                     }
                 }
                 double value = data != null ? ((Number) data).doubleValue() : -1.0;
@@ -526,6 +558,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 return false;
             }
         },
+
+        /*
+         * Showing the values calculated by MeasurementValue.
+         */
         X(MeasurementValue.X),
         Y(MeasurementValue.Y),
         Z(MeasurementValue.Z),
@@ -536,13 +572,18 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         RELATIVE_REMANENCE(MeasurementValue.RELATIVE_REMANENCE),
         THETA63(MeasurementValue.THETA63);
 
+        /* Begin class SequenceColumn */
+
         private String columnName;
 
         private MeasurementValue value;
 
+        private NumberFormat numberFormat;
+
         private SequenceColumn(String columnName) {
             this.columnName = columnName;
             this.value = null;
+            this.numberFormat = NumberFormat.getNumberInstance();
         }
 
         private SequenceColumn(MeasurementValue value) {
@@ -552,6 +593,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 this.columnName = value.getCaption() + " (" + value.getUnit() + ")";
             }
             this.value = value;
+            this.numberFormat = NumberFormat.getNumberInstance();
         }
 
         /**
@@ -602,7 +644,28 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 if (rowIndex >= project.getSteps()) {
                     return null;
                 }
-                return wrap(project.getValue(rowIndex, value), rowIndex, project);
+                //return wrap(getNumberFormat().format(value), rowIndex, project);
+
+                Object obj = project.getValue(rowIndex, value);
+                if (obj != null && obj instanceof Number) {
+
+                    // format the return value with NumberFormatter
+                    double doubleValue = ((Number) obj).doubleValue();
+                    String formatted = getNumberFormat().format(obj);
+
+                    // check for Infinity and NaN
+                    if (formatted.charAt(0) == 65533) { // for some reason "doubleValue == Double.NaN" doesn't work
+                        return "NaN";
+                    } else if (doubleValue == Double.POSITIVE_INFINITY) {
+                        return "\u221E";
+                    } else if (doubleValue == Double.NEGATIVE_INFINITY) {
+                        return "-\u221E";
+                    } else {
+                        return wrap(formatted, rowIndex, project);
+                    }
+                } else {
+                    return wrap(obj, rowIndex, project);
+                }
             } else {
                 return null;
             }
@@ -645,6 +708,13 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
          */
         public Class<?> getColumnClass() {
             return StyledWrapper.class;
+        }
+
+        /**
+         * Returns the number format used for rendering the numbers in this column.
+         */
+        public NumberFormat getNumberFormat() {
+            return numberFormat;
         }
     }
 }
