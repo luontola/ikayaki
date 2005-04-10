@@ -128,31 +128,13 @@ public class MeasurementStep {
             throw new NullPointerException();
         }
         this.project = project;
+        String s;
 
         // verify tag name
         if (!element.getTagName().equals("step")) {
             throw new IllegalArgumentException("Invalid tag name: " + element.getTagName());
         }
-
-        // get state
-        if (element.getAttribute("done").equals("1")) {
-            state = DONE;
-        } else {
-            state = READY;
-        }
-
-        // get timestamp
-        String s = element.getAttribute("timestamp");
-        if (s.equals("")) {
-            timestamp = null;
-        } else {
-            try {
-                timestamp = new Date(Long.parseLong(s));
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid timestamp: " + s);
-            }
-        }
-
+        
         // get stepValue, mass, volume
         s = element.getAttribute("stepvalue");
         try {
@@ -178,6 +160,25 @@ public class MeasurementStep {
         for (int i = 0; i < results.getLength(); i++) {
             Element result = (Element) results.item(i);
             this.results.add(new MeasurementResult(result));
+        }
+
+        // get state, must be done after getting results
+        if (element.getAttribute("done").equals("1")) {
+            state = DONE;
+        } else {
+            state = READY;
+        }
+
+        // get timestamp, must be done after getting results
+        s = element.getAttribute("timestamp");
+        if (s.equals("")) {
+            timestamp = null;
+        } else {
+            try {
+                timestamp = new Date(Long.parseLong(s));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid timestamp: " + s);
+            }
         }
 
         // check that state, timestamp and results are consistent
@@ -276,8 +277,13 @@ public class MeasurementStep {
 
     /**
      * Sets the value of this step. A negative value will clear it.
+     *
+     * @throws IllegalStateException if the step's state is not READY.
      */
     public synchronized void setStepValue(double stepValue) {
+        if (state != READY) {
+            throw new IllegalStateException("Unable to set stepValue, state is: " + state);
+        }
         if (stepValue < 0.0) {
             stepValue = -1.0;
         }
@@ -355,13 +361,14 @@ public class MeasurementStep {
 
     /**
      * Appends a measurement result to this step. This method may be called only for a steps whose state is READY or
-     * MEASURING, otherwise nothing will be changed.
+     * MEASURING.
      * <p/>
      * Sets the timestamp to the current time. Sets the state to MEASURING. The transformation matrix of the result will
      * be updated automatically.
      *
      * @param result the result to be added.
-     * @throws NullPointerException if result is null.
+     * @throws NullPointerException  if result is null.
+     * @throws IllegalStateException if this step's state is not READY or MEASURING.
      */
     public synchronized void addResult(MeasurementResult result) {
         if (result == null) {
@@ -375,6 +382,8 @@ public class MeasurementStep {
             }
             updateTransforms();
             save();
+        } else {
+            throw new IllegalStateException("Unable to add results, state is: " + state);
         }
     }
 

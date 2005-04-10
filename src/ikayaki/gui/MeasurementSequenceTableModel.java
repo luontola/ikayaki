@@ -48,6 +48,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
     private static final StyledWrapper measuringWrapper = Settings.getMeasuringWrapperInstance();
     private static final StyledWrapper doneRecentlyWrapper = Settings.getDoneRecentlyWrapperInstance();
     private static final StyledWrapper headerWrapper = new StyledWrapper();
+    private static final Border editableCellBorder =
+            BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(0xEEEEFF));
+    private static final Border editableCellFocusBorder =
+            BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(0x9999CC));
 
     static {
         // align all fields to right
@@ -378,6 +382,8 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
 
         // TODO: define the presentation of all values
 
+        // TODO: visible border for editable cells
+
         /**
          * Showing ordinal number of the measurement step, starting from number 1.
          */
@@ -444,10 +450,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 if (rowIndex >= project.getSteps()) {
                     return true;    // the last row
                 }
-                if (rowIndex < project.getCompletedSteps()) {
-                    return false;   // completed steps
+                if (project.getStep(rowIndex).getState() == MeasurementStep.State.READY) {
+                    return true;    // uncompleted steps
                 }
-                return true;        // uncompleted steps
+                return false;       // completed steps
             }
 
             @Override public String getColumnName(Project project) {
@@ -617,6 +623,8 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
          * @return the wrapped object.
          */
         public StyledWrapper wrap(Object value, int rowIndex, Project project) {
+
+            // choose the style according to the state of the step
             StyledWrapper wrapper;
             if (project == null || rowIndex >= project.getSteps()) {
                 wrapper = defaultWrapper;
@@ -638,6 +646,21 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                     break;
                 }
             }
+
+            // visible border for editable cells
+            if (isCellEditable(rowIndex, project)) {
+                wrapper.border = editableCellBorder;
+                wrapper.selectedBorder = editableCellBorder;
+                wrapper.focusBorder = editableCellFocusBorder;
+                wrapper.selectedFocusBorder = editableCellFocusBorder;
+            } else {
+                wrapper.border = null;
+                wrapper.selectedBorder = null;
+                wrapper.focusBorder = null;
+                wrapper.selectedFocusBorder = null;
+            }
+
+            // wrap the cell's value and return it
             wrapper.value = value;
             return wrapper;
         }
