@@ -376,6 +376,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
             }
 
             // wrap to the style
+            // TODO: background color for the on-going measurement
             StyledWrapper wrapper;
             if (isCalibration) {
                 Date date = Project.loadProject(file).getTimestamp();
