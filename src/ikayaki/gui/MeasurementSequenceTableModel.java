@@ -392,7 +392,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
          * Showing ordinal number of the measurement step, starting from number 1.
          */
         COUNT("#") {
-            @Override public Object getValue(int rowIndex, Project project) {
+            @Override public StyledWrapper getValue(int rowIndex, Project project) {
                 StyledWrapper wrapper = headerWrapper;
                 wrapper.value = new Integer(rowIndex + 1);
                 return wrapper;
@@ -408,13 +408,13 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                 getNumberFormat().setMaximumFractionDigits(1);
             }
 
-            @Override public Object getValue(int rowIndex, Project project) {
+            @Override public StyledWrapper getValue(int rowIndex, Project project) {
                 if (rowIndex >= project.getSteps()) {
-                    return null;
+                    return wrap(null, rowIndex, project);
                 }
                 double value = project.getStep(rowIndex).getStepValue();
                 if (value < 0.0) {
-                    return null;
+                    return wrap(null, rowIndex, project);
                 }
                 return wrap(getNumberFormat().format(value), rowIndex, project);
             }
@@ -487,16 +487,16 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
          * Showing and editing the mass of the measurement step.
          */
         MASS("Mass"){
-            @Override public Object getValue(int rowIndex, Project project) {
+            @Override public StyledWrapper getValue(int rowIndex, Project project) {
                 if (rowIndex >= project.getSteps()) {
-                    return null;
+                    return wrap(null, rowIndex, project);
                 }
                 double value = project.getStep(rowIndex).getMass();
                 if (value < 0.0) {
                     value = project.getMass();
                 }
                 if (value < 0.0) {
-                    return null;
+                    return wrap(null, rowIndex, project);
                 }
                 return wrap(getNumberFormat().format(value), rowIndex, project);
             }
@@ -536,16 +536,16 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
          * Showing and editing the volume of the measurement step.
          */
         VOLUME("Volume"){
-            @Override public Object getValue(int rowIndex, Project project) {
+            @Override public StyledWrapper getValue(int rowIndex, Project project) {
                 if (rowIndex >= project.getSteps()) {
-                    return null;
+                    return wrap(null, rowIndex, project);
                 }
                 double value = project.getStep(rowIndex).getVolume();
                 if (value < 0.0) {
                     value = project.getVolume();
                 }
                 if (value < 0.0) {
-                    return null;
+                    return wrap(null, rowIndex, project);
                 }
                 return wrap(getNumberFormat().format(value), rowIndex, project);
             }
@@ -659,14 +659,14 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
          *
          * @param rowIndex the index of the row. Can be greater than the number of measurement steps.
          * @param project  the project whose value to get. Can be null.
-         * @return the value that should be shown in that cell.
+         * @return the wrapped value that should be shown in that cell.
          */
-        public Object getValue(int rowIndex, Project project) {
+        public StyledWrapper getValue(int rowIndex, Project project) {
+
             if (value != null) {
                 if (rowIndex >= project.getSteps()) {
-                    return null;
+                    return wrap(null, rowIndex, project);
                 }
-                //return wrap(getNumberFormat().format(value), rowIndex, project);
 
                 Object obj = project.getValue(rowIndex, value);
                 if (obj != null && obj instanceof Number) {
@@ -677,19 +677,18 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
 
                     // check for Infinity and NaN
                     if (formatted.charAt(0) == 65533) { // for some reason "doubleValue == Double.NaN" doesn't work
-                        return "NaN";
+                        formatted = "NaN";
                     } else if (doubleValue == Double.POSITIVE_INFINITY) {
-                        return "\u221e";
+                        formatted = "\u221e";
                     } else if (doubleValue == Double.NEGATIVE_INFINITY) {
-                        return "-\u221e";
-                    } else {
-                        return wrap(formatted, rowIndex, project);
+                        formatted = "-\u221e";
                     }
+                    return wrap(formatted, rowIndex, project);
                 } else {
                     return wrap(obj, rowIndex, project);
                 }
             } else {
-                return null;
+                return wrap(null, rowIndex, project);
             }
         }
 
