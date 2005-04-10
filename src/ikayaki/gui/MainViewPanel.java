@@ -316,6 +316,7 @@ public class MainViewPanel extends ProjectComponent {
                  * it would not be closed. Otherwise it won't be possible for the user to see which of
                  * the steps were just completed (green color).
                  */
+
                 // close the project if it is not anymore open
                 if (measuringProject != project) {
                     if (Project.closeProject(measuringProject)) {

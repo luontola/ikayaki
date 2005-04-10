@@ -382,8 +382,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
 
         // TODO: define the presentation of all values
 
-        // TODO: visible border for editable cells
-
         /**
          * Showing ordinal number of the measurement step, starting from number 1.
          */

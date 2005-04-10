@@ -165,8 +165,14 @@ Order of rows with measurement data cannot be changed.
         sequenceStepField.addKeyListener(keyListener);
         sequenceStopField.addKeyListener(keyListener);
 
-        // TODO
-        
+        // TODO: combobox for adding saved sequences
+
+        // TODO: popup menu for saving sequences
+
+        // TODO: popup menu for choosing columns
+
+        // TODO: ability to delete unmeasured steps
+
         // finally reset the table
         setProject(null);
     }

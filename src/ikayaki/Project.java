@@ -60,6 +60,9 @@ import static ikayaki.Project.SampleType.*;
  * @author Esko Luontola
  */
 public class Project {
+
+    private static final boolean DEBUG = true;      // TODO: used for testing the measurements without a Squid
+
 /*
 Event A: On property change - Autosaving will be invoked and the project written to file
 after a short delay.
@@ -1317,7 +1320,7 @@ project listeners.
      * @throws IllegalStateException if the project's state is IDLE or it has no Squid.
      */
     private void runMeasurement() {
-        if (getSquid() == null) {
+        if (getSquid() == null && !DEBUG) {
             throw new IllegalStateException("Unable to run measurement, squid is: " + getSquid());
         }
         if (getState() == IDLE) {
@@ -1483,7 +1486,7 @@ project listeners.
      * this project.
      */
     public synchronized boolean isAutoStepEnabled() {
-        if (getSquid() == null) {
+        if (getSquid() == null && !DEBUG) {
             return false;
         }
         if (type == CALIBRATION || type == THELLIER || type == THERMAL) {
@@ -1504,7 +1507,7 @@ project listeners.
      * this project.
      */
     public synchronized boolean isSingleStepEnabled() {
-        if (getSquid() == null) {
+        if (getSquid() == null && !DEBUG) {
             return false;
         }
         if (type == CALIBRATION || type == AF || type == THELLIER || type == THERMAL) {
@@ -1558,7 +1561,7 @@ project listeners.
      * @return true if the measurement was started, otherwise false.
      */
     public synchronized boolean doAutoStep() {
-        if (getSquid() == null) {
+        if (getSquid() == null && !DEBUG) {
             return false;
         }
         if (getState() == IDLE) {
