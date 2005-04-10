@@ -667,16 +667,15 @@ public class MainViewPanel extends ProjectComponent {
         if (aboutAction == null) {
             aboutAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
+                    String message = Ikayaki.APP_NAME + " " + Ikayaki.APP_VERSION +
+                            " / " + Ikayaki.APP_VERSION_NAME + "\n" +
+                            Ikayaki.APP_BUILD + "\n\n" +
+                            Ikayaki.APP_HOME_PAGE + "\n\n";
+                    for (int i = 0; i < Ikayaki.AUTHORS.length; i++) {
+                        message += Ikayaki.AUTHORS[i] + "\n";
+                    }
                     JOptionPane.showMessageDialog(MainViewPanel.this,
-                            // TODO: how to add build date automatically?
-                            Ikayaki.APP_NAME + " " + Ikayaki.APP_VERSION + " / purselo\n7.5.2005\n\n" +
-                            Ikayaki.APP_HOME_PAGE + "\n\n" +
-                            "Mikko Jormalainen\n" +
-                            "Samuli Kaipiainen\n" +
-                            "Aki Korpua\n" +
-                            "Esko Luontola\n" +
-                            "Aki Sysmäläinen",
-                            "About " + Ikayaki.APP_NAME, JOptionPane.INFORMATION_MESSAGE,
+                            message, "About " + Ikayaki.APP_NAME, JOptionPane.INFORMATION_MESSAGE,
                             new ImageIcon(ClassLoader.getSystemResource("resources/ikayaki.png")));
                 }
             };

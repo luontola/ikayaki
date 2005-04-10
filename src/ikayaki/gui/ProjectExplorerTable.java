@@ -130,7 +130,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         // TODO: should be able to select and export multiple files at a time
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.getTableHeader().setReorderingAllowed(false);
-        // this.getTableHeader().setResizingAllowed(false);
+        this.getTableHeader().setResizingAllowed(false);
         // TODO: the grid still shows up when selecting rows. must make a custom cell renderer to change that
         this.setShowGrid(false);
         this.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
@@ -224,11 +224,11 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         for (int col = 0; col < this.columns.length; col++) {
             TableColumn column = this.getColumnModel().getColumn(col);
             switch (this.columns[col]) {
-                case COLUMN_FILENAME: column.setPreferredWidth(130); break;
-                case COLUMN_TYPE: column.setPreferredWidth(50); break;
-                case COLUMN_LASTMOD: column.setPreferredWidth(80); break;
-                case COLUMN_LASTMEASURE: column.setPreferredWidth(80); break;
-                case COLUMN_UNMEASURED: column.setPreferredWidth(40); break;
+                case COLUMN_FILENAME:    column.setPreferredWidth(130); break;
+                case COLUMN_TYPE:        column.setMinWidth(55); column.setMaxWidth(55); break;
+                case COLUMN_LASTMOD:     column.setMinWidth(90); column.setMaxWidth(90); break;
+                case COLUMN_LASTMEASURE: column.setMinWidth(90); column.setMaxWidth(90); break;
+                case COLUMN_UNMEASURED:  column.setMinWidth(55); column.setMaxWidth(55); break;
             }
         }
     }

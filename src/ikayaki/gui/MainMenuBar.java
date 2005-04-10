@@ -113,9 +113,16 @@ public class MainMenuBar extends JMenuBar {
         helpMenu.add(about);
         add(helpMenu);
 
-        // rebuilding of the history list
+        // rebuilding of the file menu
         fileMenu.addMenuListener(new MenuListener() {
             public void menuSelected(MenuEvent e) {
+
+                // enable/disable export menu
+                exportProjectMenu.setEnabled(exportProjectToDAT.isEnabled()
+                        || exportProjectToDTD.isEnabled()
+                        || exportProjectToSRM.isEnabled());
+                
+                // rebuild project history
                 openRecentProjectMenu.removeAll();
                 File[] files = Settings.instance().getProjectHistory();
                 if (files.length == 0 || MainMenuBar.this.main.getProject().getState() != Project.State.IDLE) {

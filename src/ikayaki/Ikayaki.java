@@ -51,9 +51,20 @@ be closed.
     /* Application information */
     public static final String APP_NAME = "Ikayaki";
     public static final String APP_VERSION = "0.1 CVS";
+    public static final String APP_VERSION_NAME = "purselo";
+    public static final String APP_BUILD = "2005-04-09";
     public static final String APP_HOME_PAGE = "http://www.cs.helsinki.fi/group/squid/";
+
     public static final String FILE_TYPE = ".ika";
     public static final String FILE_DESCRIPTION = "Measurement Project";
+
+    public static final String[] AUTHORS = new String[]{
+        "Mikko Jormalainen",
+        "Samuli Kaipiainen",
+        "Aki Korpua",
+        "Esko Luontola",
+        "Aki Sysmäläinen"
+    };
 
     /* Application files and directories */
     public static final File PROPERTIES_FILE = new File("ikayaki.config").getAbsoluteFile();
