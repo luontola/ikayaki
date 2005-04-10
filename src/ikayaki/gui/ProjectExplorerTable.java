@@ -315,12 +315,22 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
      */
     private class ProjectExplorerTableModel extends AbstractTableModel implements ProjectListener {
 
-        private final StyledWrapper defaultWrapper = new StyledWrapper();               // defaults
-        private final StyledWrapper calibrationNoticeWrapper = new StyledWrapper();     // bold text
+        private final StyledWrapper defaultWrapper = Settings.getDefaultWrapperInstance();
+        private final StyledWrapper measuringWrapper = Settings.getMeasuringWrapperInstance();
+        private final StyledWrapper doneRecentlyWrapper = Settings.getDoneRecentlyWrapperInstance();
+        private final Font calibrationNoticeFont = ProjectExplorerTable.this.getFont().deriveFont(Font.BOLD);
+
+        /**
+         * The project's file who currently has a measurement running, or null if no measurements are active
+         */
+        private File measuringProjectFile;
+
+        /**
+         * The project's file who last completed a measurement, or null if no recent measurements exists.
+         */
+        private File doneRecentlyProjectFile;
 
         public ProjectExplorerTableModel() {
-            calibrationNoticeWrapper.font = ProjectExplorerTable.this.getFont().deriveFont(Font.BOLD);
-
             /*
              * Refresh the data at regular intervals (5 min) even if no other events would refresh it.
              * This is especially to update the time elapsed value of a calibration panel.
@@ -375,25 +385,32 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                     break;
             }
 
-            // wrap to the style
-            // TODO: background color for the on-going measurement
+            // choose the style according to the project's state
             StyledWrapper wrapper;
-            if (isCalibration) {
-                Date date = Project.loadProject(file).getTimestamp();
-                if (date == null) {
-                    wrapper = calibrationNoticeWrapper;
-                } else {
-                    // alert the user if the calibration has not been done today
-                    int hoursElapsed = (int)(new Date().getTime() - date.getTime()) / 3600000;
-                    if (hoursElapsed >= 18) {
-                        wrapper = calibrationNoticeWrapper;
-                    } else {
-                        wrapper = defaultWrapper;
-                    }
-                }
+            if (file.equals(measuringProjectFile)) {
+                wrapper = measuringWrapper;
+            } else if (file.equals(doneRecentlyProjectFile)) {
+                wrapper = doneRecentlyWrapper;
             } else {
                 wrapper = defaultWrapper;
             }
+            wrapper.font = null;        // reset calibration notice font
+
+            // styles for the calibration panel
+            if (isCalibration) {
+                Date date = Project.loadProject(file).getTimestamp();
+                if (date == null) {
+                    wrapper.font = calibrationNoticeFont;
+                } else {
+                    // alert the user if the calibration has not been done today
+                    int hoursElapsed = (int) (new Date().getTime() - date.getTime()) / 3600000;
+                    if (hoursElapsed >= 18) {
+                        wrapper.font = calibrationNoticeFont;
+                    }
+                }
+            }
+            
+            // return the wrapped value
             wrapper.value = value;
             return wrapper;
         }
@@ -403,7 +420,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         }
 
         /**
-         * Updates the file list when a project file has been saved.
+         * Updates the file list when a project file has been saved and which project has a measurement running.
          *
          * @param event ProjectEvent received.
          */
@@ -415,6 +432,30 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                         explorerTableModel.fireTableRowsUpdated(i, i);
                         return;
                     }
+                }
+
+            } else if (event.getType() == ProjectEvent.Type.STATE_CHANGED) {
+                File file = event.getProject().getFile();
+                switch (event.getProject().getState()) {
+                case IDLE:
+                    if (file.equals(measuringProjectFile)) {
+                        // the project's measurement has just ended
+                        measuringProjectFile = null;
+                        doneRecentlyProjectFile = file;
+                        fireTableDataChanged();
+                    }
+                    break;
+                case MEASURING:
+                case PAUSED:
+                case ABORTED:
+                    // the project has an active measurement
+                    measuringProjectFile = file;
+                    doneRecentlyProjectFile = null;
+                    fireTableDataChanged();
+                    break;
+                default:
+                    assert false;
+                    break;
                 }
             }
         }
