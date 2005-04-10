@@ -241,6 +241,11 @@ public class SquidEmulator {
 
         public void serialIOEvent(SerialIOEvent event) {
             int i;
+            try {
+              logWriter.write("HANDLER_RECIEVE:" + event.getMessage());
+            }
+            catch (IOException ex) {
+            }
             String message = lastMessagePart + event.getMessage();
             String[] commands = message.split(",");
             for (i = 0; i < commands.length - 1; i++) {
@@ -263,6 +268,12 @@ public class SquidEmulator {
         }
 
         public void serialIOEvent(SerialIOEvent event) {
+          try {
+            logWriter.write("MAGNETOMETER_RECIEVE:" + event.getMessage());
+          }
+          catch (IOException ex) {
+          }
+
             String message = event.getMessage();
             String[] commands = message.split("/r");
             //we only accept first "part". And only if it starts with A,X,Y,Z
@@ -288,6 +299,12 @@ public class SquidEmulator {
         }
 
         public void serialIOEvent(SerialIOEvent event) {
+          try {
+            logWriter.write("DEGAUSSER_RECIEVE:" + event.getMessage());
+          }
+          catch (IOException ex) {
+          }
+
             String message = event.getMessage();
             String[] commands = message.split("/r");
             //we only accept first "part". And only if it starts with D
