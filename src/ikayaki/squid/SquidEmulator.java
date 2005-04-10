@@ -202,7 +202,7 @@ public class SquidEmulator {
             System.out.println(e);
             return;
         } catch (Exception e) {
-            System.out.println("Usage \"java SquidEmulator x z... filename\"");
+            System.out.println("Usage \"java SquidEmulator (0:Magnetometer and Degausser use different ports, 1: Magnetometer and Degausser use same port) HandlerPort MagnetometerPort (optional)DegausserPort Log_filename\"");
             return;
         }
 
