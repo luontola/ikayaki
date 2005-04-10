@@ -58,8 +58,7 @@ public class StyledTableCellRenderer extends DefaultTableCellRenderer {
             return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         }
         StyledWrapper wrapper = (StyledWrapper) value;
-        super.getTableCellRendererComponent(table, wrapper.value, isSelected, hasFocus, row,
-                column);
+        super.getTableCellRendererComponent(table, wrapper.value, isSelected, hasFocus, row, column);
 
         // apply custom style to the component
         setHorizontalAlignment(wrapper.horizontalAlignment);
