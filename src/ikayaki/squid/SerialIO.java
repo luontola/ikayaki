@@ -170,6 +170,31 @@ message from serial port is received.
         // close port
     }
 
+    public void closePort() {
+      if(sPort != null) {
+        this.sPort.close();
+        try {
+          this.is.close();
+        }
+        catch (IOException ex) {
+          System.err.println("Could not close outStream for COM port");
+        }
+        try {
+          this.os.close();
+        }
+        catch (IOException ex1) {
+          System.err.println("Could not close outStream for COM port");
+        }
+      }
+    }
+
+
+    public static void closeAllPorts() {
+      for (int i = 0; i < openPorts.size(); i++) {
+            openPorts.elementAt(i).closePort();
+        }
+    }
+
     /**
      * This method is run when a serial message is received from serial port. It generates a new SerialIOEvent.
      */

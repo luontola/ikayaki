@@ -35,6 +35,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import ikayaki.squid.SerialIO;
 
 /**
  * Creates the main view panels (split panels) and Squid and Project components. It also tells everybody if the current
@@ -362,6 +363,7 @@ public class MainViewPanel extends ProjectComponent {
                 return;
             }
         }
+        SerialIO.closeAllPorts();
         System.exit(0);
     }
 

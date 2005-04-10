@@ -192,8 +192,10 @@ public class SquidEmulator {
             logWriter = new FileWriter(logFile);
         } catch (SerialIOException e) {
             System.out.println(e);
+            return;
         } catch (Exception e) {
             System.out.println("Usage \"java SquidEmulator x z... filename\"");
+            return;
         }
 
         handler = new HandlerEmu();
