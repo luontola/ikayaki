@@ -145,7 +145,7 @@ Order of rows with measurement data cannot be changed.
             private void updateColumns() {
                 TableColumnModel columnModel = sequenceTable.getColumnModel();
                 for (int col = 0; col < columnModel.getColumnCount(); col++) {
-                    if (columnModel.getColumn(col).getHeaderValue().equals(COUNT.getColumnName())) {
+                    if (columnModel.getColumn(col).getHeaderValue().equals(COUNT.getColumnName(null))) {
 
                         // find out the column's preferred width using the actual cell contents
                         int width = 20;

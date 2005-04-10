@@ -368,7 +368,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * @return a string containing the default name of column.
      */
     @Override public String getColumnName(int column) {
-        return visibleColumns.get(column).getColumnName();
+        return visibleColumns.get(column).getColumnName(project);
     }
 
     /**
@@ -402,7 +402,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         /**
          * Showing and editing the stepValue of the measurement step.
          */
-        STEP("Tesla"){
+        STEP("Step Value"){
             {
                 getNumberFormat().setGroupingUsed(false);
                 getNumberFormat().setMaximumFractionDigits(1);
@@ -458,6 +458,28 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                     return false;   // completed steps
                 }
                 return true;        // uncompleted steps
+            }
+
+            @Override public String getColumnName(Project project) {
+                if (project == null) {
+                    return "Tesla";
+                }
+                String name;
+                switch (project.getType()) {
+                case AF:
+                case CALIBRATION:
+                    name = "Tesla";
+                    break;
+                case THELLIER:
+                case THERMAL:
+                    name = "Temp";
+                    break;
+                default:
+                    assert false;
+                    name = "";
+                    break;
+                }
+                return name;
             }
         },
 
@@ -657,9 +679,9 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                     if (formatted.charAt(0) == 65533) { // for some reason "doubleValue == Double.NaN" doesn't work
                         return "NaN";
                     } else if (doubleValue == Double.POSITIVE_INFINITY) {
-                        return "\u221E";
+                        return "\u221e";
                     } else if (doubleValue == Double.NEGATIVE_INFINITY) {
-                        return "-\u221E";
+                        return "-\u221e";
                     } else {
                         return wrap(formatted, rowIndex, project);
                     }
@@ -696,9 +718,12 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         }
 
         /**
-         * Returns the name of this column. The name will be shown in the header of the table.
+         * Returns the name of this column. The name will be shown in the header of the table. The default
+         * implementation returns always the columnName property. Subclasses can override the default behaviour.
+         *
+         * @param project the open project or null if no project is active.
          */
-        public final String getColumnName() {
+        public String getColumnName(Project project) {
             return columnName;
         }
 
