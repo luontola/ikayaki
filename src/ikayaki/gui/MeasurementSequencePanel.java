@@ -311,6 +311,7 @@ Order of rows with measurement data cannot be changed.
             for (int i = getProject().getSteps() - 1; i >= 0; i--) {
                 if (getProject().getStep(i) == event.getStep()) {
                     scrollToRow(i);
+                    scrollToRow(Math.min(i + 2, sequenceTableModel.getRowCount() - 1));
                     return;
                 }
             }

@@ -43,42 +43,22 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
 
     private static final String VISIBLE_COLUMNS_PROPERTY = "visibleColumns";
 
-    private static final StyledWrapper defaultWrapper = new StyledWrapper();
-    private static final StyledWrapper measuringWrapper = new StyledWrapper();
-    private static final StyledWrapper doneRecentlyWrapper = new StyledWrapper();
+    private static final StyledWrapper defaultWrapper = Settings.getDefaultWrapperInstance();
+    private static final StyledWrapper measuringWrapper = Settings.getMeasuringWrapperInstance();
+    private static final StyledWrapper doneRecentlyWrapper = Settings.getDoneRecentlyWrapperInstance();
     private static final StyledWrapper headerWrapper = new StyledWrapper();
 
     static {
-        defaultWrapper.opaque = true;
-        defaultWrapper.background = new Color(0xFFFFFF);
-        defaultWrapper.selectedBackground = new Color(0xC3D4E8);
-        defaultWrapper.focusBackground = new Color(0xC3D4E8);
-        defaultWrapper.selectedFocusBackground = new Color(0xC3D4E8);
-//        defaultWrapper.border = null;
-        defaultWrapper.horizontalAlignment = SwingConstants.TRAILING;
-
-        measuringWrapper.opaque = true;
-        measuringWrapper.background = new Color(0xEEBAEE);
-        measuringWrapper.selectedBackground = new Color(0xFFCCFF);
-        measuringWrapper.focusBackground = new Color(0xFFCCFF);
-        measuringWrapper.selectedFocusBackground = new Color(0xFFCCFF);
-//        measuringWrapper.border = null;
-        measuringWrapper.horizontalAlignment = SwingConstants.TRAILING;
-
-        doneRecentlyWrapper.opaque = true;
-        doneRecentlyWrapper.background = new Color(0xBAEEBA);
-        doneRecentlyWrapper.selectedBackground = new Color(0xCCFFCC);
-        doneRecentlyWrapper.focusBackground = new Color(0xCCFFCC);
-        doneRecentlyWrapper.selectedFocusBackground = new Color(0xCCFFCC);
-//        doneRecentlyWrapper.border = null;
-        doneRecentlyWrapper.horizontalAlignment = SwingConstants.TRAILING;
-
         headerWrapper.opaque = true;
         headerWrapper.background = new Color(0xE1E1E1);
         headerWrapper.selectedBackground = new Color(0xE1E1E1);
         headerWrapper.focusBackground = new Color(0xE1E1E1);
         headerWrapper.selectedFocusBackground = new Color(0xE1E1E1);
 //        headerWrapper.border = BorderFactory.createEmptyBorder(0, 2, 0, 2);   // causes the text to move a couple of pixels when the row is selected, so let's not use it
+
+        defaultWrapper.horizontalAlignment = SwingConstants.TRAILING;
+        measuringWrapper.horizontalAlignment = SwingConstants.TRAILING;
+        doneRecentlyWrapper.horizontalAlignment = SwingConstants.TRAILING;
         headerWrapper.horizontalAlignment = SwingConstants.TRAILING;
     }
 

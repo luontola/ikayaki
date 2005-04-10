@@ -22,6 +22,7 @@
 
 package ikayaki;
 
+import ikayaki.gui.StyledWrapper;
 import ikayaki.util.DocumentUtilities;
 import ikayaki.util.LastExecutor;
 import org.w3c.dom.Document;
@@ -47,6 +48,10 @@ public class Settings {
     private static final int DIRECTORY_HISTORY_SIZE = 30;
     private static final int PROJECT_HISTORY_SIZE = 10;
 
+    private static final StyledWrapper defaultWrapper = new StyledWrapper();
+    private static final StyledWrapper measuringWrapper = new StyledWrapper();
+    private static final StyledWrapper doneRecentlyWrapper = new StyledWrapper();
+
     static {
         // ensure that the configuration files and directories exist
         if (!Ikayaki.CALIBRATION_PROJECT_DIR.exists()) {
@@ -57,6 +62,25 @@ public class Settings {
         if (!Ikayaki.CALIBRATION_PROJECT_DIR.isDirectory()) {
             System.err.println("No such directory: " + Ikayaki.CALIBRATION_PROJECT_DIR);
         }
+
+        // set background colors for the styled wrappers
+        defaultWrapper.opaque = true;
+        defaultWrapper.background = new Color(0xFFFFFF);
+        defaultWrapper.selectedBackground = new Color(0xC3D4E8);
+        defaultWrapper.focusBackground = new Color(0xC3D4E8);
+        defaultWrapper.selectedFocusBackground = new Color(0xC3D4E8);
+
+        measuringWrapper.opaque = true;
+        measuringWrapper.background = new Color(0xEEBAEE);
+        measuringWrapper.selectedBackground = new Color(0xFFCCFF);
+        measuringWrapper.focusBackground = new Color(0xFFCCFF);
+        measuringWrapper.selectedFocusBackground = new Color(0xFFCCFF);
+
+        doneRecentlyWrapper.opaque = true;
+        doneRecentlyWrapper.background = new Color(0xBAEEBA);
+        doneRecentlyWrapper.selectedBackground = new Color(0xCCFFCC);
+        doneRecentlyWrapper.focusBackground = new Color(0xCCFFCC);
+        doneRecentlyWrapper.selectedFocusBackground = new Color(0xCCFFCC);
     }
 
     /**
@@ -679,5 +703,26 @@ public class Settings {
         if (sequence != null) {
             sequences.remove(sequence);
         }
+    }
+
+    /**
+     * Returns a copy of the default StyledWrapper.
+     */
+    public static StyledWrapper getDefaultWrapperInstance() {
+        return (StyledWrapper) defaultWrapper.clone();
+    }
+
+    /**
+     * Returns a copy of the StyledWrapper for measuring projects.
+     */
+    public static StyledWrapper getMeasuringWrapperInstance() {
+        return (StyledWrapper) measuringWrapper.clone();
+    }
+
+    /**
+     * Returns a copy of the StyledWrapper for recently measured projects.
+     */
+    public static StyledWrapper getDoneRecentlyWrapperInstance() {
+        return (StyledWrapper) doneRecentlyWrapper.clone();
     }
 }

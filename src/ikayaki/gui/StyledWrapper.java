@@ -32,7 +32,7 @@ import java.awt.*;
  *
  * @author Esko Luontola
  */
-public class StyledWrapper {
+public class StyledWrapper implements Cloneable {
 
     /**
      * The wrapped value.
@@ -109,4 +109,19 @@ public class StyledWrapper {
      * The font of this component or null to use the parent's font.
      */
     public Font font = null;
+
+    /**
+     * Creates and returns a copy of this object. The value property of the copy will be null.
+     */
+    @Override public Object clone() {
+        try {
+            StyledWrapper copy = (StyledWrapper) super.clone();
+            copy.value = null;
+            return copy;
+        } catch (CloneNotSupportedException e) {
+            assert false;
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
