@@ -221,6 +221,8 @@ public class SquidEmulator {
         } catch (IOException ex) {
         }
 
+        SerialIO.closeAllPorts();
+
         return;
     }
 

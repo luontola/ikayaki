@@ -35,7 +35,7 @@ import javax.swing.event.EventListenerList;
 /**
  * This class represents hardware layer to serial port communications.
  *
- * @author Aki Sysmäläinen
+ * @author Aki Sysmäläinen, Aki Korpua (co)
  */
 public class SerialIO implements SerialPortEventListener {
 /*
@@ -132,6 +132,7 @@ message from serial port is received.
     }
 
     public static SerialIO openPort(SerialParameters parameters) throws SerialIOException {
+      System.out.println("Let's try open port: " + parameters.getPortName());
 
         SerialIO newPort = null;
 
@@ -190,15 +191,16 @@ message from serial port is received.
         this.sPort.close();
         try {
           this.is.close();
+          this.os.close();
         }
         catch (IOException ex) {
-          System.err.println("Could not close outStream for COM port");
+          System.err.println("Could not close Stream for COM port");
         }
         try {
           this.os.close();
         }
         catch (IOException ex1) {
-          System.err.println("Could not close outStream for COM port");
+          System.err.println("Could not close Stream for COM port");
         }
       }
     }
@@ -214,6 +216,7 @@ message from serial port is received.
      * This method is run when a serial message is received from serial port. It generates a new SerialIOEvent.
      */
     public void serialEvent(SerialPortEvent event) {
+      System.out.println("New message arrived from COM port");
       switch(event.getEventType()) {
         case SerialPortEvent.BI:
         case SerialPortEvent.OE:
