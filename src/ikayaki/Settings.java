@@ -33,6 +33,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
@@ -67,19 +68,19 @@ public class Settings {
         defaultWrapper.opaque = true;
         defaultWrapper.background = new Color(0xFFFFFF);
         defaultWrapper.selectedBackground = new Color(0xC3D4E8);
-        defaultWrapper.focusBackground = new Color(0xC3D4E8);
+        defaultWrapper.focusBackground = new Color(0xFFFFFF);
         defaultWrapper.selectedFocusBackground = new Color(0xC3D4E8);
 
         measuringWrapper.opaque = true;
         measuringWrapper.background = new Color(0xEEBAEE);
         measuringWrapper.selectedBackground = new Color(0xFFCCFF);
-        measuringWrapper.focusBackground = new Color(0xFFCCFF);
+        measuringWrapper.focusBackground = new Color(0xEEBAEE);
         measuringWrapper.selectedFocusBackground = new Color(0xFFCCFF);
 
         doneRecentlyWrapper.opaque = true;
         doneRecentlyWrapper.background = new Color(0xBAEEBA);
         doneRecentlyWrapper.selectedBackground = new Color(0xCCFFCC);
-        doneRecentlyWrapper.focusBackground = new Color(0xCCFFCC);
+        doneRecentlyWrapper.focusBackground = new Color(0xBAEEBA);
         doneRecentlyWrapper.selectedFocusBackground = new Color(0xCCFFCC);
     }
 

@@ -141,27 +141,6 @@ Order of rows with measurement data cannot be changed.
             public void columnSelectionChanged(ListSelectionEvent e) {
                 // DO NOTHING
             }
-
-            private void updateColumns() {
-                TableColumnModel columnModel = sequenceTable.getColumnModel();
-                for (int col = 0; col < columnModel.getColumnCount(); col++) {
-                    if (columnModel.getColumn(col).getHeaderValue().equals(COUNT.getColumnName(null))) {
-
-                        // find out the column's preferred width using the actual cell contents
-                        int width = 20;
-                        Component comp;
-                        for (int row = 0; row < sequenceTable.getRowCount(); row++) {
-                            comp = sequenceTable.getCellRenderer(row, col).getTableCellRendererComponent(sequenceTable,
-                                    sequenceTable.getValueAt(row, col), false, false, row, col);
-                            width = Math.max(width, comp.getPreferredSize().width);
-                        }
-                        width += 5;
-                        columnModel.getColumn(col).setMinWidth(width);
-                        columnModel.getColumn(col).setMaxWidth(width);
-                        return;
-                    }
-                }
-            }
         });
 
         /* Add Sequence Controls */
@@ -187,6 +166,33 @@ Order of rows with measurement data cannot be changed.
         sequenceStopField.addKeyListener(keyListener);
 
         // TODO
+        
+        // finally reset the table
+        setProject(null);
+    }
+
+    /**
+     * Resize the table's columns to fit the content.
+     */
+    private void updateColumns() {
+        TableColumnModel columnModel = sequenceTable.getColumnModel();
+        for (int col = 0; col < columnModel.getColumnCount(); col++) {
+            if (columnModel.getColumn(col).getHeaderValue().equals(COUNT.getColumnName(null))) {
+
+                // find out the column's preferred width using the actual cell contents
+                int width = 20;
+                Component comp;
+                for (int row = 0; row < sequenceTable.getRowCount(); row++) {
+                    comp = sequenceTable.getCellRenderer(row, col).getTableCellRendererComponent(sequenceTable,
+                            sequenceTable.getValueAt(row, col), false, false, row, col);
+                    width = Math.max(width, comp.getPreferredSize().width);
+                }
+                width += 5;
+                columnModel.getColumn(col).setMinWidth(width);
+                columnModel.getColumn(col).setMaxWidth(width);
+                return;
+            }
+        }
     }
 
     private double getLastStepValue() {

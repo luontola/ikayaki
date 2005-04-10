@@ -27,6 +27,7 @@ import ikayaki.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.*;
 import javax.swing.table.*;
 
@@ -131,8 +132,8 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.getTableHeader().setReorderingAllowed(false);
         this.getTableHeader().setResizingAllowed(false);
-        // TODO: the grid still shows up when selecting rows. must make a custom cell renderer to change that
         this.setShowGrid(false);
+        this.setIntercellSpacing(new Dimension(0, 0));
         this.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
 
         // TODO: what should be here anyway?
@@ -220,15 +221,15 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         // StructureChanged resets columns' PreferredWidths, so they must be set again...
         explorerTableModel.fireTableStructureChanged();
 
-        // TODO: set column sizes somehow automatically, according to table contents?
+        // TODO: set column sizes somehow automatically, according to table contents? look at the example in MeasurementSequencePanel method updateColumns()
         for (int col = 0; col < this.columns.length; col++) {
             TableColumn column = this.getColumnModel().getColumn(col);
             switch (this.columns[col]) {
                 case COLUMN_FILENAME:    column.setPreferredWidth(130); break;
-                case COLUMN_TYPE:        column.setMinWidth(55); column.setMaxWidth(55); break;
-                case COLUMN_LASTMOD:     column.setMinWidth(90); column.setMaxWidth(90); break;
-                case COLUMN_LASTMEASURE: column.setMinWidth(90); column.setMaxWidth(90); break;
-                case COLUMN_UNMEASURED:  column.setMinWidth(55); column.setMaxWidth(55); break;
+                case COLUMN_TYPE:        column.setMinWidth(50); column.setMaxWidth(50); break;
+                case COLUMN_LASTMOD:     column.setMinWidth(95); column.setMaxWidth(95); break;
+                case COLUMN_LASTMEASURE: column.setMinWidth(95); column.setMaxWidth(95); break;
+                case COLUMN_UNMEASURED:  column.setMinWidth(50); column.setMaxWidth(50); break;
             }
         }
     }
@@ -331,11 +332,27 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         private File doneRecentlyProjectFile;
 
         public ProjectExplorerTableModel() {
+
+            // hide the ugly table borders
+            Border emptyBorder = BorderFactory.createEmptyBorder(1, 1, 1, 1);
+            defaultWrapper.border = emptyBorder;
+            defaultWrapper.selectedBorder = emptyBorder;
+            defaultWrapper.focusBorder = emptyBorder;
+            defaultWrapper.selectedFocusBorder = emptyBorder;
+            measuringWrapper.border = emptyBorder;
+            measuringWrapper.selectedBorder = emptyBorder;
+            measuringWrapper.focusBorder = emptyBorder;
+            measuringWrapper.selectedFocusBorder = emptyBorder;
+            doneRecentlyWrapper.border = emptyBorder;
+            doneRecentlyWrapper.selectedBorder = emptyBorder;
+            doneRecentlyWrapper.focusBorder = emptyBorder;
+            doneRecentlyWrapper.selectedFocusBorder = emptyBorder;
+
             /*
              * Refresh the data at regular intervals (5 min) even if no other events would refresh it.
              * This is especially to update the time elapsed value of a calibration panel.
              */
-            new Timer(5*60*1000, new ActionListener() {
+            new Timer(5 * 60 * 1000, new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     ProjectExplorerTable.this.setDirectory(directory);
                 }
@@ -409,7 +426,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                     }
                 }
             }
-            
+
             // return the wrapped value
             wrapper.value = value;
             return wrapper;

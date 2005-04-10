@@ -25,6 +25,7 @@ package ikayaki.gui;
 import ikayaki.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.text.NumberFormat;
@@ -49,17 +50,27 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
     private static final StyledWrapper headerWrapper = new StyledWrapper();
 
     static {
-        headerWrapper.opaque = true;
-        headerWrapper.background = new Color(0xE1E1E1);
-        headerWrapper.selectedBackground = new Color(0xE1E1E1);
-        headerWrapper.focusBackground = new Color(0xE1E1E1);
-        headerWrapper.selectedFocusBackground = new Color(0xE1E1E1);
-//        headerWrapper.border = BorderFactory.createEmptyBorder(0, 2, 0, 2);   // causes the text to move a couple of pixels when the row is selected, so let's not use it
-
+        // align all fields to right
         defaultWrapper.horizontalAlignment = SwingConstants.TRAILING;
         measuringWrapper.horizontalAlignment = SwingConstants.TRAILING;
         doneRecentlyWrapper.horizontalAlignment = SwingConstants.TRAILING;
         headerWrapper.horizontalAlignment = SwingConstants.TRAILING;
+
+        // styles for the COUNT column
+        Color headerBackground = new Color(0xE1E1E1);
+        Border headerBorder = BorderFactory.createEmptyBorder(1, 2, 1, 2);
+//        Border headerBorder = BorderFactory.createCompoundBorder(
+//                BorderFactory.createMatteBorder(0, 0, 0, 1, new Color(0x808080)),
+//                BorderFactory.createEmptyBorder(1, 2, 1, 2));
+        headerWrapper.opaque = true;
+        headerWrapper.background = headerBackground;
+        headerWrapper.selectedBackground = headerBackground;
+        headerWrapper.focusBackground = headerBackground;
+        headerWrapper.selectedFocusBackground = headerBackground;
+        headerWrapper.border = headerBorder;
+        headerWrapper.selectedBorder = headerBorder;
+        headerWrapper.focusBorder = headerBorder;
+        headerWrapper.selectedFocusBorder = headerBorder;
     }
 
     private Project project = null;
@@ -97,7 +108,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
             project.addMeasurementListener(this);
         }
         this.project = project;
-
 
         // reset columns to defaults
         possibleColumns.clear();
