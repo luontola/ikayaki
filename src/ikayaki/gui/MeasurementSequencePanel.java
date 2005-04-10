@@ -229,7 +229,6 @@ Order of rows with measurement data cannot be changed.
         if (sequenceStartField.getValue() == null
                 || sequenceStepField.getValue() == null
                 || sequenceStopField.getValue() == null) {
-            System.out.println("1");
             return;
         }
         // TODO: if there are invalid values in some fields, flash them red
@@ -283,9 +282,6 @@ Order of rows with measurement data cannot be changed.
     public void setProject(Project project) {
         super.setProject(project);
         sequenceTableModel.setProject(project);
-//        if (project != null) {
-//            sequenceTable.getSelectionModel().setSelectionInterval(project.getSteps() - 1, project.getSteps() - 1);
-//        }
         setEnabled(project != null);
         resetAddSequence();
 
