@@ -39,6 +39,8 @@ import java.util.Enumeration;
 import java.text.DecimalFormat;
 import javax.swing.text.NumberFormatter;
 import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.ArrayList;
 
 /**
  * Creates its components and updats changes to Settings and saves them in Configuration file
@@ -246,6 +248,8 @@ public class SettingsPanel
 
     Enumeration ports = CommPortIdentifier.getPortIdentifiers();
 
+    ArrayList portList = new ArrayList();
+
     if (!ports.hasMoreElements()) {
       System.err.println("No comm ports found!");
     }
@@ -258,11 +262,19 @@ public class SettingsPanel
         CommPortIdentifier portId = (CommPortIdentifier) ports.nextElement();
 
         if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-          this.magnetometerPort.addItem(portId.getName());
-          this.handlerPort.addItem(portId.getName());
-          this.demagnetizerPort.addItem(portId.getName());
+          portList.add(portId.getName());
+          //this.magnetometerPort.addItem(portId.getName());
+          //this.handlerPort.addItem(portId.getName());
+          //this.demagnetizerPort.addItem(portId.getName());
         }
       }
+    }
+    Arrays.sort(portList.toArray());
+
+    for(int i=0; i<portList.size(); i++) {
+      this.magnetometerPort.addItem(portList.get(i));
+      this.handlerPort.addItem(portList.get(i));
+      this.demagnetizerPort.addItem(portList.get(i));
     }
 
     this.magnetometerPort.setSelectedItem(Settings.instance().getMagnetometerPort());
