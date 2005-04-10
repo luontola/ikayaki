@@ -70,6 +70,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public Magnetometer() throws SerialIOException {
         this.serialIO = SerialIO.openPort(
                 new SerialParameters(Settings.instance().getMagnetometerPort(), 1200, 0, 0, 8, 1, 0));
+        serialIO.addSerialIOListener(this);
     }
 
     /**

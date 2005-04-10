@@ -129,8 +129,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * class.
      */
     public Handler() throws SerialIOException {
-        this.serialIO = SerialIO.openPort(new SerialParameters(Settings.instance().getHandlerPort(), 1200, 0, 0, 8, 1,
-                0));
+      this.serialIO = SerialIO.openPort(new SerialParameters(Settings.instance().
+          getHandlerPort(), 1200, 0, 0, 8, 1,
+          0));
+      serialIO.addSerialIOListener(this);
         this.acceleration = Settings.instance().getHandlerAcceleration();
         this.deceleration = Settings.instance().getHandlerDeceleration();
         this.axialAFPosition = Settings.instance().getHandlerAxialAFPosition();

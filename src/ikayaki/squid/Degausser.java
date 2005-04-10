@@ -95,6 +95,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public Degausser() throws SerialIOException {
         this.serialIO = SerialIO.openPort(new SerialParameters(Settings.instance().
                 getDegausserPort()));
+        serialIO.addSerialIOListener(this);
         this.degausserDelay = Settings.instance().getDegausserDelay();
         this.degausserRamp = Settings.instance().getDegausserRamp();
         lastCommandTime = System.currentTimeMillis();

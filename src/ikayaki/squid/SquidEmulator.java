@@ -39,8 +39,16 @@ import java.util.Stack;
  * @author Aki Korpua
  */
 public class SquidEmulator {
+  public SquidEmulator() {
+    try {
+      jbInit();
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
 
-    /*
+  /*
   Event A: On New IO Message - reads message and puts it in Buffer
   */
 
@@ -216,8 +224,10 @@ public class SquidEmulator {
         return;
     }
 
+  private void jbInit() throws Exception {
+  }
 
-    /**
+  /**
      * Runs handler emulation process. Process incoming messages and sends data back. When message comes, process it
      * (wait if needed for a while), updates own status and sends result back.
      */
@@ -232,7 +242,7 @@ public class SquidEmulator {
 
         public HandlerEmu() {
             //Setlistener to handlePort
-            //handlerPort.set
+            handlerPort.addSerialIOListener(this);
         }
 
         public void run() {
@@ -262,6 +272,12 @@ public class SquidEmulator {
     private static class MagnetometerEmu extends Thread implements SerialIOListener {
         //All recieved commands
         private Stack commandStack;
+
+        public MagnetometerEmu() {
+           //Setlistener to port
+           magnetometerPort.addSerialIOListener(this);
+       }
+
 
         public void run() {
             // TODO
@@ -293,6 +309,12 @@ public class SquidEmulator {
 
         //All recieved commands
         private Stack commandStack;
+
+        public DegausserEmu() {
+           //Setlistener to port
+           degausserPort.addSerialIOListener(this);
+       }
+
 
         public void run() {
             // TODO

@@ -28,6 +28,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Vector;
+import java.util.*;
+import javax.swing.SwingUtilities;
+import javax.swing.event.EventListenerList;
 
 /**
  * This class represents hardware layer to serial port communications.
@@ -41,6 +44,12 @@ message from serial port is received.
 */
 
     private static Vector<SerialIO> openPorts = new Vector();
+
+    /**
+     * Listeners for this port.
+     */
+    private EventListenerList listenerList = new EventListenerList();
+
 
     /**
      * contains last received message from the serial port that this SerialIO represents.
@@ -112,6 +121,12 @@ message from serial port is received.
 
         this.sPort = sPort;
         this.portName = sPort.getName();
+        try {
+          sPort.addEventListener(this);
+        }
+        catch (TooManyListenersException ex) {
+          throw new SerialIOException("Too many listeners");
+        }
 
         return;
     }
@@ -199,7 +214,71 @@ message from serial port is received.
      * This method is run when a serial message is received from serial port. It generates a new SerialIOEvent.
      */
     public void serialEvent(SerialPortEvent event) {
-        return; // TODO
+      switch(event.getEventType()) {
+        case SerialPortEvent.BI:
+        case SerialPortEvent.OE:
+        case SerialPortEvent.FE:
+        case SerialPortEvent.PE:
+        case SerialPortEvent.CD:
+        case SerialPortEvent.CTS:
+        case SerialPortEvent.DSR:
+        case SerialPortEvent.RI:
+        case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
+            break;
+        case SerialPortEvent.DATA_AVAILABLE:
+            byte[] readBuffer = new byte[20];
+
+            try {
+                while (is.available() > 0) {
+                    int numBytes = is.read(readBuffer);
+                }
+                fireSerialIOEvent(new String(readBuffer));
+            } catch (IOException e) {}
+            break;
+        }
+      return;
+    }
+
+    /**
+     * Adds a MeasurementListener to the project.
+     *
+     * @param l the listener to be added.
+     */
+    public synchronized void addSerialIOListener(SerialIOListener l) {
+      listenerList.add(SerialIOListener.class, l);
+    }
+
+    /**
+     * Removes a MeasurementListener from the project.
+     *
+     * @param l the listener to be removed
+     */
+    public synchronized void removeSerialIOListener(SerialIOListener l) {
+      listenerList.remove(SerialIOListener.class, l);
+    }
+
+    /**
+     * Notifies all listeners that have registered for MeasurementEvents.
+     *
+     * @param step the measurement step that has generated the event.
+     * @param type the type of the event.
+     */
+    private synchronized void fireSerialIOEvent(String message) {
+      final SerialIOEvent event = new SerialIOEvent(this, message);
+      final SerialIOListener[] listeners = listenerList.getListeners(
+          SerialIOListener.class);
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          for (SerialIOListener l : listeners) {
+            try {
+              l.serialIOEvent(event);
+            }
+            catch (Throwable t) {
+              t.printStackTrace();
+            }
+          }
+        }
+      });
     }
 
     private String getName() {
