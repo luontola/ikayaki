@@ -662,34 +662,27 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
          * @return the wrapped value that should be shown in that cell.
          */
         public StyledWrapper getValue(int rowIndex, Project project) {
-
-            if (value != null) {
-                if (rowIndex >= project.getSteps()) {
-                    return wrap(null, rowIndex, project);
-                }
-
-                Object obj = project.getValue(rowIndex, value);
-                if (obj != null && obj instanceof Number) {
-
-                    // format the return value with NumberFormatter
-                    double doubleValue = ((Number) obj).doubleValue();
-                    String formatted = getNumberFormat().format(obj);
-
-                    // check for Infinity and NaN
-                    if (formatted.charAt(0) == 65533) { // for some reason "doubleValue == Double.NaN" doesn't work
-                        formatted = "NaN";
-                    } else if (doubleValue == Double.POSITIVE_INFINITY) {
-                        formatted = "\u221e";
-                    } else if (doubleValue == Double.NEGATIVE_INFINITY) {
-                        formatted = "-\u221e";
-                    }
-                    return wrap(formatted, rowIndex, project);
-                } else {
-                    return wrap(obj, rowIndex, project);
-                }
-            } else {
+            if (value == null || rowIndex >= project.getSteps()) {
                 return wrap(null, rowIndex, project);
             }
+            Object obj = project.getValue(rowIndex, value);
+            if (obj == null || !(obj instanceof Number)) {
+                return wrap(obj, rowIndex, project);
+            }
+
+            // format the return value with NumberFormatter
+            double doubleValue = ((Number) obj).doubleValue();
+            String formatted = getNumberFormat().format(obj);
+
+            // check for Infinity and NaN
+            if (formatted.charAt(0) == 65533) { // for some reason "doubleValue == Double.NaN" doesn't work
+                formatted = "NaN";
+            } else if (doubleValue == Double.POSITIVE_INFINITY) {
+                formatted = "\u221e";
+            } else if (doubleValue == Double.NEGATIVE_INFINITY) {
+                formatted = "-\u221e";
+            }
+            return wrap(formatted, rowIndex, project);
         }
 
         /**
