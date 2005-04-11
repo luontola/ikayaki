@@ -28,6 +28,8 @@ import ikayaki.Ikayaki;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.event.TableModelListener;
+import javax.swing.event.TableModelEvent;
 import java.io.File;
 
 /**
@@ -91,9 +93,14 @@ or disable if measuring has started.
         calibratePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
         calibratePanel.add(calibrateButton);
 
+        // emulate the looks of a JScrollPane
+        JPanel tablePanel = new JPanel(new BorderLayout());
+        tablePanel.add(calibrationProjectTable.getTableHeader(), BorderLayout.NORTH);
+        tablePanel.add(calibrationProjectTable, BorderLayout.CENTER);
+        tablePanel.setBorder(new JScrollPane().getBorder());
+
         this.setLayout(new BorderLayout());
-        this.add(calibrationProjectTable.getTableHeader(), BorderLayout.NORTH);
-        this.add(calibrationProjectTable, BorderLayout.CENTER);
+        this.add(tablePanel, BorderLayout.CENTER);
         this.add(calibratePanel, BorderLayout.SOUTH);
     }
 
