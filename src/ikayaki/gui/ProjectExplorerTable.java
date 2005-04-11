@@ -457,13 +457,15 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
 
             } else if (event.getType() == ProjectEvent.Type.STATE_CHANGED) {
                 File file = event.getProject().getFile();
+                boolean repaintTable = false;
+
                 switch (event.getProject().getState()) {
                 case IDLE:
                     if (file.equals(measuringProjectFile)) {
                         // the project's measurement has just ended
                         measuringProjectFile = null;
                         doneRecentlyProjectFile = file;
-                        fireTableDataChanged();
+                        repaintTable = true;
                     }
                     break;
                 case MEASURING:
@@ -472,11 +474,21 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                     // the project has an active measurement
                     measuringProjectFile = file;
                     doneRecentlyProjectFile = null;
-                    fireTableDataChanged();
+                    repaintTable = true;
                     break;
                 default:
                     assert false;
                     break;
+                }
+
+                // repaint the table to show updated project states
+                if (repaintTable) {
+                    // save the selections, or they will be lost in fireTableDataChanged()
+                    int[] selectedRows = ProjectExplorerTable.this.getSelectedRows();
+                    fireTableDataChanged();
+                    for (int i : selectedRows) {
+                        ProjectExplorerTable.this.getSelectionModel().addSelectionInterval(i, i);
+                    }
                 }
             }
         }

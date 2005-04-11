@@ -54,14 +54,14 @@ public class MainViewPanel extends ProjectComponent {
     private Squid squid;
 
     /**
-     * Currently opened project.
+     * Currently opened project, or null of no project is open.
      */
-    private Project project;
+    private Project project = null;
 
     /**
-     * Project which has an ongoing measurement, or null if no measurement is running.
+     * Project which has had the latest measurement, or null if no measurements have been made..
      */
-    private Project measuringProject;
+    private Project latestMeasuringProject = null;
 
     /* GUI Components */
     private MainMenuBar menuBar;
@@ -276,9 +276,8 @@ public class MainViewPanel extends ProjectComponent {
         getMeasurementDetailsPanel().setProject(project);
         getMeasurementGraphsPanel().setProject(project);
 
-        // close the previous project if it has no measurements running
-        // (it will be closed by projectUpdated() if there is a measurement running)
-        if (oldProject != null && oldProject != measuringProject && oldProject != project) {
+        // close the previous project if it is not the latest measuring project
+        if (oldProject != null && oldProject != project && oldProject != latestMeasuringProject) {
             if (!Project.closeProject(oldProject)) {
                 JOptionPane.showMessageDialog(this,
                         "Unable to close the project " + oldProject.getName(),
@@ -300,36 +299,54 @@ public class MainViewPanel extends ProjectComponent {
     @Override public void projectUpdated(ProjectEvent event) {
         if (event.getType() == ProjectEvent.Type.STATE_CHANGED) {
 
-            // check if the last measurement has stopped
-            if (measuringProject != null && measuringProject.getState() == Project.State.IDLE) {
+            // keep track of which project has a measurement running
+            if (event.getProject().getState() != Project.State.IDLE) {
 
-                /* TODO:
-                 * It might be better that if the measuring ends when measuringProject is not active,
-                 * it would not be closed. Otherwise it won't be possible for the user to see which of
-                 * the steps were just completed (green color).
-                 */
-
-                // close the project if it is not anymore open
-                if (measuringProject != project) {
-                    if (Project.closeProject(measuringProject)) {
-                        measuringProject = null;
-                        project.setSquid(squid);
-                    } else {
+                // close the previous measuring project if it is no more open
+                if (latestMeasuringProject != null
+                        && latestMeasuringProject != project
+                        && latestMeasuringProject != event.getProject()) {
+                    if (!Project.closeProject(latestMeasuringProject)) {
                         JOptionPane.showMessageDialog(this,
-                                "Unable to close the project " + measuringProject.getName(),
+                                "Unable to close the project " + latestMeasuringProject.getName(),
                                 "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
                     }
-                } else {
-                    // measuringProject is no more measuring, but it is still the active project
-                    measuringProject = null;
                 }
+                latestMeasuringProject = event.getProject();
             }
 
-            // check if a new measurement has started
-            if (project != null && project.getState() != Project.State.IDLE) {
-                measuringProject = project;
-            }
+            return;
+
+//            // check if the last measurement has stopped
+//            if (latestMeasuringProject != null && latestMeasuringProject.getState() == Project.State.IDLE) {
+//
+//                /* TODO:
+//                 * It might be better that if the measuring ends when latestMeasuringProject is not active,
+//                 * it would not be closed. Otherwise it won't be possible for the user to see which of
+//                 * the steps were just completed (green color).
+//                 */
+//
+//                // close the project if it is not anymore open
+//                if (latestMeasuringProject != project) {
+//                    if (Project.closeProject(latestMeasuringProject)) {
+//                        latestMeasuringProject = null;
+//                        project.setSquid(squid);
+//                    } else {
+//                        JOptionPane.showMessageDialog(this,
+//                                "Unable to close the project " + latestMeasuringProject.getName(),
+//                                "Error", JOptionPane.ERROR_MESSAGE);
+//                        return;
+//                    }
+//                } else {
+//                    // latestMeasuringProject is no more measuring, but it is still the active project
+//                    latestMeasuringProject = null;
+//                }
+//            }
+//
+//            // check if a new measurement has started
+//            if (project != null && project.getState() != Project.State.IDLE) {
+//                latestMeasuringProject = project;
+//            }
         }
     }
 
@@ -338,29 +355,37 @@ public class MainViewPanel extends ProjectComponent {
      * before exiting.
      */
     public void exitProgram() {
-        if (measuringProject != null) {
+        if (latestMeasuringProject != null && latestMeasuringProject.getState() != Project.State.IDLE) {
             JOptionPane.showMessageDialog(this,
                     "Can not exit. A measurement is running.",
                     "Error", JOptionPane.ERROR_MESSAGE);
-//            System.err.println("Can not exit: a measurement is running");
             return;
         }
         if (!Settings.instance().saveNow()) {
             JOptionPane.showMessageDialog(this,
                     "Can not exit. Unable to save the settings.",
                     "Error", JOptionPane.ERROR_MESSAGE);
-//            System.err.println("Can not exit: unable to save settings");
             return;
         }
-        if (project != null) {
-            if (!Project.closeProject(project)) {
+        setProject(null); // close the active project
+//        if (project != null) {
+//            if (!Project.closeProject(project)) {
+//                JOptionPane.showMessageDialog(this,
+//                        "Can not exit. Unable to close the project " + project.getName() + ".",
+//                        "Error", JOptionPane.ERROR_MESSAGE);
+//                return;
+//            }
+//        }
+        if (latestMeasuringProject != null) {
+            if (!Project.closeProject(latestMeasuringProject)) {
                 JOptionPane.showMessageDialog(this,
-                        "Can not exit. Unable to close the project " + project.getName() + ".",
+                        "Can not exit. Unable to close the project " + latestMeasuringProject.getName() + ".",
                         "Error", JOptionPane.ERROR_MESSAGE);
-//                System.err.println("Can not exit: unable to close project " + project.getName());
                 return;
             }
         }
+        // TODO: close all projects in the cache
+
         SerialIO.closeAllPorts();
         System.exit(0);
     }

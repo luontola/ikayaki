@@ -321,10 +321,12 @@ project listeners.
     }
 
     /**
-     * Ensures that the project file is saved and frees the resources taken by the project. A project should not be used
-     * after it has been closed – any further use of the object is undefined (will create an IllegalStateException if
-     * somebody tries to modify it). The closed project is removed from the projectCache. A project can not be closed if
-     * it has a measurement running.
+     * Ensures that the project file is saved and frees the resources taken by the project. The closed project will
+     * automatically detach itself from the Squid. The closed project is removed from the projectCache.
+     * <p/>
+     * A project should not be used after it has been closed – any further use of the object is undefined (will create
+     * an IllegalStateException if somebody tries to modify it). A project can not be closed if it has a measurement
+     * running.
      *
      * @param project project to be closed.
      * @return true if the project has been closed, false if a measurement is running and the project can not be
