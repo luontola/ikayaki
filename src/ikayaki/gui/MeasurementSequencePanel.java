@@ -87,6 +87,9 @@ Order of rows with measurement data cannot be changed.
     private JFormattedTextField sequenceStartField;
     private JFormattedTextField sequenceStepField;
     private JFormattedTextField sequenceStopField;
+    private ComponentFlasher sequenceStartFieldFlasher;
+    private ComponentFlasher sequenceStepFieldFlasher;
+    private ComponentFlasher sequenceStopFieldFlasher;
     private JLabel stepValueType;
     private JButton addSequenceButton;
     private JComboBox loadSequenceBox;
@@ -145,6 +148,9 @@ Order of rows with measurement data cannot be changed.
         sequenceStartField.setFormatterFactory(factory);
         sequenceStepField.setFormatterFactory(factory);
         sequenceStopField.setFormatterFactory(factory);
+        sequenceStartFieldFlasher = new ComponentFlasher(sequenceStartField);
+        sequenceStepFieldFlasher = new ComponentFlasher(sequenceStepField);
+        sequenceStopFieldFlasher = new ComponentFlasher(sequenceStopField);
 
         addSequenceButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -242,39 +248,89 @@ Order of rows with measurement data cannot be changed.
         if (getProject() == null || !getProject().isSequenceEditEnabled()) {
             return;
         }
-        if (sequenceStartField.getValue() == null
-                || sequenceStepField.getValue() == null
-                || sequenceStopField.getValue() == null) {
-            return;
-        }
-        // TODO: if there are invalid values in some fields, flash them red
 
-        MeasurementStep step = new MeasurementStep();
-        double startVal = ((Number) sequenceStartField.getValue()).doubleValue();
-        double stepVal = ((Number) sequenceStepField.getValue()).doubleValue();
-        double stopVal = ((Number) sequenceStopField.getValue()).doubleValue();
+        // verify the values of the fields, flash them red if errors are found
+        double startVal;
+        double stepVal;
+        double stopVal;
+        if (sequenceStartField.getValue() != null
+                && sequenceStepField.getValue() == null
+                && sequenceStopField.getValue() == null) {
+            // only start entered, add only one step
+            startVal = ((Number) sequenceStartField.getValue()).doubleValue();
+            stepVal = 1.0;
+            stopVal = startVal;
 
-        // add the steps to the sequence
-        if (stepVal > 0.09) {
-            for (double d = startVal; d <= stopVal; d += stepVal) {
-                if (Math.abs(d - getLastStepValue()) < 0.09) {
-                    continue;
-                }
-                step.setStepValue(d);
-                getProject().addStep(step);
+        } else if (sequenceStartField.getValue() != null
+                && sequenceStepField.getValue() != null
+                && sequenceStopField.getValue() != null) {
+            // all values entered, check their sizes
+            startVal = ((Number) sequenceStartField.getValue()).doubleValue();
+            stepVal = ((Number) sequenceStepField.getValue()).doubleValue();
+            stopVal = ((Number) sequenceStopField.getValue()).doubleValue();
+
+            JTextField fixThisField = null;
+            if (startVal > stopVal) {
+                sequenceStopFieldFlasher.flash();
+                fixThisField = sequenceStopField;
+            }
+            if (stepVal <= 0.09) {
+                sequenceStepFieldFlasher.flash();
+                fixThisField = sequenceStepField;
+            }
+            if (fixThisField != null) {
+                fixThisField.grabFocus();
+                final JTextField f = fixThisField;
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        // needs to use invokeLater because it won't be possible to select text from a field which has no focus
+                        f.setSelectionStart(0);
+                        f.setSelectionEnd(f.getText().length());
+                    }
+                });
+                return;
             }
 
-            // finally reset the fields, move focus to the Start field and show the added steps
-            resetAddSequence();
-            sequenceStartField.grabFocus();
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    scrollToRow(sequenceTableModel.getRowCount() - 1);
-                    sequenceStartField.setSelectionStart(0);
-                    sequenceStartField.setSelectionEnd(sequenceStartField.getText().length());
-                }
-            });
+        } else {
+            // some required values have not been entered, so flash them
+            if (sequenceStopField.getValue() == null) {
+                sequenceStopFieldFlasher.flash();
+                sequenceStopField.grabFocus();
+            }
+            if (sequenceStepField.getValue() == null) {
+                sequenceStepFieldFlasher.flash();
+                sequenceStepField.grabFocus();
+            }
+            if (sequenceStartField.getValue() == null) {
+                sequenceStartFieldFlasher.flash();
+                sequenceStartField.grabFocus();
+            }
+            return;
         }
+
+        // add the steps to the sequence
+        if (stepVal <= 0.09) {
+            return;
+        }
+        MeasurementStep step = new MeasurementStep();
+        for (double d = startVal; d <= stopVal; d += stepVal) {
+            if (Math.abs(d - getLastStepValue()) < 0.09) {
+                continue;
+            }
+            step.setStepValue(d);
+            getProject().addStep(step);
+        }
+
+        // finally reset the fields, move focus to the Start field and show the added steps
+        resetAddSequence();
+        sequenceStartField.grabFocus();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                scrollToRow(sequenceTableModel.getRowCount() - 1);
+                sequenceStartField.setSelectionStart(0);
+                sequenceStartField.setSelectionEnd(sequenceStartField.getText().length());
+            }
+        });
     }
 
     /**
@@ -306,7 +362,7 @@ Order of rows with measurement data cannot be changed.
             public void run() {
                 /* HACK: Must use invokeLater or otherwise the scrolling
                  * does not work at the start of the program, when the sizes
-                 * of the components are not known.
+                 * of the components are not known. Causes the GUI to blink some.
                  */
                 scrollToRow(0);
                 if (project != null) {

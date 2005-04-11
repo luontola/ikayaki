@@ -394,12 +394,12 @@ public class ProjectInformationPanel extends ProjectComponent {
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
                         new Dimension(70, -1), null));
         final JLabel label2 = new JLabel();
-        label2.setText("Mass");
+        label2.setText("Mass (grams)");
         contentPane.add(label2,
                 new GridConstraints(11, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label3 = new JLabel();
-        label3.setText("Volume");
+        label3.setText("Volume (cm³)");
         contentPane.add(label3,
                 new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));

@@ -114,12 +114,12 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         }
         this.project = project;
 
-        // reset columns to defaults
+        // reset columns to defaults, in order of appearance
         possibleColumns.clear();
         possibleColumns.add(COUNT);
         possibleColumns.add(STEP);
-        possibleColumns.add(MASS);
         possibleColumns.add(VOLUME);
+        possibleColumns.add(MASS);
         possibleColumns.add(DECLINATION);
         possibleColumns.add(INCLINATION);
         possibleColumns.add(REMANENCE);
@@ -389,7 +389,14 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         COUNT("#") {
             @Override public StyledWrapper getValue(int rowIndex, Project project) {
                 StyledWrapper wrapper = headerWrapper;
-                wrapper.value = new Integer(rowIndex + 1);
+                if (project != null && project.getSteps() > rowIndex) {
+                    wrapper.value = new Integer(rowIndex + 1);
+                } else {
+                    //wrapper.value = ">"; // greater-than sign
+                    wrapper.value = "\u00BB"; // right-pointing double angle quotation mark
+                    //wrapper.value = "\u2192"; // rightwards arrow
+                    //wrapper.value = "\u25BA"; // black right-pointing pointer
+                }
                 return wrapper;
             }
         },
