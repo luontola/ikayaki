@@ -108,25 +108,30 @@ public class MeasurementControlsPanel extends ProjectComponent {
         buttonPanel.add(abortButton);
 
         zButtonGroup = new ButtonGroup();
-        zPlusRadioButton = new JRadioButton("+z", true);
+        zPlusRadioButton = new JRadioButton("+z");
         zMinusRadioButton = new JRadioButton("-z");
         zButtonGroup.add(zPlusRadioButton);
         zButtonGroup.add(zMinusRadioButton);
-
+/*
         JPanel zButtonPanel = new JPanel(new GridLayout(2, 1));
         zButtonPanel.add(zPlusRadioButton);
         zButtonPanel.add(zMinusRadioButton);
-
-        sampleInsertTextLabel = new JLabel("Put sample in holder arrow up");
+*/
+        sampleInsertTextLabel = new JLabel("Put sample in holder arrow up.");
         sampleInsertZPlusIcon = new ImageIcon(ClassLoader.getSystemResource("resources/zplus.png"));
         sampleInsertZMinusIcon = new ImageIcon(ClassLoader.getSystemResource("resources/zminus.png"));
-        sampleInsertIconLabel = new JLabel(sampleInsertZPlusIcon);
+        sampleInsertIconLabel = new JLabel();
 
         sampleInsertPanel = new JPanel(new BorderLayout(8, 4));
         sampleInsertPanel.add(sampleInsertTextLabel, BorderLayout.NORTH);
+        sampleInsertPanel.add(sampleInsertIconLabel, BorderLayout.CENTER);
+        sampleInsertPanel.add(zMinusRadioButton, BorderLayout.WEST);
+        sampleInsertPanel.add(zPlusRadioButton, BorderLayout.EAST);
+/*
+        sampleInsertPanel.add(sampleInsertTextLabel, BorderLayout.NORTH);
         sampleInsertPanel.add(sampleInsertIconLabel, BorderLayout.WEST);
         sampleInsertPanel.add(zButtonPanel, BorderLayout.CENTER);
-
+*/
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(buttonPanel, BorderLayout.CENTER);
         topPanel.add(sampleInsertPanel, BorderLayout.SOUTH);
@@ -137,7 +142,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
         setLayout(new BorderLayout());
         add(topPanel, BorderLayout.NORTH);
         add(manualControlsPanel, BorderLayout.WEST);
-        add(magnetometerStatusPanel, BorderLayout.EAST);
+        add(magnetometerStatusPanel, BorderLayout.CENTER);
 
         /**
          * Event D: On zPlus/MinusRadioButton click - call project.setOrientation(boolean) where
@@ -158,8 +163,6 @@ public class MeasurementControlsPanel extends ProjectComponent {
 
         // initialize with no project
         setProject(null);
-
-        return; // TODO
     }
 
     /**
@@ -189,7 +192,8 @@ public class MeasurementControlsPanel extends ProjectComponent {
      * @param event MeasurementEvent received.
      */
     public void measurementUpdated(MeasurementEvent event) {
-        // TODO
+        // TODO: so MeasurementEvent won't tell handler position and rotation?
+        magnetometerStatusPanel.updateStatus();
     }
 
     /**
