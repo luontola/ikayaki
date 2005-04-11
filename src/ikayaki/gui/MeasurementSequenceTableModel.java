@@ -406,7 +406,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
          */
         STEP("Step Value"){
             {
-                getNumberFormat().setGroupingUsed(false);
                 getNumberFormat().setMaximumFractionDigits(1);
             }
 
@@ -489,6 +488,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
          * Showing and editing the mass of the measurement step.
          */
         MASS("Mass"){
+            {
+                getNumberFormat().setMaximumFractionDigits(3);
+            }
+
             @Override public StyledWrapper getValue(int rowIndex, Project project) {
                 if (rowIndex >= project.getSteps()) {
                     return wrap(null, rowIndex, project);
@@ -538,6 +541,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
          * Showing and editing the volume of the measurement step.
          */
         VOLUME("Volume"){
+            {
+                getNumberFormat().setMaximumFractionDigits(3);
+            }
+
             @Override public StyledWrapper getValue(int rowIndex, Project project) {
                 if (rowIndex >= project.getSteps()) {
                     return wrap(null, rowIndex, project);
@@ -586,15 +593,60 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         /*
          * Showing the values calculated by MeasurementValue.
          */
-        X(MeasurementValue.X),
-        Y(MeasurementValue.Y),
-        Z(MeasurementValue.Z),
-        DECLINATION(MeasurementValue.DECLINATION),
-        INCLINATION(MeasurementValue.INCLINATION),
-        MOMENT(MeasurementValue.MOMENT),
-        REMANENCE(MeasurementValue.REMANENCE),
-        RELATIVE_REMANENCE(MeasurementValue.RELATIVE_REMANENCE),
-        THETA63(MeasurementValue.THETA63);
+        X(MeasurementValue.X) {
+            {
+                getNumberFormat().setMinimumFractionDigits(3);
+                getNumberFormat().setMaximumFractionDigits(3);
+            }
+        },
+        Y(MeasurementValue.Y) {
+            {
+                getNumberFormat().setMinimumFractionDigits(3);
+                getNumberFormat().setMaximumFractionDigits(3);
+            }
+        },
+        Z(MeasurementValue.Z) {
+            {
+                getNumberFormat().setMinimumFractionDigits(3);
+                getNumberFormat().setMaximumFractionDigits(3);
+            }
+        },
+        DECLINATION(MeasurementValue.DECLINATION) {
+            {
+                getNumberFormat().setMinimumFractionDigits(1);
+                getNumberFormat().setMaximumFractionDigits(1);
+            }
+        },
+        INCLINATION(MeasurementValue.INCLINATION) {
+            {
+                getNumberFormat().setMinimumFractionDigits(1);
+                getNumberFormat().setMaximumFractionDigits(1);
+            }
+        },
+        MOMENT(MeasurementValue.MOMENT) {
+            {
+                getNumberFormat().setMinimumFractionDigits(3);
+                getNumberFormat().setMaximumFractionDigits(3);
+            }
+        },
+        REMANENCE(MeasurementValue.REMANENCE) {
+            {
+                getNumberFormat().setMinimumFractionDigits(3);
+                getNumberFormat().setMaximumFractionDigits(3);
+            }
+        },
+        RELATIVE_REMANENCE(MeasurementValue.RELATIVE_REMANENCE) {
+            {
+                getNumberFormat().setMinimumFractionDigits(3);
+                getNumberFormat().setMaximumFractionDigits(3);
+            }
+        },
+        THETA63(MeasurementValue.THETA63) {
+            {
+                getNumberFormat().setMinimumFractionDigits(3);
+                getNumberFormat().setMaximumFractionDigits(3);
+            }
+        };
 
         /* Begin class SequenceColumn */
 
@@ -608,6 +660,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
             this.columnName = columnName;
             this.value = null;
             this.numberFormat = NumberFormat.getNumberInstance();
+            this.numberFormat.setGroupingUsed(false);
         }
 
         private SequenceColumn(MeasurementValue value) {
@@ -618,6 +671,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
             }
             this.value = value;
             this.numberFormat = NumberFormat.getNumberInstance();
+            this.numberFormat.setGroupingUsed(false);
         }
 
         /**
@@ -751,6 +805,18 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
          */
         public NumberFormat getNumberFormat() {
             return numberFormat;
+        }
+
+        /**
+         * Sets the number format used for rendering the numbers in this column.
+         *
+         * @throws NullPointerException if numberFormat is null.
+         */
+        public void setNumberFormat(NumberFormat numberFormat) {
+            if (numberFormat == null) {
+                throw new NullPointerException();
+            }
+            this.numberFormat = numberFormat;
         }
     }
 }

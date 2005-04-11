@@ -214,7 +214,7 @@ Order of rows with measurement data cannot be changed.
     /**
      * Returns the latest stepValue which is greater than 0. If none is found, returns 0.
      */
-    private double getLastStepValue() {
+    private double getLastPositiveStepValue() {
         for (int i = getProject().getSteps() - 1; i >= 0; i--) {
             double stepValue = getProject().getStep(i).getStepValue();
             if (stepValue > 0.0) {
@@ -222,6 +222,17 @@ Order of rows with measurement data cannot be changed.
             }
         }
         return 0.0;
+    }
+
+    /**
+     * Returns the stepValue of the last step. The returned value is 0 or greater. If there are no steps, returns 0.
+     */
+    private double getLastStepValue() {
+        double stepValue = 0.0;
+        if (getProject().getSteps() > 0) {
+            stepValue = getProject().getStep(getProject().getSteps() - 1).getStepValue();
+        }
+        return Math.max(0.0, stepValue);
     }
 
     /**
@@ -236,7 +247,7 @@ Order of rows with measurement data cannot be changed.
         }
 
         // set the latest step value to the Start field
-        double stepValue = getLastStepValue();
+        double stepValue = getLastPositiveStepValue();
         sequenceStartField.setValue(new Double(stepValue));
     }
 
