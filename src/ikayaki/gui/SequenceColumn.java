@@ -36,6 +36,8 @@ import java.text.ParseException;
 
 /**
  * Represents a column in the measurement sequence table. Calculates the values of that column.
+ *
+ * @author Esko Luontola
  */
 public enum SequenceColumn {
 

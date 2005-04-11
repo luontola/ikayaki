@@ -31,7 +31,8 @@ import java.util.List;
 import static ikayaki.gui.SequenceColumn.*;
 
 /**
- * Handles data in table.
+ * Handles the showing and editing of a project's measurement sequence. The columns that are being shown can be selected
+ * on a per project basis, and the selections are remembered even after the project has been closed.
  *
  * @author Esko Luontola
  */
@@ -45,7 +46,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
     private List<SequenceColumn> possibleColumns = new ArrayList<SequenceColumn>();
 
     /**
-     * Creates SequenceTableModel
+     * Creates a new MeasurementSequenceTableModel with no active project.
      */
     public MeasurementSequenceTableModel() {
         // initialize with no project
@@ -135,12 +136,18 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         }
     }
 
+    /**
+     * Refreshes the table to reflect the changes in the project's data.
+     */
     public void projectUpdated(ProjectEvent event) {
         if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
             fireTableDataChanged();
         }
     }
 
+    /**
+     * Refreshes the table to reflect the changes in the measurement steps.
+     */
     public void measurementUpdated(MeasurementEvent event) {
         if (event.getType() == MeasurementEvent.Type.VALUE_MEASURED
                 || event.getType() == MeasurementEvent.Type.STEP_START
