@@ -28,8 +28,7 @@ import ikayaki.ProjectEvent;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 /**
  * Has "Measure"/"Pause", "Single step" and "Stop now!" buttons for controlling measurements; "+z/-z" radiobuttons for
@@ -46,33 +45,36 @@ public class MeasurementControlsPanel extends ProjectComponent {
      * Measure/pause -button; "Measure" when no measuring is being done, "Pause" when there is ongoing measuring
      * sequence.
      */
-    private JButton measureButton;
-    private JButton stepButton;
-    private JButton abortButton;
+    private final JButton measureButton;
+    private final JButton stepButton;
+    private final JButton abortButton;
 
     /**
      * Groups together +z and -z RadioButtons.
      */
-    private ButtonGroup zButtonGroup;
+    private final ButtonGroup zButtonGroup;
 
     /**
      * Changes sample orientation to +Z.
      */
-    private JRadioButton zPlusRadioButton;
+    private final JRadioButton zPlusRadioButton;
 
     /**
      * Changes sample orientation to -Z.
      */
-    private JRadioButton zMinusRadioButton;
+    private final JRadioButton zMinusRadioButton;
 
     /**
      * Draws a help image and text for sample inserting: "Put sample in holder arrow up."
      */
-    private JPanel sampleInsertPanel;
+    private final JPanel sampleInsertPanel;
+    private final Icon sampleInsertZPlusIcon;
+    private final Icon sampleInsertZMinusIcon;
+    private final JLabel sampleInsertIconLabel;
 
-    private MagnetometerStatusPanel magnetometerStatusPanel;
+    private final MagnetometerStatusPanel magnetometerStatusPanel;
 
-    private ManualControlsPanel manualControlsPanel;
+    private final ManualControlsPanel manualControlsPanel;
 
     /* Swing Actions */
     private Action autoStepAction;
@@ -87,20 +89,62 @@ public class MeasurementControlsPanel extends ProjectComponent {
         abortButton = new JButton(getAbortAction());
         updateActions();
 
-//        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 2, 2)); // prevents button resize, looks a bit ugly
+        //JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 2, 2)); // prevents button resize, looks a bit ugly
         JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 2, 2)); // prevents button resize, looks a bit ugly
+        //JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 4, 4, 4));
         buttonPanel.add(measureButton);
         buttonPanel.add(stepButton);
         buttonPanel.add(abortButton);
 
-        setLayout(new BorderLayout());
-        add(buttonPanel, BorderLayout.NORTH);
+        zButtonGroup = new ButtonGroup();
+        zPlusRadioButton = new JRadioButton("+z", true);
+        zMinusRadioButton = new JRadioButton("-z");
+        zButtonGroup.add(zPlusRadioButton);
+        zButtonGroup.add(zMinusRadioButton);
 
-        /*
-        Event D: On zPlus,MinusRadioButton click - call project.setOrientation(boolean) where
-        Plus is true and Minus is false.
-        */
+        JPanel zButtonPanel = new JPanel(new GridLayout(2, 1));
+        zButtonPanel.add(zPlusRadioButton);
+        zButtonPanel.add(zMinusRadioButton);
+
+        JLabel sampleUpLabel = new JLabel("Put sample in holder arrow up");
+        sampleInsertZPlusIcon = new ImageIcon(ClassLoader.getSystemResource("resources/zplus.png"));
+        sampleInsertZMinusIcon = new ImageIcon(ClassLoader.getSystemResource("resources/zminus.png"));
+        sampleInsertIconLabel = new JLabel(sampleInsertZPlusIcon);
+
+        sampleInsertPanel = new JPanel(new BorderLayout(8, 4));
+        sampleInsertPanel.add(sampleUpLabel, BorderLayout.NORTH);
+        sampleInsertPanel.add(sampleInsertIconLabel, BorderLayout.WEST);
+        sampleInsertPanel.add(zButtonPanel, BorderLayout.CENTER);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(buttonPanel, BorderLayout.CENTER);
+        topPanel.add(sampleInsertPanel, BorderLayout.SOUTH);
+
+        magnetometerStatusPanel = new MagnetometerStatusPanel();
+        manualControlsPanel = new ManualControlsPanel();
+
+        setLayout(new BorderLayout());
+        add(topPanel, BorderLayout.NORTH);
+        add(manualControlsPanel, BorderLayout.WEST);
+        add(magnetometerStatusPanel, BorderLayout.EAST);
+
+        /**
+         * Event D: On zPlus/MinusRadioButton click - call project.setOrientation(boolean) where
+         * Plus is true and Minus is false.
+         */
+        zPlusRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                getProject().setOrientation(true);
+                sampleInsertIconLabel.setIcon(sampleInsertZPlusIcon);
+            }
+        });
+        zMinusRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                getProject().setOrientation(false);
+                sampleInsertIconLabel.setIcon(sampleInsertZMinusIcon);
+            }
+        });
 
         return; // TODO
     }
@@ -108,6 +152,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
     @Override public void setProject(Project project) {
         super.setProject(project);
         updateActions();
+        if (project != null) setOrientation(project.getOrientation());
     }
 
     /**
@@ -127,6 +172,21 @@ public class MeasurementControlsPanel extends ProjectComponent {
      */
     public void measurementUpdated(MeasurementEvent event) {
         // TODO
+    }
+
+    /**
+     * Sets zPlus/Minus radiobutton enabled, and the corresponding image as sample inserting help image.
+     *
+     * @param orientation true for +z, false for -z.
+     */
+    private void setOrientation(boolean orientation) {
+        if (orientation) {
+            zPlusRadioButton.setSelected(true);
+            sampleInsertIconLabel.setIcon(sampleInsertZPlusIcon);
+        } else {
+            zMinusRadioButton.setSelected(true);
+            sampleInsertIconLabel.setIcon(sampleInsertZMinusIcon);
+        }
     }
 
     /**
@@ -157,6 +217,10 @@ public class MeasurementControlsPanel extends ProjectComponent {
 
     /* Getters for Swing Actions */
 
+    /**
+     * Event A: On measureButton click - call project.doAutoStep() or project.doPause(), depending
+     * on current button status. Show error message if false is returned.
+     */
     public Action getAutoStepAction() {
         if (autoStepAction == null) {
             autoStepAction = new AbstractAction() {
@@ -176,6 +240,9 @@ public class MeasurementControlsPanel extends ProjectComponent {
         return autoStepAction;
     }
 
+    /**
+     * Event B: On stepButton click - call project.doSingleStep(); show error message if false is returned.
+     */
     public Action getSingleStepAction() {
         if (singleStepAction == null) {
             singleStepAction = new AbstractAction() {
@@ -235,6 +302,10 @@ public class MeasurementControlsPanel extends ProjectComponent {
         return pauseAction;
     }
 
+    /**
+     * Event C: On stopButton click - call project.doAbort(); show critical error message if false
+     * is returned.
+     */
     public Action getAbortAction() {
         if (abortAction == null) {
             abortAction = new AbstractAction() {
