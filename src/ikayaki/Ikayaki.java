@@ -56,6 +56,8 @@ be closed.
     public static final String APP_HOME_PAGE = "http://www.cs.helsinki.fi/group/squid/";
 
     public static final String FILE_TYPE = ".ika";
+    public static final String FILE_DTD = "http://www.cs.helsinki.fi/group/squid/ikayaki10.dtd"; // TODO: create the DTD
+    public static final File FILE_DTD_FILE = new File("ikayaki10.dtd"); // TODO: use ClassLoader.getSystemResource
     public static final String FILE_DESCRIPTION = "Measurement Project";
 
     public static final String[] AUTHORS = new String[]{

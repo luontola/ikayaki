@@ -124,6 +124,8 @@ public class ProjectExplorerPanel extends ProjectComponent {
         browserFieldFlasher = new ComponentFlasher(browserFieldEditor);
         // browserFieldEditor.setFocusTraversalKeysEnabled(false); // disable tab-exiting from browserField
 
+        // TODO: a custom renderer for browserField's items so that long file paths would be visible in the dropdown menu
+
         // browse button
         browseButton = new JButton("Browse...");
 

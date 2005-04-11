@@ -360,6 +360,8 @@ project listeners.
         return true;
     }
 
+    // TODO: a method for closing all of the cached project files
+
     /**
      * Returns the type of a project file. Reads the type of the project from the specified file quickly, without fully
      * loading the Project. The first request for each file reads from the file system, but after that the results are
@@ -547,6 +549,8 @@ project listeners.
             updateTransforms();     // transforms must be updated before running MeasurementSequence's constructor
             sequence = new MeasurementSequence((Element) sequenceList.item(0), this);
 
+            // TODO: check from the measurement step's timestamps and states that the steps are in the right order
+
 //      } else if (version.equals("x.y")) {
 //          ... importing of file version x.y ...
         } else {
@@ -567,6 +571,8 @@ project listeners.
         } catch (ParserConfigurationException e) {
             return null;
         }
+        
+        // TODO: use a DTD for the document
 
         // create document's root element
         Element root = document.createElement("project");
