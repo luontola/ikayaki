@@ -50,6 +50,13 @@ class FittedComboBoxRenderer extends BasicComboBoxRenderer {
         this.delimiterRegexp = regexp;
     }
 
+    /* TODO:
+     * Tuo nykyinen algoritmi on melko hyv‰ Project Explorerin kansiohistoriaa katsottaessa. Autocompletessa se ei ole
+     * niin hyv‰, koska jos on eri pituisia kansioiden nimi‰, niin polku katkaistaan niill‰ eri kohdasta. Jos
+     * autocompleten haluaisi hyv‰ksi, niin pit‰isi ennen valikon avaamista laskea ett‰ kuinka paljon enimmill‰‰n
+     * p‰tkit‰‰n ja sitten tallettaa se muistiin t‰m‰n rendererin k‰ytett‰v‰ksi.
+     */
+
     @Override public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
                                                             boolean cellHasFocus) {
         JLabel comp = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
