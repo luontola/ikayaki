@@ -143,7 +143,8 @@ public class MeasurementControlsPanel extends ProjectComponent {
         setLayout(new BorderLayout());
         add(topPanel, BorderLayout.NORTH);
         add(manualControlsPanel, BorderLayout.WEST);
-        add(magnetometerStatusPanel, BorderLayout.CENTER);
+        // TODO: MagnetometerStatusPanel appears to freeze the program when opening a file dialog
+        //add(magnetometerStatusPanel, BorderLayout.CENTER);
 
         /**
          * Event D: On zPlus/MinusRadioButton click - call project.setOrientation(boolean) where
