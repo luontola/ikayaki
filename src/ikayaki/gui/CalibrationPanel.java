@@ -89,7 +89,8 @@ public class CalibrationPanel extends ProjectComponent {
         this.directory = Ikayaki.CALIBRATION_PROJECT_DIR;
 
         calibrationProjectTable = new ProjectExplorerTable(this.parent, true);
-        calibrationProjectTable.setDirectory(this.directory);
+        // done by setProject(null)
+        // calibrationProjectTable.setDirectory(this.directory);
 
         calibrateButton = new JButton(((MainViewPanel) parent).getMeasurementControlsPanel().getCalibrateAction());
 

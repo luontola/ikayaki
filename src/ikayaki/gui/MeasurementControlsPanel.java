@@ -121,6 +121,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
         sampleInsertZPlusIcon = new ImageIcon(ClassLoader.getSystemResource("resources/zplus.png"));
         sampleInsertZMinusIcon = new ImageIcon(ClassLoader.getSystemResource("resources/zminus.png"));
         sampleInsertIconLabel = new JLabel();
+        sampleInsertIconLabel.setHorizontalAlignment(JLabel.CENTER);
 
         sampleInsertPanel = new JPanel(new BorderLayout(8, 4));
         sampleInsertPanel.add(sampleInsertTextLabel, BorderLayout.NORTH);
