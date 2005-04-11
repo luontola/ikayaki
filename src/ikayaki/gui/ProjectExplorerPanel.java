@@ -121,11 +121,12 @@ public class ProjectExplorerPanel extends ProjectComponent {
 
         // custom renderer for browserField's items so that long path names are right-justified in the popup menu
         browserFieldRenderer = new BrowserFieldRenderer();
+        browserField.setRenderer(browserFieldRenderer);
+        // TODO
         //DefaultListCellRenderer renderer = new DefaultListCellRenderer();
         //renderer.setHorizontalAlignment(DefaultListCellRenderer.TRAILING);
         //browserField.setRenderer(renderer);
         //browserFieldRenderer.setPreferredSize(new Dimension(100, 20));
-        browserField.setRenderer(browserFieldRenderer);
 
         // browse button
         browseButton = new JButton("Browse...");
@@ -390,18 +391,17 @@ public class ProjectExplorerPanel extends ProjectComponent {
      */
     private class BrowserFieldRenderer extends JLabel implements ListCellRenderer {
 
-        private int height;
-
         /**
          * Creates an opaque JLabel with a small border.
          */
         public BrowserFieldRenderer() {
             setOpaque(true);
             setBorder(BorderFactory.createEmptyBorder(1, 4, 1, 2));
+            // TODO
             //setEnabled(false);
             //setHorizontalAlignment(RIGHT);
             //System.out.println(getPreferredSize());
-            height = getPreferredSize().height;
+            //setMaximumSize(new Dimension(100, 20));
         }
 
         /**
@@ -425,18 +425,30 @@ public class ProjectExplorerPanel extends ProjectComponent {
             }
 
             setText(value.toString());
+            // TODO
+            //setBounds(0, 0, 100, 14);
+            //list.setFixedCellWidth(100);
+            //setMaximumSize(new Dimension(100, 14));
+            //setPreferredSize(new Dimension(100, 14));
             //setSize(browserField.getWidth(), getHeight());
-            setMaximumSize(new Dimension(browserField.getWidth(), height));
-            list.setMaximumSize(new Dimension(browserField.getWidth(), height));
+            //setMaximumSize(new Dimension(browserField.getWidth(), height));
+            //list.setMaximumSize(new Dimension(browserField.getWidth(), height));
             //setCaretPosition(getText().length());
             //setCaretPosition(getDocument().getLength());
-            repaint();
+            //setLocation(list.getWidth() - getWidth(), getY());
+            //repaint();
 
-            //System.out.println(browserField.getWidth() + " " + height);
+            //System.out.println(list.getWidth() + " " + getWidth() + " " + getY());
+            //System.out.println(browserField.getWidth());
             //System.out.println(list.getWidth() + " " + list.getFixedCellHeight());
 
             return this;
         }
+
+        //public void setBounds(int x, int y, int width, int height) {
+            //super.setBounds(x, y, 100, height);
+            //System.out.println(browserField.getWidth() + " / " + x + " " + y + " " + width + " " + height);
+        //}
     }
 
     /**
