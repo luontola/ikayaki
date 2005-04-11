@@ -22,14 +22,22 @@
 
 package ikayaki.gui;
 
-import ikayaki.*;
+import ikayaki.Ikayaki;
+import ikayaki.Project;
+import ikayaki.Settings;
 import ikayaki.util.LastExecutor;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import java.io.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileFilter;
 
 /**
  * Creates a history/autocomplete field (browserField) for choosing the project directory, a listing of project files in
@@ -56,7 +64,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
      * clicked.
      */
     private final JComboBox browserField;
-    private final BrowserFieldRenderer browserFieldRenderer;
+//    private final ListCellRenderer browserFieldRenderer;
     private final JTextField browserFieldEditor; // WARNING: look-and-feel-dependant code
     private final ComponentFlasher browserFieldFlasher;
 
@@ -102,10 +110,10 @@ public class ProjectExplorerPanel extends ProjectComponent {
     }
 
     /**
-     * Creates all components, sets directory as the last open directory or opened project's directory,
-     * initializes files with files from that directory.
+     * Creates all components, sets directory as the last open directory or opened project's directory, initializes
+     * files with files from that directory.
      *
-     * @param parent the component whose setProject() method will be called on opening a new project file.
+     * @param parent  the component whose setProject() method will be called on opening a new project file.
      * @param project project to load and whose directory to set as current directory.
      */
     public ProjectExplorerPanel(ProjectComponent parent, Project project) {
@@ -120,13 +128,14 @@ public class ProjectExplorerPanel extends ProjectComponent {
         // browserFieldEditor.setFocusTraversalKeysEnabled(false); // disable tab-exiting from browserField
 
         // custom renderer for browserField's items so that long path names are right-justified in the popup menu
-        browserFieldRenderer = new BrowserFieldRenderer();
-        browserField.setRenderer(browserFieldRenderer);
-        // TODO
+//        browserFieldRenderer = new BrowserFieldRenderer();
+//        browserFieldRenderer = new BrowserFieldRenderer2();
         //DefaultListCellRenderer renderer = new DefaultListCellRenderer();
         //renderer.setHorizontalAlignment(DefaultListCellRenderer.TRAILING);
         //browserField.setRenderer(renderer);
         //browserFieldRenderer.setPreferredSize(new Dimension(100, 20));
+//        browserField.setRenderer(browserFieldRenderer);
+        browserField.setRenderer(new BrowserFieldRenderer2());
 
         // browse button
         browseButton = new JButton("Browse...");
@@ -391,26 +400,27 @@ public class ProjectExplorerPanel extends ProjectComponent {
      */
     private class BrowserFieldRenderer extends JLabel implements ListCellRenderer {
 
+        private int height;
+
         /**
          * Creates an opaque JLabel with a small border.
          */
         public BrowserFieldRenderer() {
             setOpaque(true);
             setBorder(BorderFactory.createEmptyBorder(1, 4, 1, 2));
-            // TODO
             //setEnabled(false);
             //setHorizontalAlignment(RIGHT);
             //System.out.println(getPreferredSize());
-            //setMaximumSize(new Dimension(100, 20));
+            height = getPreferredSize().height;
         }
 
         /**
          * Returns a JLabel with long directory names right-justified.
          *
-         * @param list a JList object used behind the scenes to display the items.
-         * @param value the Object to render; the directory (File) that is.
-         * @param index the index of the object to render.
-         * @param isSelected indicates whether the object to render is selected.
+         * @param list         a JList object used behind the scenes to display the items.
+         * @param value        the Object to render; the directory (File) that is.
+         * @param index        the index of the object to render.
+         * @param isSelected   indicates whether the object to render is selected.
          * @param cellHasFocus indicates whether the object to render has the focus.
          * @return custom renderer Component (JLabel).
          */
@@ -425,30 +435,62 @@ public class ProjectExplorerPanel extends ProjectComponent {
             }
 
             setText(value.toString());
-            // TODO
-            //setBounds(0, 0, 100, 14);
-            //list.setFixedCellWidth(100);
-            //setMaximumSize(new Dimension(100, 14));
-            //setPreferredSize(new Dimension(100, 14));
             //setSize(browserField.getWidth(), getHeight());
-            //setMaximumSize(new Dimension(browserField.getWidth(), height));
-            //list.setMaximumSize(new Dimension(browserField.getWidth(), height));
+            setMaximumSize(new Dimension(browserField.getWidth(), height));
+            list.setMaximumSize(new Dimension(browserField.getWidth(), height));
             //setCaretPosition(getText().length());
             //setCaretPosition(getDocument().getLength());
-            //setLocation(list.getWidth() - getWidth(), getY());
-            //repaint();
+            repaint();
 
-            //System.out.println(list.getWidth() + " " + getWidth() + " " + getY());
-            //System.out.println(browserField.getWidth());
+            //System.out.println(browserField.getWidth() + " " + height);
             //System.out.println(list.getWidth() + " " + list.getFixedCellHeight());
 
             return this;
         }
+    }
 
-        //public void setBounds(int x, int y, int width, int height) {
-            //super.setBounds(x, y, 100, height);
-            //System.out.println(browserField.getWidth() + " / " + x + " " + y + " " + width + " " + height);
-        //}
+    private class BrowserFieldRenderer2 extends BasicComboBoxRenderer.UIResource {
+
+        private String delimiter = "\\";
+        private String delimiterRegexp = "\\\\";
+
+        @Override public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+                                                                boolean cellHasFocus) {
+            JLabel comp = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            int fieldWidth = browserFieldEditor.getWidth();
+
+            String[] text = value.toString().split(delimiterRegexp);
+            if (fieldWidth <= comp.getPreferredSize().width && text.length >= 3) {
+                boolean shortenMore = true;
+                while (shortenMore) {
+
+                    // take out one part of the text
+                    shortenMore = false;
+                    for (int i = 1; i < text.length - 1; i++) {
+                        if (text[i] != null) {
+                            text[i] = null;
+                            shortenMore = true;
+                            break;
+                        }
+                    }
+
+                    // put the text together
+                    String result = text[0] + delimiter + "...";
+                    for (int i = 1; i < text.length; i++) {
+                        if (text[i] != null) {
+                            result += delimiter + text[i];
+                        }
+                    }
+
+                    // try if it fits
+                    comp.setText(result);
+                    if (fieldWidth > comp.getPreferredSize().width) {
+                        shortenMore = false;
+                    }
+                }
+            }
+            return comp;
+        }
     }
 
     /**
