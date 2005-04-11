@@ -247,7 +247,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
                         if (e.getSource() == measureButton) {
                             measureButtonFlasher.flash();
                         } else {
-                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
+                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this.getParentFrame(),
                                 "Unable to measure.", "Squid Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
@@ -273,7 +273,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
                         if (e.getSource() == stepButton) {
                             stepButtonFlasher.flash();
                         } else {
-                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
+                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this.getParentFrame(),
                                 "Unable to single step.", "Squid Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
@@ -297,7 +297,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
                         if (e.getSource() instanceof JButton) {
                             new ComponentFlasher((JComponent) e.getSource()).flash();
                         } else {
-                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
+                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this.getParentFrame(),
                                 "Unable to calibrate.", "Squid Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
@@ -321,7 +321,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
                         if (e.getSource() == measureButton ) {
                             measureButtonFlasher.flash();
                         } else {
-                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
+                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this.getParentFrame(),
                                 "Unable to pause.", "Squid Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
@@ -348,8 +348,8 @@ public class MeasurementControlsPanel extends ProjectComponent {
                         if (e.getSource() == abortButton) {
                             abortButtonFlasher.flash();
                         } else {
-                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
-                                "Unable to abort!", "Squid Serious Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this.getParentFrame(),
+                                "Unable to abort!", "Squid Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }
