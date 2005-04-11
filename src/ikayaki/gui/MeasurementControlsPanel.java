@@ -49,6 +49,11 @@ public class MeasurementControlsPanel extends ProjectComponent {
     private final JButton stepButton;
     private final JButton abortButton;
 
+    // error-flashers for buttons
+    private final ComponentFlasher measureButtonFlasher;
+    private final ComponentFlasher stepButtonFlasher;
+    private final ComponentFlasher abortButtonFlasher;
+
     /**
      * Groups together +z and -z RadioButtons.
      */
@@ -68,6 +73,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
      * Draws a help image and text for sample inserting: "Put sample in holder arrow up."
      */
     private final JPanel sampleInsertPanel;
+    private final JLabel sampleInsertTextLabel;
     private final Icon sampleInsertZPlusIcon;
     private final Icon sampleInsertZMinusIcon;
     private final JLabel sampleInsertIconLabel;
@@ -89,6 +95,10 @@ public class MeasurementControlsPanel extends ProjectComponent {
         abortButton = new JButton(getAbortAction());
         updateActions();
 
+        measureButtonFlasher = new ComponentFlasher(measureButton);
+        stepButtonFlasher = new ComponentFlasher(stepButton);
+        abortButtonFlasher = new ComponentFlasher(abortButton);
+
         //JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 2, 2)); // prevents button resize, looks a bit ugly
         JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 2, 2)); // prevents button resize, looks a bit ugly
         //JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -107,13 +117,13 @@ public class MeasurementControlsPanel extends ProjectComponent {
         zButtonPanel.add(zPlusRadioButton);
         zButtonPanel.add(zMinusRadioButton);
 
-        JLabel sampleUpLabel = new JLabel("Put sample in holder arrow up");
+        sampleInsertTextLabel = new JLabel("Put sample in holder arrow up");
         sampleInsertZPlusIcon = new ImageIcon(ClassLoader.getSystemResource("resources/zplus.png"));
         sampleInsertZMinusIcon = new ImageIcon(ClassLoader.getSystemResource("resources/zminus.png"));
         sampleInsertIconLabel = new JLabel(sampleInsertZPlusIcon);
 
         sampleInsertPanel = new JPanel(new BorderLayout(8, 4));
-        sampleInsertPanel.add(sampleUpLabel, BorderLayout.NORTH);
+        sampleInsertPanel.add(sampleInsertTextLabel, BorderLayout.NORTH);
         sampleInsertPanel.add(sampleInsertIconLabel, BorderLayout.WEST);
         sampleInsertPanel.add(zButtonPanel, BorderLayout.CENTER);
 
@@ -149,6 +159,11 @@ public class MeasurementControlsPanel extends ProjectComponent {
         return; // TODO
     }
 
+    /**
+     * Call super.setProject(project), update buttons and manual controls according to project.isXXXEnabled().
+     *
+     * @param project project opened, or null to open no project.
+     */
     @Override public void setProject(Project project) {
         super.setProject(project);
         updateActions();
@@ -192,7 +207,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
     /**
      * Checks the current state of the active project and enables/disables the measurement controls accordingly.
      */
-    private void updateActions() {
+    private void updateActions() { /* TESTING error notification
         if (getProject() != null) {
             getAutoStepAction().setEnabled(getProject().isAutoStepEnabled());
             getSingleStepAction().setEnabled(getProject().isSingleStepEnabled());
@@ -212,7 +227,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
             measureButton.setAction(getAutoStepAction());
         } else {
             measureButton.setAction(getPauseAction());
-        }
+        } */
     }
 
     /* Getters for Swing Actions */
@@ -226,8 +241,12 @@ public class MeasurementControlsPanel extends ProjectComponent {
             autoStepAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     if (!getProject().doAutoStep()) {
-                        JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
-                                "Unable to measure.", "Error", JOptionPane.ERROR_MESSAGE);
+                        if (e.getSource() == measureButton) {
+                            measureButtonFlasher.flash();
+                        } else {
+                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
+                                "Unable to measure.", "Squid Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
             };
@@ -248,8 +267,12 @@ public class MeasurementControlsPanel extends ProjectComponent {
             singleStepAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     if (!getProject().doSingleStep()) {
-                        JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
-                                "Unable to single step.", "Error", JOptionPane.ERROR_MESSAGE);
+                        if (e.getSource() == stepButton) {
+                            stepButtonFlasher.flash();
+                        } else {
+                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
+                                "Unable to single step.", "Squid Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
             };
@@ -268,8 +291,12 @@ public class MeasurementControlsPanel extends ProjectComponent {
             calibrateAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     if (!getProject().doSingleStep()) {
-                        JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
-                                "Unable to calibrate.", "Error", JOptionPane.ERROR_MESSAGE);
+                        if (e.getSource() instanceof JButton) {
+                            new ComponentFlasher((JComponent) e.getSource()).flash();
+                        } else {
+                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
+                                "Unable to calibrate.", "Squid Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
             };
@@ -288,8 +315,12 @@ public class MeasurementControlsPanel extends ProjectComponent {
             pauseAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     if (!getProject().doPause()) {
-                        JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
-                                "Unable to pause.", "Error", JOptionPane.ERROR_MESSAGE);
+                        if (e.getSource() == measureButton ) {
+                            measureButtonFlasher.flash();
+                        } else {
+                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
+                                "Unable to pause.", "Squid Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
             };
@@ -311,8 +342,12 @@ public class MeasurementControlsPanel extends ProjectComponent {
             abortAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     if (!getProject().doAbort()) {
-                        JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
-                                "Unable to abort.", "Error", JOptionPane.ERROR_MESSAGE);
+                        if (e.getSource() == abortButton) {
+                            abortButtonFlasher.flash();
+                        } else {
+                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this,
+                                "Unable to abort!", "Squid Serious Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
             };

@@ -36,7 +36,7 @@ public class ComponentFlasher extends Timer {
     private final JComponent component;
     private final Color componentBG;
     private final Color flashcolor;
-    private static final Color defauldFlashColor = new Color(0xff8080);
+    private static final Color defauldFlashColor = new Color(0xff6060);
 
     public ComponentFlasher(JComponent component) {
         this(component, defauldFlashColor, 100);
