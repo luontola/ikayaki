@@ -30,6 +30,7 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -381,8 +382,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      */
     public enum SequenceColumn {
 
-        // TODO: define the presentation of all values
-
         /**
          * Showing ordinal number of the measurement step, starting from number 1.
          */
@@ -514,7 +513,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                     if (data.toString().equals("")) {
                         data = null;
                     } else {
-//                        data = new Double(data.toString());
                         try {
                             data = getNumberFormat().parse(data.toString());
                         } catch (ParseException e) {
@@ -567,7 +565,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
                     if (data.toString().equals("")) {
                         data = null;
                     } else {
-//                        data = new Double(data.toString());
                         try {
                             data = getNumberFormat().parse(data.toString());
                         } catch (ParseException e) {
@@ -595,20 +592,17 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
          */
         X(MeasurementValue.X) {
             {
-                getNumberFormat().setMinimumFractionDigits(3);
-                getNumberFormat().setMaximumFractionDigits(3);
+                setNumberFormat(new DecimalFormat("0.000E0"));
             }
         },
         Y(MeasurementValue.Y) {
             {
-                getNumberFormat().setMinimumFractionDigits(3);
-                getNumberFormat().setMaximumFractionDigits(3);
+                setNumberFormat(new DecimalFormat("0.000E0"));
             }
         },
         Z(MeasurementValue.Z) {
             {
-                getNumberFormat().setMinimumFractionDigits(3);
-                getNumberFormat().setMaximumFractionDigits(3);
+                setNumberFormat(new DecimalFormat("0.000E0"));
             }
         },
         DECLINATION(MeasurementValue.DECLINATION) {
@@ -625,14 +619,12 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         },
         MOMENT(MeasurementValue.MOMENT) {
             {
-                getNumberFormat().setMinimumFractionDigits(3);
-                getNumberFormat().setMaximumFractionDigits(3);
+                setNumberFormat(new DecimalFormat("0.000E0"));
             }
         },
         REMANENCE(MeasurementValue.REMANENCE) {
             {
-                getNumberFormat().setMinimumFractionDigits(3);
-                getNumberFormat().setMaximumFractionDigits(3);
+                setNumberFormat(new DecimalFormat("0.000E0"));
             }
         },
         RELATIVE_REMANENCE(MeasurementValue.RELATIVE_REMANENCE) {
