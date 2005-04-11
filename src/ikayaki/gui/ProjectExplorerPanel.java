@@ -135,7 +135,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
         //browserField.setRenderer(renderer);
         //browserFieldRenderer.setPreferredSize(new Dimension(100, 20));
 //        browserField.setRenderer(browserFieldRenderer);
-        browserField.setRenderer(new BrowserFieldRenderer2());
+        browserField.setRenderer(new BrowserFieldRenderer2(browserField));
 
         // browse button
         browseButton = new JButton("Browse...");
@@ -449,18 +449,37 @@ public class ProjectExplorerPanel extends ProjectComponent {
         }
     }
 
-    private class BrowserFieldRenderer2 extends BasicComboBoxRenderer.UIResource {
+    /**
+     * Fits the contents of a ComboBox list to a components width by shortening the text. Especially useful for showing
+     * long file paths in a narrow list.
+     *
+     * @author Esko Luontola
+     */
+    private static class BrowserFieldRenderer2 extends BasicComboBoxRenderer.UIResource {
 
-        private String delimiter = "\\";
-        private String delimiterRegexp = "\\\\";
+        private JComponent fitToComponent;
+        private String delimiter;
+        private String delimiterRegexp;
+
+        public BrowserFieldRenderer2(JComponent fitToComponent) {
+            this.fitToComponent = fitToComponent;
+            this.delimiter = "\\";
+            this.delimiterRegexp = "\\\\";
+        }
+
+        public BrowserFieldRenderer2(JComponent fitToComponent, String delimiter, String regexp) {
+            this.fitToComponent = fitToComponent;
+            this.delimiter = delimiter;
+            this.delimiterRegexp = regexp;
+        }
 
         @Override public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
                                                                 boolean cellHasFocus) {
             JLabel comp = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            int fieldWidth = browserFieldEditor.getWidth();
+            int maxWidth = fitToComponent.getWidth();
 
             String[] text = value.toString().split(delimiterRegexp);
-            if (fieldWidth <= comp.getPreferredSize().width && text.length >= 3) {
+            if (maxWidth <= comp.getPreferredSize().width && text.length >= 3) {
                 boolean shortenMore = true;
                 while (shortenMore) {
 
@@ -484,7 +503,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
 
                     // try if it fits
                     comp.setText(result);
-                    if (fieldWidth > comp.getPreferredSize().width) {
+                    if (maxWidth > comp.getPreferredSize().width) {
                         shortenMore = false;
                     }
                 }

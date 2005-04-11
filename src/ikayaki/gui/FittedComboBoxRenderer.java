@@ -55,6 +55,7 @@ class FittedComboBoxRenderer extends BasicComboBoxRenderer {
         JLabel comp = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         int maxWidth = fitToComponent.getWidth();
 
+        // split the text and take out parts of it until it fits
         String[] text = value.toString().split(delimiterRegexp);
         if (maxWidth <= comp.getPreferredSize().width && text.length >= 3) {
             boolean shortenMore = true;
