@@ -37,6 +37,7 @@ import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
+import java.io.*;
 
 import static ikayaki.gui.SequenceColumn.*;
 
@@ -96,11 +97,13 @@ Order of rows with measurement data cannot be changed.
 
     private JPanel controlsPane;
 
+    public File sequences;
+
     /**
      * Creates default MeasurementSequencePanel.
      */
     public MeasurementSequencePanel() {
-
+        sequences = new File("sequences");
         /* Set up table */
         sequenceTableModel = new MeasurementSequenceTableModel();
         sequenceTable = new JTable(sequenceTableModel);
@@ -176,6 +179,7 @@ Order of rows with measurement data cannot be changed.
         });
 
         // TODO: combobox for adding saved sequences
+        updateComboBox();
 
         // TODO: popup menu for saving sequences
 
@@ -185,6 +189,47 @@ Order of rows with measurement data cannot be changed.
 
         // initialize with no project
         setProject(null);
+    }
+
+    public String valueAt(int row, int column) {
+        return (String)sequenceTable.getValueAt(row, column);
+    }
+
+    public void updateComboBox() {
+        try {
+            String read = null;
+            if (sequences.exists()) {
+                loadSequenceBox.removeAllItems();
+                BufferedReader in = new BufferedReader(new FileReader(sequences));
+                while ((read = in.readLine()) != null) {
+                    if (read == ">>") {
+                        loadSequenceBox.addItem(in.readLine());
+                    }
+                }
+                in.close();
+            }
+        }
+        catch (Exception e) {}
+    }
+
+    public int[] selectedRows() {
+        return sequenceTable.getSelectedRows();
+    }
+
+    public int rowCount() {
+        return sequenceTable.getRowCount();
+    }
+
+    public void showVolume(){
+        sequenceTableModel.showColumn(MeasurementSequenceTableModel.SequenceColumn.VOLUME);
+    }
+
+    public void hideVolume() {
+        sequenceTableModel.hideColumn(MeasurementSequenceTableModel.SequenceColumn.VOLUME);
+    }
+
+    public boolean isVolumeShown() {
+        return sequenceTableModel.isColumnShown(MeasurementSequenceTableModel.SequenceColumn.VOLUME);
     }
 
     /**

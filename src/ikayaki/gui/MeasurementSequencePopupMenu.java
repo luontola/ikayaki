@@ -23,6 +23,8 @@
 package ikayaki.gui;
 
 import javax.swing.*;
+import java.awt.event.*;
+import java.io.*;
 
 /**
  * Allows selection if volume is shown in table and saving sequence. Pops up when measurement sequence table is
@@ -44,40 +46,132 @@ public class MeasurementSequencePopupMenu extends JPopupMenu {
      */
     private JTextField nameTextField;
 
+    private JButton ok;
     private JButton cancel;
     private JButton saveFull;
     private JButton saveSelected;
+    private JButton removeSelected;
+
+    private MeasurementSequencePanel c;
+    private boolean showVolume;
 
     /**
      * Creates SequencePopupMenu.
      */
-    public MeasurementSequencePopupMenu() {
+    public MeasurementSequencePopupMenu(MeasurementSequencePanel creator) {
+        c = creator;
+        showVolume = false;
+
         volume = new JCheckBox("Volume", false);
+        volume.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (volume.isSelected()) {
+                    showVolume = true;
+                }
+                else {
+                    showVolume = false;
+                }
+            }
+        });
         add(volume);
+
         nameLabel = new JLabel("Name of sequence");
         add(nameLabel);
         nameTextField = new JTextField(20);
         add(nameTextField);
+
         cancel = new JButton("cancel");
+        cancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                close();
+            }
+        });
         add(cancel);
+
+        ok = new JButton("OK");
+        ok.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (showVolume && !c.isVolumeShown()) {
+                    c.showVolume();
+                }
+                else if (!showVolume && c.isVolumeShown()) {
+                    c.hideVolume();
+                }
+                close();
+            }
+        });
+        add(ok);
+
         saveFull = new JButton("Save entire sequence");
+        saveFull.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveFullSequence();
+                close();
+            }
+        });
         add(saveFull);
+
         saveSelected = new JButton("Save selected sequence");
+        saveSelected.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveSelectedSequence();
+                close();
+            }
+        });
         add(saveSelected);
+
+        removeSelected = new JButton("remove selected sequence");
+        removeSelected.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                removeRows();
+                close();
+            }
+        });
+        add(removeSelected);
     }
+
+    private MeasurementSequencePopupMenu() {}
 
     /**
      * Saves whole sequence into dropdown menu.
      */
     private void saveFullSequence() {
-        return; // TODO
+        try {
+            PrintWriter writer = new PrintWriter(new FileOutputStream(c.sequences, true), true);
+            if (nameTextField.getText() != null && nameTextField.getText() != "") {
+                writer.println(">>");
+                writer.println(nameTextField.getText());
+                for (int i=0; i<c.rowCount(); ++i) {
+                    writer.println(c.valueAt(i, 0));
+                }
+                writer.println("<<");
+            }
+            writer.close();
+            c.updateComboBox();
+        }
+        catch (Exception e) {}
     }
 
     /**
      * Saves selected sequence into dropdown menu.
      */
     private void saveSelectedSequence() {
-        return; // TODO
+        try {
+            int[] rows = c.selectedRows();
+            PrintWriter writer = new PrintWriter(new FileOutputStream(c.sequences, true), true);
+            if (nameTextField.getText() != null && nameTextField.getText() != ""
+                && rows != null) {
+                writer.println(">>");
+                writer.println(nameTextField.getText());
+                for (int i=0; i<rows.length; ++i) {
+                    writer.println(c.valueAt(rows[i], 0));
+                }
+                writer.println("<<");
+            }
+            writer.close();
+            c.updateComboBox();
+        }
+        catch (Exception e) {}
     }
 
     /**
@@ -85,5 +179,9 @@ public class MeasurementSequencePopupMenu extends JPopupMenu {
      */
     private void removeRows() {
         return; // TODO
+    }
+
+    private void close() {
+        setVisible(false);
     }
 }
