@@ -125,7 +125,7 @@ public class MainMenuBar extends JMenuBar {
                 // rebuild project history
                 openRecentProjectMenu.removeAll();
                 File[] files = Settings.instance().getProjectHistory();
-                if (files.length == 0 || MainMenuBar.this.main.getProject().getState() != Project.State.IDLE) {
+                if (files.length == 0 /*|| MainMenuBar.this.main.getProject().getState() != Project.State.IDLE*/) {
                     openRecentProjectMenu.setEnabled(false);
                 } else {
                     openRecentProjectMenu.setEnabled(true);

@@ -103,17 +103,6 @@ public class MainViewPanel extends ProjectComponent {
                 project = Project.loadProject(projectHistory[0]);
             }
         }
-//        setProject(project);    // the project must be set before doing the layout
-
-        // TODO: testataan...
-        setProject(null);    // the project must be set before doing the layout
-        final Project p = project;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                setProject(p); // TODO: causes the program flash at the start, but otherwise is good. sequence table scrolls nicely.
-            }
-        });
-
 
         /* Init SQUID interface */
         try {
@@ -221,8 +210,11 @@ public class MainViewPanel extends ProjectComponent {
         add(tabControls, "West");
         setBackground(new Color(247, 243, 239));
 
-//        /* Finalize */
-//        setProject(project);
+//        // TODO: testing... initialize with no project
+//        setProject(null);
+
+        /* Initialize everything with the loaded project or null */
+        setProject(project);
     }
 
     /**

@@ -31,6 +31,10 @@ public class MeasurementGraphsPanel extends ProjectComponent {
 
     public MeasurementGraphsPanel() {
         add(new JLabel("Graphs"));
+
+        // initialize with no project
+        setProject(null);
+        
         return; // TODO
     }
 }

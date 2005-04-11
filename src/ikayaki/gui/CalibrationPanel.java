@@ -105,6 +105,9 @@ public class CalibrationPanel extends ProjectComponent {
         this.setLayout(new BorderLayout());
         this.add(tablePanel, BorderLayout.CENTER);
         this.add(calibratePanel, BorderLayout.SOUTH);
+
+        // initialize with no project
+        setProject(null);
     }
 
     /**

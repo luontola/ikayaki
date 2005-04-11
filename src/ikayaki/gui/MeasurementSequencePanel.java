@@ -31,10 +31,7 @@ import ikayaki.Project;
 import ikayaki.ProjectEvent;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.TableColumnModelEvent;
-import javax.swing.event.TableColumnModelListener;
+import javax.swing.event.*;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
@@ -165,6 +162,13 @@ Order of rows with measurement data cannot be changed.
         sequenceStepField.addKeyListener(keyListener);
         sequenceStopField.addKeyListener(keyListener);
 
+        // reset the add sequence controls when new rows are added, removed or stepValues are changed
+        sequenceTableModel.addTableModelListener(new TableModelListener() {
+            public void tableChanged(TableModelEvent e) {
+                resetAddSequence();
+            }
+        });
+
         // TODO: combobox for adding saved sequences
 
         // TODO: popup menu for saving sequences
@@ -173,7 +177,7 @@ Order of rows with measurement data cannot be changed.
 
         // TODO: ability to delete unmeasured steps
 
-        // finally reset the table
+        // initialize with no project
         setProject(null);
     }
 
@@ -201,15 +205,17 @@ Order of rows with measurement data cannot be changed.
         }
     }
 
+    /**
+     * Returns the latest stepValue which is greater than 0. If none is found, returns 0.
+     */
     private double getLastStepValue() {
-        double stepValue = -1.0;
         for (int i = getProject().getSteps() - 1; i >= 0; i--) {
-            stepValue = getProject().getStep(i).getStepValue();
-            if (stepValue >= 0.0) {
-                break;
+            double stepValue = getProject().getStep(i).getStepValue();
+            if (stepValue > 0.0) {
+                return stepValue;
             }
         }
-        return stepValue;
+        return 0.0;
     }
 
     /**
@@ -225,9 +231,7 @@ Order of rows with measurement data cannot be changed.
 
         // set the latest step value to the Start field
         double stepValue = getLastStepValue();
-        if (stepValue >= 0.0) {
-            sequenceStartField.setValue(new Double(stepValue));
-        }
+        sequenceStartField.setValue(new Double(stepValue));
     }
 
     /**
@@ -291,19 +295,27 @@ Order of rows with measurement data cannot be changed.
      * Sets the project whose sequence is shown in the table. Sets project listeners, enables or disables the sequence
      * edit controls and updates the table data.
      */
-    public void setProject(Project project) {
+    public void setProject(final Project project) {
         super.setProject(project);
         sequenceTableModel.setProject(project);
         setEnabled(project != null);
         resetAddSequence();
 
         // scroll the table so that as many measuments as possible are visible, plus a couple of empty rows
-        scrollToRow(0);
-        if (project != null) {
-            scrollToRow(Math.min(project.getCompletedSteps() + 5, sequenceTableModel.getRowCount() - 1));
-        } else {
-            scrollToRow(sequenceTableModel.getRowCount() - 1);
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                /* HACK: Must use invokeLater or otherwise the scrolling
+                 * does not work at the start of the program, when the sizes
+                 * of the components are not known.
+                 */
+                scrollToRow(0);
+                if (project != null) {
+                    scrollToRow(Math.min(project.getCompletedSteps() + 5, sequenceTableModel.getRowCount() - 1));
+                } else {
+                    scrollToRow(sequenceTableModel.getRowCount() - 1);
+                }
+            }
+        });
     }
 
     /**

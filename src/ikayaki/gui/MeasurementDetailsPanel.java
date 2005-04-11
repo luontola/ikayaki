@@ -88,6 +88,9 @@ in MeasurementSequencePanel update tables with new measurement data.
         errorDetails.setValueAt("Error", 0, 0);
         add(BorderLayout.SOUTH, errorDetails);
         rowSelected = true;
+        
+        // initialize with no project
+        setProject(null);
     }
 
     /**

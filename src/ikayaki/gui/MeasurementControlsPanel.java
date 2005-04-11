@@ -93,7 +93,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
         measureButton = new JButton(getAutoStepAction());
         stepButton = new JButton(getSingleStepAction());
         abortButton = new JButton(getAbortAction());
-        updateActions();
+//        updateActions(); // already done by setProject(null)
 
         measureButtonFlasher = new ComponentFlasher(measureButton);
         stepButtonFlasher = new ComponentFlasher(stepButton);
@@ -155,6 +155,9 @@ public class MeasurementControlsPanel extends ProjectComponent {
                 sampleInsertIconLabel.setIcon(sampleInsertZMinusIcon);
             }
         });
+
+        // initialize with no project
+        setProject(null);
 
         return; // TODO
     }

@@ -86,6 +86,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * Creates SequenceTableModel
      */
     public MeasurementSequenceTableModel() {
+        // initialize with no project
         setProject(null);
     }
 

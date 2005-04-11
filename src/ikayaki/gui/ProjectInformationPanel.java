@@ -180,6 +180,9 @@ public class ProjectInformationPanel extends ProjectComponent {
             }
         });
         autosave.start();
+        
+        // initialize with no project
+        setProject(null);
     }
 
     /**
@@ -250,7 +253,7 @@ public class ProjectInformationPanel extends ProjectComponent {
             massField.setValue(new Double(project.getMass()));
             volumeField.setValue(new Double(project.getVolume()));
         } else {
-            // clear the form fields
+            // no project active, clear the form fields
 
             /* Radio Button Groups */
             measurementTypeAuto.setSelected(true);
