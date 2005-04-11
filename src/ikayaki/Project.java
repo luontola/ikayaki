@@ -483,86 +483,145 @@ project listeners.
         this.file = file.getAbsoluteFile();
         String s = null;
 
-        // verify project file's version
-        Element root = document.getDocumentElement();
-        if (!root.getTagName().equals("project")) {
-            throw new IllegalArgumentException("Invalid tag name: " + root.getTagName());
+        synchronized (this) {
+            try {
+
+                // verify project file's version
+                Element root = document.getDocumentElement();
+                if (!root.getTagName().equals("project")) {
+                    throw new IllegalArgumentException("Invalid tag name: " + root.getTagName());
+                }
+                String version = root.getAttribute("version");
+
+                if (version.equals("1.0")) {
+
+                    /* Begin importing version 1.0 */
+
+                    // get type
+                    s = root.getAttribute("type");
+                    try {
+                        type = Type.valueOf(s);
+                    } catch (IllegalArgumentException e) {
+                        throw new IllegalArgumentException("Unknown project type: " + s);
+                    }
+
+                    // get properties element
+                    NodeList propertiesList = root.getElementsByTagName("properties");
+                    if (propertiesList.getLength() != 1) {
+                        throw new IllegalArgumentException(
+                                "One properties required, found " + propertiesList.getLength());
+                    }
+                    Element properties = (Element) propertiesList.item(0);
+
+                    // get default properties
+                    s = properties.getAttribute("strike");
+                    try {
+                        strike = Double.parseDouble(s);
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Invalid strike: " + s);
+                    }
+                    s = properties.getAttribute("dip");
+                    try {
+                        dip = Double.parseDouble(s);
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Invalid dip: " + s);
+                    }
+                    s = properties.getAttribute("mass");
+                    try {
+                        mass = Double.parseDouble(s);
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Invalid mass: " + s);
+                    }
+                    s = properties.getAttribute("volume");
+                    try {
+                        volume = Double.parseDouble(s);
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Invalid volume: " + s);
+                    }
+                    s = properties.getAttribute("sampletype");
+                    try {
+                        sampleType = SampleType.valueOf(s);
+                    } catch (IllegalArgumentException e) {
+                        throw new IllegalArgumentException("Invalid sampletype: " + s);
+                    }
+                    s = properties.getAttribute("orientation");
+                    orientation = s.equals("1") ? true : false;
+
+                    // get custom properties
+                    NodeList propertyList = properties.getElementsByTagName("property");
+                    for (int i = 0; i < propertyList.getLength(); i++) {
+                        Element property = (Element) propertyList.item(i);
+                        this.properties.put(property.getAttribute("key"), property.getAttribute("value"));
+                    }
+
+                    // get sequence
+                    NodeList sequenceList = root.getElementsByTagName("sequence");
+                    if (sequenceList.getLength() != 1) {
+                        throw new IllegalArgumentException("One sequence required, found " + sequenceList.getLength());
+                    }
+                    updateTransforms();     // transforms must be updated before running MeasurementSequence's constructor
+                    sequence = new MeasurementSequence((Element) sequenceList.item(0), this);
+
+                    // check from the measurement step's timestamps and states that the steps are in the right order
+                    Date lastTimestamp = new Date(0);
+                    MeasurementStep.State lastState = MeasurementStep.State.DONE;
+                    for (int i = 0; i < sequence.getSteps(); i++) {
+                        MeasurementStep step = sequence.getStep(i);
+                        Date currentTimestamp = step.getTimestamp();
+                        MeasurementStep.State currentState = step.getState();
+
+                        // check the order of the timestamps
+                        if (lastTimestamp != null && currentTimestamp != null
+                                && currentTimestamp.before(lastTimestamp)) {
+                            throw new IllegalArgumentException("The timestamp of step " + i + " is too early.");
+                        }
+                        if (lastTimestamp == null && currentTimestamp != null) {
+                            throw new IllegalArgumentException(
+                                    "The non-null timestamp of step " + i + " follows a null timestamp.");
+                        }
+
+                        // check the order of the states
+                        switch (currentState) {
+                        case DONE_RECENTLY:
+                        case MEASURING:
+                            // the state of a just opened step can not be DONE_RECENTLY or MEASURING
+                            throw new IllegalArgumentException("The state of step " + i + " is " + currentState);
+                        case DONE:
+                            if (lastState == MeasurementStep.State.READY) {
+                                throw new IllegalArgumentException("The state of step " + i + " is "
+                                        + currentState + " after a " + MeasurementStep.State.READY);
+                            }
+                            break;
+                        case READY:
+                            // lastState is DONE or READY, so everything is OK
+                            break;
+                        default:
+                            throw new IllegalArgumentException(
+                                    "The step " + i + " has an unknown state: " + currentState);
+                        }
+
+                        lastTimestamp = currentTimestamp;
+                        lastState = currentState;
+                    }
+
+                    /* End of importing version 1.0 */
+
+//              } else if (version.equals("x.y")) {
+//                  ... importing of file version x.y ...
+                } else {
+                    throw new IllegalArgumentException("Unknown version: " + version);
+                }
+
+            } catch (RuntimeException e) {
+                /*
+                 * Catch and rethrow any exceptions, so that the finally block would prevent
+                 * the overwriting of a project file whose loading failed.
+                 */
+                throw e;
+            } finally {
+                modified = false;   // prevent the automatic save() operations that the importing created
+            }
         }
-        String version = root.getAttribute("version");
-        if (version.equals("1.0")) {
-
-            // get type
-            s = root.getAttribute("type");
-            try {
-                type = Type.valueOf(s);
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Unknown project type: " + s);
-            }
-
-            // get properties element
-            NodeList propertiesList = root.getElementsByTagName("properties");
-            if (propertiesList.getLength() != 1) {
-                throw new IllegalArgumentException("One properties required, found " + propertiesList.getLength());
-            }
-            Element properties = (Element) propertiesList.item(0);
-
-            // get default properties
-            s = properties.getAttribute("strike");
-            try {
-                strike = Double.parseDouble(s);
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid strike: " + s);
-            }
-            s = properties.getAttribute("dip");
-            try {
-                dip = Double.parseDouble(s);
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid dip: " + s);
-            }
-            s = properties.getAttribute("mass");
-            try {
-                mass = Double.parseDouble(s);
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid mass: " + s);
-            }
-            s = properties.getAttribute("volume");
-            try {
-                volume = Double.parseDouble(s);
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid volume: " + s);
-            }
-            s = properties.getAttribute("sampletype");
-            try {
-                sampleType = SampleType.valueOf(s);
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Invalid sampletype: " + s);
-            }
-            s = properties.getAttribute("orientation");
-            orientation = s.equals("1") ? true : false;
-
-            // get custom properties
-            NodeList propertyList = properties.getElementsByTagName("property");
-            for (int i = 0; i < propertyList.getLength(); i++) {
-                Element property = (Element) propertyList.item(i);
-                this.properties.put(property.getAttribute("key"), property.getAttribute("value"));
-            }
-
-            // get sequence
-            NodeList sequenceList = root.getElementsByTagName("sequence");
-            if (sequenceList.getLength() != 1) {
-                throw new IllegalArgumentException("One sequence required, found " + sequenceList.getLength());
-            }
-            updateTransforms();     // transforms must be updated before running MeasurementSequence's constructor
-            sequence = new MeasurementSequence((Element) sequenceList.item(0), this);
-
-            // TODO: check from the measurement step's timestamps and states that the steps are in the right order
-
-//      } else if (version.equals("x.y")) {
-//          ... importing of file version x.y ...
-        } else {
-            throw new IllegalArgumentException("Unknown version: " + version);
-        }
-        modified = false;   // prevent the automatic save() operations that the importing created
     }
 
     /**
