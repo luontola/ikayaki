@@ -39,8 +39,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 /**
- * Creates a list of project files in directory. Handles loading selected projects and showing export popup menu
- * (ProjectExplorerPopupMenu).
+ * Creates a list of project files in directory. Handles loading selected projects and showing export popup menu.
  *
  * @author Samuli Kaipiainen
  */
@@ -96,8 +95,8 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
     public static final String[] column_name = {"Name", "Type", "Modified", "Measured", "Elapsed"};
 
     // default column configurations for different table types
-    public static final int[] default_columns = { COLUMN_FILENAME, COLUMN_TYPE, COLUMN_LASTMOD};
-    public static final int[] calibration_columns = { COLUMN_FILENAME, COLUMN_LASTMEASURE, COLUMN_UNMEASURED};
+    public static final int[] default_columns = {COLUMN_FILENAME, COLUMN_TYPE, COLUMN_LASTMOD};
+    public static final int[] calibration_columns = {COLUMN_FILENAME, COLUMN_LASTMEASURE, COLUMN_UNMEASURED};
 
     /**
      * Visible columns in this table (as in column translation table); can be set with setColumns(int[]).
@@ -137,7 +136,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         this.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
 
         // TODO: what should be here anyway?
-        this.setPreferredScrollableViewportSize(new Dimension(280, 400));
+        // this.setPreferredScrollableViewportSize(new Dimension(280, 400));
 
         // set the right visible columns for table type
         if (this.isCalibration) setColumns(calibration_columns);
@@ -226,7 +225,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
             TableColumn column = this.getColumnModel().getColumn(col);
             switch (this.columns[col]) {
                 case COLUMN_FILENAME:    column.setPreferredWidth(130); break;
-                case COLUMN_TYPE:        column.setMinWidth(50); column.setMaxWidth(50); break;
+                case COLUMN_TYPE:        column.setMinWidth(55); column.setMaxWidth(55); break;
                 case COLUMN_LASTMOD:     column.setMinWidth(95); column.setMaxWidth(95); break;
                 case COLUMN_LASTMEASURE: column.setMinWidth(95); column.setMaxWidth(95); break;
                 case COLUMN_UNMEASURED:  column.setMinWidth(50); column.setMaxWidth(50); break;

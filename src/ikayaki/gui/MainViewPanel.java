@@ -679,8 +679,8 @@ public class MainViewPanel extends ProjectComponent {
                             " / " + Ikayaki.APP_VERSION_NAME + "\n" +
                             Ikayaki.APP_BUILD + "\n\n" +
                             Ikayaki.APP_HOME_PAGE + "\n\n";
-                    for (int i = 0; i < Ikayaki.AUTHORS.length; i++) {
-                        message += Ikayaki.AUTHORS[i] + "\n";
+                    for (String author : Ikayaki.AUTHORS) {
+                        message += author + "\n";
                     }
                     JOptionPane.showMessageDialog(MainViewPanel.this,
                             message, "About " + Ikayaki.APP_NAME, JOptionPane.INFORMATION_MESSAGE,
