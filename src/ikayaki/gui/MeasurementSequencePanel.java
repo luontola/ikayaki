@@ -38,7 +38,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
 
-import static ikayaki.gui.MeasurementSequenceTableModel.SequenceColumn.*;
+import static ikayaki.gui.SequenceColumn.*;
 
 /**
  * Allows creating, editing and removing measurement sequences. Shows measurement data. Right-click brings popup menu
