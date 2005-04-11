@@ -40,21 +40,24 @@ import java.io.File;
  * @author Samuli Kaipiainen
  */
 public class CalibrationPanel extends ProjectComponent {
-/*
-Event A: On calibrateButton click - call project.doSingleStep(); show error message if
-false is returned.
-*/
-/*
-Event B: On calibrationProjectTable click - call Project.loadProject(File) with clicked
-project file (calibrationProjectTable row); call MainViewPanel.changeProject(Project) with
-returned Project unless null, on which case show error message and revert calibrationProjectTable
-selection to old project, if any.
-*/
-/*
-Event C: On ProjectEvent - highlight calibration project whose measuring started, or
-unhighlight one whose measuring ended; enable calibrateButton if measuring has ended,
-or disable if measuring has started.
-*/
+
+    /* -- in MeasurementControlsPanel --
+     * Event A: On calibrateButton click - call project.doSingleStep(); show error message if
+     * false is returned.
+     */
+
+    /* -- in ProjectExplorerTable --
+     * Event B: On calibrationProjectTable click - call Project.loadProject(File) with clicked
+     * project file (calibrationProjectTable row); call MainViewPanel.changeProject(Project) with
+     * returned Project unless null, on which case show error message and revert calibrationProjectTable
+     * selection to old project, if any.
+     */
+
+    /* -- in ProjectExplorerTable and MeasurementControlsPanel --
+     * Event C: On ProjectEvent - highlight calibration project whose measuring started, or
+     * unhighlight one whose measuring ended; enable calibrateButton if measuring has ended,
+     * or disable if measuring has started.
+     */
 
     /**
      * The component whose setProject() method will be called on opening a new project file.

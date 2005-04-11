@@ -436,6 +436,11 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         }
 
         /**
+         * Event E: On ProjectEvent - hilight project whose measuring started, or unhilight one
+         * whose measuring ended.
+         */
+
+        /**
          * Updates the file list when a project file has been saved and which project has a measurement running.
          *
          * @param event ProjectEvent received.

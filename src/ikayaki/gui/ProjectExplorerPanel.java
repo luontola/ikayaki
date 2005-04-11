@@ -40,12 +40,6 @@ import java.io.*;
  * @author Samuli Kaipiainen
  */
 public class ProjectExplorerPanel extends ProjectComponent {
-    // TODO:
-    /**
-     * Event E: On ProjectEvent - hilight project whose measuring started, or unhilight one
-     * whose measuring ended.
-     */
-
     /**
      * The component (MainViewPanel) whose setProject() method will be called on opening a new project file.
      */
@@ -62,6 +56,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
      * clicked.
      */
     private final JComboBox browserField;
+    private final BrowserFieldRenderer browserFieldRenderer;
     private final JTextField browserFieldEditor; // WARNING: look-and-feel-dependant code
     private final ComponentFlasher browserFieldFlasher;
 
@@ -124,7 +119,13 @@ public class ProjectExplorerPanel extends ProjectComponent {
         browserFieldFlasher = new ComponentFlasher(browserFieldEditor);
         // browserFieldEditor.setFocusTraversalKeysEnabled(false); // disable tab-exiting from browserField
 
-        // TODO: a custom renderer for browserField's items so that long file paths would be visible in the dropdown menu
+        // custom renderer for browserField's items so that long path names are right-justified in the popup menu
+        browserFieldRenderer = new BrowserFieldRenderer();
+        //DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+        //renderer.setHorizontalAlignment(DefaultListCellRenderer.TRAILING);
+        //browserField.setRenderer(renderer);
+        //browserFieldRenderer.setPreferredSize(new Dimension(100, 20));
+        browserField.setRenderer(browserFieldRenderer);
 
         // browse button
         browseButton = new JButton("Browse...");
@@ -385,6 +386,60 @@ public class ProjectExplorerPanel extends ProjectComponent {
     }
 
     /**
+     * Custom renderer for browserField's popup menu items.
+     */
+    private class BrowserFieldRenderer extends JLabel implements ListCellRenderer {
+
+        private int height;
+
+        /**
+         * Creates an opaque JLabel with a small border.
+         */
+        public BrowserFieldRenderer() {
+            setOpaque(true);
+            setBorder(BorderFactory.createEmptyBorder(1, 4, 1, 2));
+            //setEnabled(false);
+            //setHorizontalAlignment(RIGHT);
+            //System.out.println(getPreferredSize());
+            height = getPreferredSize().height;
+        }
+
+        /**
+         * Returns a JLabel with long directory names right-justified.
+         *
+         * @param list a JList object used behind the scenes to display the items.
+         * @param value the Object to render; the directory (File) that is.
+         * @param index the index of the object to render.
+         * @param isSelected indicates whether the object to render is selected.
+         * @param cellHasFocus indicates whether the object to render has the focus.
+         * @return custom renderer Component (JLabel).
+         */
+        public Component getListCellRendererComponent(JList list, Object value,
+                                                      int index, boolean isSelected, boolean cellHasFocus) {
+            if (isSelected) {
+                setBackground(browserFieldEditor.getSelectionColor());
+                setForeground(list.getSelectionForeground());
+            } else {
+                setBackground(list.getBackground());
+                setForeground(list.getForeground());
+            }
+
+            setText(value.toString());
+            //setSize(browserField.getWidth(), getHeight());
+            setMaximumSize(new Dimension(browserField.getWidth(), height));
+            list.setMaximumSize(new Dimension(browserField.getWidth(), height));
+            //setCaretPosition(getText().length());
+            //setCaretPosition(getDocument().getLength());
+            repaint();
+
+            //System.out.println(browserField.getWidth() + " " + height);
+            //System.out.println(list.getWidth() + " " + list.getFixedCellHeight());
+
+            return this;
+        }
+    }
+
+    /**
      * Panel with components for creating a new project. This Panel will be somewhere below the project file listing...
      */
     private class NewProjectPanel extends JPanel {
@@ -400,7 +455,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
 
             newProjectName = new JTextField();
             newProjectType = new JComboBox(Project.Type.values());
-            newProjectType.removeItem(Project.Type.CALIBRATION); // calibratin projects are created from the File menu
+            newProjectType.removeItem(Project.Type.CALIBRATION); // calibration projects are created from the File menu
             newProjectType.setSelectedItem(Project.Type.AF);
             newProjectType.setBackground(Color.WHITE);
             createNewProjectButton = new JButton("Create New");
