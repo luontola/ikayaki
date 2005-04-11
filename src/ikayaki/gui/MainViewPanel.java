@@ -219,11 +219,14 @@ public class MainViewPanel extends ProjectComponent {
 
     /**
      * Loads a new project to all GUI components. This method will be called by the Project Explorer and Calibration
-     * panels.
+     * panels. Will do nothing if somebody tries to reopen the same project.
      *
      * @param project the project to be opened, or null to close the previous one.
      */
     @Override public void setProject(Project project) {
+        if (project == this.project) {
+            return;
+        }
         if (project != null) {
             // update history logs
             if (project.getType() != Project.Type.CALIBRATION) {

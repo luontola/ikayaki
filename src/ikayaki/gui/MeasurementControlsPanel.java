@@ -210,7 +210,10 @@ public class MeasurementControlsPanel extends ProjectComponent {
     /**
      * Checks the current state of the active project and enables/disables the measurement controls accordingly.
      */
-    private void updateActions() { /* TESTING error notification
+    private void updateActions() {
+        // TODO: the following line is for testing error notification
+        //if (true) return;
+
         if (getProject() != null) {
             getAutoStepAction().setEnabled(getProject().isAutoStepEnabled());
             getSingleStepAction().setEnabled(getProject().isSingleStepEnabled());
@@ -230,7 +233,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
             measureButton.setAction(getAutoStepAction());
         } else {
             measureButton.setAction(getPauseAction());
-        } */
+        }
     }
 
     /* Getters for Swing Actions */
