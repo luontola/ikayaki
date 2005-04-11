@@ -128,8 +128,8 @@ public class ProjectExplorerPanel extends ProjectComponent {
         // browserFieldEditor.setFocusTraversalKeysEnabled(false); // disable tab-exiting from browserField
 
         // custom renderer for browserField's items so that long path names are right-justified in the popup menu
-        browserField.setRenderer(new FittedComboBoxRenderer(browserField));
-        
+        browserField.setRenderer(new FittedComboBoxRenderer(browserFieldEditor));
+
         // TODO: remove the commented out code
 //        browserFieldRenderer = new BrowserFieldRenderer();
 //        browserFieldRenderer = new BrowserFieldRenderer2();
