@@ -60,6 +60,8 @@ be closed.
     public static final File FILE_DTD_FILE = new File("ikayaki10.dtd"); // TODO: use ClassLoader.getSystemResource
     public static final String FILE_DESCRIPTION = "Measurement Project";
 
+    public static final String HELP_PAGES = new File("manual/index.html").getAbsolutePath();
+
     public static final String[] AUTHORS = new String[]{
         "Mikko Jormalainen",
         "Samuli Kaipiainen",

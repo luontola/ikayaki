@@ -34,6 +34,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -177,7 +178,7 @@ public class MainViewPanel extends ProjectComponent {
         left.setMinimumSize(d);
 
         // button for hiding the tabs
-        // TODO: make this as an Action
+        // TODO: make this as an Action?
         Box tabControls = new Box(BoxLayout.Y_AXIS);
         final Icon tabButtonDown = new ImageIcon(ClassLoader.getSystemResource("resources/projectExplorerTabDown.png"));
         final Icon tabButtonUp = new ImageIcon(ClassLoader.getSystemResource("resources/projectExplorerTabUp.png"));
@@ -320,10 +321,11 @@ public class MainViewPanel extends ProjectComponent {
 
             return;
 
+// TODO: remove the following legacy code
 //            // check if the last measurement has stopped
 //            if (latestMeasuringProject != null && latestMeasuringProject.getState() == Project.State.IDLE) {
 //
-//                /* TODO:
+//                /*
 //                 * It might be better that if the measuring ends when latestMeasuringProject is not active,
 //                 * it would not be closed. Otherwise it won't be possible for the user to see which of
 //                 * the steps were just completed (green color).
@@ -694,8 +696,30 @@ public class MainViewPanel extends ProjectComponent {
     public Action getHelpAction() {
         if (helpAction == null) {
             helpAction = new AbstractAction() {
-                public void actionPerformed(ActionEvent e) {
-                    // TODO
+                public void actionPerformed(ActionEvent event) {
+                    if (!System.getProperty("os.name").startsWith("Windows")) {
+                        JOptionPane.showMessageDialog(MainViewPanel.this,
+                                "Open this file in your web browser to view the help pages:\n" + Ikayaki.HELP_PAGES);
+                        return;
+                    }
+
+                    // open the help pages in a web browser
+                    String[] cmd = {"cmd", "/c", "start", Ikayaki.HELP_PAGES};
+                    //String[] cmd = {"cmd", "/c", "start", "http://www.cs.helsinki.fi/group/squid/"};
+                    //String[] cmd = {"cmd.exe", "/c", "dir"};
+                    try {
+                        Process p = Runtime.getRuntime().exec(cmd);
+                        BufferedInputStream in = new BufferedInputStream(p.getInputStream());
+
+                        // print what the process writes to stdout
+                        int i;
+                        while ((i = in.read()) >= 0) {
+                            System.err.print((char) i);
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             };
             helpAction.putValue(Action.NAME, "Help Topics");
