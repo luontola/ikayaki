@@ -253,6 +253,11 @@ project listeners.
             throw new NullPointerException();
         }
 
+        // must use only absolute file paths. otherwise the cache could include the same file twise.
+        if (!file.isAbsolute()) {
+            file = file.getAbsoluteFile();
+        }
+
         // create a new file, do not overwrite an old one
         try {
             if (!file.createNewFile()) {
@@ -268,10 +273,6 @@ project listeners.
             return null;
         }
         projectCache.put(file, project);
-
-// TODO: this is done in MainViewPanel.setProject(), so remove from here?
-//        // update history log
-//        Settings.instance().updateProjectHistory(file);
         return project;
     }
 
@@ -291,12 +292,14 @@ project listeners.
             return null;
         }
 
+        // must use only absolute file paths. otherwise the cache could include the same file twise.
+        if (!file.isAbsolute()) {
+            file = file.getAbsoluteFile();
+        }
+
         // check cache
         Project project = projectCache.get(file);
         if (project != null) {
-// TODO: this is done in MainViewPanel.setProject(), so remove from here?
-//            // update history log
-//            Settings.instance().updateProjectHistory(file);
             return project;
         }
 
@@ -313,10 +316,6 @@ project listeners.
             e.printStackTrace();
             return null;
         }
-
-// TODO: this is done in MainViewPanel.setProject(), so remove from here?
-//        // update history log
-//        Settings.instance().updateProjectHistory(file);
         return project;
     }
 
@@ -362,7 +361,12 @@ project listeners.
         return true;
     }
 
-    // TODO: a method for closing all of the cached project files
+    /**
+     * Returns an array containing all the projects that are in the project cache.
+     */
+    public static synchronized Project[] getCachedProjects() {
+        return projectCache.values().toArray(new Project[0]);
+    }
 
     /**
      * Returns the type of a project file. Reads the type of the project from the specified file quickly, without fully
@@ -387,7 +391,7 @@ project listeners.
                 return null;
             }
         }
-        // TODO: should the cache be emptied at some point?
+        // TODO: should the cache be emptied at some point? - I suppose not.
 
         Type type = null;
         BufferedReader reader = null;

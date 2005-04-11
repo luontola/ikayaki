@@ -358,27 +358,27 @@ public class MainViewPanel extends ProjectComponent {
      * before exiting.
      */
     public void exitProgram() {
+
+        // must not exit if a measurement is running
         if (latestMeasuringProject != null && latestMeasuringProject.getState() != Project.State.IDLE) {
             JOptionPane.showMessageDialog(this,
                     "Can not exit. A measurement is running.",
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
+        // ensure that all settings will be saved
         if (!Settings.instance().saveNow()) {
             JOptionPane.showMessageDialog(this,
                     "Can not exit. Unable to save the settings.",
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        setProject(null); // close the active project
-//        if (project != null) {
-//            if (!Project.closeProject(project)) {
-//                JOptionPane.showMessageDialog(this,
-//                        "Can not exit. Unable to close the project " + project.getName() + ".",
-//                        "Error", JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
-//        }
+
+        // close the active project
+        setProject(null);
+
+        // close the latest measuring project (if same as the active project, it was not close by setProject(null))
         if (latestMeasuringProject != null) {
             if (!Project.closeProject(latestMeasuringProject)) {
                 JOptionPane.showMessageDialog(this,
@@ -387,9 +387,23 @@ public class MainViewPanel extends ProjectComponent {
                 return;
             }
         }
-        // TODO: close all projects in the cache
 
+        // close all projects in the cache
+        Project[] cachedProjects = Project.getCachedProjects();
+        for (Project cached : cachedProjects) {
+            System.err.println("Found a cached project, closing it: " + cached.getFile());
+            if (!Project.closeProject(cached)) {
+                JOptionPane.showMessageDialog(this,
+                        "Can not exit. Unable to close the (cached) project " + cached.getName() + ".",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+        // close serial port connections
         SerialIO.closeAllPorts();
+
+        // all preparations successful, exit the program
         System.exit(0);
     }
 
