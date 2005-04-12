@@ -34,16 +34,16 @@ If Rita testing utility is easy enough to use it will be used in testing. Tests 
 
 Unit Testing is done for each class separately. Classes tested with JUnit have it's own ClassNameTest.java class in test-directory and gui-components are tested manually. They should be done before and during coding class. All test cases must be executable after classes are ready. Every class should be tested succesfully before integration tests.
 
-JUnit test cases are listed in section \ref{junit}.
+All use cases are listed in section \ref{cases}.
 
 \subsection{Integrity Testing}
 \label{integrity}
 
-Integrity testing is done after unit test is passed for all classes. Testing is done using squid emulator at first and finally with real Squid system.
+Integrity testing is done after unit test is passed for all classes. Testing is done using squid emulator at first and finally with real Squid system. Graphical User Interface is tested first and after that Squid Interface is tested.
 
 Graphical User Interface is tested using all use cases from \ref{intcase}. If one fails, it is corrected immediatelly and all use cases must be done again. When all use cases are done without errors this phase is ready.
 
-Interface testing is done with Emulator. Use cases are Automatic Measurement, Thellier Measurement and Manual Measurement with all variations (see Requirements Document). In first phase we use old program with emulator, save its log file and take results. After that we run it with new program and compare results. If they are not same, corrections are made immediatelly to new program and test is runned again. This is done until results are same for all use cases.
+Squid Interface testing is done with Emulator. Use cases are Automatic Measurement, Thellier Measurement and Manual Measurement with all variations (see \ref{intcase}). In first phase we use old program with emulator, save its log file and take results. After that we run it with new program and compare results. If they are not same, corrections are made immediatelly to new program and test is runned again. This is done until results are same for all use cases.
 
 \subsection{Squid Emulator}
 \label{emulator}
@@ -110,7 +110,14 @@ Here are listed test cases for gui-classes, these are done manually just clickin
 
 Here is test case which is done in integration phase to all components at same time. This is done in following order and must be repeated until done succesfully
 
+\subsubsection{GUI test case}
 \input{int_case}
+
+\subsubsection{Automatic Measurement}
+
+\subsubsection{Thellier Measurement}
+
+\subsubsection{Manual Measurement}
 
 \section{JUnit}
 \label{jhelp}
