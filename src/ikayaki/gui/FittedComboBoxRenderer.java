@@ -35,6 +35,8 @@ import java.awt.*;
 class FittedComboBoxRenderer extends BasicComboBoxRenderer {
 
     private JComponent fitToComponent;
+    private int fitLimit = -1;
+
     private String delimiter;
     private String delimiterRegexp;
 
@@ -50,6 +52,22 @@ class FittedComboBoxRenderer extends BasicComboBoxRenderer {
         this.delimiterRegexp = regexp;
     }
 
+    /**
+     * Returns the number of parts that will be chopped of the text, or -1 if it is being detected automatically.
+     */
+    public int getFitLimit() {
+        return fitLimit;
+    }
+
+    /**
+     * Sets the number of parts that should be chopped of the text.
+     *
+     * @param fitLimit a fixed number of parts to chop off, or -1 to detected it automatically.
+     */
+    public void setFitLimit(int fitLimit) {
+        this.fitLimit = fitLimit;
+    }
+
     /* TODO:
      * Tuo nykyinen algoritmi on melko hyvä Project Explorerin kansiohistoriaa katsottaessa. Autocompletessa se ei ole
      * niin hyvä, koska jos on eri pituisia kansioiden nimiä, niin polku katkaistaan niillä eri kohdasta. Jos
@@ -60,21 +78,60 @@ class FittedComboBoxRenderer extends BasicComboBoxRenderer {
     @Override public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
                                                             boolean cellHasFocus) {
         JLabel comp = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        if (fitLimit >= 0) {
+            fitValue(value, fitLimit);
+        } else {
+            fitValue(value);
+        }
+        return comp;
+    }
+
+    /**
+     * Fits the specified object to this component. After this method call the possibly shortened string value of the
+     * object will be the text in this renderer component. Tells how much had to be removed from the string value before
+     * it did fit.
+     *
+     * @param value the object whose toString() value to fit into this renderer component.
+     * @return the number of parts that were chopped off the value.
+     */
+    public int fitValue(Object value) {
+        return fitValue(value, -1);
+    }
+
+    /**
+     * Fits the specified object to this component. After this method call the possibly shortened string value of the
+     * object will be the text in this renderer component. Tells how many parts were removed from the text.
+     *
+     * @param value    the object whose toString() value to fit into this renderer component.
+     * @param fitLimit the fixed number parts to chop off the value, or -1 to detect it automatically.
+     * @return the number of parts that were chopped off the value.
+     */
+    public int fitValue(Object value, int fitLimit) {
         int maxWidth = fitToComponent.getWidth();
+        int fitCount = 0;
 
         // split the text and take out parts of it until it fits
         String[] text = value.toString().split(delimiterRegexp);
-        if (maxWidth <= comp.getPreferredSize().width && text.length >= 3) {
+        if (maxWidth <= this.getPreferredSize().width && text.length >= 3) {
             boolean shortenMore = true;
             while (shortenMore) {
 
-                // take out one part of the text
                 shortenMore = false;
-                for (int i = 1; i < text.length - 1; i++) {
-                    if (text[i] != null) {
+                if (fitLimit >= 0) {
+                    // take the specified number of parts out of the text
+                    for (int i = 1; i < Math.min(text.length - 1, fitLimit); i++) {
                         text[i] = null;
-                        shortenMore = true;
-                        break;
+                        fitCount++;
+                    }
+                } else {
+                    // take out one part of the text at a time
+                    for (int i = 1; i < text.length - 1; i++) {
+                        if (text[i] != null) {
+                            text[i] = null;
+                            shortenMore = true;     // try again if it doesn't fit
+                            fitCount++;
+                            break;
+                        }
                     }
                 }
 
@@ -87,12 +144,12 @@ class FittedComboBoxRenderer extends BasicComboBoxRenderer {
                 }
 
                 // try if it fits
-                comp.setText(result);
-                if (maxWidth > comp.getPreferredSize().width) {
+                this.setText(result);
+                if (maxWidth > this.getPreferredSize().width) {
                     shortenMore = false;
                 }
             }
         }
-        return comp;
+        return fitCount;
     }
 }
