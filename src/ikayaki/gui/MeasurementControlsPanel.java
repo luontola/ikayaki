@@ -229,6 +229,8 @@ public class MeasurementControlsPanel extends ProjectComponent {
         if (getProject() != null) {
             getAutoStepAction().setEnabled(getProject().isAutoStepEnabled());
             getSingleStepAction().setEnabled(getProject().isSingleStepEnabled());
+//            getSingleStepAction().setEnabled(getProject().isSingleStepEnabled()   // TODO: this would cause the key shortcuts not to work
+//                    && getProject().getType() != Project.Type.CALIBRATION);
             getCalibrateAction().setEnabled(getProject().isSingleStepEnabled()
                     && getProject().getType() == Project.Type.CALIBRATION);
             getPauseAction().setEnabled(getProject().isPauseEnabled());

@@ -15,7 +15,7 @@ import java.util.concurrent.SynchronousQueue;
 public class SerialIOTest
         extends TestCase implements SerialIOListener {
 
-    private SynchronousQueue queue;
+    private SynchronousQueue<String> queue;
 
     public static Test suite() {
         return new TestSuite(SerialIOTest.class);

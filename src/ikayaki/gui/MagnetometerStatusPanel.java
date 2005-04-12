@@ -53,7 +53,7 @@ public class MagnetometerStatusPanel extends JPanel {
     private int posMeasurement;
 
     private final JSlider baseSlider;
-    private final Hashtable baseSliderLabels;
+    private final Hashtable<Integer,JComponent> baseSliderLabels;
 
     /**
      * Sets magnetometer status to current position.
@@ -62,7 +62,7 @@ public class MagnetometerStatusPanel extends JPanel {
         super(new BorderLayout());
 
         updatePositions();
-        baseSliderLabels = new Hashtable<Integer,Component>();
+        baseSliderLabels = new Hashtable<Integer,JComponent>();
         baseSliderLabels.put(posHome, new JLabel("Home"));
         baseSliderLabels.put(posDemagZ, new JLabel("Demag Z"));
         baseSliderLabels.put(posDemagY, new JLabel("Demag Y"));
