@@ -37,16 +37,16 @@ import java.io.*;
 public class MagnetometerStatusPanel extends JPanel {
 
     private int position, rotation;
-    private int maxposition = 1 << 16, maxrotation = 2000;
+    private final int maxposition = 1 << 24, maxrotation = 2000;
 
     /**
      * Sets magnetometer status to current position.
      */
     public MagnetometerStatusPanel() {
-        setPreferredSize(new Dimension(300, 400));
-        //setMinimumSize(new Dimension(300, 400));
+        setPreferredSize(new Dimension(200, 400));
+        //setMinimumSize(new Dimension(200, 400));
         //updateStatus();
-        updateStatus(12345678, 400);
+        updateStatus(1 << 23, 400);
     }
 
     /**
@@ -108,7 +108,7 @@ public class MagnetometerStatusPanel extends JPanel {
         int rotl = w / 5;
 
         // sample position
-        int samplep = position / maxposition;
+        int samplep = (int) ((long) h * position / maxposition);
 
         // do the drawing...
 

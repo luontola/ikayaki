@@ -145,7 +145,6 @@ public class MeasurementControlsPanel extends ProjectComponent {
         setLayout(new BorderLayout());
         add(topPanel, BorderLayout.NORTH);
         add(manualControlsPanel, BorderLayout.WEST);
-        // TODO: MagnetometerStatusPanel appears to freeze the program when opening a file dialog
         add(magnetometerStatusPanel, BorderLayout.CENTER);
 
         /**
@@ -178,6 +177,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
         super.setProject(project);
         updateActions();
         if (project != null) setOrientation(project.getOrientation());
+        manualControlsPanel.setProject(project);
     }
 
     /**
@@ -187,6 +187,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
      */
     public void projectUpdated(ProjectEvent event) {
         updateActions();
+        manualControlsPanel.setEnabled(getProject().isManualControlEnabled());
     }
 
     /**

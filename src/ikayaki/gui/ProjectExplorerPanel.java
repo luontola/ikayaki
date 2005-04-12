@@ -453,8 +453,10 @@ public class ProjectExplorerPanel extends ProjectComponent {
 
                     Project created = Project.createProject(file, type);
 
-                    if (created == null) newProjectNameFlasher.flash();
-                    else {
+                    if (created == null) {
+                        newProjectNameFlasher.flash();
+                        newProjectName.requestFocusInWindow();
+                    } else {
                         parent.setProject(created);
                         newProjectName.setText("");
                     }
