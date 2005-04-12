@@ -168,7 +168,7 @@ be closed.
         if (args.length > 0) {
             File file = new File(args[0]);
             if (file.exists() && file.isFile()) {
-//                project = Project.loadProject(file);
+                project = Project.loadProject(file);
             }
         }
 
