@@ -35,9 +35,24 @@ public class SerialIOTest
             readPort.addSerialIOListener(this);
             assertTrue(writePort != null);
             assertTrue(readPort != null);
-            String testString = "S124,5//r";
+            final String testString = "S124,5//r";
+            StringBuffer test = new StringBuffer();
+            for (int i = 0; i < 254; i++) {
+                test.append((char) i);
+            }
+
             writePort.writeMessage(testString);
+            writePort.writeMessage(test.toString());
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             assertTrue(testString.equals((String) queue.poll()));
+            assertTrue(test.equals((String) queue.poll()));
+
         } catch (SerialIOException e) {
             fail(e.toString());
         }
@@ -55,9 +70,9 @@ public class SerialIOTest
         try {
             queue.put(event.getMessage());
         } catch (InterruptedException e) {
-            System.err.println("Interrupted Degausser message event");
+            System.err.println("Interrupted message event");
         } catch (NullPointerException e) {
-            System.err.println("Null from SerialEvent in Degausser");
+            System.err.println("Null from SerialEvent");
         }
     }
 
