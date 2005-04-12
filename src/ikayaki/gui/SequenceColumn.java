@@ -354,14 +354,23 @@ public enum SequenceColumn {
             setNumberFormat(new DecimalFormat("0.000E0"));
         }
     },
-    MAGNETIZATION(MeasurementValue.MAGNETIZATION) { // TODO: "magnetization" would be a better name
+    MAGNETIZATION(MeasurementValue.MAGNETIZATION) {
         {
             setNumberFormat(new DecimalFormat("0.000E0"));
         }
 
         @Override public String getColumnName(Project project) {
-            // TODO: change the unit according to whether it is volume or mass normalization
-            return super.getColumnName(project);
+            String[] units = value.getUnit().split(",");
+            if (project.getNormalization() == Project.Normalization.VOLUME) {
+                System.out.println("1");
+                return value.getCaption() + " (" + units[0] + ")";
+            } else if (project.getNormalization() == Project.Normalization.MASS) {
+                System.out.println("2");
+                return value.getCaption() + " (" + units[1] + ")";
+            } else {
+                assert false;
+                return null;
+            }
         }
     },
     RELATIVE_MAGNETIZATION(MeasurementValue.RELATIVE_MAGNETIZATION) {
@@ -414,11 +423,11 @@ public enum SequenceColumn {
 
     /* Begin class SequenceColumn */
 
-    private String columnName;
+    protected String columnName;
 
-    private MeasurementValue value;
+    protected MeasurementValue value;
 
-    private NumberFormat numberFormat;
+    protected NumberFormat numberFormat;
 
     private SequenceColumn(String columnName) {
         this.columnName = columnName;

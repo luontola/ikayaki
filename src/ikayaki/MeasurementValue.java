@@ -201,7 +201,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the length of the vector from the component averages.
      */
     public static final MeasurementValue<Double> MOMENT =
-            new MeasurementValue<Double>("M", "Am^2", "Magnetic moment") {
+            new MeasurementValue<Double>("M", "Am\u00B2", "Magnetic moment") {
                 public Double getValue(MeasurementStep step) {
                     Double x = SAMPLE_X.getValue(step);
                     Double y = SAMPLE_Y.getValue(step);
@@ -219,7 +219,7 @@ public abstract class MeasurementValue <T> {
      * (depending on the selected normalization).
      */
     public static final MeasurementValue<Double> MAGNETIZATION =
-            new MeasurementValue<Double>("J", "Am^2/kg,mA/m", "Magnetic intensity (J=M/volume or J=M/mass)") {
+            new MeasurementValue<Double>("J", "Am\u00B2/kg,mA/m", "Magnetic intensity (J=M/volume or J=M/mass)") {
                 public Double getValue(MeasurementStep step) {
                     Project project = step.getProject();
                     if (project == null) {
