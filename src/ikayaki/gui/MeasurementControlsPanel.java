@@ -108,8 +108,8 @@ public class MeasurementControlsPanel extends ProjectComponent {
         buttonPanel.add(abortButton);
 
         zButtonGroup = new ButtonGroup();
-        zPlusRadioButton = new JRadioButton("+z");
-        zMinusRadioButton = new JRadioButton("-z");
+        zPlusRadioButton = new JRadioButton("+Z");
+        zMinusRadioButton = new JRadioButton("-Z");
         zButtonGroup.add(zPlusRadioButton);
         zButtonGroup.add(zMinusRadioButton);
 /*
@@ -124,10 +124,12 @@ public class MeasurementControlsPanel extends ProjectComponent {
         sampleInsertIconLabel.setHorizontalAlignment(JLabel.CENTER);
 
         sampleInsertPanel = new JPanel(new BorderLayout(8, 4));
+        zPlusRadioButton.setHorizontalAlignment(SwingConstants.RIGHT);
+        zMinusRadioButton.setHorizontalAlignment(SwingConstants.LEFT);
         sampleInsertPanel.add(sampleInsertTextLabel, BorderLayout.NORTH);
         sampleInsertPanel.add(sampleInsertIconLabel, BorderLayout.CENTER);
-        sampleInsertPanel.add(zMinusRadioButton, BorderLayout.WEST);
-        sampleInsertPanel.add(zPlusRadioButton, BorderLayout.EAST);
+        sampleInsertPanel.add(zPlusRadioButton, BorderLayout.WEST);
+        sampleInsertPanel.add(zMinusRadioButton, BorderLayout.EAST);
 /*
         sampleInsertPanel.add(sampleInsertTextLabel, BorderLayout.NORTH);
         sampleInsertPanel.add(sampleInsertIconLabel, BorderLayout.WEST);
