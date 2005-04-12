@@ -1017,7 +1017,7 @@ project listeners.
         double s = getStrike();
         if (sampleType == CORE) {
             // core sample: sample -> geographic
-            transform.setRow(0, sin(d) * cos(s), sin(s), cos(s) * cos(d));
+            transform.setRow(0, sin(d) * cos(s), -sin(s), cos(s) * cos(d));
             transform.setRow(1, sin(s) * sin(d), cos(s), cos(d) * sin(s));
             transform.setRow(2, -cos(d), 0, sin(d));
         } else if (sampleType == HAND) {
@@ -1036,8 +1036,9 @@ project listeners.
              *    [ 0 -1  0 ]
              *    [ 0  0 -1 ]]
              */
-            transform.setColumn(1, -transform.m01, -transform.m11, -transform.m21);
-            transform.setColumn(2, -transform.m02, -transform.m12, -transform.m22);
+            // TODO: it appears that they use only -Z position, so these are not necessary?
+//            transform.setColumn(1, -transform.m01, -transform.m11, -transform.m21);
+//            transform.setColumn(2, -transform.m02, -transform.m12, -transform.m22);
         }
         for (int i = 0; i < sequence.getSteps(); i++) {
             sequence.getStep(i).updateTransforms();

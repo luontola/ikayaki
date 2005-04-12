@@ -145,6 +145,7 @@ public class MeasurementResult {
     void setTransform(Matrix3d transform) {
         type.rotate(rawVector, vector);     // copy rawVector to vector and rotate the values
         if (transform != null) {
+            // TODO: testing
             transform.transform(vector);    // apply transformation matrix
         }
     }

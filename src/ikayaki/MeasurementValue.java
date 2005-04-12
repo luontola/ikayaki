@@ -22,6 +22,7 @@
 
 package ikayaki;
 
+import static java.lang.Math.atan2;
 import static java.lang.Math.sin;
 import static java.lang.Math.cos;
 import static java.lang.Math.PI;
@@ -41,7 +42,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all X components.
      */
     public static final MeasurementValue<Double> X =
-            new MeasurementValue<Double>("X", "mT", "Average of measured X components") {
+            new MeasurementValue<Double>("X", "mA/m", "Average of measured X components") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = step.getResults();
@@ -60,7 +61,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all Y components.
      */
     public static final MeasurementValue<Double> Y =
-            new MeasurementValue<Double>("Y", "mT", "Average of measured Y components") {
+            new MeasurementValue<Double>("Y", "mA/m", "Average of measured Y components") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = step.getResults();
@@ -79,7 +80,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all Z components.
      */
     public static final MeasurementValue<Double> Z =
-            new MeasurementValue<Double>("Z", "mT", "Average of measured Z components") {
+            new MeasurementValue<Double>("Z", "mA/m", "Average of measured Z components") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = step.getResults();
@@ -105,11 +106,12 @@ public abstract class MeasurementValue <T> {
                     if (x == null || y == null) {
                         return null;
                     } else {
-                        double d = atan(x / y);
+                        // TESTED: OK
+                        double d = atan2(y, x);
                         if (d < 0.0) {
-                            d += PI;
+                            d += PI * 2;
                         }
-                        return (d / PI) * 360.0;
+                        return Math.toDegrees(d);
                     }
                 }
             };
@@ -126,8 +128,15 @@ public abstract class MeasurementValue <T> {
                     if (x == null || y == null || z == null) {
                         return null;
                     } else {
+                        if (x == 0.0) {
+                            x = 0.000000000001;
+                        }
+                        if (y == 0.0) {
+                            y = 0.000000000001;
+                        }
+                        if (z == 0) System.out.println(sqrt(pow(x, 2) + pow(y, 2)));
                         double d = atan(z / sqrt(pow(x, 2) + pow(y, 2)));
-                        return (d / PI) * 360.0;
+                        return Math.toDegrees(d);
                     }
                 }
             };
@@ -136,7 +145,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the length of the vector from the component averages.
      */
     public static final MeasurementValue<Double> MOMENT =
-            new MeasurementValue<Double>("M", "mT", "Length of the magnetization vector") {
+            new MeasurementValue<Double>("M", "Am^2", "Magnetic moment of the sample") {
                 public Double getValue(MeasurementStep step) {
                     Double x = X.getValue(step);
                     Double y = Y.getValue(step);
@@ -153,7 +162,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the remanence from the component averages and the sample’s volume.
      */
     public static final MeasurementValue<Double> REMANENCE =
-            new MeasurementValue<Double>("J", "?", "Magnitude of the magnetization (M/V=J)") {
+            new MeasurementValue<Double>("J", "Am^2/kg or mA/m", "Magnetic intensity (J=M/volume or J=M/mass)") {
                 public Double getValue(MeasurementStep step) {
                     Project project = step.getProject();
                     double volume = step.getVolume();

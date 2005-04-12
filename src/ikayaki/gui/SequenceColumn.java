@@ -64,6 +64,7 @@ public enum SequenceColumn {
      */
     STEP("Step Value"){
         {
+            // one decimal is the maximum presision
             getNumberFormat().setMaximumFractionDigits(1);
         }
 
@@ -127,11 +128,11 @@ public enum SequenceColumn {
             switch (project.getType()) {
             case AF:
             case CALIBRATION:
-                name = "Tesla";
+                name = "AF (mT)";
                 break;
             case THELLIER:
             case THERMAL:
-                name = "Temp";
+                name = "T (\u00b0C)";
                 break;
             default:
                 assert false;
@@ -145,9 +146,10 @@ public enum SequenceColumn {
     /**
      * Showing and editing the mass of the measurement step.
      */
-    MASS("Mass"){
+    MASS("Mass"){ // unit is grams
         {
-            getNumberFormat().setMaximumFractionDigits(3);
+            // at least 5 decimals
+            getNumberFormat().setMaximumFractionDigits(6);
         }
 
         @Override public StyledWrapper getValue(int rowIndex, Project project) {
@@ -197,9 +199,10 @@ public enum SequenceColumn {
     /**
      * Showing and editing the volume of the measurement step.
      */
-    VOLUME("Volume"){
+    VOLUME("Volume"){ // unit is cm^3
         {
-            getNumberFormat().setMaximumFractionDigits(3);
+            // at least 2 decimals
+            getNumberFormat().setMaximumFractionDigits(6);
         }
 
         @Override public StyledWrapper getValue(int rowIndex, Project project) {
@@ -266,14 +269,16 @@ public enum SequenceColumn {
     },
     DECLINATION(MeasurementValue.DECLINATION) {
         {
-            getNumberFormat().setMinimumFractionDigits(1);
-            getNumberFormat().setMaximumFractionDigits(1);
+            // 2 decimals is good
+            getNumberFormat().setMinimumFractionDigits(2);
+            getNumberFormat().setMaximumFractionDigits(2);
         }
     },
     INCLINATION(MeasurementValue.INCLINATION) {
         {
-            getNumberFormat().setMinimumFractionDigits(1);
-            getNumberFormat().setMaximumFractionDigits(1);
+            // 2 decimals is good
+            getNumberFormat().setMinimumFractionDigits(2);
+            getNumberFormat().setMaximumFractionDigits(2);
         }
     },
     MOMENT(MeasurementValue.MOMENT) {
@@ -281,9 +286,14 @@ public enum SequenceColumn {
             setNumberFormat(new DecimalFormat("0.000E0"));
         }
     },
-    REMANENCE(MeasurementValue.REMANENCE) {
+    REMANENCE(MeasurementValue.REMANENCE) { // TODO: "magnetization" would be a better name
         {
             setNumberFormat(new DecimalFormat("0.000E0"));
+        }
+
+        @Override public String getColumnName(Project project) {
+            // TODO: change the unit according to whether it is volume or mass normalization
+            return super.getColumnName(project);
         }
     },
     RELATIVE_REMANENCE(MeasurementValue.RELATIVE_REMANENCE) {
