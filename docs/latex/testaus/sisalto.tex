@@ -60,14 +60,126 @@ This should be done so that Old Program has same results with SQUID-system and e
 
 Here are listed JUnit test cases for <insert class names>. JUnit is introduced in section \ref{Junit-help}.
 
-\input{junit_cases}
+\subsubsubsection{SampleClass}
+\label{cases:SampleClass}
+
+\begin{enumerate}
+
+\item Test1
+
+Conditions:
+\begin{itemize}
+\item Cond1
+\item Cond2
+\end{itemize}
+
+\item Test2
+
+Conditions:
+\begin{itemize}
+\item Cond1
+\end{itemize}
+
+\end{enumerate}
 
 \subsubsection{GUI-component test cases}
 \label{guicase}
 
 Here are listed test cases for gui-classes, these are done manually just clicking and changing values.
 
-\input{gui_cases}
+\subsubsubsection{SettingsPanel}
+\label{cases:SettingsPanel}
+
+\begin{enumerate}
+
+\item Magnetometer,Handler and Degausser COM-port combobox
+
+Conditions:
+\begin{itemize}
+\item Shows all COM-ports on system in alphabetical order
+\item Loads correct COM port from Settings
+\item Doesn't allow same value as in Handler and Magnetometer/Degausser COM-port comboboxes
+\end{itemize}
+
+\item Save button
+
+Conditions:
+\begin{itemize}
+\item Only available if changes are made and values are permissible.
+\item Unavailable on start
+\item On click closes window and saved data correctly
+\end{itemize}
+
+\item Cancel button
+
+Conditions:
+\begin{itemize}
+\item On click closes window and doesnt save changes
+\item Always available
+\end{itemize}
+
+\item Calibration constants
+\begin{itemize}
+\item Loads data correctly from Settings
+\item Accepts positive and negative decimal numbers
+\end{itemize}
+
+\item Degausser ramp
+\begin{itemize}
+\item Loads data correctly from Settings
+\item Has only elements: 3,5,7,9
+\end{itemize}
+
+\item Degausser delay
+\begin{itemize}
+\item Loads data correctly from Settings
+\item Has only elements: 1..9
+\end{itemize}
+
+\item Acceleration and deceleration fields
+\begin{itemize}
+\item Loads data correctly from Settings
+\item Accepts only values in range of Integers 0..127
+\end{itemize}
+
+\item Velocity and velocity in measurement fields
+\begin{itemize}
+\item Loads data correctly from Settings
+\item Accepts only values in range of Integers 50..20000
+\end{itemize}
+
+\item Translation positions fields
+\begin{itemize}
+\item Loads data correctly from Settings
+\item Accepts only values in range of Integers 0..16777215
+\end{itemize}
+
+\item Right limit
+\begin{itemize}
+\item Loads data correctly from Settings
+\item Has only elements: plus, minus
+\end{itemize}
+
+\item Rotation field
+\begin{itemize}
+\item Loads data correctly from Settings
+\item Accepts positive and negative Integer numbers
+\end{itemize}
+
+\end{enumerate}
+
+\subsubsubsection{className}
+\label{cases:className}
+
+\begin{enumerate}
+
+\item Use case1
+\begin{itemize}
+\item Cond1
+\item Cond2
+\end{itemize}
+
+\end{enumerate}
 
 \subsection{Intergrity test case}
 \label{intcase}
