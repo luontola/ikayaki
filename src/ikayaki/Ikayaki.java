@@ -30,10 +30,7 @@ import jutil.JUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
 
 /**
@@ -100,7 +97,7 @@ be closed.
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         pack();
 
-        // listeners for this frame
+        // monitor the size of this frame
         addComponentListener(new ComponentAdapter() {
             @Override public void componentResized(ComponentEvent e) {
                 if ((getExtendedState() & MAXIMIZED_BOTH) == 0) {
@@ -109,13 +106,19 @@ be closed.
                 }
             }
         });
-        addWindowListener(new WindowAdapter() {
-            @Override public void windowClosing(WindowEvent e) {
+        addWindowStateListener(new WindowStateListener() {
+            public void windowStateChanged(WindowEvent e) {
                 if ((getExtendedState() & MAXIMIZED_BOTH) != 0) {
                     Settings.instance().setWindowMaximized(true);
                 } else {
                     Settings.instance().setWindowMaximized(false);
                 }
+            }
+        });
+
+        // set the window close operation
+        addWindowListener(new WindowAdapter() {
+            @Override public void windowClosing(WindowEvent e) {
                 main.exitProgram();
             }
         });
