@@ -64,7 +64,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
      * clicked.
      */
     private final JComboBox browserField;
-//    private final ListCellRenderer browserFieldRenderer;
+    private final FittedComboBoxRenderer browserFieldRenderer;
     private final JTextField browserFieldEditor; // WARNING: look-and-feel-dependant code
     private final ComponentFlasher browserFieldFlasher;
 
@@ -127,17 +127,9 @@ public class ProjectExplorerPanel extends ProjectComponent {
         browserFieldFlasher = new ComponentFlasher(browserFieldEditor);
         // browserFieldEditor.setFocusTraversalKeysEnabled(false); // disable tab-exiting from browserField
 
-        // custom renderer for browserField's items so that long path names are right-justified in the popup menu
-        browserField.setRenderer(new FittedComboBoxRenderer(browserFieldEditor));
-
-        // TODO: remove the commented out code
-//        browserFieldRenderer = new BrowserFieldRenderer();
-//        browserFieldRenderer = new BrowserFieldRenderer2();
-        //DefaultListCellRenderer renderer = new DefaultListCellRenderer();
-        //renderer.setHorizontalAlignment(DefaultListCellRenderer.TRAILING);
-        //browserField.setRenderer(renderer);
-        //browserFieldRenderer.setPreferredSize(new Dimension(100, 20));
-//        browserField.setRenderer(browserFieldRenderer);
+        // custom renderer for browserField's items so that long path names in the popup menu are made shorter
+        browserFieldRenderer = new FittedComboBoxRenderer(browserFieldEditor);
+        browserField.setRenderer(browserFieldRenderer);
 
         // browse button
         browseButton = new JButton("Browse...");
@@ -226,7 +218,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
                     browserFieldPopupIsAutocomplete = false;
                     // TODO: when mouseclicking autocomplete list item, textfield gets cleared because of this
                     //Object item = browserField.getSelectedItem();
-                    setBrowserFieldPopup(getDirectoryHistory());
+                    setBrowserFieldPopup(getDirectoryHistory(), false);
                     //browserField.setSelectedItem(item);
                 }
             }
@@ -274,7 +266,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
     }
 
     /**
-     * Call super.setProject(project), hilight selected project, or unhilight unselected project.
+     * Call super.setProject(project), highlight selected project, or unhighlight unselected project.
      *
      * @param project project opened, or null to open no project.
      */
@@ -283,7 +275,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
 
         // update directory history, as it might have changed
         browserField.hidePopup();
-        setBrowserFieldPopup(getDirectoryHistory());
+        setBrowserFieldPopup(getDirectoryHistory(), false);
 
         // change directory, if not calibration project; in that case just update selected project in explorerTable
         if (project != null && project.getType() != Project.Type.CALIBRATION) {
@@ -360,7 +352,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
                 browserField.hidePopup();
 
                 browserFieldPopupIsAutocomplete = true;
-                setBrowserFieldPopup(files);
+                setBrowserFieldPopup(files, true);
                 if (files.length > 0) browserField.showPopup();
             }
         });
@@ -369,9 +361,10 @@ public class ProjectExplorerPanel extends ProjectComponent {
     /**
      * Sets browserField popup-menu-list as given files; also clears any selection.
      *
-     * @param files list of files to set the list to.
+     * @param files      list of files to set the list to.
+     * @param uniformFit true if all the file paths should be cut short from the same directory, false otherwise.
      */
-    private void setBrowserFieldPopup(File[] files) {
+    private void setBrowserFieldPopup(File[] files, boolean uniformFit) {
         // purkkaillaan -- some hardcore bubblegum stitching (the whole method)
         browserFieldUpdatingPopup = true;
 
@@ -380,6 +373,19 @@ public class ProjectExplorerPanel extends ProjectComponent {
 
         browserField.removeAllItems();
         for (File file : files) browserField.addItem(file);
+
+        // fit the contents of the menu list
+        if (uniformFit) {
+            int maxFitValue = 0;
+            for (int i = 0; i < browserField.getItemCount(); i++) {
+                Object item = browserField.getItemAt(i);
+                int fitValue = browserFieldRenderer.fitValue(item);
+                maxFitValue = Math.max(maxFitValue, fitValue);
+            }
+            browserFieldRenderer.setFitLimit(maxFitValue);
+        } else {
+            browserFieldRenderer.setFitLimit(-1);
+        }
 
         browserField.setSelectedIndex(-1);
         browserFieldEditor.setText(browserFieldEditorText);
@@ -396,61 +402,6 @@ public class ProjectExplorerPanel extends ProjectComponent {
     private void setBrowserFieldCursorToEnd() {
         browserFieldEditor.setCaretPosition(browserFieldEditor.getDocument().getLength());
     }
-
-    // TODO: remove the commented out code
-//    /**
-//     * Custom renderer for browserField's popup menu items.
-//     */
-//    private class BrowserFieldRenderer extends JLabel implements ListCellRenderer {
-//
-//        private int height;
-//
-//        /**
-//         * Creates an opaque JLabel with a small border.
-//         */
-//        public BrowserFieldRenderer() {
-//            setOpaque(true);
-//            setBorder(BorderFactory.createEmptyBorder(1, 4, 1, 2));
-//            //setEnabled(false);
-//            //setHorizontalAlignment(RIGHT);
-//            //System.out.println(getPreferredSize());
-//            height = getPreferredSize().height;
-//        }
-//
-//        /**
-//         * Returns a JLabel with long directory names right-justified.
-//         *
-//         * @param list         a JList object used behind the scenes to display the items.
-//         * @param value        the Object to render; the directory (File) that is.
-//         * @param index        the index of the object to render.
-//         * @param isSelected   indicates whether the object to render is selected.
-//         * @param cellHasFocus indicates whether the object to render has the focus.
-//         * @return custom renderer Component (JLabel).
-//         */
-//        public Component getListCellRendererComponent(JList list, Object value,
-//                                                      int index, boolean isSelected, boolean cellHasFocus) {
-//            if (isSelected) {
-//                setBackground(browserFieldEditor.getSelectionColor());
-//                setForeground(list.getSelectionForeground());
-//            } else {
-//                setBackground(list.getBackground());
-//                setForeground(list.getForeground());
-//            }
-//
-//            setText(value.toString());
-//            //setSize(browserField.getWidth(), getHeight());
-//            setMaximumSize(new Dimension(browserField.getWidth(), height));
-//            list.setMaximumSize(new Dimension(browserField.getWidth(), height));
-//            //setCaretPosition(getText().length());
-//            //setCaretPosition(getDocument().getLength());
-//            repaint();
-//
-//            //System.out.println(browserField.getWidth() + " " + height);
-//            //System.out.println(list.getWidth() + " " + list.getFixedCellHeight());
-//
-//            return this;
-//        }
-//    }
 
     /**
      * Panel with components for creating a new project. This Panel will be somewhere below the project file listing...

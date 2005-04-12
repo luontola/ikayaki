@@ -132,46 +132,59 @@ class FittedComboBoxRenderer extends BasicComboBoxRenderer {
         int maxWidth = fitToComponent.getWidth();
         int fitCount = 0;
 
-        // split the text and take out parts of it until it fits
+        // set the text and split it
+        this.setText(value.toString());
         String[] text = value.toString().split(delimiterRegexp);
-        if (maxWidth <= this.getPreferredSize().width && text.length >= 3) {
-            boolean shortenMore = true;
-            while (shortenMore) {
+        if (text.length < 3) {
+            return 0;               // unable to chop any smaller
+        }
+        if (fitLimit < 0) {
+            // autodetecting enabled
+            if (maxWidth > this.getPreferredSize().width) {
+                return 0;           // it already fits
+            }
+        } else if (fitLimit == 0) {
+            return 0;               // forbidden to chop any smaller
+        }
 
-                shortenMore = false;
-                if (fitLimit >= 0) {
-                    // take the specified number of parts out of the text
-                    for (int i = 1; i < Math.min(text.length - 1, fitLimit); i++) {
-                        text[i] = null;
-                        fitCount++;
-                    }
-                } else {
-                    // take out one part of the text at a time
-                    for (int i = 1; i < text.length - 1; i++) {
-                        if (text[i] != null) {
-                            text[i] = null;
-                            shortenMore = true;     // try again if it doesn't fit
-                            fitCount++;
-                            break;
-                        }
-                    }
+        // take out parts of the text it until it fits
+        boolean shortenMore = true;
+        while (shortenMore) {
+
+            shortenMore = false;
+            if (fitLimit >= 0) {
+                // take the specified number of parts out of the text
+                for (int i = 1; i < text.length - 1 && fitLimit > 0; i++, fitLimit--) {
+                    text[i] = null;
+                    fitCount++;
                 }
-
-                // put the text together
-                String result = text[0] + delimiter + "...";
-                for (int i = 1; i < text.length; i++) {
+            } else {
+                // take out one part of the text at a time
+                for (int i = 1; i < text.length - 1; i++) {
                     if (text[i] != null) {
-                        result += delimiter + text[i];
+                        text[i] = null;
+                        shortenMore = true;     // try again if it doesn't fit
+                        fitCount++;
+                        break;
                     }
-                }
-
-                // try if it fits
-                this.setText(result);
-                if (maxWidth > this.getPreferredSize().width) {
-                    shortenMore = false;
                 }
             }
+
+            // put the text together
+            String result = text[0] + delimiter + "...";
+            for (int i = 1; i < text.length; i++) {
+                if (text[i] != null) {
+                    result += delimiter + text[i];
+                }
+            }
+
+            // try if it fits
+            this.setText(result);
+            if (maxWidth > this.getPreferredSize().width) {
+                shortenMore = false;
+            }
         }
+
         return fitCount;
     }
 }
