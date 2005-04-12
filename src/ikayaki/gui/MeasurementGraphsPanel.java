@@ -23,6 +23,7 @@
 package ikayaki.gui;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author
@@ -30,11 +31,18 @@ import javax.swing.*;
 public class MeasurementGraphsPanel extends ProjectComponent {
 
     public MeasurementGraphsPanel() {
-        add(new JLabel("Graphs"));
+
+        JLabel message = new JLabel("Not available");
+        message.setHorizontalAlignment(JLabel.CENTER);
+        message.setVerticalAlignment(JLabel.CENTER);
+        message.setEnabled(false);
+
+        setLayout(new BorderLayout());
+        add(message, "Center");
 
         // initialize with no project
         setProject(null);
-        
+
         return; // TODO
     }
 }

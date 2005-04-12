@@ -148,7 +148,7 @@ project listeners.
      * Orientation of the sample. true if the sample orientation is +Z, or false if it is -Z. Will be used to create the
      * transform matrix.
      */
-    private boolean orientation = true;
+    private boolean orientation = false;
 
     /**
      * Matrix for correcting the sample’s orientation. The matrix will be updated whenever the strike, dip, sampleType
@@ -1028,7 +1028,7 @@ project listeners.
         } else {
             assert false;
         }
-        if (!orientation) {
+        if (orientation) {
             // -Z position -> +Z position
             /*
              *  transform multipied by
@@ -1037,8 +1037,8 @@ project listeners.
              *    [ 0  0 -1 ]]
              */
             // TODO: it appears that they use only -Z position, so these are not necessary?
-//            transform.setColumn(1, -transform.m01, -transform.m11, -transform.m21);
-//            transform.setColumn(2, -transform.m02, -transform.m12, -transform.m22);
+            transform.setColumn(1, -transform.m01, -transform.m11, -transform.m21);
+            transform.setColumn(2, -transform.m02, -transform.m12, -transform.m22);
         }
         for (int i = 0; i < sequence.getSteps(); i++) {
             sequence.getStep(i).updateTransforms();
