@@ -119,8 +119,8 @@ message from serial port is received.
         // Set notifyOnDataAvailable to true to allow event driven input.
         sPort.notifyOnDataAvailable(true);
 
-        // Set notifyOnBreakInterrup to allow event driven break handling.
-        sPort.notifyOnBreakInterrupt(true);
+        // Set notifyOnBreakInterrup to allow event driven break handling. Unneccessary?
+        //sPort.notifyOnBreakInterrupt(true);
 
         // Set receive timeout to allow breaking out of polling loop during
         // input handling.
@@ -213,6 +213,7 @@ message from serial port is received.
      */
     public void serialEvent(SerialPortEvent event) {
         System.out.println("New message arrived to port: " + this.portName);
+
         switch (event.getEventType()) {
         case SerialPortEvent.BI:
         case SerialPortEvent.OE:
@@ -225,17 +226,30 @@ message from serial port is received.
         case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
             break;
         case SerialPortEvent.DATA_AVAILABLE:
-            byte[] readBuffer = new byte[20];
+            StringBuffer inputBuffer = new StringBuffer();
+            int newData = 0;
+            byte[] newByte = new byte[1];
 
-            try {
-                while (is.available() > 0) {
-                    int numBytes = is.read(readBuffer);
+            while (newData != -1) {
+                try {
+                    newData = is.read();
+                    if (newData == -1) {
+                        break;
+                    }
+                    if ('\r' == (char) newData) {
+                        inputBuffer.append('\n');
+                    } else {
+                        newByte[0] = new Integer(newData).byteValue();
+                        inputBuffer.append(new String(newByte, "US-ASCII"));
+                    }
+                } catch (IOException ex) {
+                    System.err.println(ex);
+                    return;
                 }
-                // TODO convert from ASCII to unicode
-                System.out.println("sending: " + new String(readBuffer)); //TODO debug
-                fireSerialIOEvent(new String(readBuffer));
-            } catch (IOException e) {
             }
+            // TODO convert from ASCII to unicode
+            //System.out.println("sending: " + new String(inputBuffer)); //debug
+            fireSerialIOEvent(new String(inputBuffer));
             break;
         }
         return;
