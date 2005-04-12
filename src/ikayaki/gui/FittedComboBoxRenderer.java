@@ -40,13 +40,35 @@ class FittedComboBoxRenderer extends BasicComboBoxRenderer {
     private String delimiter;
     private String delimiterRegexp;
 
+    /**
+     * Creates a FittedComboBoxRenderer that will fit the list items to the width of a component. The list items' string
+     * values will be split using the "\" character.
+     *
+     * @param fitToComponent the component to whose width the list items will be fit to.
+     * @throws NullPointerException if fitToComponent is null.
+     */
     public FittedComboBoxRenderer(JComponent fitToComponent) {
+        if (fitToComponent == null) {
+            throw new NullPointerException();
+        }
         this.fitToComponent = fitToComponent;
         this.delimiter = "\\";
         this.delimiterRegexp = "\\\\";
     }
 
+    /**
+     * Creates a FittedComboBoxRenderer that will fit the list items to the width of a component. The list items' string
+     * values will be split using the specified pattern.
+     *
+     * @param fitToComponent the component to whose width the list items will be fit to.
+     * @param delimiter      the string with which to join the parts after they have been split.
+     * @param regexp         a regular expression of the delimiter with which to split the text into parts.
+     * @throws NullPointerException if any of the parameters is null.
+     */
     public FittedComboBoxRenderer(JComponent fitToComponent, String delimiter, String regexp) {
+        if (fitToComponent == null || delimiter == null || regexp == null) {
+            throw new NullPointerException();
+        }
         this.fitToComponent = fitToComponent;
         this.delimiter = delimiter;
         this.delimiterRegexp = regexp;
