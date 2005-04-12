@@ -47,14 +47,19 @@ public class MeasurementResult {
     private Type type;
 
     /**
-     * The unmodified measurements recieved from the squid.
+     * The unmodified measurements recieved from the squid. Will not change after it has been once set.
      */
     private Vector3d rawVector = new Vector3d();
 
     /**
+     * The measurements with the rotation applied. Will not change after it has been once set.
+     */
+    private Vector3d sampleVector = new Vector3d();
+
+    /**
      * The measurements with the rotation and transformation matrix applied.
      */
-    private Vector3d vector = new Vector3d();
+    private Vector3d geographicVector = new Vector3d();
 
     /**
      * Creates a new measurement result.
@@ -71,7 +76,8 @@ public class MeasurementResult {
         }
         this.type = type;
         rawVector.set(x, y, z);
-        setTransform(null);     // initialize this.vector with an identity matrix
+        this.type.rotate(rawVector, sampleVector);
+        setTransform(null);
     }
 
     /**
@@ -117,7 +123,8 @@ public class MeasurementResult {
             throw new IllegalArgumentException("Invalid number: " + e.getMessage());
         }
 
-        // initialize this.vector with an identity matrix;
+        // initialize sampleVector and geographicVector
+        this.type.rotate(rawVector, sampleVector);
         setTransform(null);
     }
 
@@ -143,10 +150,8 @@ public class MeasurementResult {
      * @param transform the matrix to be applied. If null, will assume identity matrix.
      */
     void setTransform(Matrix3d transform) {
-        type.rotate(rawVector, vector);     // copy rawVector to vector and rotate the values
         if (transform != null) {
-            // TODO: testing
-            transform.transform(vector);    // apply transformation matrix
+            transform.transform(sampleVector, geographicVector);
         }
     }
 
@@ -161,46 +166,67 @@ public class MeasurementResult {
      * Returns the rotated and transformed X coordinate of this result.
      */
     public double getGeographicX() {
-        return vector.x;
+        return geographicVector.x;
     }
 
     /**
      * Returns the rotated and transformed Y coordinate of this result.
      */
     public double getGeographicY() {
-        return vector.y;
+        return geographicVector.y;
     }
 
     /**
      * Returns the rotated and transformed Z coordinate of this result.
      */
     public double getGeographicZ() {
-        return vector.z;
+        return geographicVector.z;
     }
 
     /**
-     * Returns the unmodified X coordinate of this result as recieved from the Squid.
+     * Returns the rotated X coordinate of this result.
+     */
+    public double getSampleX() {
+        return sampleVector.x;
+    }
+
+    /**
+     * Returns the rotated Y coordinate of this result.
+     */
+    public double getSampleY() {
+        return sampleVector.y;
+    }
+
+    /**
+     * Returns the rotated Z coordinate of this result.
+     */
+    public double getSampleZ() {
+        return sampleVector.z;
+    }
+
+    /**
+     * Returns the unmodified X coordinate of this result.
      */
     public double getRawX() {
         return rawVector.x;
     }
 
     /**
-     * Returns the unmodified Y coordinate of this result as recieved from the Squid.
+     * Returns the unmodified Y coordinate of this result.
      */
     public double getRawY() {
         return rawVector.y;
     }
 
     /**
-     * Returns the unmodified Z coordinate of this result as recieved from the Squid.
+     * Returns the unmodified Z coordinate of this result.
      */
     public double getRawZ() {
         return rawVector.z;
     }
 
     @Override public String toString() {
-        return "[result type=" + type + " value=(" + vector.x + ", " + vector.y + ", " + vector.z + ")]";
+        return "[result type=" + type + " value=(" + geographicVector.x + ", " + geographicVector.y + ", " + geographicVector.z + ")]";
     }
 
     /**
