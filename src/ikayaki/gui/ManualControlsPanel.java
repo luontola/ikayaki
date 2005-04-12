@@ -145,7 +145,7 @@ public class ManualControlsPanel extends JPanel {
      * Demagnetization amplitude in mT, used when demagZ/YButton is clicked.
      */
     private final JTextField demagAmplitudeField = new JTextField();
-    private final JLabel demagAmplitudeLabel = new JLabel("Demag mT");
+    private final JLabel demagAmplitudeLabel = new JLabel("mT");
     private final ComponentFlasher demagAmplitudeFieldFlasher = new ComponentFlasher(demagAmplitudeField);
 
     /**
@@ -159,6 +159,12 @@ public class ManualControlsPanel extends JPanel {
      */
     private final JButton demagYButton = new JButton("Demag in Y");
     private final ComponentFlasher demagYButtonFlasher = new ComponentFlasher(demagYButton);
+
+    // labels for command groups
+    private final JLabel moveLabel = new JLabel("Move");
+    private final JLabel rotateLabel = new JLabel("Rotate");
+    private final JLabel measureLabel = new JLabel("Meausure");
+    private final JLabel demagLabel = new JLabel("Demagnetize");
 
     /**
      * Creates our stupid ManualControlsPanel.
@@ -175,15 +181,23 @@ public class ManualControlsPanel extends JPanel {
         rotateButtonGroup.add(rotate180);
         rotateButtonGroup.add(rotate270);
 
-        // TODO: how to layout?
-        setLayout(new GridLayout(13, 1));
+        moveLabel.setFont(moveLabel.getFont().deriveFont(Font.BOLD));
+        rotateLabel.setFont(rotateLabel.getFont().deriveFont(Font.BOLD));
+        measureLabel.setFont(measureLabel.getFont().deriveFont(Font.BOLD));
+        demagLabel.setFont(demagLabel.getFont().deriveFont(Font.BOLD));
 
+        // TODO: how to layout?
+        setLayout(new GridLayout(20, 1));
+
+        add(moveLabel);
         add(moveHome);
         add(moveDemagZ);
         add(moveDemagY);
         add(moveBG);
         add(moveMeasure);
+        add(new JPanel());
 
+        add(rotateLabel);
         rotate0.setHorizontalAlignment(JRadioButton.CENTER);
         add(rotate0);
         JPanel rotatePanel = new JPanel(new GridLayout(1, 2));
@@ -192,13 +206,18 @@ public class ManualControlsPanel extends JPanel {
         add(rotatePanel);
         rotate180.setHorizontalAlignment(JRadioButton.CENTER);
         add(rotate180);
+        add(new JPanel());
 
+        add(measureLabel);
         add(measureAllButton);
         add(resetAllButton);
+        add(new JPanel());
 
-        JPanel demagAmplitudePanel = new JPanel(new GridLayout(1, 2));
-        demagAmplitudePanel.add(demagAmplitudeLabel);
-        demagAmplitudePanel.add(demagAmplitudeField);
+        add(demagLabel);
+        //JPanel demagAmplitudePanel = new JPanel(new GridLayout(1, 2));
+        JPanel demagAmplitudePanel = new JPanel(new BorderLayout(4, 0));
+        demagAmplitudePanel.add(demagAmplitudeField, BorderLayout.CENTER);
+        demagAmplitudePanel.add(demagAmplitudeLabel, BorderLayout.EAST);
         add(demagAmplitudePanel);
         add(demagZButton);
         add(demagYButton);
