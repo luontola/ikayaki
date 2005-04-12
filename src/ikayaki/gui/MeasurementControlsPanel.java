@@ -90,6 +90,10 @@ public class MeasurementControlsPanel extends ProjectComponent {
     private Action abortAction;
 
     public MeasurementControlsPanel() {
+
+        // size limit for the panel
+        setPreferredSize(new Dimension(200, -1));
+
         measureButton = new JButton(getAutoStepAction());
         stepButton = new JButton(getSingleStepAction());
         abortButton = new JButton(getAbortAction());

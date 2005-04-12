@@ -43,7 +43,7 @@ Event A: On new SerialPortEvent - generates new SerialMessageArrivedEvent if a d
 message from serial port is received.
 */
 
-    private static Vector<SerialIO> openPorts = new Vector();
+    private static Vector<SerialIO> openPorts = new Vector<SerialIO>();
 
     /**
      * Listeners for this port.
