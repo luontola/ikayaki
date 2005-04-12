@@ -144,7 +144,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
         add(topPanel, BorderLayout.NORTH);
         add(manualControlsPanel, BorderLayout.WEST);
         // TODO: MagnetometerStatusPanel appears to freeze the program when opening a file dialog
-        //add(magnetometerStatusPanel, BorderLayout.CENTER);
+        add(magnetometerStatusPanel, BorderLayout.CENTER);
 
         /**
          * Event D: On zPlus/MinusRadioButton click - call project.setOrientation(boolean) where
@@ -194,7 +194,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
      * @param event MeasurementEvent received.
      */
     public void measurementUpdated(MeasurementEvent event) {
-        // TODO: so MeasurementEvent won't tell handler position and rotation? - It only tells when it starts moving 
+        // TODO: so MeasurementEvent won't tell handler position and rotation? - It only tells when it starts moving
         // and when it stops. If the listener wants to know the position, he should ask it from the Squid.
         magnetometerStatusPanel.updateStatus();
     }

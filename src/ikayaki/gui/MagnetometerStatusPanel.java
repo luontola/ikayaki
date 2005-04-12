@@ -121,31 +121,28 @@ public class MagnetometerStatusPanel extends JPanel {
         g.drawLine(base2x, 0, base2x, h);
 
         // "sample"
-        Color saved = getBackground();
-        setBackground(Color.WHITE);
-        drawFillOval(g, base2x - samplew / 2, samplep - sampled, samplew, sampleh);
-        drawFillSideRect(g, base2x - samplew / 2, samplep - sampled + sampleh / 2, samplew, sampled);
-        drawFillOval(g, base2x - samplew / 2, samplep, samplew, sampleh);
-        setBackground(saved);
+        drawFillOval(g, Color.WHITE, base2x - samplew / 2, samplep - sampled, samplew, sampleh);
+        drawFillSideRect(g, Color.WHITE, base2x - samplew / 2, samplep - sampled + sampleh / 2, samplew, sampled);
+        drawFillOval(g, Color.WHITE, base2x - samplew / 2, samplep, samplew, sampleh);
     }
 
     /**
-     * Draws a getBackground-filled oval with line.
+     * Draws a filled oval with line.
      */
-    private void drawFillOval(Graphics g, int x, int y, int width, int height) {
+    private void drawFillOval(Graphics g, Color fill, int x, int y, int width, int height) {
         Color saved = g.getColor();
-        g.setColor(getBackground());
+        g.setColor(fill);
         g.fillOval(x, y, width, height);
         g.setColor(saved);
         g.drawOval(x, y, width, height);
     }
 
     /**
-     * Draws a getBackground-filled rectangle with lines on left and right side.
+     * Draws a filled rectangle with lines on left and right side.
      */
-    private void drawFillSideRect(Graphics g, int x, int y, int width, int height) {
+    private void drawFillSideRect(Graphics g, Color fill, int x, int y, int width, int height) {
         Color saved = g.getColor();
-        g.setColor(getBackground());
+        g.setColor(fill);
         g.fillRect(x, y, width, height);
         g.setColor(saved);
         g.drawLine(x, y, x, y + height);
