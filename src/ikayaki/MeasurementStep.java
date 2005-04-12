@@ -74,14 +74,19 @@ public class MeasurementStep {
     private double stepValue = -1.0;
 
     /**
-     * The mass of this step’s sample, or a negative number to use the project’s default mass.
+     * The mass of this step's sample, or a negative number to use the project's default mass.
      */
     private double mass = -1.0;
 
     /**
-     * The volume of this step’s sample, or a negative number to use the project’s default volume.
+     * The volume of this step's sample, or a negative number to use the project's default volume.
      */
     private double volume = -1.0;
+
+    /**
+     * The susceptibility of this step's sample, or a negative number to use the project's default volume.
+     */
+    private double susceptibility = -1.0;
 
     /**
      * The individual measurement results that are part of this measurement step.
@@ -154,6 +159,13 @@ public class MeasurementStep {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid volume: " + s);
         }
+        s = element.getAttribute("susceptibility");
+        try {
+            setSusceptibility(Double.parseDouble(s));
+        } catch (NumberFormatException e) {
+            // TODO: import old version
+            //throw new IllegalArgumentException("Invalid susceptibility: " + s);
+        }
 
         // get results
         NodeList results = element.getElementsByTagName("result");
@@ -209,6 +221,7 @@ public class MeasurementStep {
         element.setAttribute("stepvalue", Double.toString(stepValue));
         element.setAttribute("mass", Double.toString(mass));
         element.setAttribute("volume", Double.toString(volume));
+        element.setAttribute("susceptibility", Double.toString(susceptibility));
 
         for (MeasurementResult result : results) {
             element.appendChild(result.getElement(document));
@@ -239,20 +252,6 @@ public class MeasurementStep {
     public synchronized State getState() {
         return state;
     }
-
-// setState(State) was replaced by setDone()
-//
-//    /**
-//     * Sets the completion status of this step. Only the owner project may set the state.
-//     *
-//     * @throws NullPointerException if state is null.
-//     */
-//    synchronized void setState(State state) {
-//        if (state == null) {
-//            throw new NullPointerException();
-//        }
-//        this.state = state;
-//    }
 
     /**
      * Returns the time the measurements were completed, or null if that has not yet happened.
@@ -292,14 +291,14 @@ public class MeasurementStep {
     }
 
     /**
-     * Returns the mass of this step’s sample, or a negative number to use the project’s default mass.
+     * Returns the mass of this step's sample, or a negative number to use the project's default mass.
      */
     public synchronized double getMass() {
         return mass;
     }
 
     /**
-     * Sets the mass of this step’s sample. A negative value will clear it.
+     * Sets the mass of this step's sample. A negative value will clear it.
      */
     public synchronized void setMass(double mass) {
         if (mass < 0.0) {
@@ -310,14 +309,14 @@ public class MeasurementStep {
     }
 
     /**
-     * Returns the volume of this step’s sample, or a negative number to use the project’s default volume.
+     * Returns the volume of this step's sample, or a negative number to use the project's default volume.
      */
     public synchronized double getVolume() {
         return volume;
     }
 
     /**
-     * Sets the volume of this step’s sample. A negative value will clear it.
+     * Sets the volume of this step's sample. A negative value will clear it.
      */
     public synchronized void setVolume(double volume) {
         if (volume < 0.0) {
@@ -328,7 +327,25 @@ public class MeasurementStep {
     }
 
     /**
-     * Updates all of the measurement results with the owner project’s transformation matrix. If there is no owner, an
+     * Returns the susceptibility of this step's sample, or a negative number to use the project's default susceptibility.
+     */
+    public synchronized double getSusceptibility() {
+        return susceptibility;
+    }
+
+    /**
+     * Sets the susceptibility of this step's sample. A negative value will clear it.
+     */
+    public synchronized void setSusceptibility(double susceptibility) {
+        if (susceptibility < 0.0) {
+            susceptibility = -1.0;
+        }
+        this.susceptibility = susceptibility;
+        save();
+    }
+
+    /**
+     * Updates all of the measurement results with the owner project's transformation matrix. If there is no owner, an
      * identity matrix will be used.
      */
     synchronized void updateTransforms() {

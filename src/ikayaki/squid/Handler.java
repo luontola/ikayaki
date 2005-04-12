@@ -40,12 +40,12 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     /**
      * Buffer for incoming messages, readed when needed.
      */
-    private Stack messageBuffer;
+    private Stack<String> messageBuffer;
 
     /**
      * Synchronous queue for waiting result message from handler
      */
-    private SynchronousQueue queue;
+    private SynchronousQueue<String> queue;
 
 
     /**

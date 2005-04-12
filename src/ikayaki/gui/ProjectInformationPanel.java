@@ -63,8 +63,12 @@ public class ProjectInformationPanel extends ProjectComponent {
     private JRadioButton measurementTypeManual;
 
     private ButtonGroup sampleType;
-    private JRadioButton sampleTypeCore;
     private JRadioButton sampleTypeHand;
+    private JRadioButton sampleTypeCore;
+
+    private ButtonGroup normalization;
+    private JRadioButton normalizationVolume;
+    private JRadioButton normalizationMass;
 
     /* Plain Text Fields */
     private JTextField operatorField;
@@ -80,11 +84,29 @@ public class ProjectInformationPanel extends ProjectComponent {
     private JFormattedTextField dipField;
     private JFormattedTextField massField;
     private JFormattedTextField volumeField;
+    private JFormattedTextField susceptibilityField;
 
     private JPanel contentPane;
 
     private boolean propertiesModified = false;
     private boolean parametersModified = false;
+
+    /* Labels */
+    private JLabel operatorLabel;
+    private JLabel dateLabel;
+    private JLabel measurementTypeLabel;
+    private JLabel rockTypeLabel;
+    private JLabel siteLabel;
+    private JLabel commentLabel;
+    private JLabel latitudeLabel;
+    private JLabel longitudeLabel;
+    private JLabel strikeLabel;
+    private JLabel dipLabel;
+    private JLabel volumeLabel;
+    private JLabel massLabel;
+    private JLabel susceptibilityLabel;
+    private JLabel sampleTypeLabel;
+    private JLabel normalizationLabel;
 
     /**
      * Creates default ProjectInformationPanel with no current project. Starts an autosaving thread.
@@ -100,8 +122,12 @@ public class ProjectInformationPanel extends ProjectComponent {
         measurementType.add(measurementTypeManual);
 
         sampleType = new ButtonGroup();
-        sampleType.add(sampleTypeCore);
         sampleType.add(sampleTypeHand);
+        sampleType.add(sampleTypeCore);
+
+        normalization = new ButtonGroup();
+        normalization.add(normalizationVolume);
+        normalization.add(normalizationMass);
 
         /* Formatted Text Fields */
         MyFormatterFactory factory = new MyFormatterFactory();
@@ -111,6 +137,7 @@ public class ProjectInformationPanel extends ProjectComponent {
         dipField.setFormatterFactory(factory);
         massField.setFormatterFactory(factory);
         volumeField.setFormatterFactory(factory);
+        susceptibilityField.setFormatterFactory(factory);
 
         /* Listeners for properties */
         DocumentListener propertiesDocumentListener = new DocumentListener() {
@@ -164,13 +191,16 @@ public class ProjectInformationPanel extends ProjectComponent {
             }
         };
 
-        sampleTypeCore.addActionListener(parametersActionListener);
         sampleTypeHand.addActionListener(parametersActionListener);
+        sampleTypeCore.addActionListener(parametersActionListener);
+        normalizationVolume.addActionListener(parametersActionListener);
+        normalizationMass.addActionListener(parametersActionListener);
 
         strikeField.getDocument().addDocumentListener(parametersDocumentListener);
         dipField.getDocument().addDocumentListener(parametersDocumentListener);
         massField.getDocument().addDocumentListener(parametersDocumentListener);
         volumeField.getDocument().addDocumentListener(parametersDocumentListener);
+        susceptibilityField.getDocument().addDocumentListener(parametersDocumentListener);
 
         /* Autosaving at regular intervals */
         Timer autosave = new Timer(500, new ActionListener() {
@@ -196,8 +226,10 @@ public class ProjectInformationPanel extends ProjectComponent {
         /* Radio Button Groups */
         measurementTypeAuto.setEnabled(enabled);
         measurementTypeManual.setEnabled(enabled);
-        sampleTypeCore.setEnabled(enabled);
         sampleTypeHand.setEnabled(enabled);
+        sampleTypeCore.setEnabled(enabled);
+        normalizationVolume.setEnabled(enabled);
+        normalizationMass.setEnabled(enabled);
 
         /* Plain Text Fields */
         operatorField.setEnabled(enabled);
@@ -213,6 +245,24 @@ public class ProjectInformationPanel extends ProjectComponent {
         dipField.setEnabled(enabled);
         massField.setEnabled(enabled);
         volumeField.setEnabled(enabled);
+        susceptibilityField.setEnabled(enabled);
+
+        /* Labels */
+        operatorLabel.setEnabled(enabled);
+        dateLabel.setEnabled(enabled);
+        measurementTypeLabel.setEnabled(enabled);
+        rockTypeLabel.setEnabled(enabled);
+        siteLabel.setEnabled(enabled);
+        commentLabel.setEnabled(enabled);
+        latitudeLabel.setEnabled(enabled);
+        longitudeLabel.setEnabled(enabled);
+        strikeLabel.setEnabled(enabled);
+        dipLabel.setEnabled(enabled);
+        volumeLabel.setEnabled(enabled);
+        massLabel.setEnabled(enabled);
+        susceptibilityLabel.setEnabled(enabled);
+        sampleTypeLabel.setEnabled(enabled);
+        normalizationLabel.setEnabled(enabled);
     }
 
     /**
@@ -235,8 +285,10 @@ public class ProjectInformationPanel extends ProjectComponent {
                     MEASUREMENT_TYPE_AUTO_VALUE).equals(MEASUREMENT_TYPE_AUTO_VALUE));
             measurementTypeManual.setSelected(project.getProperty(MEASUREMENT_TYPE_PROPERTY,
                     MEASUREMENT_TYPE_AUTO_VALUE).equals(MEASUREMENT_TYPE_MANUAL_VALUE));
-            sampleTypeCore.setSelected(project.getSampleType() == Project.SampleType.CORE);
             sampleTypeHand.setSelected(project.getSampleType() == Project.SampleType.HAND);
+            sampleTypeCore.setSelected(project.getSampleType() == Project.SampleType.CORE);
+            normalizationVolume.setSelected(project.getNormalization() == Project.Normalization.VOLUME);
+            normalizationMass.setSelected(project.getNormalization() == Project.Normalization.MASS);
 
             /* Plain Text Fields */
             operatorField.setText(project.getProperty(OPERATOR_PROPERTY, ""));
@@ -252,14 +304,17 @@ public class ProjectInformationPanel extends ProjectComponent {
             dipField.setValue(new Double(project.getDip()));
             massField.setValue(new Double(project.getMass()));
             volumeField.setValue(new Double(project.getVolume()));
+            susceptibilityField.setValue(new Double(project.getSusceptibility()));
         } else {
             // no project active, clear the form fields
 
             /* Radio Button Groups */
             measurementTypeAuto.setSelected(true);
             measurementTypeManual.setSelected(false);
-            sampleTypeCore.setSelected(true);
-            sampleTypeHand.setSelected(false);
+            sampleTypeHand.setSelected(true);
+            sampleTypeCore.setSelected(false);
+            normalizationVolume.setSelected(true);
+            normalizationMass.setSelected(false);
 
             /* Plain Text Fields */
             operatorField.setText("");
@@ -269,12 +324,14 @@ public class ProjectInformationPanel extends ProjectComponent {
             commentField.setText("");
 
             /* Number Fields */
+            // TODO: should I use setValue? otherwise the field might remember the number.
             latitudeField.setText("");
             longitudeField.setText("");
             strikeField.setText("");
             dipField.setText("");
             massField.setText("");
             volumeField.setText("");
+            susceptibilityField.setText("");
         }
 
         // prevent the saving of unchanged values
@@ -343,11 +400,17 @@ public class ProjectInformationPanel extends ProjectComponent {
 //        System.out.println("Parameters saved");
 
         /* Radio Button Groups */
+        if (sampleTypeHand.isSelected()) {
+            getProject().setSampleType(Project.SampleType.HAND);
+        }
         if (sampleTypeCore.isSelected()) {
             getProject().setSampleType(Project.SampleType.CORE);
         }
-        if (sampleTypeHand.isSelected()) {
-            getProject().setSampleType(Project.SampleType.HAND);
+        if (normalizationVolume.isSelected()) {
+            getProject().setNormalization(Project.Normalization.VOLUME);
+        }
+        if (normalizationMass.isSelected()) {
+            getProject().setNormalization(Project.Normalization.MASS);
         }
 
         /* Number-only Text Fields */
@@ -360,6 +423,8 @@ public class ProjectInformationPanel extends ProjectComponent {
         getProject().setMass(value.doubleValue());
         value = (Number) volumeField.getValue();
         getProject().setVolume(value.doubleValue());
+        value = (Number) susceptibilityField.getValue();
+        getProject().setSusceptibility(value.doubleValue());
 
         parametersModified = false;
     }
@@ -377,10 +442,10 @@ public class ProjectInformationPanel extends ProjectComponent {
      */
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(13, 2, new Insets(0, 0, 0, 0), -1, 2));
-        final JLabel label1 = new JLabel();
-        label1.setText("Operator");
-        contentPane.add(label1,
+        contentPane.setLayout(new GridLayoutManager(15, 2, new Insets(0, 0, 0, 0), -1, 2));
+        operatorLabel = new JLabel();
+        operatorLabel.setText("Operator");
+        contentPane.add(operatorLabel,
                 new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         operatorField = new JTextField();
@@ -393,49 +458,49 @@ public class ProjectInformationPanel extends ProjectComponent {
                 new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
                         new Dimension(70, -1), null));
-        final JLabel label2 = new JLabel();
-        label2.setText("Mass (grams)");
-        contentPane.add(label2,
+        massLabel = new JLabel();
+        massLabel.setText("Mass (grams)");
+        contentPane.add(massLabel,
                 new GridConstraints(11, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label3 = new JLabel();
-        label3.setText("Volume (cm³)");
-        contentPane.add(label3,
+        volumeLabel = new JLabel();
+        volumeLabel.setText("Volume (cm³)");
+        contentPane.add(volumeLabel,
                 new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label4 = new JLabel();
-        label4.setText("Dip");
-        contentPane.add(label4,
+        dipLabel = new JLabel();
+        dipLabel.setText("Dip");
+        contentPane.add(dipLabel,
                 new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label5 = new JLabel();
-        label5.setText("Strike");
-        contentPane.add(label5,
+        strikeLabel = new JLabel();
+        strikeLabel.setText("Strike");
+        contentPane.add(strikeLabel,
                 new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label6 = new JLabel();
-        label6.setText("Longitude");
-        contentPane.add(label6,
+        longitudeLabel = new JLabel();
+        longitudeLabel.setText("Longitude");
+        contentPane.add(longitudeLabel,
                 new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label7 = new JLabel();
-        label7.setText("Latitude");
-        contentPane.add(label7,
+        latitudeLabel = new JLabel();
+        latitudeLabel.setText("Latitude");
+        contentPane.add(latitudeLabel,
                 new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label8 = new JLabel();
-        label8.setText("Comment");
-        contentPane.add(label8,
+        commentLabel = new JLabel();
+        commentLabel.setText("Comment");
+        contentPane.add(commentLabel,
                 new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label9 = new JLabel();
-        label9.setText("Site");
-        contentPane.add(label9,
+        siteLabel = new JLabel();
+        siteLabel.setText("Site");
+        contentPane.add(siteLabel,
                 new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label10 = new JLabel();
-        label10.setText("Rock type");
-        contentPane.add(label10,
+        rockTypeLabel = new JLabel();
+        rockTypeLabel.setText("Rock type");
+        contentPane.add(rockTypeLabel,
                 new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         commentField = new JTextField();
@@ -453,9 +518,9 @@ public class ProjectInformationPanel extends ProjectComponent {
                 new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
                         new Dimension(70, -1), null));
-        final JLabel label11 = new JLabel();
-        label11.setText("Date");
-        contentPane.add(label11,
+        dateLabel = new JLabel();
+        dateLabel.setText("Date");
+        contentPane.add(dateLabel,
                 new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         latitudeField = new JFormattedTextField();
@@ -509,37 +574,73 @@ public class ProjectInformationPanel extends ProjectComponent {
         panel1.add(spacer1,
                 new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
-        final JLabel label12 = new JLabel();
-        label12.setText("Measurement Type");
-        contentPane.add(label12,
+        measurementTypeLabel = new JLabel();
+        measurementTypeLabel.setText("Measurement type");
+        contentPane.add(measurementTypeLabel,
                 new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel2,
-                new GridConstraints(12, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                new GridConstraints(13, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
+        final Spacer spacer2 = new Spacer();
+        panel2.add(spacer2,
+                new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
         sampleTypeCore = new JRadioButton();
         sampleTypeCore.setText("Core");
         panel2.add(sampleTypeCore,
-                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         sampleTypeHand = new JRadioButton();
         sampleTypeHand.setText("Hand");
         panel2.add(sampleTypeHand,
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        sampleTypeLabel = new JLabel();
+        sampleTypeLabel.setText("Sample type");
+        contentPane.add(sampleTypeLabel,
+                new GridConstraints(13, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        susceptibilityLabel = new JLabel();
+        susceptibilityLabel.setText("Susceptibility");
+        contentPane.add(susceptibilityLabel,
+                new GridConstraints(12, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        susceptibilityField = new JFormattedTextField();
+        contentPane.add(susceptibilityField,
+                new GridConstraints(12, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(70, -1), null));
+        normalizationLabel = new JLabel();
+        normalizationLabel.setText("Normalize by");
+        contentPane.add(normalizationLabel,
+                new GridConstraints(14, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        contentPane.add(panel3,
+                new GridConstraints(14, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
+        final Spacer spacer3 = new Spacer();
+        panel3.add(spacer3,
+                new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
+        normalizationMass = new JRadioButton();
+        normalizationMass.setText("Mass");
+        panel3.add(normalizationMass,
                 new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final Spacer spacer2 = new Spacer();
-        panel2.add(spacer2,
-                new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
-        final JLabel label13 = new JLabel();
-        label13.setText("Sample Type");
-        contentPane.add(label13,
-                new GridConstraints(12, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        normalizationVolume = new JRadioButton();
+        normalizationVolume.setText("Volume");
+        panel3.add(normalizationVolume,
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
     }
 
     /**
@@ -561,7 +662,7 @@ public class ProjectInformationPanel extends ProjectComponent {
             if (tf == latitudeField || tf == longitudeField) {
                 // allow null values
                 format = new NullableDecimalFormat();
-            } else if (tf == massField || tf == volumeField) {
+            } else if (tf == massField || tf == volumeField || tf == susceptibilityField) {
                 // show only positive numbers
                 format = new PositiveDecimalFormat();
             } else {

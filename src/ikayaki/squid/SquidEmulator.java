@@ -251,7 +251,7 @@ public class SquidEmulator {
 
 
         //All recieved commands
-        private Stack commandStack;
+        private Stack<String> commandStack;
 
         //remainder of last command (commands are separated with ',')
         private String lastMessagePart;
@@ -288,7 +288,7 @@ public class SquidEmulator {
      */
     private static class MagnetometerEmu extends Thread implements SerialIOListener {
         //All recieved commands
-        private Stack commandStack;
+        private Stack<String> commandStack;
 
         public MagnetometerEmu() {
            //Setlistener to port
@@ -326,7 +326,7 @@ public class SquidEmulator {
             extends Thread implements SerialIOListener {
 
         //All recieved commands
-        private Stack commandStack;
+        private Stack<String> commandStack;
 
         public DegausserEmu() {
            //Setlistener to port

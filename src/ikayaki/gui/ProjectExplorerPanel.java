@@ -59,7 +59,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
     private final JPanel browsePanel = new JPanel();
 
     /**
-     * Text field for writing directory to change to. Autocomplete results appear to Combo Box’ popup window, scheduled
+     * Text field for writing directory to change to. Autocomplete results appear to Combo Box' popup window, scheduled
      * by LastExecutor. Directory history appears to the same popup window when the down-arrow right to text field is
      * clicked.
      */
@@ -209,7 +209,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
         });
 
         /**
-         * Event B: On browserField down-arrow-click - show directory history in browserField’s popup window.
+         * Event B: On browserField down-arrow-click - show directory history in browserField's popup window.
          */
         browserField.addPopupMenuListener(new PopupMenuListener() {
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
@@ -228,9 +228,9 @@ public class ProjectExplorerPanel extends ProjectComponent {
         });
 
         /**
-         * Event A: On browserField change - send autocomplete-results-finder with browserField’s text
+         * Event A: On browserField change - send autocomplete-results-finder with browserField's text
          * to LastExecutor via autocompleteExecutor.execute(Runnable), which schedules disk access and
-         * displaying autocomplete results in browserField’s popup window.
+         * displaying autocomplete results in browserField's popup window.
          */
         browserFieldEditor.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {

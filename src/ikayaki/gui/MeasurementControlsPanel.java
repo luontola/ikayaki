@@ -157,13 +157,13 @@ public class MeasurementControlsPanel extends ProjectComponent {
          */
         zPlusRadioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                getProject().setOrientation(true);
+                getProject().setOrientation(Project.Orientation.PLUS_Z);
                 sampleInsertIconLabel.setIcon(sampleInsertZPlusIcon);
             }
         });
         zMinusRadioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                getProject().setOrientation(false);
+                getProject().setOrientation(Project.Orientation.MINUS_Z);
                 sampleInsertIconLabel.setIcon(sampleInsertZMinusIcon);
             }
         });
@@ -208,11 +208,9 @@ public class MeasurementControlsPanel extends ProjectComponent {
 
     /**
      * Sets zPlus/Minus radiobutton enabled, and the corresponding image as sample inserting help image.
-     *
-     * @param orientation true for +z, false for -z.
      */
-    private void setOrientation(boolean orientation) {
-        if (orientation) {
+    private void setOrientation(Project.Orientation orientation) {
+        if (orientation == Project.Orientation.PLUS_Z) {
             zPlusRadioButton.setSelected(true);
             sampleInsertIconLabel.setIcon(sampleInsertZPlusIcon);
         } else {
@@ -230,8 +228,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
 
         if (getProject() != null) {
             getAutoStepAction().setEnabled(getProject().isAutoStepEnabled());
-            getSingleStepAction().setEnabled(getProject().isSingleStepEnabled()
-                    && getProject().getType() != Project.Type.CALIBRATION);
+            getSingleStepAction().setEnabled(getProject().isSingleStepEnabled());
             getCalibrateAction().setEnabled(getProject().isSingleStepEnabled()
                     && getProject().getType() == Project.Type.CALIBRATION);
             getPauseAction().setEnabled(getProject().isPauseEnabled());

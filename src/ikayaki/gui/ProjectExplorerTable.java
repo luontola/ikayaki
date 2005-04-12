@@ -392,12 +392,20 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                     value = DateFormat.getInstance().format(file.lastModified());
                     break;
                 case COLUMN_LASTMEASURE:
-                    Date date = Project.loadProject(file).getTimestamp();
+                    Project p = Project.loadProject(file);
+                    if (p == null) {
+                        return null;
+                    }
+                    Date date = p.getTimestamp();
                     if (date == null) value = null;
                     else value = DateFormat.getInstance().format(date);
                     break;
                 case COLUMN_UNMEASURED:
-                    date = Project.loadProject(file).getTimestamp();
+                    p = Project.loadProject(file);
+                    if (p == null) {
+                        return null;
+                    }
+                    date = p.getTimestamp();
                     if (date == null) value = null;
                     else value = (new Date().getTime() - date.getTime()) / 3600000 + " h";
                     break;
@@ -420,7 +428,11 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
 
             // styles for the calibration panel
             if (isCalibration) {
-                Date date = Project.loadProject(file).getTimestamp();
+                Project p = Project.loadProject(file);
+                if (p == null) {
+                    return null;
+                }
+                Date date = p.getTimestamp();
                 if (date == null) {
                     wrapper.font = calibrationNoticeFont;
                 } else {

@@ -77,12 +77,13 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         }
         this.project = project;
 
-        // reset columns to defaults, in order of appearance
+        // set all possible columns, in order of appearance
         possibleColumns.clear();
         possibleColumns.add(COUNT);
         possibleColumns.add(STEP);
         possibleColumns.add(VOLUME);
         possibleColumns.add(MASS);
+        possibleColumns.add(SUSCEPTIBILITY);
         possibleColumns.add(DECLINATION);
         possibleColumns.add(INCLINATION);
         possibleColumns.add(REMANENCE);

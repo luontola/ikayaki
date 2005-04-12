@@ -248,7 +248,7 @@ public class SettingsPanel
 
     Enumeration ports = CommPortIdentifier.getPortIdentifiers();
 
-    ArrayList portList = new ArrayList();
+    ArrayList<String> portList = new ArrayList<String>();
 
     if (!ports.hasMoreElements()) {
       System.err.println("No comm ports found!");

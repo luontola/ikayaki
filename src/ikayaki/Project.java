@@ -37,6 +37,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.util.*;
 
+import static ikayaki.Project.Orientation.PLUS_Z;
+import static ikayaki.Project.Orientation.MINUS_Z;
+import static ikayaki.Project.Normalization.VOLUME;
 import static java.lang.Math.sin;
 import static java.lang.Math.cos;
 import static ikayaki.ProjectEvent.Type.DATA_CHANGED;
@@ -142,16 +145,20 @@ project listeners.
     /**
      * Type of the sample. Will be used to create the transform matrix.
      */
-    private SampleType sampleType = CORE;
+    private SampleType sampleType = HAND;
 
     /**
-     * Orientation of the sample. true if the sample orientation is +Z, or false if it is -Z. Will be used to create the
-     * transform matrix.
+     * Orientation of the sample. Will be used to create the transform matrix.
      */
-    private boolean orientation = false;
+    private Orientation orientation = MINUS_Z;
 
     /**
-     * Matrix for correcting the sample’s orientation. The matrix will be updated whenever the strike, dip, sampleType
+     * The type of normalization to use.
+     */
+    private Normalization normalization = VOLUME;
+
+    /**
+     * Matrix for correcting the sample's orientation. The matrix will be updated whenever the strike, dip, sampleType
      * or orientation is changed. After that the updated matrix will be applied to all measurements.
      */
     private Matrix3d transform = new Matrix3d();
@@ -165,6 +172,11 @@ project listeners.
      * Volume of the sample, or a negative value if no volume is defined.
      */
     private double volume = -1.0;
+
+    /**
+     * Susceptibility of the sample, or a negative value if no susceptibility is defined.
+     */
+    private double susceptibility = -1.0;
 
     /**
      * Current measurement step, or null if no measurement is running.
@@ -496,6 +508,8 @@ project listeners.
                 if (version.equals("1.0")) {
 
                     /* Begin importing version 1.0 */
+                    // TODO: import old version
+                    boolean importOldVersion = false;
 
                     // get type
                     s = root.getAttribute("type");
@@ -538,6 +552,14 @@ project listeners.
                     } catch (NumberFormatException e) {
                         throw new IllegalArgumentException("Invalid volume: " + s);
                     }
+                    s = properties.getAttribute("susceptibility");
+                    try {
+                        susceptibility = Double.parseDouble(s);
+                    } catch (NumberFormatException e) {
+                        // TODO: import old version
+                        importOldVersion = true;
+                        //throw new IllegalArgumentException("Invalid susceptibility: " + s);
+                    }
                     s = properties.getAttribute("sampletype");
                     try {
                         sampleType = SampleType.valueOf(s);
@@ -545,7 +567,19 @@ project listeners.
                         throw new IllegalArgumentException("Invalid sampletype: " + s);
                     }
                     s = properties.getAttribute("orientation");
-                    orientation = s.equals("1") ? true : false;
+                    try {
+                        orientation = Orientation.valueOf(s);
+                    } catch (IllegalArgumentException e) {
+                        // TODO: import old version
+                        //throw new IllegalArgumentException("Invalid orientation: " + s);
+                    }
+                    s = properties.getAttribute("normalization");
+                    try {
+                        normalization = Normalization.valueOf(s);
+                    } catch (IllegalArgumentException e) {
+                        // TODO: import old version
+                        //throw new IllegalArgumentException("Invalid normalization: " + s);
+                    }
 
                     // get custom properties
                     NodeList propertyList = properties.getElementsByTagName("property");
@@ -606,6 +640,9 @@ project listeners.
 
                     /* End of importing version 1.0 */
 
+                    // TODO: import old version
+                    if (importOldVersion) saveNow();
+
 //              } else if (version.equals("x.y")) {
 //                  ... importing of file version x.y ...
                 } else {
@@ -650,8 +687,10 @@ project listeners.
         properties.setAttribute("dip", Double.toString(dip));
         properties.setAttribute("mass", Double.toString(mass));
         properties.setAttribute("volume", Double.toString(volume));
+        properties.setAttribute("susceptibility", Double.toString(susceptibility));
         properties.setAttribute("sampletype", sampleType.name());
-        properties.setAttribute("orientation", orientation ? "1" : "0");
+        properties.setAttribute("orientation", orientation.name());
+        properties.setAttribute("normalization", normalization.name());
 
         // create custom properties
         Set<Map.Entry<Object, Object>> entries = this.properties.entrySet();
@@ -811,7 +850,7 @@ project listeners.
 
     /**
      * Returns the timestamp of the last completed measurement. This is usually less than the last modified date of the
-     * file, because this is not affected by changing the project’s properties.
+     * file, because this is not affected by changing the project's properties.
      *
      * @return the timestamp of the last measurement, or null if no measurements are completed.
      */
@@ -848,7 +887,7 @@ project listeners.
      * method of the specified Squid.
      * <p/>
      * Only one project may own the Squid at a time. The Squid must be first detached with "setSquid(null)" from its
-     * owner before it can be given to another project. Detaching the Squid is possible only when the project’s state is
+     * owner before it can be given to another project. Detaching the Squid is possible only when the project's state is
      * IDLE.
      *
      * @param squid pointer to the SQUID interface, or null to detach this project from it.
@@ -976,21 +1015,43 @@ project listeners.
 
     /**
      * Returns the orientation of the sample.
-     *
-     * @return true if the sample orientation is +Z, or false if it is -Z.
      */
-    public synchronized boolean getOrientation() {
+    public synchronized Orientation getOrientation() {
         return orientation;
     }
 
     /**
      * Sets the orientation of the sample and calls updateTransforms().
      *
-     * @param orientation true if the sample orientation is +Z, or false if it is -Z.
+     * @throws NullPointerException if orientation is null.
      */
-    public synchronized void setOrientation(boolean orientation) {
+    public synchronized void setOrientation(Orientation orientation) {
+        if (orientation == null) {
+            throw new NullPointerException();
+        }
         this.orientation = orientation;
         updateTransforms();
+        fireProjectEvent(DATA_CHANGED);
+        save();
+    }
+
+    /**
+     * Returns the normalization to be used for the measurement values.
+     */
+    public Normalization getNormalization() {
+        return normalization;
+    }
+
+    /**
+     * Sets the normalization to be used for the measurement values.
+     *
+     * @throws NullPointerException if normalization is null.
+     */
+    public void setNormalization(Normalization normalization) {
+        if (normalization == null) {
+            throw new NullPointerException();
+        }
+        this.normalization = normalization;
         fireProjectEvent(DATA_CHANGED);
         save();
     }
@@ -1028,7 +1089,7 @@ project listeners.
         } else {
             assert false;
         }
-        if (orientation) {
+        if (orientation == PLUS_Z) {
             // -Z position -> +Z position
             /*
              *  transform multipied by
@@ -1087,6 +1148,29 @@ project listeners.
             volume = -1.0;
         }
         this.volume = volume;
+        fireProjectEvent(DATA_CHANGED);
+        save();
+    }
+
+    /**
+     * Returns the susceptibility of the sample.
+     *
+     * @return susceptibility of the sample, or a negative number if no susceptibility is specified.
+     */
+    public synchronized double getSusceptibility() {
+        return susceptibility;
+    }
+
+    /**
+     * Sets the susceptibility of the sample.
+     *
+     * @param susceptibility susceptibility of the sample, or a negative number to clear it.
+     */
+    public synchronized void setSusceptibility(double susceptibility) {
+        if (susceptibility < 0.0) {
+            susceptibility = -1.0;
+        }
+        this.susceptibility = susceptibility;
         fireProjectEvent(DATA_CHANGED);
         save();
     }
@@ -1171,7 +1255,7 @@ project listeners.
     }
 
     /**
-     * Appends a sequence to this project’s sequence. Only the stepValues will be copied from the specified sequence and
+     * Appends a sequence to this project's sequence. Only the stepValues will be copied from the specified sequence and
      * added as new steps to this project.
      * <p/>
      * If isSequenceEditEnabled() is false, nothing will be done.
@@ -1198,7 +1282,7 @@ project listeners.
     }
 
     /**
-     * Returns a copy of this project’s sequence. Only the stepValues will be copied from this project’s sequence. The
+     * Returns a copy of this project's sequence. Only the stepValues will be copied from this project's sequence. The
      * returned sequence will have no name.
      *
      * @param start index of the first step in the sequence.
@@ -1220,7 +1304,7 @@ project listeners.
     }
 
     /**
-     * Appends a step to this project’s sequence. Only the stepValue will be copied from the specified step and added as
+     * Appends a step to this project's sequence. Only the stepValue will be copied from the specified step and added as
      * a new step to this project.
      *
      * @param step the measurement step to be added.
@@ -1242,7 +1326,7 @@ project listeners.
     }
 
     /**
-     * Adds a step to the specified index of this project’s sequence. Only the stepValue will be copied from the
+     * Adds a step to the specified index of this project's sequence. Only the stepValue will be copied from the
      * specified step and added as a new step to this project.
      * <p/>
      * The index must be such, that the indices of the completed measurements will not change.
@@ -1277,7 +1361,7 @@ project listeners.
     }
 
     /**
-     * Removes a step from this project’s sequence. Completed measurements can not be removed.
+     * Removes a step from this project's sequence. Completed measurements can not be removed.
      * <p/>
      * If isSequenceEditEnabled() is false, nothing will be done.
      *
@@ -1301,7 +1385,7 @@ project listeners.
     }
 
     /**
-     * Removes a series of steps from this project’s sequence. Completed measurements can not be removed.
+     * Removes a series of steps from this project's sequence. Completed measurements can not be removed.
      * <p/>
      * If isSequenceEditEnabled() is false, nothing will be done.
      *
@@ -1371,7 +1455,7 @@ project listeners.
     }
 
     /**
-     * Calculates and returns a value from a measurement step. The specified MeasurementValue’s algorithm will be used
+     * Calculates and returns a value from a measurement step. The specified MeasurementValue's algorithm will be used
      * and the results returned.
      *
      * @param index     the measurement step from which the value is calculated.
@@ -1805,7 +1889,7 @@ project listeners.
     }
 
     /**
-     * The state of the project’s measurements.
+     * The state of the project's measurements.
      */
     public enum State {
         IDLE, MEASURING, PAUSED, ABORTED
@@ -1816,6 +1900,20 @@ project listeners.
      */
     public enum SampleType {
         CORE, HAND
+    }
+
+    /**
+     * The orientation of the sample in the measurements.
+     */
+    public enum Orientation {
+        PLUS_Z, MINUS_Z
+    }
+
+    /**
+     * The type of normalization to use for the measurement values.
+     */
+    public enum Normalization {
+        VOLUME, MASS
     }
 
     public static void main(String[] args) {

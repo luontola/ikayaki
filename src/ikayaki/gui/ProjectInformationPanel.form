@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ikayaki.gui.ProjectInformationPanel">
-  <grid id="c8cdf" binding="contentPane" row-count="13" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="2">
+  <grid id="c8cdf" binding="contentPane" row-count="15" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="2">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="0" y="34" width="314" height="372"/>
+      <xy x="70" y="34" width="314" height="372"/>
       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <component id="fbbea" class="javax.swing.JLabel">
+      <component id="fbbea" class="javax.swing.JLabel" binding="operatorLabel">
         <constraints>
-          <xy x="0" y="7" width="44" height="14"/>
+          <xy x="0" y="5" width="44" height="14"/>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
@@ -20,7 +20,7 @@
       </component>
       <component id="14339" class="javax.swing.JTextField" binding="operatorField">
         <constraints>
-          <xy x="102" y="3" width="212" height="21"/>
+          <xy x="100" y="1" width="214" height="21"/>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
             <preferred-size width="70" height="-1"/>
           </grid>
@@ -29,88 +29,88 @@
       </component>
       <component id="3ce27" class="javax.swing.JTextField" binding="dateField">
         <constraints>
-          <xy x="102" y="33" width="212" height="21"/>
+          <xy x="100" y="27" width="214" height="21"/>
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
             <preferred-size width="70" height="-1"/>
           </grid>
         </constraints>
         <properties/>
       </component>
-      <component id="3739" class="javax.swing.JLabel">
+      <component id="3739" class="javax.swing.JLabel" binding="massLabel">
         <constraints>
-          <xy x="0" y="322" width="24" height="14"/>
+          <xy x="0" y="278" width="64" height="14"/>
           <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
           <text value="Mass (grams)"/>
         </properties>
       </component>
-      <component id="a9d17" class="javax.swing.JLabel">
+      <component id="a9d17" class="javax.swing.JLabel" binding="volumeLabel">
         <constraints>
-          <xy x="0" y="294" width="63" height="14"/>
+          <xy x="0" y="254" width="63" height="14"/>
           <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
           <text value="Volume (cm³)"/>
         </properties>
       </component>
-      <component id="67b2" class="javax.swing.JLabel">
+      <component id="67b2" class="javax.swing.JLabel" binding="dipLabel">
         <constraints>
-          <xy x="0" y="266" width="15" height="14"/>
+          <xy x="0" y="230" width="15" height="14"/>
           <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
           <text value="Dip"/>
         </properties>
       </component>
-      <component id="b66b4" class="javax.swing.JLabel">
+      <component id="b66b4" class="javax.swing.JLabel" binding="strikeLabel">
         <constraints>
-          <xy x="0" y="238" width="27" height="14"/>
+          <xy x="0" y="206" width="27" height="14"/>
           <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
           <text value="Strike"/>
         </properties>
       </component>
-      <component id="b8eb8" class="javax.swing.JLabel">
+      <component id="b8eb8" class="javax.swing.JLabel" binding="longitudeLabel">
         <constraints>
-          <xy x="0" y="210" width="47" height="14"/>
+          <xy x="0" y="182" width="47" height="14"/>
           <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
           <text value="Longitude"/>
         </properties>
       </component>
-      <component id="2c522" class="javax.swing.JLabel">
+      <component id="2c522" class="javax.swing.JLabel" binding="latitudeLabel">
         <constraints>
-          <xy x="0" y="182" width="39" height="14"/>
+          <xy x="0" y="158" width="39" height="14"/>
           <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
           <text value="Latitude"/>
         </properties>
       </component>
-      <component id="678ef" class="javax.swing.JLabel">
+      <component id="678ef" class="javax.swing.JLabel" binding="commentLabel">
         <constraints>
-          <xy x="0" y="153" width="45" height="14"/>
+          <xy x="0" y="133" width="45" height="14"/>
           <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
           <text value="Comment"/>
         </properties>
       </component>
-      <component id="1ac6a" class="javax.swing.JLabel">
+      <component id="1ac6a" class="javax.swing.JLabel" binding="siteLabel">
         <constraints>
-          <xy x="0" y="124" width="18" height="14"/>
+          <xy x="0" y="108" width="18" height="14"/>
           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
           <text value="Site"/>
         </properties>
       </component>
-      <component id="4ee1d" class="javax.swing.JLabel">
+      <component id="4ee1d" class="javax.swing.JLabel" binding="rockTypeLabel">
         <constraints>
-          <xy x="0" y="95" width="48" height="14"/>
+          <xy x="0" y="83" width="48" height="14"/>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
@@ -119,7 +119,7 @@
       </component>
       <component id="b1b20" class="javax.swing.JTextField" binding="commentField">
         <constraints>
-          <xy x="102" y="150" width="212" height="21"/>
+          <xy x="100" y="130" width="214" height="21"/>
           <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
             <preferred-size width="70" height="-1"/>
           </grid>
@@ -128,7 +128,7 @@
       </component>
       <component id="976ca" class="javax.swing.JTextField" binding="rockTypeField">
         <constraints>
-          <xy x="102" y="92" width="212" height="21"/>
+          <xy x="100" y="80" width="214" height="21"/>
           <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
             <preferred-size width="70" height="-1"/>
           </grid>
@@ -137,16 +137,16 @@
       </component>
       <component id="e9a61" class="javax.swing.JTextField" binding="siteField">
         <constraints>
-          <xy x="102" y="121" width="212" height="21"/>
+          <xy x="100" y="105" width="214" height="21"/>
           <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
             <preferred-size width="70" height="-1"/>
           </grid>
         </constraints>
         <properties/>
       </component>
-      <component id="b81f9" class="javax.swing.JLabel">
+      <component id="b81f9" class="javax.swing.JLabel" binding="dateLabel">
         <constraints>
-          <xy x="0" y="36" width="23" height="14"/>
+          <xy x="0" y="31" width="23" height="14"/>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
@@ -155,7 +155,7 @@
       </component>
       <component id="e682f" class="javax.swing.JFormattedTextField" binding="latitudeField">
         <constraints>
-          <xy x="102" y="179" width="212" height="20"/>
+          <xy x="100" y="155" width="214" height="20"/>
           <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
             <preferred-size width="70" height="-1"/>
           </grid>
@@ -164,7 +164,7 @@
       </component>
       <component id="2df11" class="javax.swing.JFormattedTextField" binding="massField">
         <constraints>
-          <xy x="102" y="319" width="212" height="20"/>
+          <xy x="100" y="275" width="214" height="20"/>
           <grid row="11" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
             <preferred-size width="70" height="-1"/>
           </grid>
@@ -173,7 +173,7 @@
       </component>
       <component id="4bea2" class="javax.swing.JFormattedTextField" binding="volumeField">
         <constraints>
-          <xy x="102" y="291" width="212" height="20"/>
+          <xy x="100" y="251" width="214" height="20"/>
           <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
             <preferred-size width="70" height="-1"/>
           </grid>
@@ -182,7 +182,7 @@
       </component>
       <component id="16e3" class="javax.swing.JFormattedTextField" binding="dipField">
         <constraints>
-          <xy x="102" y="263" width="212" height="20"/>
+          <xy x="100" y="227" width="214" height="20"/>
           <grid row="9" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
             <preferred-size width="70" height="-1"/>
           </grid>
@@ -191,7 +191,7 @@
       </component>
       <component id="82849" class="javax.swing.JFormattedTextField" binding="longitudeField">
         <constraints>
-          <xy x="102" y="207" width="212" height="20"/>
+          <xy x="100" y="179" width="214" height="20"/>
           <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
             <preferred-size width="70" height="-1"/>
           </grid>
@@ -200,7 +200,7 @@
       </component>
       <component id="5af6a" class="javax.swing.JFormattedTextField" binding="strikeField">
         <constraints>
-          <xy x="102" y="235" width="212" height="20"/>
+          <xy x="100" y="203" width="214" height="20"/>
           <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
             <preferred-size width="70" height="-1"/>
           </grid>
@@ -210,7 +210,7 @@
       <grid id="6e05d" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <xy x="102" y="59" width="212" height="28"/>
+          <xy x="100" y="52" width="214" height="25"/>
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="0" fill="3"/>
         </constraints>
         <properties/>
@@ -218,7 +218,7 @@
         <children>
           <component id="e475f" class="javax.swing.JRadioButton" binding="measurementTypeAuto">
             <constraints>
-              <xy x="0" y="3" width="48" height="22"/>
+              <xy x="0" y="1" width="48" height="22"/>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0"/>
             </constraints>
             <properties>
@@ -227,7 +227,7 @@
           </component>
           <component id="b6a65" class="javax.swing.JRadioButton" binding="measurementTypeManual">
             <constraints>
-              <xy x="58" y="3" width="59" height="22"/>
+              <xy x="58" y="1" width="59" height="22"/>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0"/>
             </constraints>
             <properties>
@@ -236,34 +236,40 @@
           </component>
           <hspacer id="8d47e">
             <constraints>
-              <xy x="117" y="8" width="95" height="11"/>
+              <xy x="117" y="7" width="97" height="11"/>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1"/>
             </constraints>
           </hspacer>
         </children>
       </grid>
-      <component id="5c43" class="javax.swing.JLabel">
+      <component id="5c43" class="javax.swing.JLabel" binding="measurementTypeLabel">
         <constraints>
-          <xy x="0" y="66" width="92" height="14"/>
+          <xy x="0" y="57" width="90" height="14"/>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
-          <text value="Measurement Type"/>
+          <text value="Measurement type"/>
         </properties>
       </component>
       <grid id="611ed" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <xy x="102" y="344" width="212" height="28"/>
-          <grid row="12" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="0" fill="3"/>
+          <xy x="100" y="322" width="214" height="24"/>
+          <grid row="13" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="0" fill="3"/>
         </constraints>
         <properties/>
         <border type="none"/>
         <children>
+          <hspacer id="e0774">
+            <constraints>
+              <xy x="108" y="6" width="106" height="11"/>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1"/>
+            </constraints>
+          </hspacer>
           <component id="47f97" class="javax.swing.JRadioButton" binding="sampleTypeCore">
             <constraints>
-              <xy x="0" y="3" width="48" height="22"/>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0"/>
+              <xy x="60" y="1" width="48" height="22"/>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0"/>
             </constraints>
             <properties>
               <text value="Core"/>
@@ -271,30 +277,86 @@
           </component>
           <component id="21c3f" class="javax.swing.JRadioButton" binding="sampleTypeHand">
             <constraints>
-              <xy x="58" y="3" width="50" height="22"/>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0"/>
+              <xy x="0" y="1" width="50" height="22"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0"/>
             </constraints>
             <properties>
               <text value="Hand"/>
             </properties>
           </component>
-          <hspacer id="e0774">
-            <constraints>
-              <xy x="108" y="8" width="104" height="11"/>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1"/>
-            </constraints>
-          </hspacer>
         </children>
       </grid>
-      <component id="55da4" class="javax.swing.JLabel">
+      <component id="55da4" class="javax.swing.JLabel" binding="sampleTypeLabel">
         <constraints>
-          <xy x="0" y="351" width="61" height="14"/>
+          <xy x="0" y="327" width="59" height="14"/>
+          <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+        </constraints>
+        <properties>
+          <text value="Sample type"/>
+        </properties>
+      </component>
+      <component id="ffb33" class="javax.swing.JLabel" binding="susceptibilityLabel">
+        <constraints>
+          <xy x="0" y="302" width="62" height="14"/>
           <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
         </constraints>
         <properties>
-          <text value="Sample Type"/>
+          <text value="Susceptibility"/>
         </properties>
       </component>
+      <component id="8707e" class="javax.swing.JFormattedTextField" binding="susceptibilityField">
+        <constraints>
+          <xy x="100" y="299" width="214" height="20"/>
+          <grid row="12" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+            <preferred-size width="70" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="acc25" class="javax.swing.JLabel" binding="normalizationLabel">
+        <constraints>
+          <xy x="0" y="353" width="61" height="14"/>
+          <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+        </constraints>
+        <properties>
+          <text value="Normalize by"/>
+        </properties>
+      </component>
+      <grid id="d6803" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <xy x="100" y="348" width="214" height="24"/>
+          <grid row="14" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="0" fill="3"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <hspacer id="a2811">
+            <constraints>
+              <xy x="118" y="6" width="96" height="11"/>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1"/>
+            </constraints>
+          </hspacer>
+          <component id="2deca" class="javax.swing.JRadioButton" binding="normalizationMass">
+            <constraints>
+              <xy x="69" y="1" width="49" height="22"/>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0"/>
+            </constraints>
+            <properties>
+              <text value="Mass"/>
+            </properties>
+          </component>
+          <component id="99d4e" class="javax.swing.JRadioButton" binding="normalizationVolume">
+            <constraints>
+              <xy x="0" y="1" width="59" height="22"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0"/>
+            </constraints>
+            <properties>
+              <text value="Volume"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
 </form>

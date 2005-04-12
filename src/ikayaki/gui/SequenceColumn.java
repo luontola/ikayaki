@@ -249,6 +249,59 @@ public enum SequenceColumn {
         }
     },
 
+    /**
+     * Showing and editing the susceptibility of the measurement step.
+     */
+    SUSCEPTIBILITY("Susceptibility"){ // has no unit
+        {
+            // usually no decimals are needed
+            getNumberFormat().setMaximumFractionDigits(6);
+        }
+
+        @Override public StyledWrapper getValue(int rowIndex, Project project) {
+            if (rowIndex >= project.getSteps()) {
+                return wrap(null, rowIndex, project);
+            }
+            double value = project.getStep(rowIndex).getSusceptibility();
+            if (value < 0.0) {
+                value = project.getSusceptibility();
+            }
+            if (value < 0.0) {
+                return wrap(null, rowIndex, project);
+            }
+            return wrap(getNumberFormat().format(value), rowIndex, project);
+        }
+
+        @Override public void setValue(Object data, int rowIndex, Project project) {
+            if (project == null) {
+                return;
+            }
+            if (data != null && !(data instanceof Number)) {
+                if (data.toString().equals("")) {
+                    data = null;
+                } else {
+                    try {
+                        data = getNumberFormat().parse(data.toString());
+                    } catch (ParseException e) {
+                        throw new NumberFormatException("For input string: \"" + data.toString() + "\"");
+                    }
+                }
+            }
+            double value = data != null ? ((Number) data).doubleValue() : -1.0;
+
+            if (rowIndex < project.getSteps()) {
+                project.getStep(rowIndex).setSusceptibility(value);
+            }
+        }
+
+        @Override public boolean isCellEditable(int rowIndex, Project project) {
+            if (rowIndex < project.getSteps()) {
+                return true;
+            }
+            return false;
+        }
+    },
+
     /*
      * Showing the values calculated by MeasurementValue.
      */

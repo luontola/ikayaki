@@ -159,7 +159,7 @@ public abstract class MeasurementValue <T> {
             };
 
     /**
-     * Calculates the remanence from the component averages and the sample’s volume.
+     * Calculates the remanence from the component averages and the sample's volume.
      */
     public static final MeasurementValue<Double> REMANENCE =
             new MeasurementValue<Double>("J", "Am^2/kg or mA/m", "Magnetic intensity (J=M/volume or J=M/mass)") {
@@ -182,7 +182,7 @@ public abstract class MeasurementValue <T> {
             };
 
     /**
-     * Calculates the remanence relative to the first measurement’s remanence.
+     * Calculates the remanence relative to the first measurement's remanence.
      */
     public static final MeasurementValue<Double> RELATIVE_REMANENCE =
             new MeasurementValue<Double>("J/J0", "", "Relative magnitude of the magnetization") {
