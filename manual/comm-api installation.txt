@@ -1,0 +1,19 @@
+To install comm-api to your java runtime environment you need copy three (3) files:
+
+squid/lib/win32com.dll
+
+this file needs to be installed in 'JRE/bin'-folder.
+
+squid/lib/comm.jar
+
+this file needs to be installed in 'JRE/lib'-folder and needs to be added in classpath
+set JRE/lib/comm.jar;%CLASSPATH%
+
+squid/lib/javax.comm.properties
+
+this file needs to be installed in 'JRE/lib'-folder.
+
+tricky part is to find you JRE-folder. It might be something like this:
+C:\Program Files\Java\jre1.5.0_02
+or
+C:\Program Files\Java\jdk1.5.0_01\jre

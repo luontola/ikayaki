@@ -165,7 +165,7 @@ public class SquidEmulator {
     public static void writeMessage(String message, SerialIO port) {
         //writes log if indicated to do so
         try {
-            logWriter.write("SEND:" + message);
+            logWriter.write("SEND:" + message + "\n");
             logWriter.flush();
         } catch (IOException e) {
             System.err.println("Error on writing log file");
@@ -259,6 +259,7 @@ public class SquidEmulator {
         public HandlerEmu() {
             //Setlistener to handlePort
             handlerPort.addSerialIOListener(this);
+            commandStack = new Stack<String>();
         }
 
         public void run() {
@@ -268,7 +269,7 @@ public class SquidEmulator {
         public void serialIOEvent(SerialIOEvent event) {
             int i;
             try {
-              logWriter.write("HANDLER_RECIEVE:" + event.getMessage());
+              logWriter.write("HANDLER_RECIEVE:" + event.getMessage() + "\n");
               logWriter.flush();
             }
             catch (IOException ex) {
@@ -278,7 +279,10 @@ public class SquidEmulator {
             for (i = 0; i < commands.length - 1; i++) {
                 commandStack.add(commands[i]);
             }
-            lastMessagePart = commands[i + 1];
+            if(commands.length == 1)
+              lastMessagePart = commands[0];
+            else if(commands.length >= i)
+              lastMessagePart = commands[i];
         }
     }
 
@@ -293,6 +297,7 @@ public class SquidEmulator {
         public MagnetometerEmu() {
            //Setlistener to port
            magnetometerPort.addSerialIOListener(this);
+           commandStack = new Stack<String>();
        }
 
 
@@ -302,7 +307,7 @@ public class SquidEmulator {
 
         public void serialIOEvent(SerialIOEvent event) {
           try {
-            logWriter.write("MAGNETOMETER_RECIEVE:" + event.getMessage());
+            logWriter.write("MAGNETOMETER_RECIEVE:" + event.getMessage() + "\n");
             logWriter.flush();
           }
           catch (IOException ex) {
@@ -331,6 +336,7 @@ public class SquidEmulator {
         public DegausserEmu() {
            //Setlistener to port
            degausserPort.addSerialIOListener(this);
+           commandStack = new Stack<String>();
        }
 
 
@@ -340,7 +346,7 @@ public class SquidEmulator {
 
         public void serialIOEvent(SerialIOEvent event) {
           try {
-            logWriter.write("DEGAUSSER_RECIEVE:" + event.getMessage());
+            logWriter.write("DEGAUSSER_RECIEVE:" + event.getMessage() + "\n");
             logWriter.flush();
           }
           catch (IOException ex) {
