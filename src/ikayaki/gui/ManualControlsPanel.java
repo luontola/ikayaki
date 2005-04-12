@@ -176,18 +176,26 @@ public class ManualControlsPanel extends JPanel {
         rotateButtonGroup.add(rotate270);
 
         // TODO: how to layout?
-        setLayout(new GridLayout(14, 1));
+        setLayout(new GridLayout(13, 1));
+
         add(moveHome);
         add(moveDemagZ);
         add(moveDemagY);
         add(moveBG);
         add(moveMeasure);
+
+        rotate0.setHorizontalAlignment(JRadioButton.CENTER);
         add(rotate0);
-        add(rotate90);
+        JPanel rotatePanel = new JPanel(new GridLayout(1, 2));
+        rotatePanel.add(rotate270);
+        rotatePanel.add(rotate90);
+        add(rotatePanel);
+        rotate180.setHorizontalAlignment(JRadioButton.CENTER);
         add(rotate180);
-        add(rotate270);
+
         add(measureAllButton);
         add(resetAllButton);
+
         JPanel demagAmplitudePanel = new JPanel(new GridLayout(1, 2));
         demagAmplitudePanel.add(demagAmplitudeLabel);
         demagAmplitudePanel.add(demagAmplitudeField);
@@ -316,6 +324,9 @@ public class ManualControlsPanel extends JPanel {
         super.setEnabled(enabled);
         for (Component component : getComponents())
             component.setEnabled(enabled);
+        // special cases in JPanel
+        rotate90.setEnabled(enabled);
+        rotate270.setEnabled(enabled);
     }
 
     /**
@@ -333,7 +344,9 @@ public class ManualControlsPanel extends JPanel {
         // TODO: do we command sample handler directly?
         try {
             this.handler = Squid.instance().getHandler();
+            // TODO: set selected radiobexes according to current handler status...
         } catch (IOException ex) {
+            // TEST
             //setEnabled(false);
         }
     }
