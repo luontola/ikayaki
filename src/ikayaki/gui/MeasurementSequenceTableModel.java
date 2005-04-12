@@ -228,10 +228,10 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
     }
 
     /**
-     * Tells if specifiec column is shown.
+     * Tells if specified column is currently visible.
      *
-     * @param column the column to be hidden.
-     * @return should this column change be saved to the project or not.
+     * @param column the column to be queried.
+     * @return true if the column is visible, otherwise false.
      */
     public boolean isColumnShown(SequenceColumn column) {
         return visibleColumns.contains(column);

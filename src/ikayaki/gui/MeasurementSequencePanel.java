@@ -221,15 +221,15 @@ Order of rows with measurement data cannot be changed.
     }
 
     public void showVolume(){
-        sequenceTableModel.showColumn(MeasurementSequenceTableModel.SequenceColumn.VOLUME);
+        sequenceTableModel.showColumn(SequenceColumn.VOLUME);
     }
 
     public void hideVolume() {
-        sequenceTableModel.hideColumn(MeasurementSequenceTableModel.SequenceColumn.VOLUME);
+        sequenceTableModel.hideColumn(SequenceColumn.VOLUME);
     }
 
     public boolean isVolumeShown() {
-        return sequenceTableModel.isColumnShown(MeasurementSequenceTableModel.SequenceColumn.VOLUME);
+        return sequenceTableModel.isColumnShown(SequenceColumn.VOLUME);
     }
 
     /**
