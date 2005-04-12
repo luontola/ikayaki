@@ -33,11 +33,14 @@ import ikayaki.ProjectEvent;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableColumn;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.text.DecimalFormat;
-import java.io.*;
 
 import static ikayaki.gui.SequenceColumn.*;
 
@@ -192,7 +195,7 @@ Order of rows with measurement data cannot be changed.
     }
 
     public String valueAt(int row, int column) {
-        return (String)sequenceTable.getValueAt(row, column);
+        return (String) sequenceTable.getValueAt(row, column);
     }
 
     public void updateComboBox() {
@@ -208,8 +211,8 @@ Order of rows with measurement data cannot be changed.
                 }
                 in.close();
             }
+        } catch (Exception e) {
         }
-        catch (Exception e) {}
     }
 
     public int[] selectedRows() {
@@ -220,7 +223,7 @@ Order of rows with measurement data cannot be changed.
         return sequenceTable.getRowCount();
     }
 
-    public void showVolume(){
+    public void showVolume() {
         sequenceTableModel.showColumn(SequenceColumn.VOLUME);
     }
 
@@ -437,8 +440,16 @@ Order of rows with measurement data cannot be changed.
         sequenceTable.scrollRectToVisible(sequenceTable.getCellRect(rowIndex, rowIndex, true));
     }
 
+    /**
+     * Refreshes the table header on project data change, in case the header names have changed.
+     */
     public void projectUpdated(ProjectEvent event) {
-        // TODO ?
+        if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
+            for (int i = 0; i < sequenceTable.getColumnCount(); i++) {
+                sequenceTable.getColumnModel().getColumn(i).setHeaderValue(sequenceTableModel.getColumnName(i));
+            }
+            sequenceTable.getTableHeader().repaint();
+        }
     }
 
     public void measurementUpdated(MeasurementEvent event) {
