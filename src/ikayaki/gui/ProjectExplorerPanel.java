@@ -500,6 +500,8 @@ public class ProjectExplorerPanel extends ProjectComponent {
 
                     // TODO: should we check here if the file is legitimate?
 
+                    // TODO: empty the text field after the file has been created 
+
                     Project created = Project.createProject(file, type);
 
                     if (created == null) newProjectNameFlasher.flash();
