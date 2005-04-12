@@ -122,7 +122,7 @@ message from serial port is received.
         this.sPort = sPort;
         this.portName = sPort.getName();
         try {
-          sPort.addEventListener(this);
+          this.sPort.addEventListener(this);
         }
         catch (TooManyListenersException ex) {
           throw new SerialIOException("Too many listeners");
@@ -168,6 +168,7 @@ message from serial port is received.
 
         // send message to outputstream
         try {
+          System.out.println("We send data on COM port");
             os.write(asciiMsg);
             os.flush(); // TODO is this needed ??
         } catch (IOException e) {

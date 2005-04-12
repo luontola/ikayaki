@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Stack;
+import java.util.Date;
 
 /**
  * This class tries to emulate behavior of real squid-system. It starts 3 threads (handler,magnetometer,degausser),
@@ -165,6 +166,7 @@ public class SquidEmulator {
         //writes log if indicated to do so
         try {
             logWriter.write("SEND:" + message);
+            logWriter.flush();
         } catch (IOException e) {
             System.err.println("Error on writing log file");
         }
@@ -214,6 +216,13 @@ public class SquidEmulator {
         degausser.start();
 
         System.out.println("System running...");
+        try {
+          logWriter.write("SESSION STARTED:\n");
+          logWriter.flush();
+        }
+        catch (IOException ex1) {
+          System.out.println("Writing error");
+        }
 
         try {
             //wait for signal to quit 8)
@@ -222,6 +231,11 @@ public class SquidEmulator {
         }
 
         SerialIO.closeAllPorts();
+        try {
+          logWriter.close();
+        }
+        catch (IOException ex2) {
+        }
 
         return;
     }
@@ -255,6 +269,7 @@ public class SquidEmulator {
             int i;
             try {
               logWriter.write("HANDLER_RECIEVE:" + event.getMessage());
+              logWriter.flush();
             }
             catch (IOException ex) {
             }
@@ -288,6 +303,7 @@ public class SquidEmulator {
         public void serialIOEvent(SerialIOEvent event) {
           try {
             logWriter.write("MAGNETOMETER_RECIEVE:" + event.getMessage());
+            logWriter.flush();
           }
           catch (IOException ex) {
           }
@@ -325,6 +341,7 @@ public class SquidEmulator {
         public void serialIOEvent(SerialIOEvent event) {
           try {
             logWriter.write("DEGAUSSER_RECIEVE:" + event.getMessage());
+            logWriter.flush();
           }
           catch (IOException ex) {
           }
