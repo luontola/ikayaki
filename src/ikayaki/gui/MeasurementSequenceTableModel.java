@@ -168,16 +168,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
     }
 
     /**
-     * Shows the specified column. Makes sure that the columns are always in the same order. Saves the visible columns
-     * to the project's properties.
-     *
-     * @param column the column to be shown.
-     */
-    public void showColumn(SequenceColumn column) {
-        showColumn(column, true);
-    }
-
-    /**
      * Shows the specified column. Makes sure that the columns are always in the same order.
      *
      * @param column the column to be shown.
@@ -208,15 +198,6 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
     }
 
     /**
-     * Hides the specified column. Saves the visible columns to the project's properties.
-     *
-     * @param column the column to be hidden.
-     */
-    public void hideColumn(SequenceColumn column) {
-        hideColumn(column, true);
-    }
-
-    /**
      * Hides the specified column.
      *
      * @param column the column to be hidden.
@@ -236,9 +217,35 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      *
      * @param column the column to be queried.
      * @return true if the column is visible, otherwise false.
+     * @throws NullPointerException if column is null.
      */
-    public boolean isColumnShown(SequenceColumn column) {
+    public boolean isColumnVisible(SequenceColumn column) {
+        if (column == null) {
+            throw new NullPointerException();
+        }
         return visibleColumns.contains(column);
+    }
+
+    /**
+     * Sets visibility of the specified column. Makes sure that the columns are always in the same order. Saves the
+     * visible columns to the project's properties.
+     *
+     * @param column  the column to be changed.
+     * @param visible true if the column should be visible, otherwise false.
+     * @throws NullPointerException if column is null.
+     */
+    public void setColumnVisible(SequenceColumn column, boolean visible) {
+        if (column == null) {
+            throw new NullPointerException();
+        }
+        if (isColumnVisible(column) == visible) {
+            return;
+        }
+        if (visible) {
+            showColumn(column, true);
+        } else {
+            hideColumn(column, true);
+        }
     }
 
     /**

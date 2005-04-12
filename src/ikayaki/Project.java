@@ -779,7 +779,7 @@ project listeners.
      * @throws NullPointerException if file is null.
      */
     public boolean exportToDAT(File file) {
-        return false; // TODO
+        return false; // TODO: exporting to DAT has priority over SRM and TDT
     }
 
     /**
@@ -1097,7 +1097,7 @@ project listeners.
              *    [ 0 -1  0 ]
              *    [ 0  0 -1 ]]
              */
-            // TODO: it appears that they use only -Z position, so these are not necessary?
+            // TODO: it appears that they use only -Z position, so these are not necessary? in any case let's not remove them.
             transform.setColumn(1, -transform.m01, -transform.m11, -transform.m21);
             transform.setColumn(2, -transform.m02, -transform.m12, -transform.m22);
         }
