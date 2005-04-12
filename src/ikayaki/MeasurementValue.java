@@ -42,7 +42,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all X components in geographic coordinates.
      */
     public static final MeasurementValue<Double> GEOGRAPHIC_X =
-            new MeasurementValue<Double>("X", "mA/m", "Mean X (geographic coordinates)") {
+            new MeasurementValue<Double>("X'", "mA/m", "Mean X (geographic coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = step.getResults();
@@ -61,7 +61,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all Y components in geographic coordinates.
      */
     public static final MeasurementValue<Double> GEOGRAPHIC_Y =
-            new MeasurementValue<Double>("Y", "mA/m", "Mean Y (geographic coordinates)") {
+            new MeasurementValue<Double>("Y'", "mA/m", "Mean Y (geographic coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = step.getResults();
@@ -80,7 +80,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all Z components in geographic coordinates.
      */
     public static final MeasurementValue<Double> GEOGRAPHIC_Z =
-            new MeasurementValue<Double>("Z", "mA/m", "Mean Z (geographic coordinates)") {
+            new MeasurementValue<Double>("Z'", "mA/m", "Mean Z (geographic coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = step.getResults();
@@ -96,7 +96,64 @@ public abstract class MeasurementValue <T> {
             };
 
     /**
-     * Calculates the declination from the component averages.
+     * Calculates the average of all X components in sample coordinates.
+     */
+    public static final MeasurementValue<Double> SAMPLE_X =
+            new MeasurementValue<Double>("X", "mA/m", "Mean X (sample coordinates)") {
+                public Double getValue(MeasurementStep step) {
+                    double sum = 0.0;
+                    int count = step.getResults();
+                    for (int i = 0; i < count; i++) {
+                        sum += step.getResult(i).getSampleX();
+                    }
+                    if (count > 0) {
+                        return new Double(sum / count);
+                    } else {
+                        return null;
+                    }
+                }
+            };
+
+    /**
+     * Calculates the average of all Y components in sample coordinates.
+     */
+    public static final MeasurementValue<Double> SAMPLE_Y =
+            new MeasurementValue<Double>("Y", "mA/m", "Mean Y (sample coordinates)") {
+                public Double getValue(MeasurementStep step) {
+                    double sum = 0.0;
+                    int count = step.getResults();
+                    for (int i = 0; i < count; i++) {
+                        sum += step.getResult(i).getSampleY();
+                    }
+                    if (count > 0) {
+                        return new Double(sum / count);
+                    } else {
+                        return null;
+                    }
+                }
+            };
+
+    /**
+     * Calculates the average of all Z components in sample coordinates.
+     */
+    public static final MeasurementValue<Double> SAMPLE_Z =
+            new MeasurementValue<Double>("Z", "mA/m", "Mean Z (sample coordinates)") {
+                public Double getValue(MeasurementStep step) {
+                    double sum = 0.0;
+                    int count = step.getResults();
+                    for (int i = 0; i < count; i++) {
+                        sum += step.getResult(i).getSampleZ();
+                    }
+                    if (count > 0) {
+                        return new Double(sum / count);
+                    } else {
+                        return null;
+                    }
+                }
+            };
+
+    /**
+     * Calculates the declination from the component averages in geographic coordinates.
      */
     public static final MeasurementValue<Double> DECLINATION =
             new MeasurementValue<Double>("D", "\u00b0", "Geographic declination") {
@@ -106,7 +163,6 @@ public abstract class MeasurementValue <T> {
                     if (x == null || y == null) {
                         return null;
                     } else {
-                        // TESTED: OK
                         double d = atan2(y, x);
                         if (d < 0.0) {
                             d += PI * 2;
@@ -117,7 +173,7 @@ public abstract class MeasurementValue <T> {
             };
 
     /**
-     * Calculates the inclination from the component averages.
+     * Calculates the inclination from the component averages in geographic coordinates.
      */
     public static final MeasurementValue<Double> INCLINATION =
             new MeasurementValue<Double>("I", "\u00b0", "Geographic inclination") {
@@ -147,9 +203,9 @@ public abstract class MeasurementValue <T> {
     public static final MeasurementValue<Double> MOMENT =
             new MeasurementValue<Double>("M", "Am^2", "Magnetic moment") {
                 public Double getValue(MeasurementStep step) {
-                    Double x = GEOGRAPHIC_X.getValue(step);
-                    Double y = GEOGRAPHIC_Y.getValue(step);
-                    Double z = GEOGRAPHIC_Z.getValue(step);
+                    Double x = SAMPLE_X.getValue(step);
+                    Double y = SAMPLE_Y.getValue(step);
+                    Double z = SAMPLE_Z.getValue(step);
                     if (x == null || y == null || z == null) {
                         return null;
                     } else {
@@ -159,7 +215,7 @@ public abstract class MeasurementValue <T> {
             };
 
     /**
-     * Calculates the magnetic intensity (or remanence) from the component averages and the sample's volume or mass
+     * Calculates the magnetic intensity (or remanence) from the moment and the sample's volume or mass
      * (depending on the selected normalization).
      */
     public static final MeasurementValue<Double> MAGNETIZATION =
@@ -236,9 +292,9 @@ public abstract class MeasurementValue <T> {
 
                     for (int i = 0; i < step.getResults(); i++) {
                         MeasurementResult r = step.getResult(i);
-                        double declination = atan(r.getGeographicX() / r.getGeographicY());
-                        double inclination = atan(r.getGeographicZ() /
-                                sqrt(pow(r.getGeographicX(), 2) + pow(r.getGeographicY(), 2)));
+                        double declination = atan(r.getSampleX() / r.getSampleY());
+                        double inclination = atan(r.getSampleZ() /
+                                sqrt(pow(r.getSampleX(), 2) + pow(r.getSampleY(), 2)));
                         double l = cos(declination) * cos(inclination);
                         double m = sin(declination) * cos(inclination);
                         double n = sin(inclination);

@@ -89,9 +89,12 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         possibleColumns.add(MAGNETIZATION);
         possibleColumns.add(RELATIVE_MAGNETIZATION);
         possibleColumns.add(MOMENT);
-        possibleColumns.add(X);
-        possibleColumns.add(Y);
-        possibleColumns.add(Z);
+        possibleColumns.add(GEOGRAPHIC_X);
+        possibleColumns.add(GEOGRAPHIC_Y);
+        possibleColumns.add(GEOGRAPHIC_Z);
+        possibleColumns.add(SAMPLE_X);
+        possibleColumns.add(SAMPLE_Y);
+        possibleColumns.add(SAMPLE_Z);
         possibleColumns.add(THETA63);
 
         // show default columns
@@ -101,9 +104,9 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         showColumn(DECLINATION, false);
         showColumn(INCLINATION, false);
         showColumn(RELATIVE_MAGNETIZATION, false);
-        showColumn(X, false);
-        showColumn(Y, false);
-        showColumn(Z, false);
+        showColumn(SAMPLE_X, false);
+        showColumn(SAMPLE_Y, false);
+        showColumn(SAMPLE_Z, false);
         showColumn(THETA63, false);
 
         if (project != null) {

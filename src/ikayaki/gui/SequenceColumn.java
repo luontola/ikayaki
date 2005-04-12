@@ -305,17 +305,32 @@ public enum SequenceColumn {
     /*
      * Showing the values calculated by MeasurementValue.
      */
-    X(MeasurementValue.GEOGRAPHIC_X) {
+    GEOGRAPHIC_X(MeasurementValue.GEOGRAPHIC_X) {
         {
             setNumberFormat(new DecimalFormat("0.000E0"));
         }
     },
-    Y(MeasurementValue.GEOGRAPHIC_Y) {
+    GEOGRAPHIC_Y(MeasurementValue.GEOGRAPHIC_Y) {
         {
             setNumberFormat(new DecimalFormat("0.000E0"));
         }
     },
-    Z(MeasurementValue.GEOGRAPHIC_Z) {
+    GEOGRAPHIC_Z(MeasurementValue.GEOGRAPHIC_Z) {
+        {
+            setNumberFormat(new DecimalFormat("0.000E0"));
+        }
+    },
+    SAMPLE_X(MeasurementValue.SAMPLE_X) {
+        {
+            setNumberFormat(new DecimalFormat("0.000E0"));
+        }
+    },
+    SAMPLE_Y(MeasurementValue.SAMPLE_Y) {
+        {
+            setNumberFormat(new DecimalFormat("0.000E0"));
+        }
+    },
+    SAMPLE_Z(MeasurementValue.SAMPLE_Z) {
         {
             setNumberFormat(new DecimalFormat("0.000E0"));
         }
