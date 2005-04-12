@@ -231,6 +231,8 @@ message from serial port is received.
                 while (is.available() > 0) {
                     int numBytes = is.read(readBuffer);
                 }
+                // TODO convert from ASCII to unicode
+                System.out.println("sending: " + new String(readBuffer)); //TODO debug
                 fireSerialIOEvent(new String(readBuffer));
             } catch (IOException e) {
             }

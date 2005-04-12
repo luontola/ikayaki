@@ -39,7 +39,6 @@ public class SerialIOEvent extends EventObject {
     public SerialIOEvent(Object source, String message) {
         super(source);
         this.message = message;
-        // TODO
     }
 
     /**
@@ -48,6 +47,6 @@ public class SerialIOEvent extends EventObject {
      * @return The message in ASCII form that was received from serial port.
      */
     public String getMessage() {
-        return null; // TODO
+        return this.message;
     }
 }
