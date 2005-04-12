@@ -90,13 +90,6 @@ class FittedComboBoxRenderer extends BasicComboBoxRenderer {
         this.fitLimit = fitLimit;
     }
 
-    /* TODO:
-     * Tuo nykyinen algoritmi on melko hyvä Project Explorerin kansiohistoriaa katsottaessa. Autocompletessa se ei ole
-     * niin hyvä, koska jos on eri pituisia kansioiden nimiä, niin polku katkaistaan niillä eri kohdasta. Jos
-     * autocompleten haluaisi hyväksi, niin pitäisi ennen valikon avaamista laskea että kuinka paljon enimmillään
-     * pätkitään ja sitten tallettaa se muistiin tämän rendererin käytettäväksi.
-     */
-
     @Override public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
                                                             boolean cellHasFocus) {
         JLabel comp = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -150,8 +143,8 @@ class FittedComboBoxRenderer extends BasicComboBoxRenderer {
         // take out parts of the text it until it fits
         boolean shortenMore = true;
         while (shortenMore) {
+            shortenMore = false;    // stop the loop, unless somebody tells us to continue
 
-            shortenMore = false;
             if (fitLimit >= 0) {
                 // take the specified number of parts out of the text
                 for (int i = 1; i < text.length - 1 && fitLimit > 0; i++, fitLimit--) {
@@ -184,7 +177,6 @@ class FittedComboBoxRenderer extends BasicComboBoxRenderer {
                 shortenMore = false;
             }
         }
-
         return fitCount;
     }
 }
