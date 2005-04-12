@@ -41,7 +41,7 @@ JUnit test cases are listed in section \ref{junit}.
 
 Integrity testing is done after unit test is passed for all classes. Testing is done using squid emulator at first and finally with real Squid system.
 
-Graphical User Interface is tested using all use cases from \ref{intcases}. If one fails, it is corrected immediatelly and all use cases must be done again. When all use cases are done without errors this phase is ready.
+Graphical User Interface is tested using all use cases from \ref{intcase}. If one fails, it is corrected immediatelly and all use cases must be done again. When all use cases are done without errors this phase is ready.
 
 Interface testing is done with Emulator. Use cases are Automatic Measurement, Thellier Measurement and Manual Measurement with all variations (see Requirements Document). In first phase we use old program with emulator, save its log file and take results. After that we run it with new program and compare results. If they are not same, corrections are made immediatelly to new program and test is runned again. This is done until results are same for all use cases.
 
@@ -51,6 +51,9 @@ Interface testing is done with Emulator. Use cases are Automatic Measurement, Th
 Squid emulator is tested with old program. Use cases are Automatic Measurement, Thellier Measurement and Manual Measurement with all variations (see Requirements Document). When all use cases can be done with emulator it is ready enough for integrity testing.
 
 This should be done so that Old Program has same results with SQUID-system and emulator for all use cases. But we don't have resources for this. So this test only tells us that Old and New program works same way with squid emulator.
+
+\section{Test cases}
+\label{cases}
 
 \subsection{JUnit test cases}
 \label{junit}
@@ -87,83 +90,7 @@ Here are listed test cases for gui-classes, these are done manually just clickin
 \subsubsection{SettingsPanel}
 \label{cases:SettingsPanel}
 
-\begin{enumerate}
-
-\item Magnetometer,Handler and Degausser COM-port combobox
-
-Conditions:
-\begin{itemize}
-\item Shows all COM-ports on system in alphabetical order
-\item Loads correct COM port from Settings
-\item Doesn't allow same value as in Handler and Magnetometer/Degausser COM-port comboboxes
-\end{itemize}
-
-\item Save button
-
-Conditions:
-\begin{itemize}
-\item Only available if changes are made and values are permissible.
-\item Unavailable on start
-\item On click closes window and saved data correctly
-\end{itemize}
-
-\item Cancel button
-
-Conditions:
-\begin{itemize}
-\item On click closes window and doesnt save changes
-\item Always available
-\end{itemize}
-
-\item Calibration constants
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Accepts positive and negative decimal numbers
-\end{itemize}
-
-\item Degausser ramp
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Has only elements: 3,5,7,9
-\end{itemize}
-
-\item Degausser delay
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Has only elements: 1..9
-\end{itemize}
-
-\item Acceleration and deceleration fields
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Accepts only values in range of Integers 0..127
-\end{itemize}
-
-\item Velocity and velocity in measurement fields
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Accepts only values in range of Integers 50..20000
-\end{itemize}
-
-\item Translation positions fields
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Accepts only values in range of Integers 0..16777215
-\end{itemize}
-
-\item Right limit
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Has only elements: plus, minus
-\end{itemize}
-
-\item Rotation field
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Accepts positive and negative Integer numbers
-\end{itemize}
-
-\end{enumerate}
+\input{uc_settingspanel}
 
 \subsubsection{className}
 \label{cases:className}
@@ -185,7 +112,7 @@ Here is test case which is done in integration phase to all components at same t
 
 \input{int_case}
 
-\subsection{JUnit}
+\section{JUnit}
 \label{jhelp}
 
 JUnit is simple java-based framework for testing your java classes. We use it in this project for Unit Testing. For more information visit http://junit.sourceforge.net/.
