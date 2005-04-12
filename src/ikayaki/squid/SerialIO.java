@@ -23,14 +23,14 @@
 package ikayaki.squid;
 
 import javax.comm.*;
+import javax.swing.*;
+import javax.swing.event.EventListenerList;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.TooManyListenersException;
 import java.util.Vector;
-import java.util.*;
-import javax.swing.SwingUtilities;
-import javax.swing.event.EventListenerList;
 
 /**
  * This class represents hardware layer to serial port communications.
@@ -49,16 +49,6 @@ message from serial port is received.
      * Listeners for this port.
      */
     private EventListenerList listenerList = new EventListenerList();
-
-
-    /**
-     * contains last received message from the serial port that this SerialIO represents.
-     */
-    private String lastMessage;
-
-    /**
-     * parameters for serial port
-     */
 
     private SerialPort sPort;
 
@@ -87,7 +77,7 @@ message from serial port is received.
         try {
             sPort = (SerialPort) portId.open("SerialPort", 4000);
         } catch (PortInUseException e) {
-            throw new SerialIOException("The port" + parameters.getPortName() + "is already in use");
+            throw new SerialIOException("The port " + parameters.getPortName() + " is already in use");
         }
 
         // Set the parameters of the connection
@@ -119,20 +109,35 @@ message from serial port is received.
             throw new SerialIOException("Error opening i/o streams");
         }
 
+        // add this object to be listener for the com port
+        try {
+            sPort.addEventListener(this);
+        } catch (TooManyListenersException ex) {
+            throw new SerialIOException("Too many listeners");
+        }
+
+        // Set notifyOnDataAvailable to true to allow event driven input.
+        sPort.notifyOnDataAvailable(true);
+
+        // Set notifyOnBreakInterrup to allow event driven break handling.
+        sPort.notifyOnBreakInterrupt(true);
+
+        // Set receive timeout to allow breaking out of polling loop during
+        // input handling.
+        try {
+            sPort.enableReceiveTimeout(30);
+        } catch (UnsupportedCommOperationException e) {
+            throw new SerialIOException("Unsupported operation");
+        }
+
         this.sPort = sPort;
         this.portName = sPort.getName();
-        try {
-          this.sPort.addEventListener(this);
-        }
-        catch (TooManyListenersException ex) {
-          throw new SerialIOException("Too many listeners");
-        }
 
         return;
     }
 
     public static SerialIO openPort(SerialParameters parameters) throws SerialIOException {
-      System.out.println("Let's try open port: " + parameters.getPortName());
+        System.out.println("Let's try to open port: " + parameters.getPortName());  //TODO debug
 
         SerialIO newPort = null;
 
@@ -146,6 +151,7 @@ message from serial port is received.
         newPort = new SerialIO(parameters);
         openPorts.add(newPort);
 
+        System.out.println("Port: " + parameters.getPortName() + " opened");
         return newPort;
     }
 
@@ -163,52 +169,41 @@ message from serial port is received.
         try {
             asciiMsg = message.getBytes("US-ASCII"); // TODO is this right??
         } catch (UnsupportedEncodingException e) {
-            throw new SerialIOException("ASCII charset not supported on!");
+            throw new SerialIOException("ASCII charset not supported");
         }
 
         // send message to outputstream
         try {
-          System.out.println("We send data on COM port");
+            System.out.println("Sending data to port: " + this.portName); // TODO debug
             os.write(asciiMsg);
             os.flush(); // TODO is this needed ??
         } catch (IOException e) {
-            throw new SerialIOException("Couldn't write to outputstream of" + portName);
+            throw new SerialIOException("Couldn't write to outputstream of" + this.portName);
         }
-
 
         return;
     }
 
-
-    public void closePort(String portName) throws SerialIOException {
-        // throw exception if it's not found
-        // make sure port is not null to avoid NPE
-        // close streams
-        // close port
-    }
-
     public void closePort() {
-      if(sPort != null) {
-        this.sPort.close();
-        try {
-          this.is.close();
-          this.os.close();
+        if (sPort != null) {
+            this.sPort.close();
+            try {
+                this.is.close();
+                this.os.close();
+            } catch (IOException ex) {
+                System.err.println("Could not close stream for COM port");
+            }
+            try {
+                this.os.close();
+            } catch (IOException ex1) {
+                System.err.println("Could not close stream for COM port");
+            }
         }
-        catch (IOException ex) {
-          System.err.println("Could not close Stream for COM port");
-        }
-        try {
-          this.os.close();
-        }
-        catch (IOException ex1) {
-          System.err.println("Could not close Stream for COM port");
-        }
-      }
     }
 
 
     public static void closeAllPorts() {
-      for (int i = 0; i < openPorts.size(); i++) {
+        for (int i = 0; i < openPorts.size(); i++) {
             openPorts.elementAt(i).closePort();
         }
     }
@@ -217,8 +212,8 @@ message from serial port is received.
      * This method is run when a serial message is received from serial port. It generates a new SerialIOEvent.
      */
     public void serialEvent(SerialPortEvent event) {
-      System.out.println("New message arrived from COM port");
-      switch(event.getEventType()) {
+        System.out.println("New message arrived to port: " + this.portName);
+        switch (event.getEventType()) {
         case SerialPortEvent.BI:
         case SerialPortEvent.OE:
         case SerialPortEvent.FE:
@@ -237,10 +232,11 @@ message from serial port is received.
                     int numBytes = is.read(readBuffer);
                 }
                 fireSerialIOEvent(new String(readBuffer));
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
             break;
         }
-      return;
+        return;
     }
 
     /**
@@ -249,7 +245,7 @@ message from serial port is received.
      * @param l the listener to be added.
      */
     public synchronized void addSerialIOListener(SerialIOListener l) {
-      listenerList.add(SerialIOListener.class, l);
+        listenerList.add(SerialIOListener.class, l);
     }
 
     /**
@@ -258,35 +254,28 @@ message from serial port is received.
      * @param l the listener to be removed
      */
     public synchronized void removeSerialIOListener(SerialIOListener l) {
-      listenerList.remove(SerialIOListener.class, l);
+        listenerList.remove(SerialIOListener.class, l);
     }
 
     /**
      * Notifies all listeners that have registered for MeasurementEvents.
      *
-     * @param step the measurement step that has generated the event.
-     * @param type the type of the event.
+     * @param message
      */
     private synchronized void fireSerialIOEvent(String message) {
-      final SerialIOEvent event = new SerialIOEvent(this, message);
-      final SerialIOListener[] listeners = listenerList.getListeners(
-          SerialIOListener.class);
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          for (SerialIOListener l : listeners) {
-            try {
-              l.serialIOEvent(event);
+        final SerialIOEvent event = new SerialIOEvent(this, message);
+        final SerialIOListener[] listeners = listenerList.getListeners(SerialIOListener.class);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                for (SerialIOListener l : listeners) {
+                    try {
+                        l.serialIOEvent(event);
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+                }
             }
-            catch (Throwable t) {
-              t.printStackTrace();
-            }
-          }
-        }
-      });
+        });
     }
 
-    private String getName() {
-
-        return this.portName;
-    }
 }
