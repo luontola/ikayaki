@@ -498,14 +498,15 @@ public class ProjectExplorerPanel extends ProjectComponent {
 
                     File file = new File(directory, name);
 
-                    // TODO: should we check here if the file is legitimate?
-
-                    // TODO: empty the text field after the file has been created 
+                    // TODO: should we check here if the file is legitimate? or does Project.createProject check it already?
 
                     Project created = Project.createProject(file, type);
 
                     if (created == null) newProjectNameFlasher.flash();
-                    else parent.setProject(created);
+                    else {
+                        parent.setProject(created);
+                        newProjectName.setText("");
+                    }
                 }
             });
 
