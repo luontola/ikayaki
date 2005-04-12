@@ -22,11 +22,14 @@
 
 package ikayaki.gui;
 
+import ikayaki.Settings;
 import ikayaki.squid.Squid;
+import ikayaki.squid.Handler;
 
 import java.awt.*;
 import javax.swing.*;
-import java.io.*;
+import java.io.IOException;
+import java.util.Hashtable;
 
 /**
  * Picture of current magnetometer status, with sample holder position and rotation. Status is updated according to
@@ -36,17 +39,61 @@ import java.io.*;
  */
 public class MagnetometerStatusPanel extends JPanel {
 
+    // handler current position and rotation
     private int position, rotation;
+
+    // handler hard-coded max position and max rotation
     private final int maxposition = 1 << 24, maxrotation = 2000;
+
+    // handler positions, read from Settings
+    private int posHome;
+    private int posDemagZ;
+    private int posDemagY;
+    private int posBG;
+    private int posMeasurement;
+
+    private final JSlider baseSlider;
+    private final Hashtable baseSliderLabels;
 
     /**
      * Sets magnetometer status to current position.
      */
     public MagnetometerStatusPanel() {
+        super(new BorderLayout());
+
+        updatePositions();
+        baseSliderLabels = new Hashtable<Integer,Component>();
+        baseSliderLabels.put(posHome, new JLabel("Home"));
+        baseSliderLabels.put(posDemagZ, new JLabel("Demag Z"));
+        baseSliderLabels.put(posDemagY, new JLabel("Demag Y"));
+        baseSliderLabels.put(posBG, new JLabel("Background"));
+        baseSliderLabels.put(posMeasurement, new JLabel("Measurement"));
+
+        baseSlider = new JSlider(JSlider.VERTICAL, 0, maxposition, 0);
+        baseSlider.setEnabled(false);
+        baseSlider.setInverted(true);
+        baseSlider.setLabelTable(baseSliderLabels);
+        baseSlider.setPaintLabels(true);
+        baseSlider.setOpaque(false);
+
+        add(baseSlider, BorderLayout.CENTER);
+
         setPreferredSize(new Dimension(200, 400));
-        //setMinimumSize(new Dimension(200, 400));
+        setMinimumSize(new Dimension(200, 400));
         //updateStatus();
         updateStatus(1 << 23, 400);
+    }
+
+    /**
+     * Reads handler positions from Settings.
+     */
+    private void updatePositions() {
+        Settings settings = Settings.instance();
+        this.posHome = settings.getHandlerSampleLoadPosition();
+        this.posDemagZ = settings.getHandlerAxialAFPosition();
+        this.posDemagY = settings.getHandlerTransverseYAFPosition();
+        this.posBG = settings.getHandlerBackgroundPosition();
+        this.posMeasurement = settings.getHandlerMeasurementPosition();
     }
 
     /**
@@ -54,31 +101,36 @@ public class MagnetometerStatusPanel extends JPanel {
      *
      * @param position sample holder position, from 1 to 16777215.
      * @param rotation sample holder rotation, from 0 (angle 0) to 2000 (angle 360).
-     * @deprecated we read position and rotation ourself
+     * @deprecated we read position and rotation ourself.
      */
     public void updateStatus(int position, int rotation) {
         this.position = position;
         this.rotation = rotation;
+        updatePositions();
+        baseSlider.setValue(this.position);
         repaint();
     }
 
     /**
      * Updates magnetometer status picture; called by MeasurementControlsPanel when it receives MeasurementEvent.
-     * Reads current handler position and rotation from Squid.getHandler().
+     * Reads current handler position and rotation from Squid.instance().getHandler().
      */
     public void updateStatus() {
-        // TODO: this is where to read current status?
         try {
-            this.position = Squid.instance().getHandler().getPosition();
-            this.rotation = Squid.instance().getHandler().getRotation();
+            Handler handler = Squid.instance().getHandler();
+            this.position = handler.getPosition();
+            this.rotation = handler.getRotation();
         } catch (IOException ex) { }
+        updatePositions();
+        baseSlider.setValue(this.position);
         repaint();
     }
 
     /**
      * Paints the magnetometer status picture.
      *
-     * @param g mursu
+     * @param g mursu.
+     * @deprecated we use different drawing methods.
      */
     public void paintComponent(Graphics g) {
         // let Swing erase the background
@@ -92,9 +144,8 @@ public class MagnetometerStatusPanel extends JPanel {
         int base1x = w / 3;
 
         // magnetometer boxes' y positions and widths
-        // TODO: read position marks from Settings
-        int box1y = h / 2;
-        int box2y = box1y + h / 8;
+        int box1y = (int) ((long) h * posDemagZ / maxposition);
+        int box2y = (int) ((long) h * posBG / maxposition);
         int box1w = w / 5;
         int box2w = w / 3;
 
