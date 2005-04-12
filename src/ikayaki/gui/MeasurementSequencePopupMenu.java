@@ -59,10 +59,16 @@ public class MeasurementSequencePopupMenu extends JPopupMenu {
      * Creates SequencePopupMenu.
      */
     public MeasurementSequencePopupMenu(MeasurementSequencePanel creator) {
+        // sama juttu kun tossa detailsissa en jaksa alkaa ulkoasua säätään kun ei nää lopputulosta
         c = creator;
-        showVolume = false;
-
-        volume = new JCheckBox("Volume", false);
+        if (c.isShowing()) {
+            showVolume = true;
+            volume = new JCheckBox("Volume", true);
+        }
+        else {
+            showVolume = false;
+            volume = new JCheckBox("Volume", false);
+        }
         volume.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (volume.isSelected()) {
@@ -142,7 +148,7 @@ public class MeasurementSequencePopupMenu extends JPopupMenu {
                 writer.println(">>");
                 writer.println(nameTextField.getText());
                 for (int i=0; i<c.rowCount(); ++i) {
-                    writer.println(c.valueAt(i, 0));
+                    writer.println(c.valueAt(i, 1));
                 }
                 writer.println("<<");
             }
@@ -164,7 +170,7 @@ public class MeasurementSequencePopupMenu extends JPopupMenu {
                 writer.println(">>");
                 writer.println(nameTextField.getText());
                 for (int i=0; i<rows.length; ++i) {
-                    writer.println(c.valueAt(rows[i], 0));
+                    writer.println(c.valueAt(rows[i], 1));
                 }
                 writer.println("<<");
             }
@@ -178,7 +184,10 @@ public class MeasurementSequencePopupMenu extends JPopupMenu {
      * Removes selected rows. Rows with measurement data cannot be removed.
      */
     private void removeRows() {
-        return; // TODO
+        int[] rows = c.selectedRows();
+        for (int i=0; i<rows.length; ++i) {
+            c.removeRow(rows[i]);
+        }
     }
 
     private void close() {

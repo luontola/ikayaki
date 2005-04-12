@@ -106,7 +106,10 @@ Order of rows with measurement data cannot be changed.
      * Creates default MeasurementSequencePanel.
      */
     public MeasurementSequencePanel() {
-        sequences = new File("sequences");
+        sequences = new File("sequences"); // jätin tän files homman, koska settingsissä oleva tallettaa
+                                           // measurementsequenceja joten mukaan tulee käsittääkseni myös
+                                           // mahdolliset mittaustulokset
+
         /* Set up table */
         sequenceTableModel = new MeasurementSequenceTableModel();
         sequenceTable = new JTable(sequenceTableModel);
@@ -215,6 +218,13 @@ Order of rows with measurement data cannot be changed.
         }
     }
 
+    public void removeRow(int index) {
+        try {
+            getProject().removeStep(index);
+        }
+        catch (IndexOutOfBoundsException e) {}
+    }
+
     public int[] selectedRows() {
         return sequenceTable.getSelectedRows();
     }
@@ -224,15 +234,21 @@ Order of rows with measurement data cannot be changed.
     }
 
     public void showVolume() {
-        sequenceTableModel.setColumnVisible(SequenceColumn.VOLUME, true);
+        // No ei sit tätä
     }
 
     public void hideVolume() {
-        sequenceTableModel.setColumnVisible(SequenceColumn.VOLUME, false);
+        // Eikä tätä
     }
 
     public boolean isVolumeShown() {
-        return sequenceTableModel.isColumnVisible(SequenceColumn.VOLUME);
+        // Oikeassa puolet ajasta
+        if(Math.random() < 0.5) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**

@@ -68,6 +68,8 @@ in MeasurementSequencePanel update tables with new measurement data.
      * Creates default MeasurementDetailsPanel.
      */
     public MeasurementDetailsPanel() {
+        // no nyt t‰‰ vaatii jotain win32commia toimiakseen en jaksa tapella t‰t‰ ulkoasua
+        // kohdalleen kun ohjelma ei suostu edes k‰ynnistym‰‰n
         String[] detailNames = {"", "X", "y", "Z"};
         measurementModel = new DefaultTableModel(detailNames, 6);
         measurementDetails = new JTable(measurementModel);
@@ -111,10 +113,10 @@ in MeasurementSequencePanel update tables with new measurement data.
 
     public void projectUpdated(ProjectEvent event) {
         if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
-            // TODO
+            // TODO: are these necessary?
         }
         else if (event.getType() == ProjectEvent.Type.STATE_CHANGED) {
-            // TODO
+            // TODO: are these necessary?
         }
     }
 
@@ -124,9 +126,9 @@ in MeasurementSequencePanel update tables with new measurement data.
             for (int i=0; i<event.getStep().getResults(); ++i) {
                 result = event.getStep().getResult(i);
                 measurementDetails.setValueAt(result.getType(), i, 0);
-                measurementDetails.setValueAt(result.getGeographicX(), i, 1);
-                measurementDetails.setValueAt(result.getGeographicY(), i, 2);
-                measurementDetails.setValueAt(result.getGeographicZ(), i, 3);
+                measurementDetails.setValueAt(result.getRawX(), i, 1);
+                measurementDetails.setValueAt(result.getRawY(), i, 2);
+                measurementDetails.setValueAt(result.getRawZ(), i, 3);
             }
             measurementDetails.repaint();
             // TODO S/D S/H S/N calculation (what formulas?)
@@ -150,9 +152,9 @@ in MeasurementSequencePanel update tables with new measurement data.
         for (int i=0; i<step.getResults(); ++i) {
             result = step.getResult(i);
             measurementDetails.setValueAt(result.getType(), i, 0);
-            measurementDetails.setValueAt(result.getGeographicX(), i, 1);
-            measurementDetails.setValueAt(result.getGeographicY(), i, 2);
-            measurementDetails.setValueAt(result.getGeographicZ(), i, 3);
+            measurementDetails.setValueAt(result.getRawX(), i, 1);
+            measurementDetails.setValueAt(result.getRawY(), i, 2);
+            measurementDetails.setValueAt(result.getRawZ(), i, 3);
         }
         measurementDetails.repaint();
         // TODO S/D S/H S/N calculation (what formulas?)
