@@ -34,7 +34,7 @@ If Rita testing utility is easy enough to use it will be used in testing. Tests 
 
 Unit Testing is done for each class separately. Classes tested with JUnit have it's own ClassNameTest.java class in test-directory and gui-components are tested manually. They should be done before and during coding class. All test cases must be executable after classes are ready. Every class should be tested succesfully before integration tests.
 
-All test cases are listed in section \ref{cases}.
+JUnit test cases are listed in section \ref{junit}.
 
 \subsection{Integrity Testing}
 \label{integrity}
@@ -52,13 +52,10 @@ Squid emulator is tested with old program. Use cases are Automatic Measurement, 
 
 This should be done so that Old Program has same results with SQUID-system and emulator for all use cases. But we don't have resources for this. So this test only tells us that Old and New program works same way with squid emulator.
 
-\subsection{Test Cases}
-\label{cases}
+\subsection{JUnit test cases}
+\label{junit}
 
-\subsubsection{JUnit test cases}
-\label{JUnit}
-
-Here are listed JUnit test cases for <insert class names>. JUnit is introduced in section \ref{Junit-help}.
+Here are listed JUnit test cases for <insert class names>. JUnit is introduced in section \ref{jhelp}.
 
 \subsubsubsection{SampleClass}
 \label{cases:SampleClass}
@@ -82,12 +79,12 @@ Conditions:
 
 \end{enumerate}
 
-\subsubsection{GUI-component test cases}
+\subsection{GUI-component test cases}
 \label{guicase}
 
 Here are listed test cases for gui-classes, these are done manually just clicking and changing values.
 
-\subsubsubsection{SettingsPanel}
+\subsubsection{SettingsPanel}
 \label{cases:SettingsPanel}
 
 \begin{enumerate}
@@ -168,7 +165,7 @@ Conditions:
 
 \end{enumerate}
 
-\subsubsubsection{className}
+\subsubsection{className}
 \label{cases:className}
 
 \begin{enumerate}
@@ -189,7 +186,7 @@ Here is test case which is done in integration phase to all components at same t
 \input{int_case}
 
 \subsection{JUnit}
-\label{JUnit-help}
+\label{jhelp}
 
 JUnit is simple java-based framework for testing your java classes. We use it in this project for Unit Testing. For more information visit http://junit.sourceforge.net/.
 
