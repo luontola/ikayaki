@@ -160,21 +160,21 @@ public class MeasurementResult {
     /**
      * Returns the rotated and transformed X coordinate of this result.
      */
-    public double getX() {
+    public double getGeographicX() {
         return vector.x;
     }
 
     /**
      * Returns the rotated and transformed Y coordinate of this result.
      */
-    public double getY() {
+    public double getGeographicY() {
         return vector.y;
     }
 
     /**
      * Returns the rotated and transformed Z coordinate of this result.
      */
-    public double getZ() {
+    public double getGeographicZ() {
         return vector.z;
     }
 

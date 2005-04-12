@@ -39,15 +39,15 @@ import static java.lang.Math.sqrt;
 public abstract class MeasurementValue <T> {
 
     /**
-     * Calculates the average of all X components.
+     * Calculates the average of all X components in geographic coordinates.
      */
-    public static final MeasurementValue<Double> X =
-            new MeasurementValue<Double>("X", "mA/m", "Average of measured X components") {
+    public static final MeasurementValue<Double> GEOGRAPHIC_X =
+            new MeasurementValue<Double>("X", "mA/m", "Mean X (geographic coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
-                        sum += step.getResult(i).getX();
+                        sum += step.getResult(i).getGeographicX();
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -58,15 +58,15 @@ public abstract class MeasurementValue <T> {
             };
 
     /**
-     * Calculates the average of all Y components.
+     * Calculates the average of all Y components in geographic coordinates.
      */
-    public static final MeasurementValue<Double> Y =
-            new MeasurementValue<Double>("Y", "mA/m", "Average of measured Y components") {
+    public static final MeasurementValue<Double> GEOGRAPHIC_Y =
+            new MeasurementValue<Double>("Y", "mA/m", "Mean Y (geographic coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
-                        sum += step.getResult(i).getY();
+                        sum += step.getResult(i).getGeographicY();
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -77,15 +77,15 @@ public abstract class MeasurementValue <T> {
             };
 
     /**
-     * Calculates the average of all Z components.
+     * Calculates the average of all Z components in geographic coordinates.
      */
-    public static final MeasurementValue<Double> Z =
-            new MeasurementValue<Double>("Z", "mA/m", "Average of measured Z components") {
+    public static final MeasurementValue<Double> GEOGRAPHIC_Z =
+            new MeasurementValue<Double>("Z", "mA/m", "Mean Z (geographic coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
-                        sum += step.getResult(i).getZ();
+                        sum += step.getResult(i).getGeographicZ();
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -101,8 +101,8 @@ public abstract class MeasurementValue <T> {
     public static final MeasurementValue<Double> DECLINATION =
             new MeasurementValue<Double>("D", "\u00b0", "Geographic declination") {
                 public Double getValue(MeasurementStep step) {
-                    Double x = X.getValue(step);
-                    Double y = Y.getValue(step);
+                    Double x = GEOGRAPHIC_X.getValue(step);
+                    Double y = GEOGRAPHIC_Y.getValue(step);
                     if (x == null || y == null) {
                         return null;
                     } else {
@@ -122,9 +122,9 @@ public abstract class MeasurementValue <T> {
     public static final MeasurementValue<Double> INCLINATION =
             new MeasurementValue<Double>("I", "\u00b0", "Geographic inclination") {
                 public Double getValue(MeasurementStep step) {
-                    Double x = X.getValue(step);
-                    Double y = Y.getValue(step);
-                    Double z = Z.getValue(step);
+                    Double x = GEOGRAPHIC_X.getValue(step);
+                    Double y = GEOGRAPHIC_Y.getValue(step);
+                    Double z = GEOGRAPHIC_Z.getValue(step);
                     if (x == null || y == null || z == null) {
                         return null;
                     } else {
@@ -145,11 +145,11 @@ public abstract class MeasurementValue <T> {
      * Calculates the length of the vector from the component averages.
      */
     public static final MeasurementValue<Double> MOMENT =
-            new MeasurementValue<Double>("M", "Am^2", "Magnetic moment of the sample") {
+            new MeasurementValue<Double>("M", "Am^2", "Magnetic moment") {
                 public Double getValue(MeasurementStep step) {
-                    Double x = X.getValue(step);
-                    Double y = Y.getValue(step);
-                    Double z = Z.getValue(step);
+                    Double x = GEOGRAPHIC_X.getValue(step);
+                    Double y = GEOGRAPHIC_Y.getValue(step);
+                    Double z = GEOGRAPHIC_Z.getValue(step);
                     if (x == null || y == null || z == null) {
                         return null;
                     } else {
@@ -159,40 +159,57 @@ public abstract class MeasurementValue <T> {
             };
 
     /**
-     * Calculates the remanence from the component averages and the sample's volume.
+     * Calculates the magnetic intensity (or remanence) from the component averages and the sample's volume or mass
+     * (depending on the selected normalization).
      */
-    public static final MeasurementValue<Double> REMANENCE =
+    public static final MeasurementValue<Double> MAGNETIZATION =
             new MeasurementValue<Double>("J", "Am^2/kg or mA/m", "Magnetic intensity (J=M/volume or J=M/mass)") {
-                public Double getValue(MeasurementStep step) {
-                    Project project = step.getProject();
-                    double volume = step.getVolume();
-                    if (volume < 0.0 && project != null) {
-                        volume = project.getVolume();
-                    }
-                    if (volume <= 0.0) {
-                        return null;
-                    }
-                    Double moment = MOMENT.getValue(step);
-                    if (moment == null) {
-                        return null;
-                    } else {
-                        return moment / volume;
-                    }
-                }
-            };
-
-    /**
-     * Calculates the remanence relative to the first measurement's remanence.
-     */
-    public static final MeasurementValue<Double> RELATIVE_REMANENCE =
-            new MeasurementValue<Double>("J/J0", "", "Relative magnitude of the magnetization") {
                 public Double getValue(MeasurementStep step) {
                     Project project = step.getProject();
                     if (project == null) {
                         return null;
                     }
-                    Double j = REMANENCE.getValue(step);
-                    Double j0 = REMANENCE.getValue(project.getStep(0));     // there is at least one step in the project
+
+                    double normalizer;
+                    if (project.getNormalization() == Project.Normalization.VOLUME) {
+                        normalizer = step.getVolume();
+                        if (normalizer < 0.0) {
+                            normalizer = project.getVolume();
+                        }
+                    } else if (project.getNormalization() == Project.Normalization.MASS) {
+                        normalizer = step.getMass();
+                        if (normalizer < 0.0) {
+                            normalizer = project.getMass();
+                        }
+                    } else {
+                        assert false;
+                        return null;
+                    }
+                    if (normalizer <= 0.0) {
+                        return null;
+                    }
+
+                    Double moment = MOMENT.getValue(step);
+                    if (moment == null) {
+                        return null;
+                    } else {
+                        return moment / normalizer;
+                    }
+                }
+            };
+
+    /**
+     * Calculates the magnetic intensity (or remanence) relative to the first measurement's magnetic intensity.
+     */
+    public static final MeasurementValue<Double> RELATIVE_MAGNETIZATION =
+            new MeasurementValue<Double>("J/J0", "", "Relative magnetic intensity") {
+                public Double getValue(MeasurementStep step) {
+                    Project project = step.getProject();
+                    if (project == null) {
+                        return null;
+                    }
+                    Double j = MAGNETIZATION.getValue(step);
+                    Double j0 = MAGNETIZATION.getValue(project.getStep(0));     // there is at least one step in the project
                     if (j == null || j0 == null) {
                         return null;
                     } else {
@@ -202,7 +219,7 @@ public abstract class MeasurementValue <T> {
             };
 
     /**
-     * Calculates the Theta 63 value from the measurement result set.
+     * Calculates the angular standard deviation (Theta 63) from the measurement result set.
      */
     public static final MeasurementValue<Double> THETA63 =
             new MeasurementValue<Double>("\u03b863", "\u00b0", "Angular standard deviation") {
@@ -219,8 +236,9 @@ public abstract class MeasurementValue <T> {
 
                     for (int i = 0; i < step.getResults(); i++) {
                         MeasurementResult r = step.getResult(i);
-                        double declination = atan(r.getX() / r.getY());
-                        double inclination = atan(r.getZ() / sqrt(pow(r.getX(), 2) + pow(r.getY(), 2)));
+                        double declination = atan(r.getGeographicX() / r.getGeographicY());
+                        double inclination = atan(r.getGeographicZ() /
+                                sqrt(pow(r.getGeographicX(), 2) + pow(r.getGeographicY(), 2)));
                         double l = cos(declination) * cos(inclination);
                         double m = sin(declination) * cos(inclination);
                         double n = sin(inclination);
@@ -298,18 +316,3 @@ public abstract class MeasurementValue <T> {
         return description;
     }
 }
-
-//enum Test {
-//
-//    TEST1(){
-//        public void test() {
-//        }
-//    },
-//
-//    TEST2(){
-//        public void test() {
-//        }
-//    };
-//
-//    public abstract void test();
-//}

@@ -124,9 +124,9 @@ in MeasurementSequencePanel update tables with new measurement data.
             for (int i=0; i<event.getStep().getResults(); ++i) {
                 result = event.getStep().getResult(i);
                 measurementDetails.setValueAt(result.getType(), i, 0);
-                measurementDetails.setValueAt(result.getX(), i, 1);
-                measurementDetails.setValueAt(result.getY(), i, 2);
-                measurementDetails.setValueAt(result.getZ(), i, 3);
+                measurementDetails.setValueAt(result.getGeographicX(), i, 1);
+                measurementDetails.setValueAt(result.getGeographicY(), i, 2);
+                measurementDetails.setValueAt(result.getGeographicZ(), i, 3);
             }
             measurementDetails.repaint();
             // TODO S/D S/H S/N calculation (what formulas?)
@@ -150,9 +150,9 @@ in MeasurementSequencePanel update tables with new measurement data.
         for (int i=0; i<step.getResults(); ++i) {
             result = step.getResult(i);
             measurementDetails.setValueAt(result.getType(), i, 0);
-            measurementDetails.setValueAt(result.getX(), i, 1);
-            measurementDetails.setValueAt(result.getY(), i, 2);
-            measurementDetails.setValueAt(result.getZ(), i, 3);
+            measurementDetails.setValueAt(result.getGeographicX(), i, 1);
+            measurementDetails.setValueAt(result.getGeographicY(), i, 2);
+            measurementDetails.setValueAt(result.getGeographicZ(), i, 3);
         }
         measurementDetails.repaint();
         // TODO S/D S/H S/N calculation (what formulas?)

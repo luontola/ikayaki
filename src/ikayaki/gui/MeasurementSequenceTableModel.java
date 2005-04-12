@@ -86,8 +86,8 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         possibleColumns.add(SUSCEPTIBILITY);
         possibleColumns.add(DECLINATION);
         possibleColumns.add(INCLINATION);
-        possibleColumns.add(REMANENCE);
-        possibleColumns.add(RELATIVE_REMANENCE);
+        possibleColumns.add(MAGNETIZATION);
+        possibleColumns.add(RELATIVE_MAGNETIZATION);
         possibleColumns.add(MOMENT);
         possibleColumns.add(X);
         possibleColumns.add(Y);
@@ -100,7 +100,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
         showColumn(STEP, false);
         showColumn(DECLINATION, false);
         showColumn(INCLINATION, false);
-        showColumn(RELATIVE_REMANENCE, false);
+        showColumn(RELATIVE_MAGNETIZATION, false);
         showColumn(X, false);
         showColumn(Y, false);
         showColumn(Z, false);

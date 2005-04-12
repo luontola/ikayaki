@@ -305,17 +305,17 @@ public enum SequenceColumn {
     /*
      * Showing the values calculated by MeasurementValue.
      */
-    X(MeasurementValue.X) {
+    X(MeasurementValue.GEOGRAPHIC_X) {
         {
             setNumberFormat(new DecimalFormat("0.000E0"));
         }
     },
-    Y(MeasurementValue.Y) {
+    Y(MeasurementValue.GEOGRAPHIC_Y) {
         {
             setNumberFormat(new DecimalFormat("0.000E0"));
         }
     },
-    Z(MeasurementValue.Z) {
+    Z(MeasurementValue.GEOGRAPHIC_Z) {
         {
             setNumberFormat(new DecimalFormat("0.000E0"));
         }
@@ -339,7 +339,7 @@ public enum SequenceColumn {
             setNumberFormat(new DecimalFormat("0.000E0"));
         }
     },
-    REMANENCE(MeasurementValue.REMANENCE) { // TODO: "magnetization" would be a better name
+    MAGNETIZATION(MeasurementValue.MAGNETIZATION) { // TODO: "magnetization" would be a better name
         {
             setNumberFormat(new DecimalFormat("0.000E0"));
         }
@@ -349,7 +349,7 @@ public enum SequenceColumn {
             return super.getColumnName(project);
         }
     },
-    RELATIVE_REMANENCE(MeasurementValue.RELATIVE_REMANENCE) {
+    RELATIVE_MAGNETIZATION(MeasurementValue.RELATIVE_MAGNETIZATION) {
         {
             getNumberFormat().setMinimumFractionDigits(3);
             getNumberFormat().setMaximumFractionDigits(3);
