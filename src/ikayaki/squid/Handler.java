@@ -567,10 +567,14 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * moving" message. Caution: If this command is used while the motor is executing a Slew command the only way to
      * stop is with a reset or a hard limit switch input.
      */
-    private void join() {
+    public void join() {
         try {
-            this.serialIO.writeMessage("F");
-            this.serialIO.writeMessage(","); //execute command
+            this.serialIO.writeMessage("F%,");
+            //this.serialIO.writeMessage(","); //execute command
+            waitingForMessage = true;
+            String answer = (String) queue.poll();
+            waitingForMessage = false;
+
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }

@@ -672,7 +672,7 @@ project listeners.
         } catch (ParserConfigurationException e) {
             return null;
         }
-        
+
         // TODO: use a DTD for the document
 
         // create document's root element
@@ -1837,69 +1837,78 @@ project listeners.
 
                 try {
                     // reset the equipment
-                    // TODO: if handler rotation is not 0, then rotate to 0
+                    if(Squid.instance().getHandler().getRotation() != 0) {
+                      Squid.instance().getHandler().rotateTo(0);
+                      Squid.instance().getHandler().join();
+                    }
                     checkAborted();
 
                     // demagnetizing
                     if (currentStep.getStepValue() > 0.0) {
 
                         // demagnetize Z
-                        // TODO: move the handler to demag Z
+                        Squid.instance().getHandler().moveToDegausserZ();
                         fireMeasurementEvent(currentStep, HANDLER_MOVE);
-                        // TODO: wait for the handler
+                        Squid.instance().getHandler().join();
                         fireMeasurementEvent(currentStep, HANDLER_STOP);
                         checkAborted();
-                        // TODO: begin demagnetize
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
-                        // TODO: wait for demagnetize
+                        //need Gauss value
+                        Squid.instance().getDegausser().demagnetizeZ((int)(currentStep.getStepValue()*10));
+                        // blocking method
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
                         checkAborted();
 
                         // demagnetize Y
-                        // TODO: move the handler to demag Y
+                        Squid.instance().getHandler().moveToDegausserY();
                         fireMeasurementEvent(currentStep, HANDLER_MOVE);
-                        // TODO: wait for the handler
+                        Squid.instance().getHandler().join();
                         fireMeasurementEvent(currentStep, HANDLER_STOP);
                         checkAborted();
-                        // TODO: begin demagnetize
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
-                        // TODO: wait for demagnetize
+                        //need Gauss value
+                        Squid.instance().getDegausser().demagnetizeY((int)(currentStep.getStepValue()*10));
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
                         checkAborted();
 
                         // demagnetize X
-                        // TODO: rotate the handler to demag X
+                        Squid.instance().getHandler().rotateTo(90);
                         fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-                        // TODO: wait for the handler
+                        Squid.instance().getHandler().join();
                         fireMeasurementEvent(currentStep, HANDLER_STOP);
                         checkAborted();
-                        // TODO: begin demagnetize
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
-                        // TODO: wait for demagnetize
+                        //need Gauss value
+                        Squid.instance().getDegausser().demagnetizeY((int)(currentStep.getStepValue()*10));
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
                         checkAborted();
-                        // TODO: rotate the handler back to zero
+                        Squid.instance().getHandler().rotateTo(0);
                         fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-                        // TODO: wait for the handler
+                        Squid.instance().getHandler().join();
                         fireMeasurementEvent(currentStep, HANDLER_STOP);
                         checkAborted();
                     }
 
                     // measure first background noise
-                    // TODO: move the handler to background pos
+                    Squid.instance().getHandler().moveToBackground();
                     fireMeasurementEvent(currentStep, HANDLER_MOVE);
-                    // TODO: wait for the handler
+                    Squid.instance().getHandler().join();
                     fireMeasurementEvent(currentStep, HANDLER_STOP);
                     checkAborted();
-                    // TODO: measure background noise
-                    currentStep.addResult(new MeasurementResult(BG, 0.0, 0.0, 0.0));
+                    // Begin by pulsing feedback loop for each axis And by clearing flux counter for each axis
+                    Squid.instance().getMagnetometer().openLoop('a');
+                    Squid.instance().getMagnetometer().join();
+                    Squid.instance().getMagnetometer().clearFlux('a');
+                    Squid.instance().getMagnetometer().join();
+                    Double[] results = Squid.instance().getMagnetometer().readData();
+                    currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
                     checkAborted();
 
                     // begin measuring the sample
-                    // TODO: move the handler to measure pos
+                    Squid.instance().getHandler().moveToMeasurement();
                     fireMeasurementEvent(currentStep, HANDLER_MOVE);
-                    // TODO: wait for the handler
+                    Squid.instance().getHandler().join();
                     fireMeasurementEvent(currentStep, HANDLER_STOP);
                     checkAborted();
 
@@ -1908,8 +1917,8 @@ project listeners.
                     if (rotations == 0) {
 
                         // quick measure with no rotations
-                        // TODO: measure sample
-                        currentStep.addResult(new MeasurementResult(BG, 0.0, 0.0, 0.0));
+                        results = Squid.instance().getMagnetometer().readData();
+                        currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
                         fireMeasurementEvent(currentStep, VALUE_MEASURED);
                         checkAborted();
                     } else {
@@ -1918,63 +1927,65 @@ project listeners.
                         for (int j = 0; j < rotations; j++) {
 
                             // measure at 0 degrees
-                            // TODO: measure sample
-                            currentStep.addResult(new MeasurementResult(DEG0, 0.0, 0.0, 0.0));
+                            results = Squid.instance().getMagnetometer().readData();
+                            currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
                             // measure at 90 degrees
-                            // TODO: rotate the handler to 90 degrees
+                            Squid.instance().getHandler().rotateTo(90);
                             fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-                            // TODO: wait for the handler
+                            Squid.instance().getHandler().join();
                             fireMeasurementEvent(currentStep, HANDLER_STOP);
                             checkAborted();
-                            // TODO: measure sample
-                            currentStep.addResult(new MeasurementResult(DEG90, 0.0, 0.0, 0.0));
+                            results = Squid.instance().getMagnetometer().readData();
+                            currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
                             // measure at 180 degrees
-                            // TODO: rotate the handler to 180 degrees
+                            Squid.instance().getHandler().rotateTo(180);
                             fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-                            // TODO: wait for the handler
+                            Squid.instance().getHandler().join();
                             fireMeasurementEvent(currentStep, HANDLER_STOP);
                             checkAborted();
-                            // TODO: measure sample
-                            currentStep.addResult(new MeasurementResult(DEG180, 0.0, 0.0, 0.0));
+                            results = Squid.instance().getMagnetometer().readData();
+                            currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
                             // measure at 270 degrees
-                            // TODO: rotate the handler to 270 degrees
+                            Squid.instance().getHandler().rotateTo(270);
                             fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-                            // TODO: wait for the handler
+                            Squid.instance().getHandler().join();
                             fireMeasurementEvent(currentStep, HANDLER_STOP);
                             checkAborted();
-                            // TODO: measure sample
-                            currentStep.addResult(new MeasurementResult(DEG270, 0.0, 0.0, 0.0));
+                            results = Squid.instance().getMagnetometer().readData();
+                            currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
                             // rotate the handler back to 0 degrees
-                            // TODO: rotate the handler to 0 degrees
+                            Squid.instance().getHandler().rotateTo(0);
                             fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-                            // TODO: wait for the handler
+                            Squid.instance().getHandler().join();
                             fireMeasurementEvent(currentStep, HANDLER_STOP);
                             checkAborted();
                         }
                     }
 
                     // measure second background noise
-                    // TODO: move the handler to background pos
+                    // measure first background noise
+                    Squid.instance().getHandler().moveToBackground();
                     fireMeasurementEvent(currentStep, HANDLER_MOVE);
-                    // TODO: wait for the handler
+                    Squid.instance().getHandler().join();
                     fireMeasurementEvent(currentStep, HANDLER_STOP);
                     checkAborted();
-                    // TODO: measure background noise
-                    currentStep.addResult(new MeasurementResult(BG, 0.0, 0.0, 0.0));
+                    results = Squid.instance().getMagnetometer().readData();
+                    currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
                     checkAborted();
+
 
                 } catch (InterruptedException e) {
 
@@ -1984,7 +1995,9 @@ project listeners.
                     } else {
                         e.printStackTrace();
                     }
-                } finally {
+                } catch (IOException e) {
+                  e.printStackTrace();
+                }finally {
 
                     // complete the step
                     currentStep.setDone();
