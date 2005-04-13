@@ -184,6 +184,18 @@ Order of rows with measurement data cannot be changed.
                 if (obj != null && obj instanceof MeasurementSequence) {
                     MeasurementSequence sequence = (MeasurementSequence) obj;
                     getProject().addSequence(sequence);
+
+                    // select the just added steps
+                    final int addedSteps = sequence.getSteps();
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            scrollToRow(getProject().getSteps());
+                            int start = getProject().getSteps() - 1 - addedSteps;
+                            int end = getProject().getSteps() - 1;
+                            sequenceTable.getSelectionModel().clearSelection();
+                            sequenceTable.getSelectionModel().setSelectionInterval(start, end);
+                        }
+                    });
                 }
             }
         });
