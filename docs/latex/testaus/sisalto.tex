@@ -34,12 +34,12 @@ If Rita testing utility is easy enough to use it will be used in testing. Tests 
 
 Unit Testing is done for each class separately. Classes tested with JUnit have it's own ClassNameTest.java class in test-directory and gui-components are tested manually. They should be done before and during coding class. All test cases must be executable after classes are ready. Every class should be tested succesfully before integration tests.
 
-All use cases are listed in section \ref{cases}.
+All test cases are listed in section \ref{cases}.
 
 \subsection{Integrity Testing}
 \label{integrity}
 
-Integrity testing is done after unit test is passed for all classes. Testing is done using squid emulator at first and finally with real Squid system. Graphical User Interface is tested first and after that Squid Interface is tested.
+Integrity testing is done after unit test is passed for all classes. Testing is done using squid emulator at first and finally with real Squid system. Graphical User Interface is mainly tested in Unit testing and is only looked that all components work together as Squid Interface is tested.
 
 Graphical User Interface is tested using all use cases from \ref{intcase}. If one fails, it is corrected immediatelly and all use cases must be done again. When all use cases are done without errors this phase is ready.
 
@@ -108,16 +108,22 @@ Here are listed test cases for gui-classes, these are done manually just clickin
 \subsection{Intergrity test case}
 \label{intcase}
 
-Here is test case which is done in integration phase to all components at same time. This is done in following order and must be repeated until done succesfully
+Here is test case which is done in integration phase to all components at same time. This is done in following order and must be repeated until done succesfully. Variations can be made to ensure that all works in different situations.
 
-\subsubsection{GUI test case}
-\input{int_case}
+#\subsubsection{GUI test case}
+#\input{int_case}
 
 \subsubsection{Automatic Measurement}
 
+\input{uc_af}
+
 \subsubsection{Thellier Measurement}
 
+\input{uc_thellier}
+
 \subsubsection{Manual Measurement}
+
+\input{uc_manual}
 
 \section{JUnit}
 \label{jhelp}

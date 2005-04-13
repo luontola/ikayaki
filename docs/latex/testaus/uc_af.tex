@@ -1,0 +1,145 @@
+\begin{enumerate}
+
+\item Open software
+
+Conditions:
+\begin{itemize}
+\item Last project is opened, if available.
+\item All components are in right place
+\end{itemize}
+
+\item Select Sample holder calibration
+
+Conditions:
+\begin{itemize}
+\item opens Sample holder calibration project in Measurement Sequence
+\item disables Measurement Controls
+\item enables calibrate button
+\end{itemize}
+
+\item Click Calibration button
+
+Conditions:
+\begin{itemize}
+\item Starts calibration, progress shown on measurement controls
+\item Data is updated correctly in Measurement Details
+\item Calibration button changed to stop button
+\end{itemize}
+
+\item Calibration finished
+
+Conditions:
+\begin{itemize}
+\item New data added to Measurement Sequence
+\item stop button is changed to calibration button
+\item Last modified is updated Sample Holder
+\end{itemize}
+
+\item Select standard sample
+
+Conditions:
+\begin{itemize}
+\item opens Standard Sample calibration project in Measurement Sequence
+\end{itemize}
+
+\item Click Calibration button
+
+Conditions:
+\begin{itemize}
+\item Starts calibration, progress shown on measurement controls
+\item Data is updated correctly in Measurement Details
+\item Calibration button changed to stop button
+\end{itemize}
+
+\item Calibration finished
+
+Conditions:
+\begin{itemize}
+\item New data added to Measurement Sequence
+\item stop button is changed to calibration button
+\item Last modified is updated in Standard Sample
+\end{itemize}
+
+\item Create new AF project
+
+Conditions:
+\begin{itemize}
+\item Calibration project is closed
+\item new AF project is opened with given name (ProjectInfo,MeasurementSequence)
+\item Measurement Controls has enabled buttons Measure,Single Step and disable Stop Now!
+\end{itemize}
+
+\item Add project Information
+
+Conditions:
+\begin{itemize}
+\item All data is accepted
+\end{itemize}
+
+\item Load Set
+
+Conditions:
+\begin{itemize}
+\item Loaded set is correctly added to Sequence
+\end{itemize}
+
+\item Click Measure
+
+Conditions:
+\begin{itemize}
+\item Measure button changed to Pause, disables Single Step, enables Stop Now!
+\item Rows are highlighted in Explorer and Sequence
+\item Starts measuring first phase correctly (no demag now)
+\item Picture of demagnetizer is up-to-date
+\item Plots are drawn when one phase is over
+\item Continues on next phase and does demag first
+\item updates Details and Sequence
+\item any sequence cannot be changed 
+\end{itemize}
+
+\item Pause button
+
+Conditions:
+\begin{itemize}
+\item Finish current measure and stops after that
+\item Pause button changed to Measure button
+\item When finished disables Stop Now!
+\end{itemize}
+
+\item Sequence edit
+
+Conditions:
+\begin{itemize}
+\item Steps not yet measured, can be changed
+\end{itemize}
+
+\item Single step button
+
+Conditions:
+\begin{itemize}
+\item Performs Next phase on measure
+\item Disables Measure button and Single Step button, enables Stop Now!
+\end{itemize}
+
+\item Measure button
+
+Conditions:
+\begin{itemize}
+\item Measure button changed to Pause, disables Single Step, enables Stop Now!
+\item Rows are highlighted in Explorer and Sequence
+\item Continues from Next phase
+\item Picture of demagnetizer is up-to-date
+\item Plots are drawn when one phase is over
+\item Continues on next phase
+\item updates Details and Sequence
+\end{itemize}
+
+\item Stop Now! button
+
+Conditions:
+\begin{itemize}
+\item Stops measurement immediatelly.
+\item Disables buttons and enables Manual Control
+\end{itemize}
+
+\end{enumerate}
