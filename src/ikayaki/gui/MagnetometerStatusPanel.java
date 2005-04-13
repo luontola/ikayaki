@@ -79,13 +79,13 @@ public class MagnetometerStatusPanel extends JPanel {
         baseSlider.setOpaque(false);
         baseSlider.setLabelTable(baseSliderLabels);
 
-        add(baseSlider, BorderLayout.CENTER);
+        add(baseSlider, BorderLayout.EAST);
 
         setPreferredSize(new Dimension(150, 400));
         //setMinimumSize(new Dimension(100, 400));
 
         //updateStatus();
-        updateStatus(posHome, 1500);
+        updateStatus(posHome, 00);
     }
 
     /**
@@ -105,7 +105,7 @@ public class MagnetometerStatusPanel extends JPanel {
      *
      * @param position sample holder position, from 1 to 16777215.
      * @param rotation sample holder rotation, from 0 (angle 0) to 2000 (angle 360).
-     * @deprecated we read position and rotation ourself.
+     * @deprecated we read position and rotation ourself in updateStatus().
      */
     public void updateStatus(int position, int rotation) {
         this.position = position;
@@ -161,20 +161,19 @@ public class MagnetometerStatusPanel extends JPanel {
         int samplew = w / 3;
         int sampleh = w / 4;
         int sampled = h / 12;
-        int rotl = w / 5;
+        int rotl = w / 6;
 
         // sample y position
         int sampley = (int) ((long) h * position / maxposition);
 
         // do the drawing...
 
+        // handler base line
         g2.drawLine(basex, 0, basex, box1y);
 
         // magnetometer boxes
         g2.drawRect(basex - box1w / 2, box1y, box1w, box2y - box1y);
-        g2.drawRect(basex - box2w / 2, box2y, box2w, h - box2y);
-
-        g2.drawLine(basex, 0, basex, h);
+        g2.drawRect(basex - box2w / 2, box2y, box2w, h - box2y - 2);
 
         // "sample"
         drawFillOval(g2, Color.WHITE, basex - samplew / 2, sampley - sampled, samplew, sampleh);
@@ -184,6 +183,7 @@ public class MagnetometerStatusPanel extends JPanel {
         // rotation arrow
         drawArrow(g2, basex, sampley + sampleh / 2, rotl, rotation);
 
+        // restore original Graphics
         g2.dispose();
     }
 
@@ -216,7 +216,7 @@ public class MagnetometerStatusPanel extends JPanel {
      * @param g2 marsu.
      * @param x x-center.
      * @param y y-center.
-     * @param length arrow length.
+     * @param length arrow length; arrow pointing lines' length will be length/4.
      * @param rotation rotation angle as 0..maxrotation (meaning 0..360 degrees).
      */
     private void drawArrow(Graphics2D g2, int x, int y, int length, int rotation) {
@@ -224,8 +224,8 @@ public class MagnetometerStatusPanel extends JPanel {
         g2.translate(x, y);
         g2.rotate(Math.PI * 2 * rotation / maxrotation);
         g2.drawLine(0, -length / 2, 0, length / 2);
-        g2.drawLine(0, -length / 2, -length / 8, -length / 2 + length / 8);
-        g2.drawLine(0, -length / 2, length / 8, -length / 2 + length / 8);
+        g2.drawLine(0, -length / 2, -length / 4, -length / 2 + length / 4);
+        g2.drawLine(0, -length / 2, length / 4, -length / 2 + length / 4);
         g2.dispose();
     }
 }
