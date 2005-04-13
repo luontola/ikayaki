@@ -54,29 +54,39 @@ public class ManualControlsPanel extends JPanel {
     private final ButtonGroup moveButtonGroup = new ButtonGroup();
 
     /**
+     * Moves sample holder to left limit position.
+     */
+    final JRadioButton moveLeft = new JRadioButton("Left limit");
+
+    /**
      * Moves sample holder to home position.
      */
-    private final JRadioButton moveHome = new JRadioButton("Home");
+    final JRadioButton moveHome = new JRadioButton("Home");
 
     /**
      * Moves sample holder to demagnetize-Z position.
      */
-    private final JRadioButton moveDemagZ = new JRadioButton("Demag Z");
+    final JRadioButton moveDemagZ = new JRadioButton("Demag Z");
 
     /**
      * Moves sample holder to demagnetize-Y position.
      */
-    private final JRadioButton moveDemagY = new JRadioButton("Demag Y");
+    final JRadioButton moveDemagY = new JRadioButton("Demag Y");
 
     /**
      * Moves sample holder to background position.
      */
-    private final JRadioButton moveBG = new JRadioButton("BG");
+    final JRadioButton moveBG = new JRadioButton("BG");
 
     /**
      * Moves sample holder to measurement position.
      */
-    private final JRadioButton moveMeasure = new JRadioButton("Measure");
+    final JRadioButton moveMeasure = new JRadioButton("Measure");
+
+    /**
+     * Moves sample holder to right limit position.
+     */
+    final JRadioButton moveRight = new JRadioButton("Right limit");
 
     /**
      * Groups together all sample holder rotating RadioButtons (rotateXXX).
@@ -135,10 +145,18 @@ public class ManualControlsPanel extends JPanel {
     private final ComponentFlasher demagYButtonFlasher = new ComponentFlasher(demagYButton);
 
     // labels for command groups
-    private final JLabel moveLabel = new JLabel("Move");
+    final JLabel moveLabel = new JLabel("Move");
     private final JLabel rotateLabel = new JLabel("Rotate");
-    private final JLabel measureLabel = new JLabel("Meausure");
-    private final JLabel demagLabel = new JLabel("Demagnetize");
+    private final JLabel measureLabel = new JLabel("Measure");
+    private final JLabel demagLabel = new JLabel("Demag");
+
+    // don't say anything about this...
+    private final Component[] components = new Component[] {
+        moveLeft, moveHome, moveDemagZ, moveDemagY, moveBG, moveMeasure, moveRight,
+        rotate0, rotate90, rotate180, rotate270,
+        measureAllButton, resetAllButton, demagAmplitudeField, demagAmplitudeLabel, demagZButton, demagYButton,
+        moveLabel, rotateLabel, measureLabel, demagLabel
+    };
 
     /**
      * Creates our stupid ManualControlsPanel.
@@ -149,6 +167,7 @@ public class ManualControlsPanel extends JPanel {
         moveButtonGroup.add(moveDemagY);
         moveButtonGroup.add(moveBG);
         moveButtonGroup.add(moveMeasure);
+        moveButtonGroup.add(moveRight);
 
         rotateButtonGroup.add(rotate0);
         rotateButtonGroup.add(rotate90);
@@ -160,41 +179,50 @@ public class ManualControlsPanel extends JPanel {
         measureLabel.setFont(measureLabel.getFont().deriveFont(Font.BOLD));
         demagLabel.setFont(demagLabel.getFont().deriveFont(Font.BOLD));
 
-        // TODO: how to layout?
-        setLayout(new GridLayout(20, 1));
+        moveHome.setMargin(new Insets(0, 0, 0, 0));
+        moveDemagZ.setMargin(new Insets(0, 0, 0, 0));
+        moveDemagY.setMargin(new Insets(0, 0, 0, 0));
+        moveBG.setMargin(new Insets(0, 0, 0, 0));
+        moveMeasure.setMargin(new Insets(0, 0, 0, 0));
 
-        add(moveLabel);
-        add(moveHome);
-        add(moveDemagZ);
-        add(moveDemagY);
-        add(moveBG);
-        add(moveMeasure);
-        add(new JPanel());
+        measureAllButton.setMargin(new Insets(1, 1, 1, 1));
+        resetAllButton.setMargin(new Insets(1, 1, 1, 1));
+        demagZButton.setMargin(new Insets(1, 1, 1, 1));
+        demagYButton.setMargin(new Insets(1, 1, 1, 1));
 
-        add(rotateLabel);
+        JPanel rotatePanel = new JPanel(new BorderLayout());
+        JPanel rotateButtonPanel = new JPanel(new BorderLayout());
         rotate0.setHorizontalAlignment(JRadioButton.CENTER);
-        add(rotate0);
-        JPanel rotatePanel = new JPanel(new GridLayout(1, 2));
-        rotatePanel.add(rotate270);
-        rotatePanel.add(rotate90);
-        add(rotatePanel);
         rotate180.setHorizontalAlignment(JRadioButton.CENTER);
-        add(rotate180);
-        add(new JPanel());
+        rotateButtonPanel.add(rotate0, BorderLayout.NORTH);
+        rotateButtonPanel.add(rotate90, BorderLayout.EAST);
+        rotateButtonPanel.add(rotate180, BorderLayout.SOUTH);
+        rotateButtonPanel.add(rotate270, BorderLayout.WEST);
+        rotatePanel.add(rotateLabel, BorderLayout.NORTH);
+        rotatePanel.add(rotateButtonPanel, BorderLayout.CENTER);
 
-        add(measureLabel);
-        add(measureAllButton);
-        add(resetAllButton);
-        add(new JPanel());
+        JPanel measurePanel = new JPanel(new BorderLayout());
+        JPanel measureButtonPanel = new JPanel(new GridLayout(3, 1, 0, 4));
+        measureButtonPanel.add(measureAllButton);
+        measureButtonPanel.add(resetAllButton);
+        measurePanel.add(measureLabel, BorderLayout.NORTH);
+        measurePanel.add(measureButtonPanel, BorderLayout.CENTER);
 
-        add(demagLabel);
-        //JPanel demagAmplitudePanel = new JPanel(new GridLayout(1, 2));
+        JPanel demagPanel = new JPanel(new BorderLayout());
+        JPanel demagButtonPanel = new JPanel(new GridLayout(3, 1, 0, 4));
         JPanel demagAmplitudePanel = new JPanel(new BorderLayout(4, 0));
         demagAmplitudePanel.add(demagAmplitudeField, BorderLayout.CENTER);
         demagAmplitudePanel.add(demagAmplitudeLabel, BorderLayout.EAST);
-        add(demagAmplitudePanel);
-        add(demagZButton);
-        add(demagYButton);
+        demagButtonPanel.add(demagAmplitudePanel);
+        demagButtonPanel.add(demagZButton);
+        demagButtonPanel.add(demagYButton);
+        demagPanel.add(demagLabel, BorderLayout.NORTH);
+        demagPanel.add(demagButtonPanel, BorderLayout.CENTER);
+
+        setLayout(new FlowLayout(FlowLayout.LEFT, 12, 0));
+        add(rotatePanel);
+        add(measurePanel);
+        add(demagPanel);
 
         //setPreferredSize(new Dimension(100, 400));
         //setMaximumSize(new Dimension(100, 400));
@@ -319,9 +347,7 @@ public class ManualControlsPanel extends JPanel {
     private void getHandler() {
         try {
             this.handler = Squid.instance().getHandler();
-        } catch (IOException ex) {
-            setEnabled(false);
-        }
+        } catch (IOException ex) { }
     }
 
     /**
@@ -356,18 +382,10 @@ public class ManualControlsPanel extends JPanel {
      */
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
-        setEnabled(getComponents(), enabled);
+        if (this.handler == null) enabled = false;
+        for (Component component : components) component.setEnabled(enabled);
 
         // TODO: if enabled==true set selected radiobexes according to current handler status...
-    }
-
-    private static void setEnabled(Component[] components, boolean enabled) {
-        for (Component c : components) {
-            if (c instanceof Container) {
-                setEnabled(((Container) c).getComponents(), enabled);
-            }
-            c.setEnabled(enabled);
-        }
     }
 
     /**
@@ -378,7 +396,7 @@ public class ManualControlsPanel extends JPanel {
     public void setProject(Project project) {
         this.project = project;
 
-        if (this.handler == null || this.project == null) setEnabled(false);
+        if (this.project == null) setEnabled(false);
         else setEnabled(project.isManualControlEnabled());
     }
 }

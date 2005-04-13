@@ -22,15 +22,13 @@
 
 package ikayaki.gui;
 
-import java.io.*;
-import java.util.*;
-
-import java.awt.*;
-import javax.swing.*;
-
 import ikayaki.*;
 import ikayaki.squid.*;
 import ikayaki.squid.Handler;
+
+import java.awt.*;
+import javax.swing.*;
+import java.io.*;
 
 /**
  * Picture of current magnetometer status, with sample holder position and rotation. Status is updated according to
@@ -45,6 +43,11 @@ public class MagnetometerStatusPanel extends JPanel {
      */
     private Handler handler;
 
+    /**
+     * ManualControlsPanel whose move-radiobuttons to show.
+     */
+    private final ManualControlsPanel manualControlsPanel;
+
     // handler current position and rotation
     private int position, rotation;
 
@@ -52,45 +55,34 @@ public class MagnetometerStatusPanel extends JPanel {
     private final int maxposition = 1 << 24, maxrotation = 2000;
 
     // handler positions, read from Settings, thank you autoboxing!
-    // TODO: does autoboxing keep the same Integers in the Hashtable, so updating them would show in JSlider?
-    private Integer posHome;
-    private Integer posDemagZ;
-    private Integer posDemagY;
-    private Integer posBG;
-    private Integer posMeasurement;
-
-    private final JSlider baseSlider;
-    private final Hashtable<Integer,JLabel> baseSliderLabels;
+    private int posLeft;
+    private int posHome;
+    private int posDemagZ;
+    private int posDemagY;
+    private int posBG;
+    private int posMeasure;
+    private int posRight;
 
     /**
      * Sets magnetometer status to current position.
      */
-    public MagnetometerStatusPanel() {
-        super(new BorderLayout());
+    public MagnetometerStatusPanel(ManualControlsPanel manualControlsPanel) {
+        this.setLayout(new OverlayLayout(this));
+        this.manualControlsPanel = manualControlsPanel;
 
-        updatePositions();
-        baseSliderLabels = new Hashtable<Integer,JLabel>();
-        baseSliderLabels.put(posHome, new JLabel("Home"));
-        baseSliderLabels.put(posDemagZ, new JLabel("Demag Z"));
-        baseSliderLabels.put(posDemagY, new JLabel("Demag Y"));
-        baseSliderLabels.put(posBG, new JLabel("Background"));
-        baseSliderLabels.put(posMeasurement, new JLabel("Measurement"));
-
-        baseSlider = new JSlider(JSlider.VERTICAL, 0, maxposition, 0);
-        baseSlider.setEnabled(false);
-        baseSlider.setInverted(true);
-        baseSlider.setPaintLabels(true);
-        baseSlider.setPaintTrack(false);
-        baseSlider.setOpaque(false);
-        baseSlider.setLabelTable(baseSliderLabels);
-
-        add(baseSlider, BorderLayout.EAST);
+        add(manualControlsPanel.moveLabel);
+        add(manualControlsPanel.moveHome);
+        add(manualControlsPanel.moveDemagZ);
+        add(manualControlsPanel.moveDemagY);
+        add(manualControlsPanel.moveBG);
+        add(manualControlsPanel.moveMeasure);
+        //add(manualControlsPanel.moveRight);
 
         setPreferredSize(new Dimension(150, 400));
         //setMinimumSize(new Dimension(100, 400));
 
         //updateStatus();
-        updateStatus(posHome, 400); // NOTE: for testing
+        updateStatus(1 << 23, 400); // NOTE: for testing
     }
 
     /**
@@ -107,11 +99,31 @@ public class MagnetometerStatusPanel extends JPanel {
      */
     private void updatePositions() {
         Settings settings = Settings.instance();
+        // TODO: what's this?
+        //this.posLeft = settings.getHandlerLeftLimit();
         this.posHome = settings.getHandlerSampleLoadPosition();
         this.posDemagZ = settings.getHandlerAxialAFPosition();
         this.posDemagY = settings.getHandlerTransverseYAFPosition();
         this.posBG = settings.getHandlerBackgroundPosition();
-        this.posMeasurement = settings.getHandlerMeasurementPosition();
+        this.posMeasure = settings.getHandlerMeasurementPosition();
+        this.posRight = settings.getHandlerRightLimit();
+    }
+
+    /**
+     * Updates moveButtons' positions.
+     */
+    private void updateButtonPositions() {
+        updateYPosition(manualControlsPanel.moveLabel, 0);
+        updateYPosition(manualControlsPanel.moveHome, posHome);
+        updateYPosition(manualControlsPanel.moveDemagZ, posDemagZ);
+        updateYPosition(manualControlsPanel.moveDemagY, posDemagY);
+        updateYPosition(manualControlsPanel.moveBG, posBG);
+        updateYPosition(manualControlsPanel.moveMeasure, posMeasure);
+        updateYPosition(manualControlsPanel.moveRight, posRight);
+    }
+
+    private void updateYPosition(JComponent b, int position) {
+        b.setLocation(b.getX(), (int) ((long) getHeight() * position / maxposition));
     }
 
     /**
@@ -125,7 +137,6 @@ public class MagnetometerStatusPanel extends JPanel {
         this.position = position;
         this.rotation = rotation;
         updatePositions();
-        baseSlider.setValue(this.position);
         repaint();
     }
 
@@ -139,7 +150,6 @@ public class MagnetometerStatusPanel extends JPanel {
             this.rotation = this.handler.getRotation();
         }
         updatePositions();
-        baseSlider.setValue(this.position);
         repaint();
     }
 
@@ -149,6 +159,9 @@ public class MagnetometerStatusPanel extends JPanel {
      * @param g mursu.
      */
     protected void paintComponent(Graphics g) {
+        // must update radiobuttons' positions here, hope it's safe...
+        updateButtonPositions();
+
         // let Swing erase the background
         super.paintComponent(g);
 
@@ -160,6 +173,10 @@ public class MagnetometerStatusPanel extends JPanel {
         // save our width and height to be handly available
         int w = getWidth();
         int h = getHeight();
+
+        // leave some space for move-radiobuttons
+        g2.translate(80, 0);
+        w -= 80;
 
         // sample handler base line x position
         int basex = w / 2;

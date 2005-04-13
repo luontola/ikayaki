@@ -60,15 +60,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
      * Groups together +z and -z RadioButtons.
      */
     private final ButtonGroup zButtonGroup;
-
-    /**
-     * Changes sample orientation to +Z.
-     */
     private final JRadioButton zPlusRadioButton;
-
-    /**
-     * Changes sample orientation to -Z.
-     */
     private final JRadioButton zMinusRadioButton;
 
     /**
@@ -80,9 +72,15 @@ public class MeasurementControlsPanel extends ProjectComponent {
     private final Icon sampleInsertZMinusIcon;
     private final JLabel sampleInsertIconLabel;
 
-    private final MagnetometerStatusPanel magnetometerStatusPanel;
-
+    /**
+     * Magnetometer manual controls.
+     */
     private final ManualControlsPanel manualControlsPanel;
+
+    /**
+     * Magnetometer status panel; also holds move-radiobuttons from ManualControlsPanel.
+     */
+    private final MagnetometerStatusPanel magnetometerStatusPanel;
 
     /* Swing Actions */
     private Action autoStepAction;
@@ -141,14 +139,14 @@ public class MeasurementControlsPanel extends ProjectComponent {
         topPanel.add(buttonPanel, BorderLayout.CENTER);
         topPanel.add(sampleInsertPanel, BorderLayout.SOUTH);
 
-        magnetometerStatusPanel = new MagnetometerStatusPanel();
         manualControlsPanel = new ManualControlsPanel();
+        magnetometerStatusPanel = new MagnetometerStatusPanel(manualControlsPanel);
 
         JPanel contentPane = new JPanel(new BorderLayout(0, 8));
         contentPane.setBorder(BorderFactory.createEmptyBorder(0, 4, 4, 4));
         contentPane.add(topPanel, BorderLayout.NORTH);
-        contentPane.add(manualControlsPanel, BorderLayout.WEST);
         contentPane.add(magnetometerStatusPanel, BorderLayout.CENTER);
+        contentPane.add(manualControlsPanel, BorderLayout.SOUTH);
         this.setLayout(new BorderLayout());
         this.add(contentPane);
 
