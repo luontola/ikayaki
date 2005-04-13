@@ -441,9 +441,6 @@ public enum SequenceColumn {
         // styles for the COUNT column
         Color headerBackground = new Color(0xE1E1E1);
         Border headerBorder = BorderFactory.createEmptyBorder(1, 2, 1, 2);
-//        Border headerBorder = BorderFactory.createCompoundBorder(
-//                BorderFactory.createMatteBorder(0, 0, 0, 1, new Color(0x808080)),
-//                BorderFactory.createEmptyBorder(1, 2, 1, 2));
         headerWrapper.opaque = true;
         headerWrapper.background = headerBackground;
         headerWrapper.selectedBackground = headerBackground;

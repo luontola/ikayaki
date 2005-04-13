@@ -185,7 +185,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
                             scrollToRow(getProject().getSteps());
-                            int start = getProject().getSteps() - 1 - addedSteps;
+                            int start = getProject().getSteps() - addedSteps;
                             int end = getProject().getSteps() - 1;
                             sequenceTable.getSelectionModel().clearSelection();
                             sequenceTable.getSelectionModel().setSelectionInterval(start, end);

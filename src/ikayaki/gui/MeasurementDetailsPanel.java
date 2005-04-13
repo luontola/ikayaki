@@ -96,8 +96,16 @@ public class MeasurementDetailsPanel extends ProjectComponent {
         tablePanel.add(detailsTablePanel, "Center");
         tablePanel.add(errorsTablePanel, "South");
 
-        setLayout(new FlowLayout(FlowLayout.CENTER));
-        add(tablePanel);
+        JPanel contentPane = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        contentPane.add(tablePanel);
+
+        JScrollPane scrollPane = new JScrollPane(contentPane,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(null);
+        this.setLayout(new BorderLayout());
+        this.add(scrollPane);
+        this.setMinimumSize(new Dimension(0, 205));
     }
 
     public MeasurementStep getStep() {
@@ -153,7 +161,26 @@ public class MeasurementDetailsPanel extends ProjectComponent {
         }
 
         public int getRowCount() {
-            return Math.max(1, 4 * Settings.instance().getMeasurementRotations()) + 2;
+            // the expected number of results based on measurement rotations
+            int expected = Math.max(1, 4 * Settings.instance().getMeasurementRotations()) + 2;
+
+            if (step == null) {
+                return expected;
+
+            } else if (step.getState() == MeasurementStep.State.DONE
+                    || step.getState() == MeasurementStep.State.DONE_RECENTLY) {
+                return step.getResults();
+
+            } else {
+                // try to estimate the number of steps
+                int count = step.getResults();
+                
+                // if the last step is not BG, there are more steps coming
+                if (count >= 2 && step.getResult(count - 1).getType() != MeasurementResult.Type.BG) {
+                    count++;
+                }
+                return Math.max(expected, count);
+            }
         }
 
         public int getColumnCount() {
@@ -327,6 +354,4 @@ public class MeasurementDetailsPanel extends ProjectComponent {
             return wrapper;
         }
     }
-
-
 }
