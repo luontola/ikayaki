@@ -541,7 +541,6 @@ public class Settings {
         }
     }
 
-
     /* Program window */
 
     public synchronized int getWindowWidth() {
