@@ -29,6 +29,7 @@ import ikayaki.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
@@ -792,6 +793,160 @@ public class MeasurementSequencePanel extends ProjectComponent {
                 checkBox.setToolTipText(column.getToolTipText(getProject()));
                 add(checkBox);
             }
+        }
+    }
+
+    /**
+     * Shows the details of the active measurement step.
+     *
+     * @author Esko Luontola
+     */
+    private class DetailsPanel extends ProjectComponent {
+
+        private JTable detailsTable;
+        private DetailsTableModel detailsTableModel;
+
+        private JTable errorsTable;
+        private ErrorsTableModel errorsTableModel;
+
+        /**
+         * The measurement step whose details are being shown or null to show a blank table.
+         */
+        private MeasurementStep step;
+
+        public DetailsPanel() {
+
+            detailsTableModel = new DetailsTableModel();
+            detailsTable = new JTable(detailsTableModel);
+
+            errorsTableModel = new ErrorsTableModel();
+            errorsTable = new JTable(errorsTableModel);
+        }
+
+        public MeasurementStep getStep() {
+            return step;
+        }
+
+        public void setStep(MeasurementStep step) {
+            this.step = step;
+            this.detailsTableModel.setStep(step);
+            this.errorsTableModel.setStep(step);
+        }
+
+        @Override public void measurementUpdated(MeasurementEvent event) {
+            if (event.getStep() == step) {
+                detailsTableModel.fireTableDataChanged();
+                errorsTableModel.fireTableDataChanged();
+            }
+        }
+    }
+
+    private class DetailsTableModel extends AbstractTableModel {
+
+        private MeasurementStep step;
+
+        private final String[] COLUMNS = new String[]{"", "X", "Y", "Z"};
+        private final int HEADER_COLUMN = 0;
+        private final int X_COLUMN = 1;
+        private final int Y_COLUMN = 2;
+        private final int Z_COLUMN = 3;
+
+        public MeasurementStep getStep() {
+            return step;
+        }
+
+        public void setStep(MeasurementStep step) {
+            this.step = step;
+        }
+
+        public int getRowCount() {
+            int expected = Settings.instance().getMeasurementRotations();
+            if (expected == 0) expected++;
+            expected += 2;
+            return expected;
+        }
+
+        public int getColumnCount() {
+            return COLUMNS.length;
+        }
+
+        @Override public String getColumnName(int column) {
+            return COLUMNS[column];
+        }
+
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            Object value;
+            switch (columnIndex) {
+            case HEADER_COLUMN:
+                value = "DEG";
+                break;
+            case X_COLUMN:
+                value = "X"; // TODO
+                break;
+            case Y_COLUMN:
+                value = "Y"; // TODO
+                break;
+            case Z_COLUMN:
+                value = "Z"; // TODO
+                break;
+            default:
+                value = null;
+                break;
+            }
+            return value;
+        }
+    }
+
+    private class ErrorsTableModel extends AbstractTableModel {
+
+        private MeasurementStep step;
+
+        private final String[] COLUMNS = new String[]{"", "Signal/Drift", "Signal/Holder", "Signal/Noise"};
+        private final int HEADER_COLUMN = 0;
+        private final int SIGNAL_DRIFT_COLUMN = 1;
+        private final int SIGNAL_HOLDER_COLUMN = 2;
+        private final int SIGNAL_NOISE_COLUMN = 3;
+
+        public MeasurementStep getStep() {
+            return step;
+        }
+
+        public void setStep(MeasurementStep step) {
+            this.step = step;
+        }
+
+        public int getRowCount() {
+            return 1;
+        }
+
+        public int getColumnCount() {
+            return COLUMNS.length;
+        }
+
+        @Override public String getColumnName(int column) {
+            return COLUMNS[column];
+        }
+
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            Object value;
+            switch (columnIndex) {
+            case HEADER_COLUMN:
+                value = "Error";
+                break;
+            case SIGNAL_DRIFT_COLUMN:
+                value = "(S/D)"; // TODO
+                break;
+            case SIGNAL_HOLDER_COLUMN:
+                value = "(S/H)"; // TODO
+                break;
+            case SIGNAL_NOISE_COLUMN:
+                value = "(S/N)"; // TODO
+                break;
+            default:
+                value = null;
+                break;
+            }
+            return value;
         }
     }
 }
