@@ -804,9 +804,25 @@ Order of rows with measurement data cannot be changed.
      */
     private class HeaderPopupMenu extends JPopupMenu {
         public HeaderPopupMenu() {
-            add("HeaderPopupMenu");
 
-            // TODO
+            JMenuItem header = new JMenuItem("Visible Columns");
+            header.setFont(header.getFont().deriveFont(Font.BOLD));
+            header.setEnabled(false);
+            add(header);
+
+            SequenceColumn[] columns = sequenceTableModel.getPossibleColumns();
+            for (final SequenceColumn column : columns) {
+
+                // add all of the columns to the menu as checkboxes
+                final JCheckBox checkBox = new JCheckBox(column.getColumnName(getProject()));
+                checkBox.setSelected(sequenceTableModel.isColumnVisible(column));
+                checkBox.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        sequenceTableModel.setColumnVisible(column, checkBox.isSelected());
+                    }
+                });
+                add(checkBox);
+            }
         }
     }
 }

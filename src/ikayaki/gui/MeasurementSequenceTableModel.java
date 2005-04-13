@@ -168,6 +168,13 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
     }
 
     /**
+     * Returns an array of columns that the current project can show. They are in the order of appearance.
+     */
+    public SequenceColumn[] getPossibleColumns() {
+        return possibleColumns.toArray(new SequenceColumn[possibleColumns.size()]);
+    }
+
+    /**
      * Shows the specified column. Makes sure that the columns are always in the same order.
      *
      * @param column the column to be shown.
@@ -291,7 +298,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * @see #getColumnCount
      */
     public int getRowCount() {
-        if (project != null) {
+        if (project != null && visibleColumns.size() > 0) {
             if (project.isSequenceEditEnabled()) {
                 return project.getSteps() + 1;
             } else {
@@ -310,7 +317,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * @see #getRowCount
      */
     public int getColumnCount() {
-        return visibleColumns.size();
+        return Math.max(1, visibleColumns.size());
     }
 
     /**
@@ -353,6 +360,9 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * @return a string containing the default name of column.
      */
     @Override public String getColumnName(int column) {
+        if (visibleColumns.size() <= column) {
+            return "< right-click to select columns >";
+        }
         return visibleColumns.get(column).getColumnName(project);
     }
 
@@ -363,6 +373,9 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
      * @return the Object.class
      */
     @Override public Class<?> getColumnClass(int columnIndex) {
+        if (visibleColumns.size() <= columnIndex) {
+            return Object.class;
+        }
         return visibleColumns.get(columnIndex).getColumnClass();
     }
 }
