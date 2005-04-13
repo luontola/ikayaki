@@ -688,6 +688,10 @@ Order of rows with measurement data cannot be changed.
         private Action getInsertBeforeAction() {
             Action action = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
+                    int index = getFirstIndex();
+                    for (int i = 0; i < steps.length; i++) {
+                        getProject().addStep(index, new MeasurementStep());
+                    }
                 }
             };
             action.putValue(Action.NAME, "Insert Before");
@@ -705,6 +709,10 @@ Order of rows with measurement data cannot be changed.
         private Action getInsertAfterAction() {
             Action action = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
+                    int index = getLastIndex() + 1;
+                    for (int i = 0; i < steps.length; i++) {
+                        getProject().addStep(index, new MeasurementStep());
+                    }
                 }
             };
             action.putValue(Action.NAME, "Insert After");
@@ -722,6 +730,11 @@ Order of rows with measurement data cannot be changed.
         private Action getDeleteSelectedAction() {
             Action action = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
+                    // can not use removeStep(int,int) here because the selection might not be contiguous
+                    int index;
+                    while ((index = getLastIndex()) >= 0) {
+                        getProject().removeStep(index);
+                    }
                 }
             };
             action.putValue(Action.NAME, "Delete Selected");
@@ -738,6 +751,7 @@ Order of rows with measurement data cannot be changed.
         private Action getSaveSelectedAsAction() {
             Action action = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
+                    // TODO
                 }
             };
             action.putValue(Action.NAME, "Save Selected As...");
@@ -754,6 +768,7 @@ Order of rows with measurement data cannot be changed.
         private Action getSaveAllAsAction() {
             Action action = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
+                    // TODO
                 }
             };
             action.putValue(Action.NAME, "Save All As...");
@@ -815,12 +830,13 @@ Order of rows with measurement data cannot be changed.
 
                 // add all of the columns to the menu as checkboxes
                 final JCheckBox checkBox = new JCheckBox(column.getColumnName(getProject()));
-                checkBox.setSelected(sequenceTableModel.isColumnVisible(column));
                 checkBox.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         sequenceTableModel.setColumnVisible(column, checkBox.isSelected());
                     }
                 });
+                checkBox.setSelected(sequenceTableModel.isColumnVisible(column));
+                checkBox.setToolTipText(column.getToolTipText(getProject()));
                 add(checkBox);
             }
         }

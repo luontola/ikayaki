@@ -45,6 +45,10 @@ public enum SequenceColumn {
      * Showing ordinal number of the measurement step, starting from number 1.
      */
     COUNT("#") {
+        {
+            toolTipText = "Number of the measurement step";
+        }
+
         @Override public StyledWrapper getValue(int rowIndex, Project project) {
             StyledWrapper wrapper = headerWrapper;
             if (project != null && project.getSteps() > rowIndex) {
@@ -121,25 +125,54 @@ public enum SequenceColumn {
         }
 
         @Override public String getColumnName(Project project) {
+            final String AF_COLUMN_NAME = "AF (mT)";
+            final String TEMP_COLUMN_NAME = "T (\u00b0C)";
+
             if (project == null) {
-                return "Tesla";
+                return AF_COLUMN_NAME;
             }
-            String name;
+            String s;
             switch (project.getType()) {
             case AF:
             case CALIBRATION:
-                name = "AF (mT)";
+                s = AF_COLUMN_NAME;
                 break;
             case THELLIER:
             case THERMAL:
-                name = "T (\u00b0C)";
+                s = TEMP_COLUMN_NAME;
                 break;
             default:
                 assert false;
-                name = "";
+                s = "";
                 break;
             }
-            return name;
+            return s;
+        }
+
+        @Override public String getToolTipText(Project project) {
+            final String AF_TOOL_TIP = "Intensity of the alternating-field demagnetization";
+            final String TEMP_TOOL_TIP = "Temperature used for demagnetization";
+
+            if (project == null) {
+                return AF_TOOL_TIP;
+            }
+            String s;
+            switch (project.getType()) {
+            case AF:
+            case CALIBRATION:
+                s = AF_TOOL_TIP;
+                break;
+            case THELLIER:
+            case THERMAL:
+                s = TEMP_TOOL_TIP;
+                break;
+            default:
+                assert false;
+                s = null;
+                break;
+            }
+            return s;
+
         }
     },
 
@@ -150,6 +183,7 @@ public enum SequenceColumn {
         {
             // at least 5 decimals
             getNumberFormat().setMaximumFractionDigits(6);
+            toolTipText = "Mass of the sample (grams)";
         }
 
         @Override public StyledWrapper getValue(int rowIndex, Project project) {
@@ -203,6 +237,7 @@ public enum SequenceColumn {
         {
             // at least 2 decimals
             getNumberFormat().setMaximumFractionDigits(6);
+            toolTipText = "Volume of the sample (cm\u00B3)";
         }
 
         @Override public StyledWrapper getValue(int rowIndex, Project project) {
@@ -256,6 +291,7 @@ public enum SequenceColumn {
         {
             // usually no decimals are needed
             getNumberFormat().setMaximumFractionDigits(6);
+            toolTipText = "Susceptibility of the sample";
         }
 
         @Override public StyledWrapper getValue(int rowIndex, Project project) {
@@ -423,12 +459,15 @@ public enum SequenceColumn {
 
     protected String columnName;
 
+    protected String toolTipText;
+
     protected MeasurementValue value;
 
     protected NumberFormat numberFormat;
 
     private SequenceColumn(String columnName) {
         this.columnName = columnName;
+        this.toolTipText = null;
         this.value = null;
         this.numberFormat = NumberFormat.getNumberInstance();
         this.numberFormat.setGroupingUsed(false);
@@ -440,6 +479,7 @@ public enum SequenceColumn {
         } else {
             this.columnName = value.getCaption() + " (" + value.getUnit() + ")";
         }
+        this.toolTipText = value.getDescription();
         this.value = value;
         this.numberFormat = NumberFormat.getNumberInstance();
         this.numberFormat.setGroupingUsed(false);
@@ -561,6 +601,17 @@ public enum SequenceColumn {
      */
     public String getColumnName(Project project) {
         return columnName;
+    }
+
+    /**
+     * Returns the tooltip text for this column. The default implementation returns the description of the provided
+     * MeasurementValue or null if none is provided. Subclasses can override the default behaviour.
+     *
+     * @param project the open project or null if no project is active.
+     * @return the tooltip text or null if none is set.
+     */
+    public String getToolTipText(Project project) {
+        return toolTipText;
     }
 
     /**

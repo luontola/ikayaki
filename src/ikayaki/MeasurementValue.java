@@ -219,7 +219,7 @@ public abstract class MeasurementValue <T> {
      * (depending on the selected normalization).
      */
     public static final MeasurementValue<Double> MAGNETIZATION =
-            new MeasurementValue<Double>("J", "Am\u00B2/kg,mA/m", "Magnetic intensity (J=M/volume or J=M/mass)") {
+            new MeasurementValue<Double>("J", "Am\u00B2/kg,mA/m", "Magnetic intensity") { // J=M/volume or J=M/mass
                 public Double getValue(MeasurementStep step) {
                     Project project = step.getProject();
                     if (project == null) {
