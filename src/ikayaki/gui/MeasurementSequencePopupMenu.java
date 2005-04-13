@@ -136,48 +136,16 @@ public class MeasurementSequencePopupMenu extends JPopupMenu {
         add(removeSelected);
     }
 
-    private MeasurementSequencePopupMenu() {}
-
     /**
      * Saves whole sequence into dropdown menu.
      */
     private void saveFullSequence() {
-        try {
-            PrintWriter writer = new PrintWriter(new FileOutputStream(c.sequences, true), true);
-            if (nameTextField.getText() != null && nameTextField.getText() != "") {
-                writer.println(">>");
-                writer.println(nameTextField.getText());
-                for (int i=0; i<c.rowCount(); ++i) {
-                    writer.println(c.valueAt(i, 1));
-                }
-                writer.println("<<");
-            }
-            writer.close();
-            c.updateComboBox();
-        }
-        catch (Exception e) {}
     }
 
     /**
      * Saves selected sequence into dropdown menu.
      */
     private void saveSelectedSequence() {
-        try {
-            int[] rows = c.selectedRows();
-            PrintWriter writer = new PrintWriter(new FileOutputStream(c.sequences, true), true);
-            if (nameTextField.getText() != null && nameTextField.getText() != ""
-                && rows != null) {
-                writer.println(">>");
-                writer.println(nameTextField.getText());
-                for (int i=0; i<rows.length; ++i) {
-                    writer.println(c.valueAt(rows[i], 1));
-                }
-                writer.println("<<");
-            }
-            writer.close();
-            c.updateComboBox();
-        }
-        catch (Exception e) {}
     }
 
     /**

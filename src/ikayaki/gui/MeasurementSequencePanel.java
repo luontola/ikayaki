@@ -25,22 +25,16 @@ package ikayaki.gui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import ikayaki.MeasurementEvent;
-import ikayaki.MeasurementStep;
-import ikayaki.Project;
-import ikayaki.ProjectEvent;
+import ikayaki.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableColumn;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
 import static ikayaki.gui.SequenceColumn.*;
 
@@ -100,15 +94,10 @@ Order of rows with measurement data cannot be changed.
 
     private JPanel controlsPane;
 
-    public File sequences;
-
     /**
      * Creates default MeasurementSequencePanel.
      */
     public MeasurementSequencePanel() {
-        sequences = new File("sequences"); // jätin tän files homman, koska settingsissä oleva tallettaa
-                                           // measurementsequenceja joten mukaan tulee käsittääkseni myös
-                                           // mahdolliset mittaustulokset
 
         /* Set up table */
         sequenceTableModel = new MeasurementSequenceTableModel();
@@ -184,8 +173,38 @@ Order of rows with measurement data cannot be changed.
             }
         });
 
-        // TODO: combobox for adding saved sequences
-        updateComboBox();
+        // drop down menu for adding preset sequences
+        loadSequenceBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                // append saved sequences when they are selected from the list
+                Object obj = loadSequenceBox.getSelectedItem();
+                if (obj != null && obj instanceof MeasurementSequence) {
+                    MeasurementSequence sequence = (MeasurementSequence) obj;
+                    getProject().addSequence(sequence);
+                }
+            }
+        });
+        loadSequenceBox.addPopupMenuListener(new PopupMenuListener() {
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+
+                // clear the previous selection when the menu is opened
+                if (loadSequenceBox.getSelectedItem() != null) {
+                    loadSequenceBox.setSelectedItem(null);
+                }
+            }
+
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                // DO NOTHING
+            }
+
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                // DO NOTHING
+            }
+        });
+
+
+
 
         // TODO: popup menu for saving sequences
 
@@ -194,59 +213,89 @@ Order of rows with measurement data cannot be changed.
         // TODO: ability to delete unmeasured steps
 
         // initialize with no project
+        updateLoadSequenceBox();
         setProject(null);
     }
 
+    private void updateLoadSequenceBox() {
+
+        // rebuild the contents of the menu
+        Object selected = loadSequenceBox.getSelectedItem();
+        loadSequenceBox.removeAllItems();
+        MeasurementSequence[] sequences = Settings.instance().getSequences();
+//        sequences = new MeasurementSequence[]{
+//            new MeasurementSequence("AA"),
+//            new MeasurementSequence("CC"),
+//            new MeasurementSequence("BB"),
+//            new MeasurementSequence("DD")
+//        };
+        Arrays.sort(sequences);
+        loadSequenceBox.addItem(null);  // the first item is empty
+        for (MeasurementSequence sequence : sequences) {
+            loadSequenceBox.addItem(sequence);
+        }
+        loadSequenceBox.setSelectedItem(selected);
+    }
+
+    /**
+     * @deprecated
+     */
     public String valueAt(int row, int column) {
         return (String) sequenceTable.getValueAt(row, column);
     }
 
+    /**
+     * @deprecated
+     */
     public void updateComboBox() {
-        try {
-            String read = null;
-            if (sequences.exists()) {
-                loadSequenceBox.removeAllItems();
-                BufferedReader in = new BufferedReader(new FileReader(sequences));
-                while ((read = in.readLine()) != null) {
-                    if (read == ">>") {
-                        loadSequenceBox.addItem(in.readLine());
-                    }
-                }
-                in.close();
-            }
-        } catch (Exception e) {
-        }
     }
 
+    /**
+     * @deprecated
+     */
     public void removeRow(int index) {
         try {
             getProject().removeStep(index);
+        } catch (IndexOutOfBoundsException e) {
         }
-        catch (IndexOutOfBoundsException e) {}
     }
 
+    /**
+     * @deprecated
+     */
     public int[] selectedRows() {
         return sequenceTable.getSelectedRows();
     }
 
+    /**
+     * @deprecated
+     */
     public int rowCount() {
         return sequenceTable.getRowCount();
     }
 
+    /**
+     * @deprecated
+     */
     public void showVolume() {
         // No ei sit tätä
     }
 
+    /**
+     * @deprecated
+     */
     public void hideVolume() {
         // Eikä tätä
     }
 
+    /**
+     * @deprecated
+     */
     public boolean isVolumeShown() {
         // Oikeassa puolet ajasta
-        if(Math.random() < 0.5) {
+        if (Math.random() < 0.5) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }

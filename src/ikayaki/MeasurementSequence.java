@@ -210,4 +210,10 @@ public class MeasurementSequence implements Comparable<MeasurementSequence> {
             return 0;
         }
     }
+
+    @Override public String toString() {
+        return getName();
+    }
+
+
 }
