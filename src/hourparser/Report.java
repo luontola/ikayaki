@@ -276,10 +276,10 @@ public class Report {
             html.append("</tr>\n");
             for (Entry entry : entries) {
                 html.append("<tr>\n");
-                html.append("   <td>" + HourParser.getDateFormat().format(entry.getDate()) + "</td>\n");
-                html.append("   <td>" + entry.getCode() + "</td>\n");
-                html.append("   <td>" + HourParser.getNumberFormat().format(entry.getHours()) + "</td>\n");
-                html.append("   <td>" + entry.getComment() + "</td>\n");
+                html.append("   <td valign=\"top\">" + HourParser.getDateFormat().format(entry.getDate()) + "</td>\n");
+                html.append("   <td valign=\"top\">" + entry.getCode() + "</td>\n");
+                html.append("   <td valign=\"top\">" + HourParser.getNumberFormat().format(entry.getHours()) + "</td>\n");
+                html.append("   <td valign=\"top\">" + entry.getComment() + "</td>\n");
                 html.append("</tr>\n");
                 weekSum += entry.getHours();
             }
