@@ -199,14 +199,12 @@ public class MeasurementControlsPanel extends ProjectComponent {
     }
 
     /**
-     * Event F: On MeasurementEvent - call magnetometerStatusPanel.updateStatus(int, int) with the right values from
-     * MeasurementEvent.
+     * Event F: On MeasurementEvent - call magnetometerStatusPanel.updateStatus().
      *
      * @param event MeasurementEvent received.
      */
     public void measurementUpdated(MeasurementEvent event) {
-        // TODO: so MeasurementEvent won't tell handler position and rotation? - It only tells when it starts moving
-        // and when it stops. If the listener wants to know the position, he should ask it from the Squid.
+        // MeasurementEvent won't tell handler position and rotation; MagnetometerStatusPanel asks them from Squid
         magnetometerStatusPanel.updateStatus();
     }
 

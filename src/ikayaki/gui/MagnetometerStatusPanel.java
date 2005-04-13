@@ -40,6 +40,11 @@ import ikayaki.squid.Handler;
  */
 public class MagnetometerStatusPanel extends JPanel {
 
+    /**
+     * Sample hanlder to read current position and rotation from.
+     */
+    private Handler handler;
+
     // handler current position and rotation
     private int position, rotation;
 
@@ -85,7 +90,16 @@ public class MagnetometerStatusPanel extends JPanel {
         //setMinimumSize(new Dimension(100, 400));
 
         //updateStatus();
-        updateStatus(posHome, 00);
+        updateStatus(posHome, 400); // NOTE: for testing
+    }
+
+    /**
+     * Reads current sample handler from Squid.instance().getHandler(), saves it to this.handler.
+     */
+    private void getHanlderPosition() {
+        try {
+            this.handler = Squid.instance().getHandler();
+        } catch (IOException ex) { }
     }
 
     /**
@@ -117,14 +131,13 @@ public class MagnetometerStatusPanel extends JPanel {
 
     /**
      * Updates magnetometer status picture; called by MeasurementControlsPanel when it receives MeasurementEvent.
-     * Reads current handler position and rotation from Squid.instance().getHandler().
+     * Reads current handler position and rotation from Handler saved to this.handler.
      */
     public void updateStatus() {
-        try {
-            Handler handler = Squid.instance().getHandler();
-            this.position = handler.getPosition();
-            this.rotation = handler.getRotation();
-        } catch (IOException ex) { }
+        if (this.handler != null) {
+            this.position = this.handler.getPosition();
+            this.rotation = this.handler.getRotation();
+        }
         updatePositions();
         baseSlider.setValue(this.position);
         repaint();
@@ -141,8 +154,8 @@ public class MagnetometerStatusPanel extends JPanel {
 
         // use more sophisticated drawing methods
         Graphics2D g2 = (Graphics2D) g.create();
-        g2.setStroke(new BasicStroke(2));
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setStroke(new BasicStroke(2));
 
         // save our width and height to be handly available
         int w = getWidth();
@@ -161,7 +174,7 @@ public class MagnetometerStatusPanel extends JPanel {
         int samplew = w / 3;
         int sampleh = w / 4;
         int sampled = h / 12;
-        int rotl = w / 6;
+        int arrowlength = w / 6;
 
         // sample y position
         int sampley = (int) ((long) h * position / maxposition);
@@ -180,8 +193,8 @@ public class MagnetometerStatusPanel extends JPanel {
         drawFillSideRect(g2, Color.WHITE, basex - samplew / 2, sampley - sampled + sampleh / 2, samplew, sampled);
         drawFillOval(g2, Color.WHITE, basex - samplew / 2, sampley, samplew, sampleh);
 
-        // rotation arrow
-        drawArrow(g2, basex, sampley + sampleh / 2, rotl, rotation);
+        // sample rotation arrow
+        drawArrow(g2, basex, sampley + sampleh / 2, arrowlength, rotation);
 
         // restore original Graphics
         g2.dispose();

@@ -39,8 +39,8 @@ import java.util.Enumeration;
 import java.text.DecimalFormat;
 import javax.swing.text.NumberFormatter;
 import java.text.NumberFormat;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Creates its components and updats changes to Settings and saves them in Configuration file
@@ -269,7 +269,7 @@ public class SettingsPanel
         }
       }
     }
-    Arrays.sort(portList.toArray());
+    Collections.sort(portList);
 
     for(int i=0; i<portList.size(); i++) {
       this.magnetometerPort.addItem(portList.get(i));

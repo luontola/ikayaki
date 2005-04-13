@@ -65,15 +65,8 @@ public class Squid {
      * Returns a reference to the Squid. If it has not yet been created, will create one.
      */
     public static synchronized Squid instance() throws IOException {
-      if (instance == null) {
-        try{
-        instance = new Squid();
-        }
-        catch (IOException e) {
-          throw new IOException();
-        }
-      }
-        return instance;
+      if (instance == null) instance = new Squid();
+      return instance;
     }
 
     /**

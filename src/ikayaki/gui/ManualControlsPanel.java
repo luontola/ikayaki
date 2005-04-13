@@ -199,6 +199,9 @@ public class ManualControlsPanel extends JPanel {
         //setPreferredSize(new Dimension(100, 400));
         //setMaximumSize(new Dimension(100, 400));
 
+        // sample handler to command with move/rotate commands
+        getHandler();
+
         /*
          * Event A: On moveXXX click - call project.doManualMove(int) with clicked position.
          * If false is returned, show small error message. Position values are found from Settings;
@@ -311,6 +314,17 @@ public class ManualControlsPanel extends JPanel {
     }
 
     /**
+     * Gets sample handler from Squid.instance().getHandler(), saves it to this.handler.
+     */
+    private void getHandler() {
+        try {
+            this.handler = Squid.instance().getHandler();
+        } catch (IOException ex) {
+            setEnabled(false);
+        }
+    }
+
+    /**
      * Reads demag amplitude from demagAmplitudeField.
      *
      * @return double demagAmplitudeField's double-value, or, -1 if not valid.
@@ -327,7 +341,7 @@ public class ManualControlsPanel extends JPanel {
     }
 
     /**
-     * Notifies of an error in demagAmplitudeField double-value: selects all, requests focus and flashes.
+     * Notifies of an error in demagAmplitudeField double-value: requests focus and flashes it.
      */
     private void demagAmplitudeFieldError() {
         //demagAmplitudeField.selectAll();
@@ -336,20 +350,15 @@ public class ManualControlsPanel extends JPanel {
     }
 
     /**
-     * Enables/disables all our components.
+     * Enables/disables all our components. If enabled, also sets selected radioboxes to current handler status.
      *
      * @param enabled true==enabled, false==disabled.
      */
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         setEnabled(getComponents(), enabled);
-//        for (Component component : getComponents()) {
-//            component.setEnabled(enabled);
-//        }
-//
-//        // special cases in JPanel
-//        rotate90.setEnabled(enabled);
-//        rotate270.setEnabled(enabled);
+
+        // TODO: if enabled==true set selected radiobexes according to current handler status...
     }
 
     private static void setEnabled(Component[] components, boolean enabled) {
@@ -369,17 +378,7 @@ public class ManualControlsPanel extends JPanel {
     public void setProject(Project project) {
         this.project = project;
 
-        if (project == null) setEnabled(false);
+        if (this.handler == null || this.project == null) setEnabled(false);
         else setEnabled(project.isManualControlEnabled());
-
-        // update handler, if by any chance it has changed
-        // TODO: do we command sample handler directly?
-        try {
-            this.handler = Squid.instance().getHandler();
-            // TODO: set selected radiobexes according to current handler status...
-        } catch (IOException ex) {
-            // TEST
-            //setEnabled(false);
-        }
     }
 }
