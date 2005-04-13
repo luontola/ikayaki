@@ -315,40 +315,7 @@ public class MainViewPanel extends ProjectComponent {
                 }
                 latestMeasuringProject = event.getProject();
             }
-
             return;
-
-// TODO: remove the following legacy code
-//            // check if the last measurement has stopped
-//            if (latestMeasuringProject != null && latestMeasuringProject.getState() == Project.State.IDLE) {
-//
-//                /*
-//                 * It might be better that if the measuring ends when latestMeasuringProject is not active,
-//                 * it would not be closed. Otherwise it won't be possible for the user to see which of
-//                 * the steps were just completed (green color).
-//                 */
-//
-//                // close the project if it is not anymore open
-//                if (latestMeasuringProject != project) {
-//                    if (Project.closeProject(latestMeasuringProject)) {
-//                        latestMeasuringProject = null;
-//                        project.setSquid(squid);
-//                    } else {
-//                        JOptionPane.showMessageDialog(this,
-//                                "Unable to close the project " + latestMeasuringProject.getName(),
-//                                "Error", JOptionPane.ERROR_MESSAGE);
-//                        return;
-//                    }
-//                } else {
-//                    // latestMeasuringProject is no more measuring, but it is still the active project
-//                    latestMeasuringProject = null;
-//                }
-//            }
-//
-//            // check if a new measurement has started
-//            if (project != null && project.getState() != Project.State.IDLE) {
-//                latestMeasuringProject = project;
-//            }
         }
     }
 
