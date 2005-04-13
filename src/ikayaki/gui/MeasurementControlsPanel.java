@@ -239,12 +239,22 @@ public class MeasurementControlsPanel extends ProjectComponent {
                     && getProject().getType() == Project.Type.CALIBRATION);
             getPauseAction().setEnabled(getProject().isPauseEnabled());
             getAbortAction().setEnabled(getProject().isAbortEnabled());
+
+            sampleInsertTextLabel.setEnabled(true);
+            sampleInsertIconLabel.setEnabled(true);
+            zPlusRadioButton.setEnabled(true);
+            zMinusRadioButton.setEnabled(true);
         } else {
             getAutoStepAction().setEnabled(false);
             getSingleStepAction().setEnabled(false);
             getCalibrateAction().setEnabled(false);
             getPauseAction().setEnabled(false);
             getAbortAction().setEnabled(false);
+
+            sampleInsertTextLabel.setEnabled(false);
+            sampleInsertIconLabel.setEnabled(false);
+            zPlusRadioButton.setEnabled(false);
+            zMinusRadioButton.setEnabled(false);
         }
 
         // TODO: let's try how it looks when Measure and Pause buttons are separate

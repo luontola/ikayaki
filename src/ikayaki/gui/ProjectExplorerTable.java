@@ -151,6 +151,14 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
          */
         this.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
+
+                /* TODO:
+                 * It is possible by CTRL-clicking to deselect the selected row. This can cause problems
+                 * because after that the user will not anymore see which of the files is open. Change it
+                 * so that if for some reason no row is selected and the currently open project is in this
+                 * directory, select that project's file.
+                 */
+
                 // we only want the actually selected row, and don't want to react to an already selected line
                 // (which could also mean that we had a load error, and that selection was reverted)
                 if (e.getValueIsAdjusting() || getSelectedRow() == selectedFile) return;

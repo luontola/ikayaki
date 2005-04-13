@@ -342,11 +342,23 @@ public class ManualControlsPanel extends JPanel {
      */
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
-        for (Component component : getComponents())
-            component.setEnabled(enabled);
-        // special cases in JPanel
-        rotate90.setEnabled(enabled);
-        rotate270.setEnabled(enabled);
+        setEnabled(getComponents(), enabled);
+//        for (Component component : getComponents()) {
+//            component.setEnabled(enabled);
+//        }
+//
+//        // special cases in JPanel
+//        rotate90.setEnabled(enabled);
+//        rotate270.setEnabled(enabled);
+    }
+
+    private static void setEnabled(Component[] components, boolean enabled) {
+        for (Component c : components) {
+            if (c instanceof Container) {
+                setEnabled(((Container) c).getComponents(), enabled);
+            }
+            c.setEnabled(enabled);
+        }
     }
 
     /**
