@@ -254,7 +254,7 @@ Order of rows with measurement data cannot be changed.
         // get new items
         MeasurementSequence[] sequences = Settings.instance().getSequences();
         Arrays.sort(sequences);
-        
+
         // insert new items and restore old selection
         loadSequenceBox.addItem(null);  // the first item is empty
         for (MeasurementSequence sequence : sequences) {
@@ -758,8 +758,12 @@ Order of rows with measurement data cannot be changed.
                     }
 
                     // ask for a name for the sequence
-                    // TODO
-                    String name = ""+System.currentTimeMillis();
+                    String name = JOptionPane.showInputDialog(getParentFrame(),
+                            "Enter a name for the sequence",
+                            "Save Selected As...", JOptionPane.PLAIN_MESSAGE);
+                    if (name == null) {
+                        return;
+                    }
 
                     // save the sequence
                     sequence.setName(name);
@@ -786,8 +790,12 @@ Order of rows with measurement data cannot be changed.
                     MeasurementSequence sequence = getProject().copySequence(0, getProject().getSteps() - 1);
 
                     // ask for a name for the sequence
-                    // TODO
-                    String name = "" + System.currentTimeMillis();
+                    String name = JOptionPane.showInputDialog(getParentFrame(),
+                            "Enter a name for the sequence",
+                            "Save All As...", JOptionPane.PLAIN_MESSAGE);
+                    if (name == null) {
+                        return;
+                    }
 
                     // save the sequence
                     sequence.setName(name);
