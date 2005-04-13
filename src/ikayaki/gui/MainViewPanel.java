@@ -75,7 +75,7 @@ public class MainViewPanel extends ProjectComponent {
     private ProjectInformationPanel projectInformationPanel;
     private MeasurementSequencePanel measurementSequencePanel;
     private MeasurementControlsPanel measurementControlsPanel;
-    private MeasurementSequencePanel.DetailsPanel measurementDetailsPanel;
+    private MeasurementDetailsPanel measurementDetailsPanel;
     private MeasurementGraphsPanel measurementGraphsPanel;
 
     /* Swing Actions */
@@ -525,9 +525,8 @@ public class MainViewPanel extends ProjectComponent {
         return measurementGraphsPanel;
     }
 
-    public MeasurementSequencePanel.DetailsPanel getMeasurementDetailsPanel() {
+    public MeasurementDetailsPanel getMeasurementDetailsPanel() {
         if (measurementDetailsPanel == null) {
-//            measurementDetailsPanel = new MeasurementDetailsPanel();
             measurementDetailsPanel = getMeasurementSequencePanel().getDetailsPanel();
             measurementDetailsPanel.setBorder(BorderFactory.createTitledBorder("Details"));
         }

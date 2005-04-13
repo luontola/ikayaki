@@ -1,179 +1,332 @@
 /*
-* MeasurementDetailsPanel.java
-*
-* Copyright (C) 2005 Project SQUID, http://www.cs.helsinki.fi/group/squid/
-*
-* This file is part of Ikayaki.
-*
-* Ikayaki is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* Ikayaki is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Ikayaki; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*/
+ * MeasurementDetailsPanel.java
+ *
+ * Copyright (C) 2005 Project SQUID, http://www.cs.helsinki.fi/group/squid/
+ *
+ * This file is part of Ikayaki.
+ *
+ * Ikayaki is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Ikayaki is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Ikayaki; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 
 package ikayaki.gui;
 
-import ikayaki.*;
+import ikayaki.MeasurementEvent;
+import ikayaki.MeasurementResult;
+import ikayaki.MeasurementStep;
+import ikayaki.Settings;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.AbstractTableModel;
 import java.awt.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
- * Shows details of measurement selected in MeasurementSequencePanel.
+ * Shows the details of the active measurement step.
  *
- * @author Mikko Jormalainen
+ * @author Esko Luontola
  */
 public class MeasurementDetailsPanel extends ProjectComponent {
-/*
-Event A: On project event - Update tables to correspond projects new state.
-*/
-/*
-Event B: On change of selected row in MeasurementSequencePanel - Change tables to
-correspond selected row.
-*/
-/*
-Event C: On measurement event - If row corresponding to ongoing measurement is selected
-in MeasurementSequencePanel update tables with new measurement data.
-*/
+
+    private JTable detailsTable;
+    private DetailsTableModel detailsTableModel;
+
+    private JTable errorsTable;
+    private ErrorsTableModel errorsTableModel;
 
     /**
-     * X, Y and Z components of BG1, 0, 90, 180, 270, BG2
+     * The measurement step whose details are being shown or null to show a blank table.
      */
-    private JTable measurementDetails;
+    private MeasurementStep step;
 
-    /**
-     * S/D, S/H and S/N of error
-     */
-    private JTable errorDetails;
-
-    private DefaultTableModel measurementModel;
-    private DefaultTableModel errorModel;
-
-    /**
-     * Tells if currently measured row in MeasurementSequenceTable is selected.
-     */
-    private boolean rowSelected;
-
-    /**
-     * Creates default MeasurementDetailsPanel.
-     */
     public MeasurementDetailsPanel() {
-        // no nyt t‰‰ vaatii jotain win32commia toimiakseen en jaksa tapella t‰t‰ ulkoasua
-        // kohdalleen kun ohjelma ei suostu edes k‰ynnistym‰‰n
-        String[] detailNames = {"", "X", "y", "Z"};
-        measurementModel = new DefaultTableModel(detailNames, 6);
-        measurementDetails = new JTable(measurementModel);
-        measurementDetails.setRowSelectionAllowed(false);
-        measurementDetails.setColumnSelectionAllowed(false);
-        measurementDetails.setValueAt("BG", 0, 0);
-        measurementDetails.setValueAt("0", 1, 0);
-        measurementDetails.setValueAt("90", 2, 0);
-        measurementDetails.setValueAt("180", 3, 0);
-        measurementDetails.setValueAt("270", 4, 0);
-        measurementDetails.setValueAt("BG", 5, 0);
-        add(BorderLayout.NORTH, measurementDetails);
-        String[] errorNames = {"", "S/D", "S/H", "S/N"};
-        errorModel = new DefaultTableModel(errorNames, 1);
-        errorDetails = new JTable(errorModel);
-        errorDetails.setRowSelectionAllowed(false);
-        errorDetails.setColumnSelectionAllowed(false);
-        errorDetails.setValueAt("Error", 0, 0);
-        add(BorderLayout.SOUTH, errorDetails);
-        rowSelected = true;
-        
-        // initialize with no project
-        setProject(null);
+
+        // build the tables
+        detailsTableModel = new DetailsTableModel();
+        detailsTable = new JTable(detailsTableModel);
+        detailsTable.setFocusable(false);
+        detailsTable.setEnabled(false);
+        detailsTable.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
+
+        errorsTableModel = new ErrorsTableModel();
+        errorsTable = new JTable(errorsTableModel);
+        errorsTable.setFocusable(false);
+        errorsTable.setEnabled(false);
+        errorsTable.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
+
+        detailsTable.getColumnModel().getColumn(0).setPreferredWidth(50);
+        detailsTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+        detailsTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+        detailsTable.getColumnModel().getColumn(3).setPreferredWidth(100);
+        detailsTable.getTableHeader().setReorderingAllowed(false);
+        detailsTable.getTableHeader().setResizingAllowed(false);
+
+        errorsTable.getColumnModel().getColumn(0).setPreferredWidth(50);
+        errorsTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+        errorsTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+        errorsTable.getColumnModel().getColumn(3).setPreferredWidth(100);
+        errorsTable.getTableHeader().setReorderingAllowed(false);
+        errorsTable.getTableHeader().setResizingAllowed(false);
+
+        // emulate the looks of a JScrollPane
+        JPanel detailsTablePanel = new JPanel(new BorderLayout());
+        detailsTablePanel.add(detailsTable.getTableHeader(), BorderLayout.NORTH);
+        detailsTablePanel.add(detailsTable, BorderLayout.CENTER);
+        detailsTablePanel.setBorder(new JScrollPane().getBorder());
+
+        JPanel errorsTablePanel = new JPanel(new BorderLayout());
+        errorsTablePanel.add(errorsTable.getTableHeader(), BorderLayout.NORTH);
+        errorsTablePanel.add(errorsTable, BorderLayout.CENTER);
+        errorsTablePanel.setBorder(new JScrollPane().getBorder());
+
+        // lay out the components
+        JPanel tablePanel = new JPanel(new BorderLayout(10, 10));
+        tablePanel.add(detailsTablePanel, "Center");
+        tablePanel.add(errorsTablePanel, "South");
+
+        setLayout(new FlowLayout(FlowLayout.CENTER));
+        add(tablePanel);
     }
 
-    /**
-     * Calls super.setProject(project), clears tables and shows new projects measurement details.
-     */
-    public void setProject(Project project) {
-        super.setProject(project);
-        rowSelected = true;
-        clearTables();
-        if (project != null) {
-            if (project.getCurrentStep() != null) {
-                setStep(project.getCurrentStep());
-            }
-        }
-        measurementDetails.repaint();
-        errorDetails.repaint();
-    }
-
-    public void projectUpdated(ProjectEvent event) {
-        if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
-            // TODO: are these necessary?
-        }
-        else if (event.getType() == ProjectEvent.Type.STATE_CHANGED) {
-            // TODO: are these necessary?
-        }
-    }
-
-    public void measurementUpdated(MeasurementEvent event) {
-        if (event.getType() == MeasurementEvent.Type.VALUE_MEASURED && rowSelected) {
-            MeasurementResult result = null;
-            for (int i=0; i<event.getStep().getResults(); ++i) {
-                result = event.getStep().getResult(i);
-                measurementDetails.setValueAt(result.getType(), i, 0);
-                measurementDetails.setValueAt(result.getRawX(), i, 1);
-                measurementDetails.setValueAt(result.getRawY(), i, 2);
-                measurementDetails.setValueAt(result.getRawZ(), i, 3);
-            }
-            measurementDetails.repaint();
-            // TODO S/D S/H S/N calculation (what formulas?)
-            // TODO more than 2 BG ja 4 rotation measurements in step
-        }
-        else if (event.getType() == MeasurementEvent.Type.STEP_START && rowSelected) {
-            clearTables();
-            measurementDetails.repaint();
-            errorDetails.repaint();
-        }
+    public MeasurementStep getStep() {
+        return step;
     }
 
     public void setStep(MeasurementStep step) {
-        if (getProject().getCurrentStep() == step && !rowSelected) {
-            rowSelected = true;
-        }
-        else if (getProject().getCurrentStep() != step && rowSelected) {
-            rowSelected = false;
-        }
-        MeasurementResult result = null;
-        for (int i=0; i<step.getResults(); ++i) {
-            result = step.getResult(i);
-            measurementDetails.setValueAt(result.getType(), i, 0);
-            measurementDetails.setValueAt(result.getRawX(), i, 1);
-            measurementDetails.setValueAt(result.getRawY(), i, 2);
-            measurementDetails.setValueAt(result.getRawZ(), i, 3);
-        }
-        measurementDetails.repaint();
-        // TODO S/D S/H S/N calculation (what formulas?)
+        this.step = step;
+        this.detailsTableModel.setStep(step);
+        this.errorsTableModel.setStep(step);
     }
 
-    private void clearTables() {
-        measurementDetails.setValueAt("BG", 0, 0);
-        measurementDetails.setValueAt("0", 1, 0);
-        measurementDetails.setValueAt("90", 2, 0);
-        measurementDetails.setValueAt("180", 3, 0);
-        measurementDetails.setValueAt("270", 4, 0);
-        measurementDetails.setValueAt("BG", 5, 0);
-        for (int i=1; i<4; ++i) {
-            for (int j=0; j<6; ++j) {
-                measurementDetails.setValueAt("", j, i);
-            }
+    @Override public void measurementUpdated(MeasurementEvent event) {
+        if (event.getStep() == step) {
+            detailsTableModel.fireTableDataChanged();
+            errorsTableModel.fireTableDataChanged();
         }
-        errorDetails.setValueAt("", 0, 1);
-        errorDetails.setValueAt("", 0, 2);
-        errorDetails.setValueAt("", 0, 3);
     }
+
+    /**
+     * Table model for the details table.
+     *
+     * @author Esko Luontola
+     */
+    private class DetailsTableModel extends AbstractTableModel {
+
+        private MeasurementStep step;
+
+        private final String[] COLUMNS = new String[]{" ", "X", "Y", "Z"};
+        private final int HEADER_COLUMN = 0;
+        private final int X_COLUMN = 1;
+        private final int Y_COLUMN = 2;
+        private final int Z_COLUMN = 3;
+
+        private NumberFormat numberFormat = new DecimalFormat("0.000000E0");
+
+        private StyledWrapper defaultWrapper = new StyledWrapper();
+        private StyledWrapper headerWrapper = new StyledWrapper();
+
+        public DetailsTableModel() {
+            defaultWrapper.horizontalAlignment = SwingConstants.TRAILING;
+            headerWrapper.horizontalAlignment = SwingConstants.TRAILING;
+            headerWrapper.font = new JLabel("").getFont().deriveFont(Font.BOLD);
+        }
+
+        public MeasurementStep getStep() {
+            return step;
+        }
+
+        public void setStep(MeasurementStep step) {
+            this.step = step;
+            fireTableDataChanged();
+        }
+
+        public int getRowCount() {
+            return Math.max(1, 4 * Settings.instance().getMeasurementRotations()) + 2;
+        }
+
+        public int getColumnCount() {
+            return COLUMNS.length;
+        }
+
+        @Override public String getColumnName(int column) {
+            return COLUMNS[column];
+        }
+
+        @Override public Class<?> getColumnClass(int columnIndex) {
+            return StyledWrapper.class;
+        }
+
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            Object value;
+            if (step != null && rowIndex < step.getResults()) {
+
+                // get the values from the step
+                switch (columnIndex) {
+                case HEADER_COLUMN:
+                    value = step.getResult(rowIndex).getType().toString();
+                    break;
+                case X_COLUMN:
+                    value = numberFormat.format(step.getResult(rowIndex).getRawX());
+                    break;
+                case Y_COLUMN:
+                    value = numberFormat.format(step.getResult(rowIndex).getRawY());
+                    break;
+                case Z_COLUMN:
+                    value = numberFormat.format(step.getResult(rowIndex).getRawZ());
+                    break;
+                default:
+                    assert false;
+                    value = null;
+                    break;
+                }
+
+            } else {
+
+                // try to guess the values
+                if (columnIndex == HEADER_COLUMN) {
+                    if (rowIndex == 0 || rowIndex == getRowCount() - 1) {
+                        value = MeasurementResult.Type.BG.toString();
+                    } else {
+                        switch ((rowIndex - 1) % 4) {
+                        case 0:
+                            value = MeasurementResult.Type.DEG0.toString();
+                            break;
+                        case 1:
+                            value = MeasurementResult.Type.DEG90.toString();
+                            break;
+                        case 2:
+                            value = MeasurementResult.Type.DEG180.toString();
+                            break;
+                        case 3:
+                            value = MeasurementResult.Type.DEG270.toString();
+                            break;
+                        default:
+                            assert false;
+                            value = null;
+                            break;
+                        }
+                    }
+                } else {
+                    value = null;
+                }
+            }
+            return wrap(value, rowIndex, columnIndex);
+        }
+
+        public StyledWrapper wrap(Object value, int rowIndex, int columnIndex) {
+            StyledWrapper wrapper;
+
+            // choose the style according to the column
+            if (columnIndex == HEADER_COLUMN) {
+                wrapper = headerWrapper;
+            } else {
+                wrapper = defaultWrapper;
+            }
+
+            // wrap the cell's value and return it
+            wrapper.value = value;
+            return wrapper;
+        }
+    }
+
+    /**
+     * Table model for the error table.
+     *
+     * @author Esko Luontola
+     */
+    private class ErrorsTableModel extends AbstractTableModel {
+
+        private MeasurementStep step;
+
+        private final String[] COLUMNS = new String[]{" ", "Signal/Drift", "Signal/Holder", "Signal/Noise"};
+        private final int HEADER_COLUMN = 0;
+        private final int SIGNAL_DRIFT_COLUMN = 1;
+        private final int SIGNAL_HOLDER_COLUMN = 2;
+        private final int SIGNAL_NOISE_COLUMN = 3;
+
+        private StyledWrapper defaultWrapper = new StyledWrapper();
+        private StyledWrapper headerWrapper = new StyledWrapper();
+
+        public ErrorsTableModel() {
+            defaultWrapper.horizontalAlignment = SwingConstants.TRAILING;
+            headerWrapper.horizontalAlignment = SwingConstants.TRAILING;
+            headerWrapper.font = new JLabel("").getFont().deriveFont(Font.BOLD);
+        }
+
+        public MeasurementStep getStep() {
+            return step;
+        }
+
+        public void setStep(MeasurementStep step) {
+            this.step = step;
+            fireTableDataChanged();
+        }
+
+        public int getRowCount() {
+            return 1;
+        }
+
+        public int getColumnCount() {
+            return COLUMNS.length;
+        }
+
+        @Override public String getColumnName(int column) {
+            return COLUMNS[column];
+        }
+
+        @Override public Class<?> getColumnClass(int columnIndex) {
+            return StyledWrapper.class;
+        }
+
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            Object value;
+            switch (columnIndex) {
+            case HEADER_COLUMN:
+                value = "Error";
+                break;
+            case SIGNAL_DRIFT_COLUMN:
+                value = "TODO"; // TODO
+                break;
+            case SIGNAL_HOLDER_COLUMN:
+                value = "TODO"; // TODO
+                break;
+            case SIGNAL_NOISE_COLUMN:
+                value = "TODO"; // TODO
+                break;
+            default:
+                value = null;
+                break;
+            }
+            return wrap(value, rowIndex, columnIndex);
+        }
+
+        public StyledWrapper wrap(Object value, int rowIndex, int columnIndex) {
+            StyledWrapper wrapper;
+
+            // choose the style according to the column
+            if (columnIndex == HEADER_COLUMN) {
+                wrapper = headerWrapper;
+            } else {
+                wrapper = defaultWrapper;
+            }
+
+            // wrap the cell's value and return it
+            wrapper.value = value;
+            return wrapper;
+        }
+    }
+
+
 }

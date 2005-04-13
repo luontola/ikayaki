@@ -29,13 +29,11 @@ import ikayaki.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -66,8 +64,8 @@ public class MeasurementSequencePanel extends ProjectComponent {
 
     private JPanel controlsPane;
 
-    /* DetailsPanel */
-    private DetailsPanel detailsPanel;
+    /* Details Panel */
+    private MeasurementDetailsPanel detailsPanel;
 
     /**
      * Creates default MeasurementSequencePanel.
@@ -255,9 +253,9 @@ public class MeasurementSequencePanel extends ProjectComponent {
     /**
      * Returns the component that will show the details of the active measurement step.
      */
-    public DetailsPanel getDetailsPanel() {
+    public MeasurementDetailsPanel getDetailsPanel() {
         if (detailsPanel == null) {
-            detailsPanel = new DetailsPanel();
+            detailsPanel = new MeasurementDetailsPanel();
         }
         return detailsPanel;
     }
@@ -607,7 +605,6 @@ public class MeasurementSequencePanel extends ProjectComponent {
      */
     private class MyFormatterFactory extends JFormattedTextField.AbstractFormatterFactory {
         public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf) {
-            //NumberFormat format = NumberFormat.getNumberInstance();
             DecimalFormat format = new DecimalFormat();
             format.setGroupingUsed(false);
             format.setMaximumFractionDigits(1);
@@ -824,8 +821,8 @@ public class MeasurementSequencePanel extends ProjectComponent {
      * @author Esko Luontola
      */
     private class HeaderPopupMenu extends JPopupMenu {
-        public HeaderPopupMenu() {
 
+        public HeaderPopupMenu() {
             JMenuItem header = new JMenuItem("Visible Columns");
             header.setFont(header.getFont().deriveFont(Font.BOLD));
             header.setEnabled(false);
@@ -845,302 +842,6 @@ public class MeasurementSequencePanel extends ProjectComponent {
                 checkBox.setToolTipText(column.getToolTipText(getProject()));
                 add(checkBox);
             }
-        }
-    }
-
-    /**
-     * Shows the details of the active measurement step.
-     *
-     * @author Esko Luontola
-     */
-    public class DetailsPanel extends ProjectComponent {
-
-        private JTable detailsTable;
-        private DetailsTableModel detailsTableModel;
-
-        private JTable errorsTable;
-        private ErrorsTableModel errorsTableModel;
-
-        /**
-         * The measurement step whose details are being shown or null to show a blank table.
-         */
-        private MeasurementStep step;
-
-        public DetailsPanel() {
-
-            // build the tables
-            detailsTableModel = new DetailsTableModel();
-            detailsTable = new JTable(detailsTableModel);
-            detailsTable.setFocusable(false);
-            detailsTable.setEnabled(false);
-            detailsTable.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
-
-            errorsTableModel = new ErrorsTableModel();
-            errorsTable = new JTable(errorsTableModel);
-            errorsTable.setFocusable(false);
-            errorsTable.setEnabled(false);
-            errorsTable.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
-
-            detailsTable.getColumnModel().getColumn(0).setPreferredWidth(50);
-            detailsTable.getColumnModel().getColumn(1).setPreferredWidth(100);
-            detailsTable.getColumnModel().getColumn(2).setPreferredWidth(100);
-            detailsTable.getColumnModel().getColumn(3).setPreferredWidth(100);
-            detailsTable.getTableHeader().setReorderingAllowed(false);
-            detailsTable.getTableHeader().setResizingAllowed(false);
-
-            errorsTable.getColumnModel().getColumn(0).setPreferredWidth(50);
-            errorsTable.getColumnModel().getColumn(1).setPreferredWidth(100);
-            errorsTable.getColumnModel().getColumn(2).setPreferredWidth(100);
-            errorsTable.getColumnModel().getColumn(3).setPreferredWidth(100);
-            errorsTable.getTableHeader().setReorderingAllowed(false);
-            errorsTable.getTableHeader().setResizingAllowed(false);
-
-            // emulate the looks of a JScrollPane
-            JPanel detailsTablePanel = new JPanel(new BorderLayout());
-            detailsTablePanel.add(detailsTable.getTableHeader(), BorderLayout.NORTH);
-            detailsTablePanel.add(detailsTable, BorderLayout.CENTER);
-            detailsTablePanel.setBorder(new JScrollPane().getBorder());
-
-            JPanel errorsTablePanel = new JPanel(new BorderLayout());
-            errorsTablePanel.add(errorsTable.getTableHeader(), BorderLayout.NORTH);
-            errorsTablePanel.add(errorsTable, BorderLayout.CENTER);
-            errorsTablePanel.setBorder(new JScrollPane().getBorder());
-
-            // lay out the components
-            JPanel tablePanel = new JPanel(new BorderLayout(10, 10));
-            tablePanel.add(detailsTablePanel, "Center");
-            tablePanel.add(errorsTablePanel, "South");
-
-            setLayout(new FlowLayout(FlowLayout.CENTER));
-            add(tablePanel);
-        }
-
-        public MeasurementStep getStep() {
-            return step;
-        }
-
-        public void setStep(MeasurementStep step) {
-            this.step = step;
-            this.detailsTableModel.setStep(step);
-            this.errorsTableModel.setStep(step);
-        }
-
-        @Override public void measurementUpdated(MeasurementEvent event) {
-            if (event.getStep() == step) {
-                detailsTableModel.fireTableDataChanged();
-                errorsTableModel.fireTableDataChanged();
-            }
-        }
-    }
-
-    /**
-     * Table model for the details table.
-     *
-     * @author Esko Luontola
-     */
-    private class DetailsTableModel extends AbstractTableModel {
-
-        private MeasurementStep step;
-
-        private final String[] COLUMNS = new String[]{" ", "X", "Y", "Z"};
-        private final int HEADER_COLUMN = 0;
-        private final int X_COLUMN = 1;
-        private final int Y_COLUMN = 2;
-        private final int Z_COLUMN = 3;
-
-        private NumberFormat numberFormat = new DecimalFormat("0.000000E0");
-
-        private StyledWrapper defaultWrapper = new StyledWrapper();
-        private StyledWrapper headerWrapper = new StyledWrapper();
-
-        public DetailsTableModel() {
-            defaultWrapper.horizontalAlignment = SwingConstants.TRAILING;
-            headerWrapper.horizontalAlignment = SwingConstants.TRAILING;
-            headerWrapper.font = new JLabel("").getFont().deriveFont(Font.BOLD);
-        }
-
-        public MeasurementStep getStep() {
-            return step;
-        }
-
-        public void setStep(MeasurementStep step) {
-            this.step = step;
-            fireTableDataChanged();
-        }
-
-        public int getRowCount() {
-            return Math.max(1, 4 * Settings.instance().getMeasurementRotations()) + 2;
-        }
-
-        public int getColumnCount() {
-            return COLUMNS.length;
-        }
-
-        @Override public String getColumnName(int column) {
-            return COLUMNS[column];
-        }
-
-        @Override public Class<?> getColumnClass(int columnIndex) {
-            return StyledWrapper.class;
-        }
-
-        public Object getValueAt(int rowIndex, int columnIndex) {
-            Object value;
-            if (step != null && rowIndex < step.getResults()) {
-
-                // get the values from the step
-                switch (columnIndex) {
-                case HEADER_COLUMN:
-                    value = step.getResult(rowIndex).getType().toString();
-                    break;
-                case X_COLUMN:
-                    value = numberFormat.format(step.getResult(rowIndex).getRawX());
-                    break;
-                case Y_COLUMN:
-                    value = numberFormat.format(step.getResult(rowIndex).getRawY());
-                    break;
-                case Z_COLUMN:
-                    value = numberFormat.format(step.getResult(rowIndex).getRawZ());
-                    break;
-                default:
-                    assert false;
-                    value = null;
-                    break;
-                }
-
-            } else {
-
-                // try to guess the values
-                if (columnIndex == HEADER_COLUMN) {
-                    if (rowIndex == 0 || rowIndex == getRowCount() - 1) {
-                        value = MeasurementResult.Type.BG.toString();
-                    } else {
-                        switch ((rowIndex - 1) % 4) {
-                        case 0:
-                            value = MeasurementResult.Type.DEG0.toString();
-                            break;
-                        case 1:
-                            value = MeasurementResult.Type.DEG90.toString();
-                            break;
-                        case 2:
-                            value = MeasurementResult.Type.DEG180.toString();
-                            break;
-                        case 3:
-                            value = MeasurementResult.Type.DEG270.toString();
-                            break;
-                        default:
-                            assert false;
-                            value = null;
-                            break;
-                        }
-                    }
-                } else {
-                    value = null;
-                }
-            }
-            return wrap(value, rowIndex, columnIndex);
-        }
-
-        public StyledWrapper wrap(Object value, int rowIndex, int columnIndex) {
-            StyledWrapper wrapper;
-
-            // choose the style according to the column
-            if (columnIndex == HEADER_COLUMN) {
-                wrapper = headerWrapper;
-            } else {
-                wrapper = defaultWrapper;
-            }
-
-            // wrap the cell's value and return it
-            wrapper.value = value;
-            return wrapper;
-        }
-    }
-
-    /**
-     * Table model for the error table.
-     *
-     * @author Esko Luontola
-     */
-    private class ErrorsTableModel extends AbstractTableModel {
-
-        private MeasurementStep step;
-
-        private final String[] COLUMNS = new String[]{" ", "Signal/Drift", "Signal/Holder", "Signal/Noise"};
-        private final int HEADER_COLUMN = 0;
-        private final int SIGNAL_DRIFT_COLUMN = 1;
-        private final int SIGNAL_HOLDER_COLUMN = 2;
-        private final int SIGNAL_NOISE_COLUMN = 3;
-
-        private StyledWrapper defaultWrapper = new StyledWrapper();
-        private StyledWrapper headerWrapper = new StyledWrapper();
-
-        public ErrorsTableModel() {
-            defaultWrapper.horizontalAlignment = SwingConstants.TRAILING;
-            headerWrapper.horizontalAlignment = SwingConstants.TRAILING;
-            headerWrapper.font = new JLabel("").getFont().deriveFont(Font.BOLD);
-        }
-
-        public MeasurementStep getStep() {
-            return step;
-        }
-
-        public void setStep(MeasurementStep step) {
-            this.step = step;
-            fireTableDataChanged();
-        }
-
-        public int getRowCount() {
-            return 1;
-        }
-
-        public int getColumnCount() {
-            return COLUMNS.length;
-        }
-
-        @Override public String getColumnName(int column) {
-            return COLUMNS[column];
-        }
-
-        @Override public Class<?> getColumnClass(int columnIndex) {
-            return StyledWrapper.class;
-        }
-
-        public Object getValueAt(int rowIndex, int columnIndex) {
-            Object value;
-            switch (columnIndex) {
-            case HEADER_COLUMN:
-                value = "Error";
-                break;
-            case SIGNAL_DRIFT_COLUMN:
-                value = "TODO"; // TODO
-                break;
-            case SIGNAL_HOLDER_COLUMN:
-                value = "TODO"; // TODO
-                break;
-            case SIGNAL_NOISE_COLUMN:
-                value = "TODO"; // TODO
-                break;
-            default:
-                value = null;
-                break;
-            }
-            return wrap(value, rowIndex, columnIndex);
-        }
-
-        public StyledWrapper wrap(Object value, int rowIndex, int columnIndex) {
-            StyledWrapper wrapper;
-
-            // choose the style according to the column
-            if (columnIndex == HEADER_COLUMN) {
-                wrapper = headerWrapper;
-            } else {
-                wrapper = defaultWrapper;
-            }
-
-            // wrap the cell's value and return it
-            wrapper.value = value;
-            return wrapper;
         }
     }
 }
