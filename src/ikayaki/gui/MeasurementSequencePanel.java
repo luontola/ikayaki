@@ -690,12 +690,15 @@ Order of rows with measurement data cannot be changed.
                 public void actionPerformed(ActionEvent e) {
                 }
             };
-            action.putValue(Action.NAME, "Insert before");
+            action.putValue(Action.NAME, "Insert Before");
             action.putValue(Action.SHORT_DESCRIPTION,
-                    "Inserts the selected number of new steps\n"+
-                    "in front of the the selected steps.");
+                    "Inserts the selected number of new steps " +
+                    "in front of the selected steps.");
             action.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_I);
 
+            if (steps.length == 0 || getFirstIndex() < getProject().getCompletedSteps()) {
+                action.setEnabled(false);
+            }
             return action;
         }
 
@@ -704,8 +707,15 @@ Order of rows with measurement data cannot be changed.
                 public void actionPerformed(ActionEvent e) {
                 }
             };
-            action.putValue(Action.NAME, "Insert after");
+            action.putValue(Action.NAME, "Insert After");
+            action.putValue(Action.SHORT_DESCRIPTION,
+                    "Inserts the selected number of new steps " +
+                    "after the selected steps.");
+            action.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
 
+            if (steps.length == 0 || getLastIndex() < getProject().getCompletedSteps() - 1) {
+                action.setEnabled(false);
+            }
             return action;
         }
 
@@ -715,7 +725,13 @@ Order of rows with measurement data cannot be changed.
                 }
             };
             action.putValue(Action.NAME, "Delete Selected");
+            action.putValue(Action.SHORT_DESCRIPTION,
+                    "Removes the selected steps from the sequence.");
+            action.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
 
+            if (steps.length == 0 || getFirstIndex() < getProject().getCompletedSteps()) {
+                action.setEnabled(false);
+            }
             return action;
         }
 
@@ -725,7 +741,13 @@ Order of rows with measurement data cannot be changed.
                 }
             };
             action.putValue(Action.NAME, "Save Selected As...");
+            action.putValue(Action.SHORT_DESCRIPTION,
+                    "Saves the selected steps as a new preset sequence.");
+            action.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
 
+            if (steps.length == 0) {
+                action.setEnabled(false);
+            }
             return action;
         }
 
@@ -735,7 +757,13 @@ Order of rows with measurement data cannot be changed.
                 }
             };
             action.putValue(Action.NAME, "Save All As...");
+            action.putValue(Action.SHORT_DESCRIPTION,
+                    "Saves all of the steps as a new preset sequence.");
+            action.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
 
+            if (getProject().getSteps() == 0) {
+                action.setEnabled(false);
+            }
             return action;
         }
 
