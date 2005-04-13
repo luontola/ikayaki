@@ -621,7 +621,11 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                             else if (filetype.equals("srm")) ok = Project.loadProject(file).exportToSRM(exportfile);
 
                             // TODO: tell somehow, not with popup, if export was successful; statusbar perhaps?
-                            if (!ok) JOptionPane.showMessageDialog(ProjectExplorerTable.this,
+                            Component c = ProjectExplorerTable.this;
+                            while (c.getParent() != null) {
+                                c = c.getParent();
+                            }
+                            if (!ok) JOptionPane.showMessageDialog(c,
                                 "Unable to write to " + exportfile,
                                 "Error exporting file", JOptionPane.ERROR_MESSAGE);
                         }

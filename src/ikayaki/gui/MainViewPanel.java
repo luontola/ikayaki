@@ -280,7 +280,7 @@ public class MainViewPanel extends ProjectComponent {
         // close the previous project if it is not the latest measuring project
         if (oldProject != null && oldProject != project && oldProject != latestMeasuringProject) {
             if (!Project.closeProject(oldProject)) {
-                JOptionPane.showMessageDialog(this,
+                JOptionPane.showMessageDialog(getParentFrame(),
                         "Unable to close the project " + oldProject.getName(),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -308,7 +308,7 @@ public class MainViewPanel extends ProjectComponent {
                         && latestMeasuringProject != project
                         && latestMeasuringProject != event.getProject()) {
                     if (!Project.closeProject(latestMeasuringProject)) {
-                        JOptionPane.showMessageDialog(this,
+                        JOptionPane.showMessageDialog(getParentFrame(),
                                 "Unable to close the project " + latestMeasuringProject.getName(),
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -360,7 +360,7 @@ public class MainViewPanel extends ProjectComponent {
 
         // must not exit if a measurement is running
         if (latestMeasuringProject != null && latestMeasuringProject.getState() != Project.State.IDLE) {
-            JOptionPane.showMessageDialog(this,
+            JOptionPane.showMessageDialog(getParentFrame(),
                     "Can not exit. A measurement is running.",
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -368,7 +368,7 @@ public class MainViewPanel extends ProjectComponent {
 
         // ensure that all settings will be saved
         if (!Settings.instance().saveNow()) {
-            JOptionPane.showMessageDialog(this,
+            JOptionPane.showMessageDialog(getParentFrame(),
                     "Can not exit. Unable to save the settings.",
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -380,7 +380,7 @@ public class MainViewPanel extends ProjectComponent {
         // close the latest measuring project (if same as the active project, it was not close by setProject(null))
         if (latestMeasuringProject != null) {
             if (!Project.closeProject(latestMeasuringProject)) {
-                JOptionPane.showMessageDialog(this,
+                JOptionPane.showMessageDialog(getParentFrame(),
                         "Can not exit. Unable to close the project " + latestMeasuringProject.getName() + ".",
                         "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -392,7 +392,7 @@ public class MainViewPanel extends ProjectComponent {
         for (Project cached : cachedProjects) {
             System.err.println("Found a cached project, closing it: " + cached.getFile());
             if (!Project.closeProject(cached)) {
-                JOptionPane.showMessageDialog(this,
+                JOptionPane.showMessageDialog(getParentFrame(),
                         "Can not exit. Unable to close the (cached) project " + cached.getName() + ".",
                         "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -420,7 +420,7 @@ public class MainViewPanel extends ProjectComponent {
         if (project != null) {
             setProject(project);
         } else {
-            JOptionPane.showMessageDialog(this,
+            JOptionPane.showMessageDialog(getParentFrame(),
                     "Unable to open the file " + file,
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -441,7 +441,7 @@ public class MainViewPanel extends ProjectComponent {
         if (project != null) {
             setProject(project);
         } else {
-            JOptionPane.showMessageDialog(this,
+            JOptionPane.showMessageDialog(getParentFrame(),
                     "Unable to create the file " + file,
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -470,7 +470,7 @@ public class MainViewPanel extends ProjectComponent {
 
                 // overwrite old file?
                 if (file.exists()) {
-                    returnVal = JOptionPane.showConfirmDialog(MainViewPanel.this,
+                    returnVal = JOptionPane.showConfirmDialog(getParentFrame(),
                             "Overwrite the file " + file + "?",
                             "Confirm", JOptionPane.YES_NO_CANCEL_OPTION);
                     if (returnVal == JOptionPane.NO_OPTION) {
@@ -492,7 +492,7 @@ public class MainViewPanel extends ProjectComponent {
                     throw new IllegalArgumentException("Unkown export type: " + type);
                 }
                 if (!ok) {
-                    JOptionPane.showMessageDialog(MainViewPanel.this,
+                    JOptionPane.showMessageDialog(getParentFrame(),
                             "Unable to write the file " + file,
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -695,7 +695,7 @@ public class MainViewPanel extends ProjectComponent {
             helpAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent event) {
                     if (!System.getProperty("os.name").startsWith("Windows")) {
-                        JOptionPane.showMessageDialog(MainViewPanel.this,
+                        JOptionPane.showMessageDialog(getParentFrame(),
                                 "Open this file in your web browser to view the help pages:\n" + Ikayaki.HELP_PAGES);
                         return;
                     }
@@ -737,7 +737,7 @@ public class MainViewPanel extends ProjectComponent {
                     for (String author : Ikayaki.AUTHORS) {
                         message += author + "\n";
                     }
-                    JOptionPane.showMessageDialog(MainViewPanel.this,
+                    JOptionPane.showMessageDialog(getParentFrame(),
                             message, "About " + Ikayaki.APP_NAME, JOptionPane.INFORMATION_MESSAGE,
                             new ImageIcon(ClassLoader.getSystemResource("resources/ikayaki.png")));
                 }

@@ -46,11 +46,13 @@ public class MeasurementControlsPanel extends ProjectComponent {
      * sequence.
      */
     private final JButton measureButton;
+    private final JButton pauseButton;
     private final JButton stepButton;
     private final JButton abortButton;
 
     // error-flashers for buttons
     private final ComponentFlasher measureButtonFlasher;
+    private final ComponentFlasher pauseButtonFlasher;
     private final ComponentFlasher stepButtonFlasher;
     private final ComponentFlasher abortButtonFlasher;
 
@@ -92,19 +94,22 @@ public class MeasurementControlsPanel extends ProjectComponent {
     public MeasurementControlsPanel() {
 
         measureButton = new JButton(getAutoStepAction());
+        pauseButton = new JButton(getPauseAction());
         stepButton = new JButton(getSingleStepAction());
         abortButton = new JButton(getAbortAction());
 
         measureButtonFlasher = new ComponentFlasher(measureButton);
+        pauseButtonFlasher = new ComponentFlasher(pauseButton);
         stepButtonFlasher = new ComponentFlasher(stepButton);
         abortButtonFlasher = new ComponentFlasher(abortButton);
 
         //JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         //JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 2, 2)); // prevents button resize, looks a bit ugly
-        JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 2, 2)); // prevents button resize, looks a bit ugly
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 4, 4, 4));
+        //JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 2, 2)); // prevents button resize, looks a bit ugly
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 2, 2, 2)); // prevents button resize, looks a bit ugly
         buttonPanel.add(measureButton);
         buttonPanel.add(stepButton);
+        buttonPanel.add(pauseButton);
         buttonPanel.add(abortButton);
 
         zButtonGroup = new ButtonGroup();
@@ -132,17 +137,20 @@ public class MeasurementControlsPanel extends ProjectComponent {
         //sampleInsertPanel.add(zPlusRadioButton, BorderLayout.WEST);
         //sampleInsertPanel.add(zMinusRadioButton, BorderLayout.EAST);
 
-        JPanel topPanel = new JPanel(new BorderLayout());
+        JPanel topPanel = new JPanel(new BorderLayout(0, 8));
         topPanel.add(buttonPanel, BorderLayout.CENTER);
         topPanel.add(sampleInsertPanel, BorderLayout.SOUTH);
 
         magnetometerStatusPanel = new MagnetometerStatusPanel();
         manualControlsPanel = new ManualControlsPanel();
 
-        setLayout(new BorderLayout());
-        add(topPanel, BorderLayout.NORTH);
-        add(manualControlsPanel, BorderLayout.WEST);
-        add(magnetometerStatusPanel, BorderLayout.CENTER);
+        JPanel contentPane = new JPanel(new BorderLayout(0, 8));
+        contentPane.setBorder(BorderFactory.createEmptyBorder(0, 4, 4, 4));
+        contentPane.add(topPanel, BorderLayout.NORTH);
+        contentPane.add(manualControlsPanel, BorderLayout.WEST);
+        contentPane.add(magnetometerStatusPanel, BorderLayout.CENTER);
+        this.setLayout(new BorderLayout());
+        this.add(contentPane);
 
         // size limit for the panel
         //setPreferredSize(new Dimension(200, -1));
@@ -239,11 +247,12 @@ public class MeasurementControlsPanel extends ProjectComponent {
             getAbortAction().setEnabled(false);
         }
 
-        if (getAutoStepAction().isEnabled()) {
-            measureButton.setAction(getAutoStepAction());
-        } else {
-            measureButton.setAction(getPauseAction());
-        }
+        // TODO: let's try how it looks when Measure and Pause buttons are separate
+//        if (getAutoStepAction().isEnabled()) {
+//            measureButton.setAction(getAutoStepAction());
+//        } else {
+//            measureButton.setAction(getPauseAction());
+//        }
     }
 
     /* Getters for Swing Actions */
@@ -260,7 +269,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
                         if (e.getSource() == measureButton) {
                             measureButtonFlasher.flash();
                         } else {
-                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this.getParentFrame(),
+                            JOptionPane.showMessageDialog(getParentFrame(),
                                 "Unable to measure.", "Squid Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
@@ -286,7 +295,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
                         if (e.getSource() == stepButton) {
                             stepButtonFlasher.flash();
                         } else {
-                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this.getParentFrame(),
+                            JOptionPane.showMessageDialog(getParentFrame(),
                                 "Unable to single step.", "Squid Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
@@ -310,7 +319,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
                         if (e.getSource() instanceof JButton) {
                             new ComponentFlasher((JComponent) e.getSource()).flash();
                         } else {
-                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this.getParentFrame(),
+                            JOptionPane.showMessageDialog(getParentFrame(),
                                 "Unable to calibrate.", "Squid Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
@@ -331,10 +340,12 @@ public class MeasurementControlsPanel extends ProjectComponent {
             pauseAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     if (!getProject().doPause()) {
-                        if (e.getSource() == measureButton ) {
+                        if (e.getSource() == pauseButton ) {
+                            pauseButtonFlasher.flash();
+                        } else if (e.getSource() == measureButton ) {
                             measureButtonFlasher.flash();
                         } else {
-                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this.getParentFrame(),
+                            JOptionPane.showMessageDialog(getParentFrame(),
                                 "Unable to pause.", "Squid Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
@@ -361,7 +372,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
                         if (e.getSource() == abortButton) {
                             abortButtonFlasher.flash();
                         } else {
-                            JOptionPane.showMessageDialog(MeasurementControlsPanel.this.getParentFrame(),
+                            JOptionPane.showMessageDialog(getParentFrame(),
                                 "Unable to abort!", "Squid Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
