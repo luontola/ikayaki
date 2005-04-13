@@ -841,6 +841,11 @@ public class MeasurementSequencePanel extends ProjectComponent {
         }
     }
 
+    /**
+     * Table model for the details table.
+     *
+     * @author Esko Luontola
+     */
     private class DetailsTableModel extends AbstractTableModel {
 
         private MeasurementStep step;
@@ -897,6 +902,11 @@ public class MeasurementSequencePanel extends ProjectComponent {
         }
     }
 
+    /**
+     * Table model for the error table.
+     *
+     * @author Esko Luontola
+     */
     private class ErrorsTableModel extends AbstractTableModel {
 
         private MeasurementStep step;
