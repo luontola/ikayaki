@@ -489,27 +489,41 @@ public class MeasurementSequencePanel extends ProjectComponent {
     }
 
     /**
-     * Refreshes the table header on project data change, in case the header names have changed.
+     * Updates the sequence table on project data change. The TableModel does not need to listen to ProjectEvents.
      */
     public void projectUpdated(ProjectEvent event) {
         if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
+
+            // refresh the table header, in case the header names have changed.
             for (int i = 0; i < sequenceTable.getColumnCount(); i++) {
                 sequenceTable.getColumnModel().getColumn(i).setHeaderValue(sequenceTableModel.getColumnName(i));
             }
             sequenceTable.getTableHeader().repaint();
+
+            // save the selected rows and update the table data
+            int[] rows = sequenceTable.getSelectedRows();
+            sequenceTableModel.fireTableDataChanged();
+            for (int i : rows) {
+                sequenceTable.getSelectionModel().addSelectionInterval(i, i);
+            }
         }
     }
 
     public void measurementUpdated(MeasurementEvent event) {
-        // on measurement step start, scroll the row visible
         if (event.getType() == MeasurementEvent.Type.STEP_START) {
+
+            // scroll the row visible
             for (int i = getProject().getSteps() - 1; i >= 0; i--) {
                 if (getProject().getStep(i) == event.getStep()) {
                     scrollToRow(i);
                     scrollToRow(Math.min(i + 2, sequenceTableModel.getRowCount() - 1));
-                    return;
+                    break;
                 }
             }
+        } else if (event.getType() == MeasurementEvent.Type.VALUE_MEASURED) {
+
+            // show the details of the latest measurement
+            getDetailsPanel().setStep(event.getStep());
         }
     }
 

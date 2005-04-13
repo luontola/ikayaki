@@ -142,11 +142,15 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
 
     /**
      * Refreshes the table to reflect the changes in the project's data.
+     *
+     * @deprecated The selected rows need to be saved before updating the table data, and that can only be done with
+     *             access to the JTable. That's why it is on MeasurementSequencePanel's responsibility is to react to
+     *             ProjectEvents.
      */
     public void projectUpdated(ProjectEvent event) {
-        if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
-            fireTableDataChanged();
-        }
+//        if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
+//            fireTableDataChanged();
+//        }
     }
 
     /**
