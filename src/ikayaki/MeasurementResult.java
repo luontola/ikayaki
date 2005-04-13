@@ -36,6 +36,8 @@ import static ikayaki.MeasurementResult.Type.*;
  * A set of X, Y and Z values measured by the magnetometer. The raw XYZ values will be rotated in 3D space by using a
  * transformation matrix. The project will set and update the transformation whenever its parameters are changed.
  *
+ * All units are mA/m.
+ *
  * @author Esko Luontola
  */
 public class MeasurementResult {
@@ -62,7 +64,7 @@ public class MeasurementResult {
     private Vector3d geographicVector = new Vector3d();
 
     /**
-     * Creates a new measurement result.
+     * Creates a new measurement result. All units are mA/m.
      *
      * @param type the type (background or rotation) of this result.
      * @param x    the measured X coordinate value.

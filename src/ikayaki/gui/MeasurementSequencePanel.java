@@ -34,7 +34,9 @@ import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static ikayaki.gui.SequenceColumn.*;
 
@@ -203,6 +205,38 @@ Order of rows with measurement data cannot be changed.
             }
         });
 
+        // on table cell right-click: show a popup menu for adding/removing steps and saving sequences
+        sequenceTable.addMouseListener(new MouseAdapter() {
+            @Override public void mouseClicked(MouseEvent e) {
+                if (getProject() == null) {
+                    return;
+                }
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    int[] rows = sequenceTable.getSelectedRows();
+                    List<MeasurementStep> steps = new ArrayList<MeasurementStep>();
+                    for (int i : rows) {
+                        if (i < getProject().getSteps()) {
+                            steps.add(getProject().getStep(i));
+                        }
+                    }
+                    JPopupMenu popup = new SequencePopupMenu(steps.toArray(new MeasurementStep[steps.size()]));
+                    popup.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+
+        // on table header right-click: show a popup menu for choosing the table columns
+        sequenceTable.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override public void mouseClicked(MouseEvent e) {
+                if (getProject() == null) {
+                    return;
+                }
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    JPopupMenu popup = new HeaderPopupMenu();
+                    popup.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
 
 
 
@@ -617,6 +651,134 @@ Order of rows with measurement data cannot be changed.
             formatter.setMinimum(new Double(0.0));
             formatter.setMaximum(new Double(9999.0));
             return formatter;
+        }
+    }
+
+    /**
+     * Popup menu for removing and adding steps from the sequence, and saving steps as a preset sequence. This popup
+     * will assume that there is an open project while this popup is visible.
+     */
+    private class SequencePopupMenu extends JPopupMenu {
+
+        /**
+         * The currently selected steps from the sequence, or an empty array if no steps are selected.
+         */
+        private MeasurementStep[] steps;
+
+        /**
+         * Creates a new SequencePopupMenu.
+         *
+         * @param steps the currently selected steps from the sequence, or an empty array if no steps are selected.
+         * @throws NullPointerException if steps is null.
+         */
+        public SequencePopupMenu(MeasurementStep[] steps) {
+            if (steps == null) {
+                throw new NullPointerException();
+            }
+            this.steps = steps;
+
+            add(getInsertBeforeAction());
+            add(getInsertAfterAction());
+            add(getDeleteSelectedAction());
+            add(new JSeparator());
+            add(getSaveSelectedAsAction());
+            add(getSaveAllAsAction());
+        }
+
+        private Action getInsertBeforeAction() {
+            Action action = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                }
+            };
+            action.putValue(Action.NAME, "Insert before");
+            action.putValue(Action.SHORT_DESCRIPTION,
+                    "Inserts the selected number of new steps\n"+
+                    "in front of the the selected steps.");
+            action.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_I);
+
+            return action;
+        }
+
+        private Action getInsertAfterAction() {
+            Action action = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                }
+            };
+            action.putValue(Action.NAME, "Insert after");
+
+            return action;
+        }
+
+        private Action getDeleteSelectedAction() {
+            Action action = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                }
+            };
+            action.putValue(Action.NAME, "Delete Selected");
+
+            return action;
+        }
+
+        private Action getSaveSelectedAsAction() {
+            Action action = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                }
+            };
+            action.putValue(Action.NAME, "Save Selected As...");
+
+            return action;
+        }
+
+        private Action getSaveAllAsAction() {
+            Action action = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                }
+            };
+            action.putValue(Action.NAME, "Save All As...");
+
+            return action;
+        }
+
+        /**
+         * Returns the index of the first step, or -1 if there are no steps.
+         */
+        private int getFirstIndex() {
+            for (int i = 0; i < getProject().getSteps(); i++) {
+                MeasurementStep current = getProject().getStep(i);
+                for (MeasurementStep step : steps) {
+                    if (current == step) {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
+
+        /**
+         * Returns the index of the last step, or -1 if there are no steps.
+         */
+        private int getLastIndex() {
+            for (int i = getProject().getSteps() - 1; i >= 0; i--) {
+                MeasurementStep current = getProject().getStep(i);
+                for (MeasurementStep step : steps) {
+                    if (current == step) {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
+    }
+
+    /**
+     * Popup menu for selecting which columns to show in the sequence table. This popup will assume that there is an
+     * open project while this popup is visible.
+     */
+    private class HeaderPopupMenu extends JPopupMenu {
+        public HeaderPopupMenu() {
+            add("HeaderPopupMenu");
+
+            // TODO
         }
     }
 }
