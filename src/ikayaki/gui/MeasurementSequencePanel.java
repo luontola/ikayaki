@@ -74,7 +74,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
      */
     public MeasurementSequencePanel() {
 
-        /* Set up table */
+        /* Sequence Table */
         sequenceTableModel = new MeasurementSequenceTableModel();
         sequenceTable = new JTable(sequenceTableModel);
         sequenceTable.getTableHeader().setReorderingAllowed(false);
@@ -82,7 +82,16 @@ public class MeasurementSequencePanel extends ProjectComponent {
         sequenceTable.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
         sequenceTable.setDefaultEditor(StyledWrapper.class, new StyledCellEditor(new JTextField()));
 
-        /* Build layout */
+        /* Add Sequence Controls */
+        MyFormatterFactory factory = new MyFormatterFactory();
+        sequenceStartField.setFormatterFactory(factory);
+        sequenceStepField.setFormatterFactory(factory);
+        sequenceStopField.setFormatterFactory(factory);
+        sequenceStartFieldFlasher = new ComponentFlasher(sequenceStartField);
+        sequenceStepFieldFlasher = new ComponentFlasher(sequenceStepField);
+        sequenceStopFieldFlasher = new ComponentFlasher(sequenceStopField);
+
+        /* Build Layout */
         controlsPane.setBorder(BorderFactory.createEmptyBorder(0, 4, 4, 4));
         JScrollPane scrollPane = new JScrollPane(sequenceTable);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -93,7 +102,9 @@ public class MeasurementSequencePanel extends ProjectComponent {
         add(controlsPane, "North");
         add(scrollPane);
 
-        // resize the columns to be always the right size
+        /* Event Listeners */
+
+        // resize the table columns to be always the right size
         sequenceTable.getColumnModel().addColumnModelListener(new TableColumnModelListener() {
             public void columnAdded(TableColumnModelEvent e) {
                 updateColumns();
@@ -116,15 +127,28 @@ public class MeasurementSequencePanel extends ProjectComponent {
             }
         });
 
-        /* Add Sequence Controls */
-        MyFormatterFactory factory = new MyFormatterFactory();
-        sequenceStartField.setFormatterFactory(factory);
-        sequenceStepField.setFormatterFactory(factory);
-        sequenceStopField.setFormatterFactory(factory);
-        sequenceStartFieldFlasher = new ComponentFlasher(sequenceStartField);
-        sequenceStepFieldFlasher = new ComponentFlasher(sequenceStepField);
-        sequenceStopFieldFlasher = new ComponentFlasher(sequenceStopField);
+        // show the details of the selected step in the details panel
+        sequenceTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                if (getProject() == null) {
+                    return;
+                }
 
+                // if there is exactly one step selected, show that one
+                if (sequenceTable.getSelectedRowCount() == 1) {
+                    int index = sequenceTable.getSelectedRow();
+                    if (index < getProject().getSteps()) {
+                        getDetailsPanel().setStep(getProject().getStep(index));
+                        return;
+                    }
+                }
+
+                // if it is unclear that which step to show, show the measuring step (might be null)
+                getDetailsPanel().setStep(getProject().getCurrentStep());
+            }
+        });
+
+        // adding a sequence with the add sequence controls
         addSequenceButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addSequence();
@@ -927,6 +951,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
 
         public void setStep(MeasurementStep step) {
             this.step = step;
+            fireTableDataChanged();
         }
 
         public int getRowCount() {
@@ -947,7 +972,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
 
         public Object getValueAt(int rowIndex, int columnIndex) {
             Object value;
-            if (step != null && rowIndex <= step.getResults()) {
+            if (step != null && rowIndex < step.getResults()) {
 
                 // get the values from the step
                 switch (columnIndex) {
@@ -1048,6 +1073,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
 
         public void setStep(MeasurementStep step) {
             this.step = step;
+            fireTableDataChanged();
         }
 
         public int getRowCount() {
