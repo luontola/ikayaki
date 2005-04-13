@@ -71,6 +71,24 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         this.serialIO = SerialIO.openPort(
                 new SerialParameters(Settings.instance().getMagnetometerPort(), 1200, 0, 0, 8, 1, 0));
         serialIO.addSerialIOListener(this);
+        try {
+          //Original sets range and filter to 1x and disable fast-slew, TODO: check if right, do we need status confirm?
+          serialIO.writeMessage("XCR1\r");
+          serialIO.writeMessage("XCF1\r");
+          serialIO.writeMessage("XCSD\r");
+          serialIO.writeMessage("YCR1\r");
+          serialIO.writeMessage("YCF1\r");
+          serialIO.writeMessage("YCSD\r");
+          serialIO.writeMessage("ZCR1\r");
+          serialIO.writeMessage("ZCF1\r");
+          serialIO.writeMessage("ZCSD\r");
+          //and original resets all
+          this.configure('a','L','P');
+          this.resetCounter('a');
+        }
+        catch (SerialIOException ex1) {
+          System.err.println("Error using port in degausser:" + ex1);
+        }
     }
 
     /**
@@ -96,8 +114,8 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
             axis = 'Z';
         } else if (axis == 'a') axis = 'A';
         try {
-            //as a note: <CR> obviously means /r
-            this.serialIO.writeMessage(axis + "R/r");
+            //as a note: <CR> obviously means \r
+            this.serialIO.writeMessage(axis + "R\r");
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -119,7 +137,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         } else if (axis == 'a') axis = 'A';
 
         try {
-            this.serialIO.writeMessage(axis + "RC/r");
+            this.serialIO.writeMessage(axis + "RC\r");
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -134,7 +152,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      *                   "T" Ten Hertz Filter; 10 Hz "H" One hundred Hertz Filter; 100 Hz "W" Wide band filter; WB
      *                   <br/>"R" Set DC SQUID electronic range. The data subfield selects the range desired. The four
      *                   possible data values are: "1" One time range; 1x "T" Ten times range; 10x "H" One hundred times
-     *                   range; 100x "E" Extended range; 1000x <br/>"S" Set/Reset the fast-slew option. Two data values
+     *                   range; 100x "E" Extended range; 1000x <br/>"S" Set\reset the fast-slew option. Two data values
      *                   are possible: "E" Enable the fast-slew; turn it on. "D" Disable the fast-slew; turn it off.
      *                   <br/>"L" This subcommand opens or closes the SQUID feedback loop or resets the analog signal to
      *                   +/- 1/2 flux quantum about zero. The three possible data values are: "O" Open the feedback
@@ -152,7 +170,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
             axis = 'Z';
         } else if (axis == 'a') axis = 'A';
         try {
-            this.serialIO.writeMessage(axis + "C" + subcommand + option + "/r");
+            this.serialIO.writeMessage(axis + "C" + subcommand + option + "\r");
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -173,7 +191,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
             axis = 'Z';
         } else if (axis == 'a') axis = 'A';
         try {
-            this.serialIO.writeMessage(axis + "LD/r");
+            this.serialIO.writeMessage(axis + "LD\r");
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -194,7 +212,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
             axis = 'Z';
         } else if (axis == 'a') axis = 'A';
         try {
-            this.serialIO.writeMessage(axis + "LC/r");
+            this.serialIO.writeMessage(axis + "LC\r");
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -225,14 +243,14 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         }
         if (command == 'D' || command == 'C') {
             try {
-                this.serialIO.writeMessage(axis + "S" + command + "/r");
+                this.serialIO.writeMessage(axis + "S" + command + "\r");
             } catch (SerialIOException ex) {
                 System.err.println(ex);
                 return null;
             }
         } else if (command == 'S') {
             try {
-                this.serialIO.writeMessage(axis + "S" + command + datavalues + "/r");
+                this.serialIO.writeMessage(axis + "S" + command + datavalues + "\r");
             } catch (SerialIOException ex) {
                 System.err.println(ex);
                 return null;

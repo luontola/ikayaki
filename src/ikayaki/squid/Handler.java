@@ -146,7 +146,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         //first put system online
         this.setOnline();
 
-        //set all settings
+        //set all settings TODO: do we need to check values? (original does)
         this.setAcceleration(this.acceleration);
         this.setVelocity(this.velocity);
         this.setDeceleration(this.deceleration);
@@ -240,7 +240,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     public void moveToHome() {
         try {
-            this.serialIO.writeMessage("H1");
+            this.serialIO.writeMessage("O1,0");
+            this.serialIO.writeMessage(","); //execute command
+            this.serialIO.writeMessage("O1,1");
             this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException ex) {
             System.err.println(ex);

@@ -101,14 +101,15 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         lastCommandTime = System.currentTimeMillis();
         //needs to call new functions setDelay() and setRamp(). TODO
         waitSecond();
+        //TODO: do we need to check values? (original does)
         try {
-            this.serialIO.writeMessage("DCD " + this.degausserDelay);
+            this.serialIO.writeMessage("DCD" + this.degausserDelay + "\r");
         } catch (SerialIOException ex1) {
             System.err.println("Error using port in degausser:" + ex1);
         }
         waitSecond();
         try {
-            this.serialIO.writeMessage("DCR " + this.degausserRamp);
+            this.serialIO.writeMessage("DCR" + this.degausserRamp + "\r");
         } catch (SerialIOException ex1) {
             System.err.println("Error using port in degausser:" + ex1);
         }
