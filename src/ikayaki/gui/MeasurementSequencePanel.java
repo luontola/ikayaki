@@ -843,6 +843,20 @@ public class MeasurementSequencePanel extends ProjectComponent {
             errorsTable.setEnabled(false);
             errorsTable.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
 
+            detailsTable.getColumnModel().getColumn(0).setPreferredWidth(50);
+            detailsTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+            detailsTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+            detailsTable.getColumnModel().getColumn(3).setPreferredWidth(100);
+            detailsTable.getTableHeader().setReorderingAllowed(false);
+            detailsTable.getTableHeader().setResizingAllowed(false);
+
+            errorsTable.getColumnModel().getColumn(0).setPreferredWidth(50);
+            errorsTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+            errorsTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+            errorsTable.getColumnModel().getColumn(3).setPreferredWidth(100);
+            errorsTable.getTableHeader().setReorderingAllowed(false);
+            errorsTable.getTableHeader().setResizingAllowed(false);
+
             // emulate the looks of a JScrollPane
             JPanel detailsTablePanel = new JPanel(new BorderLayout());
             detailsTablePanel.add(detailsTable.getTableHeader(), BorderLayout.NORTH);
@@ -898,7 +912,14 @@ public class MeasurementSequencePanel extends ProjectComponent {
 
         private NumberFormat numberFormat = new DecimalFormat("0.000000E0");
 
-        private StyledWrapper wrapper = Settings.getDefaultWrapperInstance();
+        private StyledWrapper defaultWrapper = new StyledWrapper();
+        private StyledWrapper headerWrapper = new StyledWrapper();
+
+        public DetailsTableModel() {
+            defaultWrapper.horizontalAlignment = SwingConstants.TRAILING;
+            headerWrapper.horizontalAlignment = SwingConstants.TRAILING;
+            headerWrapper.font = new JLabel("").getFont().deriveFont(Font.BOLD);
+        }
 
         public MeasurementStep getStep() {
             return step;
@@ -978,6 +999,20 @@ public class MeasurementSequencePanel extends ProjectComponent {
                     value = null;
                 }
             }
+            return wrap(value, rowIndex, columnIndex);
+        }
+
+        public StyledWrapper wrap(Object value, int rowIndex, int columnIndex) {
+            StyledWrapper wrapper;
+
+            // choose the style according to the column
+            if (columnIndex == HEADER_COLUMN) {
+                wrapper = headerWrapper;
+            } else {
+                wrapper = defaultWrapper;
+            }
+
+            // wrap the cell's value and return it
             wrapper.value = value;
             return wrapper;
         }
@@ -998,7 +1033,14 @@ public class MeasurementSequencePanel extends ProjectComponent {
         private final int SIGNAL_HOLDER_COLUMN = 2;
         private final int SIGNAL_NOISE_COLUMN = 3;
 
-        private StyledWrapper wrapper = Settings.getDefaultWrapperInstance();
+        private StyledWrapper defaultWrapper = new StyledWrapper();
+        private StyledWrapper headerWrapper = new StyledWrapper();
+
+        public ErrorsTableModel() {
+            defaultWrapper.horizontalAlignment = SwingConstants.TRAILING;
+            headerWrapper.horizontalAlignment = SwingConstants.TRAILING;
+            headerWrapper.font = new JLabel("").getFont().deriveFont(Font.BOLD);
+        }
 
         public MeasurementStep getStep() {
             return step;
@@ -1031,18 +1073,32 @@ public class MeasurementSequencePanel extends ProjectComponent {
                 value = "Error";
                 break;
             case SIGNAL_DRIFT_COLUMN:
-                value = "(S/D)"; // TODO
+                value = "TODO"; // TODO
                 break;
             case SIGNAL_HOLDER_COLUMN:
-                value = "(S/H)"; // TODO
+                value = "TODO"; // TODO
                 break;
             case SIGNAL_NOISE_COLUMN:
-                value = "(S/N)"; // TODO
+                value = "TODO"; // TODO
                 break;
             default:
                 value = null;
                 break;
             }
+            return wrap(value, rowIndex, columnIndex);
+        }
+
+        public StyledWrapper wrap(Object value, int rowIndex, int columnIndex) {
+            StyledWrapper wrapper;
+
+            // choose the style according to the column
+            if (columnIndex == HEADER_COLUMN) {
+                wrapper = headerWrapper;
+            } else {
+                wrapper = defaultWrapper;
+            }
+
+            // wrap the cell's value and return it
             wrapper.value = value;
             return wrapper;
         }
