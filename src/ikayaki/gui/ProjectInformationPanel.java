@@ -324,14 +324,13 @@ public class ProjectInformationPanel extends ProjectComponent {
             commentField.setText("");
 
             /* Number Fields */
-            // TODO: should I use setValue? otherwise the field might remember the number.
-            latitudeField.setText("");
-            longitudeField.setText("");
-            strikeField.setText("");
-            dipField.setText("");
-            massField.setText("");
-            volumeField.setText("");
-            susceptibilityField.setText("");
+            latitudeField.setValue(null);
+            longitudeField.setValue(null);
+            strikeField.setValue(null);
+            dipField.setValue(null);
+            massField.setValue(null);
+            volumeField.setValue(null);
+            susceptibilityField.setValue(null);
         }
 
         // prevent the saving of unchanged values

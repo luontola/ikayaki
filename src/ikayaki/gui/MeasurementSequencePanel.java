@@ -58,14 +58,21 @@ public class MeasurementSequencePanel extends ProjectComponent {
     private ComponentFlasher sequenceStartFieldFlasher;
     private ComponentFlasher sequenceStepFieldFlasher;
     private ComponentFlasher sequenceStopFieldFlasher;
-    private JLabel stepValueType;
     private JButton addSequenceButton;
     private JComboBox loadSequenceBox;
+
+    private JLabel stepValueTypeLabel;  // stepValue's type depends on the project's type
+    private JLabel sequenceStartLabel;
+    private JLabel sequenceStepLabel;
+    private JLabel sequenceStopLabel;
+    private JLabel loadSequenceLabel;
 
     private JPanel controlsPane;
 
     /* Details Panel */
     private MeasurementDetailsPanel detailsPanel;
+
+
 
     /**
      * Creates default MeasurementSequencePanel.
@@ -444,11 +451,18 @@ public class MeasurementSequencePanel extends ProjectComponent {
      */
     @Override public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
+
         sequenceStartField.setEnabled(enabled);
         sequenceStepField.setEnabled(enabled);
         sequenceStopField.setEnabled(enabled);
         addSequenceButton.setEnabled(enabled);
         loadSequenceBox.setEnabled(enabled);
+
+        stepValueTypeLabel.setEnabled(enabled);
+        sequenceStartLabel.setEnabled(enabled);
+        sequenceStepLabel.setEnabled(enabled);
+        sequenceStopLabel.setEnabled(enabled);
+        loadSequenceLabel.setEnabled(enabled);
     }
 
     /**
@@ -557,19 +571,19 @@ public class MeasurementSequencePanel extends ProjectComponent {
                 new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
                         new Dimension(35, -1), null));
-        final JLabel label1 = new JLabel();
-        label1.setText("Start");
-        controlsPane.add(label1,
+        sequenceStartLabel = new JLabel();
+        sequenceStartLabel.setText("Start");
+        controlsPane.add(sequenceStartLabel,
                 new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label2 = new JLabel();
-        label2.setText("Step");
-        controlsPane.add(label2,
+        sequenceStepLabel = new JLabel();
+        sequenceStepLabel.setText("Step");
+        controlsPane.add(sequenceStepLabel,
                 new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label3 = new JLabel();
-        label3.setText("Stop");
-        controlsPane.add(label3,
+        sequenceStopLabel = new JLabel();
+        sequenceStopLabel.setText("Stop");
+        controlsPane.add(sequenceStopLabel,
                 new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         addSequenceButton = new JButton();
@@ -578,9 +592,9 @@ public class MeasurementSequencePanel extends ProjectComponent {
                 new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        stepValueType = new JLabel();
-        stepValueType.setText("mT");
-        controlsPane.add(stepValueType,
+        stepValueTypeLabel = new JLabel();
+        stepValueTypeLabel.setText("mT");
+        controlsPane.add(stepValueTypeLabel,
                 new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final Spacer spacer1 = new Spacer();
@@ -591,9 +605,9 @@ public class MeasurementSequencePanel extends ProjectComponent {
         controlsPane.add(loadSequenceBox,
                 new GridConstraints(1, 6, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label4 = new JLabel();
-        label4.setText("Load Set");
-        controlsPane.add(label4,
+        loadSequenceLabel = new JLabel();
+        loadSequenceLabel.setText("Load Set");
+        controlsPane.add(loadSequenceLabel,
                 new GridConstraints(0, 6, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
     }
