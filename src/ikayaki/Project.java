@@ -132,12 +132,12 @@ project listeners.
     private MeasurementSequence sequence = new MeasurementSequence();   // this instance will be dumped by the constructor Project(File,Document)
 
     /**
-     * Strike of the sample. Will be used to create the transform matrix.
+     * Strike of the sample. Will be used to create the transform matrix. The unit is degrees (0 to 360).
      */
     private double strike = 0.0;
 
     /**
-     * Dip of the sample. Will be used to create the transform matrix.
+     * Dip of the sample. Will be used to create the transform matrix. The unit is degrees (-90 to 90).
      */
     private double dip = 0.0;
 
@@ -163,17 +163,17 @@ project listeners.
     private Matrix3d transform = new Matrix3d();
 
     /**
-     * Mass of the sample, or a negative value if no mass is defined.
+     * Mass of the sample, or a negative value if no mass is defined. The unit is gram.
      */
     private double mass = -1.0;
 
     /**
-     * Volume of the sample, or a negative value if no volume is defined.
+     * Volume of the sample, or a negative value if no volume is defined. The unit is cm^3.
      */
     private double volume = -1.0;
 
     /**
-     * Susceptibility of the sample, or a negative value if no susceptibility is defined.
+     * Susceptibility of the sample, or a negative value if no susceptibility is defined. Susceptibility has no unit.
      */
     private double susceptibility = -1.0;
 
@@ -957,14 +957,14 @@ project listeners.
     }
 
     /**
-     * Returns the strike of the sample.
+     * Returns the strike of the sample. The unit is degrees (0 to 360).
      */
     public synchronized double getStrike() {
         return strike;
     }
 
     /**
-     * Sets the strike of the sample and calls updateTransforms().
+     * Sets the strike of the sample and calls updateTransforms(). The unit is degrees (0 to 360).
      */
     public synchronized void setStrike(double strike) {
         this.strike = strike;
@@ -974,14 +974,14 @@ project listeners.
     }
 
     /**
-     * Returns the dip of the sample.
+     * Returns the dip of the sample. The unit is degrees (-90 to 90).
      */
     public synchronized double getDip() {
         return dip;
     }
 
     /**
-     * Sets the dip of the sample and calls updateTransforms().
+     * Sets the dip of the sample and calls updateTransforms(). The unit is degrees (-90 to 90).
      */
     public synchronized void setDip(double dip) {
         this.dip = dip;
@@ -1106,7 +1106,7 @@ project listeners.
     }
 
     /**
-     * Returns the mass of the sample.
+     * Returns the mass of the sample. The unit is gram.
      *
      * @return mass of the sample, or a negative number if no mass is specified.
      */
@@ -1115,7 +1115,7 @@ project listeners.
     }
 
     /**
-     * Sets the mass of the sample.
+     * Sets the mass of the sample. The unit is gram.
      *
      * @param mass mass of the sample, or a negative number to clear it.
      */
@@ -1129,7 +1129,7 @@ project listeners.
     }
 
     /**
-     * Returns the volume of the sample.
+     * Returns the volume of the sample. The unit is cm^3.
      *
      * @return volume of the sample, or a negative number if no volume is specified.
      */
@@ -1138,7 +1138,7 @@ project listeners.
     }
 
     /**
-     * Sets the volume of the sample.
+     * Sets the volume of the sample. The unit is cm^3.
      *
      * @param volume volume of the sample, or a negative number to clear it.
      */
@@ -1152,7 +1152,7 @@ project listeners.
     }
 
     /**
-     * Returns the susceptibility of the sample.
+     * Returns the susceptibility of the sample. Susceptibility has no unit.
      *
      * @return susceptibility of the sample, or a negative number if no susceptibility is specified.
      */
@@ -1161,7 +1161,7 @@ project listeners.
     }
 
     /**
-     * Sets the susceptibility of the sample.
+     * Sets the susceptibility of the sample. Susceptibility has no unit.
      *
      * @param susceptibility susceptibility of the sample, or a negative number to clear it.
      */

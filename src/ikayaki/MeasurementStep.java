@@ -69,22 +69,24 @@ public class MeasurementStep {
     private Date timestamp = null;
 
     /**
-     * The AF/Thermal value of this step, or a negative number if it has not been specified.
+     * The AF or Thermal value of this step, or a negative number if it has not been specified. The unit is millitesla
+     * (when AF) or Celcius (when thermal).
      */
     private double stepValue = -1.0;
 
     /**
-     * The mass of this step's sample, or a negative number to use the project's default mass.
+     * The mass of this step's sample, or a negative number to use the project's default mass. The unit is gram.
      */
     private double mass = -1.0;
 
     /**
-     * The volume of this step's sample, or a negative number to use the project's default volume.
+     * The volume of this step's sample, or a negative number to use the project's default volume. The unit is cm^3.
      */
     private double volume = -1.0;
 
     /**
      * The susceptibility of this step's sample, or a negative number to use the project's default volume.
+     * Susceptibility has no unit.
      */
     private double susceptibility = -1.0;
 
@@ -268,14 +270,16 @@ public class MeasurementStep {
     }
 
     /**
-     * Returns the AF/Thermal value of this step, or a negative number if it has not been specified.
+     * Returns the AF/Thermal value of this step, or a negative number if it has not been specified. The unit is
+     * millitesla (when AF) or Celcius (when thermal).
      */
     public synchronized double getStepValue() {
         return stepValue;
     }
 
     /**
-     * Sets the value of this step. A negative value will clear it.
+     * Sets the value of this step. A negative value will clear it. The unit is millitesla (when AF) or Celcius (when
+     * thermal).
      *
      * @throws IllegalStateException if the step's state is not READY.
      */
@@ -291,14 +295,15 @@ public class MeasurementStep {
     }
 
     /**
-     * Returns the mass of this step's sample, or a negative number to use the project's default mass.
+     * Returns the mass of this step's sample, or a negative number to use the project's default mass. The unit is
+     * gram.
      */
     public synchronized double getMass() {
         return mass;
     }
 
     /**
-     * Sets the mass of this step's sample. A negative value will clear it.
+     * Sets the mass of this step's sample. A negative value will clear it. The unit is gram.
      */
     public synchronized void setMass(double mass) {
         if (mass < 0.0) {
@@ -309,14 +314,15 @@ public class MeasurementStep {
     }
 
     /**
-     * Returns the volume of this step's sample, or a negative number to use the project's default volume.
+     * Returns the volume of this step's sample, or a negative number to use the project's default volume. The unit is
+     * cm^3.
      */
     public synchronized double getVolume() {
         return volume;
     }
 
     /**
-     * Sets the volume of this step's sample. A negative value will clear it.
+     * Sets the volume of this step's sample. A negative value will clear it. The unit is cm^3.
      */
     public synchronized void setVolume(double volume) {
         if (volume < 0.0) {
@@ -327,14 +333,15 @@ public class MeasurementStep {
     }
 
     /**
-     * Returns the susceptibility of this step's sample, or a negative number to use the project's default susceptibility.
+     * Returns the susceptibility of this step's sample, or a negative number to use the project's default
+     * susceptibility. Susceptibility has no unit.
      */
     public synchronized double getSusceptibility() {
         return susceptibility;
     }
 
     /**
-     * Sets the susceptibility of this step's sample. A negative value will clear it.
+     * Sets the susceptibility of this step's sample. A negative value will clear it. Susceptibility has no unit.
      */
     public synchronized void setSusceptibility(double susceptibility) {
         if (susceptibility < 0.0) {
