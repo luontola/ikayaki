@@ -44,6 +44,11 @@ using squid emulator at first and finally with real Squid system. Graphical User
 mainly tested in Unit testing and is only looked that all components work together as Squid
 Interface is tested.
 
+Integration testing for GUI-components is done using top-down method.
+Testing is done partly during implementation phase, when new components
+are added to program. After adding component to program it is tested to
+work properly with other components.
+
 Graphical User Interface is tested using all use cases from \ref{intcase}. If one fails, it is
 corrected immediatelly and all use cases must be done again. When all use cases are done
 without errors this phase is ready.
@@ -54,11 +59,6 @@ phase we use old program with emulator, save its log file and take results. Afte
 run it with new program and compare results. If they are not same, corrections
 are made immediatelly to new program and test is run again. This is done until results are
 same for all use cases.
-
-Integration testing for GUI-components is done using top-down method.
-Testing is done partly during implementation phase, when new components
-are added to program. After adding component to program it is tested to
-work properly with other components.
 
 \subsection{Squid Emulator}
 \label{emulator}
