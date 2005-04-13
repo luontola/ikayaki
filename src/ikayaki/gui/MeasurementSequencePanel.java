@@ -41,43 +41,11 @@ import java.util.List;
 import static ikayaki.gui.SequenceColumn.*;
 
 /**
- * Allows creating, editing and removing measurement sequences. Shows measurement data. Right-click brings popup menu
- * for hiding columns, and saving sequence. Left-click selects a row. Multiple rows can be selected by ctrl-clicking or
- * shift-clicking. Allows dragging rows to different order if multiple rows are selected multiple rows are dragged. Has
- * three textfields for inserting new sequences, first field for start value, second for step and third for stop value.
- * Clicking Add sequence-button appends sequence into table. Saved sequences can be loaded from dropdown menu.
+ * Shows the measurements of a project and provides controls for modifying the sequence.
  *
  * @author Esko Luontola
  */
 public class MeasurementSequencePanel extends ProjectComponent {
-/*
-Event A: On SequenceTable mouse right-click - Create a MeasurementSequencePopupMenu.
-*/
-/*
-Event B: On addSequence mouseclick - Add measurement sequence to project class and
-tell MeasurementSequenceTableModel to update itself.
-*/
-/*
-Event C: On sequenceSelector mouseclick - Bring dropdown menu for selecting premade
-sequence.
-*/
-/*
-Event D: On selecting sequence from dropdown menu - Add measurement sequence to
-table and tell MeasurementSequenceTableModel to update itself.
-*/
-/*
-Event E: On Project event - Update contest of table to correspond projects state.
-*/
-/*
-Event F: On Measurement event - If measurement step is finished, get measurement
-data from project class and if row being measured was selected select next row unless
-measurement sequence ended.
-*/
-/*
-Event G: On Drag event - Change measurement sequences row order in project class
-and tell MeasurementSequenceTableModel to update itself to correspond new row order.
-Order of rows with measurement data cannot be changed.
-*/
 
     /* Measurement Sequence Table */
     private JTable sequenceTable;
@@ -273,69 +241,6 @@ Order of rows with measurement data cannot be changed.
             loadSequenceBox.addItem(sequence);
         }
         loadSequenceBox.setSelectedItem(selected);
-    }
-
-    /**
-     * @deprecated
-     */
-    public String valueAt(int row, int column) {
-        return (String) sequenceTable.getValueAt(row, column);
-    }
-
-    /**
-     * @deprecated
-     */
-    public void updateComboBox() {
-    }
-
-    /**
-     * @deprecated
-     */
-    public void removeRow(int index) {
-        try {
-            getProject().removeStep(index);
-        } catch (IndexOutOfBoundsException e) {
-        }
-    }
-
-    /**
-     * @deprecated
-     */
-    public int[] selectedRows() {
-        return sequenceTable.getSelectedRows();
-    }
-
-    /**
-     * @deprecated
-     */
-    public int rowCount() {
-        return sequenceTable.getRowCount();
-    }
-
-    /**
-     * @deprecated
-     */
-    public void showVolume() {
-        // No ei sit tätä
-    }
-
-    /**
-     * @deprecated
-     */
-    public void hideVolume() {
-        // Eikä tätä
-    }
-
-    /**
-     * @deprecated
-     */
-    public boolean isVolumeShown() {
-        // Oikeassa puolet ajasta
-        if (Math.random() < 0.5) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -693,6 +598,8 @@ Order of rows with measurement data cannot be changed.
             add(getSaveSelectedAsAction());
             add(getSaveAllAsAction());
         }
+
+        // TODO: Put these same actions to the program's main menu. Each action might then need to find out the selected rows itself and monitor the ListSelectionModel.
 
         private Action getInsertBeforeAction() {
             Action action = new AbstractAction() {
