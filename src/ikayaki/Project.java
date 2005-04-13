@@ -37,19 +37,18 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.util.*;
 
-import static ikayaki.Project.Orientation.PLUS_Z;
-import static ikayaki.Project.Orientation.MINUS_Z;
-import static ikayaki.Project.Normalization.VOLUME;
 import static java.lang.Math.sin;
 import static java.lang.Math.cos;
-import static ikayaki.ProjectEvent.Type.DATA_CHANGED;
-import static ikayaki.ProjectEvent.Type.STATE_CHANGED;
-import static ikayaki.ProjectEvent.Type.FILE_SAVED;
+import static ikayaki.MeasurementEvent.Type.*;
+import static ikayaki.MeasurementResult.Type.*;
 import static ikayaki.MeasurementStep.State.DONE;
 import static ikayaki.MeasurementStep.State.DONE_RECENTLY;
+import static ikayaki.Project.Normalization.*;
+import static ikayaki.Project.Orientation.*;
 import static ikayaki.Project.State.*;
-import static ikayaki.Project.Type.*;
 import static ikayaki.Project.SampleType.*;
+import static ikayaki.Project.Type.*;
+import static ikayaki.ProjectEvent.Type.*;
 
 /**
  * Represents a measurement project file. Project is responsible for managing and storing the data that is recieved from
@@ -1483,111 +1482,19 @@ project listeners.
             throw new IllegalStateException("Unable to run measurement, state is: " + getState());
         }
 
-        System.out.println("Measurement started");
-        for (int i = getCompletedSteps(); i < getSteps(); i++) {
-
-            System.out.println("Measuring step " + i + "...");
-            currentStep = getStep(i);
-            currentStep.setMeasuring();
-            fireMeasurementEvent(currentStep, MeasurementEvent.Type.STEP_START);
-
-            try {
-                // measure BG (1)
-                Thread.sleep(500);
-                if (getState() == ABORTED) {
-                    System.out.println("Measurement aborted");
-                    setState(IDLE);
-                    return;
+        try {
+            if (DEBUG) {
+                synchronized (DummyMeasurement.class) {
+                    new DummyMeasurement().run();
                 }
-                currentStep.addResult(new MeasurementResult(MeasurementResult.Type.BG,
-                        Math.random(), Math.random(), Math.random()));
-                System.out.println("Result added");
-                fireMeasurementEvent(currentStep, MeasurementEvent.Type.VALUE_MEASURED);
-
-                // measure DEG0
-                Thread.sleep(500);
-                if (getState() == ABORTED) {
-                    System.out.println("Measurement aborted");
-                    setState(IDLE);
-                    currentStep.setDone();
-                    return;
+            } else {
+                synchronized (Measurement.class) {
+                    new Measurement().run();
                 }
-                currentStep.addResult(new MeasurementResult(MeasurementResult.Type.DEG0,
-                        Math.random(), Math.random(), Math.random()));
-                System.out.println("Result added");
-                fireMeasurementEvent(currentStep, MeasurementEvent.Type.VALUE_MEASURED);
-
-                // measure DEG90
-                Thread.sleep(500);
-                if (getState() == ABORTED) {
-                    System.out.println("Measurement aborted");
-                    setState(IDLE);
-                    currentStep.setDone();
-                    return;
-                }
-                currentStep.addResult(new MeasurementResult(MeasurementResult.Type.DEG90,
-                        Math.random(), Math.random(), Math.random()));
-                System.out.println("Result added");
-                fireMeasurementEvent(currentStep, MeasurementEvent.Type.VALUE_MEASURED);
-
-                // measure DEG180
-                Thread.sleep(500);
-                if (getState() == ABORTED) {
-                    System.out.println("Measurement aborted");
-                    setState(IDLE);
-                    currentStep.setDone();
-                    return;
-                }
-                currentStep.addResult(new MeasurementResult(MeasurementResult.Type.DEG180,
-                        Math.random(), Math.random(), Math.random()));
-                System.out.println("Result added");
-                fireMeasurementEvent(currentStep, MeasurementEvent.Type.VALUE_MEASURED);
-
-                // measure DEG270
-                Thread.sleep(500);
-                if (getState() == ABORTED) {
-                    System.out.println("Measurement aborted");
-                    setState(IDLE);
-                    currentStep.setDone();
-                    return;
-                }
-                currentStep.addResult(new MeasurementResult(MeasurementResult.Type.DEG270,
-                        Math.random(), Math.random(), Math.random()));
-                System.out.println("Result added");
-                fireMeasurementEvent(currentStep, MeasurementEvent.Type.VALUE_MEASURED);
-
-                // measure BG (2)
-                Thread.sleep(500);
-                if (getState() == ABORTED) {
-                    System.out.println("Measurement aborted");
-                    setState(IDLE);
-                    currentStep.setDone();
-                    return;
-                }
-                currentStep.addResult(new MeasurementResult(MeasurementResult.Type.BG,
-                        Math.random(), Math.random(), Math.random()));
-                System.out.println("Result added");
-                fireMeasurementEvent(currentStep, MeasurementEvent.Type.VALUE_MEASURED);
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } finally {
-                // complete step
-                currentStep.setDone();
-                System.out.println("Step " + i + " completed");
-                fireMeasurementEvent(currentStep, MeasurementEvent.Type.STEP_END);
-                currentStep = null;
             }
-
-            if (getState() == PAUSED) {
-                System.out.println("Measurement ended (paused)");
-                setState(IDLE);
-                return;
-            }
-
-            // TODO
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        System.out.println("Measurement ended");
         setState(IDLE);
     }
 
@@ -1914,6 +1821,307 @@ project listeners.
      */
     public enum Normalization {
         VOLUME, MASS
+    }
+
+    /**
+     * Runs the measurements and adds the measurement data to this project.
+     */
+    private class Measurement implements Runnable {
+        public void run() {
+            for (int i = getCompletedSteps(); i < getSteps(); i++) {
+
+                // begin measuring the first uncomplete step
+                currentStep = getStep(i);
+                currentStep.setMeasuring();
+                fireMeasurementEvent(currentStep, STEP_START);
+
+                try {
+                    // reset the equipment
+                    // TODO: if handler rotation is not 0, then rotate to 0
+                    checkAborted();
+
+                    // demagnetizing
+                    if (currentStep.getStepValue() > 0.0) {
+
+                        // demagnetize Z
+                        // TODO: move the handler to demag Z
+                        fireMeasurementEvent(currentStep, HANDLER_MOVE);
+                        // TODO: wait for the handler
+                        fireMeasurementEvent(currentStep, HANDLER_STOP);
+                        checkAborted();
+                        // TODO: begin demagnetize
+                        fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
+                        // TODO: wait for demagnetize
+                        fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
+                        checkAborted();
+
+                        // demagnetize Y
+                        // TODO: move the handler to demag Y
+                        fireMeasurementEvent(currentStep, HANDLER_MOVE);
+                        // TODO: wait for the handler
+                        fireMeasurementEvent(currentStep, HANDLER_STOP);
+                        checkAborted();
+                        // TODO: begin demagnetize
+                        fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
+                        // TODO: wait for demagnetize
+                        fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
+                        checkAborted();
+
+                        // demagnetize X
+                        // TODO: rotate the handler to demag X
+                        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
+                        // TODO: wait for the handler
+                        fireMeasurementEvent(currentStep, HANDLER_STOP);
+                        checkAborted();
+                        // TODO: begin demagnetize
+                        fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
+                        // TODO: wait for demagnetize
+                        fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
+                        checkAborted();
+                        // TODO: rotate the handler back to zero
+                        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
+                        // TODO: wait for the handler
+                        fireMeasurementEvent(currentStep, HANDLER_STOP);
+                        checkAborted();
+                    }
+
+                    // measure first background noise
+                    // TODO: move the handler to background pos
+                    fireMeasurementEvent(currentStep, HANDLER_MOVE);
+                    // TODO: wait for the handler
+                    fireMeasurementEvent(currentStep, HANDLER_STOP);
+                    checkAborted();
+                    // TODO: measure background noise
+                    currentStep.addResult(new MeasurementResult(BG, 0.0, 0.0, 0.0));
+                    fireMeasurementEvent(currentStep, VALUE_MEASURED);
+                    checkAborted();
+
+                    // begin measuring the sample
+                    // TODO: move the handler to measure pos
+                    fireMeasurementEvent(currentStep, HANDLER_MOVE);
+                    // TODO: wait for the handler
+                    fireMeasurementEvent(currentStep, HANDLER_STOP);
+                    checkAborted();
+
+                    // measure with the set amount of handler rotations
+                    int rotations = Settings.instance().getMeasurementRotations();
+                    if (rotations == 0) {
+
+                        // quick measure with no rotations
+                        // TODO: measure sample
+                        currentStep.addResult(new MeasurementResult(BG, 0.0, 0.0, 0.0));
+                        fireMeasurementEvent(currentStep, VALUE_MEASURED);
+                        checkAborted();
+                    } else {
+
+                        // accurate measure with rotations
+                        for (int j = 0; j < rotations; j++) {
+
+                            // measure at 0 degrees
+                            // TODO: measure sample
+                            currentStep.addResult(new MeasurementResult(DEG0, 0.0, 0.0, 0.0));
+                            fireMeasurementEvent(currentStep, VALUE_MEASURED);
+                            checkAborted();
+
+                            // measure at 90 degrees
+                            // TODO: rotate the handler to 90 degrees
+                            fireMeasurementEvent(currentStep, HANDLER_ROTATE);
+                            // TODO: wait for the handler
+                            fireMeasurementEvent(currentStep, HANDLER_STOP);
+                            checkAborted();
+                            // TODO: measure sample
+                            currentStep.addResult(new MeasurementResult(DEG90, 0.0, 0.0, 0.0));
+                            fireMeasurementEvent(currentStep, VALUE_MEASURED);
+                            checkAborted();
+
+                            // measure at 180 degrees
+                            // TODO: rotate the handler to 180 degrees
+                            fireMeasurementEvent(currentStep, HANDLER_ROTATE);
+                            // TODO: wait for the handler
+                            fireMeasurementEvent(currentStep, HANDLER_STOP);
+                            checkAborted();
+                            // TODO: measure sample
+                            currentStep.addResult(new MeasurementResult(DEG180, 0.0, 0.0, 0.0));
+                            fireMeasurementEvent(currentStep, VALUE_MEASURED);
+                            checkAborted();
+
+                            // measure at 270 degrees
+                            // TODO: rotate the handler to 270 degrees
+                            fireMeasurementEvent(currentStep, HANDLER_ROTATE);
+                            // TODO: wait for the handler
+                            fireMeasurementEvent(currentStep, HANDLER_STOP);
+                            checkAborted();
+                            // TODO: measure sample
+                            currentStep.addResult(new MeasurementResult(DEG270, 0.0, 0.0, 0.0));
+                            fireMeasurementEvent(currentStep, VALUE_MEASURED);
+                            checkAborted();
+
+                            // rotate the handler back to 0 degrees
+                            // TODO: rotate the handler to 0 degrees
+                            fireMeasurementEvent(currentStep, HANDLER_ROTATE);
+                            // TODO: wait for the handler
+                            fireMeasurementEvent(currentStep, HANDLER_STOP);
+                            checkAborted();
+                        }
+                    }
+
+                    // measure second background noise
+                    // TODO: move the handler to background pos
+                    fireMeasurementEvent(currentStep, HANDLER_MOVE);
+                    // TODO: wait for the handler
+                    fireMeasurementEvent(currentStep, HANDLER_STOP);
+                    checkAborted();
+                    // TODO: measure background noise
+                    currentStep.addResult(new MeasurementResult(BG, 0.0, 0.0, 0.0));
+                    fireMeasurementEvent(currentStep, VALUE_MEASURED);
+                    checkAborted();
+
+                } catch (InterruptedException e) {
+
+                    // the measurement was aborted or some error occurred
+                    if (getState() == ABORTED) {
+                        System.out.println(e.getMessage());
+                    } else {
+                        e.printStackTrace();
+                    }
+                } finally {
+
+                    // complete the step
+                    currentStep.setDone();
+                    fireMeasurementEvent(currentStep, STEP_END);
+                    currentStep = null;
+                }
+
+                if (getState() == PAUSED || getState() == ABORTED) {
+                    setState(IDLE);
+                    return;
+                }
+            }
+        }
+
+        /**
+         * Checks whether the measurement has been aborted. Will throw an exception if the measurement has been aborted,
+         * otherwise will do nothing.
+         *
+         * @throws InterruptedException if the measurement has been aborted.
+         */
+        private void checkAborted() throws InterruptedException {
+            if (getState() == ABORTED) {
+                fireMeasurementEvent(currentStep, STEP_ABORTED);
+                throw new InterruptedException("Measurement aborted");
+            }
+        }
+    }
+
+    /**
+     * A measurement that gives random data for testing purposes.
+     */
+    private class DummyMeasurement implements Runnable {
+        public void run() {
+            System.out.println("Measurement started");
+            for (int i = getCompletedSteps(); i < getSteps(); i++) {
+
+                System.out.println("Measuring step " + i + "...");
+                currentStep = getStep(i);
+                currentStep.setMeasuring();
+                fireMeasurementEvent(currentStep, STEP_START);
+
+                try {
+                    // measure BG (1)
+                    Thread.sleep(500);
+                    if (getState() == ABORTED) {
+                        System.out.println("Measurement aborted");
+                        setState(IDLE);
+                        return;
+                    }
+                    currentStep.addResult(new MeasurementResult(BG,
+                            Math.random(), Math.random(), Math.random()));
+                    System.out.println("Result added");
+                    fireMeasurementEvent(currentStep, VALUE_MEASURED);
+
+                    // measure DEG0
+                    Thread.sleep(500);
+                    if (getState() == ABORTED) {
+                        System.out.println("Measurement aborted");
+                        setState(IDLE);
+                        currentStep.setDone();
+                        return;
+                    }
+                    currentStep.addResult(new MeasurementResult(DEG0,
+                            Math.random(), Math.random(), Math.random()));
+                    System.out.println("Result added");
+                    fireMeasurementEvent(currentStep, VALUE_MEASURED);
+
+                    // measure DEG90
+                    Thread.sleep(500);
+                    if (getState() == ABORTED) {
+                        System.out.println("Measurement aborted");
+                        setState(IDLE);
+                        currentStep.setDone();
+                        return;
+                    }
+                    currentStep.addResult(new MeasurementResult(DEG90,
+                            Math.random(), Math.random(), Math.random()));
+                    System.out.println("Result added");
+                    fireMeasurementEvent(currentStep, VALUE_MEASURED);
+
+                    // measure DEG180
+                    Thread.sleep(500);
+                    if (getState() == ABORTED) {
+                        System.out.println("Measurement aborted");
+                        setState(IDLE);
+                        currentStep.setDone();
+                        return;
+                    }
+                    currentStep.addResult(new MeasurementResult(DEG180,
+                            Math.random(), Math.random(), Math.random()));
+                    System.out.println("Result added");
+                    fireMeasurementEvent(currentStep, VALUE_MEASURED);
+
+                    // measure DEG270
+                    Thread.sleep(500);
+                    if (getState() == ABORTED) {
+                        System.out.println("Measurement aborted");
+                        setState(IDLE);
+                        currentStep.setDone();
+                        return;
+                    }
+                    currentStep.addResult(new MeasurementResult(DEG270,
+                            Math.random(), Math.random(), Math.random()));
+                    System.out.println("Result added");
+                    fireMeasurementEvent(currentStep, VALUE_MEASURED);
+
+                    // measure BG (2)
+                    Thread.sleep(500);
+                    if (getState() == ABORTED) {
+                        System.out.println("Measurement aborted");
+                        setState(IDLE);
+                        currentStep.setDone();
+                        return;
+                    }
+                    currentStep.addResult(new MeasurementResult(BG,
+                            Math.random(), Math.random(), Math.random()));
+                    System.out.println("Result added");
+                    fireMeasurementEvent(currentStep, VALUE_MEASURED);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    // complete step
+                    currentStep.setDone();
+                    System.out.println("Step " + i + " completed");
+                    fireMeasurementEvent(currentStep, STEP_END);
+                    currentStep = null;
+                }
+
+                if (getState() == PAUSED) {
+                    System.out.println("Measurement ended (paused)");
+                    setState(IDLE);
+                    return;
+                }
+            }
+            System.out.println("Measurement ended");
+        }
     }
 
     public static void main(String[] args) {

@@ -33,7 +33,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
@@ -523,6 +522,25 @@ public class Settings {
         setProperty("squid.handler.rotation", Integer.toString(value));
         return true;
     }
+
+    /* Other settings for measurements */
+
+    /**
+     * How many times the handler should rotate itself when taking the measurements. Possible values are 0, 1 or more.
+     */
+    public synchronized int getMeasurementRotations() {
+        return Integer.parseInt(getProperty("measurement.rotations", "1"));
+    }
+
+    public synchronized boolean setMeasurementRotations(int value) {
+        if (value >= 0) {
+            setProperty("measurement.rotations", Integer.toString(value));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     /* Program window */
 
