@@ -45,12 +45,13 @@ public class MagnetometerStatusPanel extends JPanel {
     // handler hard-coded max position and max rotation
     private final int maxposition = 1 << 24, maxrotation = 2000;
 
-    // handler positions, read from Settings
-    private int posHome;
-    private int posDemagZ;
-    private int posDemagY;
-    private int posBG;
-    private int posMeasurement;
+    // handler positions, read from Settings, thank you autoboxing!
+    // TODO: does autoboxing keep the same Integers in the Hashtable, so updating them would show in JSlider?
+    private Integer posHome;
+    private Integer posDemagZ;
+    private Integer posDemagY;
+    private Integer posBG;
+    private Integer posMeasurement;
 
     private final JSlider baseSlider;
     private final Hashtable<Integer,JComponent> baseSliderLabels;
@@ -80,8 +81,9 @@ public class MagnetometerStatusPanel extends JPanel {
 
         setPreferredSize(new Dimension(200, 400));
         setMinimumSize(new Dimension(200, 400));
+
         //updateStatus();
-        updateStatus(1 << 23, 400);
+        updateStatus(posHome, 400);
     }
 
     /**
