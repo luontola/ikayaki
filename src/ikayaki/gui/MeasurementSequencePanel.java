@@ -35,6 +35,7 @@ import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -64,6 +65,9 @@ public class MeasurementSequencePanel extends ProjectComponent {
     private JComboBox loadSequenceBox;
 
     private JPanel controlsPane;
+
+    /* DetailsPanel */
+    private DetailsPanel detailsPanel;
 
     /**
      * Creates default MeasurementSequencePanel.
@@ -222,6 +226,16 @@ public class MeasurementSequencePanel extends ProjectComponent {
         // initialize with no project
         updateLoadSequenceBox();
         setProject(null);
+    }
+
+    /**
+     * Returns the component that will show the details of the active measurement step.
+     */
+    public DetailsPanel getDetailsPanel() {
+        if (detailsPanel == null) {
+            detailsPanel = new DetailsPanel();
+        }
+        return detailsPanel;
     }
 
     /**
@@ -801,7 +815,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
      *
      * @author Esko Luontola
      */
-    private class DetailsPanel extends ProjectComponent {
+    public class DetailsPanel extends ProjectComponent {
 
         private JTable detailsTable;
         private DetailsTableModel detailsTableModel;
@@ -816,11 +830,37 @@ public class MeasurementSequencePanel extends ProjectComponent {
 
         public DetailsPanel() {
 
+            // build the tables
             detailsTableModel = new DetailsTableModel();
             detailsTable = new JTable(detailsTableModel);
+            detailsTable.setFocusable(false);
+            detailsTable.setEnabled(false);
+            detailsTable.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
 
             errorsTableModel = new ErrorsTableModel();
             errorsTable = new JTable(errorsTableModel);
+            errorsTable.setFocusable(false);
+            errorsTable.setEnabled(false);
+            errorsTable.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
+
+            // emulate the looks of a JScrollPane
+            JPanel detailsTablePanel = new JPanel(new BorderLayout());
+            detailsTablePanel.add(detailsTable.getTableHeader(), BorderLayout.NORTH);
+            detailsTablePanel.add(detailsTable, BorderLayout.CENTER);
+            detailsTablePanel.setBorder(new JScrollPane().getBorder());
+
+            JPanel errorsTablePanel = new JPanel(new BorderLayout());
+            errorsTablePanel.add(errorsTable.getTableHeader(), BorderLayout.NORTH);
+            errorsTablePanel.add(errorsTable, BorderLayout.CENTER);
+            errorsTablePanel.setBorder(new JScrollPane().getBorder());
+
+            // lay out the components
+            JPanel tablePanel = new JPanel(new BorderLayout(10, 10));
+            tablePanel.add(detailsTablePanel, "Center");
+            tablePanel.add(errorsTablePanel, "South");
+
+            setLayout(new FlowLayout(FlowLayout.CENTER));
+            add(tablePanel);
         }
 
         public MeasurementStep getStep() {
@@ -850,11 +890,15 @@ public class MeasurementSequencePanel extends ProjectComponent {
 
         private MeasurementStep step;
 
-        private final String[] COLUMNS = new String[]{"", "X", "Y", "Z"};
+        private final String[] COLUMNS = new String[]{" ", "X", "Y", "Z"};
         private final int HEADER_COLUMN = 0;
         private final int X_COLUMN = 1;
         private final int Y_COLUMN = 2;
         private final int Z_COLUMN = 3;
+
+        private NumberFormat numberFormat = new DecimalFormat("0.000000E0");
+
+        private StyledWrapper wrapper = Settings.getDefaultWrapperInstance();
 
         public MeasurementStep getStep() {
             return step;
@@ -865,10 +909,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
         }
 
         public int getRowCount() {
-            int expected = Settings.instance().getMeasurementRotations();
-            if (expected == 0) expected++;
-            expected += 2;
-            return expected;
+            return Math.max(1, 4 * Settings.instance().getMeasurementRotations()) + 2;
         }
 
         public int getColumnCount() {
@@ -879,26 +920,66 @@ public class MeasurementSequencePanel extends ProjectComponent {
             return COLUMNS[column];
         }
 
+        @Override public Class<?> getColumnClass(int columnIndex) {
+            return StyledWrapper.class;
+        }
+
         public Object getValueAt(int rowIndex, int columnIndex) {
             Object value;
-            switch (columnIndex) {
-            case HEADER_COLUMN:
-                value = "DEG";
-                break;
-            case X_COLUMN:
-                value = "X"; // TODO
-                break;
-            case Y_COLUMN:
-                value = "Y"; // TODO
-                break;
-            case Z_COLUMN:
-                value = "Z"; // TODO
-                break;
-            default:
-                value = null;
-                break;
+            if (step != null && rowIndex <= step.getResults()) {
+
+                // get the values from the step
+                switch (columnIndex) {
+                case HEADER_COLUMN:
+                    value = step.getResult(rowIndex).getType().toString();
+                    break;
+                case X_COLUMN:
+                    value = numberFormat.format(step.getResult(rowIndex).getRawX());
+                    break;
+                case Y_COLUMN:
+                    value = numberFormat.format(step.getResult(rowIndex).getRawY());
+                    break;
+                case Z_COLUMN:
+                    value = numberFormat.format(step.getResult(rowIndex).getRawZ());
+                    break;
+                default:
+                    assert false;
+                    value = null;
+                    break;
+                }
+
+            } else {
+
+                // try to guess the values
+                if (columnIndex == HEADER_COLUMN) {
+                    if (rowIndex == 0 || rowIndex == getRowCount() - 1) {
+                        value = MeasurementResult.Type.BG.toString();
+                    } else {
+                        switch ((rowIndex - 1) % 4) {
+                        case 0:
+                            value = MeasurementResult.Type.DEG0.toString();
+                            break;
+                        case 1:
+                            value = MeasurementResult.Type.DEG90.toString();
+                            break;
+                        case 2:
+                            value = MeasurementResult.Type.DEG180.toString();
+                            break;
+                        case 3:
+                            value = MeasurementResult.Type.DEG270.toString();
+                            break;
+                        default:
+                            assert false;
+                            value = null;
+                            break;
+                        }
+                    }
+                } else {
+                    value = null;
+                }
             }
-            return value;
+            wrapper.value = value;
+            return wrapper;
         }
     }
 
@@ -911,11 +992,13 @@ public class MeasurementSequencePanel extends ProjectComponent {
 
         private MeasurementStep step;
 
-        private final String[] COLUMNS = new String[]{"", "Signal/Drift", "Signal/Holder", "Signal/Noise"};
+        private final String[] COLUMNS = new String[]{" ", "Signal/Drift", "Signal/Holder", "Signal/Noise"};
         private final int HEADER_COLUMN = 0;
         private final int SIGNAL_DRIFT_COLUMN = 1;
         private final int SIGNAL_HOLDER_COLUMN = 2;
         private final int SIGNAL_NOISE_COLUMN = 3;
+
+        private StyledWrapper wrapper = Settings.getDefaultWrapperInstance();
 
         public MeasurementStep getStep() {
             return step;
@@ -937,6 +1020,10 @@ public class MeasurementSequencePanel extends ProjectComponent {
             return COLUMNS[column];
         }
 
+        @Override public Class<?> getColumnClass(int columnIndex) {
+            return StyledWrapper.class;
+        }
+
         public Object getValueAt(int rowIndex, int columnIndex) {
             Object value;
             switch (columnIndex) {
@@ -956,7 +1043,8 @@ public class MeasurementSequencePanel extends ProjectComponent {
                 value = null;
                 break;
             }
-            return value;
+            wrapper.value = value;
+            return wrapper;
         }
     }
 }

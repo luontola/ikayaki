@@ -75,7 +75,7 @@ public class MainViewPanel extends ProjectComponent {
     private ProjectInformationPanel projectInformationPanel;
     private MeasurementSequencePanel measurementSequencePanel;
     private MeasurementControlsPanel measurementControlsPanel;
-    private MeasurementDetailsPanel measurementDetailsPanel;
+    private MeasurementSequencePanel.DetailsPanel measurementDetailsPanel;
     private MeasurementGraphsPanel measurementGraphsPanel;
 
     /* Swing Actions */
@@ -525,9 +525,10 @@ public class MainViewPanel extends ProjectComponent {
         return measurementGraphsPanel;
     }
 
-    public MeasurementDetailsPanel getMeasurementDetailsPanel() {
+    public MeasurementSequencePanel.DetailsPanel getMeasurementDetailsPanel() {
         if (measurementDetailsPanel == null) {
-            measurementDetailsPanel = new MeasurementDetailsPanel();
+//            measurementDetailsPanel = new MeasurementDetailsPanel();
+            measurementDetailsPanel = getMeasurementSequencePanel().getDetailsPanel();
             measurementDetailsPanel.setBorder(BorderFactory.createTitledBorder("Details"));
         }
         return measurementDetailsPanel;
@@ -750,7 +751,7 @@ public class MainViewPanel extends ProjectComponent {
 
     /**
      * Customized JFileChooser for the use of getNewProjectAction(). Has controls for selecting the project's type.
-     * 
+     *
      * @author Esko Luontola
      */
     private class NewProjectFileChooser extends JFileChooser {
