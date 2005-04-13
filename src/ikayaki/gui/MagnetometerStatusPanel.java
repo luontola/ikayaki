@@ -22,14 +22,15 @@
 
 package ikayaki.gui;
 
-import ikayaki.Settings;
-import ikayaki.squid.Squid;
-import ikayaki.squid.Handler;
+import java.io.*;
+import java.util.*;
 
 import java.awt.*;
 import javax.swing.*;
-import java.io.IOException;
-import java.util.Hashtable;
+
+import ikayaki.*;
+import ikayaki.squid.*;
+import ikayaki.squid.Handler;
 
 /**
  * Picture of current magnetometer status, with sample holder position and rotation. Status is updated according to
@@ -54,7 +55,7 @@ public class MagnetometerStatusPanel extends JPanel {
     private Integer posMeasurement;
 
     private final JSlider baseSlider;
-    private final Hashtable<Integer,JComponent> baseSliderLabels;
+    private final Hashtable<Integer,JLabel> baseSliderLabels;
 
     /**
      * Sets magnetometer status to current position.
@@ -63,7 +64,7 @@ public class MagnetometerStatusPanel extends JPanel {
         super(new BorderLayout());
 
         updatePositions();
-        baseSliderLabels = new Hashtable<Integer,JComponent>();
+        baseSliderLabels = new Hashtable<Integer,JLabel>();
         baseSliderLabels.put(posHome, new JLabel("Home"));
         baseSliderLabels.put(posDemagZ, new JLabel("Demag Z"));
         baseSliderLabels.put(posDemagY, new JLabel("Demag Y"));
@@ -73,17 +74,18 @@ public class MagnetometerStatusPanel extends JPanel {
         baseSlider = new JSlider(JSlider.VERTICAL, 0, maxposition, 0);
         baseSlider.setEnabled(false);
         baseSlider.setInverted(true);
-        baseSlider.setLabelTable(baseSliderLabels);
         baseSlider.setPaintLabels(true);
+        baseSlider.setPaintTrack(false);
         baseSlider.setOpaque(false);
+        baseSlider.setLabelTable(baseSliderLabels);
 
         add(baseSlider, BorderLayout.CENTER);
 
-        setPreferredSize(new Dimension(200, 400));
-        setMinimumSize(new Dimension(200, 400));
+        setPreferredSize(new Dimension(150, 400));
+        //setMinimumSize(new Dimension(100, 400));
 
         //updateStatus();
-        updateStatus(posHome, 400);
+        updateStatus(posHome, 1500);
     }
 
     /**
@@ -132,27 +134,28 @@ public class MagnetometerStatusPanel extends JPanel {
      * Paints the magnetometer status picture.
      *
      * @param g mursu.
-     * @deprecated we use different drawing methods.
      */
-    public void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) {
         // let Swing erase the background
         super.paintComponent(g);
+
+        // use more sophisticated drawing methods
+        Graphics2D g2 = (Graphics2D) g.create();
+        g2.setStroke(new BasicStroke(2));
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // save our width and height to be handly available
         int w = getWidth();
         int h = getHeight();
 
         // sample handler base line x position
-        int base1x = w / 3;
+        int basex = w / 2;
 
         // magnetometer boxes' y positions and widths
         int box1y = (int) ((long) h * posDemagZ / maxposition);
         int box2y = (int) ((long) h * posBG / maxposition);
-        int box1w = w / 5;
-        int box2w = w / 3;
-
-        // moving sample handler base line x position
-        int base2x = 3*w / 4;
+        int box1w = w * 3 / 5;
+        int box2w = w * 4 / 5;
 
         // "sample" width, height and depth, rotation arrow length
         int samplew = w / 3;
@@ -160,45 +163,69 @@ public class MagnetometerStatusPanel extends JPanel {
         int sampled = h / 12;
         int rotl = w / 5;
 
-        // sample position
-        int samplep = (int) ((long) h * position / maxposition);
+        // sample y position
+        int sampley = (int) ((long) h * position / maxposition);
 
         // do the drawing...
 
-        g.drawLine(base1x, 0, base1x, box1y);
+        g2.drawLine(basex, 0, basex, box1y);
 
         // magnetometer boxes
-        g.drawRect(base1x - box1w / 2, box1y, box1w, box2y - box1y);
-        g.drawRect(base1x - box2w / 2, box2y, box2w, h - box2y);
+        g2.drawRect(basex - box1w / 2, box1y, box1w, box2y - box1y);
+        g2.drawRect(basex - box2w / 2, box2y, box2w, h - box2y);
 
-        g.drawLine(base2x, 0, base2x, h);
+        g2.drawLine(basex, 0, basex, h);
 
         // "sample"
-        drawFillOval(g, Color.WHITE, base2x - samplew / 2, samplep - sampled, samplew, sampleh);
-        drawFillSideRect(g, Color.WHITE, base2x - samplew / 2, samplep - sampled + sampleh / 2, samplew, sampled);
-        drawFillOval(g, Color.WHITE, base2x - samplew / 2, samplep, samplew, sampleh);
+        drawFillOval(g2, Color.WHITE, basex - samplew / 2, sampley - sampled, samplew, sampleh);
+        drawFillSideRect(g2, Color.WHITE, basex - samplew / 2, sampley - sampled + sampleh / 2, samplew, sampled);
+        drawFillOval(g2, Color.WHITE, basex - samplew / 2, sampley, samplew, sampleh);
+
+        // rotation arrow
+        drawArrow(g2, basex, sampley + sampleh / 2, rotl, rotation);
+
+        g2.dispose();
     }
 
     /**
      * Draws a filled oval with line.
      */
-    private void drawFillOval(Graphics g, Color fill, int x, int y, int width, int height) {
-        Color saved = g.getColor();
-        g.setColor(fill);
-        g.fillOval(x, y, width, height);
-        g.setColor(saved);
-        g.drawOval(x, y, width, height);
+    private void drawFillOval(Graphics2D g2, Color fill, int x, int y, int width, int height) {
+        Color saved = g2.getColor();
+        g2.setColor(fill);
+        g2.fillOval(x, y, width, height);
+        g2.setColor(saved);
+        g2.drawOval(x, y, width, height);
     }
 
     /**
      * Draws a filled rectangle with lines on left and right side.
      */
-    private void drawFillSideRect(Graphics g, Color fill, int x, int y, int width, int height) {
-        Color saved = g.getColor();
-        g.setColor(fill);
-        g.fillRect(x, y, width, height);
-        g.setColor(saved);
-        g.drawLine(x, y, x, y + height);
-        g.drawLine(x + width, y, x + width, y + height);
+    private void drawFillSideRect(Graphics2D g2, Color fill, int x, int y, int width, int height) {
+        Color saved = g2.getColor();
+        g2.setColor(fill);
+        g2.fillRect(x, y, width, height);
+        g2.setColor(saved);
+        g2.drawLine(x, y, x, y + height);
+        g2.drawLine(x + width, y, x + width, y + height);
+    }
+
+    /**
+     * Draws the rotation arrow.
+     *
+     * @param g2 marsu.
+     * @param x x-center.
+     * @param y y-center.
+     * @param length arrow length.
+     * @param rotation rotation angle as 0..maxrotation (meaning 0..360 degrees).
+     */
+    private void drawArrow(Graphics2D g2, int x, int y, int length, int rotation) {
+        g2 = (Graphics2D) g2.create();
+        g2.translate(x, y);
+        g2.rotate(Math.PI * 2 * rotation / maxrotation);
+        g2.drawLine(0, -length / 2, 0, length / 2);
+        g2.drawLine(0, -length / 2, -length / 8, -length / 2 + length / 8);
+        g2.drawLine(0, -length / 2, length / 8, -length / 2 + length / 8);
+        g2.dispose();
     }
 }

@@ -38,32 +38,6 @@ import javax.swing.*;
  * @author Samuli Kaipiainen
  */
 public class ManualControlsPanel extends JPanel {
-    /*
-     * Event A: On moveXXX click - call project.doManualMove(int) with clicked position.
-     * If false is returned, show small error message. Position values are found from Settings;
-     * demagZ is Settings.instance().getAxialAFPosition() and demagY is Settings.instance().getTransverseYAFPosition().
-     */
-    /*
-     * Event B: On rotateXXX click - call project.doManualRotate(int) with clicked angle. If
-     * false is returned, show small error message.
-     */
-    /*
-     * Event C: On measureAllButton click - call project.doManualMeasure(). If false is returned,
-     * show small error message.
-     */
-    /*
-     * Event D: On resetAllButton click - call project.doManualReset()? If false is returned,
-     * show small error message.
-     */
-    /*
-     * Event E: On DemagZButton click - call project.doManualDemagZ(double) with value
-     * from demagAmplitudeField. If false is returned, show small error message.
-     */
-    /*
-     * Event F: On DemagYButton click - call project.doManualDemagY(double) with value
-     * from demagAmplitudeField. If false is returned, show small error message.
-     */
-
     /**
      * Currently open project.
      */
@@ -225,6 +199,12 @@ public class ManualControlsPanel extends JPanel {
         //setPreferredSize(new Dimension(100, 400));
         //setMaximumSize(new Dimension(100, 400));
 
+        /*
+         * Event A: On moveXXX click - call project.doManualMove(int) with clicked position.
+         * If false is returned, show small error message. Position values are found from Settings;
+         * demagZ is Settings.instance().getAxialAFPosition() and demagY is Settings.instance().getTransverseYAFPosition().
+         */
+
         moveHome.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 handler.moveToHome();
@@ -255,6 +235,11 @@ public class ManualControlsPanel extends JPanel {
             }
         });
 
+        /*
+         * Event B: On rotateXXX click - call project.doManualRotate(int) with clicked angle. If
+         * false is returned, show small error message.
+         */
+
         rotate0.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 handler.rotateTo(0);
@@ -279,12 +264,20 @@ public class ManualControlsPanel extends JPanel {
             }
         });
 
+        /*
+         * Event C: On measureAllButton click - call project.doManualMeasure(). If false is returned,
+         * show small error message.
+         */
         measureAllButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (!project.doManualMeasure()) measureAllButtonFlasher.flash();
             }
         });
 
+        /*
+         * Event D: On resetAllButton click - call project.doManualReset()? If false is returned,
+         * show small error message.
+         */
         resetAllButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // TODO: what to do?
@@ -292,6 +285,10 @@ public class ManualControlsPanel extends JPanel {
             }
         });
 
+        /*
+         * Event E: On DemagZButton click - call project.doManualDemagZ(double) with value
+         * from demagAmplitudeField. If false is returned, show small error message.
+         */
         demagZButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 double amplitude = getDemagAmplitude();
@@ -300,6 +297,10 @@ public class ManualControlsPanel extends JPanel {
             }
         });
 
+        /*
+         * Event F: On DemagYButton click - call project.doManualDemagY(double) with value
+         * from demagAmplitudeField. If false is returned, show small error message.
+         */
         demagYButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 double amplitude = getDemagAmplitude();

@@ -91,21 +91,17 @@ public class MeasurementControlsPanel extends ProjectComponent {
 
     public MeasurementControlsPanel() {
 
-        // size limit for the panel
-        setPreferredSize(new Dimension(200, -1));
-
         measureButton = new JButton(getAutoStepAction());
         stepButton = new JButton(getSingleStepAction());
         abortButton = new JButton(getAbortAction());
-//        updateActions(); // already done by setProject(null)
 
         measureButtonFlasher = new ComponentFlasher(measureButton);
         stepButtonFlasher = new ComponentFlasher(stepButton);
         abortButtonFlasher = new ComponentFlasher(abortButton);
 
+        //JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         //JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 2, 2)); // prevents button resize, looks a bit ugly
         JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 2, 2)); // prevents button resize, looks a bit ugly
-        //JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 4, 4, 4));
         buttonPanel.add(measureButton);
         buttonPanel.add(stepButton);
@@ -116,29 +112,26 @@ public class MeasurementControlsPanel extends ProjectComponent {
         zMinusRadioButton = new JRadioButton("-Z");
         zButtonGroup.add(zPlusRadioButton);
         zButtonGroup.add(zMinusRadioButton);
-/*
-        JPanel zButtonPanel = new JPanel(new GridLayout(2, 1));
+
+        JPanel zButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 0));
         zButtonPanel.add(zPlusRadioButton);
         zButtonPanel.add(zMinusRadioButton);
-*/
+
         sampleInsertTextLabel = new JLabel("Put sample in holder arrow up.");
         sampleInsertZPlusIcon = new ImageIcon(ClassLoader.getSystemResource("resources/zplus.png"));
         sampleInsertZMinusIcon = new ImageIcon(ClassLoader.getSystemResource("resources/zminus.png"));
         sampleInsertIconLabel = new JLabel();
-        sampleInsertIconLabel.setHorizontalAlignment(JLabel.CENTER);
+        //sampleInsertIconLabel.setHorizontalAlignment(JLabel.CENTER);
+        //zPlusRadioButton.setHorizontalAlignment(SwingConstants.RIGHT);
+        //zMinusRadioButton.setHorizontalAlignment(SwingConstants.LEFT);
 
         sampleInsertPanel = new JPanel(new BorderLayout(8, 4));
-        zPlusRadioButton.setHorizontalAlignment(SwingConstants.RIGHT);
-        zMinusRadioButton.setHorizontalAlignment(SwingConstants.LEFT);
         sampleInsertPanel.add(sampleInsertTextLabel, BorderLayout.NORTH);
-        sampleInsertPanel.add(sampleInsertIconLabel, BorderLayout.CENTER);
-        sampleInsertPanel.add(zPlusRadioButton, BorderLayout.WEST);
-        sampleInsertPanel.add(zMinusRadioButton, BorderLayout.EAST);
-/*
-        sampleInsertPanel.add(sampleInsertTextLabel, BorderLayout.NORTH);
-        sampleInsertPanel.add(sampleInsertIconLabel, BorderLayout.WEST);
         sampleInsertPanel.add(zButtonPanel, BorderLayout.CENTER);
-*/
+        sampleInsertPanel.add(sampleInsertIconLabel, BorderLayout.SOUTH);
+        //sampleInsertPanel.add(zPlusRadioButton, BorderLayout.WEST);
+        //sampleInsertPanel.add(zMinusRadioButton, BorderLayout.EAST);
+
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(buttonPanel, BorderLayout.CENTER);
         topPanel.add(sampleInsertPanel, BorderLayout.SOUTH);
@@ -150,6 +143,9 @@ public class MeasurementControlsPanel extends ProjectComponent {
         add(topPanel, BorderLayout.NORTH);
         add(manualControlsPanel, BorderLayout.WEST);
         add(magnetometerStatusPanel, BorderLayout.CENTER);
+
+        // size limit for the panel
+        //setPreferredSize(new Dimension(200, -1));
 
         /**
          * Event D: On zPlus/MinusRadioButton click - call project.setOrientation(boolean) where
