@@ -243,19 +243,19 @@ Order of rows with measurement data cannot be changed.
         setProject(null);
     }
 
+    /**
+     * Rebuilds the contents of the loadSequenceBox combobox by getting the saved sequences from the settings.
+     */
     private void updateLoadSequenceBox() {
-
-        // rebuild the contents of the menu
+        // save old selection
         Object selected = loadSequenceBox.getSelectedItem();
         loadSequenceBox.removeAllItems();
+
+        // get new items
         MeasurementSequence[] sequences = Settings.instance().getSequences();
-//        sequences = new MeasurementSequence[]{
-//            new MeasurementSequence("AA"),
-//            new MeasurementSequence("CC"),
-//            new MeasurementSequence("BB"),
-//            new MeasurementSequence("DD")
-//        };
         Arrays.sort(sequences);
+        
+        // insert new items and restore old selection
         loadSequenceBox.addItem(null);  // the first item is empty
         for (MeasurementSequence sequence : sequences) {
             loadSequenceBox.addItem(sequence);
@@ -632,6 +632,8 @@ Order of rows with measurement data cannot be changed.
 
     /**
      * Sets the format for the JFormattedTextFields of this panel.
+     *
+     * @author Esko Luontola
      */
     private class MyFormatterFactory extends JFormattedTextField.AbstractFormatterFactory {
         public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf) {
@@ -650,6 +652,8 @@ Order of rows with measurement data cannot be changed.
     /**
      * Popup menu for removing and adding steps from the sequence, and saving steps as a preset sequence. This popup
      * will assume that there is an open project while this popup is visible.
+     *
+     * @author Esko Luontola
      */
     private class SequencePopupMenu extends JPopupMenu {
 
@@ -836,6 +840,8 @@ Order of rows with measurement data cannot be changed.
     /**
      * Popup menu for selecting which columns to show in the sequence table. This popup will assume that there is an
      * open project while this popup is visible.
+     *
+     * @author Esko Luontola
      */
     private class HeaderPopupMenu extends JPopupMenu {
         public HeaderPopupMenu() {

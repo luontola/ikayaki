@@ -750,6 +750,8 @@ public class MainViewPanel extends ProjectComponent {
 
     /**
      * Customized JFileChooser for the use of getNewProjectAction(). Has controls for selecting the project's type.
+     * 
+     * @author Esko Luontola
      */
     private class NewProjectFileChooser extends JFileChooser {
 

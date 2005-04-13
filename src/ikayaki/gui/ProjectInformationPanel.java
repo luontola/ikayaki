@@ -645,6 +645,8 @@ public class ProjectInformationPanel extends ProjectComponent {
 
     /**
      * Custom formatter factory for the JFormattedTextFields in this class.
+     * 
+     * @author Esko Luontola
      */
     private class MyFormatterFactory extends JFormattedTextField.AbstractFormatterFactory {
         /**
