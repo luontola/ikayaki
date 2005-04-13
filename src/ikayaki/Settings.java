@@ -226,6 +226,7 @@ public class Settings {
                 for (MeasurementSequence sequence : sequences) {
                     root.appendChild(sequence.getElement(document));
                 }
+                document.appendChild(root);
 
                 if (DocumentUtilities.storeToXML(sequencesFile, document)) {
                     sequencesModified = false;
@@ -711,6 +712,8 @@ public class Settings {
     public synchronized void addSequence(MeasurementSequence sequence) {
         if (sequence != null && !sequences.contains(sequence)) {
             sequences.add(sequence);
+            sequencesModified = true;
+            save();
         }
     }
 
@@ -720,6 +723,8 @@ public class Settings {
     public synchronized void removeSequence(MeasurementSequence sequence) {
         if (sequence != null) {
             sequences.remove(sequence);
+            sequencesModified = true;
+            save();
         }
     }
 

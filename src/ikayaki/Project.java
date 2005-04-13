@@ -1303,6 +1303,25 @@ project listeners.
     }
 
     /**
+     * Returns a copy of this project's sequence. Only the stepValues will be copied from this project's sequence. The
+     * returned sequence will have no name.
+     *
+     * @param indices indices of the steps to be included in the sequence. The steps will be included in the same order
+     *                as their indices are listed.
+     * @return copy of the sequence with only stepValues and no results.
+     * @throws IndexOutOfBoundsException if any of the indices is out of range (index < 0 || index >= getSteps()).
+     */
+    public synchronized MeasurementSequence copySequence(int... indices) {
+        MeasurementSequence copy = new MeasurementSequence();
+        for (int i : indices) {
+            MeasurementStep step = new MeasurementStep();
+            step.setStepValue(sequence.getStep(i).getStepValue());
+            copy.addStep(step);
+        }
+        return copy;
+    }
+
+    /**
      * Appends a step to this project's sequence. Only the stepValue will be copied from the specified step and added as
      * a new step to this project.
      *

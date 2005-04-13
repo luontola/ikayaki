@@ -238,14 +238,6 @@ Order of rows with measurement data cannot be changed.
             }
         });
 
-
-
-        // TODO: popup menu for saving sequences
-
-        // TODO: popup menu for choosing columns
-
-        // TODO: ability to delete unmeasured steps
-
         // initialize with no project
         updateLoadSequenceBox();
         setProject(null);
@@ -512,6 +504,7 @@ Order of rows with measurement data cannot be changed.
     public void setProject(final Project project) {
         super.setProject(project);
         sequenceTableModel.setProject(project);
+        loadSequenceBox.setSelectedItem(null);
         setEnabled(project != null);
         resetAddSequence();
 
@@ -751,7 +744,23 @@ Order of rows with measurement data cannot be changed.
         private Action getSaveSelectedAsAction() {
             Action action = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
+
+                    // make a copy of the selected steps
+                    MeasurementSequence sequence = new MeasurementSequence();
+                    for (MeasurementStep step : steps) {
+                        MeasurementStep copy = new MeasurementStep();
+                        copy.setStepValue(step.getStepValue());
+                        sequence.addStep(copy);
+                    }
+
+                    // ask for a name for the sequence
                     // TODO
+                    String name = ""+System.currentTimeMillis();
+
+                    // save the sequence
+                    sequence.setName(name);
+                    Settings.instance().addSequence(sequence);
+                    updateLoadSequenceBox();
                 }
             };
             action.putValue(Action.NAME, "Save Selected As...");
@@ -768,7 +777,18 @@ Order of rows with measurement data cannot be changed.
         private Action getSaveAllAsAction() {
             Action action = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
+
+                    // make a copy of all the steps
+                    MeasurementSequence sequence = getProject().copySequence(0, getProject().getSteps() - 1);
+
+                    // ask for a name for the sequence
                     // TODO
+                    String name = "" + System.currentTimeMillis();
+
+                    // save the sequence
+                    sequence.setName(name);
+                    Settings.instance().addSequence(sequence);
+                    updateLoadSequenceBox();
                 }
             };
             action.putValue(Action.NAME, "Save All As...");
