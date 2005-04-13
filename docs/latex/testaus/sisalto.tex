@@ -36,14 +36,29 @@ Unit Testing is done for each class separately. Classes tested with JUnit have i
 
 All test cases are listed in section \ref{cases}.
 
-\subsection{Integrity Testing}
+\subsection{Integration Testing}
 \label{integrity}
 
-Integrity testing is done after unit test is passed for all classes. Testing is done using squid emulator at first and finally with real Squid system. Graphical User Interface is mainly tested in Unit testing and is only looked that all components work together as Squid Interface is tested.
+Integration testing is mostly done after unit tests are passed for all classes. Testing is done
+using squid emulator at first and finally with real Squid system. Graphical User Interface is
+mainly tested in Unit testing and is only looked that all components work together as Squid
+Interface is tested.
 
-Graphical User Interface is tested using all use cases from \ref{intcase}. If one fails, it is corrected immediatelly and all use cases must be done again. When all use cases are done without errors this phase is ready.
+Graphical User Interface is tested using all use cases from \ref{intcase}. If one fails, it is
+corrected immediatelly and all use cases must be done again. When all use cases are done
+without errors this phase is ready.
 
-Squid Interface testing is done with Emulator. Use cases are Automatic Measurement, Thellier Measurement and Manual Measurement with all variations (see \ref{intcase}). In first phase we use old program with emulator, save its log file and take results. After that we run it with new program and compare results. If they are not same, corrections are made immediatelly to new program and test is runned again. This is done until results are same for all use cases.
+Squid Interface testing is done with Emulator. Use cases are Automatic Measurement, Thellier
+Measurement and Manual Measurement with all variations (see \ref{intcase}). In first
+phase we use old program with emulator, save its log file and take results. After that we
+run it with new program and compare results. If they are not same, corrections
+are made immediatelly to new program and test is run again. This is done until results are
+same for all use cases.
+
+Integration testing for GUI-components is done using top-down method.
+Testing is done partly during implementation phase, when new components
+are added to program. After adding component to program it is tested to
+work properly with other components.
 
 \subsection{Squid Emulator}
 \label{emulator}
