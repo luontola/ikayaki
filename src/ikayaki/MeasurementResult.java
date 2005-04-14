@@ -35,12 +35,18 @@ import static ikayaki.MeasurementResult.Type.*;
 /**
  * A set of X, Y and Z values measured by the magnetometer. The raw XYZ values will be rotated in 3D space by using a
  * transformation matrix. The project will set and update the transformation whenever its parameters are changed.
- *
+ * <p/>
  * All units are mA/m.
  *
  * @author Esko Luontola
  */
 public class MeasurementResult {
+
+    // TODO: change the Type values to SAMPLE, NOISE, HOLDER
+
+    // TODO: add property "int rotation" and getters for it. allow rotations also others than 0, 90, 180, 270.
+
+    // TODO: getters for returning copies of the vectors
 
     /**
      * The type of this result. Can be either a background noise measurement, or a sample in one of four rotations (0,
