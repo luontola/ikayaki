@@ -47,6 +47,7 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
+                        // TODO: do not include BG measurements!
                         sum += step.getResult(i).getGeographicX();
                     }
                     if (count > 0) {
@@ -66,6 +67,7 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
+                        // TODO: do not include BG measurements!
                         sum += step.getResult(i).getGeographicY();
                     }
                     if (count > 0) {
@@ -85,6 +87,7 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
+                        // TODO: do not include BG measurements!
                         sum += step.getResult(i).getGeographicZ();
                     }
                     if (count > 0) {
@@ -104,6 +107,7 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
+                        // TODO: do not include BG measurements!
                         sum += step.getResult(i).getSampleX();
                     }
                     if (count > 0) {
@@ -123,6 +127,7 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
+                        // TODO: do not include BG measurements!
                         sum += step.getResult(i).getSampleY();
                     }
                     if (count > 0) {
@@ -142,6 +147,7 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
+                        // TODO: do not include BG measurements!
                         sum += step.getResult(i).getSampleZ();
                     }
                     if (count > 0) {

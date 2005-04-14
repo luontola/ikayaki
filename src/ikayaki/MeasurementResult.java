@@ -171,63 +171,66 @@ public class MeasurementResult {
     }
 
     /**
-     * Returns the rotated and transformed X coordinate of this result.
+     * Returns the rotated and transformed X coordinate of this result. The value is in geographic coordinates.
      */
     public double getGeographicX() {
+        // TODO: throw exception if not a SAMPLE measurement
         return geographicVector.x;
     }
 
     /**
-     * Returns the rotated and transformed Y coordinate of this result.
+     * Returns the rotated and transformed Y coordinate of this result. The value is in geographic coordinates.
      */
     public double getGeographicY() {
+        // TODO: throw exception if not a SAMPLE measurement
         return geographicVector.y;
     }
 
     /**
-     * Returns the rotated and transformed Z coordinate of this result.
+     * Returns the rotated and transformed Z coordinate of this result. The value is in geographic coordinates.
      */
     public double getGeographicZ() {
+        // TODO: throw exception if not a SAMPLE measurement
         return geographicVector.z;
     }
 
     /**
-     * Returns the rotated X coordinate of this result.
+     * Returns the rotated X coordinate of this result. The value is in sample coordinates.
      */
     public double getSampleX() {
         return sampleVector.x;
     }
 
     /**
-     * Returns the rotated Y coordinate of this result.
+     * Returns the rotated Y coordinate of this result. The value is in sample coordinates.
      */
     public double getSampleY() {
         return sampleVector.y;
     }
 
     /**
-     * Returns the rotated Z coordinate of this result.
+     * Returns the rotated Z coordinate of this result. The value is in sample coordinates.
      */
     public double getSampleZ() {
         return sampleVector.z;
     }
 
     /**
-     * Returns the unmodified X coordinate of this result.
+     * Returns the unmodified X coordinate of this result. The value is in magnetometer coordinates.
      */
     public double getRawX() {
         return rawVector.x;
     }
 
     /**
-     * Returns the unmodified Y coordinate of this result.
+     * Returns the unmodified Y coordinate of this result. The value is in magnetometer coordinates.
      */
     public double getRawY() {
         return rawVector.y;
     }
 
     /**
-     * Returns the unmodified Z coordinate of this result.
+     * Returns the unmodified Z coordinate of this result. The value is in magnetometer coordinates.
      */
     public double getRawZ() {
         return rawVector.z;

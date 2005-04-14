@@ -45,7 +45,9 @@ import java.util.List;
  */
 public class Settings {
 
-    private static final int DIRECTORY_HISTORY_SIZE = 30;
+    // TODO: make all methods static
+
+    private static final int DIRECTORY_HISTORY_SIZE = 30;   // TODO: make the history sizes variable
     private static final int PROJECT_HISTORY_SIZE = 10;
 
     private static final StyledWrapper defaultWrapper = new StyledWrapper();
@@ -533,7 +535,7 @@ public class Settings {
         return Integer.parseInt(getProperty("measurement.rotations", "1"));
     }
 
-    public synchronized boolean setMeasurementRotations(int value) {
+    public synchronized boolean setMeasurementRotations(int value) { // TODO: gui for changing this value
         if (value >= 0) {
             setProperty("measurement.rotations", Integer.toString(value));
             return true;
@@ -720,13 +722,15 @@ public class Settings {
     /**
      * Removes a sequence from the sequence list. If the specified sequence is not in the list, it will be ignored.
      */
-    public synchronized void removeSequence(MeasurementSequence sequence) {
+    public synchronized void removeSequence(MeasurementSequence sequence) { // TODO: gui for renaming and removing sequences
         if (sequence != null) {
             sequences.remove(sequence);
             sequencesModified = true;
             save();
         }
     }
+
+    // TODO: method for notifying that somebody has changed the saved sequences (invoke autosave)
 
     /**
      * Returns a copy of the default StyledWrapper.
