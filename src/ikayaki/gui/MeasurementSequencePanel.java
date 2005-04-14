@@ -73,7 +73,6 @@ public class MeasurementSequencePanel extends ProjectComponent {
     private MeasurementDetailsPanel detailsPanel;
 
 
-
     /**
      * Creates default MeasurementSequencePanel.
      */
@@ -129,6 +128,21 @@ public class MeasurementSequencePanel extends ProjectComponent {
 
             public void columnSelectionChanged(ListSelectionEvent e) {
                 // DO NOTHING
+            }
+        });
+
+        // show the column's description in the header as a tooltip
+        sequenceTable.getTableHeader().addMouseMotionListener(new MouseMotionAdapter() {
+
+            private int currentColumn;
+
+            @Override public void mouseMoved(MouseEvent e) {
+                int column = sequenceTable.getColumnModel().getColumnIndexAtX(e.getX());
+
+                if (column != currentColumn) {
+                    sequenceTable.getTableHeader().setToolTipText(sequenceTableModel.getColumnToolTip(column));
+                    currentColumn = column;     // avoin unnecessary setToolTipText() calls
+                }
             }
         });
 
