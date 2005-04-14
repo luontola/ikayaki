@@ -371,7 +371,7 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
     }
 
     /**
-     * Returns the tooltip text for the specified column. Will be shown in the table header. 
+     * Returns the tooltip text for the specified column. Will be shown in the table header.
      */
     public String getColumnToolTip(int column) {
         if (column < visibleColumns.size()) {
