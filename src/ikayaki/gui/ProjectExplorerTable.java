@@ -235,8 +235,8 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                 case COLUMN_FILENAME:    column.setPreferredWidth(130); break;
                 case COLUMN_TYPE:        column.setMinWidth(55); column.setMaxWidth(55); break;
                 case COLUMN_LASTMOD:     column.setMinWidth(95); column.setMaxWidth(95); break;
-                case COLUMN_LASTMEASURE: column.setMinWidth(95); column.setMaxWidth(95); break;
-                case COLUMN_UNMEASURED:  column.setMinWidth(50); column.setMaxWidth(50); break;
+                case COLUMN_LASTMEASURE: column.setMinWidth(100); column.setMaxWidth(100); break;   // should be wide enough for dates like "22.12.2005 22:22"
+                case COLUMN_UNMEASURED:  column.setMinWidth(45); column.setMaxWidth(45); break;
             }
         }
     }
@@ -398,6 +398,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                     break;
                 case COLUMN_LASTMOD:
                     value = DateFormat.getInstance().format(file.lastModified());
+//                    value = "22.12.2005 22:22"; // testing if this fits to the table
                     break;
                 case COLUMN_LASTMEASURE:
                     Project p = Project.loadProject(file);
@@ -405,6 +406,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                         return null;
                     }
                     Date date = p.getTimestamp();
+//                    date = new Date(105, 11, 22, 22, 22, 22); // testing if this fits to the table
                     if (date == null) value = null;
                     else value = DateFormat.getInstance().format(date);
                     break;
