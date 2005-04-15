@@ -401,9 +401,10 @@ public class MeasurementStep {
         if (state == READY || state == MEASURING) {
             setMeasuring();
             results.add(result);
-            if (timestamp == null) {
-                timestamp = new Date();
-            }
+            timestamp = new Date();
+//            if (timestamp == null) {
+//                timestamp = new Date();
+//            }
             updateTransforms();
             save();
         } else {
@@ -428,7 +429,12 @@ public class MeasurementStep {
      */
     public synchronized void setDone() {
         if (state != DONE && state != DONE_RECENTLY) {
-            state = DONE_RECENTLY;
+            // if the measurement was aborted before any steps were measured, return to an unmeasured state
+            if (getResults() == 0) {
+                state = READY;
+            } else {
+                state = DONE_RECENTLY;
+            }
             save();
         }
     }
