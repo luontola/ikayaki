@@ -89,6 +89,7 @@ be closed.
         final MainViewPanel main = new MainViewPanel(project);
 
         setTitle(null);
+        setIconImage(new ImageIcon(ClassLoader.getSystemResource("resources/icon.png")).getImage());
         setLayout(new BorderLayout());
         setJMenuBar(main.getMenuBar());
         add(main, "Center");
