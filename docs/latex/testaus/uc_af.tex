@@ -1,149 +1,101 @@
-\begin{enumerate}
+\beginTestedClass{Automatic AF Measurement}
 
-\item Open software
+\beginCase{Open software
+\condition{Last project is opened, if available.
+\condition{All components are in right place
+\closeCase
 
-Conditions:
-\begin{itemize}
-\item Last project is opened, if available.
-\item All components are in right place
-\end{itemize}
+\beginCase{Select Sample holder calibration
+\condition{opens Sample holder calibration project in Measurement Sequence and Information
+\condition{disables Measurement Controls
+\condition{enables calibrate button
+\condition{disables editing sequence
+\closeCase
 
-\item Select Sample holder calibration
+\beginCase{Click Calibration button
+\condition{Adds new line in Sequence at bottom
+\condition{Starts calibration, progress shown on measurement controls
+\condition{Data is updated correctly in Measurement Details
+\condition{Calibration button changed to stop button
+\closeCase
 
-Conditions:
-\begin{itemize}
-\item opens Sample holder calibration project in Measurement Sequence and Information
-\item disables Measurement Controls
-\item enables calibrate button
-\item disables editing sequence
-\end{itemize}
+\beginCase{Calibration finished
+\condition{New data added to Measurement Sequence
+\condition{Stop button is changed to calibration button
+\condition{Last modified is updated Sample Holder
+\closeCase
 
-\item Click Calibration button
+\beginCase{Select standard sample
+\condition{opens Standard Sample calibration project in Measurement Sequence
+\closeCase
 
-Conditions:
-\begin{itemize}
-\item Adds new line in Sequence at bottom
-\item Starts calibration, progress shown on measurement controls
-\item Data is updated correctly in Measurement Details
-\item Calibration button changed to stop button
-\end{itemize}
+\beginCase{Click Calibration button
+\condition{Adds new line in Sequence at bottom
+\condition{Starts calibration, progress shown on measurement controls
+\condition{Data is updated correctly in Measurement Details
+\condition{Calibration button changed to stop button
+\closeCase
 
-\item Calibration finished
+\beginCase{Calibration finished
+\condition{New data added to Measurement Sequence
+\condition{stop button is changed to calibration button
+\condition{Last modified is updated in Standard Sample
+\closeCase
 
-Conditions:
-\begin{itemize}
-\item New data added to Measurement Sequence
-\item Stop button is changed to calibration button
-\item Last modified is updated Sample Holder
-\end{itemize}
+\beginCase{Create new AF project
+\condition{Calibration project is closed
+\condition{new AF project is opened with given name (ProjectInfo,MeasurementSequence)
+\condition{Measurement Controls has enabled buttons Measure,Single Step and disable Stop Now!
+\closeCase
 
-\item Select standard sample
+\beginCase{Add project Information
+\condition{All data is accepted
+\closeCase
 
-Conditions:
-\begin{itemize}
-\item opens Standard Sample calibration project in Measurement Sequence
-\end{itemize}
+\beginCase{Load Set
+\condition{Loaded set is correctly added to Sequence
+\closeCase
 
-\item Click Calibration button
+\beginCase{Click Measure
+\condition{Measure button changed to Pause, disables Single Step, enables Stop Now!
+\condition{Rows are highlighted in Explorer and Sequence
+\condition{Starts measuring first phase correctly (no demag now)
+\condition{Picture of demagnetizer is up-to-date
+\condition{Plots are drawn when one phase is over
+\condition{Continues on next phase and does demag first
+\condition{updates Details and Sequence
+\condition{any sequence cannot be changed 
+\closeCase
 
-Conditions:
-\begin{itemize}
-\item Adds new line in Sequence at bottom
-\item Starts calibration, progress shown on measurement controls
-\item Data is updated correctly in Measurement Details
-\item Calibration button changed to stop button
-\end{itemize}
+\beginCase{Pause button
+\condition{Finish current measure and stops after that
+\condition{Pause button changed to Measure button
+\condition{When finished disables Stop Now!
+\closeCase
 
-\item Calibration finished
+\beginCase{Sequence edit
+\condition{Steps not yet measured, can be changed
+\closeCase
 
-Conditions:
-\begin{itemize}
-\item New data added to Measurement Sequence
-\item stop button is changed to calibration button
-\item Last modified is updated in Standard Sample
-\end{itemize}
+\beginCase{Single step button
+\condition{Performs Next phase on measure
+\condition{Disables Measure button and Single Step button, enables Stop Now!
+\closeCase
 
-\item Create new AF project
+\beginCase{Measure button
+\condition{Measure button changed to Pause, disables Single Step, enables Stop Now!
+\condition{Rows are highlighted in Explorer and Sequence
+\condition{Continues from Next phase
+\condition{Picture of demagnetizer is up-to-date
+\condition{Plots are drawn when one phase is over
+\condition{Continues on next phase
+\condition{updates Details and Sequence
+\closeCase
 
-Conditions:
-\begin{itemize}
-\item Calibration project is closed
-\item new AF project is opened with given name (ProjectInfo,MeasurementSequence)
-\item Measurement Controls has enabled buttons Measure,Single Step and disable Stop Now!
-\end{itemize}
+\beginCase{Stop Now! button
+\condition{Stops measurement immediatelly.
+\condition{Disables buttons and enables Manual Control
+\condition{What now? Is project Manual or is this only temporary?
+\closeCase
 
-\item Add project Information
-
-Conditions:
-\begin{itemize}
-\item All data is accepted
-\end{itemize}
-
-\item Load Set
-
-Conditions:
-\begin{itemize}
-\item Loaded set is correctly added to Sequence
-\end{itemize}
-
-\item Click Measure
-
-Conditions:
-\begin{itemize}
-\item Measure button changed to Pause, disables Single Step, enables Stop Now!
-\item Rows are highlighted in Explorer and Sequence
-\item Starts measuring first phase correctly (no demag now)
-\item Picture of demagnetizer is up-to-date
-\item Plots are drawn when one phase is over
-\item Continues on next phase and does demag first
-\item updates Details and Sequence
-\item any sequence cannot be changed 
-\end{itemize}
-
-\item Pause button
-
-Conditions:
-\begin{itemize}
-\item Finish current measure and stops after that
-\item Pause button changed to Measure button
-\item When finished disables Stop Now!
-\end{itemize}
-
-\item Sequence edit
-
-Conditions:
-\begin{itemize}
-\item Steps not yet measured, can be changed
-\end{itemize}
-
-\item Single step button
-
-Conditions:
-\begin{itemize}
-\item Performs Next phase on measure
-\item Disables Measure button and Single Step button, enables Stop Now!
-\end{itemize}
-
-\item Measure button
-
-Conditions:
-\begin{itemize}
-\item Measure button changed to Pause, disables Single Step, enables Stop Now!
-\item Rows are highlighted in Explorer and Sequence
-\item Continues from Next phase
-\item Picture of demagnetizer is up-to-date
-\item Plots are drawn when one phase is over
-\item Continues on next phase
-\item updates Details and Sequence
-\end{itemize}
-
-\item Stop Now! button
-
-Conditions:
-\begin{itemize}
-\item Stops measurement immediatelly.
-\item Disables buttons and enables Manual Control
-\item What now? Is project Manual or is this only temporary?
-\end{itemize}
-
-\end{enumerate}
+\closeTestedClass

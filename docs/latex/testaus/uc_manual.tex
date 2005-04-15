@@ -1,67 +1,43 @@
-\begin{enumerate}
+\beginTestedClass{Manual Measurement}
 
-\item Open software
+\beginCase{Open software}
+\condition{Last project is opened, if available.}
+\condition{All components are in right place}
+\closeCase
 
-Conditions:
-\begin{itemize}
-\item Last project is opened, if available.
-\item All components are in right place
-\end{itemize}
+\beginCase{Create new AF/Thellier project}
+\condition{new AF/thellier project is opened with given name (ProjectInfo,MeasurementSequence)}
+\condition{Measurement Controls has enabled buttons (Measure,) Single Step and disable Stop Now!}
+\closeCase
 
-\item Create new AF/Thellier project
+\beginCase{Adding project data and selecting manual}
+\condition{Data is accepted correctly}
+\condition{Manual is enabled}
+\closeCase
 
-Conditions:
-\begin{itemize}
-\item new AF/thellier project is opened with given name (ProjectInfo,MeasurementSequence)
-\item Measurement Controls has enabled buttons (Measure,) Single Step and disable Stop Now!
-\end{itemize}
+\beginCase{Rotate handler}
+\condition{Rotation changes on image of squid}
+\condition{Squid-system rotates}
+\closeCase
 
-\item Adding project data and selecting manual
+\beginCase{Move handler to specific place}
+\condition{Image of squid animates correctly and stops on right position}
+\condition{Squid-system moves to exact place}
+\closeCase
 
-Conditions:
-\begin{itemize}
-\item Data is accepted correctly
-\item Manual is enabled
-\end{itemize}
+\beginCase{Demagnetize}
+\condition{Demagnetization is shown on squid image}
+\condition{Squid-system demagnetizes}
+\closeCase
 
-\item Rotate handler
+\beginCase{Measure-all}
+\condition{Measuring is shown on squid image}
+\condition{Data is added to Details correctly (right rotation, background)}
+\condition{Data is added to Sequence (only if all degrees done?)}
+\closeCase
 
-Conditions:
-\begin{itemize}
-\item Rotation changes on image of squid
-\item Squid-system rotates
-\end{itemize}
+\beginCase{Reset measure}
+\condition{Nothing shown, Magnetometer is reseted.}
+\closeCase
 
-\item Move handler to specific place
-
-Conditions:
-\begin{itemize}
-\item Image of squid animates correctly and stops on right position
-\item Squid-system moves to exact place
-\end{itemize}
-
-\item Demagnetize
-
-Conditions:
-\begin{itemize}
-\item Demagnetization is shown on squid image
-\item Squid-system demagnetizes
-\end{itemize}
-
-\item Measure-all
-
-Conditions:
-\begin{itemize}
-\item Measuring is shown on squid image
-\item Data is added to Details correctly (right rotation, background)
-\item Data is added to Sequence (only if all degrees done?)
-\end{itemize}
-
-\item Reset measure
-
-Conditions:
-\begin{itemize}
-\item Nothing shown, Magnetometer is reseted.
-\end{itemize}
-
-\end{enumerate}
+\closeTestedClass
