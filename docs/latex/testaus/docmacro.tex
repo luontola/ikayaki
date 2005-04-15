@@ -6,7 +6,7 @@
 \newcounter{overallTest}
 \newcommand{\beginTestedClass}[0] {
 	\begin{enumerate}
-	\begin{tabular*}{14cm}{lr}
+	%\begin{tabular*}{14cm}{lr}
 }
 \newcommand{\beginCase}[1] {
 	\item #1
@@ -37,7 +37,7 @@
 }
 \newcommand{\closeTestedClass}[0] {
 	\end{enumerate}
-	\end{tabular*}
+	%\end{tabular*}
 	Result for TestCase \arabic{successTest}/\arabic{overallTest}
 	\setcounter{overallTest}{0}
 	\setcounter{successTest}{0}
