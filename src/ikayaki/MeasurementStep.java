@@ -218,8 +218,13 @@ public class MeasurementStep {
     public synchronized Element getElement(Document document) {
         Element element = document.createElement("step");
 
-        element.setAttribute("done", state.isDone() ? "1" : "0");
-        element.setAttribute("timestamp", timestamp == null ? "" : Long.toString(timestamp.getTime()));
+        if (results.size() == 0) {
+            element.setAttribute("done", "0");
+            element.setAttribute("timestamp", "");
+        } else {
+            element.setAttribute("done", "1");
+            element.setAttribute("timestamp", Long.toString(timestamp.getTime()));
+        }
         element.setAttribute("stepvalue", Double.toString(stepValue));
         element.setAttribute("mass", Double.toString(mass));
         element.setAttribute("volume", Double.toString(volume));
@@ -259,7 +264,7 @@ public class MeasurementStep {
      * Returns the time the measurements were completed, or null if that has not yet happened.
      */
     public synchronized Date getTimestamp() {
-        if (state != DONE && state != DONE_RECENTLY) {
+        if (!state.isDone()) {
             return null;
         }
         if (timestamp == null) {
@@ -398,37 +403,36 @@ public class MeasurementStep {
         if (result == null) {
             throw new NullPointerException();
         }
-        if (state == READY || state == MEASURING) {
-            setMeasuring();
-            results.add(result);
-            timestamp = new Date();
-//            if (timestamp == null) {
-//                timestamp = new Date();
-//            }
-            updateTransforms();
-            save();
-        } else {
+        if (state.isDone()) {
             throw new IllegalStateException("Unable to add results, state is: " + state);
         }
+        setMeasuring();
+        results.add(result);
+        timestamp = new Date();
+        updateTransforms();
+        save();
     }
 
     /**
-     * Called when the step's measurements are started. If the the step's current status is READY, will set it to
-     * MEASURING. Otherwise nothing will be changed.
+     * Called when the step's measurements are started. Sets the step's state to MEASURING.
+     *
+     * @throws IllegalStateException if this method is called when the state is marked as DONE.
      */
     public synchronized void setMeasuring() {
-        if (state == READY) {
-            state = MEASURING;
-            save();
+        if (state.isDone()) {
+            throw new IllegalStateException("Unable set state to MEASURING, state is: " + state);
         }
+        state = MEASURING;
+        save();
     }
 
     /**
      * Called after all results have been added. Sets the step's status to DONE_RECENTLY and prevents the adding of
-     * further results. If the state is already DONE or DONE_RECENTLY, then nothing will be changed.
+     * further results. If there are no results (maybe the measurement was cancelled), will set the state back to READY.
+     * If the state is already DONE or DONE_RECENTLY, then nothing will be changed.
      */
     public synchronized void setDone() {
-        if (state != DONE && state != DONE_RECENTLY) {
+        if (!state.isDone()) {
             // if the measurement was aborted before any steps were measured, return to an unmeasured state
             if (getResults() == 0) {
                 state = READY;
@@ -468,7 +472,7 @@ public class MeasurementStep {
      * The state of a measurement step.
      */
     public enum State {
-        READY(false), MEASURING(true), DONE_RECENTLY(true), DONE(true);
+        READY(false), MEASURING(false), DONE_RECENTLY(true), DONE(true);
 
         private boolean done;
 
@@ -476,6 +480,9 @@ public class MeasurementStep {
             this.done = done;
         }
 
+        /**
+         * When the step's state is "done", no changes to the measurements are any more allowed.
+         */
         public boolean isDone() {
             return done;
         }
