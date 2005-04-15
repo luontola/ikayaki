@@ -6,6 +6,7 @@
 \newcounter{overallTest}
 \newcommand{\beginTestedClass}[0] {
 	\begin{enumerate}
+	\begin{tabular*}{14cm}{lr}
 }
 \newcommand{\beginCase}[1] {
 	\item #1
@@ -18,10 +19,12 @@
 	\item #1
 }
 \newcommand{\testParam}[1] {
-	Tested parameter: #1
+	\\
+	& Tested parameter: #1
 }
 \newcommand{\testResultTrue}[0] {
-	Result: success
+	\\
+	& Result: success
 	\stepcounter{overallTest}
 	\stepcounter{successTest}
 }
@@ -29,12 +32,13 @@
 	Result: failed
 	\stepcounter{overallTest}
 }
-\newcommand{\endConditions}[0] {
+\newcommand{\closeConditions}[0] {
 	\end{itemize}
 }
-\newcommand{\endTestedClass}[0] {
+\newcommand{\closeTestedClass}[0] {
 	\end{enumerate}
-	Result for TestCase \Alph{successTest}/\Alph{overallTest}
+	\end{tabular*}\\
+	Result for TestCase \arabic{successTest}/\arabic{overallTest}
 	\setcounter{overallTest}{0}
 	\setcounter{successTest}{0}
 }
