@@ -110,27 +110,18 @@ Then you must write test class for every class to be tested. Test classes extend
 Type "java junit.swingui.TestRunner SimpleTest" to run test cases for Simple.
 
 
-\subsection{SampleClass}
-\label{cases:SampleClass}
+\beginTestedClass{SampleClass}
 
-\begin{enumerate}
+\beginCase{Test1}
+\condition{Cond1}
+\condition{Cond2}
+\closeCase
 
-\item Test1
+\beginCase{Test2}
+\condition{Cond1}
+\closeCase
 
-Conditions:
-\begin{itemize}
-\item Cond1
-\item Cond2
-\end{itemize}
-
-\item Test2
-
-Conditions:
-\begin{itemize}
-\item Cond1
-\end{itemize}
-
-\end{enumerate}
+\closeTestedClass
 
 \section{GUI-component test cases}
 \label{guicase}
@@ -142,13 +133,12 @@ Here are listed test cases for gui-classes, these are done manually just clickin
 \beginTestedClass{SampleClass}
 
 \beginCase{Use case1}
-\beginConditions{}
 \condition{Cond1}
 \testDescription{Description1}
 \testResultTrue
 \condition{Cond2}
 \testResultFalse
-\closeConditions{}
+\closeCase{}
 
 \closeTestedClass{}
 

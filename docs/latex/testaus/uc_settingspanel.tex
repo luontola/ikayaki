@@ -1,62 +1,55 @@
 \beginTestedClass{SettingsPanel}
 
 \beginCase{Magnetometer,Handler and Degausser COM-port combobox}
-\beginConditions{}
 \condition{Shows all COM-ports on system in alphabetical order}
 \testResultTrue{}
 \condition{Loads correct COM port from Settings}
 \testResultTrue{}
 \condition{Doesn't allow same value as in Handler and Magnetometer/Degausser COM-port comboboxes}
 \testResultFalse{}
-\closeConditions{}
+\closeCase{}
 
 %\testResultFalse{}
 
 \beginCase{Save button}
-\beginConditions{}
 \condition{Only available if changes are made and values are permissible}
 \testResultTrue{}
 \condition{Unavailable on start}
 \testResultTrue{}
 \condition{On click closes window and saved data correctly}
 \testResultTrue{}
-\closeConditions{}
+\closeCase{}
 
 \beginCase{Cancel button}
-\beginConditions{}
 \condition{On click closes window and doesnt save changes}
 \testResultTrue{}
 \condition{Always available}
 \testResultTrue{}
-\closeConditions{}
+\closeCase{}
 
 \beginCase{Calibration constants}
-\beginConditions{}
 \condition{Loads data correctly from Settings}
 \testResultTrue{}
 \condition{Accepts positive and negative decimal numbers}
 \testDescription{-0.430002}
 \testResultTrue{}
-\closeConditions{}
+\closeCase{}
 
 \beginCase{Degausser ramp}
-\beginConditions{}
 \condition{Loads data correctly from Settings}
 \testResultTrue{}
 \condition{Has only elements: 3,5,7,9}
 \testResultTrue{}
-\closeConditions{}
+\closeCase{}
 
 \beginCase{Degausser delay}
-\beginConditions{}
 \condition{Loads data correctly from Settings}
 \testResultTrue{}
 \condition{Has only elements: 1..9}
 \testResultTrue{}
-\closeConditions{}
+\closeCase{}
 
 \beginCase{Acceleration and deceleration fields}
-\beginConditions{}
 \condition{Loads data correctly from Settings}
 \testResultTrue{}
 \condition{Accepts only values in range of Integers 0..127}
@@ -64,10 +57,9 @@
 \testResultTrue{}
 \testDescription{-10}
 \testResultTrue{}
-\closeConditions{}
+\closeCase{}
 
 \beginCase{Velocity and velocity in measurement fields}
-\beginConditions{}
 \condition{Loads data correctly from Settings}
 \testResultTrue{}
 \condition{Accepts only values in range of Integers 50..20000}
@@ -75,27 +67,24 @@
 \testResultTrue{}
 \testDescription{2001}
 \testResultTrue{}
-\closeConditions{}
+\closeCase{}
 
 \beginCase{Translation positions fields}
-\beginConditions{}
 \condition{Loads data correctly from Settings}
 \testResultTrue{}
 \condition{Accepts only values in range of Integers 0..16777215}
 \testDescription{-1}
 \testResultTrue{}
-\closeConditions{}
+\closeCase{}
 
 \beginCase{Right limit}
-\beginConditions{}
 \condition{Loads data correctly from Settings}
 \testResultTrue{}
 \condition{Has only elements: plus, minus}
 \testResultTrue{}
-\closeConditions{}
+\closeCase{}
 
 \beginCase{Rotation field}
-\beginConditions{}
 \condition{Loads data correctly from Settings}
 \testResultTrue{}
 \condition{Accepts positive and negative Integer numbers}
@@ -103,6 +92,6 @@
 \testResultTrue{}
 \testDescription{0.1}
 \testResultTrue{}
-\closeConditions{}
+\closeCase{}
 
 \closeTestedClass

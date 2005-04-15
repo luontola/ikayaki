@@ -12,8 +12,6 @@
 }
 \newcommand{\beginCase}[1] {
 	\item #1
-}
-\newcommand{\beginConditions}[0] {
 	Conditions:
 	\begin{itemize}
 }
@@ -35,12 +33,12 @@
 	\textbf{Result}: failed
 	\stepcounter{overallTest}
 }
-\newcommand{\closeConditions}[0] {
+\newcommand{\closeCase}[0] {
 	\end{itemize}
 }
 \newcommand{\closeTestedClass}[0] {
 	\end{enumerate}
-	\textbf{Test results for \getClass   \arabic{successTest}/\arabic{overallTest}}
+	\textbf{Test results for \getClass : \arabic{successTest}/\arabic{overallTest}}
 	\setcounter{overallTest}{0}
 	\setcounter{successTest}{0}
 }
