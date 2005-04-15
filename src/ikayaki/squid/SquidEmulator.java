@@ -155,8 +155,9 @@ public class SquidEmulator {
     private static HandlerEmu handler;
     private static MagnetometerEmu magnetometer;
     private static DegausserEmu degausser;
+  private static boolean running;
 
-    /**
+  /**
      * send message to SerialIO to be sented.
      *
      * @param message any message reply we are sending back
@@ -208,6 +209,8 @@ public class SquidEmulator {
             return;
         }
 
+        running = true;
+
         handler = new HandlerEmu();
         handler.start();
         magnetometer = new MagnetometerEmu();
@@ -237,6 +240,8 @@ public class SquidEmulator {
         catch (IOException ex2) {
         }
 
+        running = false;
+
         return;
     }
 
@@ -254,7 +259,7 @@ public class SquidEmulator {
         private Stack<String> commandStack;
 
         //remainder of last command (commands are separated with ',')
-        private String lastMessagePart;
+        private String lastMessagePart = "";
 
         public HandlerEmu() {
             //Setlistener to handlePort
@@ -263,7 +268,28 @@ public class SquidEmulator {
         }
 
         public void run() {
-            // TODO
+            while(running) {
+
+              if(!commandStack.empty()) {
+                String command = commandStack.pop();
+                if(command.startsWith("V",0)) {
+                  writeMessage("100" + command, handlerPort);
+                }
+                else if(command.startsWith("F",0)) {
+                  try {
+                    this.sleep(2000);
+                  }
+                  catch (InterruptedException ex1) {
+                  }
+                  writeMessage("perillä" + command, handlerPort);
+                }
+              }
+              try {
+                this.sleep(100);
+              }
+              catch (InterruptedException ex) {
+              }
+            }
         }
 
         public void serialIOEvent(SerialIOEvent event) {
@@ -280,8 +306,8 @@ public class SquidEmulator {
                 commandStack.add(commands[i]);
             }
             if(commands.length == 1)
-              lastMessagePart = commands[0];
-            else if(commands.length >= i)
+              commandStack.add(commands[0]);
+            else if(commands.length >= i && commands[i] != null)
               lastMessagePart = commands[i];
         }
     }
@@ -302,7 +328,30 @@ public class SquidEmulator {
 
 
         public void run() {
-            // TODO
+          while(running) {
+
+            if(!commandStack.empty()) {
+              String command = commandStack.pop();
+              if(command.startsWith("A",0)) {
+                writeMessage("" + Math.random(), handlerPort);
+              }
+              else if(command.startsWith("X",0)) {
+                writeMessage("" + Math.random(), handlerPort);
+              }
+              else if(command.startsWith("Y",0)) {
+                writeMessage("" + Math.random(), handlerPort);
+              }
+              else if(command.startsWith("Z",0)) {
+                writeMessage("" + Math.random(), handlerPort);
+              }
+            }
+            try {
+              this.sleep(100);
+            }
+            catch (InterruptedException ex) {
+            }
+          }
+
         }
 
         public void serialIOEvent(SerialIOEvent event) {
@@ -341,7 +390,21 @@ public class SquidEmulator {
 
 
         public void run() {
-            // TODO
+          while(running) {
+
+            if(!commandStack.empty()) {
+              String command = commandStack.pop();
+              if(command.startsWith("D",0)) {
+                writeMessage("" + Math.random(), handlerPort);
+              }
+            }
+            try {
+              this.sleep(100);
+            }
+            catch (InterruptedException ex) {
+            }
+          }
+
         }
 
         public void serialIOEvent(SerialIOEvent event) {

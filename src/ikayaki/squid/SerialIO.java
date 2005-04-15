@@ -31,6 +31,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.TooManyListenersException;
 import java.util.Vector;
+import java.io.FileWriter;
 
 /**
  * This class represents hardware layer to serial port communications.
@@ -42,6 +43,9 @@ public class SerialIO implements SerialPortEventListener {
 Event A: On new SerialPortEvent - generates new SerialMessageArrivedEvent if a data
 message from serial port is received.
 */
+
+  private static final boolean DEBUG = false;      // Writes log-file
+
 
     private static Vector<SerialIO> openPorts = new Vector<SerialIO>();
 
@@ -56,8 +60,9 @@ message from serial port is received.
     private InputStream is;
 
     private String portName;
+  private FileWriter logWriter;
 
-    /**
+  /**
      * Creates an instance of SerialIO which represents one serial port.
      *
      * @param parameters parameters for the serial port being opened.
@@ -80,6 +85,15 @@ message from serial port is received.
             throw new SerialIOException("The port " + parameters.getPortName() + " is already in use");
         }
 
+        // if debug mode, make own logfile for port
+        if(DEBUG) {
+          try {
+            logWriter = new FileWriter(parameters.getPortName() + ".log");
+          }
+          catch (IOException ex1) {
+            System.err.println(ex1);
+          }
+        }
         // Set the parameters of the connection
         try {
             sPort.setSerialPortParams(parameters.getBaudRate(),
@@ -137,7 +151,7 @@ message from serial port is received.
     }
 
     public static SerialIO openPort(SerialParameters parameters) throws SerialIOException {
-        System.out.println("Let's try to open port: " + parameters.getPortName());  //TODO debug
+        //System.out.println("Let's try to open port: " + parameters.getPortName());  //TODO debug
 
         SerialIO newPort = null;
 
@@ -176,6 +190,10 @@ message from serial port is received.
         try {
             System.out.println("Sending data to port: " + this.portName); // TODO debug
             os.write(asciiMsg);
+             if(DEBUG) {
+               logWriter.write("SEND:" + message);
+               logWriter.flush();
+             }
             os.flush(); // TODO is this needed ??
         } catch (IOException e) {
             throw new SerialIOException("Couldn't write to outputstream of" + this.portName);
@@ -212,7 +230,7 @@ message from serial port is received.
      * This method is run when a serial message is received from serial port. It generates a new SerialIOEvent.
      */
     public void serialEvent(SerialPortEvent event) {
-        System.out.println("New message arrived to port: " + this.portName);
+        //System.out.println("New message arrived to port: " + this.portName);
 
         switch (event.getEventType()) {
         case SerialPortEvent.BI:
@@ -249,6 +267,16 @@ message from serial port is received.
             }
             // TODO convert from ASCII to unicode
             //System.out.println("sending: " + new String(inputBuffer)); //debug
+            if(DEBUG) {
+              try {
+                logWriter.write("RECIEVE:" + new String(inputBuffer));
+                logWriter.flush();
+              }
+              catch (IOException ex1) {
+                System.err.println(ex1);
+              }
+             }
+
             fireSerialIOEvent(new String(inputBuffer));
             break;
         }
