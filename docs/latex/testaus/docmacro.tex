@@ -4,9 +4,11 @@
 
 \newcounter{successTest}
 \newcounter{overallTest}
-\newcommand{\beginTestedClass}[0] {
+\newcommand{\getClass}[0]{}
+\newcommand{\beginTestedClass}[1] {
+	\subsection{#1}
+	\renewcommand{\getClass}[0]{#1}
 	\begin{enumerate}
-	%\begin{tabular*}{14cm}{lr}
 }
 \newcommand{\beginCase}[1] {
 	\item #1
@@ -20,16 +22,17 @@
 }
 \newcommand{\testParam}[1] {
 	\\
-	& Tested parameter: #1
+	\textbf{Tested parameter}: #1
 }
 \newcommand{\testResultTrue}[0] {
 	\\
-	& Result: success
+	\textbf{Result}: success
 	\stepcounter{overallTest}
 	\stepcounter{successTest}
 }
 \newcommand{\testResultFalse}[0] {
-	Result: failed
+	\\
+	\textbf{Result}: failed
 	\stepcounter{overallTest}
 }
 \newcommand{\closeConditions}[0] {
@@ -37,8 +40,7 @@
 }
 \newcommand{\closeTestedClass}[0] {
 	\end{enumerate}
-	%\end{tabular*}
-	Result for TestCase \arabic{successTest}/\arabic{overallTest}
+	\textbf{Test results for \getClass   \arabic{successTest}/\arabic{overallTest}}
 	\setcounter{overallTest}{0}
 	\setcounter{successTest}{0}
 }

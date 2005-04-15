@@ -37,7 +37,7 @@ If Rita testing utility is easy enough to use it will be used in testing. Tests 
 
 Unit Testing is done for each class separately. Classes tested with JUnit have it's own ClassNameTest.java class in test-directory and gui-components are tested manually. They should be done before and during coding class. All test cases must be executable after classes are ready. Every class should be tested succesfully before integration tests.
 
-All test cases are listed in section \ref{cases}.
+All test cases are listed in sections \ref{junit} and \ref{guicase}.
 
 \subsection{Integration Testing}
 \label{integrity}
@@ -70,81 +70,10 @@ Squid emulator is tested with old program. Use cases are Automatic Measurement, 
 
 This should be done so that Old Program has same results with SQUID-system and emulator for all use cases. But we don't have resources for this. So this test only tells us that Old and New program works same way with squid emulator.
 
-\section{Test cases}
-\label{cases}
-
-\subsection{JUnit test cases}
+\section{JUnit test cases}
 \label{junit}
 
-Here are listed JUnit test cases for <insert class names>. JUnit is introduced in section \ref{jhelp}.
-
-\subsubsection{SampleClass}
-\label{cases:SampleClass}
-
-\begin{enumerate}
-
-\item Test1
-
-Conditions:
-\begin{itemize}
-\item Cond1
-\item Cond2
-\end{itemize}
-
-\item Test2
-
-Conditions:
-\begin{itemize}
-\item Cond1
-\end{itemize}
-
-\end{enumerate}
-
-\subsection{GUI-component test cases}
-\label{guicase}
-
-Here are listed test cases for gui-classes, these are done manually just clicking and changing values.
-
-\subsubsection{SettingsPanel}
-\label{cases:SettingsPanel}
-
-\input{uc_settingspanel}
-
-\subsubsection{className}
-\label{cases:className}
-
-\begin{enumerate}
-
-\item Use case1
-\begin{itemize}
-\item Cond1
-\item Cond2
-\end{itemize}
-
-\end{enumerate}
-
-\subsection{Intergrity test case}
-\label{intcase}
-
-Here is test case which is done in integration phase to all components at same time. This is done in following order and must be repeated until done succesfully. Variations can be made to ensure that all works in different situations.
-
-% \subsubsection{GUI test case}
-% \input{int_case}
-
-\subsubsection{Automatic Measurement}
-
-\input{uc_af}
-
-\subsubsection{Thellier Measurement}
-
-\input{uc_thellier}
-
-\subsubsection{Manual Measurement}
-
-\input{uc_manual}
-
-\section{JUnit}
-\label{jhelp}
+Here are listed JUnit test cases for classes.
 
 JUnit is simple java-based framework for testing your java classes. We use it in this project for Unit Testing. For more information visit http://junit.sourceforge.net/.
 
@@ -179,3 +108,66 @@ Then you must write test class for every class to be tested. Test classes extend
 }
 
 Type "java junit.swingui.TestRunner SimpleTest" to run test cases for Simple.
+
+
+\subsection{SampleClass}
+\label{cases:SampleClass}
+
+\begin{enumerate}
+
+\item Test1
+
+Conditions:
+\begin{itemize}
+\item Cond1
+\item Cond2
+\end{itemize}
+
+\item Test2
+
+Conditions:
+\begin{itemize}
+\item Cond1
+\end{itemize}
+
+\end{enumerate}
+
+\section{GUI-component test cases}
+\label{guicase}
+
+Here are listed test cases for gui-classes, these are done manually just clicking and changing values.
+
+\input{uc_settingspanel}
+
+\beginTestedClass{SampleClass}
+
+\beginCase{Use case1}
+\beginConditions{}
+\condition{Cond1}
+\testParam{param1}
+\testResultTrue
+\condition{Cond2}
+\testResultFalse
+\closeConditions{}
+
+\closeTestedClass{}
+
+\section{Intergrity test case}
+\label{intcase}
+
+Here is test case which is done in integration phase to all components at same time. This is done in following order and must be repeated until done succesfully. Variations can be made to ensure that all works in different situations.
+
+% \subsection{GUI test case}
+% \input{int_case}
+
+\subsection{Automatic Measurement}
+
+\input{uc_af}
+
+\subsection{Thellier Measurement}
+
+\input{uc_thellier}
+
+\subsection{Manual Measurement}
+
+\input{uc_manual}
