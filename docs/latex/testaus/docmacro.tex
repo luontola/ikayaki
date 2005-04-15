@@ -1,0 +1,42 @@
+% Macros for generating Test Cases
+
+% MACROS FOR TEST CASE
+
+\newcounter{successTest}
+\newcounter{overallTest}
+\newcommand{\beginTestedClass}[0] {
+	\begin{enumerate}
+}
+\newcommand{\beginCase}[1] {
+	\item #1
+}
+\newcommand{\beginConditions}[0] {
+	Conditions:
+	\begin{itemize}
+}
+\newcommand{\condition}[1] {
+	\item #1
+}
+\newcommand{\testParam}[1] {
+	Tested parameter: #1
+}
+\newcommand{\testResultTrue}[0] {
+	Result: success
+	\stepcounter{overallTest}
+	\stepcounter{successTest}
+}
+\newcommand{\testResultFalse}[0] {
+	Result: failed
+	\stepcounter{overallTest}
+}
+\newcommand{\endConditions}[0] {
+	\end{itemize}
+}
+\newcommand{\endTestedClass}[0] {
+	\end{enumerate}
+	Result for TestCase \Alph{successTest}/\Alph{overallTest}
+	\setcounter{overallTest}{0}
+	\setcounter{successTest}{0}
+}
+
+% MACROS FOR GETTING RESULTS

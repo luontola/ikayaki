@@ -1,83 +1,74 @@
-\begin{enumerate}
+\beginTestedClass{}
 
-\item Magnetometer,Handler and Degausser COM-port combobox
+\beginCase{Magnetometer,Handler and Degausser COM-port combobox}
+\beginConditions{}
+\condition{Shows all COM-ports on system in alphabetical order}
+\testResultTrue{}
+\condition{Loads correct COM port from Settings}
+\testResultTrue{}
+\condition{Doesn't allow same value as in Handler and Magnetometer/Degausser COM-port comboboxes}
+\testResultFalse{}
+\endConditions{}
 
-Conditions:
-\begin{itemize}
-\item Shows all COM-ports on system in alphabetical order
-\item Loads correct COM port from Settings
-\item Doesn't allow same value as in Handler and Magnetometer/Degausser COM-port comboboxes
-\end{itemize}
+\beginCase{Save button}
+\beginConditions{}
+\condition{Only available if changes are made and values are permissible}
+\condition{Unavailable on start}
+\condition{On click closes window and saved data correctly}
+\endConditions{}
 
-\item Save button
-Conditions:
-\begin{itemize}
-\item Only available if changes are made and values are permissible.
-\item Unavailable on start
-\item On click closes window and saved data correctly
-\end{itemize}
+\beginCase{Cancel button}
+\beginConditions{}
+\condition{On click closes window and doesnt save changes}
+\condition{Always available}
+\endConditions{}
 
-\item Cancel button
-Conditions:
-\begin{itemize}
-\item On click closes window and doesnt save changes
-\item Always available
-\end{itemize}
+\beginCase{Calibration constants}
+\beginConditions{}
+\condition{Loads data correctly from Settings}
+\condition{Accepts positive and negative decimal numbers}
+\endConditions{}
 
-\item Calibration constants
-Conditions:
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Accepts positive and negative decimal numbers
-\end{itemize}
+\beginCase{Degausser ramp}
+\beginConditions{}
+\condition{Loads data correctly from Settings}
+\condition{Has only elements: 3,5,7,9}
+\endConditions{}
 
-\item Degausser ramp
-Conditions:
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Has only elements: 3,5,7,9
-\end{itemize}
+\beginCase{Degausser delay}
+\beginConditions{}
+\condition{Loads data correctly from Settings}
+\condition{Has only elements: 1..9}
+\endConditions{}
 
-\item Degausser delay
-Conditions:
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Has only elements: 1..9
-\end{itemize}
+\beginCase{Acceleration and deceleration fields}
+\beginConditions{}
+\condition{Loads data correctly from Settings}
+\condition{Accepts only values in range of Integers 0..127}
+\endConditions{}
 
-\item Acceleration and deceleration fields
-Conditions:
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Accepts only values in range of Integers 0..127
-\end{itemize}
+\beginCase{Velocity and velocity in measurement fields}
+\beginConditions{}
+\condition{Loads data correctly from Settings}
+\condition{Accepts only values in range of Integers 50..20000}
+\endConditions{}
 
-\item Velocity and velocity in measurement fields
-Conditions:
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Accepts only values in range of Integers 50..20000
-\end{itemize}
+\beginCase{Translation positions fields}
+\beginConditions{}
+\condition{Loads data correctly from Settings}
+\condition{Accepts only values in range of Integers 0..16777215}
+\endConditions{}
 
-\item Translation positions fields
-Conditions:
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Accepts only values in range of Integers 0..16777215
-\end{itemize}
+\beginCase{Right limit}
+\beginConditions{}
+\condition{Loads data correctly from Settings}
+\condition{Has only elements: plus, minus}
+\endConditions{}
 
-\item Right limit
-Conditions:
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Has only elements: plus, minus
-\end{itemize}
+\beginCase{Rotation field}
+\beginConditions{}
+\condition{Loads data correctly from Settings}
+\condition{Accepts positive and negative Integer numbers}
+\endConditions{}
 
-\item Rotation field
-Conditions:
-\begin{itemize}
-\item Loads data correctly from Settings
-\item Accepts positive and negative Integer numbers
-\end{itemize}
-
-\end{enumerate}
+\endTestedClass
