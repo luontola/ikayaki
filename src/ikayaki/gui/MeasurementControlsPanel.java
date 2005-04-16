@@ -75,7 +75,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
     /**
      * Magnetometer manual controls.
      */
-    private final ManualControlsPanel manualControlsPanel;
+    private final MagnetometerStatusPanel.ManualControlsPanel manualControlsPanel;
 
     /**
      * Magnetometer status panel; also holds move-radiobuttons from ManualControlsPanel.
@@ -128,7 +128,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
         //zPlusRadioButton.setHorizontalAlignment(SwingConstants.RIGHT);
         //zMinusRadioButton.setHorizontalAlignment(SwingConstants.LEFT);
 
-        sampleInsertPanel = new JPanel(new BorderLayout(8, 4));
+        sampleInsertPanel = new JPanel(new BorderLayout(4, 4));
         sampleInsertPanel.add(sampleInsertTextLabel, BorderLayout.NORTH);
         sampleInsertPanel.add(zButtonPanel, BorderLayout.CENTER);
         sampleInsertPanel.add(sampleInsertIconLabel, BorderLayout.SOUTH);
@@ -139,8 +139,8 @@ public class MeasurementControlsPanel extends ProjectComponent {
         topPanel.add(buttonPanel, BorderLayout.CENTER);
         topPanel.add(sampleInsertPanel, BorderLayout.SOUTH);
 
-        manualControlsPanel = new ManualControlsPanel();
-        magnetometerStatusPanel = new MagnetometerStatusPanel(manualControlsPanel);
+        magnetometerStatusPanel = new MagnetometerStatusPanel();
+        manualControlsPanel = magnetometerStatusPanel.manualControlsPanel;
 
         JPanel contentPane = new JPanel(new BorderLayout(0, 8));
         contentPane.setBorder(BorderFactory.createEmptyBorder(0, 4, 4, 4));
@@ -191,7 +191,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
      *
      * @param event ProjectEvent received.
      */
-    public void projectUpdated(ProjectEvent event) {
+    @Override public void projectUpdated(ProjectEvent event) {
         updateActions();
         manualControlsPanel.setEnabled(getProject().isManualControlEnabled());
     }
@@ -201,7 +201,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
      *
      * @param event MeasurementEvent received.
      */
-    public void measurementUpdated(MeasurementEvent event) {
+    @Override public void measurementUpdated(MeasurementEvent event) {
         // MeasurementEvent won't tell handler position and rotation; MagnetometerStatusPanel asks them from Squid
         magnetometerStatusPanel.updateStatus();
     }
