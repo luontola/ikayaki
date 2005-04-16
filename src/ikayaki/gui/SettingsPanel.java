@@ -432,7 +432,6 @@ public class SettingsPanel
         public void actionPerformed(ActionEvent e) {
           saveSettings();
         }
-
       };
       saveAction.putValue(Action.NAME, "Save");
     }

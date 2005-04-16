@@ -106,7 +106,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      *
      * @param axis x,y,z or a (all). In lower case.
      */
-    void reset(char axis) {
+    protected void reset(char axis) {
         //they should be upper case, duh :)
         if (axis == 'x') {
             axis = 'X';
@@ -128,7 +128,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      *
      * @param axis x,y,z or a (all). In lower case.
      */
-    void resetCounter(char axis) {
+    protected void resetCounter(char axis) {
         //they should be upper case, duh :)
         if (axis == 'x') {
             axis = 'X';
@@ -162,7 +162,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      *                   (open then close) the feedback loop. (This command also zeros the flux counter)
      * @param option     see data values from subcommands.
      */
-    void configure(char axis, char subcommand, char option) {
+    protected void configure(char axis, char subcommand, char option) {
         //they should be upper case, duh :)
         if (axis == 'x') {
             axis = 'X';
@@ -183,7 +183,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      *
      * @param axis x,y,z or a (all). In lower case.
      */
-    void latchAnalog(char axis) {
+    protected void latchAnalog(char axis) {
         //they should be upper case, duh :)
         if (axis == 'x') {
             axis = 'X';
@@ -204,7 +204,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      *
      * @param axis x,y,z or a (all). In lower case.
      */
-    void latchCounter(char axis) {
+    protected void latchCounter(char axis) {
         //they should be upper case, duh :)
         if (axis == 'x') {
             axis = 'X';
@@ -233,7 +233,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      *                   feedback loop status. Return feedback, waiting time?
      * @return Returns data wanted, see command and datavalue
      */
-    String getData(char axis, char command, String datavalues) {
+    protected String getData(char axis, char command, String datavalues) {
         if (axis == 'x') {
             axis = 'X';
         } else if (axis == 'y') {

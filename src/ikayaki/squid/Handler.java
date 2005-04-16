@@ -248,10 +248,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     public void moveToHome() {
         try {
             setVelocity(velocity);
-            this.serialIO.writeMessage("O1,0");
-            this.serialIO.writeMessage(","); //execute command
-            this.serialIO.writeMessage("O1,1");
-            this.serialIO.writeMessage(","); //execute command
+            this.serialIO.writeMessage("O1,0,");
+            this.go();
+            this.serialIO.writeMessage("O1,1,");
+            this.go();
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
