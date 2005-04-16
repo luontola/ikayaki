@@ -34,6 +34,40 @@ import java.io.IOException;
 public class SquidFront extends JFrame {
 
     private Squid squid;
+    private JTextField param1;
+    private JTextField param2;
+    private JButton hupdateSettings;
+    private JButton hgetStatus;
+    private JButton hgetPosition;
+    private JButton hgetRotation;
+    private JButton hisOK;
+    private JButton hmoveToHome;
+    private JButton hmoveToDegausserZ;
+    private JButton hmoveToDegausserY;
+    private JButton hmoveToMeasurement;
+    private JButton hmoveToBackground;
+    private JButton hmoveToPos;
+    private JButton hstop;
+    private JButton hrotateTo;
+    private JButton hsetOnline;
+    private JButton hsetAcceleration;
+    private JButton hsetDeceleration;
+    private JButton hsetBaseSpeed;
+    private JButton hsetVelocity;
+    private JButton hsetHoldTime;
+    private JButton hsetCrystalFrequence;
+    private JButton hstopExecution;
+    private JButton hperformSlew;
+    private JButton hsetMotorPositive;
+    private JButton hsetMotorNegative;
+    private JButton hsetSteps;
+    private JButton hsetPosition;
+    private JButton hgo;
+    private JButton hjoin;
+    private JButton hverify;
+    private JButton hsetPositionRegister;
+    private JButton htakeMessage;
+
 
     public SquidFront() throws HeadlessException {
         super("SQUID Debugger");
