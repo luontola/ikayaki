@@ -71,6 +71,8 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         this.serialIO = SerialIO.openPort(
                 new SerialParameters(Settings.instance().getMagnetometerPort(), 1200, 0, 0, 8, 1, 0));
         serialIO.addSerialIOListener(this);
+        messageBuffer = new Stack<String>();
+        queue = new SynchronousQueue<String>();
         try {
           //Original sets range and filter to 1x and disable fast-slew, TODO: check if right, do we need status confirm?
           serialIO.writeMessage("XCR1\r");
@@ -259,7 +261,12 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
             return null;
         }
         waitingForMessage = true;
-        String answer = (String) queue.poll();
+        String answer = null;
+        try {
+          answer = (String) queue.take();
+        }
+        catch (InterruptedException ex1) {
+        }
         waitingForMessage = false;
         return answer;
     }
@@ -411,15 +418,19 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public void serialIOEvent(SerialIOEvent event) {
         //TODO: problem when Degausser and Magnetometer uses same port :/
         String message = event.getMessage();
-        if (waitingForMessage) {
+        if(message != null) {
+          if (waitingForMessage) {
             try {
-                queue.put(message);
-            } catch (InterruptedException e) {
-                System.err.println("Interrupted Magnetometer message event");
-            } catch (NullPointerException e) {
-                System.err.println("Null from SerialEvent in Magnetometer");
+              queue.put(message);
             }
+            catch (InterruptedException e) {
+              System.err.println("Interrupted Magnetometer message event");
+            }
+            catch (NullPointerException e) {
+              System.err.println("Null from SerialEvent in Magnetometer");
+            }
+          }
+          messageBuffer.add(message);
         }
-        messageBuffer.add(message);
     }
 }

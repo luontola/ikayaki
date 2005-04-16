@@ -1937,7 +1937,7 @@ project listeners.
 
                         // quick measure with no rotations
                         results = Squid.instance().getMagnetometer().readData();
-                        currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
+                        currentStep.addResult(new MeasurementResult(DEG0, results[0], results[1], results[2]));
                         fireMeasurementEvent(currentStep, VALUE_MEASURED);
                         checkAborted();
                     } else {
@@ -1947,7 +1947,7 @@ project listeners.
 
                             // measure at 0 degrees
                             results = Squid.instance().getMagnetometer().readData();
-                            currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
+                            currentStep.addResult(new MeasurementResult(DEG0, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
@@ -1958,7 +1958,7 @@ project listeners.
                             fireMeasurementEvent(currentStep, HANDLER_STOP);
                             checkAborted();
                             results = Squid.instance().getMagnetometer().readData();
-                            currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
+                            currentStep.addResult(new MeasurementResult(DEG90, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
@@ -1969,7 +1969,7 @@ project listeners.
                             fireMeasurementEvent(currentStep, HANDLER_STOP);
                             checkAborted();
                             results = Squid.instance().getMagnetometer().readData();
-                            currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
+                            currentStep.addResult(new MeasurementResult(DEG180, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
@@ -1980,7 +1980,7 @@ project listeners.
                             fireMeasurementEvent(currentStep, HANDLER_STOP);
                             checkAborted();
                             results = Squid.instance().getMagnetometer().readData();
-                            currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
+                            currentStep.addResult(new MeasurementResult(DEG270, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 

@@ -133,6 +133,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
           getHandlerPort(), 1200, 0, 0, 8, 1,
           0));
       serialIO.addSerialIOListener(this);
+      messageBuffer = new Stack<String>();
+      queue = new SynchronousQueue<String>();
         this.acceleration = Settings.instance().getHandlerAcceleration();
         this.deceleration = Settings.instance().getHandlerDeceleration();
         this.axialAFPosition = Settings.instance().getHandlerAxialAFPosition();
@@ -195,7 +197,12 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             return 'E';
         }
         waitingForMessage = true;
-        String answer = (String) queue.poll();
+        String answer = null;
+        try {
+          answer = (String) queue.take();
+        }
+        catch (InterruptedException ex1) {
+        }
         waitingForMessage = false;
         return answer.charAt(0);
 
@@ -235,7 +242,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Commands the holder to move to home position. Only starts movement, needs to poll with join() when movement is
+     * Commands the holder to move to home position. Only starts movement, needs to take with join() when movement is
      * finished.
      */
     public void moveToHome() {
@@ -251,7 +258,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Commands the holder to move to degauss Z position. Only starts movement, needs to poll with join() when movement
+     * Commands the holder to move to degauss Z position. Only starts movement, needs to take with join() when movement
      * is finished.
      */
     public void moveToDegausserZ() {
@@ -261,7 +268,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Commands the holder to move to degauss Y (and X) position. Only starts movement, needs to poll with join() when
+     * Commands the holder to move to degauss Y (and X) position. Only starts movement, needs to take with join() when
      * movement is finished.
      */
     public void moveToDegausserY() {
@@ -272,7 +279,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
 
 
     /**
-     * Commands the holder to move to measure position. Only starts movement, needs to poll with join() when movement is
+     * Commands the holder to move to measure position. Only starts movement, needs to take with join() when movement is
      * finished.
      */
     public void moveToMeasurement() {
@@ -284,7 +291,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Commands the holder to move to background position. Only starts movement, needs to poll with join() when movement
+     * Commands the holder to move to background position. Only starts movement, needs to take with join() when movement
      * is finished.
      */
     public void moveToBackground() {
@@ -295,7 +302,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
 
     /**
      * Commands the holder to move to the specified position. Value must be between 1 and 16,777,215. Return true if
-     * good pos-value and moves handler there. Only starts movement, needs to poll with join() when movement is
+     * good pos-value and moves handler there. Only starts movement, needs to take with join() when movement is
      * finished.
      *
      * @param pos the position where the handler will move to.
@@ -334,7 +341,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
 
     /**
      * Rotates the handler to the specified angle. If angle is over than 360 or lower than 0, it is divided by 360 and
-     * value is remainder. Only starts movement, needs to poll with join() when movement is finished.
+     * value is remainder. Only starts movement, needs to take with join() when movement is finished.
      *
      * @param angle the angle in degrees to rotate the handler to.
      */
@@ -582,7 +589,11 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             this.serialIO.writeMessage("F%,");
             //this.serialIO.writeMessage(","); //execute command
             waitingForMessage = true;
-            String answer = (String) queue.poll();
+            try {
+              String answer = (String) queue.take();
+            }
+            catch (InterruptedException ex1) {
+            }
             waitingForMessage = false;
 
         } catch (SerialIOException ex) {
@@ -609,7 +620,12 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             System.err.println(ex);
         }
         waitingForMessage = true;
-        String answer = (String) queue.poll();
+        String answer = null;
+        try {
+          answer = (String) queue.take();
+        }
+        catch (InterruptedException ex1) {
+        }
         waitingForMessage = false;
         return answer;
 
@@ -632,7 +648,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Poll the device for any waiting messages such as errors or end of move. (
+     * take the device for any waiting messages such as errors or end of move. (
      *
      * @return 0 Normal, no service required <br/>1 Command error, illegal command sent <br/>2 Range error, an out of
      *         range numeric parameter was sent <br/>3 Command invalid while moving (e.g. G, S, H) <br/>4 Command only
@@ -641,7 +657,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *         limit <br/>8 End of program notice, internal program has completed <br/>G Motor is indexing and no other
      *         notice pending
      */
-    private char pollMessage() {
+    private char takeMessage() {
         try {
             this.serialIO.writeMessage("%,");
             //this.serialIO.writeMessage(","); //execute command
@@ -649,22 +665,31 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             System.err.println(ex);
         }
         waitingForMessage = true;
-        String answer = (String) queue.poll();
+        String answer = null;
+        try {
+          answer = (String) queue.take();
+        }
+        catch (InterruptedException ex1) {
+        }
         waitingForMessage = false;
         return answer.charAt(0);
     }
 
     public void serialIOEvent(SerialIOEvent event) {
       String message = event.getMessage();
+      if(message != null) {
         if (waitingForMessage) {
-            try {
-                queue.put(message);
-            } catch (InterruptedException e) {
-                System.err.println("Interrupted Handler message event");
-            } catch (NullPointerException e) {
-                System.err.println("Null from SerialEvent in Handler");
-            }
+          try {
+            queue.put(message);
+          }
+          catch (InterruptedException e) {
+            System.err.println("Interrupted Handler message event");
+          }
+          catch (NullPointerException e) {
+            System.err.println("Null from SerialEvent in Handler");
+          }
         }
         messageBuffer.add(message);
+      }
     }
 }

@@ -96,6 +96,8 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         this.serialIO = SerialIO.openPort(new SerialParameters(Settings.instance().
                 getDegausserPort()));
         serialIO.addSerialIOListener(this);
+        messageBuffer = new Stack<String>();
+        queue = new SynchronousQueue<String>();
         this.degausserDelay = Settings.instance().getDegausserDelay();
         this.degausserRamp = Settings.instance().getDegausserRamp();
         lastCommandTime = System.currentTimeMillis();
@@ -230,9 +232,14 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         this.setCoil('Z');
         this.setAmplitude(amplitude);
         this.executeRampCycle();
-        //we need to poll for DONE message or TRACK ERROR message
+        //we need to take for DONE message or TRACK ERROR message
         waitingForMessage = true;
-        String answer = (String) queue.poll();
+        String answer = null;
+        try {
+          answer = queue.take();
+        }
+        catch (InterruptedException ex) {
+        }
         waitingForMessage = false;
         if (answer.equals("DONE")) {
             return true;
@@ -252,9 +259,14 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         this.setCoil('Y');
         this.setAmplitude(amplitude);
         this.executeRampCycle();
-        //we need to poll for DONE message or TRACK ERROR message
+        //we need to take for DONE message or TRACK ERROR message
         waitingForMessage = true;
-        String answer = (String) queue.poll();
+        String answer = null;
+        try {
+          answer = (String) queue.take();
+        }
+        catch (InterruptedException ex) {
+        }
         waitingForMessage = false;
         if (answer.equals("DONE")) {
             return true;
@@ -274,7 +286,12 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         } catch (SerialIOException ex) {
         }
         waitingForMessage = true;
-        String answer = (String) queue.poll();
+        String answer = null;
+        try {
+          answer = (String) queue.take();
+        }
+        catch (InterruptedException ex1) {
+        }
         waitingForMessage = false;
         return answer.charAt(1);
     }
@@ -290,7 +307,12 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         } catch (SerialIOException ex) {
         }
         waitingForMessage = true;
-        String answer = (String) queue.poll();
+        String answer = null;
+        try {
+          answer = (String) queue.take();
+        }
+        catch (InterruptedException ex1) {
+        }
         waitingForMessage = false;
         return (int) answer.charAt(4);
 
@@ -307,7 +329,12 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         } catch (SerialIOException ex) {
         }
         waitingForMessage = true;
-        String answer = (String) queue.poll();
+        String answer = null;
+        try {
+          answer = (String) queue.take();
+        }
+        catch (InterruptedException ex1) {
+        }
         waitingForMessage = false;
         return (int) answer.charAt(7);
 
@@ -324,7 +351,12 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         } catch (SerialIOException ex) {
         }
         waitingForMessage = true;
-        String answer = (String) queue.poll();
+        String answer = null;
+        try {
+          answer = (String) queue.take();
+        }
+        catch (InterruptedException ex1) {
+        }
         waitingForMessage = false;
         return answer.charAt(10);
 
@@ -341,7 +373,12 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         } catch (SerialIOException ex) {
         }
         waitingForMessage = true;
-        String answer = (String) queue.poll();
+        String answer = null;
+        try {
+          answer = (String) queue.take();
+        }
+        catch (InterruptedException ex1) {
+        }
         waitingForMessage = false;
 
         return Integer.parseInt(answer.substring(13, 17));
@@ -363,15 +400,19 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public void serialIOEvent(SerialIOEvent event) {
         //TODO: problem when Degausser and Magnetometer uses same port :/
         String message = event.getMessage();
-        if (waitingForMessage) {
+        if(message != null) {
+          if (waitingForMessage) {
             try {
-                queue.put(message);
-            } catch (InterruptedException e) {
-                System.err.println("Interrupted Degausser message event");
-            } catch (NullPointerException e) {
-                System.err.println("Null from SerialEvent in Degausser");
+              queue.put(message);
             }
+            catch (InterruptedException e) {
+              System.err.println("Interrupted Degausser message event");
+            }
+            catch (NullPointerException e) {
+              System.err.println("Null from SerialEvent in Degausser");
+            }
+          }
+          messageBuffer.add(message);
         }
-        messageBuffer.add(message);
     }
 }

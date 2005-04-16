@@ -33,7 +33,6 @@ import java.util.TooManyListenersException;
 import java.util.Vector;
 import java.io.FileWriter;
 import java.io.File;
-import java.util.Date;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -48,7 +47,7 @@ Event A: On new SerialPortEvent - generates new SerialMessageArrivedEvent if a d
 message from serial port is received.
 */
 
-  private static final boolean DEBUG = false; // Writes log-file
+  private static final boolean DEBUG = true; // Writes log-file
 
   private static Vector<SerialIO> openPorts = new Vector<SerialIO> ();
 
@@ -193,7 +192,13 @@ message from serial port is received.
 
         // send message to outputstream
         try {
-            System.out.println("Sending data to port: " + this.portName); // TODO debug
+            //System.out.println("Sending data to port: " + this.portName); // TODO debug
+            //Shall we wait? No need to shoot them too quick to system
+            try {
+              Thread.sleep(50);
+            }
+            catch (InterruptedException ex) {
+            }
             os.write(asciiMsg);
              if(DEBUG) {
                logWriter.write("SEND:" + message + "\r");

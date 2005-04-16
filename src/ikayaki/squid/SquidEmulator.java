@@ -300,6 +300,8 @@ public class SquidEmulator {
             }
             catch (IOException ex) {
             }
+            commandStack.add(event.getMessage());
+            /*
             String message = lastMessagePart + event.getMessage();
             String[] commands = message.split(",");
             for (i = 0; i < commands.length - 1; i++) {
@@ -309,6 +311,7 @@ public class SquidEmulator {
               commandStack.add(commands[0]);
             else if(commands.length >= i && commands[i] != null)
               lastMessagePart = commands[i];
+             */
         }
     }
 
@@ -332,18 +335,22 @@ public class SquidEmulator {
 
             if(!commandStack.empty()) {
               String command = commandStack.pop();
-              if(command.startsWith("A",0)) {
-                writeMessage("" + Math.random(), handlerPort);
+              if(command.startsWith("SD",1)) {
+                writeMessage("+" + Math.random(), magnetometerPort);
               }
-              else if(command.startsWith("X",0)) {
-                writeMessage("" + Math.random(), handlerPort);
+              else if(command.startsWith("SC",1)) {
+                writeMessage("+" + (int)(Math.random()*100), magnetometerPort);
               }
+              else
+                writeMessage("1", magnetometerPort);
+              /*
               else if(command.startsWith("Y",0)) {
-                writeMessage("" + Math.random(), handlerPort);
+                writeMessage("+" + Math.random(), magnetometerPort);
               }
               else if(command.startsWith("Z",0)) {
-                writeMessage("" + Math.random(), handlerPort);
+                writeMessage("+" + Math.random(), magnetometerPort);
               }
+*/
             }
             try {
               this.sleep(100);
@@ -395,7 +402,7 @@ public class SquidEmulator {
             if(!commandStack.empty()) {
               String command = commandStack.pop();
               if(command.startsWith("D",0)) {
-                writeMessage("" + Math.random(), handlerPort);
+                writeMessage("DONE", degausserPort);
               }
             }
             try {
