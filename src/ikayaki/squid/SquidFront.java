@@ -132,11 +132,45 @@ public class SquidFront extends JFrame {
             }
         }
 
+        initHandlerActions();
+        initMagnetometerActions();
+        initDegausserActions();
+        initLogging();
+
         setLayout(new BorderLayout());
         setContentPane(contentPane);
         setLocationByPlatform(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setVisible(true);
+    }
+
+    /**
+     * Sets ActionListeners for handler's control buttons.
+     */
+    private void initHandlerActions() {
+        // TODO
+    }
+
+    /**
+     * Sets ActionListeners for magnetometer's control buttons.
+     */
+    private void initMagnetometerActions() {
+        // TODO
+    }
+
+    /**
+     * Sets ActionListeners for degausser's control buttons.
+     */
+    private void initDegausserActions() {
+        // TODO
+    }
+
+    /**
+     * Sets anything that is needed for logging to file and to screen. 
+     */
+    private void initLogging() {
+        // TODO
     }
 
     public static void main(String[] args) {
