@@ -1,5 +1,5 @@
 /*
- * SquidDebugger.java
+ * SquidFront.java
  *
  * Copyright (C) 2005 Project SQUID, http://www.cs.helsinki.fi/group/squid/
  *
@@ -20,24 +20,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package test.ikayaki.squid;
-
-import ikayaki.squid.Squid;
+package ikayaki.squid;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
 /**
- * GUI for using the SQUID Interface's protocol level commands.
+ * Graphical front-end for using the SQUID Interface's protocol level commands.
  *
  * @author Esko Luontola
  */
-public class SquidDebugger extends JFrame {
+public class SquidFront extends JFrame {
 
     private Squid squid;
 
-    public SquidDebugger() throws HeadlessException {
+    public SquidFront() throws HeadlessException {
         super("SQUID Debugger");
 
         // initialize the squid
@@ -52,7 +50,6 @@ public class SquidDebugger extends JFrame {
             System.exit(2);
         }
 
-        
 
         setLocationByPlatform(true);
         pack();
@@ -60,6 +57,6 @@ public class SquidDebugger extends JFrame {
     }
 
     public static void main(String[] args) {
-        new SquidDebugger();
+        new SquidFront();
     }
 }
