@@ -25,6 +25,9 @@ package ikayaki.squid;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import com.jgoodies.looks.plastic.PlasticLookAndFeel;
+import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
+import com.jgoodies.looks.plastic.theme.SkyBlue;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +40,7 @@ import java.io.IOException;
  */
 public class SquidFront extends JFrame {
 
-    private static boolean DEBUG = true; // debug the program without squid
+    private static boolean DEBUG = false; // debug the program without squid
 
     private JButton hupdateSettings;
     private JButton hgetStatus;
@@ -167,13 +170,20 @@ public class SquidFront extends JFrame {
     }
 
     /**
-     * Sets anything that is needed for logging to file and to screen. 
+     * Sets anything that is needed for logging to file and to screen.
      */
     private void initLogging() {
         // TODO
     }
 
     public static void main(String[] args) {
+        PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
+        try {
+            UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+        } catch (UnsupportedLookAndFeelException e) {
+            System.err.println(e);
+        }
+
         new SquidFront();
     }
 
@@ -190,13 +200,14 @@ public class SquidFront extends JFrame {
      */
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
+        contentPane.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), 6, -1));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel1,
                 new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
         final JLabel label1 = new JLabel();
         label1.setText("Handler");
         panel1.add(label1,
@@ -437,6 +448,7 @@ public class SquidFront extends JFrame {
                 new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        panel3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
         final JLabel label2 = new JLabel();
         label2.setText("Degausser");
         panel3.add(label2,
@@ -560,13 +572,13 @@ public class SquidFront extends JFrame {
         param1 = new JTextField();
         panel5.add(param1,
                 new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(50, -1), null));
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(100, -1), null));
         param2 = new JTextField();
         panel5.add(param2,
                 new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(50, -1), null));
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(100, -1), null));
         final JLabel label3 = new JLabel();
         label3.setText("param2");
         panel5.add(label3,
@@ -580,8 +592,8 @@ public class SquidFront extends JFrame {
         param3 = new JTextField();
         panel5.add(param3,
                 new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(50, -1), null));
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(100, -1), null));
         final JLabel label5 = new JLabel();
         label5.setText("param3");
         panel5.add(label5,
@@ -626,6 +638,7 @@ public class SquidFront extends JFrame {
                 new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        panel6.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
         final JLabel label6 = new JLabel();
         label6.setText("Magnetometer");
         panel6.add(label6,
