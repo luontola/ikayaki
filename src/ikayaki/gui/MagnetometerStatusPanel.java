@@ -28,7 +28,8 @@ import ikayaki.squid.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.io.*;
+import java.io.IOException;
+import java.util.TreeMap;
 
 /**
  * Picture of current magnetometer status, with sample holder position and rotation. Status is updated according to
@@ -40,14 +41,14 @@ import java.io.*;
 public class MagnetometerStatusPanel extends JPanel {
 
     /**
-     * Sample hanlder to read and command current position and rotation from/to.
-     */
-    private Handler handler;
-
-    /**
      * ManualControlsPanel whose move-radiobuttons to show.
      */
     final ManualControlsPanel manualControlsPanel;
+
+    /**
+     * Sample hanlder to read and command current position and rotation from/to.
+     */
+    private Handler handler;
 
     // handler current position and rotation
     private int position, rotation;
@@ -56,13 +57,20 @@ public class MagnetometerStatusPanel extends JPanel {
     private final int maxposition = 1 << 24, maxrotation = 2000;
 
     // handler positions, read from Settings, thank you autoboxing!
-    private int posLeft;
+    // WARNING: all of these must differ or we have trouble...
+    private int posMove = 0;
+    private int posLeft = 1;
     private int posHome;
     private int posDemagZ;
     private int posDemagY;
     private int posBG;
     private int posMeasure;
-    private int posRight;
+    private int posRight = maxposition - 1;
+
+    /**
+     * Sorted map for move-radiobuttons' positions.
+     */
+    private TreeMap<Integer,JComponent> moveButtons = new TreeMap<Integer,JComponent>();
 
     /**
      * Sets magnetometer status to current position.
@@ -70,25 +78,26 @@ public class MagnetometerStatusPanel extends JPanel {
     public MagnetometerStatusPanel() {
         this.setLayout(new OverlayLayout(this));
 
-        // move-radiobuttons come left to status picture
+        // move-radiobuttons come left from status picture
         this.manualControlsPanel = new ManualControlsPanel();
+
         add(manualControlsPanel.moveLabel);
-        //add(manualControlsPanel.moveLeft);
+        add(manualControlsPanel.moveLeft);
         add(manualControlsPanel.moveHome);
         add(manualControlsPanel.moveDemagZ);
         add(manualControlsPanel.moveDemagY);
         add(manualControlsPanel.moveBG);
         add(manualControlsPanel.moveMeasure);
-        //add(manualControlsPanel.moveRight);
+        add(manualControlsPanel.moveRight);
 
-        setPreferredSize(new Dimension(100, 400));
-        //setMinimumSize(new Dimension(100, 400));
+        setPreferredSize(new Dimension(150, 400));
+        //setMinimumSize(new Dimension(150, 400));
 
         // sample handler to read positions and command with move/rotate commands
         readHandler();
 
         //updateStatus();
-        updateStatus(1 << 23, 400); // NOTE: for testing
+        updateStatus(14000000, 500); // NOTE: for testing
     }
 
     /**
@@ -101,35 +110,44 @@ public class MagnetometerStatusPanel extends JPanel {
     }
 
     /**
-     * Reads handler positions from Settings.
+     * Reads handler positions from Settings, posLeft and posRight are hard-coded.
+     * Updates position->radiobutton -treemap.
      */
     private void updatePositions() {
         Settings settings = Settings.instance();
-        // TODO: what's this?
-        //this.posLeft = settings.getHandlerLeftLimit();
-        this.posHome = settings.getHandlerSampleLoadPosition();
-        this.posDemagZ = settings.getHandlerAxialAFPosition();
-        this.posDemagY = settings.getHandlerTransverseYAFPosition();
-        this.posBG = settings.getHandlerBackgroundPosition();
-        this.posMeasure = settings.getHandlerMeasurementPosition();
-        this.posRight = settings.getHandlerRightLimit();
+        posHome = settings.getHandlerSampleLoadPosition();
+        posDemagZ = settings.getHandlerAxialAFPosition();
+        posDemagY = settings.getHandlerTransverseYAFPosition();
+        posBG = settings.getHandlerBackgroundPosition();
+        posMeasure = settings.getHandlerMeasurementPosition();
+
+        // stack move-radiobuttons into a sorted map
+        // TODO: WARNING: if two positions are the same, previous one gets replaced
+        moveButtons.clear();
+        moveButtons.put(posMove, manualControlsPanel.moveLabel);
+        moveButtons.put(posLeft, manualControlsPanel.moveLeft);
+        moveButtons.put(posHome, manualControlsPanel.moveHome);
+        moveButtons.put(posDemagZ, manualControlsPanel.moveDemagZ);
+        moveButtons.put(posDemagY, manualControlsPanel.moveDemagY);
+        moveButtons.put(posBG, manualControlsPanel.moveBG);
+        moveButtons.put(posMeasure, manualControlsPanel.moveMeasure);
+        moveButtons.put(posRight, manualControlsPanel.moveRight);
     }
 
     /**
-     * Updates moveButtons' positions.
+     * Updates moveButtons' positions. Stacks 'em up nicely so that noone is on top of another or out of screen.
      */
     private void updateButtonPositions() {
-        updateYPosition(manualControlsPanel.moveLabel, 0);
-        updateYPosition(manualControlsPanel.moveHome, posHome);
-        updateYPosition(manualControlsPanel.moveDemagZ, posDemagZ);
-        updateYPosition(manualControlsPanel.moveDemagY, posDemagY);
-        updateYPosition(manualControlsPanel.moveBG, posBG);
-        updateYPosition(manualControlsPanel.moveMeasure, posMeasure);
-        updateYPosition(manualControlsPanel.moveRight, posRight);
-    }
-
-    private void updateYPosition(JComponent b, int position) {
-        b.setLocation(b.getX(), (int) ((long) getHeight() * position / maxposition));
+        int height = getHeight(), nextpos = 0;
+        for (int position : moveButtons.keySet()) {
+            JComponent c = moveButtons.get(position);
+            int cheight = c.getHeight();
+            int pos = (int) ((long) height * position / maxposition);
+            if (pos > height - cheight) pos = height - cheight;
+            if (pos < nextpos) pos = nextpos;
+            c.setLocation(c.getX(), pos);
+            nextpos = pos + cheight;
+        }
     }
 
     /**
@@ -166,6 +184,7 @@ public class MagnetometerStatusPanel extends JPanel {
      */
     protected void paintComponent(Graphics g) {
         // must update radiobuttons' positions here, hope it's safe...
+        // TODO: what would be the right place for this call?
         updateButtonPositions();
 
         // let Swing erase the background
@@ -182,7 +201,7 @@ public class MagnetometerStatusPanel extends JPanel {
 
         // leave some space for move-radiobuttons
         g2.translate(80, 0);
-        w -= 80;
+        w -= 100;
 
         // sample handler base line x position
         int basex = w / 2;
@@ -205,7 +224,11 @@ public class MagnetometerStatusPanel extends JPanel {
         // do the drawing...
 
         // handler base line
-        g2.drawLine(basex, 0, basex, box1y);
+        g2.drawLine(basex, 24, basex, box1y);
+        Color saved = g2.getColor();
+        g2.setColor(Color.LIGHT_GRAY);
+        g2.drawLine(basex, box1y, basex, h);
+        g2.setColor(saved);
 
         // magnetometer boxes
         g2.drawRect(basex - box1w / 2, box1y, box1w, box2y - box1y);
@@ -218,6 +241,11 @@ public class MagnetometerStatusPanel extends JPanel {
 
         // sample rotation arrow
         drawArrow(g2, basex, sampley + sampleh / 2, arrowlength, rotation);
+
+        // handler information
+        //g2.setColor(Color.BLUE);
+        g2.drawString("position: " + position, 0, 12);
+        g2.drawString("rotation: " + rotation, 0, 24);
 
         // restore original Graphics
         g2.dispose();
@@ -260,8 +288,8 @@ public class MagnetometerStatusPanel extends JPanel {
         g2.translate(x, y);
         g2.rotate(rot);
         g2.drawLine(0, -length / 2, 0, length / 2);
-        g2.drawLine(0, -length / 2, -length / 4, -length / 2 + length / 4);
-        g2.drawLine(0, -length / 2, length / 4, -length / 2 + length / 4);
+        g2.drawLine(0, -length / 2, -length / 4, -length / 4);
+        g2.drawLine(0, -length / 2, length / 4, -length / 4);
         g2.rotate(-rot);
         g2.translate(-x, -y);
     }
@@ -343,13 +371,13 @@ public class MagnetometerStatusPanel extends JPanel {
         /**
          * Measures X, Y and Z (at current sample holder position) by calling project.doManualMeasure().
          */
-        private final JButton measureAllButton = new JButton("Measure All");
+        private final JButton measureAllButton = new JButton("Measure XYZ");
         private final ComponentFlasher measureAllButtonFlasher = new ComponentFlasher(measureAllButton);
 
         /**
          * Resets X, Y and Z by calling project.doManualReset()? Does what?
          */
-        private final JButton resetAllButton = new JButton("Reset All?");
+        private final JButton resetAllButton = new JButton("Reset XYZ?");
         private final ComponentFlasher resetAllButtonFlasher = new ComponentFlasher(resetAllButton);
 
         /**
@@ -358,6 +386,13 @@ public class MagnetometerStatusPanel extends JPanel {
         private final JTextField demagAmplitudeField = new JTextField();
         private final JLabel demagAmplitudeLabel = new JLabel("mT");
         private final ComponentFlasher demagAmplitudeFieldFlasher = new ComponentFlasher(demagAmplitudeField);
+
+        /**
+         * Demagnetizes in Z, X or Y, depending on current handler position and rotation.
+         */
+        private final JButton demagButton = new JButton("Demag");
+        private final String demagButtonBaseText = "Demag ";
+        private final ComponentFlasher demagButtonFlasher = new ComponentFlasher(demagButton);
 
         /**
          * Demagnetizes in Z (at current sample holder position) by calling project.doManualDemagZ(double).
@@ -389,6 +424,7 @@ public class MagnetometerStatusPanel extends JPanel {
          * Creates our stupid ManualControlsPanel.
          */
         public ManualControlsPanel() {
+            moveButtonGroup.add(moveLeft);
             moveButtonGroup.add(moveHome);
             moveButtonGroup.add(moveDemagZ);
             moveButtonGroup.add(moveDemagY);
@@ -443,6 +479,7 @@ public class MagnetometerStatusPanel extends JPanel {
             demagButtonPanel.add(demagAmplitudePanel);
             demagButtonPanel.add(demagZButton);
             demagButtonPanel.add(demagYButton);
+            //demagButtonPanel.add(demagButton);
             demagPanel.add(demagLabel, BorderLayout.NORTH);
             demagPanel.add(demagButtonPanel, BorderLayout.CENTER);
 
@@ -461,6 +498,12 @@ public class MagnetometerStatusPanel extends JPanel {
              * demagY is Settings.instance().getTransverseYAFPosition().
              */
 
+            moveLeft.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    handler.moveToPos(posLeft);
+                }
+            });
+
             moveHome.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     handler.moveToHome();
@@ -470,12 +513,14 @@ public class MagnetometerStatusPanel extends JPanel {
             moveDemagZ.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     handler.moveToDegausserZ();
+                    demagButton.setText(demagButtonBaseText + (rotation == 0 || rotation == 180 ? "Z" : "X"));
                 }
             });
 
             moveDemagY.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     handler.moveToDegausserY();
+                    demagButton.setText(demagButtonBaseText + "Y");
                 }
             });
 
@@ -491,7 +536,13 @@ public class MagnetometerStatusPanel extends JPanel {
                 }
             });
 
-            /*
+            moveRight.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    handler.moveToPos(posRight);
+                }
+            });
+
+           /*
              * Event B: On rotateXXX click - call project.doManualRotate(int) with clicked angle. If
              * false is returned, show small error message.
              */
@@ -601,7 +652,18 @@ public class MagnetometerStatusPanel extends JPanel {
             if (handler == null) enabled = false;
             for (Component component : components) component.setEnabled(enabled);
 
-            // TODO: if enabled==true set selected radiobexes according to current handler status...
+            // set selected radioboxes according to current handler status
+            if (enabled) {
+                JComponent c = moveButtons.get(position);
+                if (c != null && c instanceof JRadioButton) ((JRadioButton) c).setSelected(true);
+
+                switch (rotation) {
+                    case 0: rotate0.setSelected(true); break;
+                    case 500: rotate90.setSelected(true); break;
+                    case 1000: rotate180.setSelected(true); break;
+                    case 1500: rotate270.setSelected(true); break;
+                }
+            }
         }
 
         /**

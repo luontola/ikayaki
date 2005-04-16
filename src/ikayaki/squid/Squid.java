@@ -75,25 +75,25 @@ public class Squid {
     private Squid() throws IOException {
         owner = null;
         try {
-          degausser = new Degausser();
+          degausser = null;new Degausser();
         }
         catch (SerialIOException ex) {
-          System.out.println("Cannot create degausser: " + ex);
-          throw new IOException();
+          System.err.println("Cannot create degausser: " + ex);
+          throw new IOException("Cannot create degausser");
         }
         try {
           handler = new Handler();
         }
-        catch (SerialIOException ex1) {
-          System.out.println("Cannot create degausser: " + ex1);
-          throw new IOException();
+        catch (SerialIOException ex) {
+          System.err.println("Cannot create handler: " + ex);
+          throw new IOException("Cannot create handler");
         }
         try {
           magnetometer = new Magnetometer();
         }
-        catch (SerialIOException ex2) {
-          System.out.println("Cannot create degausser: " + ex2);
-          throw new IOException();
+        catch (SerialIOException ex) {
+          System.err.println("Cannot create magnetometer: " + ex);
+          throw new IOException("Cannot create magnetometer");
         }
     }
 
