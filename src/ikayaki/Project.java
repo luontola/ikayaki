@@ -507,8 +507,6 @@ project listeners.
                 if (version.equals("1.0")) {
 
                     /* Begin importing version 1.0 */
-                    // TODO: import old version
-                    boolean importOldVersion = false;
 
                     // get type
                     s = root.getAttribute("type");
@@ -555,9 +553,7 @@ project listeners.
                     try {
                         susceptibility = Double.parseDouble(s);
                     } catch (NumberFormatException e) {
-                        // TODO: import old version
-                        importOldVersion = true;
-                        //throw new IllegalArgumentException("Invalid susceptibility: " + s);
+                        throw new IllegalArgumentException("Invalid susceptibility: " + s);
                     }
                     s = properties.getAttribute("sampletype");
                     try {
@@ -569,15 +565,13 @@ project listeners.
                     try {
                         orientation = Orientation.valueOf(s);
                     } catch (IllegalArgumentException e) {
-                        // TODO: import old version
-                        //throw new IllegalArgumentException("Invalid orientation: " + s);
+                        throw new IllegalArgumentException("Invalid orientation: " + s);
                     }
                     s = properties.getAttribute("normalization");
                     try {
                         normalization = Normalization.valueOf(s);
                     } catch (IllegalArgumentException e) {
-                        // TODO: import old version
-                        //throw new IllegalArgumentException("Invalid normalization: " + s);
+                        throw new IllegalArgumentException("Invalid normalization: " + s);
                     }
 
                     // get custom properties
@@ -638,9 +632,6 @@ project listeners.
                     }
 
                     /* End of importing version 1.0 */
-
-                    // TODO: import old version
-                    if (importOldVersion) saveNow();
 
 //              } else if (version.equals("x.y")) {
 //                  ... importing of file version x.y ...
@@ -2065,7 +2056,7 @@ project listeners.
                         return;
                     }
                     currentStep.addResult(new MeasurementResult(BG,
-                            Math.random(), Math.random(), Math.random()));
+                            Math.random() * 0.000001, Math.random() * 0.000001, Math.random() * 0.000001));
                     System.out.println("Result added");
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
 
@@ -2078,7 +2069,7 @@ project listeners.
                         return;
                     }
                     currentStep.addResult(new MeasurementResult(DEG0,
-                            Math.random(), Math.random(), Math.random()));
+                            Math.random() * 0.0001, Math.random() * 0.0001, Math.random() * 0.0001));
                     System.out.println("Result added");
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
 
@@ -2091,7 +2082,7 @@ project listeners.
                         return;
                     }
                     currentStep.addResult(new MeasurementResult(DEG90,
-                            Math.random(), Math.random(), Math.random()));
+                            Math.random() * 0.0001, Math.random() * 0.0001, Math.random() * 0.0001));
                     System.out.println("Result added");
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
 
@@ -2104,7 +2095,7 @@ project listeners.
                         return;
                     }
                     currentStep.addResult(new MeasurementResult(DEG180,
-                            Math.random(), Math.random(), Math.random()));
+                            Math.random() * 0.0001, Math.random() * 0.0001, Math.random() * 0.0001));
                     System.out.println("Result added");
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
 
@@ -2117,7 +2108,7 @@ project listeners.
                         return;
                     }
                     currentStep.addResult(new MeasurementResult(DEG270,
-                            Math.random(), Math.random(), Math.random()));
+                            Math.random() * 0.0001, Math.random() * 0.0001, Math.random() * 0.0001));
                     System.out.println("Result added");
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
 
@@ -2130,7 +2121,7 @@ project listeners.
                         return;
                     }
                     currentStep.addResult(new MeasurementResult(BG,
-                            Math.random(), Math.random(), Math.random()));
+                            Math.random() * 0.000001, Math.random() * 0.000001, Math.random() * 0.000001));
                     System.out.println("Result added");
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
 

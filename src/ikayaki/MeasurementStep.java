@@ -165,8 +165,7 @@ public class MeasurementStep {
         try {
             setSusceptibility(Double.parseDouble(s));
         } catch (NumberFormatException e) {
-            // TODO: import old version
-            //throw new IllegalArgumentException("Invalid susceptibility: " + s);
+            throw new IllegalArgumentException("Invalid susceptibility: " + s);
         }
 
         // get results

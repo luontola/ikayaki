@@ -373,16 +373,16 @@ public enum SequenceColumn {
     },
     DECLINATION(MeasurementValue.DECLINATION) {
         {
-            // 2 decimals is good
-            getNumberFormat().setMinimumFractionDigits(2);
-            getNumberFormat().setMaximumFractionDigits(2);
+            // 2 decimals is good, or maybe just one
+            getNumberFormat().setMinimumFractionDigits(1);
+            getNumberFormat().setMaximumFractionDigits(1);
         }
     },
     INCLINATION(MeasurementValue.INCLINATION) {
         {
-            // 2 decimals is good
-            getNumberFormat().setMinimumFractionDigits(2);
-            getNumberFormat().setMaximumFractionDigits(2);
+            // 2 decimals is good, or maybe just one
+            getNumberFormat().setMinimumFractionDigits(1);
+            getNumberFormat().setMaximumFractionDigits(1);
         }
     },
     MOMENT(MeasurementValue.MOMENT) {
@@ -415,8 +415,9 @@ public enum SequenceColumn {
     },
     THETA63(MeasurementValue.THETA63) {
         {
-            getNumberFormat().setMinimumFractionDigits(3);
-            getNumberFormat().setMaximumFractionDigits(3);
+            // one decimal should be enough
+            getNumberFormat().setMinimumFractionDigits(1);
+            getNumberFormat().setMaximumFractionDigits(1);
         }
     };
 

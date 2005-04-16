@@ -22,6 +22,7 @@
 
 package ikayaki;
 
+import static ikayaki.MeasurementResult.Type.BG;
 import static java.lang.Math.atan2;
 import static java.lang.Math.sin;
 import static java.lang.Math.cos;
@@ -47,8 +48,9 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
-                        // TODO: do not include BG measurements!
-                        sum += step.getResult(i).getGeographicX();
+                        if (step.getResult(i).getType() != BG) {
+                            sum += step.getResult(i).getGeographicX();
+                        }
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -67,8 +69,9 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
-                        // TODO: do not include BG measurements!
-                        sum += step.getResult(i).getGeographicY();
+                        if (step.getResult(i).getType() != BG) {
+                            sum += step.getResult(i).getGeographicY();
+                        }
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -87,8 +90,9 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
-                        // TODO: do not include BG measurements!
-                        sum += step.getResult(i).getGeographicZ();
+                        if (step.getResult(i).getType() != BG) {
+                            sum += step.getResult(i).getGeographicZ();
+                        }
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -107,8 +111,9 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
-                        // TODO: do not include BG measurements!
-                        sum += step.getResult(i).getSampleX();
+                        if (step.getResult(i).getType() != BG) {
+                            sum += step.getResult(i).getSampleX();
+                        }
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -127,8 +132,9 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
-                        // TODO: do not include BG measurements!
-                        sum += step.getResult(i).getSampleY();
+                        if (step.getResult(i).getType() != BG) {
+                            sum += step.getResult(i).getSampleY();
+                        }
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -147,8 +153,9 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
-                        // TODO: do not include BG measurements!
-                        sum += step.getResult(i).getSampleZ();
+                        if (step.getResult(i).getType() != BG) {
+                            sum += step.getResult(i).getSampleZ();
+                        }
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -221,8 +228,8 @@ public abstract class MeasurementValue <T> {
             };
 
     /**
-     * Calculates the magnetic intensity (or remanence) from the moment and the sample's volume or mass
-     * (depending on the selected normalization).
+     * Calculates the magnetic intensity (or remanence) from the moment and the sample's volume or mass (depending on
+     * the selected normalization).
      */
     public static final MeasurementValue<Double> MAGNETIZATION =
             new MeasurementValue<Double>("J", "Am\u00B2/kg,mA/m", "Magnetic intensity") { // J=M/volume or J=M/mass
@@ -289,9 +296,6 @@ public abstract class MeasurementValue <T> {
                     if (step.getResults() == 0) {
                         return null;
                     }
-//                  double sumL = 0.0;
-//                  double sumM = 0.0;
-//                  double sumN = 0.0;
                     double sumL2 = 0.0;
                     double sumM2 = 0.0;
                     double sumN2 = 0.0;
@@ -304,9 +308,6 @@ public abstract class MeasurementValue <T> {
                         double l = cos(declination) * cos(inclination);
                         double m = sin(declination) * cos(inclination);
                         double n = sin(inclination);
-//                      sumL += l;
-//                      sumM += m;
-//                      sumN += n;
                         sumL2 += l * l;
                         sumM2 += m * m;
                         sumN2 += n * n;
