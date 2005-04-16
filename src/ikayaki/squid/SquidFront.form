@@ -1,761 +1,865 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ikayaki.squid.SquidFront">
-  <grid id="41247" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="a8b83" binding="contentPane" row-count="3" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="6" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="43" y="33" width="400" height="46"/>
+      <xy x="43" y="36" width="970" height="712"/>
       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <component id="6711d" class="javax.swing.JTextField" binding="param1">
-        <constraints>
-          <xy x="0" y="25" width="140" height="21"/>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-            <preferred-size width="50" height="-1"/>
-          </grid>
-        </constraints>
-        <properties/>
-      </component>
-      <component id="1efd7" class="javax.swing.JTextField" binding="param2">
-        <constraints>
-          <xy x="150" y="25" width="140" height="21"/>
-          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-            <preferred-size width="50" height="-1"/>
-          </grid>
-        </constraints>
-        <properties/>
-      </component>
-      <component id="6afa" class="javax.swing.JLabel">
-        <constraints>
-          <xy x="150" y="3" width="36" height="14"/>
-          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-        </constraints>
-        <properties>
-          <text value="param2"/>
-        </properties>
-      </component>
-      <component id="ddf94" class="javax.swing.JLabel">
-        <constraints>
-          <xy x="0" y="3" width="36" height="14"/>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-        </constraints>
-        <properties>
-          <text value="param1"/>
-        </properties>
-      </component>
-      <hspacer id="aa1a">
-        <constraints>
-          <xy x="290" y="30" width="110" height="11"/>
-          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1"/>
-        </constraints>
-      </hspacer>
-    </children>
-  </grid>
-  <grid id="749b2" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-    <margin top="0" left="0" bottom="0" right="0"/>
-    <constraints>
-      <xy x="56" y="93" width="371" height="521"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
-    </constraints>
-    <properties/>
-    <border type="none"/>
-    <children>
-      <component id="60b6c" class="javax.swing.JLabel">
-        <constraints>
-          <xy x="0" y="3" width="37" height="14"/>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-        </constraints>
-        <properties>
-          <text value="Handler"/>
-        </properties>
-      </component>
-      <grid id="1da8" row-count="16" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="749b2" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <xy x="0" y="25" width="371" height="459"/>
+          <xy x="0" y="51" width="386" height="508"/>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
+        </constraints>
+        <properties/>
+        <border type="etched"/>
+        <children>
+          <component id="60b6c" class="javax.swing.JLabel">
+            <constraints>
+              <xy x="2" y="5" width="37" height="14"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+            </constraints>
+            <properties>
+              <text value="Handler"/>
+            </properties>
+          </component>
+          <grid id="1da8" row-count="16" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <xy x="2" y="27" width="382" height="459"/>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="83b25" class="javax.swing.JButton" binding="hupdateSettings">
+                <constraints>
+                  <xy x="0" y="0" width="172" height="24"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <horizontalTextPosition value="11"/>
+                  <text value="updateSettings():void"/>
+                  <verticalTextPosition value="0"/>
+                </properties>
+              </component>
+              <component id="7b55a" class="javax.swing.JButton" binding="hgetStatus">
+                <constraints>
+                  <xy x="0" y="29" width="172" height="24"/>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="getStatus():char"/>
+                </properties>
+              </component>
+              <component id="ebc64" class="javax.swing.JButton" binding="hgetPosition">
+                <constraints>
+                  <xy x="0" y="58" width="172" height="24"/>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="getPosition():int"/>
+                </properties>
+              </component>
+              <component id="b635d" class="javax.swing.JButton" binding="hgetRotation">
+                <constraints>
+                  <xy x="0" y="87" width="172" height="24"/>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="getRotation():int"/>
+                </properties>
+              </component>
+              <component id="8597d" class="javax.swing.JButton" binding="hisOK">
+                <constraints>
+                  <xy x="0" y="116" width="172" height="24"/>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="isOK():boolean"/>
+                </properties>
+              </component>
+              <component id="14574" class="javax.swing.JButton" binding="hmoveToHome">
+                <constraints>
+                  <xy x="0" y="145" width="172" height="24"/>
+                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="moveToHome():void"/>
+                </properties>
+              </component>
+              <component id="2c9a6" class="javax.swing.JButton" binding="hmoveToDegausserZ">
+                <constraints>
+                  <xy x="0" y="174" width="172" height="24"/>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="moveToDegausserZ():void"/>
+                </properties>
+              </component>
+              <component id="32ded" class="javax.swing.JButton" binding="hmoveToDegausserY">
+                <constraints>
+                  <xy x="0" y="203" width="172" height="24"/>
+                  <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="moveToDegausserY():void"/>
+                </properties>
+              </component>
+              <component id="70682" class="javax.swing.JButton" binding="hmoveToMeasurement">
+                <constraints>
+                  <xy x="0" y="232" width="172" height="24"/>
+                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="moveToMeasurement():void"/>
+                </properties>
+              </component>
+              <component id="6835c" class="javax.swing.JButton" binding="hmoveToBackground">
+                <constraints>
+                  <xy x="0" y="261" width="172" height="24"/>
+                  <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="moveToBackground():void"/>
+                </properties>
+              </component>
+              <component id="a53c8" class="javax.swing.JButton" binding="hmoveToPos">
+                <constraints>
+                  <xy x="0" y="290" width="172" height="24"/>
+                  <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="moveToPos(int pos):boolean"/>
+                </properties>
+              </component>
+              <component id="6b6c0" class="javax.swing.JButton" binding="hstop">
+                <constraints>
+                  <xy x="0" y="319" width="172" height="24"/>
+                  <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="stop():void"/>
+                </properties>
+              </component>
+              <component id="ce378" class="javax.swing.JButton" binding="hrotateTo">
+                <constraints>
+                  <xy x="0" y="348" width="172" height="24"/>
+                  <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="rotateTo(int angle):void"/>
+                </properties>
+              </component>
+              <component id="73077" class="javax.swing.JButton" binding="hsetOnline">
+                <constraints>
+                  <xy x="0" y="377" width="172" height="24"/>
+                  <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="setOnline():void"/>
+                </properties>
+              </component>
+              <component id="ae414" class="javax.swing.JButton" binding="hsetAcceleration">
+                <constraints>
+                  <xy x="0" y="406" width="172" height="24"/>
+                  <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="setAcceleration(int a):void"/>
+                </properties>
+              </component>
+              <component id="3dda6" class="javax.swing.JButton" binding="hsetDeceleration">
+                <constraints>
+                  <xy x="0" y="435" width="172" height="24"/>
+                  <grid row="15" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="setDeceleration(int d):void"/>
+                </properties>
+              </component>
+              <component id="e05d4" class="javax.swing.JButton" binding="hsetBaseSpeed">
+                <constraints>
+                  <xy x="192" y="0" width="190" height="24"/>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="setBaseSpeed(int b):void"/>
+                </properties>
+              </component>
+              <component id="1227c" class="javax.swing.JButton" binding="hsetVelocity">
+                <constraints>
+                  <xy x="192" y="29" width="190" height="24"/>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="setVelocity(int v):void"/>
+                </properties>
+              </component>
+              <component id="91691" class="javax.swing.JButton" binding="hsetHoldTime">
+                <constraints>
+                  <xy x="192" y="58" width="190" height="24"/>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="setHoldTime(int h):void"/>
+                </properties>
+              </component>
+              <component id="941eb" class="javax.swing.JButton" binding="hsetCrystalFrequence">
+                <constraints>
+                  <xy x="192" y="87" width="190" height="24"/>
+                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="setCrystalFrequence(int cf):void"/>
+                </properties>
+              </component>
+              <component id="b8f37" class="javax.swing.JButton" binding="hstopExecution">
+                <constraints>
+                  <xy x="192" y="116" width="190" height="24"/>
+                  <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="stopExecution():void"/>
+                </properties>
+              </component>
+              <component id="95b88" class="javax.swing.JButton" binding="hperformSlew">
+                <constraints>
+                  <xy x="192" y="145" width="190" height="24"/>
+                  <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="performSlew():void"/>
+                </properties>
+              </component>
+              <component id="31690" class="javax.swing.JButton" binding="hsetMotorPositive">
+                <constraints>
+                  <xy x="192" y="174" width="190" height="24"/>
+                  <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="setMotorPositive():void"/>
+                </properties>
+              </component>
+              <component id="b595e" class="javax.swing.JButton" binding="hsetMotorNegative">
+                <constraints>
+                  <xy x="192" y="203" width="190" height="24"/>
+                  <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="setMotorNegative():void"/>
+                </properties>
+              </component>
+              <component id="8eb38" class="javax.swing.JButton" binding="hsetSteps">
+                <constraints>
+                  <xy x="192" y="232" width="190" height="24"/>
+                  <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="setSteps(int s):void"/>
+                </properties>
+              </component>
+              <component id="b4548" class="javax.swing.JButton" binding="hsetPosition">
+                <constraints>
+                  <xy x="192" y="261" width="190" height="24"/>
+                  <grid row="9" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="setPosition(int p):void"/>
+                </properties>
+              </component>
+              <component id="90101" class="javax.swing.JButton" binding="hgo">
+                <constraints>
+                  <xy x="192" y="290" width="190" height="24"/>
+                  <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="go():void"/>
+                </properties>
+              </component>
+              <component id="407b" class="javax.swing.JButton" binding="hjoin">
+                <constraints>
+                  <xy x="192" y="319" width="190" height="24"/>
+                  <grid row="11" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="join():void"/>
+                </properties>
+              </component>
+              <component id="8d992" class="javax.swing.JButton" binding="hverify">
+                <constraints>
+                  <xy x="192" y="348" width="190" height="24"/>
+                  <grid row="12" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="verify(char v):String"/>
+                </properties>
+              </component>
+              <component id="6e75b" class="javax.swing.JButton" binding="hsetPositionRegister">
+                <constraints>
+                  <xy x="192" y="377" width="190" height="24"/>
+                  <grid row="13" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="setPositionRegister(int r):void"/>
+                </properties>
+              </component>
+              <component id="251b3" class="javax.swing.JButton" binding="htakeMessage">
+                <constraints>
+                  <xy x="192" y="406" width="190" height="24"/>
+                  <grid row="14" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="takeMessage():char"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <vspacer id="b3feb">
+            <constraints>
+              <xy x="187" y="486" width="11" height="20"/>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2"/>
+            </constraints>
+          </vspacer>
+        </children>
+      </grid>
+      <grid id="a355d" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <xy x="754" y="51" width="216" height="508"/>
+          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
+        </constraints>
+        <properties/>
+        <border type="etched"/>
+        <children>
+          <component id="c872a" class="javax.swing.JLabel">
+            <constraints>
+              <xy x="2" y="5" width="51" height="14"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+            </constraints>
+            <properties>
+              <text value="Degausser"/>
+            </properties>
+          </component>
+          <grid id="bbe89" row-count="14" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <xy x="2" y="27" width="212" height="401"/>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="18b88" class="javax.swing.JButton" binding="dupdateSettings">
+                <constraints>
+                  <xy x="0" y="0" width="212" height="24"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="updateSettings():void"/>
+                </properties>
+              </component>
+              <component id="c6660" class="javax.swing.JButton" binding="dsetCoil">
+                <constraints>
+                  <xy x="0" y="29" width="212" height="24"/>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="setCoil(char coil):void"/>
+                </properties>
+              </component>
+              <component id="63bd6" class="javax.swing.JButton" binding="dsetAmplitude">
+                <constraints>
+                  <xy x="0" y="58" width="212" height="24"/>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="setAmplitude(int amplitude):void"/>
+                </properties>
+              </component>
+              <component id="f7dc1" class="javax.swing.JButton" binding="dexecuteRampUp">
+                <constraints>
+                  <xy x="0" y="87" width="212" height="24"/>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="executeRampUp():void"/>
+                </properties>
+              </component>
+              <component id="b6631" class="javax.swing.JButton" binding="dexecuteRampDown">
+                <constraints>
+                  <xy x="0" y="116" width="212" height="24"/>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="executeRampDown():void"/>
+                </properties>
+              </component>
+              <component id="4173b" class="javax.swing.JButton" binding="dexecuteRampCycle">
+                <constraints>
+                  <xy x="0" y="145" width="212" height="24"/>
+                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="executeRampCycle():void"/>
+                </properties>
+              </component>
+              <component id="b0b56" class="javax.swing.JButton" binding="ddemagnetizeZ">
+                <constraints>
+                  <xy x="0" y="174" width="212" height="24"/>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="demagnetizeZ(int amplitude):boolean"/>
+                </properties>
+              </component>
+              <component id="55b10" class="javax.swing.JButton" binding="ddemagnetizeY">
+                <constraints>
+                  <xy x="0" y="203" width="212" height="24"/>
+                  <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="demagnetizeY(int amplitude):boolean"/>
+                </properties>
+              </component>
+              <component id="d8ec9" class="javax.swing.JButton" binding="dgetRampStatus">
+                <constraints>
+                  <xy x="0" y="232" width="212" height="24"/>
+                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="getRampStatus():char"/>
+                </properties>
+              </component>
+              <component id="89d1b" class="javax.swing.JButton" binding="dgetRamp">
+                <constraints>
+                  <xy x="0" y="261" width="212" height="24"/>
+                  <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="getRamp():int"/>
+                </properties>
+              </component>
+              <component id="b20d5" class="javax.swing.JButton" binding="dgetDelay">
+                <constraints>
+                  <xy x="0" y="290" width="212" height="24"/>
+                  <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="getDelay():int"/>
+                </properties>
+              </component>
+              <component id="f38c3" class="javax.swing.JButton" binding="dgetCoil">
+                <constraints>
+                  <xy x="0" y="319" width="212" height="24"/>
+                  <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <enabled value="true"/>
+                  <horizontalAlignment value="2"/>
+                  <text value="getCoil():char"/>
+                </properties>
+              </component>
+              <component id="f70f5" class="javax.swing.JButton" binding="dgetAmplitude">
+                <constraints>
+                  <xy x="0" y="348" width="212" height="24"/>
+                  <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="getAmplitude():int"/>
+                </properties>
+              </component>
+              <component id="55419" class="javax.swing.JButton" binding="disOK">
+                <constraints>
+                  <xy x="0" y="377" width="212" height="24"/>
+                  <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="isOK():boolean"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <vspacer id="79f72">
+            <constraints>
+              <xy x="102" y="428" width="11" height="78"/>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2"/>
+            </constraints>
+          </vspacer>
+        </children>
+      </grid>
+      <grid id="5c8e8" row-count="2" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <xy x="0" y="0" width="734" height="46"/>
+          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
         </constraints>
         <properties/>
         <border type="none"/>
         <children>
-          <component id="83b25" class="javax.swing.JButton" binding="hupdateSettings">
+          <component id="6711d" class="javax.swing.JTextField" binding="param1">
             <constraints>
-              <xy x="0" y="0" width="171" height="24"/>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+              <xy x="0" y="25" width="100" height="21"/>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1">
+                <preferred-size width="100" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="1efd7" class="javax.swing.JTextField" binding="param2">
+            <constraints>
+              <xy x="120" y="25" width="100" height="21"/>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1">
+                <preferred-size width="100" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="6afa" class="javax.swing.JLabel">
+            <constraints>
+              <xy x="120" y="3" width="36" height="14"/>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
             </constraints>
             <properties>
-              <horizontalAlignment value="2"/>
-              <horizontalTextPosition value="11"/>
-              <text value="updateSettings():void"/>
-              <verticalTextPosition value="0"/>
+              <text value="param2"/>
             </properties>
           </component>
-          <component id="7b55a" class="javax.swing.JButton" binding="hgetStatus">
+          <component id="ddf94" class="javax.swing.JLabel">
             <constraints>
-              <xy x="0" y="29" width="171" height="24"/>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+              <xy x="0" y="3" width="36" height="14"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
             </constraints>
             <properties>
-              <horizontalAlignment value="2"/>
-              <text value="getStatus():char"/>
+              <text value="param1"/>
             </properties>
           </component>
-          <component id="ebc64" class="javax.swing.JButton" binding="hgetPosition">
+          <component id="51229" class="javax.swing.JTextField" binding="param3">
             <constraints>
-              <xy x="0" y="58" width="171" height="24"/>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+              <xy x="240" y="25" width="100" height="21"/>
+              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1">
+                <preferred-size width="100" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="782a6" class="javax.swing.JLabel">
+            <constraints>
+              <xy x="240" y="3" width="36" height="14"/>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
             </constraints>
             <properties>
-              <horizontalAlignment value="2"/>
-              <text value="getPosition():int"/>
+              <text value="param3"/>
             </properties>
           </component>
-          <component id="b635d" class="javax.swing.JButton" binding="hgetRotation">
+          <hspacer id="aa1a">
             <constraints>
-              <xy x="0" y="87" width="171" height="24"/>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+              <xy x="340" y="30" width="394" height="11"/>
+              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1"/>
             </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="getRotation():int"/>
-            </properties>
-          </component>
-          <component id="8597d" class="javax.swing.JButton" binding="hisOK">
-            <constraints>
-              <xy x="0" y="116" width="171" height="24"/>
-              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="isOK():boolean"/>
-            </properties>
-          </component>
-          <component id="14574" class="javax.swing.JButton" binding="hmoveToHome">
-            <constraints>
-              <xy x="0" y="145" width="171" height="24"/>
-              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="moveToHome():void"/>
-            </properties>
-          </component>
-          <component id="2c9a6" class="javax.swing.JButton" binding="hmoveToDegausserZ">
-            <constraints>
-              <xy x="0" y="174" width="171" height="24"/>
-              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="moveToDegausserZ():void"/>
-            </properties>
-          </component>
-          <component id="32ded" class="javax.swing.JButton" binding="hmoveToDegausserY">
-            <constraints>
-              <xy x="0" y="203" width="171" height="24"/>
-              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="moveToDegausserY():void"/>
-            </properties>
-          </component>
-          <component id="70682" class="javax.swing.JButton" binding="hmoveToMeasurement">
-            <constraints>
-              <xy x="0" y="232" width="171" height="24"/>
-              <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="moveToMeasurement():void"/>
-            </properties>
-          </component>
-          <component id="6835c" class="javax.swing.JButton" binding="hmoveToBackground">
-            <constraints>
-              <xy x="0" y="261" width="171" height="24"/>
-              <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="moveToBackground():void"/>
-            </properties>
-          </component>
-          <component id="a53c8" class="javax.swing.JButton" binding="hmoveToPos">
-            <constraints>
-              <xy x="0" y="290" width="171" height="24"/>
-              <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="moveToPos(int pos):boolean"/>
-            </properties>
-          </component>
-          <component id="6b6c0" class="javax.swing.JButton" binding="hstop">
-            <constraints>
-              <xy x="0" y="319" width="171" height="24"/>
-              <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="stop():void"/>
-            </properties>
-          </component>
-          <component id="ce378" class="javax.swing.JButton" binding="hrotateTo">
-            <constraints>
-              <xy x="0" y="348" width="171" height="24"/>
-              <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="rotateTo(int angle):void"/>
-            </properties>
-          </component>
-          <component id="73077" class="javax.swing.JButton" binding="hsetOnline">
-            <constraints>
-              <xy x="0" y="377" width="171" height="24"/>
-              <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="setOnline():void"/>
-            </properties>
-          </component>
-          <component id="ae414" class="javax.swing.JButton" binding="hsetAcceleration">
-            <constraints>
-              <xy x="0" y="406" width="171" height="24"/>
-              <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="setAcceleration(int a):void"/>
-            </properties>
-          </component>
-          <component id="3dda6" class="javax.swing.JButton" binding="hsetDeceleration">
-            <constraints>
-              <xy x="0" y="435" width="171" height="24"/>
-              <grid row="15" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="setDeceleration(int d):void"/>
-            </properties>
-          </component>
-          <component id="e05d4" class="javax.swing.JButton" binding="hsetBaseSpeed">
-            <constraints>
-              <xy x="181" y="0" width="190" height="24"/>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="setBaseSpeed(int b):void"/>
-            </properties>
-          </component>
-          <component id="1227c" class="javax.swing.JButton" binding="hsetVelocity">
-            <constraints>
-              <xy x="181" y="29" width="190" height="24"/>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="setVelocity(int v):void"/>
-            </properties>
-          </component>
-          <component id="91691" class="javax.swing.JButton" binding="hsetHoldTime">
-            <constraints>
-              <xy x="181" y="58" width="190" height="24"/>
-              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="setHoldTime(int h):void"/>
-            </properties>
-          </component>
-          <component id="941eb" class="javax.swing.JButton" binding="hsetCrystalFrequence">
-            <constraints>
-              <xy x="181" y="87" width="190" height="24"/>
-              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="setCrystalFrequence(int cf):void"/>
-            </properties>
-          </component>
-          <component id="b8f37" class="javax.swing.JButton" binding="hstopExecution">
-            <constraints>
-              <xy x="181" y="116" width="190" height="24"/>
-              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="stopExecution():void"/>
-            </properties>
-          </component>
-          <component id="95b88" class="javax.swing.JButton" binding="hperformSlew">
-            <constraints>
-              <xy x="181" y="145" width="190" height="24"/>
-              <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="performSlew():void"/>
-            </properties>
-          </component>
-          <component id="31690" class="javax.swing.JButton" binding="hsetMotorPositive">
-            <constraints>
-              <xy x="181" y="174" width="190" height="24"/>
-              <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="setMotorPositive():void"/>
-            </properties>
-          </component>
-          <component id="b595e" class="javax.swing.JButton" binding="hsetMotorNegative">
-            <constraints>
-              <xy x="181" y="203" width="190" height="24"/>
-              <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="setMotorNegative():void"/>
-            </properties>
-          </component>
-          <component id="8eb38" class="javax.swing.JButton" binding="hsetSteps">
-            <constraints>
-              <xy x="181" y="232" width="190" height="24"/>
-              <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="setSteps(int s):void"/>
-            </properties>
-          </component>
-          <component id="b4548" class="javax.swing.JButton" binding="hsetPosition">
-            <constraints>
-              <xy x="181" y="261" width="190" height="24"/>
-              <grid row="9" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="setPosition(int p):void"/>
-            </properties>
-          </component>
-          <component id="90101" class="javax.swing.JButton" binding="hgo">
-            <constraints>
-              <xy x="181" y="290" width="190" height="24"/>
-              <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="go():void"/>
-            </properties>
-          </component>
-          <component id="407b" class="javax.swing.JButton" binding="hjoin">
-            <constraints>
-              <xy x="181" y="319" width="190" height="24"/>
-              <grid row="11" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="join():void"/>
-            </properties>
-          </component>
-          <component id="8d992" class="javax.swing.JButton" binding="hverify">
-            <constraints>
-              <xy x="181" y="348" width="190" height="24"/>
-              <grid row="12" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="verify(char v):String"/>
-            </properties>
-          </component>
-          <component id="6e75b" class="javax.swing.JButton" binding="hsetPositionRegister">
-            <constraints>
-              <xy x="181" y="377" width="190" height="24"/>
-              <grid row="13" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="setPositionRegister(int r):void"/>
-            </properties>
-          </component>
-          <component id="251b3" class="javax.swing.JButton" binding="htakeMessage">
-            <constraints>
-              <xy x="181" y="406" width="190" height="24"/>
-              <grid row="14" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="takeMessage():char"/>
-            </properties>
-          </component>
+          </hspacer>
         </children>
       </grid>
-      <vspacer id="b3feb">
+      <scrollpane id="d349f">
         <constraints>
-          <xy x="180" y="484" width="11" height="37"/>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2"/>
-        </constraints>
-      </vspacer>
-    </children>
-  </grid>
-  <component id="16f8b" class="javax.swing.JButton">
-    <constraints>
-      <xy x="659" y="485" width="66" height="24"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-    </constraints>
-    <properties>
-      <horizontalAlignment value="2"/>
-      <text value="Button"/>
-    </properties>
-  </component>
-  <component id="1b07d" class="javax.swing.JButton">
-    <constraints>
-      <xy x="669" y="495" width="66" height="24"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-    </constraints>
-    <properties>
-      <horizontalAlignment value="2"/>
-      <text value="Button"/>
-    </properties>
-  </component>
-  <component id="d2d5a" class="javax.swing.JButton">
-    <constraints>
-      <xy x="679" y="505" width="66" height="24"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-    </constraints>
-    <properties>
-      <horizontalAlignment value="2"/>
-      <text value="Button"/>
-    </properties>
-  </component>
-  <grid id="e8479" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-    <margin top="0" left="0" bottom="0" right="0"/>
-    <constraints>
-      <xy x="437" y="91" width="323" height="505"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
-    </constraints>
-    <properties/>
-    <border type="none"/>
-    <children>
-      <component id="8200a" class="javax.swing.JLabel">
-        <constraints>
-          <xy x="0" y="3" width="70" height="14"/>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+          <xy x="0" y="564" width="386" height="148"/>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3"/>
         </constraints>
         <properties>
-          <text value="Magnetometer"/>
+          <verticalScrollBarPolicy value="22"/>
         </properties>
-      </component>
-      <grid id="62aed" row-count="16" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
-        <constraints>
-          <xy x="0" y="25" width="323" height="459"/>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
-        </constraints>
-        <properties/>
         <border type="none"/>
         <children>
-          <component id="ad87f" class="javax.swing.JButton" binding="mupdateSettings">
-            <constraints>
-              <xy x="0" y="0" width="323" height="24"/>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
+          <component id="6e587" class="javax.swing.JTextArea" binding="handlerLog">
+            <constraints/>
             <properties>
-              <horizontalAlignment value="2"/>
-              <text value="updateSettings():void"/>
-            </properties>
-          </component>
-          <component id="ca927" class="javax.swing.JButton" binding="mreset">
-            <constraints>
-              <xy x="0" y="29" width="323" height="24"/>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="reset(char axis):void"/>
-            </properties>
-          </component>
-          <component id="3f1c5" class="javax.swing.JButton" binding="mresetCounter">
-            <constraints>
-              <xy x="0" y="58" width="323" height="24"/>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="resetCounter(char axis):void"/>
-            </properties>
-          </component>
-          <component id="4152f" class="javax.swing.JButton" binding="mconfigure">
-            <constraints>
-              <xy x="0" y="87" width="323" height="24"/>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="configure(char axis, char subcommand, char option):void"/>
-            </properties>
-          </component>
-          <component id="9b12" class="javax.swing.JButton" binding="mlatchAnalog">
-            <constraints>
-              <xy x="0" y="116" width="323" height="24"/>
-              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="latchAnalog(char axis):void"/>
-            </properties>
-          </component>
-          <component id="5eaa7" class="javax.swing.JButton" binding="mlatchCounter">
-            <constraints>
-              <xy x="0" y="145" width="323" height="24"/>
-              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="latchCounter(char axis):void"/>
-            </properties>
-          </component>
-          <component id="66bf1" class="javax.swing.JButton" binding="mgetData">
-            <constraints>
-              <xy x="0" y="174" width="323" height="24"/>
-              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="getData(char axis, char command, String datavalues):String"/>
-            </properties>
-          </component>
-          <component id="5633a" class="javax.swing.JButton" binding="mopenLoop">
-            <constraints>
-              <xy x="0" y="203" width="323" height="24"/>
-              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="openLoop(char axis):void"/>
-            </properties>
-          </component>
-          <component id="ccc92" class="javax.swing.JButton" binding="mclearFlux">
-            <constraints>
-              <xy x="0" y="232" width="323" height="24"/>
-              <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="clearFlux(char axis):void"/>
-            </properties>
-          </component>
-          <component id="d587" class="javax.swing.JButton" binding="mjoin">
-            <constraints>
-              <xy x="0" y="261" width="323" height="24"/>
-              <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="join():void"/>
-            </properties>
-          </component>
-          <component id="89903" class="javax.swing.JButton" binding="mreadData">
-            <constraints>
-              <xy x="0" y="290" width="323" height="24"/>
-              <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="readData():Double[3]"/>
-            </properties>
-          </component>
-          <component id="1e67e" class="javax.swing.JButton" binding="mgetFilters">
-            <constraints>
-              <xy x="0" y="319" width="323" height="24"/>
-              <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="getFilters():char[3]"/>
-            </properties>
-          </component>
-          <component id="4218e" class="javax.swing.JButton" binding="mgetRange">
-            <constraints>
-              <xy x="0" y="348" width="323" height="24"/>
-              <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="getRange():char[3]"/>
-            </properties>
-          </component>
-          <component id="83b01" class="javax.swing.JButton" binding="mgetSlew">
-            <constraints>
-              <xy x="0" y="377" width="323" height="24"/>
-              <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="getSlew():boolean[3]"/>
-            </properties>
-          </component>
-          <component id="becb" class="javax.swing.JButton" binding="mgetLoop">
-            <constraints>
-              <xy x="0" y="406" width="323" height="24"/>
-              <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="getLoop():boolean[3]"/>
-            </properties>
-          </component>
-          <component id="fb7a2" class="javax.swing.JButton" binding="misOK">
-            <constraints>
-              <xy x="0" y="435" width="323" height="24"/>
-              <grid row="15" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-            </constraints>
-            <properties>
-              <horizontalAlignment value="2"/>
-              <text value="isOK():boolean"/>
+              <rows value="6"/>
             </properties>
           </component>
         </children>
-      </grid>
-      <vspacer id="40307">
+      </scrollpane>
+      <scrollpane id="c7e3c">
         <constraints>
-          <xy x="156" y="484" width="11" height="21"/>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2"/>
+          <xy x="754" y="564" width="216" height="148"/>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3"/>
         </constraints>
-      </vspacer>
+        <properties>
+          <horizontalScrollBarPolicy value="30"/>
+          <verticalScrollBarPolicy value="22"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="ab31d" class="javax.swing.JTextArea" binding="degausserLog">
+            <constraints/>
+            <properties>
+              <rows value="6"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
+      <scrollpane id="74724">
+        <constraints>
+          <xy x="406" y="564" width="328" height="148"/>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3"/>
+        </constraints>
+        <properties>
+          <horizontalScrollBarPolicy value="30"/>
+          <verticalScrollBarPolicy value="22"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="ca6f9" class="javax.swing.JTextArea" binding="magnetometerLog">
+            <constraints/>
+            <properties>
+              <rows value="6"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
+      <grid id="e8479" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <xy x="406" y="51" width="328" height="508"/>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
+        </constraints>
+        <properties/>
+        <border type="etched"/>
+        <children>
+          <component id="8200a" class="javax.swing.JLabel">
+            <constraints>
+              <xy x="2" y="5" width="70" height="14"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+            </constraints>
+            <properties>
+              <text value="Magnetometer"/>
+            </properties>
+          </component>
+          <vspacer id="40307">
+            <constraints>
+              <xy x="158" y="486" width="11" height="20"/>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2"/>
+            </constraints>
+          </vspacer>
+          <grid id="62aed" row-count="16" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <xy x="2" y="27" width="324" height="459"/>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="ad87f" class="javax.swing.JButton" binding="mupdateSettings">
+                <constraints>
+                  <xy x="0" y="0" width="324" height="24"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="updateSettings():void"/>
+                </properties>
+              </component>
+              <component id="ca927" class="javax.swing.JButton" binding="mreset">
+                <constraints>
+                  <xy x="0" y="29" width="324" height="24"/>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="reset(char axis):void"/>
+                </properties>
+              </component>
+              <component id="3f1c5" class="javax.swing.JButton" binding="mresetCounter">
+                <constraints>
+                  <xy x="0" y="58" width="324" height="24"/>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="resetCounter(char axis):void"/>
+                </properties>
+              </component>
+              <component id="4152f" class="javax.swing.JButton" binding="mconfigure">
+                <constraints>
+                  <xy x="0" y="87" width="324" height="24"/>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="configure(char axis, char subcommand, char option):void"/>
+                </properties>
+              </component>
+              <component id="9b12" class="javax.swing.JButton" binding="mlatchAnalog">
+                <constraints>
+                  <xy x="0" y="116" width="324" height="24"/>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="latchAnalog(char axis):void"/>
+                </properties>
+              </component>
+              <component id="5eaa7" class="javax.swing.JButton" binding="mlatchCounter">
+                <constraints>
+                  <xy x="0" y="145" width="324" height="24"/>
+                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="latchCounter(char axis):void"/>
+                </properties>
+              </component>
+              <component id="66bf1" class="javax.swing.JButton" binding="mgetData">
+                <constraints>
+                  <xy x="0" y="174" width="324" height="24"/>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="getData(char axis, char command, String datavalues):String"/>
+                </properties>
+              </component>
+              <component id="5633a" class="javax.swing.JButton" binding="mopenLoop">
+                <constraints>
+                  <xy x="0" y="203" width="324" height="24"/>
+                  <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="openLoop(char axis):void"/>
+                </properties>
+              </component>
+              <component id="ccc92" class="javax.swing.JButton" binding="mclearFlux">
+                <constraints>
+                  <xy x="0" y="232" width="324" height="24"/>
+                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="clearFlux(char axis):void"/>
+                </properties>
+              </component>
+              <component id="d587" class="javax.swing.JButton" binding="mjoin">
+                <constraints>
+                  <xy x="0" y="261" width="324" height="24"/>
+                  <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="join():void"/>
+                </properties>
+              </component>
+              <component id="89903" class="javax.swing.JButton" binding="mreadData">
+                <constraints>
+                  <xy x="0" y="290" width="324" height="24"/>
+                  <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="readData():Double[3]"/>
+                </properties>
+              </component>
+              <component id="1e67e" class="javax.swing.JButton" binding="mgetFilters">
+                <constraints>
+                  <xy x="0" y="319" width="324" height="24"/>
+                  <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="getFilters():char[3]"/>
+                </properties>
+              </component>
+              <component id="4218e" class="javax.swing.JButton" binding="mgetRange">
+                <constraints>
+                  <xy x="0" y="348" width="324" height="24"/>
+                  <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="getRange():char[3]"/>
+                </properties>
+              </component>
+              <component id="83b01" class="javax.swing.JButton" binding="mgetSlew">
+                <constraints>
+                  <xy x="0" y="377" width="324" height="24"/>
+                  <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="getSlew():boolean[3]"/>
+                </properties>
+              </component>
+              <component id="becb" class="javax.swing.JButton" binding="mgetLoop">
+                <constraints>
+                  <xy x="0" y="406" width="324" height="24"/>
+                  <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="getLoop():boolean[3]"/>
+                </properties>
+              </component>
+              <component id="fb7a2" class="javax.swing.JButton" binding="misOK">
+                <constraints>
+                  <xy x="0" y="435" width="324" height="24"/>
+                  <grid row="15" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="2"/>
+                  <text value="isOK():boolean"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+        </children>
+      </grid>
     </children>
   </grid>
-  <component id="c872a" class="javax.swing.JLabel">
-    <constraints>
-      <xy x="857" y="99" width="51" height="14"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-    </constraints>
-    <properties>
-      <text value="Degausser"/>
-    </properties>
-  </component>
-  <component id="f7dc1" class="javax.swing.JButton">
-    <constraints>
-      <xy x="955" y="431" width="66" height="24"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-    </constraints>
-    <properties>
-      <horizontalAlignment value="2"/>
-      <text value="Button"/>
-    </properties>
-  </component>
-  <component id="b6631" class="javax.swing.JButton">
-    <constraints>
-      <xy x="965" y="441" width="66" height="24"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-    </constraints>
-    <properties>
-      <horizontalAlignment value="2"/>
-      <text value="Button"/>
-    </properties>
-  </component>
-  <component id="4173b" class="javax.swing.JButton">
-    <constraints>
-      <xy x="975" y="451" width="66" height="24"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-    </constraints>
-    <properties>
-      <horizontalAlignment value="2"/>
-      <text value="Button"/>
-    </properties>
-  </component>
-  <component id="18b88" class="javax.swing.JButton">
-    <constraints>
-      <xy x="939" y="243" width="66" height="24"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-    </constraints>
-    <properties>
-      <horizontalAlignment value="2"/>
-      <text value="Button"/>
-    </properties>
-  </component>
-  <component id="63bd6" class="javax.swing.JButton">
-    <constraints>
-      <xy x="959" y="263" width="66" height="24"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-    </constraints>
-    <properties>
-      <horizontalAlignment value="2"/>
-      <text value="Button"/>
-    </properties>
-  </component>
-  <component id="b0b56" class="javax.swing.JButton">
-    <constraints>
-      <xy x="969" y="273" width="66" height="24"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-    </constraints>
-    <properties>
-      <horizontalAlignment value="2"/>
-      <text value="Button"/>
-    </properties>
-  </component>
-  <component id="55b10" class="javax.swing.JButton">
-    <constraints>
-      <xy x="979" y="283" width="66" height="24"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-    </constraints>
-    <properties>
-      <horizontalAlignment value="2"/>
-      <text value="Button"/>
-    </properties>
-  </component>
-  <component id="d8ec9" class="javax.swing.JButton">
-    <constraints>
-      <xy x="989" y="293" width="66" height="24"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-    </constraints>
-    <properties>
-      <horizontalAlignment value="2"/>
-      <text value="Button"/>
-    </properties>
-  </component>
-  <component id="b20d5" class="javax.swing.JButton">
-    <constraints>
-      <xy x="999" y="303" width="66" height="24"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-    </constraints>
-    <properties>
-      <horizontalAlignment value="2"/>
-      <text value="Button"/>
-    </properties>
-  </component>
-  <component id="89d1b" class="javax.swing.JButton">
-    <constraints>
-      <xy x="1009" y="313" width="66" height="24"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-    </constraints>
-    <properties>
-      <horizontalAlignment value="2"/>
-      <text value="Button"/>
-    </properties>
-  </component>
-  <component id="f38c3" class="javax.swing.JButton">
-    <constraints>
-      <xy x="1019" y="323" width="66" height="24"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-    </constraints>
-    <properties>
-      <horizontalAlignment value="2"/>
-      <text value="Button"/>
-    </properties>
-  </component>
-  <component id="c6660" class="javax.swing.JButton">
-    <constraints>
-      <xy x="949" y="253" width="66" height="24"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
-    </constraints>
-    <properties>
-      <horizontalAlignment value="2"/>
-      <text value="Button"/>
-    </properties>
-  </component>
 </form>
