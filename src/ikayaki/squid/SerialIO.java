@@ -32,6 +32,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.TooManyListenersException;
 import java.util.Vector;
 import java.io.FileWriter;
+import java.io.File;
+import java.util.Date;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * This class represents hardware layer to serial port communications.
@@ -44,22 +48,21 @@ Event A: On new SerialPortEvent - generates new SerialMessageArrivedEvent if a d
 message from serial port is received.
 */
 
-  private static final boolean DEBUG = false;      // Writes log-file
+  private static final boolean DEBUG = false; // Writes log-file
 
+  private static Vector<SerialIO> openPorts = new Vector<SerialIO> ();
 
-    private static Vector<SerialIO> openPorts = new Vector<SerialIO>();
+  /**
+   * Listeners for this port.
+   */
+  private EventListenerList listenerList = new EventListenerList();
 
-    /**
-     * Listeners for this port.
-     */
-    private EventListenerList listenerList = new EventListenerList();
+  private SerialPort sPort;
 
-    private SerialPort sPort;
+  private OutputStream os;
+  private InputStream is;
 
-    private OutputStream os;
-    private InputStream is;
-
-    private String portName;
+  private String portName;
   private FileWriter logWriter;
 
   /**
@@ -88,7 +91,9 @@ message from serial port is received.
         // if debug mode, make own logfile for port
         if(DEBUG) {
           try {
-            logWriter = new FileWriter(parameters.getPortName() + ".log");
+            Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT+2:00"));
+            File file = new File("logs\\" + parameters.getPortName() + "(" + now.get(Calendar.HOUR) + now.get(Calendar.MINUTE) + now.get(Calendar.DAY_OF_MONTH) + now.get(Calendar.MONTH)  + now.get(Calendar.YEAR) + ").log");
+            logWriter = new FileWriter(file);
           }
           catch (IOException ex1) {
             System.err.println(ex1);
@@ -191,7 +196,7 @@ message from serial port is received.
             System.out.println("Sending data to port: " + this.portName); // TODO debug
             os.write(asciiMsg);
              if(DEBUG) {
-               logWriter.write("SEND:" + message);
+               logWriter.write("SEND:" + message + "\r");
                logWriter.flush();
              }
             os.flush(); // TODO is this needed ??
@@ -269,7 +274,7 @@ message from serial port is received.
             //System.out.println("sending: " + new String(inputBuffer)); //debug
             if(DEBUG) {
               try {
-                logWriter.write("RECIEVE:" + new String(inputBuffer));
+                logWriter.write("RECIEVE:" + new String(inputBuffer) + "\r");
                 logWriter.flush();
               }
               catch (IOException ex1) {

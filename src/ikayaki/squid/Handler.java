@@ -240,6 +240,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     public void moveToHome() {
         try {
+            setVelocity(velocity);
             this.serialIO.writeMessage("O1,0");
             this.serialIO.writeMessage(","); //execute command
             this.serialIO.writeMessage("O1,1");
@@ -254,8 +255,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * is finished.
      */
     public void moveToDegausserZ() {
+        setVelocity(velocity);
         moveToPos(this.axialAFPosition);
-        this.go();
+        //this.go();
     }
 
     /**
@@ -263,8 +265,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * movement is finished.
      */
     public void moveToDegausserY() {
+        setVelocity(velocity);
         moveToPos(this.transverseYAFPosition);
-        this.go();
+        //this.go();
     }
 
 
@@ -273,8 +276,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * finished.
      */
     public void moveToMeasurement() {
+        // do we use now measurement velocity?
+        setVelocity(measurementVelocity);
         moveToPos(this.measurementPosition);
-        this.go();
+        //this.go();
 
     }
 
@@ -283,8 +288,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * is finished.
      */
     public void moveToBackground() {
+        setVelocity(measurementVelocity);
         moveToPos(this.backgroundPosition);
-        this.go();
+        //this.go();
     }
 
     /**
@@ -318,8 +324,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     public void stop() {
         try {
-            this.serialIO.writeMessage("Q");
-            this.serialIO.writeMessage(","); //execute command
+            this.serialIO.writeMessage("Q,");
+            //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -338,8 +344,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         try {
             //first set rotation active
             this.serialIO.writeMessage("O1,1");
-            this.serialIO.writeMessage("P" + angle);
-            this.serialIO.writeMessage(","); //execute command
+            this.serialIO.writeMessage("P" + angle + ",");
+            this.currentRotation = angle;
+           // this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -350,8 +357,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     private void setOnline() {
         try {
-            this.serialIO.writeMessage("@0");
-            this.serialIO.writeMessage(","); //execute command
+            this.serialIO.writeMessage("@0" + ",");
+            //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -366,8 +373,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private void setAcceleration(int a) {
         if (a >= 0 && a < 128) {
             try {
-                this.serialIO.writeMessage("A" + a);
-                this.serialIO.writeMessage(","); //execute command
+                this.serialIO.writeMessage("A" + a + ",");
+                //this.serialIO.writeMessage(","); //execute command
+                this.acceleration = a;
             } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
@@ -382,8 +390,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private void setDeceleration(int d) {
         if (d >= 0 && d < 128) {
             try {
-                this.serialIO.writeMessage("D" + d);
-                this.serialIO.writeMessage(","); //execute command
+                this.serialIO.writeMessage("D" + d + ",");
+                //this.serialIO.writeMessage(","); //execute command
+                this.deceleration = d;
             } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
@@ -399,8 +408,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private void setBaseSpeed(int b) {
         if (b >= 50 && b < 5001) {
             try {
-                this.serialIO.writeMessage("B" + b);
-                this.serialIO.writeMessage(","); //execute command
+                this.serialIO.writeMessage("B" + b + ",");
+                //this.serialIO.writeMessage(","); //execute command
             } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
@@ -416,8 +425,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private void setVelocity(int v) {
         if (v >= 50 && v < 20001) {
             try {
-                this.serialIO.writeMessage("M" + v);
-                this.serialIO.writeMessage(","); //execute command
+                this.serialIO.writeMessage("M" + v + ",");
+                //this.serialIO.writeMessage(","); //execute command
+                this.velocity = v;
             } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
@@ -436,8 +446,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     private void setHoldTime(int h) {
         try {
-            this.serialIO.writeMessage("CH" + h);
-            this.serialIO.writeMessage(","); //execute command
+            this.serialIO.writeMessage("CH" + h + ",");
+            //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -454,8 +464,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private void setCrystalFrequence(int cf) {
         if (cf >= 4000000 && cf <= 8000000) {
             try {
-                this.serialIO.writeMessage("CX" + cf);
-                this.serialIO.writeMessage(","); //execute command
+                this.serialIO.writeMessage("CX" + cf + ",");
+                //this.serialIO.writeMessage(","); //execute command
             } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
@@ -468,8 +478,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     private void stopExecution() {
         try {
-            this.serialIO.writeMessage("Q");
-            this.serialIO.writeMessage(","); //execute command
+            this.serialIO.writeMessage("Q,");
+            //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -482,8 +492,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     private void performSlew() {
         try {
-            this.serialIO.writeMessage("S");
-            this.serialIO.writeMessage(","); //execute command
+            this.serialIO.writeMessage("S,");
+            //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -521,8 +531,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private void setSteps(int s) {
         if (s >= 0 && s <= 16777216) {
             try {
-                this.serialIO.writeMessage("N" + s);
-                this.serialIO.writeMessage(","); //execute command
+                this.serialIO.writeMessage("N" + s + ",");
+                //this.serialIO.writeMessage(","); //execute command
             } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
@@ -539,7 +549,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             try {
                 //first need to set translate active
                 this.serialIO.writeMessage("O1,0");
-                this.serialIO.writeMessage("P" + p);
+                this.serialIO.writeMessage("P" + p + ",");
             } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
@@ -552,8 +562,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     private void go() {
         try {
-            this.serialIO.writeMessage("G");
-            this.serialIO.writeMessage(","); //execute command
+            this.serialIO.writeMessage("G,");
+            //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -593,8 +603,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     private String verify(char v) {
         try {
-            this.serialIO.writeMessage("V" + v);
-            this.serialIO.writeMessage(","); //execute command
+            this.serialIO.writeMessage("V" + v + ",");
+            //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -613,8 +623,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private void setPositionRegister(int r) {
         if (r > 0 && r < 16777215) {
             try {
-                this.serialIO.writeMessage("Z" + r);
-                this.serialIO.writeMessage(","); //execute command
+                this.serialIO.writeMessage("Z" + r + ",");
+                //this.serialIO.writeMessage(","); //execute command
             } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
@@ -633,8 +643,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     private char pollMessage() {
         try {
-            this.serialIO.writeMessage("%");
-            this.serialIO.writeMessage(","); //execute command
+            this.serialIO.writeMessage("%,");
+            //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -645,15 +655,16 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     public void serialIOEvent(SerialIOEvent event) {
+      String message = event.getMessage();
         if (waitingForMessage) {
             try {
-                queue.put(event.getMessage());
+                queue.put(message);
             } catch (InterruptedException e) {
                 System.err.println("Interrupted Handler message event");
             } catch (NullPointerException e) {
                 System.err.println("Null from SerialEvent in Handler");
             }
         }
-        messageBuffer.add(event.getMessage());
+        messageBuffer.add(message);
     }
 }

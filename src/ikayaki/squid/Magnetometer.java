@@ -410,15 +410,16 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
 
     public void serialIOEvent(SerialIOEvent event) {
         //TODO: problem when Degausser and Magnetometer uses same port :/
+        String message = event.getMessage();
         if (waitingForMessage) {
             try {
-                queue.put(event.getMessage());
+                queue.put(message);
             } catch (InterruptedException e) {
                 System.err.println("Interrupted Magnetometer message event");
             } catch (NullPointerException e) {
                 System.err.println("Null from SerialEvent in Magnetometer");
             }
         }
-        messageBuffer.add(event.getMessage());
+        messageBuffer.add(message);
     }
 }
