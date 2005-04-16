@@ -144,7 +144,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      *
      * @param coil coil to set on.
      */
-    private void setCoil(char coil) {
+    void setCoil(char coil) {
         waitSecond();
         if (coil == 'X' || coil == 'Y' || coil == 'X') {
             try {
@@ -159,7 +159,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      *
      * @param amplitude amplitude to demag.
      */
-    private void setAmplitude(int amplitude) {
+    void setAmplitude(int amplitude) {
         waitSecond();
         if (amplitude >= 0 && amplitude <= 3000) {
             try {
@@ -178,7 +178,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     /**
      * Performs Ramp up. If this is used, make sure you Ramp down in less than 10 seconds because it can damage coil
      */
-    private void executeRampUp() {
+    void executeRampUp() {
         waitSecond();
         try {
             this.serialIO.writeMessage("DERU\r");
@@ -189,7 +189,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     /**
      * Brings Ramp down.
      */
-    private void executeRampDown() {
+    void executeRampDown() {
         waitSecond();
         try {
             this.serialIO.writeMessage("DERD\r");
@@ -200,7 +200,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     /**
      * Performs Ramp up and down.
      */
-    private void executeRampCycle() {
+    void executeRampCycle() {
         waitSecond();
         try {
             this.serialIO.writeMessage("DERC\r");
