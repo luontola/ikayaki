@@ -376,13 +376,156 @@ public class SquidFront extends JFrame {
           magnetometerLog.append(Squid.instance().getMagnetometer().getData(param1.getText().charAt(0),param2.getText().charAt(0),param3.getText()) + "\r");
         }
         catch (IOException ex) {
-          magnetometerLog.append("configure failed\r");
+          magnetometerLog.append("getDAta failed\r");
         }
       }
     });
     this.mgetData.getAction().putValue(Action.NAME, "getData(char,char,String)");
 
+    this.mgetLoop.setAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          magnetometerLog.append(Squid.instance().getMagnetometer().getLoop()+ "\r");
+        }
+        catch (IOException ex) {
+          magnetometerLog.append("getLoop failed\r");
+        }
+      }
+    });
+    this.mgetLoop.getAction().putValue(Action.NAME, "getLoop)");
 
+    this.mgetRange.setAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          magnetometerLog.append(Squid.instance().getMagnetometer().getRange()+ "\r");
+        }
+        catch (IOException ex) {
+          magnetometerLog.append("getRange failed\r");
+        }
+      }
+    });
+    this.mgetRange.getAction().putValue(Action.NAME, "getRange)");
+
+    this.mgetSlew.setAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          magnetometerLog.append(Squid.instance().getMagnetometer().getSlew()+ "\r");
+        }
+        catch (IOException ex) {
+          magnetometerLog.append("getSlew failed\r");
+        }
+      }
+    });
+    this.mgetSlew.getAction().putValue(Action.NAME, "getSlew()");
+
+    this.misOK.setAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          magnetometerLog.append(Squid.instance().getMagnetometer().isOK()+ "\r");
+        }
+        catch (IOException ex) {
+          magnetometerLog.append("isOK failed\r");
+        }
+      }
+    });
+    this.misOK.getAction().putValue(Action.NAME, "isOK()");
+
+    this.mjoin.setAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          Squid.instance().getMagnetometer().join();
+        }
+        catch (IOException ex) {
+          magnetometerLog.append("join failed\r");
+        }
+      }
+    });
+    this.mjoin.getAction().putValue(Action.NAME, "join()");
+
+    this.mlatchAnalog.setAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          Squid.instance().getMagnetometer().latchAnalog(param1.getText().charAt(0));
+        }
+        catch (IOException ex) {
+          magnetometerLog.append("latchAnalog failed\r");
+        }
+      }
+    });
+    this.mlatchAnalog.getAction().putValue(Action.NAME, "latchAnalog(char axis)");
+
+    this.mlatchCounter.setAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          Squid.instance().getMagnetometer().latchCounter(param1.getText().charAt(0));
+        }
+        catch (IOException ex) {
+          magnetometerLog.append("latchCounter failed\r");
+        }
+      }
+    });
+    this.mlatchCounter.getAction().putValue(Action.NAME, "latchCounter(char axis)");
+
+    this.mopenLoop.setAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          Squid.instance().getMagnetometer().openLoop(param1.getText().charAt(0));
+        }
+        catch (IOException ex) {
+          magnetometerLog.append("openLoop failed\r");
+        }
+      }
+    });
+    this.mopenLoop.getAction().putValue(Action.NAME, "openLoop(char axis)");
+
+    this.mreadData.setAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          Double[] result = Squid.instance().getMagnetometer().readData();
+          magnetometerLog.append("{" + result[0] + "," +result[1] + "," + result[2] + "}\r");
+        }
+        catch (IOException ex) {
+          magnetometerLog.append("openLoop failed\r");
+        }
+      }
+    });
+    this.mreadData.getAction().putValue(Action.NAME, "readData()");
+
+    this.mreset.setAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          Squid.instance().getMagnetometer().reset(param1.getText().charAt(0));
+        }
+        catch (IOException ex) {
+          magnetometerLog.append("reset failed\r");
+        }
+      }
+    });
+    this.mreset.getAction().putValue(Action.NAME, "reset(char axis)");
+
+    this.mresetCounter.setAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          Squid.instance().getMagnetometer().resetCounter(param1.getText().charAt(0));
+        }
+        catch (IOException ex) {
+          magnetometerLog.append("resetCounter failed\r");
+        }
+      }
+    });
+    this.mresetCounter.getAction().putValue(Action.NAME, "resetCounter(char axis)");
+
+    this.mupdateSettings.setAction(new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          Squid.instance().getMagnetometer().updateSettings();
+        }
+        catch (IOException ex) {
+          magnetometerLog.append("updateSettings failed\r");
+        }
+      }
+    });
+    this.mupdateSettings.getAction().putValue(Action.NAME, "updateSettings()");
 
     }
 

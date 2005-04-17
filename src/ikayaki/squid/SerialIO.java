@@ -162,7 +162,7 @@ message from serial port is received.
         // Check if given port is already open
         // if it is then return it
         for (int i = 0; i < openPorts.size(); i++) {
-            if (parameters.getPortName() == openPorts.elementAt(i).portName) {
+            if (parameters.getPortName().equals(openPorts.elementAt(i).portName)) {
                 return openPorts.elementAt(i);
             }
         }
