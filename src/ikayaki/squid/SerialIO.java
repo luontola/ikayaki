@@ -96,7 +96,7 @@ message from serial port is received.
                                (d < 10 ? "0" : "") + d + "-" + parameters.getPortName() + ".log");
           try {
             if (!Ikayaki.DEBUG_LOG_DIR.exists()) Ikayaki.DEBUG_LOG_DIR.mkdir();
-            //if (!file.exists()) file.createNewFile();
+            //if (!file.exists()) file.createNewFile(); // not needed
             logWriter = new BufferedWriter(new FileWriter(file, true));
           }
           catch (IOException ex1) {
