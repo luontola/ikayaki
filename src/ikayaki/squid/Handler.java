@@ -362,7 +362,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     /**
      * Sends message to handler go online (@0).
      */
-    void setOnline() {
+    protected void setOnline() {
         try {
             this.serialIO.writeMessage("@0" + ",");
             //this.serialIO.writeMessage(","); //execute command
@@ -377,7 +377,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *
      * @param a Acceleration is a number from 0 to 127
      */
-    void setAcceleration(int a) {
+    protected void setAcceleration(int a) {
         if (a >= 0 && a < 128) {
             try {
                 this.serialIO.writeMessage("A" + a + ",");
@@ -394,7 +394,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *
      * @param d Deceleration is a number from 0 to 127
      */
-    void setDeceleration(int d) {
+    protected void setDeceleration(int d) {
         if (d >= 0 && d < 128) {
             try {
                 this.serialIO.writeMessage("D" + d + ",");
@@ -412,7 +412,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *
      * @param b Base Speed is pulses per second and has a range of 50 to 5000.
      */
-    void setBaseSpeed(int b) {
+    protected void setBaseSpeed(int b) {
         if (b >= 50 && b < 5001) {
             try {
                 this.serialIO.writeMessage("B" + b + ",");
@@ -429,7 +429,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *
      * @param v Velocity range is 50 to 20,000
      */
-    void setVelocity(int v) {
+    protected void setVelocity(int v) {
         if (v >= 50 && v < 20001) {
             try {
                 this.serialIO.writeMessage("M" + v + ",");
@@ -451,7 +451,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *
      * @param h value from 0 to 127 representing the number of clock ticks to leave power on the motor after a move.
      */
-    void setHoldTime(int h) {
+    protected void setHoldTime(int h) {
         try {
             this.serialIO.writeMessage("CH" + h + ",");
             //this.serialIO.writeMessage(","); //execute command
@@ -468,7 +468,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *
      * @param cf frequence range is 4,000,000 to 8,000.000
      */
-    void setCrystalFrequence(int cf) {
+    protected void setCrystalFrequence(int cf) {
         if (cf >= 4000000 && cf <= 8000000) {
             try {
                 this.serialIO.writeMessage("CX" + cf + ",");
@@ -483,7 +483,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * This command stops execution of the internal program if it is used in the program. If the motor is indexing it
      * will ramp down and then stop. Use this command to stop the motor after issuing a slew command. (Q).
      */
-    void stopExecution() {
+    protected void stopExecution() {
         try {
             this.serialIO.writeMessage("Q,");
             //this.serialIO.writeMessage(","); //execute command
@@ -497,7 +497,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * Slew the motor up to maximum speed and continue until reaching a hard limit switch or receiving a quit (Q)
      * command. (S).
      */
-    void performSlew() {
+    protected void performSlew() {
         try {
             this.serialIO.writeMessage("S,");
             //this.serialIO.writeMessage(","); //execute command
@@ -509,7 +509,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     /**
      * Set the motor direction of movement to positive. (+).
      */
-    void setMotorPositive() {
+    protected void setMotorPositive() {
         try {
             this.serialIO.writeMessage("+");
         } catch (SerialIOException ex) {
@@ -521,7 +521,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     /**
      * Set the motor direction of movement to negative. (-).
      */
-    void setMotorNegative() {
+    protected void setMotorNegative() {
         try {
             this.serialIO.writeMessage("-");
         } catch (SerialIOException ex) {
@@ -535,7 +535,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *
      * @param s steps range is 0 to 16,777,215
      */
-    void setSteps(int s) {
+    protected void setSteps(int s) {
         if (s >= 0 && s <= 16777216) {
             try {
                 this.serialIO.writeMessage("N" + s + ",");
@@ -551,7 +551,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *
      * @param p position range is 0 to 16,777,215
      */
-    void setPosition(int p) {
+    protected void setPosition(int p) {
         if (p > 0 && p < 16777215) {
             try {
                 //first need to set translate active
@@ -567,7 +567,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     /**
      * Send handler on move (G).
      */
-    void go() {
+    protected void go() {
         try {
             this.serialIO.writeMessage("G,");
             //this.serialIO.writeMessage(","); //execute command
@@ -612,7 +612,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *          Crystal frequency
      * @return returns registery as string
      */
-    String verify(char v) {
+    protected String verify(char v) {
         try {
             this.serialIO.writeMessage("V" + v + ",");
             //this.serialIO.writeMessage(","); //execute command
@@ -636,7 +636,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *
      * @param r position range is 0 to 16,777,215
      */
-    void setPositionRegister(int r) {
+    protected void setPositionRegister(int r) {
         if (r > 0 && r < 16777215) {
             try {
                 this.serialIO.writeMessage("Z" + r + ",");
@@ -657,7 +657,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *         limit <br/>8 End of program notice, internal program has completed <br/>G Motor is indexing and no other
      *         notice pending
      */
-    char takeMessage() {
+    protected char takeMessage() {
         try {
             this.serialIO.writeMessage("%,");
             //this.serialIO.writeMessage(","); //execute command

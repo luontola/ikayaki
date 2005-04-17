@@ -1055,7 +1055,7 @@ project listeners.
      *
      * @return reference to the transformation matrix.
      */
-    synchronized Matrix3d getTransform() {
+    protected synchronized Matrix3d getTransform() {
         return transform;
     }
 

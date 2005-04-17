@@ -157,7 +157,7 @@ public class MeasurementResult {
      *
      * @param transform the matrix to be applied. If null, will assume identity matrix.
      */
-    void setTransform(Matrix3d transform) {
+    protected void setTransform(Matrix3d transform) {
         if (transform != null) {
             transform.transform(sampleVector, geographicVector);
         }

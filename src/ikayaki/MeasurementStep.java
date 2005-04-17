@@ -359,7 +359,7 @@ public class MeasurementStep {
      * Updates all of the measurement results with the owner project's transformation matrix. If there is no owner, an
      * identity matrix will be used.
      */
-    synchronized void updateTransforms() {
+    protected synchronized void updateTransforms() {
         Matrix3d transform = null;
         if (project != null) {
             transform = project.getTransform();

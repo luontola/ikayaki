@@ -356,7 +356,7 @@ public abstract class MeasurementValue <T> {
      * @return the calculated value, or null if it was not possible to calculate it.
      * @throws NullPointerException if step is null.
      */
-    abstract T getValue(MeasurementStep step);
+    protected abstract T getValue(MeasurementStep step);
 
     /**
      * Returns a short name for the value.
