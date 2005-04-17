@@ -71,6 +71,7 @@ be closed.
     public static final File PROPERTIES_FILE = new File("ikayaki.config").getAbsoluteFile();
     public static final File SEQUENCES_FILE = new File("ikayaki.sequences").getAbsoluteFile();
     public static final File CALIBRATION_PROJECT_DIR = new File("calibration").getAbsoluteFile();
+    public static final File DEBUG_LOG_DIR = new File("logs").getAbsoluteFile();
 
     /**
      * Starts the program Ikayaki.

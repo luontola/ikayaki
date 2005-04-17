@@ -22,6 +22,7 @@
 
 package ikayaki.squid;
 
+import ikayaki.Ikayaki;
 import javax.comm.*;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -31,10 +32,10 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.TooManyListenersException;
 import java.util.Vector;
-import java.io.FileWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 /**
  * This class represents hardware layer to serial port communications.
@@ -62,7 +63,7 @@ message from serial port is received.
   private InputStream is;
 
   private String portName;
-  private FileWriter logWriter;
+  private BufferedWriter logWriter;
 
   /**
      * Creates an instance of SerialIO which represents one serial port.
@@ -89,13 +90,17 @@ message from serial port is received.
 
         // if debug mode, make own logfile for port
         if(DEBUG) {
+          Calendar now = Calendar.getInstance();
+          int y = now.get(Calendar.YEAR), m = now.get(Calendar.MONTH) + 1, d = now.get(Calendar.DAY_OF_MONTH);
+          File file = new File(Ikayaki.DEBUG_LOG_DIR, y + "-" + (m < 10 ? "0" : "") + m + "-" +
+                               (d < 10 ? "0" : "") + d + "-" + parameters.getPortName() + ".log");
           try {
-            Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT+2:00"));
-            File file = new File("logs\\" + parameters.getPortName() + "(" + now.get(Calendar.HOUR) + now.get(Calendar.MINUTE) + "-" + now.get(Calendar.DAY_OF_MONTH) + now.get(Calendar.MONTH)  + "-" + now.get(Calendar.YEAR) + ").log");
-            logWriter = new FileWriter(file);
+            if (!Ikayaki.DEBUG_LOG_DIR.exists()) Ikayaki.DEBUG_LOG_DIR.mkdir();
+            //if (!file.exists()) file.createNewFile();
+            logWriter = new BufferedWriter(new FileWriter(file, true));
           }
           catch (IOException ex1) {
-            System.err.println(ex1);
+            System.err.println("Error creating log file '" + file + "': " + ex1);
           }
         }
         // Set the parameters of the connection
@@ -201,7 +206,8 @@ message from serial port is received.
             }
             os.write(asciiMsg);
              if(DEBUG) {
-               logWriter.write("SEND:" + message + "\r");
+               logWriter.write("SEND: " + message);
+               logWriter.newLine();
                logWriter.flush();
              }
             os.flush(); // TODO is this needed ??
@@ -279,7 +285,8 @@ message from serial port is received.
             //System.out.println("sending: " + new String(inputBuffer)); //debug
             if(DEBUG) {
               try {
-                logWriter.write("RECIEVE:" + new String(inputBuffer) + "\r");
+                logWriter.write("RECEIVE: " + inputBuffer);
+                logWriter.newLine();
                 logWriter.flush();
               }
               catch (IOException ex1) {
