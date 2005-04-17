@@ -321,24 +321,78 @@ public class SquidFront extends JFrame {
       });
       this.hstop.getAction().putValue(Action.NAME, "stop()");
 
+      this.hsetMotorNegative.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+            Squid.instance().getHandler().setMotorNegative();
+          }
+          catch (IOException ex) {
+            handlerLog.append("setMotorNegative failed\r");
+          }
+        }
+      });
+      this.hsetMotorNegative.getAction().putValue(Action.NAME, "setMotorNegative()");
 
-      this.hgetPosition.setEnabled(false);
-      this.hgetRotation.setEnabled(false);
-      this.hgetStatus.setEnabled(false);
-      this.hisOK.setEnabled(false);
-      this.hmoveToPos.setEnabled(false);
-      this.hperformSlew.setEnabled(false);
-      this.hsetBaseSpeed.setEnabled(false);
-      this.hsetCrystalFrequence.setEnabled(false);
-      this.hsetHoldTime.setEnabled(false);
-      this.hsetMotorNegative.setEnabled(false);
-      this.hsetMotorPositive.setEnabled(false);
-      this.hsetPosition.setEnabled(false);
-      this.hsetPositionRegister.setEnabled(false);
-      this.hsetSteps.setEnabled(false);
-      this.hstopExecution.setEnabled(false);
-      this.htakeMessage.setEnabled(false);
-      this.hupdateSettings.setEnabled(false);
+      this.hsetMotorPositive.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+            Squid.instance().getHandler().setMotorPositive();
+          }
+          catch (IOException ex) {
+            handlerLog.append("setMotorPositive failed\r");
+          }
+        }
+      });
+      this.hsetMotorPositive.getAction().putValue(Action.NAME, "setMotorPositive()");
+
+      this.hsetSteps.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+            Squid.instance().getHandler().setSteps(Integer.parseInt(param1.getText()));
+          }
+          catch (IOException ex) {
+            handlerLog.append("setSteps failed\r");
+          }
+        }
+      });
+      this.hsetSteps.getAction().putValue(Action.NAME, "setSteps(int steps)");
+
+      this.hmoveToPos.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+            Squid.instance().getHandler().moveToPos(Integer.parseInt(param1.getText()));
+          }
+          catch (IOException ex) {
+            handlerLog.append("MoveToPos failed\r");
+          }
+        }
+      });
+      this.hmoveToPos.getAction().putValue(Action.NAME, "moveToPos(int position)");
+
+      this.hgetPosition.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+            handlerLog.append(Squid.instance().getHandler().getPosition() + "\r");
+          }
+          catch (IOException ex) {
+            handlerLog.append("getPosition failed\r");
+          }
+        }
+      });
+      this.hgetPosition.getAction().putValue(Action.NAME, "getPosition()");
+
+      this.hgetRotation.setVisible(false);
+      this.hgetStatus.setVisible(false);
+      this.hisOK.setVisible(false);
+      this.hperformSlew.setVisible(false);
+      this.hsetBaseSpeed.setVisible(false);
+      this.hsetCrystalFrequence.setVisible(false);
+      this.hsetHoldTime.setVisible(false);
+      this.hsetPosition.setVisible(false);
+      this.hsetPositionRegister.setVisible(false);
+      this.hstopExecution.setVisible(false);
+      this.htakeMessage.setVisible(false);
+      this.hupdateSettings.setVisible(false);
 
     }
 
@@ -483,6 +537,7 @@ public class SquidFront extends JFrame {
         try {
           Double[] result = Squid.instance().getMagnetometer().readData();
           magnetometerLog.append("{" + result[0] + "," +result[1] + "," + result[2] + "}\r");
+
         }
         catch (IOException ex) {
           magnetometerLog.append("openLoop failed\r");
@@ -490,6 +545,8 @@ public class SquidFront extends JFrame {
       }
     });
     this.mreadData.getAction().putValue(Action.NAME, "readData()");
+
+    this.mgetFilters.setVisible(false);
 
     this.mreset.setAction(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
@@ -533,14 +590,145 @@ public class SquidFront extends JFrame {
      * Sets ActionListeners for degausser's control buttons.
      */
     private void initDegausserActions() {
-        // TODO
+      this.dupdateSettings.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+            Squid.instance().getDegausser().updateSettings();
+          }
+          catch (IOException ex) {
+            degausserLog.append("updateSettings failed\r");
+          }
+        }
+      });
+      this.dupdateSettings.getAction().putValue(Action.NAME, "updateSettings()");
+
+      this.ddemagnetizeY.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+            Squid.instance().getDegausser().demagnetizeY(Integer.parseInt(param1.getText()));
+          }
+          catch (IOException ex) {
+            degausserLog.append("demagnetizeY failed\r");
+          }
+        }
+      });
+      this.ddemagnetizeY.getAction().putValue(Action.NAME, "demagnetizeY(int amplitude)");
+
+      this.ddemagnetizeZ.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+            Squid.instance().getDegausser().demagnetizeZ(Integer.parseInt(param1.getText()));
+          }
+          catch (IOException ex) {
+            degausserLog.append("demagnetizeZ failed\r");
+          }
+        }
+      });
+      this.ddemagnetizeZ.getAction().putValue(Action.NAME, "demagnetizeY(int amplitude)");
+
+      this.dexecuteRampCycle.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+            Squid.instance().getDegausser().executeRampCycle();
+          }
+          catch (IOException ex) {
+            degausserLog.append("demagnetizeZ failed\r");
+          }
+        }
+      });
+      this.dexecuteRampCycle.getAction().putValue(Action.NAME, "executeRampCycle()");
+
+      this.dsetAmplitude.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+            Squid.instance().getDegausser().setAmplitude(Integer.parseInt(param1.getText()));
+          }
+          catch (IOException ex) {
+            degausserLog.append("demagnetizeZ failed\r");
+          }
+        }
+      });
+      this.dsetAmplitude.getAction().putValue(Action.NAME, "setAmplitude(int)");
+
+      this.dsetCoil.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+            Squid.instance().getDegausser().setCoil(param1.getText().charAt(0));
+          }
+          catch (IOException ex) {
+            degausserLog.append("demagnetizeZ failed\r");
+          }
+        }
+      });
+      this.dsetCoil.getAction().putValue(Action.NAME, "setCoil(char axis)");
+
+      this.dgetAmplitude.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+            degausserLog.append(Squid.instance().getDegausser().getAmplitude() + "\r");
+          }
+          catch (IOException ex) {
+            degausserLog.append("get failed\r");
+          }
+        }
+      });
+      this.dgetAmplitude.getAction().putValue(Action.NAME, "getAmplitude()");
+
+      this.dgetCoil.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+             degausserLog.append(Squid.instance().getDegausser().getCoil() + "\r");
+          }
+          catch (IOException ex) {
+            degausserLog.append("get failed\r");
+          }
+        }
+      });
+      this.dgetCoil.getAction().putValue(Action.NAME, "getCoil()");
+
+      this.dgetRamp.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+             degausserLog.append("" + Squid.instance().getDegausser().getRamp() + "\r");
+          }
+          catch (IOException ex) {
+            degausserLog.append("getRamp failed\r");
+          }
+        }
+      });
+      this.dgetRamp.getAction().putValue(Action.NAME, "getRamp()");
+
+      this.dgetDelay.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+             degausserLog.append(Squid.instance().getDegausser().getDelay() + "\r");
+          }
+          catch (IOException ex) {
+            degausserLog.append("getDelay failed\r");
+          }
+        }
+      });
+      this.dgetDelay.getAction().putValue(Action.NAME, "getDelay()");
+
+      this.dgetRampStatus.setAction(new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+          try {
+             degausserLog.append(Squid.instance().getDegausser().getRampStatus() + "\r");
+          }
+          catch (IOException ex) {
+            degausserLog.append("getRampStatus failed\r");
+          }
+        }
+      });
+      this.dgetRampStatus.getAction().putValue(Action.NAME, "getRampStatus()");
+
     }
 
     /**
      * Sets anything that is needed for logging to file and to screen.
      */
     private void initLogging() {
-        // TODO
+        // no need
     }
 
     public static void main(String[] args) {

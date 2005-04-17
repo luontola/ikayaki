@@ -390,7 +390,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @return true if ok.
      */
     public boolean isOK() {
-        if (serialIO != null) {
+        if (this.serialIO != null) {
             return true;
         } else {
             return false;

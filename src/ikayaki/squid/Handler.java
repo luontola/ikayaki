@@ -252,6 +252,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             this.go();
             this.serialIO.writeMessage("O1,1,");
             this.go();
+            this.currentPosition = this.homePosition;
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -264,6 +265,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     public void moveToDegausserZ() {
         setVelocity(velocity);
         moveToPos(this.axialAFPosition);
+        this.currentPosition = this.axialAFPosition;
         //this.go();
     }
 
@@ -274,6 +276,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     public void moveToDegausserY() {
         setVelocity(velocity);
         moveToPos(this.transverseYAFPosition);
+        this.currentPosition = this.transverseYAFPosition;
         //this.go();
     }
 
@@ -286,6 +289,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         // do we use now measurement velocity?
         setVelocity(measurementVelocity);
         moveToPos(this.measurementPosition);
+        this.currentPosition = this.measurementPosition;
         //this.go();
 
     }
@@ -297,6 +301,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     public void moveToBackground() {
         setVelocity(measurementVelocity);
         moveToPos(this.backgroundPosition);
+        this.currentPosition = this.backgroundPosition;
         //this.go();
     }
 
@@ -319,6 +324,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             //no need to execute, Go will do it.
             //this.serialIO.writeMessage(","); //execute command
             this.go();
+            this.currentPosition = pos;
             return true;
         } catch (SerialIOException ex) {
             System.err.println(ex);
@@ -557,6 +563,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
                 //first need to set translate active
                 this.serialIO.writeMessage("O1,0");
                 this.serialIO.writeMessage("P" + p + ",");
+                this.currentPosition = p;
             } catch (SerialIOException ex) {
                 System.err.println(ex);
             }

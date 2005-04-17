@@ -75,7 +75,7 @@ public class Squid {
     private Squid() throws IOException {
         owner = null;
         try {
-          degausser = null;new Degausser();
+          degausser = new Degausser();
         }
         catch (SerialIOException ex) {
           System.err.println("Cannot create degausser: " + ex);
@@ -142,8 +142,8 @@ public class Squid {
      * @return true if everything is correct, otherwise false.
      */
     public synchronized boolean isOK() {
-        if (degausser != null && handler != null && magnetometer != null) {
-            if (degausser.isOK() && handler.isOK() && magnetometer.isOK()) {
+        if (this.degausser != null && this.handler != null && this.magnetometer != null) {
+            if (this.degausser.isOK() && this.handler.isOK() && this.magnetometer.isOK()) {
                 return true;
             }
         }

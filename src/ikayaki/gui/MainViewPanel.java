@@ -108,11 +108,15 @@ public class MainViewPanel extends ProjectComponent {
         /* Init SQUID interface */
         try {
             squid = Squid.instance();
+            if (!squid.instance().isOK()) {
+              JOptionPane.showMessageDialog(null, "SQUID is not OK!");
+            }
         } catch (IOException e) {
             // TODO: what should be done now? give error message?
             //e.printStackTrace();
             System.err.println("Unable to initialize the SQUID interface.");
         }
+
 
         /* Lay out GUI components */
         final JPanel left = new JPanel(new GridBagLayout());

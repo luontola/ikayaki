@@ -1735,7 +1735,16 @@ project listeners.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualMove(int position) {
-        return false; // TODO
+      try {
+        squid.instance().getHandler().moveToPos(position);
+        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
+        Squid.instance().getHandler().join();
+        fireMeasurementEvent(currentStep, HANDLER_STOP);
+        return true;
+      }
+      catch (IOException ex) {
+        return false;
+      }
     }
 
     /**
@@ -1747,7 +1756,16 @@ project listeners.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualRotate(int angle) {
-        return false; // TODO
+      try {
+        squid.instance().getHandler().rotateTo(angle);
+        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
+        Squid.instance().getHandler().join();
+        fireMeasurementEvent(currentStep, HANDLER_STOP);
+        return true;
+      }
+      catch (IOException ex) {
+        return false;
+      }
     }
 
     /**
@@ -1759,7 +1777,19 @@ project listeners.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualMeasure() {
-        return false; // TODO
+      Double[] results = null;
+      try {
+        results = Squid.instance().getMagnetometer().readData();
+
+        //TODO: check where we are
+        currentStep.addResult(new MeasurementResult(BG, results[0], results[1],
+                                                    results[2]));
+        fireMeasurementEvent(currentStep, VALUE_MEASURED);
+        return true;
+      }
+      catch (IOException ex) {
+        return false;
+      }
     }
 
     /**
@@ -1772,7 +1802,21 @@ project listeners.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualDemagZ(double amplitude) {
-        return false; // TODO
+      try {
+        fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
+        //need Gauss value
+
+        Squid.instance().getDegausser().demagnetizeZ( (int) (
+            currentStep.getStepValue() * 10));
+
+        // blocking method
+        fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
+        return true;
+      }
+      catch (IOException ex) {
+        return false;
+      }
+
     }
 
     /**
@@ -1785,7 +1829,21 @@ project listeners.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualDemagY(double amplitude) {
-        return false; // TODO
+      try {
+        fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
+        //need Gauss value
+
+        Squid.instance().getDegausser().demagnetizeY( (int) (
+            currentStep.getStepValue() * 10));
+
+        // blocking method
+        fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
+        return true;
+      }
+      catch (IOException ex) {
+        return false;
+      }
+
     }
 
     /**

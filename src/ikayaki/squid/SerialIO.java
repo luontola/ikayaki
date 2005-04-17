@@ -91,7 +91,7 @@ message from serial port is received.
         if(DEBUG) {
           try {
             Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT+2:00"));
-            File file = new File("logs\\" + parameters.getPortName() + "(" + now.get(Calendar.HOUR) + now.get(Calendar.MINUTE) + now.get(Calendar.DAY_OF_MONTH) + now.get(Calendar.MONTH)  + now.get(Calendar.YEAR) + ").log");
+            File file = new File("logs\\" + parameters.getPortName() + "(" + now.get(Calendar.HOUR) + now.get(Calendar.MINUTE) + "-" + now.get(Calendar.DAY_OF_MONTH) + now.get(Calendar.MONTH)  + "-" + now.get(Calendar.YEAR) + ").log");
             logWriter = new FileWriter(file);
           }
           catch (IOException ex1) {
