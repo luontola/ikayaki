@@ -47,7 +47,7 @@ public final class JUtil {
 
 
     static {
-        System.loadLibrary("JUtil");
+        System.loadLibrary("jutil");
     }
 
     /* Make the constructor private so the class cannot be instantiated */
