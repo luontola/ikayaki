@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<jsmoothproject>
+<JVMSearchPath>registry</JVMSearchPath>
+<JVMSearchPath>javahome</JVMSearchPath>
+<JVMSearchPath>jrepath</JVMSearchPath>
+<JVMSearchPath>jdkpath</JVMSearchPath>
+<JVMSearchPath>exepath</JVMSearchPath>
+<JVMSearchPath>jview</JVMSearchPath>
+<arguments></arguments>
+<classPath>ikayaki.jar</classPath>
+<classPath>lib\comm.jar</classPath>
+<classPath>lib\forms_rt.jar</classPath>
+<classPath>lib\junit.jar</classPath>
+<classPath>lib\looks.jar</classPath>
+<classPath>lib\vecmath.jar</classPath>
+<currentDirectory>.</currentDirectory>
+<embeddedJar>false</embeddedJar>
+<executableName>ikayaki.exe</executableName>
+<iconLocation>..\resources\ikayaki.ico</iconLocation>
+<initialMemoryHeap>-1</initialMemoryHeap>
+<mainClassName>ikayaki.Ikayaki</mainClassName>
+<maximumMemoryHeap>-1</maximumMemoryHeap>
+<maximumVersion></maximumVersion>
+<minimumVersion>1.5.0</minimumVersion>
+<skeletonName>Windowed Wrapper</skeletonName>
+<skeletonProperties>
+<key>Message</key>
+<value>Java has not been found on your computer. Do you want to download it?</value>
+</skeletonProperties>
+<skeletonProperties>
+<key>URL</key>
+<value>http://java.sun.com/j2se/1.5.0/download.jsp</value>
+</skeletonProperties>
+<skeletonProperties>
+<key>SingleProcess</key>
+<value>0</value>
+</skeletonProperties>
+<skeletonProperties>
+<key>Debug</key>
+<value>0</value>
+</skeletonProperties>
+</jsmoothproject>

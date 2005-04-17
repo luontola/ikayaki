@@ -547,7 +547,7 @@ public class Settings {
     /* Program window */
 
     public synchronized int getWindowWidth() {
-        int i = Integer.parseInt(getProperty("gui.window.width", "800"));
+        int i = Integer.parseInt(getProperty("gui.window.width", "1000"));
         Rectangle maxBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         if (i < 400) {
             i = 400;
@@ -563,7 +563,7 @@ public class Settings {
     }
 
     public synchronized int getWindowHeight() {
-        int i = Integer.parseInt(getProperty("gui.window.height", "600"));
+        int i = Integer.parseInt(getProperty("gui.window.height", "700"));
         Rectangle maxBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         if (i < 300) {
             i = 300;
