@@ -4,10 +4,12 @@
 % makrot dokumentoinnin generoimiseksi
 \input{docmacro}
 
+
 \section{Introduction}
 \label{sec:intro}
 
 This document describes how this software (Ikayaki) is planned to be tested properly. Mainly this document concentrates on describing methods used for testing and test cases. It is important that all members of team to make tests in same way. This lowers possibility of testing conflicts and helps on integration test phase.
+
 
 \section{Overview of testing the system}
 \label{sec:overview}
@@ -28,6 +30,7 @@ To verify that old program and new program works same way, we will do critical m
 log file and then use emulator with that log file and do same critical measurement with new program and see that both have same results.
 
 If Rita testing utility is easy enough to use it will be used in testing. Tests will be constructed in such way that every line of code is visited at least once.
+
 
 \section{Testing}
 \label{sec:test}
@@ -69,6 +72,7 @@ same for all use cases.
 Squid emulator is tested with old program. Use cases are Automatic Measurement, Thellier Measurement and Manual Measurement with all variations (see Requirements Document). When all use cases can be done with emulator it is ready enough for integration testing.
 
 This should be done so that Old Program has same results with SQUID-system and emulator for all use cases. But we don't have resources for this. So this test only tells us that Old and New program works same way with squid emulator.
+
 
 \section{JUnit test cases}
 \label{sec:junit}
@@ -123,10 +127,15 @@ Type "java junit.swingui.TestRunner SimpleTest" to run test cases for Simple.
 
 \closeTestedClass
 
+
 \section{GUI-component test cases}
 \label{sec:guicase}
 
 Here are listed test cases for gui-classes, these are done manually just clicking and changing values.
+
+\input{uc_gui-explorer}
+\input{uc_gui-calibration}
+\input{uc_gui-mcontrols}
 
 \input{uc_settingspanel}
 
@@ -143,6 +152,7 @@ Here are listed test cases for gui-classes, these are done manually just clickin
 \closeCase{}
 
 \closeTestedClass{}
+
 
 \section{Integration test cases}
 \label{sec:intcase}
