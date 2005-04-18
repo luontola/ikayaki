@@ -240,6 +240,9 @@ public class SettingsPanel
     this.backgroundPosition.setValue(Settings.instance().
                                      getHandlerBackgroundPosition());
     this.rotation.setValue(Settings.instance().getHandlerRotation());
+    this.rotationVelocity.setValue(Settings.instance().getHandlerVelocity());
+    this.rotationAcc.setValue(Settings.instance().getHandlerAcceleration());
+    this.rotationDec.setValue(Settings.instance().getHandlerDeceleration());
     this.handlerRightLimit.addItem("plus");
     this.handlerRightLimit.addItem("minus");
     this.handlerRightLimit.setSelectedIndex(Settings.instance().
@@ -257,6 +260,9 @@ public class SettingsPanel
     backgroundPosition.setFormatterFactory(factory);
     measurementPosition.setFormatterFactory(factory);
     rotation.setFormatterFactory(factory);
+    rotationVelocity.setFormatterFactory(factory);
+    rotationAcc.setFormatterFactory(factory);
+    rotationDec.setFormatterFactory(factory);
     xAxisCalibration.setFormatterFactory(factory);
     yAxisCalibration.setFormatterFactory(factory);
     zAxisCalibration.setFormatterFactory(factory);
@@ -414,6 +420,12 @@ public class SettingsPanel
       Settings.instance().setHandlerTransverseYAFPosition(((Integer)this.
           transverseYAFPosition.getValue()));
       Settings.instance().setHandlerVelocity(((Integer)this.velocity.
+          getValue()));
+      Settings.instance().setHandlerRotationVelocity(((Integer)this.rotationVelocity.
+          getValue()));
+      Settings.instance().setHandlerRotationDeceleration(((Integer)this.rotationDec.
+          getValue()));
+      Settings.instance().setHandlerRotationAcceleration(((Integer)this.rotationAcc.
           getValue()));
       Settings.instance().setMagnetometerPort( (String)this.magnetometerPort.
                                               getSelectedItem());
@@ -904,11 +916,11 @@ public class SettingsPanel
       }
 
       // set value ranges
-      if (tf == acceleration || tf == deceleration) {
+      if (tf == acceleration || tf == deceleration || tf == rotationAcc || tf == rotationDec) {
         formatter.setMinimum(new Integer(0));
         formatter.setMaximum(new Integer(127));
       }
-      else if (tf == velocity || tf == measurementVelocity) {
+      else if (tf == velocity || tf == measurementVelocity || tf == rotationVelocity) {
         formatter.setMinimum(new Integer(50));
         formatter.setMaximum(new Integer(20000));
       }
@@ -918,6 +930,10 @@ public class SettingsPanel
                tf == measurementPosition) {
         formatter.setMinimum(new Integer(0));
         formatter.setMaximum(new Integer(16777215));
+      }
+      else if (tf == rotation) {
+        formatter.setMinimum(new Integer(Integer.MIN_VALUE));
+        formatter.setMaximum(new Integer(Integer.MAX_VALUE));
       }
       return formatter;
     }
