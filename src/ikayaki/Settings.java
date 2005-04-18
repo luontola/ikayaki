@@ -467,7 +467,7 @@ public class Settings {
     }
 
     public synchronized int getMaximumField() {
-       return Integer.parseInt(getProperty("squid.degausser.maximumField", "0"));
+       return Integer.parseInt(getProperty("squid.degausser.maximumfield", "0"));
    }
 
 
@@ -481,7 +481,7 @@ public class Settings {
     }
 
     public synchronized int getHandlerRotationDeceleration() {
-       return Integer.parseInt(getProperty("squid.handler.rotationeceleration", "0"));
+       return Integer.parseInt(getProperty("squid.handler.rotationdeceleration", "0"));
    }
 
    public synchronized boolean setHandlerRotationDeceleration(int value) {
