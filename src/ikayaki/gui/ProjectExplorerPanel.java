@@ -351,6 +351,9 @@ public class ProjectExplorerPanel extends ProjectComponent {
     private void doAutoComplete() {
         final File[] files = getAutocompleteFiles(browserField.getEditor().getItem().toString());
 
+        // the files are in the order that the OS gave them, so they need to be sorted first
+        Arrays.sort(files);
+        
         // gui updating must be done from event-dispatching thread
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -378,9 +381,6 @@ public class ProjectExplorerPanel extends ProjectComponent {
 
         String browserFieldEditorText = browserFieldEditor.getText();
         int browserFieldEditorCursorPosition = browserFieldEditor.getCaretPosition();
-
-        // the files are in the order that the OS gave them, so they need to be sorted first
-        Arrays.sort(files);
 
         browserField.removeAllItems();
         for (File file : files) browserField.addItem(file);
