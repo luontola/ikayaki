@@ -232,7 +232,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
                 if (e.getKeyCode() == KeyEvent.VK_TAB) {
                     // change to down- or up-arrow event
                     if ((e.getModifiers() & KeyEvent.SHIFT_MASK) != 0) {
-                        // this deprecation is requider for shift-tab to work
+                        // this deprecation is required for shift-tab to work
                         e.setModifiers(e.getModifiers() ^ KeyEvent.SHIFT_MASK);
                         e.setKeyCode(KeyEvent.VK_UP);
                     } else e.setKeyCode(KeyEvent.VK_DOWN);
