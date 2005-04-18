@@ -26,6 +26,7 @@ import ikayaki.Settings;
 
 import java.util.Stack;
 import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Offers an interface for controlling the sample handler.
@@ -607,7 +608,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             //this.serialIO.writeMessage(","); //execute command
             waitingForMessage = true;
             try {
-              String answer = (String) queue.take();
+              String answer = (String) queue.poll(1L, TimeUnit.SECONDS);
             }
             catch (InterruptedException ex1) {
             }

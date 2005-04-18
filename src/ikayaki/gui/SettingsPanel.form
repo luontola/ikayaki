@@ -3,7 +3,7 @@
   <grid id="e7cf3" binding="contentPane" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="0" y="0" width="746" height="522"/>
+      <xy x="0" y="0" width="777" height="522"/>
       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
     </constraints>
     <properties/>
@@ -12,7 +12,7 @@
       <grid id="48fb7" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <xy x="0" y="0" width="223" height="441"/>
+          <xy x="0" y="0" width="222" height="483"/>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
         </constraints>
         <properties/>
@@ -21,7 +21,7 @@
           <grid id="3031f" row-count="7" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <xy x="6" y="20" width="211" height="415"/>
+              <xy x="6" y="20" width="210" height="457"/>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
             </constraints>
             <properties/>
@@ -29,7 +29,7 @@
             <children>
               <component id="b0c92" class="javax.swing.JComboBox" binding="magnetometerPort">
                 <constraints>
-                  <xy x="80" y="20" width="131" height="23"/>
+                  <xy x="80" y="20" width="130" height="23"/>
                   <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1"/>
                 </constraints>
                 <properties/>
@@ -81,7 +81,7 @@
               </component>
               <component id="83d47" class="javax.swing.JFormattedTextField" binding="yAxisCalibration">
                 <constraints>
-                  <xy x="60" y="98" width="151" height="20"/>
+                  <xy x="60" y="98" width="150" height="20"/>
                   <grid row="4" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
                     <preferred-size width="150" height="-1"/>
                   </grid>
@@ -92,7 +92,7 @@
               </component>
               <component id="4c49f" class="javax.swing.JFormattedTextField" binding="xAxisCalibration">
                 <constraints>
-                  <xy x="60" y="73" width="151" height="20"/>
+                  <xy x="60" y="73" width="150" height="20"/>
                   <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
                     <preferred-size width="150" height="-1"/>
                   </grid>
@@ -103,7 +103,7 @@
               </component>
               <component id="d1ba5" class="javax.swing.JFormattedTextField" binding="zAxisCalibration">
                 <constraints>
-                  <xy x="60" y="123" width="151" height="20"/>
+                  <xy x="60" y="123" width="150" height="20"/>
                   <grid row="5" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
                     <preferred-size width="150" height="-1"/>
                   </grid>
@@ -114,7 +114,7 @@
               </component>
               <vspacer id="813bd">
                 <constraints>
-                  <xy x="64" y="143" width="11" height="272"/>
+                  <xy x="64" y="143" width="11" height="314"/>
                   <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2"/>
                 </constraints>
               </vspacer>
@@ -125,7 +125,7 @@
       <grid id="6d22a" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <xy x="233" y="0" width="252" height="441"/>
+          <xy x="232" y="0" width="252" height="483"/>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
         </constraints>
         <properties/>
@@ -134,7 +134,7 @@
           <grid id="8520f" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <xy x="6" y="20" width="240" height="415"/>
+              <xy x="6" y="20" width="240" height="457"/>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
             </constraints>
             <properties/>
@@ -142,7 +142,7 @@
             <children>
               <vspacer id="19616">
                 <constraints>
-                  <xy x="114" y="205" width="11" height="210"/>
+                  <xy x="114" y="205" width="11" height="252"/>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2"/>
                 </constraints>
               </vspacer>
@@ -268,277 +268,360 @@
       <grid id="72588" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <xy x="495" y="0" width="251" height="441"/>
+          <xy x="494" y="0" width="283" height="483"/>
           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
         </constraints>
         <properties/>
         <border type="etched" title="Handler"/>
         <children>
-          <grid id="aba49" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="aba49" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <xy x="6" y="20" width="239" height="415"/>
+              <xy x="6" y="20" width="271" height="457"/>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
             </constraints>
             <properties/>
             <border type="none"/>
             <children>
-              <vspacer id="4e4cb">
-                <constraints>
-                  <xy x="114" y="346" width="11" height="69"/>
-                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2"/>
-                </constraints>
-              </vspacer>
-              <grid id="17053" row-count="14" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="17053" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
-                  <xy x="0" y="0" width="239" height="346"/>
+                  <xy x="0" y="0" width="271" height="457"/>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
                 </constraints>
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="e8230" class="javax.swing.JLabel">
+                  <grid id="157c6" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
                     <constraints>
-                      <xy x="0" y="24" width="50" height="14"/>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-                    </constraints>
-                    <properties>
-                      <text value="COM port:"/>
-                    </properties>
-                  </component>
-                  <component id="d490b" class="javax.swing.JComboBox" binding="handlerPort">
-                    <constraints>
-                      <xy x="89" y="20" width="150" height="23"/>
-                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1"/>
+                      <xy x="0" y="0" width="271" height="457"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
                     </constraints>
                     <properties/>
-                  </component>
-                  <component id="7587b" class="javax.swing.JLabel">
-                    <constraints>
-                      <xy x="0" y="51" width="59" height="14"/>
-                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Acceleration"/>
-                    </properties>
-                  </component>
-                  <component id="5b82d" class="javax.swing.JFormattedTextField" binding="acceleration">
-                    <constraints>
-                      <xy x="89" y="48" width="150" height="20"/>
-                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-                        <preferred-size width="150" height="-1"/>
+                    <border type="none"/>
+                    <children>
+                      <grid id="bedf6" row-count="17" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
+                        <constraints>
+                          <xy x="0" y="0" width="271" height="436"/>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="db470" class="javax.swing.JFormattedTextField" binding="rotation">
+                            <constraints>
+                              <xy x="108" y="381" width="163" height="20"/>
+                              <grid row="15" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+                                <preferred-size width="150" height="-1"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <horizontalAlignment value="4"/>
+                            </properties>
+                          </component>
+                          <component id="76db3" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="384" width="76" height="14"/>
+                              <grid row="15" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Rotation counts"/>
+                            </properties>
+                          </component>
+                          <vspacer id="4e4cb">
+                            <constraints>
+                              <xy x="184" y="401" width="11" height="35"/>
+                              <grid row="16" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2"/>
+                            </constraints>
+                          </vspacer>
+                          <component id="c0985" class="javax.swing.JFormattedTextField" binding="deceleration">
+                            <constraints>
+                              <xy x="108" y="53" width="163" height="20"/>
+                              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+                                <preferred-size width="150" height="-1"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <horizontalAlignment value="4"/>
+                            </properties>
+                          </component>
+                          <component id="579d9" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="81" width="37" height="14"/>
+                              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Velocity"/>
+                            </properties>
+                          </component>
+                          <component id="2a85f" class="javax.swing.JFormattedTextField" binding="velocity">
+                            <constraints>
+                              <xy x="108" y="78" width="163" height="20"/>
+                              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+                                <preferred-size width="150" height="-1"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <horizontalAlignment value="4"/>
+                            </properties>
+                          </component>
+                          <component id="b7629" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="106" width="69" height="14"/>
+                              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Velocity Meas."/>
+                            </properties>
+                          </component>
+                          <component id="7320" class="javax.swing.JFormattedTextField" binding="measurementVelocity">
+                            <constraints>
+                              <xy x="108" y="103" width="163" height="20"/>
+                              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+                                <preferred-size width="150" height="-1"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <horizontalAlignment value="4"/>
+                            </properties>
+                          </component>
+                          <component id="d3c8c" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="156" width="79" height="14"/>
+                              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Transverse Y AF"/>
+                            </properties>
+                          </component>
+                          <component id="3824" class="javax.swing.JFormattedTextField" binding="transverseYAFPosition">
+                            <constraints>
+                              <xy x="108" y="153" width="163" height="20"/>
+                              <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+                                <preferred-size width="150" height="-1"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <horizontalAlignment value="4"/>
+                            </properties>
+                          </component>
+                          <component id="b198b" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="131" width="98" height="14"/>
+                              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Translation positions"/>
+                            </properties>
+                          </component>
+                          <component id="944fb" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="181" width="39" height="14"/>
+                              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Axial AF"/>
+                            </properties>
+                          </component>
+                          <component id="3fbe4" class="javax.swing.JFormattedTextField" binding="axialAFPosition">
+                            <constraints>
+                              <xy x="108" y="178" width="163" height="20"/>
+                              <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+                                <preferred-size width="150" height="-1"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <horizontalAlignment value="4"/>
+                            </properties>
+                          </component>
+                          <component id="7e2a2" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="206" width="60" height="14"/>
+                              <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Sample Load"/>
+                            </properties>
+                          </component>
+                          <component id="85fed" class="javax.swing.JFormattedTextField" binding="sampleLoadPosition">
+                            <constraints>
+                              <xy x="108" y="203" width="163" height="20"/>
+                              <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+                                <preferred-size width="150" height="-1"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <horizontalAlignment value="4"/>
+                            </properties>
+                          </component>
+                          <component id="e477f" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="231" width="56" height="14"/>
+                              <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Background"/>
+                            </properties>
+                          </component>
+                          <component id="321c7" class="javax.swing.JFormattedTextField" binding="backgroundPosition">
+                            <constraints>
+                              <xy x="108" y="228" width="163" height="20"/>
+                              <grid row="9" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+                                <preferred-size width="150" height="-1"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <horizontalAlignment value="4"/>
+                            </properties>
+                          </component>
+                          <component id="a4bb" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="256" width="65" height="14"/>
+                              <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Measurement"/>
+                            </properties>
+                          </component>
+                          <component id="60710" class="javax.swing.JFormattedTextField" binding="measurementPosition">
+                            <constraints>
+                              <xy x="108" y="253" width="163" height="20"/>
+                              <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+                                <preferred-size width="150" height="-1"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <horizontalAlignment value="4"/>
+                            </properties>
+                          </component>
+                          <component id="567d1" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="282" width="49" height="14"/>
+                              <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Right Limit"/>
+                            </properties>
+                          </component>
+                          <component id="9451" class="javax.swing.JComboBox" binding="handlerRightLimit">
+                            <constraints>
+                              <xy x="108" y="278" width="163" height="23"/>
+                              <grid row="11" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1"/>
+                            </constraints>
+                            <properties/>
+                          </component>
+                          <component id="c33cf" class="javax.swing.JFormattedTextField" binding="rotationAcc">
+                            <constraints>
+                              <xy x="108" y="331" width="163" height="20"/>
+                              <grid row="13" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+                                <preferred-size width="150" height="-1"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <horizontalAlignment value="4"/>
+                            </properties>
+                          </component>
+                          <component id="6c434" class="javax.swing.JFormattedTextField" binding="rotationVelocity">
+                            <constraints>
+                              <xy x="108" y="306" width="163" height="20"/>
+                              <grid row="12" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+                                <preferred-size width="150" height="-1"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <horizontalAlignment value="4"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="238be" class="javax.swing.JFormattedTextField" binding="rotationDec">
+                            <constraints>
+                              <xy x="108" y="356" width="163" height="20"/>
+                              <grid row="14" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+                                <preferred-size width="150" height="-1"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <horizontalAlignment value="4"/>
+                            </properties>
+                          </component>
+                          <component id="2bfc6" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="334" width="64" height="14"/>
+                              <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Rotation acc."/>
+                            </properties>
+                          </component>
+                          <component id="4b8ac" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="309" width="81" height="14"/>
+                              <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Rotation velocity"/>
+                            </properties>
+                          </component>
+                          <component id="2a963" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="359" width="65" height="14"/>
+                              <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Rotation dec."/>
+                            </properties>
+                          </component>
+                          <component id="e8230" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="4" width="50" height="14"/>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="COM port:"/>
+                            </properties>
+                          </component>
+                          <component id="d490b" class="javax.swing.JComboBox" binding="handlerPort">
+                            <constraints>
+                              <xy x="108" y="0" width="163" height="23"/>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1"/>
+                            </constraints>
+                            <properties/>
+                          </component>
+                          <component id="7587b" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="31" width="59" height="14"/>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Acceleration"/>
+                            </properties>
+                          </component>
+                          <component id="5b82d" class="javax.swing.JFormattedTextField" binding="acceleration">
+                            <constraints>
+                              <xy x="108" y="28" width="163" height="20"/>
+                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+                                <preferred-size width="150" height="-1"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <horizontalAlignment value="4"/>
+                            </properties>
+                          </component>
+                          <component id="bcfee" class="javax.swing.JLabel">
+                            <constraints>
+                              <xy x="0" y="56" width="60" height="14"/>
+                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
+                            </constraints>
+                            <properties>
+                              <text value="Deceleration"/>
+                            </properties>
+                          </component>
+                        </children>
                       </grid>
-                    </constraints>
-                    <properties>
-                      <horizontalAlignment value="4"/>
-                    </properties>
-                  </component>
-                  <component id="bcfee" class="javax.swing.JLabel">
-                    <constraints>
-                      <xy x="0" y="76" width="60" height="14"/>
-                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Deceleration"/>
-                    </properties>
-                  </component>
-                  <component id="c0985" class="javax.swing.JFormattedTextField" binding="deceleration">
-                    <constraints>
-                      <xy x="89" y="73" width="150" height="20"/>
-                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                    </constraints>
-                    <properties>
-                      <horizontalAlignment value="4"/>
-                    </properties>
-                  </component>
-                  <component id="579d9" class="javax.swing.JLabel">
-                    <constraints>
-                      <xy x="0" y="101" width="37" height="14"/>
-                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Velocity"/>
-                    </properties>
-                  </component>
-                  <component id="2a85f" class="javax.swing.JFormattedTextField" binding="velocity">
-                    <constraints>
-                      <xy x="89" y="98" width="150" height="20"/>
-                      <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                    </constraints>
-                    <properties>
-                      <horizontalAlignment value="4"/>
-                    </properties>
-                  </component>
-                  <component id="b7629" class="javax.swing.JLabel">
-                    <constraints>
-                      <xy x="0" y="126" width="69" height="14"/>
-                      <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Velocity Meas."/>
-                    </properties>
-                  </component>
-                  <component id="7320" class="javax.swing.JFormattedTextField" binding="measurementVelocity">
-                    <constraints>
-                      <xy x="89" y="123" width="150" height="20"/>
-                      <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                    </constraints>
-                    <properties>
-                      <horizontalAlignment value="4"/>
-                    </properties>
-                  </component>
-                  <component id="d3c8c" class="javax.swing.JLabel">
-                    <constraints>
-                      <xy x="0" y="176" width="79" height="14"/>
-                      <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Transverse Y AF"/>
-                    </properties>
-                  </component>
-                  <component id="3824" class="javax.swing.JFormattedTextField" binding="transverseYAFPosition">
-                    <constraints>
-                      <xy x="89" y="173" width="150" height="20"/>
-                      <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                    </constraints>
-                    <properties>
-                      <horizontalAlignment value="4"/>
-                    </properties>
-                  </component>
-                  <component id="b198b" class="javax.swing.JLabel">
-                    <constraints>
-                      <xy x="0" y="151" width="98" height="14"/>
-                      <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Translation positions"/>
-                    </properties>
-                  </component>
-                  <component id="944fb" class="javax.swing.JLabel">
-                    <constraints>
-                      <xy x="0" y="201" width="39" height="14"/>
-                      <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Axial AF"/>
-                    </properties>
-                  </component>
-                  <component id="3fbe4" class="javax.swing.JFormattedTextField" binding="axialAFPosition">
-                    <constraints>
-                      <xy x="89" y="198" width="150" height="20"/>
-                      <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                    </constraints>
-                    <properties>
-                      <horizontalAlignment value="4"/>
-                    </properties>
-                  </component>
-                  <component id="7e2a2" class="javax.swing.JLabel">
-                    <constraints>
-                      <xy x="0" y="226" width="60" height="14"/>
-                      <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Sample Load"/>
-                    </properties>
-                  </component>
-                  <component id="85fed" class="javax.swing.JFormattedTextField" binding="sampleLoadPosition">
-                    <constraints>
-                      <xy x="89" y="223" width="150" height="20"/>
-                      <grid row="9" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                    </constraints>
-                    <properties>
-                      <horizontalAlignment value="4"/>
-                    </properties>
-                  </component>
-                  <component id="e477f" class="javax.swing.JLabel">
-                    <constraints>
-                      <xy x="0" y="251" width="56" height="14"/>
-                      <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Background"/>
-                    </properties>
-                  </component>
-                  <component id="321c7" class="javax.swing.JFormattedTextField" binding="backgroundPosition">
-                    <constraints>
-                      <xy x="89" y="248" width="150" height="20"/>
-                      <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                    </constraints>
-                    <properties>
-                      <horizontalAlignment value="4"/>
-                    </properties>
-                  </component>
-                  <component id="a4bb" class="javax.swing.JLabel">
-                    <constraints>
-                      <xy x="0" y="276" width="65" height="14"/>
-                      <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Measurement"/>
-                    </properties>
-                  </component>
-                  <component id="60710" class="javax.swing.JFormattedTextField" binding="measurementPosition">
-                    <constraints>
-                      <xy x="89" y="273" width="150" height="20"/>
-                      <grid row="11" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                    </constraints>
-                    <properties>
-                      <horizontalAlignment value="4"/>
-                    </properties>
-                  </component>
-                  <component id="2a963" class="javax.swing.JLabel">
-                    <constraints>
-                      <xy x="0" y="329" width="41" height="14"/>
-                      <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Rotation"/>
-                    </properties>
-                  </component>
-                  <component id="db470" class="javax.swing.JFormattedTextField" binding="rotation">
-                    <constraints>
-                      <xy x="89" y="326" width="150" height="20"/>
-                      <grid row="13" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                    </constraints>
-                    <properties>
-                      <horizontalAlignment value="4"/>
-                    </properties>
-                  </component>
-                  <component id="567d1" class="javax.swing.JLabel">
-                    <constraints>
-                      <xy x="0" y="302" width="49" height="14"/>
-                      <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0"/>
-                    </constraints>
-                    <properties>
-                      <text value="Right Limit"/>
-                    </properties>
-                  </component>
-                  <component id="9451" class="javax.swing.JComboBox" binding="handlerRightLimit">
-                    <constraints>
-                      <xy x="89" y="298" width="150" height="23"/>
-                      <grid row="12" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1"/>
-                    </constraints>
-                    <properties/>
-                  </component>
+                    </children>
+                  </grid>
                 </children>
               </grid>
             </children>
@@ -548,7 +631,7 @@
       <grid id="1e9ce" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <xy x="0" y="446" width="746" height="76"/>
+          <xy x="0" y="488" width="777" height="34"/>
           <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
         </constraints>
         <properties/>
@@ -557,7 +640,7 @@
           <grid id="96888" row-count="1" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <xy x="2" y="2" width="742" height="72"/>
+              <xy x="2" y="2" width="773" height="30"/>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
             </constraints>
             <properties/>
@@ -565,7 +648,7 @@
             <children>
               <component id="bb8a2" class="javax.swing.JButton" binding="cancelButton">
                 <constraints>
-                  <xy x="382" y="24" width="66" height="24"/>
+                  <xy x="398" y="3" width="66" height="24"/>
                   <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
                 </constraints>
                 <properties>
@@ -574,13 +657,13 @@
               </component>
               <hspacer id="e0f0f">
                 <constraints>
-                  <xy x="0" y="30" width="294" height="11"/>
+                  <xy x="0" y="9" width="310" height="11"/>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1"/>
                 </constraints>
               </hspacer>
               <component id="51600" class="javax.swing.JButton" binding="saveButton">
                 <constraints>
-                  <xy x="294" y="24" width="58" height="24"/>
+                  <xy x="310" y="3" width="58" height="24"/>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
                 </constraints>
                 <properties>
@@ -589,7 +672,7 @@
               </component>
               <hspacer id="59d40">
                 <constraints>
-                  <xy x="448" y="30" width="294" height="11"/>
+                  <xy x="464" y="9" width="309" height="11"/>
                   <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1"/>
                 </constraints>
               </hspacer>
