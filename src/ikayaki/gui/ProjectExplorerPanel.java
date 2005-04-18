@@ -33,6 +33,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.io.File;
 import java.io.FileFilter;
+import java.util.Arrays;
 
 /**
  * Creates a history/autocomplete field (browserField) for choosing the project directory, a listing of project files in
@@ -377,6 +378,9 @@ public class ProjectExplorerPanel extends ProjectComponent {
 
         String browserFieldEditorText = browserFieldEditor.getText();
         int browserFieldEditorCursorPosition = browserFieldEditor.getCaretPosition();
+
+        // the files are in the order that the OS gave them, so they need to be sorted first
+        Arrays.sort(files);
 
         browserField.removeAllItems();
         for (File file : files) browserField.addItem(file);
