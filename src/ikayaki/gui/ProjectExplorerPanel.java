@@ -27,15 +27,10 @@ import ikayaki.Project;
 import ikayaki.Settings;
 import ikayaki.util.LastExecutor;
 
-import javax.swing.*;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
 import java.io.File;
 import java.io.FileFilter;
 
@@ -125,7 +120,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
         browserField.setBackground(Color.WHITE);
         browserFieldEditor = (JTextField) browserField.getEditor().getEditorComponent();
         browserFieldFlasher = new ComponentFlasher(browserFieldEditor);
-        // browserFieldEditor.setFocusTraversalKeysEnabled(false); // disable tab-exiting from browserField
+        browserFieldEditor.setFocusTraversalKeysEnabled(false); // disable tab-exiting from browserField
 
         // custom renderer for browserField's items so that long path names in the popup menu are made shorter
         browserFieldRenderer = new FittedComboBoxRenderer(browserFieldEditor);
@@ -233,12 +228,24 @@ public class ProjectExplorerPanel extends ProjectComponent {
          * displaying autocomplete results in browserField's popup window.
          */
         browserFieldEditor.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_TAB) {
+                    // fire a down-arrow event
+                    if ((e.getModifiers() & KeyEvent.SHIFT_MASK) != 0) {
+                        // NOTE: this deprecation is requider for shift-tab to work
+                        e.setModifiers(e.getModifiers() ^ KeyEvent.SHIFT_MASK);
+                        e.setKeyCode(KeyEvent.VK_UP);
+                    } else e.setKeyCode(KeyEvent.VK_DOWN);
+                }
+            }
+
             public void keyTyped(KeyEvent e) {
                 if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
-                    browserField.setSelectedItem(directory.getPath());
+                    browserField.setSelectedItem(directory);
                     // browserField.getEditor().selectAll();
                     return;
                 } else if (e.getKeyChar() == KeyEvent.VK_ENTER) return;
+                else if (e.getKeyChar() == KeyEvent.VK_TAB) return;
 
                 if (e.getModifiers() == KeyEvent.CTRL_MASK && e.getKeyChar() == KeyEvent.VK_DELETE) {
                     // delete one directory name at a time
