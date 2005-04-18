@@ -1,0 +1,32 @@
+\beginTestedClass{MeasurementControlsPanel}
+
+\beginCase{Measuring buttons}
+\condition{All of them are enabled/disabled by good manners}\testResultTrue
+\condition{On click, all of them execute their measuring command without unjustified complaints (UC1-UC7)}\testResultTrue
+\condition{Flash red on click if action can't be done}\testResultTrue
+\closeCase
+
+\beginCase{+Z/-Z info/radiobuttons}
+\condition{Shows correct orientation for current project}\testResultTrue
+\condition{Changes orientation on +z or -z radiobutton click}\testResultTrue
+\closeCase
+
+\beginCase{Magnetometer status picture}
+\condition{Always shows handler positioin and rotation as supposed...}\testResultTrue
+\condition{Updates smoothly \symbol{"5E}\symbol{"5E}}\testResultFalse
+\closeCase
+
+\beginCase{Handler manual controls (radiobuttons)}
+\condition{Disabled if "normal" measuring in action, enabled otherwise}\testResultTrue
+\condition{Executes desired action (if possible; can't tell) (UC11)}\testResultTrue
+\condition{Stack move-radiobuttons correctly (never on top of each other or missing)}
+\testDescription{Any two handler positions are set (in Settings) to same location (number)...}\testResultFalse
+\closeCase
+
+\beginCase{Magnetometer/demagnetizer manual controls (buttons)}
+\condition{Disabled if "normal" measuring in action, enabled otherwise if applicable}\testResultTrue
+\condition{Enable/disable and update text according to current handler position and rotation}\testResultFalse
+\condition{Executes desired action (if possible; flash red if not) (UC11)}\testResultTrue
+\closeCase
+
+\closeTestedClass

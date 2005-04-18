@@ -1,0 +1,34 @@
+\beginTestedClass{ProjectExplorerPanel}
+
+\beginCase{Directory text field}
+\condition{Shows autocomplete popup when typing and typed text matches to one or more directory}\testResultTrue
+\condition{Shows directory history on down-arrow click}\testResultTrue
+\condition{Too long lines in popup are shortened}\testResultTrue
+\condition{Tries to change directory when on enter press or mouse-click to popupmenu (UC21)}\testResultTrue
+\condition{Only allows correct and existing directories (flashes red on change-attempt if invalid)}\testResultTrue
+\closeCase
+
+\beginCase{Browse-button}
+\condition{Opens a dir chooser dialog}\testResultTrue
+\condition{Changes to chosen directory if "Open" selected; updates text field (UC21)}\testResultTrue
+\closeCase
+
+\beginCase{Project file table}
+\condition{Shows project files in current directory}\testResultTrue
+\condition{Only shows project files (.ika and Calibration/AF/Thellier/Thermal)}\testResultTrue
+\condition{Hilights open project}\testResultTrue
+\condition{Hilights (with different color) currently measuring project}\testResultTrue
+\condition{Loads project on project file mouseclick (UC20)}\testResultTrue
+\condition{Show export menu for clicked file on right-click}\testResultTrue
+\condition{Export to selected file if any chosen (UC13-UC15)}\testResultTrue
+\condition{Sorts data on header click}\testResultTrue
+\condition{Updates data if changed (modifield-column, that is)}\testResultTrue
+\closeCase
+
+\beginCase{"Create New" -components}
+\condition{Only allows correct, non-existing files; flashes red if invalid}
+\testDescription{/ or $\backslash$}\testResultFalse
+\condition{If valid filename, creates it, updates table with created file selected (UC19)}\testResultTrue
+\closeCase
+
+\closeTestedClass
