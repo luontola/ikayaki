@@ -338,11 +338,15 @@ public class ProjectExplorerPanel extends ProjectComponent {
 
         final String match = dirfile.isDirectory() ? "" : dirfile.getName();
 
-        return dir.listFiles(new FileFilter() {
+        File[] files = dir.listFiles(new FileFilter() {
             public boolean accept(File file) {
                 return (file.isDirectory() && file.getName().toLowerCase().startsWith(match.toLowerCase()));
             }
         });
+        
+        // listFiles() does not guarantee any order for the returned files, so they must be sorted first
+        Arrays.sort(files);
+        return files;
     }
 
     /**
@@ -351,9 +355,6 @@ public class ProjectExplorerPanel extends ProjectComponent {
     private void doAutoComplete() {
         final File[] files = getAutocompleteFiles(browserField.getEditor().getItem().toString());
 
-        // the files are in the order that the OS gave them, so they need to be sorted first
-        Arrays.sort(files);
-        
         // gui updating must be done from event-dispatching thread
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
