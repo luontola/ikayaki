@@ -457,6 +457,20 @@ public class Settings {
        return Integer.parseInt(getProperty("squid.handler.rotationacceleration", "0"));
    }
 
+   public synchronized boolean setMaximumField(int value) {
+        if (value >= 0 && value <= 4000) {
+            setProperty("squid.degausser.maximumfield", Integer.toString(value));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public synchronized int getMaximumField() {
+       return Integer.parseInt(getProperty("squid.degausser.maximumField", "0"));
+   }
+
+
    public synchronized boolean setHandlerRotationAcceleration(int value) {
         if (value >= 0 && value <= 127) {
             setProperty("squid.handler.rotationacceleration", Integer.toString(value));

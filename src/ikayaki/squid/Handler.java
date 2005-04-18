@@ -206,7 +206,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.take();
+          answer = (String) queue.poll(60L,TimeUnit.SECONDS);
         }
         catch (InterruptedException ex1) {
         }
@@ -640,7 +640,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.take();
+          answer = (String) queue.poll(60L,TimeUnit.SECONDS);
         }
         catch (InterruptedException ex1) {
         }
@@ -685,7 +685,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.take();
+          answer = (String) queue.poll(60L,TimeUnit.SECONDS);
         }
         catch (InterruptedException ex1) {
         }

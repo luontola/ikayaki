@@ -26,6 +26,7 @@ import ikayaki.Settings;
 
 import java.util.Stack;
 import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Offers an interface for controlling the degausser (demagnetizer). Because the data link is implemented in the
@@ -87,8 +88,9 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     private long lastCommandTime;
 
     private boolean waitingForMessage = false;
+  private int maximumField;
 
-    /**
+  /**
      * Creates a new degausser interface. Opens connection to degausser COM port (if not open yet) and reads settings
      * from the Setting class.
      */
@@ -100,6 +102,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         queue = new SynchronousQueue<String>();
         this.degausserDelay = Settings.instance().getDegausserDelay();
         this.degausserRamp = Settings.instance().getDegausserRamp();
+        this.maximumField = Settings.instance().getMaximumField();
         lastCommandTime = System.currentTimeMillis();
         //needs to call new functions setDelay() and setRamp(). TODO
         waitSecond();
@@ -125,6 +128,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         // No check, only two options. Doesnt matter.
         this.degausserDelay = Settings.instance().getDegausserDelay();
         this.degausserRamp = Settings.instance().getDegausserRamp();
+        this.maximumField = Settings.instance().getMaximumField();
         waitSecond();
         try {
             this.serialIO.writeMessage("DCD " + this.degausserDelay + "\r");
@@ -161,7 +165,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     protected void setAmplitude(int amplitude) {
         waitSecond();
-        if (amplitude >= 0 && amplitude <= 3000) {
+        if (amplitude >= 1 && amplitude <= maximumField) {
             try {
                 if (amplitude < 10) {
                     this.serialIO.writeMessage("DCA 000" + amplitude + "\r");
@@ -288,7 +292,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.take();
+          answer = (String) queue.poll(60L,TimeUnit.SECONDS);
         }
         catch (InterruptedException ex1) {
         }
@@ -309,7 +313,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.take();
+          answer = (String) queue.poll(60L,TimeUnit.SECONDS);
         }
         catch (InterruptedException ex1) {
         }
@@ -331,7 +335,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.take();
+          answer = (String) queue.poll(60L,TimeUnit.SECONDS);
         }
         catch (InterruptedException ex1) {
         }
@@ -353,7 +357,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.take();
+          answer = (String) queue.poll(60L,TimeUnit.SECONDS);
         }
         catch (InterruptedException ex1) {
         }
@@ -375,7 +379,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.take();
+          answer = (String) queue.poll(60L,TimeUnit.SECONDS);
         }
         catch (InterruptedException ex1) {
         }

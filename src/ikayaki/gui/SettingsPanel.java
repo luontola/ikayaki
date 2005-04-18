@@ -169,7 +169,11 @@ public class SettingsPanel
    */
   private JComboBox handlerRightLimit;
 
+  /**
+   * Maximum field to allow for equipment
+   */
   private JFormattedTextField maximumField;
+
   private JCheckBox zAxis;
   private JCheckBox yAxis;
   private JCheckBox xAxis;
@@ -243,6 +247,7 @@ public class SettingsPanel
     this.rotationVelocity.setValue(Settings.instance().getHandlerVelocity());
     this.rotationAcc.setValue(Settings.instance().getHandlerAcceleration());
     this.rotationDec.setValue(Settings.instance().getHandlerDeceleration());
+    this.maximumField.setValue(Settings.instance().getMaximumField());
     this.handlerRightLimit.addItem("plus");
     this.handlerRightLimit.addItem("minus");
     this.handlerRightLimit.setSelectedIndex(Settings.instance().
@@ -266,6 +271,7 @@ public class SettingsPanel
     xAxisCalibration.setFormatterFactory(factory);
     yAxisCalibration.setFormatterFactory(factory);
     zAxisCalibration.setFormatterFactory(factory);
+    maximumField.setFormatterFactory(factory);
 
     Enumeration ports = CommPortIdentifier.getPortIdentifiers();
 
@@ -397,6 +403,8 @@ public class SettingsPanel
                                            getSelectedItem());
       Settings.instance().setDegausserRamp(((Integer)this.
           demagRamp.getSelectedItem()));
+      Settings.instance().setMaximumField(((Integer)this.
+          maximumField.getValue()));
       Settings.instance().setHandlerAcceleration(((Integer)this.
           acceleration.getValue()));
       Settings.instance().setHandlerAxialAFPosition(((Integer)this.
@@ -934,6 +942,10 @@ public class SettingsPanel
       else if (tf == rotation) {
         formatter.setMinimum(new Integer(Integer.MIN_VALUE));
         formatter.setMaximum(new Integer(Integer.MAX_VALUE));
+      }
+      else if(tf == maximumField) {
+        formatter.setMinimum(new Integer(0));
+        formatter.setMaximum(new Integer(4000));
       }
       return formatter;
     }
