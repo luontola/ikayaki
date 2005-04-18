@@ -23,19 +23,14 @@
 package ikayaki.squid;
 
 import ikayaki.Ikayaki;
+
 import javax.comm.*;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.util.Calendar;
 import java.util.TooManyListenersException;
 import java.util.Vector;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.BufferedWriter;
-import java.util.Calendar;
 
 /**
  * This class represents hardware layer to serial port communications.
@@ -48,24 +43,44 @@ Event A: On new SerialPortEvent - generates new SerialMessageArrivedEvent if a d
 message from serial port is received.
 */
 
-  private static final boolean DEBUG = true; // Writes log-file
+    private static final boolean DEBUG = true; // Writes log-file
 
-  private static Vector<SerialIO> openPorts = new Vector<SerialIO> ();
+    /**
+     * All opened serial ports
+     */
+    private static Vector<SerialIO> openPorts = new Vector<SerialIO>();
 
-  /**
-   * Listeners for this port.
-   */
-  private EventListenerList listenerList = new EventListenerList();
+    /**
+     * Listeners for this port.
+     */
+    private EventListenerList listenerList = new EventListenerList();
 
-  private SerialPort sPort;
+    /**
+     * This serial port
+     */
+    private SerialPort sPort;
 
-  private OutputStream os;
-  private InputStream is;
+    /**
+     * Outputstream of this port
+     */
+    private OutputStream os;
 
-  private String portName;
-  private BufferedWriter logWriter;
+    /**
+     * Inputstream of this port
+     */
+    private InputStream is;
 
-  /**
+    /**
+     * Name of this port
+     */
+    private String portName;
+
+    /**
+     * Logwriter buffer
+     */
+    private BufferedWriter logWriter;
+
+    /**
      * Creates an instance of SerialIO which represents one serial port.
      *
      * @param parameters parameters for the serial port being opened.
@@ -89,19 +104,18 @@ message from serial port is received.
         }
 
         // if debug mode, make own logfile for port
-        if(DEBUG) {
-          Calendar now = Calendar.getInstance();
-          int y = now.get(Calendar.YEAR), m = now.get(Calendar.MONTH) + 1, d = now.get(Calendar.DAY_OF_MONTH);
-          File file = new File(Ikayaki.DEBUG_LOG_DIR, y + "-" + (m < 10 ? "0" : "") + m + "-" +
-                               (d < 10 ? "0" : "") + d + "-" + parameters.getPortName() + ".log");
-          try {
-            if (!Ikayaki.DEBUG_LOG_DIR.exists()) Ikayaki.DEBUG_LOG_DIR.mkdir();
-            //if (!file.exists()) file.createNewFile(); // not needed
-            logWriter = new BufferedWriter(new FileWriter(file, true));
-          }
-          catch (IOException ex1) {
-            System.err.println("Error creating log file '" + file + "': " + ex1);
-          }
+        if (DEBUG) {
+            Calendar now = Calendar.getInstance();
+            int y = now.get(Calendar.YEAR), m = now.get(Calendar.MONTH) + 1, d = now.get(Calendar.DAY_OF_MONTH);
+            File file = new File(Ikayaki.DEBUG_LOG_DIR, y + "-" + (m < 10 ? "0" : "") + m + "-" +
+                    (d < 10 ? "0" : "") + d + "-" + parameters.getPortName() + ".log");
+            try {
+                if (!Ikayaki.DEBUG_LOG_DIR.exists()) Ikayaki.DEBUG_LOG_DIR.mkdir();
+                //if (!file.exists()) file.createNewFile(); // not needed
+                logWriter = new BufferedWriter(new FileWriter(file, true));
+            } catch (IOException ex1) {
+                System.err.println("Error creating log file '" + file + "': " + ex1);
+            }
         }
         // Set the parameters of the connection
         try {
@@ -123,7 +137,7 @@ message from serial port is received.
             throw new SerialIOException("Unsupported flow control");
         }
 
-        // open the stream
+        // open the streams
         try {
             this.os = sPort.getOutputStream();
             this.is = sPort.getInputStream();
@@ -160,12 +174,12 @@ message from serial port is received.
     }
 
     public static SerialIO openPort(SerialParameters parameters) throws SerialIOException {
-        //System.out.println("Let's try to open port: " + parameters.getPortName());  //TODO debug
+        //System.out.println("Let's try to open port: " + parameters.getPortName());  //DEBUG
 
         SerialIO newPort = null;
 
         // Check if given port is already open
-        // if it is then return it
+        // if it is then return it instead of creating a new one.
         for (int i = 0; i < openPorts.size(); i++) {
             if (parameters.getPortName().equals(openPorts.elementAt(i).portName)) {
                 return openPorts.elementAt(i);
@@ -181,36 +195,34 @@ message from serial port is received.
     /**
      * Writes an ASCII format message to serial port.
      *
-     * @param message message to be send
+     * @param message a message to be send
      * @throws SerialIOException if exception occurs.
      */
     public void writeMessage(String message) throws SerialIOException {
 
         byte[] asciiMsg;
 
-        // convert message to ASCII
+        // convert a message to ASCII
         try {
-            asciiMsg = message.getBytes("US-ASCII"); // TODO is this right??
+            asciiMsg = message.getBytes("US-ASCII");
         } catch (UnsupportedEncodingException e) {
             throw new SerialIOException("ASCII charset not supported");
         }
 
-        // send message to outputstream
+        // send a message to outputstream
         try {
-            //System.out.println("Sending data to port: " + this.portName); // TODO debug
-            //Shall we wait? No need to shoot them too quick to system
             try {
-              Thread.sleep(50);
-            }
-            catch (InterruptedException ex) {
+                Thread.sleep(50); // Let's wait a bit so we won't flood the system wtih too many messages
+                // 50 msecs seems to work fine with baudrate of 1200..
+            } catch (InterruptedException ex) {
             }
             os.write(asciiMsg);
-             if(DEBUG) {
-               logWriter.write("SEND: " + message);
-               logWriter.newLine();
-               logWriter.flush();
-             }
-            os.flush(); // TODO is this needed ??
+            if (DEBUG) {
+                logWriter.write("SEND: " + message);
+                logWriter.newLine();
+                logWriter.flush();
+            }
+            os.flush(); // flush the buffer
         } catch (IOException e) {
             throw new SerialIOException("Couldn't write to outputstream of" + this.portName);
         }
@@ -218,24 +230,28 @@ message from serial port is received.
         return;
     }
 
+    /**
+     * Closes this serial port and it's streams
+     */
     public void closePort() {
         if (sPort != null) {
             this.sPort.close();
             try {
                 this.is.close();
-                this.os.close();
             } catch (IOException ex) {
-                System.err.println("Could not close stream for COM port");
+                System.err.println("Could not close inputstream for COM port");
             }
             try {
                 this.os.close();
             } catch (IOException ex1) {
-                System.err.println("Could not close stream for COM port");
+                System.err.println("Could not close outputstream for COM port");
             }
         }
     }
 
-
+    /**
+     * Closes all open serialports and their streams
+     */
     public static void closeAllPorts() {
         for (int i = 0; i < openPorts.size(); i++) {
             openPorts.elementAt(i).closePort();
@@ -246,8 +262,7 @@ message from serial port is received.
      * This method is run when a serial message is received from serial port. It generates a new SerialIOEvent.
      */
     public void serialEvent(SerialPortEvent event) {
-        //System.out.println("New message arrived to port: " + this.portName);
-
+        //System.out.println("New message arrived to port: " + this.portName); //DEBUG
         switch (event.getEventType()) {
         case SerialPortEvent.BI:
         case SerialPortEvent.OE:
@@ -271,7 +286,7 @@ message from serial port is received.
                         break;
                     }
                     if ('\r' == (char) newData) {
-                        inputBuffer.append('\n');
+                        //inputBuffer.append('\n'); // '\r' chars should be skipped I guess..
                     } else {
                         newByte[0] = new Integer(newData).byteValue();
                         inputBuffer.append(new String(newByte, "US-ASCII"));
@@ -281,18 +296,16 @@ message from serial port is received.
                     return;
                 }
             }
-            // TODO convert from ASCII to unicode
             //System.out.println("sending: " + new String(inputBuffer)); //debug
-            if(DEBUG) {
-              try {
-                logWriter.write("RECEIVE: " + inputBuffer);
-                logWriter.newLine();
-                logWriter.flush();
-              }
-              catch (IOException ex1) {
-                System.err.println(ex1);
-              }
-             }
+            if (DEBUG) {
+                try {
+                    logWriter.write("RECEIVE: " + inputBuffer);
+                    logWriter.newLine();
+                    logWriter.flush();
+                } catch (IOException ex1) {
+                    System.err.println(ex1);
+                }
+            }
 
             fireSerialIOEvent(new String(inputBuffer));
             break;
@@ -338,5 +351,4 @@ message from serial port is received.
             }
         });
     }
-
 }
