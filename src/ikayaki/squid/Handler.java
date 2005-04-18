@@ -123,8 +123,11 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private int currentRotation = 0;
 
     private boolean waitingForMessage = false;
+  private int rotationSpeed;
+  private int rotationAcceleration;
+  private int rotationDeceleration;
 
-    /**
+  /**
      * Creates a new handler interface. Opens connection to handler COM port and reads settings from the Settings
      * class.
      */
@@ -170,6 +173,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         this.measurementPosition = Settings.instance().getHandlerMeasurementPosition();
         this.measurementVelocity = Settings.instance().getHandlerMeasurementVelocity();
         this.transverseYAFPosition = Settings.instance().getHandlerTransverseYAFPosition();
+        this.rotationSpeed = Settings.instance().getHandlerRotationVelocity();
+        this.rotationAcceleration = Settings.instance().getHandlerRotationAcceleration();
+        this.rotationDeceleration = Settings.instance().getHandlerRotationDeceleration();
         this.velocity = Settings.instance().getHandlerVelocity();
 
         //set all settings.. only three. Let's do it..! Rock'N'Roll
@@ -249,9 +255,11 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         try {
             setVelocity(velocity);
             this.serialIO.writeMessage("O1,0,");
-            this.go();
+            this.serialIO.writeMessage("H1,");
+            this.join();
             this.serialIO.writeMessage("O1,1,");
-            this.go();
+            this.serialIO.writeMessage("H1,");
+            this.join();
             this.currentPosition = this.homePosition;
         } catch (SerialIOException ex) {
             System.err.println(ex);
@@ -299,7 +307,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * is finished.
      */
     public void moveToBackground() {
-        setVelocity(measurementVelocity);
+        setVelocity(velocity);
         moveToPos(this.backgroundPosition);
         this.currentPosition = this.backgroundPosition;
         //this.go();
@@ -355,9 +363,11 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         angle = angle % 360;
         angle = (int) (((double) angle) / 360.0 * Settings.instance().getHandlerRotation());
         try {
-            //first set rotation active
+            //first set rotation speed
+            this.serialIO.writeMessage("M" + rotationSpeed);
+            //then set rotation active
             this.serialIO.writeMessage("O1,1");
-            this.serialIO.writeMessage("P" + angle + ",");
+            this.serialIO.writeMessage("P" + angle + "G,");
             this.currentRotation = angle;
            // this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException ex) {

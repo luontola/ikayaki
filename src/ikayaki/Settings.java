@@ -430,9 +430,49 @@ public class Settings {
         return Integer.parseInt(getProperty("squid.handler.measurementvelocity", "0"));
     }
 
+
     public synchronized boolean setHandlerMeasurementVelocity(int value) {
         if (value >= 50 && value <= 2000) {
             setProperty("squid.handler.measurementvelocity", Integer.toString(value));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public synchronized int getHandlerRotationVelocity() {
+       return Integer.parseInt(getProperty("squid.handler.rotationvelocity", "50"));
+   }
+
+   public synchronized boolean setHandlerRotationVelocity(int value) {
+        if (value >= 50 && value <= 2000) {
+            setProperty("squid.handler.rotationvelocity", Integer.toString(value));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public synchronized int getHandlerRotationAcceleration() {
+       return Integer.parseInt(getProperty("squid.handler.rotationacceleration", "0"));
+   }
+
+   public synchronized boolean setHandlerRotationAcceleration(int value) {
+        if (value >= 0 && value <= 127) {
+            setProperty("squid.handler.rotationacceleration", Integer.toString(value));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public synchronized int getHandlerRotationDeceleration() {
+       return Integer.parseInt(getProperty("squid.handler.rotationeceleration", "0"));
+   }
+
+   public synchronized boolean setHandlerRotationDeceleration(int value) {
+        if (value >= 50 && value <= 2000) {
+            setProperty("squid.handler.rotationdeceleration", Integer.toString(value));
             return true;
         } else {
             return false;
