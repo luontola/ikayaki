@@ -628,7 +628,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             waitingForMessage = true;
             try {
               String answer = (String) queue.take();//poll(60L, TimeUnit.SECONDS);
-              System.err.println("get:" + answer + " from queue(join)");
+              //System.err.println("get:" + answer + " from queue(join)");
             }
             catch (InterruptedException ex1) {
             }
@@ -662,7 +662,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
        // while(true) {
           try {
             answer = (String) queue.take(); //(60L, TimeUnit.SECONDS);
-            System.err.println("get:" + answer + " from queue(verify)");
+            //System.err.println("get:" + answer + " from queue(verify)");
             //if(answer != null) break;
             //Thread.sleep(1000);
           }
@@ -712,7 +712,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         String answer = null;
         try {
           answer = (String) queue.poll(60L,TimeUnit.SECONDS);
-          System.err.println("get:" + answer + " from queue(take)");
+          //System.err.println("get:" + answer + " from queue(take)");
         }
         catch (InterruptedException ex1) {
         }
@@ -721,12 +721,12 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     public void serialIOEvent(SerialIOEvent event) {
-      System.err.println("new event:" + event.getMessage());
+      //System.err.println("new event:" + event.getMessage());
       String message = event.getMessage();
       if(message != null) {
         if (waitingForMessage) {
           try {
-            System.err.println("putted:" + message + " to queue");
+            //System.err.println("putted:" + message + " to queue");
             queue.put(message);
           }
           catch (InterruptedException e) {
