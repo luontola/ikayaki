@@ -93,20 +93,30 @@ public class MagnetometerStatusPanel extends JPanel {
         setPreferredSize(new Dimension(150, 400));
         //setMinimumSize(new Dimension(150, 400));
 
-        // sample handler to read positions and command with move/rotate commands
-        readHandler();
+//        // sample handler to read positions and command with move/rotate commands
+//        readHandler();
 
         //updateStatus();
         updateStatus(14000000, 500); // NOTE: for testing
     }
 
-    /**
-     * Reads current sample handler from Squid.instance().getHandler(), saves it to this.handler.
-     */
-    private void readHandler() {
-        try {
-            this.handler = Squid.instance().getHandler();
-        } catch (IOException ex) { }
+//    /**
+//     * Reads current sample handler from Squid.instance().getHandler(), saves it to this.handler.
+//     */
+//    private void readHandler() {
+//        // TODO: it might be necessary to put this to its own thread. maybe otherwise the GUI will freeze on program start?
+//        try {
+//            this.handler = Squid.instance().getHandler();
+//        } catch (IOException ex) { }
+//    }
+
+    public Handler getHandler() {
+        return handler;
+    }
+
+    public void setHandler(Handler handler) {
+        this.handler = handler;
+        updateStatus();
     }
 
     /**

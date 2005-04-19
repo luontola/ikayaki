@@ -106,17 +106,28 @@ public class MainViewPanel extends ProjectComponent {
         }
 
         /* Init SQUID interface */
-        try {
-            squid = Squid.instance();
-            if (!squid.instance().isOK()) {
-                JOptionPane.showMessageDialog(getParentFrame(),
-                    "SQUID is not OK!", "Squid error", JOptionPane.ERROR_MESSAGE);
+        new Thread() {
+            @Override public void run() {
+                try {
+                    final Squid squid = Squid.instance();       // might take a long time
+                    if (!squid.isOK()) {
+                        JOptionPane.showMessageDialog(getParentFrame(),
+                                "SQUID is not OK!", "Squid error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            setSquid(squid);
+                        }
+                    });
+
+                } catch (IOException e) {
+                    // TODO: what should be done now? give error message?
+                    //e.printStackTrace();
+                    System.err.println("Unable to initialize the SQUID interface.");
+                }
             }
-        } catch (IOException e) {
-            // TODO: what should be done now? give error message?
-            //e.printStackTrace();
-            System.err.println("Unable to initialize the SQUID interface.");
-        }
+        }.start();
 
         /* Lay out GUI components */
         final JPanel left = new JPanel(new GridBagLayout());
@@ -223,6 +234,40 @@ public class MainViewPanel extends ProjectComponent {
     }
 
     /**
+     * Returns the Squid instance used for communicating with the hardware, or null if the connection has not yet been
+     * fully initialized.
+     */
+    public Squid getSquid() {
+        return squid;
+    }
+
+    /**
+     * Sets the fully initialized Squid interface for the use of the program. Sets the active project the owner of the
+     * squid by re-setting the active project.
+     *
+     * @param squid an instance of the Squid.
+     * @throws NullPointerException  if squid is null.
+     * @throws IllegalStateException if the squid has already been set.
+     */
+    public void setSquid(Squid squid) {
+        if (squid == null) {
+            throw new NullPointerException();
+        }
+        if (this.squid != null) {
+            throw new IllegalStateException();
+        }
+        this.squid = squid;
+        setProject(getProject());
+    }
+
+    /**
+     * Returns the active project, or null if no project is active.
+     */
+    @Override public Project getProject() {
+        return project;
+    }
+
+    /**
      * Loads a new project to all GUI components. This method will be called by the Project Explorer and Calibration
      * panels. It is possible to reopen the same project, in which case all GUI components will as well be updated.
      *
@@ -289,13 +334,6 @@ public class MainViewPanel extends ProjectComponent {
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }
-
-    /**
-     * Returns the active project, or null if no project is active.
-     */
-    @Override public Project getProject() {
-        return project;
     }
 
     /**

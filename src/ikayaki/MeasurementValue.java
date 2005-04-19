@@ -203,7 +203,6 @@ public abstract class MeasurementValue <T> {
                         if (y == 0.0) {
                             y = 0.000000000001;
                         }
-                        if (z == 0) System.out.println(sqrt(pow(x, 2) + pow(y, 2)));
                         double d = atan(z / sqrt(pow(x, 2) + pow(y, 2)));
                         return Math.toDegrees(d);
                     }

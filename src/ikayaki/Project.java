@@ -865,10 +865,10 @@ project listeners.
     /**
      * Returns the Squid if this project is its owner, otherwise returns null.
      * <p/>
-     * (NOTE: Make this method public? Or return a Proxy (see design patterns), so others can know where the handler is
+     * (NOTE: Is public too unsafe? Maybe return a Proxy (see design patterns), so others can know where the handler is
      * moving but not control it?)
      */
-    private synchronized Squid getSquid() {
+    public synchronized Squid getSquid() {
         return squid;
     }
 
@@ -1735,16 +1735,11 @@ project listeners.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualMove(int position) {
-      try {
-        squid.instance().getHandler().moveToPos(position);
+        getSquid().getHandler().moveToPos(position);
         fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-        Squid.instance().getHandler().join();
+        getSquid().getHandler().join();
         fireMeasurementEvent(currentStep, HANDLER_STOP);
         return true;
-      }
-      catch (IOException ex) {
-        return false;
-      }
     }
 
     /**
@@ -1756,16 +1751,11 @@ project listeners.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualRotate(int angle) {
-      try {
-        squid.instance().getHandler().rotateTo(angle);
+        getSquid().getHandler().rotateTo(angle);
         fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-        Squid.instance().getHandler().join();
+        getSquid().getHandler().join();
         fireMeasurementEvent(currentStep, HANDLER_STOP);
         return true;
-      }
-      catch (IOException ex) {
-        return false;
-      }
     }
 
     /**
@@ -1777,19 +1767,13 @@ project listeners.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualMeasure() {
-      Double[] results = null;
-      try {
-        results = Squid.instance().getMagnetometer().readData();
+        Double[] results = null;
+        results = getSquid().getMagnetometer().readData();
 
         //TODO: check where we are
-        currentStep.addResult(new MeasurementResult(BG, results[0], results[1],
-                                                    results[2]));
+        currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
         fireMeasurementEvent(currentStep, VALUE_MEASURED);
         return true;
-      }
-      catch (IOException ex) {
-        return false;
-      }
     }
 
     /**
@@ -1802,21 +1786,14 @@ project listeners.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualDemagZ(double amplitude) {
-      try {
         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
         //need Gauss value
 
-        Squid.instance().getDegausser().demagnetizeZ( (int) (
-            currentStep.getStepValue() * 10));
+        getSquid().getDegausser().demagnetizeZ((int) (currentStep.getStepValue() * 10));
 
         // blocking method
         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
         return true;
-      }
-      catch (IOException ex) {
-        return false;
-      }
-
     }
 
     /**
@@ -1829,21 +1806,14 @@ project listeners.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualDemagY(double amplitude) {
-      try {
         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
         //need Gauss value
 
-        Squid.instance().getDegausser().demagnetizeY( (int) (
-            currentStep.getStepValue() * 10));
+        getSquid().getDegausser().demagnetizeY((int) (currentStep.getStepValue() * 10));
 
         // blocking method
         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
         return true;
-      }
-      catch (IOException ex) {
-        return false;
-      }
-
     }
 
     /**
@@ -1905,9 +1875,9 @@ project listeners.
 
                 try {
                     // reset the equipment
-                    if (Squid.instance().getHandler().getRotation() != 0) {
-                        Squid.instance().getHandler().rotateTo(0);
-                        Squid.instance().getHandler().join();
+                    if (getSquid().getHandler().getRotation() != 0) {
+                        getSquid().getHandler().rotateTo(0);
+                        getSquid().getHandler().join();
                     }
                     checkAborted();
 
@@ -1915,68 +1885,68 @@ project listeners.
                     if (currentStep.getStepValue() > 0.0) {
 
                         // demagnetize Z
-                        Squid.instance().getHandler().moveToDegausserZ();
+                        getSquid().getHandler().moveToDegausserZ();
                         fireMeasurementEvent(currentStep, HANDLER_MOVE);
-                        Squid.instance().getHandler().join();
+                        getSquid().getHandler().join();
                         fireMeasurementEvent(currentStep, HANDLER_STOP);
                         checkAborted();
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
                         //need Gauss value
-                        Squid.instance().getDegausser().demagnetizeZ((int) (currentStep.getStepValue() * 10));
+                        getSquid().getDegausser().demagnetizeZ((int) (currentStep.getStepValue() * 10));
                         // blocking method
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
                         checkAborted();
 
                         // demagnetize Y
-                        Squid.instance().getHandler().moveToDegausserY();
+                        getSquid().getHandler().moveToDegausserY();
                         fireMeasurementEvent(currentStep, HANDLER_MOVE);
-                        Squid.instance().getHandler().join();
+                        getSquid().getHandler().join();
                         fireMeasurementEvent(currentStep, HANDLER_STOP);
                         checkAborted();
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
                         //need Gauss value
-                        Squid.instance().getDegausser().demagnetizeY((int) (currentStep.getStepValue() * 10));
+                        getSquid().getDegausser().demagnetizeY((int) (currentStep.getStepValue() * 10));
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
                         checkAborted();
 
                         // demagnetize X
-                        Squid.instance().getHandler().rotateTo(90);
+                        getSquid().getHandler().rotateTo(90);
                         fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-                        Squid.instance().getHandler().join();
+                        getSquid().getHandler().join();
                         fireMeasurementEvent(currentStep, HANDLER_STOP);
                         checkAborted();
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
                         //need Gauss value
-                        Squid.instance().getDegausser().demagnetizeY((int) (currentStep.getStepValue() * 10));
+                        getSquid().getDegausser().demagnetizeY((int) (currentStep.getStepValue() * 10));
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
                         checkAborted();
-                        Squid.instance().getHandler().rotateTo(0);
+                        getSquid().getHandler().rotateTo(0);
                         fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-                        Squid.instance().getHandler().join();
+                        getSquid().getHandler().join();
                         fireMeasurementEvent(currentStep, HANDLER_STOP);
                         checkAborted();
                     }
 
                     // measure first background noise
-                    Squid.instance().getHandler().moveToBackground();
+                    getSquid().getHandler().moveToBackground();
                     fireMeasurementEvent(currentStep, HANDLER_MOVE);
-                    Squid.instance().getHandler().join();
+                    getSquid().getHandler().join();
                     fireMeasurementEvent(currentStep, HANDLER_STOP);
                     checkAborted();
                     // Begin by pulsing feedback loop for each axis And by clearing flux counter for each axis
-                    Squid.instance().getMagnetometer().openLoop('a');
-                    Squid.instance().getMagnetometer().join();
-                    Squid.instance().getMagnetometer().clearFlux('a');
-                    Squid.instance().getMagnetometer().join();
-                    Double[] results = Squid.instance().getMagnetometer().readData();
+                    getSquid().getMagnetometer().openLoop('a');
+                    getSquid().getMagnetometer().join();
+                    getSquid().getMagnetometer().clearFlux('a');
+                    getSquid().getMagnetometer().join();
+                    Double[] results = getSquid().getMagnetometer().readData();
                     currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
                     checkAborted();
 
                     // begin measuring the sample
-                    Squid.instance().getHandler().moveToMeasurement();
+                    getSquid().getHandler().moveToMeasurement();
                     fireMeasurementEvent(currentStep, HANDLER_MOVE);
-                    Squid.instance().getHandler().join();
+                    getSquid().getHandler().join();
                     fireMeasurementEvent(currentStep, HANDLER_STOP);
                     checkAborted();
 
@@ -1985,7 +1955,7 @@ project listeners.
                     if (rotations == 0) {
 
                         // quick measure with no rotations
-                        results = Squid.instance().getMagnetometer().readData();
+                        results = getSquid().getMagnetometer().readData();
                         currentStep.addResult(new MeasurementResult(DEG0, results[0], results[1], results[2]));
                         fireMeasurementEvent(currentStep, VALUE_MEASURED);
                         checkAborted();
@@ -1995,60 +1965,60 @@ project listeners.
                         for (int j = 0; j < rotations; j++) {
 
                             // measure at 0 degrees
-                            results = Squid.instance().getMagnetometer().readData();
+                            results = getSquid().getMagnetometer().readData();
                             currentStep.addResult(new MeasurementResult(DEG0, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
                             // measure at 90 degrees
-                            Squid.instance().getHandler().rotateTo(90);
+                            getSquid().getHandler().rotateTo(90);
                             fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-                            Squid.instance().getHandler().join();
+                            getSquid().getHandler().join();
                             fireMeasurementEvent(currentStep, HANDLER_STOP);
                             checkAborted();
-                            results = Squid.instance().getMagnetometer().readData();
+                            results = getSquid().getMagnetometer().readData();
                             currentStep.addResult(new MeasurementResult(DEG90, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
                             // measure at 180 degrees
-                            Squid.instance().getHandler().rotateTo(180);
+                            getSquid().getHandler().rotateTo(180);
                             fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-                            Squid.instance().getHandler().join();
+                            getSquid().getHandler().join();
                             fireMeasurementEvent(currentStep, HANDLER_STOP);
                             checkAborted();
-                            results = Squid.instance().getMagnetometer().readData();
+                            results = getSquid().getMagnetometer().readData();
                             currentStep.addResult(new MeasurementResult(DEG180, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
                             // measure at 270 degrees
-                            Squid.instance().getHandler().rotateTo(270);
+                            getSquid().getHandler().rotateTo(270);
                             fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-                            Squid.instance().getHandler().join();
+                            getSquid().getHandler().join();
                             fireMeasurementEvent(currentStep, HANDLER_STOP);
                             checkAborted();
-                            results = Squid.instance().getMagnetometer().readData();
+                            results = getSquid().getMagnetometer().readData();
                             currentStep.addResult(new MeasurementResult(DEG270, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
                             // rotate the handler back to 0 degrees
-                            Squid.instance().getHandler().rotateTo(0);
+                            getSquid().getHandler().rotateTo(0);
                             fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-                            Squid.instance().getHandler().join();
+                            getSquid().getHandler().join();
                             fireMeasurementEvent(currentStep, HANDLER_STOP);
                             checkAborted();
                         }
                     }
 
                     // measure second background noise
-                    Squid.instance().getHandler().moveToBackground();
+                    getSquid().getHandler().moveToBackground();
                     fireMeasurementEvent(currentStep, HANDLER_MOVE);
-                    Squid.instance().getHandler().join();
+                    getSquid().getHandler().join();
                     fireMeasurementEvent(currentStep, HANDLER_STOP);
                     checkAborted();
-                    results = Squid.instance().getMagnetometer().readData();
+                    results = getSquid().getMagnetometer().readData();
                     currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
                     checkAborted();
@@ -2057,12 +2027,10 @@ project listeners.
 
                     // the measurement was aborted or some error occurred
                     if (getState() == ABORTED) {
-                        System.out.println(e.getMessage());
+                        System.err.println(e.getMessage());
                     } else {
                         e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 } finally {
 
                     // complete the step
