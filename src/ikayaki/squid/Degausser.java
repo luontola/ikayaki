@@ -96,8 +96,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * from the Setting class.
      */
     public Degausser() throws SerialIOException {
-        this.serialIO = SerialIO.openPort(new SerialParameters(Settings.
-                getDegausserPort()));
+        this.serialIO = SerialIO.openPort(new SerialParameters(Settings.getDegausserPort()));
         serialIO.addSerialIOListener(this);
         messageBuffer = new Stack<String>();
         queue = new SynchronousQueue<String>();
