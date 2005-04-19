@@ -154,8 +154,11 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
 
         //set all settings TODO: do we need to check values? (original does)
         this.setAcceleration(this.acceleration);
+        System.err.println("Acceleration set:" + this.verify('A'));
         this.setVelocity(this.velocity);
+        System.err.println("Velocity set:" + this.verify('M'));
         this.setDeceleration(this.deceleration);
+        System.err.println("Deceleration set:" + this.verify('D'));
 
         //must be send to seek home position, so we can know where we are
         this.moveToHome();
@@ -249,18 +252,18 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Commands the holder to move to home position. Only starts movement, needs to take with join() when movement is
-     * finished.
+     * Commands the holder to move to home position. Blocking.
+     *
      */
     public void moveToHome() {
         try {
             setVelocity(velocity);
             this.serialIO.writeMessage("O1,0,");
             this.serialIO.writeMessage("H1,");
-            this.join();
+            //this.join();
             this.serialIO.writeMessage("O1,1,");
             this.serialIO.writeMessage("H1,");
-            this.join();
+            //this.join();
             this.currentPosition = this.homePosition;
         } catch (SerialIOException ex) {
             System.err.println(ex);
@@ -608,7 +611,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             //this.serialIO.writeMessage(","); //execute command
             waitingForMessage = true;
             try {
-              String answer = (String) queue.poll(1L, TimeUnit.SECONDS);
+              String answer = (String) queue.take();//poll(60L, TimeUnit.SECONDS);
             }
             catch (InterruptedException ex1) {
             }
