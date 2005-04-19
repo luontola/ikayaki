@@ -274,12 +274,12 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             this.serialIO.writeMessage("O1,0,");
             this.serialIO.writeMessage("+S,");
             this.join();
-            this.serialIO.writeMessage("-S,");
+            this.serialIO.writeMessage("-H1,");
             this.join();
-            this.serialIO.writeMessage("+S,");
-            this.join();
+            //this.serialIO.writeMessage("+H,");
+            //this.join();
             this.serialIO.writeMessage("O1,1,");
-            this.serialIO.writeMessage("H1,");
+            this.serialIO.writeMessage("+H1,");
             this.join();
             this.currentPosition = this.homePosition;
         } catch (SerialIOException ex) {
@@ -293,8 +293,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     public void moveToDegausserZ() {
         setVelocity(velocity);
-        moveToPos(this.axialAFPosition);
+        int pos = this.axialAFPosition - currentPosition;
         this.currentPosition = this.axialAFPosition;
+        moveToPos(pos);
+        //moveToPos(this.axialAFPosition);
         //this.go();
     }
 
@@ -304,8 +306,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     public void moveToDegausserY() {
         setVelocity(velocity);
-        moveToPos(this.transverseYAFPosition);
+        int pos = this.transverseYAFPosition - currentPosition;
         this.currentPosition = this.transverseYAFPosition;
+        moveToPos(pos);
+        //moveToPos(this.transverseYAFPosition);
         //this.go();
     }
 
@@ -317,8 +321,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     public void moveToMeasurement() {
         // do we use now measurement velocity?
         setVelocity(measurementVelocity);
-        moveToPos(this.measurementPosition);
+        int pos = this.measurementPosition - currentPosition;
         this.currentPosition = this.measurementPosition;
+        moveToPos(pos);
+        //moveToPos(this.measurementPosition);
         //this.go();
 
     }
@@ -329,15 +335,17 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     public void moveToBackground() {
         setVelocity(velocity);
-        moveToPos(this.backgroundPosition);
+        int pos = this.backgroundPosition - currentPosition;
         this.currentPosition = this.backgroundPosition;
+        moveToPos(pos);
+        //moveToPos(this.backgroundPosition);
         //this.go();
     }
 
     /**
      * Commands the holder to move to the specified position. Value must be between 1 and 16,777,215. Return true if
      * good pos-value and moves handler there. Only starts movement, needs to take with join() when movement is
-     * finished.
+     * finished. Positions is in relation to Home.
      *
      * @param pos the position where the handler will move to.
      * @return true if given position was ok, otherwise false.
@@ -347,13 +355,22 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             return false;
         }
         try {
+          boolean direction = true;
+          if (pos < 0) {
+            pos *= -1;
+            direction = false;
+          }
             //first need to set translate active
             this.serialIO.writeMessage("O1,0");
-            this.serialIO.writeMessage("P" + pos);
+            if(direction)
+              this.serialIO.writeMessage("+N" + pos);
+            else
+              this.serialIO.writeMessage("-N" + pos);
+            //this.serialIO.writeMessage("P" + pos); //absolute
             //no need to execute, Go will do it.
             //this.serialIO.writeMessage(","); //execute command
             this.go();
-            this.currentPosition = pos;
+            //this.currentPosition = pos; we cannot but relative position here
             return true;
         } catch (SerialIOException ex) {
             System.err.println(ex);

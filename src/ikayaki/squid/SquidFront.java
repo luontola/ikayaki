@@ -122,19 +122,30 @@ public class SquidFront extends JFrame {
     public SquidFront() throws HeadlessException {
         super("SQUID Front");
 
-        // initialize the squid
-        if (!DEBUG) {
-            try {
-                squid = Squid.instance();
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.exit(1);
+        /* Init SQUID interface */
+        new Thread() {
+            @Override public void run() {
+                try {
+                    final Squid squid = Squid.instance();       // might take a long time
+                    if (!squid.isOK()) {
+                        JOptionPane.showMessageDialog(null,
+                                "SQUID is not OK!", "Squid error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            setSquid(squid);
+                        }
+                    });
+
+                } catch (IOException e) {
+                    // TODO: what should be done now? give error message?
+                    //e.printStackTrace();
+                    System.err.println("Unable to initialize the SQUID interface.");
+                }
             }
-            if (!squid.isOK()) {
-                System.err.println("SQUID is not OK!");
-                System.exit(2);
-            }
-        }
+        }.start();
+
 
         initHandlerActions();
         initMagnetometerActions();
@@ -148,6 +159,25 @@ public class SquidFront extends JFrame {
         pack();
         setVisible(true);
     }
+
+    /**
+     * Sets the fully initialized Squid interface for the use of the program. Sets the active project the owner of the
+     * squid by re-setting the active project.
+     *
+     * @param squid an instance of the Squid.
+     * @throws NullPointerException  if squid is null.
+     * @throws IllegalStateException if the squid has already been set.
+     */
+    public void setSquid(Squid squid) {
+        if (squid == null) {
+            throw new NullPointerException();
+        }
+        if (this.squid != null) {
+            throw new IllegalStateException();
+        }
+        this.squid = squid;
+    }
+
 
     /**
      * Sets ActionListeners for handler's control buttons.
