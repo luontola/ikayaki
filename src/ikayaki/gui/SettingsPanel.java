@@ -382,6 +382,11 @@ public class SettingsPanel
     xAxisCalibration.getDocument().addDocumentListener(saveListener);
     yAxisCalibration.getDocument().addDocumentListener(saveListener);
     zAxisCalibration.getDocument().addDocumentListener(saveListener);
+    handlerRightLimit.addActionListener(propertiesActionListener);
+    rotationVelocity.addActionListener(propertiesActionListener);
+    rotationAcc.addActionListener(propertiesActionListener);
+    rotationDec.addActionListener(propertiesActionListener);
+    maximumField.addActionListener(propertiesActionListener);
 
   }
 
