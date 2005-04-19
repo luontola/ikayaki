@@ -343,7 +343,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
                 return (file.isDirectory() && file.getName().toLowerCase().startsWith(match.toLowerCase()));
             }
         });
-        
+
         // listFiles() does not guarantee any order for the returned files, so they must be sorted first
         Arrays.sort(files);
         return files;
