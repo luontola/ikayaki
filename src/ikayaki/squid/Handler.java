@@ -137,31 +137,42 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
           getHandlerPort(), 1200, 0, 0, 8, 1,
           0));
       serialIO.addSerialIOListener(this);
-      messageBuffer = new Stack<String>();
-      queue = new SynchronousQueue<String>();
-        this.acceleration = Settings.instance().getHandlerAcceleration();
-        this.deceleration = Settings.instance().getHandlerDeceleration();
-        this.axialAFPosition = Settings.instance().getHandlerAxialAFPosition();
-        this.backgroundPosition = Settings.instance().getHandlerBackgroundPosition();
-        this.homePosition = Settings.instance().getHandlerSampleLoadPosition();
-        this.measurementPosition = Settings.instance().getHandlerMeasurementPosition();
-        this.measurementVelocity = Settings.instance().getHandlerMeasurementVelocity();
-        this.transverseYAFPosition = Settings.instance().getHandlerTransverseYAFPosition();
-        this.velocity = Settings.instance().getHandlerVelocity();
+      messageBuffer = new Stack<String> ();
+      queue = new SynchronousQueue<String> ();
+      this.acceleration = Settings.instance().getHandlerAcceleration();
+      this.deceleration = Settings.instance().getHandlerDeceleration();
+      this.axialAFPosition = Settings.instance().getHandlerAxialAFPosition();
+      this.backgroundPosition = Settings.instance().getHandlerBackgroundPosition();
+      this.homePosition = Settings.instance().getHandlerSampleLoadPosition();
+      this.measurementPosition = Settings.instance().
+          getHandlerMeasurementPosition();
+      this.measurementVelocity = Settings.instance().
+          getHandlerMeasurementVelocity();
+      this.transverseYAFPosition = Settings.instance().
+          getHandlerTransverseYAFPosition();
+      this.velocity = Settings.instance().getHandlerVelocity();
+      this.rotationSpeed = Settings.instance().getHandlerRotationVelocity();
+      this.rotationAcceleration = Settings.instance().
+          getHandlerRotationAcceleration();
+      this.rotationDeceleration = Settings.instance().
+          getHandlerRotationDeceleration();
+    }
 
-        //first put system online
-        this.setOnline();
+    public void setUp() {
+      //first put system online
+      this.setOnline();
 
-        //set all settings TODO: do we need to check values? (original does)
-        this.setAcceleration(this.acceleration);
-        System.err.println("Acceleration set:" + this.verify('A'));
-        this.setVelocity(this.velocity);
-        System.err.println("Velocity set:" + this.verify('M'));
-        this.setDeceleration(this.deceleration);
-        System.err.println("Deceleration set:" + this.verify('D'));
+      //set all settings TODO: do we need to check values? (original does)
+      this.setAcceleration(this.acceleration);
+      System.err.println("Acceleration set:" + this.verify('A'));
+      this.setVelocity(this.velocity);
+      System.err.println("Velocity set:" + this.verify('M'));
+      this.setDeceleration(this.deceleration);
+      System.err.println("Deceleration set:" + this.verify('D'));
 
-        //must be send to seek home position, so we can know where we are
-        this.moveToHome();
+      //must be send to seek home position, so we can know where we are
+      this.moveToHome();
+
     }
 
     /**
@@ -210,6 +221,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         String answer = null;
         try {
           answer = (String) queue.poll(60L,TimeUnit.SECONDS);
+          System.err.println("get:" + answer + " from queue(status)");
         }
         catch (InterruptedException ex1) {
         }
@@ -252,18 +264,22 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Commands the holder to move to home position. Blocking.
+     * Commands the holder to move to home position. Blocking. More like Seek home.
      *
      */
     public void moveToHome() {
         try {
             setVelocity(velocity);
             this.serialIO.writeMessage("O1,0,");
-            this.serialIO.writeMessage("H1,");
-            //this.join();
+            this.serialIO.writeMessage("+S,");
+            this.join();
+            this.serialIO.writeMessage("-S,");
+            this.join();
+            this.serialIO.writeMessage("+S,");
+            this.join();
             this.serialIO.writeMessage("O1,1,");
             this.serialIO.writeMessage("H1,");
-            //this.join();
+            this.join();
             this.currentPosition = this.homePosition;
         } catch (SerialIOException ex) {
             System.err.println(ex);
@@ -612,6 +628,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             waitingForMessage = true;
             try {
               String answer = (String) queue.take();//poll(60L, TimeUnit.SECONDS);
+              System.err.println("get:" + answer + " from queue(join)");
             }
             catch (InterruptedException ex1) {
             }
@@ -642,11 +659,17 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         }
         waitingForMessage = true;
         String answer = null;
-        try {
-          answer = (String) queue.poll(60L,TimeUnit.SECONDS);
-        }
-        catch (InterruptedException ex1) {
-        }
+       // while(true) {
+          try {
+            answer = (String) queue.take(); //(60L, TimeUnit.SECONDS);
+            System.err.println("get:" + answer + " from queue(verify)");
+            //if(answer != null) break;
+            //Thread.sleep(1000);
+          }
+          catch (InterruptedException ex1) {
+          }
+        //}
+
         waitingForMessage = false;
         return answer;
 
@@ -689,6 +712,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         String answer = null;
         try {
           answer = (String) queue.poll(60L,TimeUnit.SECONDS);
+          System.err.println("get:" + answer + " from queue(take)");
         }
         catch (InterruptedException ex1) {
         }
@@ -697,10 +721,12 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     public void serialIOEvent(SerialIOEvent event) {
+      System.err.println("new event:" + event.getMessage());
       String message = event.getMessage();
       if(message != null) {
         if (waitingForMessage) {
           try {
+            System.err.println("putted:" + message + " to queue");
             queue.put(message);
           }
           catch (InterruptedException e) {

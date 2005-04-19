@@ -296,6 +296,9 @@ message from serial port is received.
                     return;
                 }
             }
+
+            fireSerialIOEvent(new String(inputBuffer));
+
             //System.out.println("sending: " + new String(inputBuffer)); //debug
             if (DEBUG) {
                 try {
@@ -307,7 +310,6 @@ message from serial port is received.
                 }
             }
 
-            fireSerialIOEvent(new String(inputBuffer));
             break;
         }
         return;

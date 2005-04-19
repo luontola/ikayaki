@@ -83,6 +83,7 @@ public class Squid {
         }
         try {
           handler = new Handler();
+          handler.setUp();
         }
         catch (SerialIOException ex) {
           System.err.println("Cannot create handler: " + ex);
