@@ -46,6 +46,11 @@ public class MagnetometerStatusPanel extends JPanel {
     final ManualControlsPanel manualControlsPanel;
 
     /**
+     * Status picture animator.
+     */
+    private final MagnetometerStatusAnimator statusAnimator;
+
+    /**
      * Sample hanlder to read and command current position and rotation from/to.
      */
     private Handler handler;
@@ -78,9 +83,10 @@ public class MagnetometerStatusPanel extends JPanel {
     public MagnetometerStatusPanel() {
         this.setLayout(new OverlayLayout(this));
 
-        // move-radiobuttons come left from status picture
         this.manualControlsPanel = new ManualControlsPanel();
+        this.statusAnimator = new MagnetometerStatusAnimator(40);
 
+        // move-radiobuttons come left from status picture
         add(manualControlsPanel.moveLabel);
         add(manualControlsPanel.moveLeft);
         add(manualControlsPanel.moveHome);
@@ -204,6 +210,7 @@ public class MagnetometerStatusPanel extends JPanel {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setStroke(new BasicStroke(2));
+        Color saved = g2.getColor();
 
         // save our width and height to be handly available
         int w = getWidth();
@@ -235,7 +242,6 @@ public class MagnetometerStatusPanel extends JPanel {
 
         // handler base line
         g2.drawLine(basex, 24, basex, box1y);
-        Color saved = g2.getColor();
         g2.setColor(Color.LIGHT_GRAY);
         g2.drawLine(basex, box1y, basex, h);
         g2.setColor(saved);
@@ -245,9 +251,10 @@ public class MagnetometerStatusPanel extends JPanel {
         g2.drawRect(basex - box2w / 2, box2y, box2w, h - box2y - 2);
 
         // "sample"
-        drawFillOval(g2, Color.WHITE, basex - samplew / 2, sampley - sampled, samplew, sampleh);
-        drawFillSideRect(g2, Color.WHITE, basex - samplew / 2, sampley - sampled + sampleh / 2, samplew, sampled);
-        drawFillOval(g2, Color.WHITE, basex - samplew / 2, sampley, samplew, sampleh);
+        Color bg = statusAnimator.going ? Color.MAGENTA : Color.WHITE;
+        drawFillOval(g2, bg, basex - samplew / 2, sampley - sampled, samplew, sampleh);
+        drawFillSideRect(g2, bg, basex - samplew / 2, sampley - sampled + sampleh / 2, samplew, sampled);
+        drawFillOval(g2, bg, basex - samplew / 2, sampley, samplew, sampleh);
 
         // sample rotation arrow
         drawArrow(g2, basex, sampley + sampleh / 2, arrowlength, rotation);
@@ -302,6 +309,77 @@ public class MagnetometerStatusPanel extends JPanel {
         g2.drawLine(0, -length / 2, length / 4, -length / 4);
         g2.rotate(-rot);
         g2.translate(-x, -y);
+    }
+
+    /**
+     * Animator-thread for updating magnetometer status pic.
+     */
+    private class MagnetometerStatusAnimator implements Runnable {
+        // drawing delay in ms (fps = 1000 / delay), steps per second, rotation-steps per second
+        private int updateDelay, sps = 1000, rps = 500;
+
+        // position & rotation we're going from and to
+        private int posFrom, rotateFrom, posTo, rotateTo;
+
+        private long startTime;
+        private boolean going;
+
+        private Thread animatorThread;
+
+        public MagnetometerStatusAnimator(int updateDelay) {
+            this.updateDelay = updateDelay;
+        }
+
+        /**
+         * Starts to move...
+         */
+        synchronized public void going(int posTo, int rotateTo) {
+            this.posFrom = position;
+            this.rotateFrom = rotation;
+            this.posTo = posTo;
+            this.rotateTo = rotateTo;
+            this.startTime = System.currentTimeMillis();
+            this.going = true;
+
+            animatorThread = new Thread(this);
+            animatorThread.setPriority(animatorThread.getPriority() - 1);
+            animatorThread.start();
+        }
+
+        /**
+         * ...And we're done; called by updateStatus.
+         */
+        synchronized public void gone() {
+            this.going = false;
+            animatorThread.interrupt();
+            try {
+                synchronized (this) { animatorThread.join(); }
+            } catch (InterruptedException e) { }
+        }
+
+        public void run() {
+            while (going) {
+                try {
+                    synchronized (this) { wait(updateDelay); }
+                } catch (InterruptedException e) { }
+
+                long time = System.currentTimeMillis() - startTime;
+
+                position = posFrom + (int) (sps * time / 1000);
+                rotation = rotateFrom + (int) (rps * time / 1000);
+
+                MagnetometerStatusPanel.this.repaint();
+            }
+        }
+    }
+
+    /**
+     * Begins handler in motion -animation.
+     *
+     * @param pos position where we're going.
+     */
+    private void startMoving(int pos, int rotate) {
+
     }
 
     /**
@@ -510,18 +588,21 @@ public class MagnetometerStatusPanel extends JPanel {
 
             moveLeft.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    statusAnimator.going(posLeft, rotation);
                     handler.moveToPos(posLeft);
                 }
             });
 
             moveHome.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    statusAnimator.going(posHome, rotation);
                     handler.moveToHome();
                 }
             });
 
             moveDemagZ.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    statusAnimator.going(posDemagZ, rotation);
                     handler.moveToDegausserZ();
                     demagButton.setText(demagButtonBaseText + (rotation == 0 || rotation == 180 ? "Z" : "X"));
                 }
@@ -529,6 +610,7 @@ public class MagnetometerStatusPanel extends JPanel {
 
             moveDemagY.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    statusAnimator.going(posDemagY, rotation);
                     handler.moveToDegausserY();
                     demagButton.setText(demagButtonBaseText + "Y");
                 }
@@ -536,18 +618,21 @@ public class MagnetometerStatusPanel extends JPanel {
 
             moveBG.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    statusAnimator.going(posBG, rotation);
                     handler.moveToBackground();
                 }
             });
 
             moveMeasure.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    statusAnimator.going(posMeasure, rotation);
                     handler.moveToMeasurement();
                 }
             });
 
             moveRight.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    statusAnimator.going(posRight, rotation);
                     handler.moveToPos(posRight);
                 }
             });
@@ -559,24 +644,28 @@ public class MagnetometerStatusPanel extends JPanel {
 
             rotate0.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    statusAnimator.going(position, 0);
                     handler.rotateTo(0);
                 }
             });
 
             rotate90.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    statusAnimator.going(position, 500);
                     handler.rotateTo(90);
                 }
             });
 
             rotate180.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    statusAnimator.going(position, 1000);
                     handler.rotateTo(180);
                 }
             });
 
             rotate270.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    statusAnimator.going(position, 1500);
                     handler.rotateTo(270);
                 }
             });
@@ -659,7 +748,7 @@ public class MagnetometerStatusPanel extends JPanel {
          */
         public void setEnabled(boolean enabled) {
             super.setEnabled(enabled);
-            if (handler == null) enabled = false;
+            // TEST if (handler == null) enabled = false;
             for (Component component : components) component.setEnabled(enabled);
 
             // set selected radioboxes according to current handler status
