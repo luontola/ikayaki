@@ -28,9 +28,11 @@ import javax.comm.*;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import java.io.*;
-import java.util.Calendar;
 import java.util.TooManyListenersException;
 import java.util.Vector;
+import java.util.Date;
+import java.util.Calendar;
+import java.text.DateFormat;
 
 /**
  * This class represents hardware layer to serial port communications.
@@ -81,6 +83,16 @@ message from serial port is received.
     private BufferedWriter logWriter;
 
     /**
+     * Have we tried to create the log writer? (Don't want to try again if it didn't work.)
+     */
+    private boolean logWriterTriedCreate = false;
+
+    /**
+     * Logwriter event type
+     */
+    private enum LogEvent {SESSION_START, SEND, REVEIVE};
+
+    /**
      * Creates an instance of SerialIO which represents one serial port.
      *
      * @param parameters parameters for the serial port being opened.
@@ -104,19 +116,8 @@ message from serial port is received.
         }
 
         // if debug mode, make own logfile for port
-        if (DEBUG) {
-            Calendar now = Calendar.getInstance();
-            int y = now.get(Calendar.YEAR), m = now.get(Calendar.MONTH) + 1, d = now.get(Calendar.DAY_OF_MONTH);
-            File file = new File(Ikayaki.DEBUG_LOG_DIR, y + "-" + (m < 10 ? "0" : "") + m + "-" +
-                    (d < 10 ? "0" : "") + d + "-" + parameters.getPortName() + ".log");
-            try {
-                if (!Ikayaki.DEBUG_LOG_DIR.exists()) Ikayaki.DEBUG_LOG_DIR.mkdir();
-                //if (!file.exists()) file.createNewFile(); // not needed
-                logWriter = new BufferedWriter(new FileWriter(file, true));
-            } catch (IOException ex1) {
-                System.err.println("Error creating log file '" + file + "': " + ex1);
-            }
-        }
+        debug(LogEvent.SESSION_START, sPort.getName());
+
         // Set the parameters of the connection
         try {
             sPort.setSerialPortParams(parameters.getBaudRate(),
@@ -216,12 +217,8 @@ message from serial port is received.
                 // 50 msecs seems to work fine with baudrate of 1200..
             } catch (InterruptedException ex) {
             }
+            debug(LogEvent.SEND, message);
             os.write(asciiMsg);
-            if (DEBUG) {
-                logWriter.write("SEND: " + message);
-                logWriter.newLine();
-                logWriter.flush();
-            }
             os.flush(); // flush the buffer
         } catch (IOException e) {
             throw new SerialIOException("Couldn't write to outputstream of" + this.portName);
@@ -300,15 +297,7 @@ message from serial port is received.
             fireSerialIOEvent(new String(inputBuffer));
 
             //System.out.println("sending: " + new String(inputBuffer)); //debug
-            if (DEBUG) {
-                try {
-                    logWriter.write("RECEIVE: " + inputBuffer);
-                    logWriter.newLine();
-                    logWriter.flush();
-                } catch (IOException ex1) {
-                    System.err.println(ex1);
-                }
-            }
+            debug(LogEvent.REVEIVE, inputBuffer.toString());
 
             break;
         }
@@ -352,5 +341,60 @@ message from serial port is received.
                 }
             }
         });
+    }
+
+    /**
+     * Debug logger.
+     *
+     * @param e LogEvent type.
+     * @param message String to write; portname if e==SESSION_START.
+     */
+    private void debug(LogEvent e, String message) {
+        // do nothing if debug mode is off
+        if (DEBUG == false) return;
+
+        // create new log writer if not yet tried
+        if (!logWriterTriedCreate) {
+            logWriterTriedCreate = true;
+
+            Calendar now = Calendar.getInstance();
+            int y = now.get(Calendar.YEAR), m = now.get(Calendar.MONTH) + 1, d = now.get(Calendar.DAY_OF_MONTH);
+            String port = e == LogEvent.SESSION_START ? message : portName;
+            File file = new File(Ikayaki.DEBUG_LOG_DIR, y + "-" + padn(m) + "-" + padn(d) + "-" + port + ".log");
+
+            boolean oldFile = file.exists();
+            if (!Ikayaki.DEBUG_LOG_DIR.exists()) Ikayaki.DEBUG_LOG_DIR.mkdir();
+
+            try {
+                logWriter = new BufferedWriter(new FileWriter(file, true));
+                // an empty line after previous session
+                if (oldFile) logWriter.newLine();
+            } catch (IOException ex1) {
+                System.err.println("Error creating log file: " + ex1);
+            }
+        }
+
+        // no working log writer :(
+        if (logWriter == null) return;
+
+        // OK, now write the log message...
+        String time = DateFormat.getTimeInstance().format(new Date());
+        try {
+            logWriter.write(time + " " + e + ": " + message);
+            logWriter.newLine();
+            logWriter.flush();
+        } catch (IOException ex1) {
+            System.err.println(ex1);
+        }
+    }
+
+    /**
+     * Zero-paddes a number if it's <10.
+     *
+     * @param n int to pad.
+     * @return padded String.
+     */
+    private String padn(int n) {
+        return (n < 10 ? "0" : "") + n;
     }
 }
