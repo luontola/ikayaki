@@ -28,7 +28,6 @@ import ikayaki.squid.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.io.IOException;
 import java.util.TreeMap;
 
 /**
@@ -130,12 +129,11 @@ public class MagnetometerStatusPanel extends JPanel {
      * Updates position->radiobutton -treemap.
      */
     private void updatePositions() {
-        Settings settings = Settings.instance();
-        posHome = settings.getHandlerSampleLoadPosition();
-        posDemagZ = settings.getHandlerAxialAFPosition();
-        posDemagY = settings.getHandlerTransverseYAFPosition();
-        posBG = settings.getHandlerBackgroundPosition();
-        posMeasure = settings.getHandlerMeasurementPosition();
+        posHome = Settings.getHandlerSampleLoadPosition();
+        posDemagZ = Settings.getHandlerAxialAFPosition();
+        posDemagY = Settings.getHandlerTransverseYAFPosition();
+        posBG = Settings.getHandlerBackgroundPosition();
+        posMeasure = Settings.getHandlerMeasurementPosition();
 
         // stack move-radiobuttons into a sorted map
         // TODO: WARNING: if two positions are the same, previous one gets replaced
@@ -390,7 +388,7 @@ public class MagnetometerStatusPanel extends JPanel {
         public void run() {
             while (going) {
                 try {
-                    animatorThread.sleep(updateDelay);
+                    animatorThread.sleep(updateDelay); // TODO: shouldn't this read "Thread.sleep(long)" ?!
                 } catch (InterruptedException e) { }
 
                 if (!going) break;
@@ -417,7 +415,7 @@ public class MagnetometerStatusPanel extends JPanel {
      *
      * @param pos position where we're going.
      */
-    private void startMoving(int pos, int rotate) {
+    private void startMoving(int pos, int rotate) { // TODO: this is never used. remove it?
 
     }
 
@@ -505,7 +503,7 @@ public class MagnetometerStatusPanel extends JPanel {
          * Resets X, Y and Z by calling project.doManualReset()? Does what?
          */
         private final JButton resetAllButton = new JButton("Reset XYZ?");
-        private final ComponentFlasher resetAllButtonFlasher = new ComponentFlasher(resetAllButton);
+        private final ComponentFlasher resetAllButtonFlasher = new ComponentFlasher(resetAllButton); // TODO: this is never used. remove it?
 
         /**
          * Demagnetization amplitude in mT, used when demagZ/YButton is clicked.
@@ -519,7 +517,7 @@ public class MagnetometerStatusPanel extends JPanel {
          */
         private final JButton demagButton = new JButton("Demag");
         private final String demagButtonBaseText = "Demag ";
-        private final ComponentFlasher demagButtonFlasher = new ComponentFlasher(demagButton);
+        private final ComponentFlasher demagButtonFlasher = new ComponentFlasher(demagButton); // TODO: this is never used. remove it?
 
         /**
          * Demagnetizes in Z (at current sample holder position) by calling project.doManualDemagZ(double).
@@ -621,8 +619,8 @@ public class MagnetometerStatusPanel extends JPanel {
             /*
              * Event A: On moveXXX click - call project.doManualMove(int) with clicked position.
              * If false is returned, show small error message. Position values are found from Settings;
-             * demagZ is Settings.instance().getAxialAFPosition() and
-             * demagY is Settings.instance().getTransverseYAFPosition().
+             * demagZ is Settings.getAxialAFPosition() and
+             * demagY is Settings.getTransverseYAFPosition().
              */
 
             moveLeft.addActionListener(new ActionListener() {

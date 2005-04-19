@@ -290,7 +290,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
         loadSequenceBox.removeAllItems();
 
         // get new items
-        MeasurementSequence[] sequences = Settings.instance().getSequences();
+        MeasurementSequence[] sequences = Settings.getSequences();
         Arrays.sort(sequences);
 
         // insert new items and restore old selection
@@ -764,7 +764,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
 
                     // save the sequence
                     sequence.setName(name);
-                    Settings.instance().addSequence(sequence);
+                    Settings.addSequence(sequence);
                     updateLoadSequenceBox();
                 }
             };
@@ -796,7 +796,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
 
                     // save the sequence
                     sequence.setName(name);
-                    Settings.instance().addSequence(sequence);
+                    Settings.addSequence(sequence);
                     updateLoadSequenceBox();
                 }
             };

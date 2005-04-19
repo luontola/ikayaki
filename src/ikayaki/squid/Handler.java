@@ -134,28 +134,28 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * class.
      */
     public Handler() throws SerialIOException {
-      this.serialIO = SerialIO.openPort(new SerialParameters(Settings.instance().
+      this.serialIO = SerialIO.openPort(new SerialParameters(Settings.
           getHandlerPort(), 1200, 0, 0, 8, 1,
           0));
       serialIO.addSerialIOListener(this);
       messageBuffer = new Stack<String> ();
       queue = new SynchronousQueue<String> ();
-      this.acceleration = Settings.instance().getHandlerAcceleration();
-      this.deceleration = Settings.instance().getHandlerDeceleration();
-      this.axialAFPosition = Settings.instance().getHandlerAxialAFPosition();
-      this.backgroundPosition = Settings.instance().getHandlerBackgroundPosition();
-      this.homePosition = Settings.instance().getHandlerSampleLoadPosition();
-      this.measurementPosition = Settings.instance().
+      this.acceleration = Settings.getHandlerAcceleration();
+      this.deceleration = Settings.getHandlerDeceleration();
+      this.axialAFPosition = Settings.getHandlerAxialAFPosition();
+      this.backgroundPosition = Settings.getHandlerBackgroundPosition();
+      this.homePosition = Settings.getHandlerSampleLoadPosition();
+      this.measurementPosition = Settings.
           getHandlerMeasurementPosition();
-      this.measurementVelocity = Settings.instance().
+      this.measurementVelocity = Settings.
           getHandlerMeasurementVelocity();
-      this.transverseYAFPosition = Settings.instance().
+      this.transverseYAFPosition = Settings.
           getHandlerTransverseYAFPosition();
-      this.velocity = Settings.instance().getHandlerVelocity();
-      this.rotationSpeed = Settings.instance().getHandlerRotationVelocity();
-      this.rotationAcceleration = Settings.instance().
+      this.velocity = Settings.getHandlerVelocity();
+      this.rotationSpeed = Settings.getHandlerRotationVelocity();
+      this.rotationAcceleration = Settings.
           getHandlerRotationAcceleration();
-      this.rotationDeceleration = Settings.instance().
+      this.rotationDeceleration = Settings.
           getHandlerRotationDeceleration();
     }
 
@@ -181,18 +181,18 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * class.
      */
     public void updateSettings() {
-        this.acceleration = Settings.instance().getHandlerAcceleration();
-        this.deceleration = Settings.instance().getHandlerDeceleration();
-        this.axialAFPosition = Settings.instance().getHandlerAxialAFPosition();
-        this.backgroundPosition = Settings.instance().getHandlerBackgroundPosition();
-        this.homePosition = Settings.instance().getHandlerSampleLoadPosition();
-        this.measurementPosition = Settings.instance().getHandlerMeasurementPosition();
-        this.measurementVelocity = Settings.instance().getHandlerMeasurementVelocity();
-        this.transverseYAFPosition = Settings.instance().getHandlerTransverseYAFPosition();
-        this.rotationSpeed = Settings.instance().getHandlerRotationVelocity();
-        this.rotationAcceleration = Settings.instance().getHandlerRotationAcceleration();
-        this.rotationDeceleration = Settings.instance().getHandlerRotationDeceleration();
-        this.velocity = Settings.instance().getHandlerVelocity();
+        this.acceleration = Settings.getHandlerAcceleration();
+        this.deceleration = Settings.getHandlerDeceleration();
+        this.axialAFPosition = Settings.getHandlerAxialAFPosition();
+        this.backgroundPosition = Settings.getHandlerBackgroundPosition();
+        this.homePosition = Settings.getHandlerSampleLoadPosition();
+        this.measurementPosition = Settings.getHandlerMeasurementPosition();
+        this.measurementVelocity = Settings.getHandlerMeasurementVelocity();
+        this.transverseYAFPosition = Settings.getHandlerTransverseYAFPosition();
+        this.rotationSpeed = Settings.getHandlerRotationVelocity();
+        this.rotationAcceleration = Settings.getHandlerRotationAcceleration();
+        this.rotationDeceleration = Settings.getHandlerRotationDeceleration();
+        this.velocity = Settings.getHandlerVelocity();
 
         //set all settings.. only three. Let's do it..! Rock'N'Roll
         this.setAcceleration(this.acceleration);
@@ -401,7 +401,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     public void rotateTo(int angle) {
         angle = angle % 360;
-        angle = (int) (((double) angle) / 360.0 * Settings.instance().getHandlerRotation());
+        angle = (int) (((double) angle) / 360.0 * Settings.getHandlerRotation());
         try {
             //first set rotation speed
             this.serialIO.writeMessage("M" + rotationSpeed);

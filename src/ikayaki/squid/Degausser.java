@@ -96,14 +96,14 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * from the Setting class.
      */
     public Degausser() throws SerialIOException {
-        this.serialIO = SerialIO.openPort(new SerialParameters(Settings.instance().
+        this.serialIO = SerialIO.openPort(new SerialParameters(Settings.
                 getDegausserPort()));
         serialIO.addSerialIOListener(this);
         messageBuffer = new Stack<String>();
         queue = new SynchronousQueue<String>();
-        this.degausserDelay = Settings.instance().getDegausserDelay();
-        this.degausserRamp = Settings.instance().getDegausserRamp();
-        this.maximumField = Settings.instance().getDegausserMaximumField();
+        this.degausserDelay = Settings.getDegausserDelay();
+        this.degausserRamp = Settings.getDegausserRamp();
+        this.maximumField = Settings.getDegausserMaximumField();
         lastCommandTime = System.currentTimeMillis();
         //needs to call new functions setDelay() and setRamp(). TODO
         waitSecond();
@@ -127,9 +127,9 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     public void updateSettings() {
         // No check, only two options. Doesnt matter.
-        this.degausserDelay = Settings.instance().getDegausserDelay();
-        this.degausserRamp = Settings.instance().getDegausserRamp();
-        this.maximumField = Settings.instance().getDegausserMaximumField();
+        this.degausserDelay = Settings.getDegausserDelay();
+        this.degausserRamp = Settings.getDegausserRamp();
+        this.maximumField = Settings.getDegausserMaximumField();
         waitSecond();
         try {
             this.serialIO.writeMessage("DCD " + this.degausserDelay + "\r");

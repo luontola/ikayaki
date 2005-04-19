@@ -99,7 +99,7 @@ public class MainViewPanel extends ProjectComponent {
 
         // if project is null, load the last open project
         if (project == null) {
-            File[] projectHistory = Settings.instance().getProjectHistory();
+            File[] projectHistory = Settings.getProjectHistory();
             if (projectHistory.length > 0) {
                 project = Project.loadProject(projectHistory[0]);
             }
@@ -277,8 +277,8 @@ public class MainViewPanel extends ProjectComponent {
         if (project != null) {
             // update history logs
             if (project.getType() != Project.Type.CALIBRATION) {
-                Settings.instance().updateProjectHistory(project.getFile());
-                Settings.instance().updateDirectoryHistory(project.getFile().getAbsoluteFile().getParentFile());
+                Settings.updateProjectHistory(project.getFile());
+                Settings.updateDirectoryHistory(project.getFile().getAbsoluteFile().getParentFile());
             }
 
             // register the new project
@@ -376,7 +376,7 @@ public class MainViewPanel extends ProjectComponent {
         }
 
         // ensure that all settings will be saved
-        if (!Settings.instance().saveNow()) {
+        if (!Settings.saveNow()) {
             JOptionPane.showMessageDialog(getParentFrame(),
                     "Can not exit. Unable to save the settings.",
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -465,7 +465,7 @@ public class MainViewPanel extends ProjectComponent {
      */
     public void exportProject(String type) {
         type = type.toLowerCase();
-        JFileChooser chooser = new JFileChooser(Settings.instance().getLastDirectory());
+        JFileChooser chooser = new JFileChooser(Settings.getLastDirectory());
         chooser.setFileFilter(new GenericFileFilter(type.toUpperCase() + " File", type));
 
         do {
@@ -588,7 +588,7 @@ public class MainViewPanel extends ProjectComponent {
         if (newProjectAction == null) {
             newProjectAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    NewProjectFileChooser chooser = new NewProjectFileChooser(Settings.instance().getLastDirectory());
+                    NewProjectFileChooser chooser = new NewProjectFileChooser(Settings.getLastDirectory());
                     chooser.setFileFilter(new GenericFileFilter(Ikayaki.FILE_DESCRIPTION, Ikayaki.FILE_TYPE));
                     int returnVal = chooser.showSaveDialog(MainViewPanel.this);
 
@@ -615,7 +615,7 @@ public class MainViewPanel extends ProjectComponent {
         if (openProjectAction == null) {
             openProjectAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    JFileChooser chooser = new JFileChooser(Settings.instance().getLastDirectory());
+                    JFileChooser chooser = new JFileChooser(Settings.getLastDirectory());
                     chooser.setFileFilter(new GenericFileFilter(Ikayaki.FILE_DESCRIPTION, Ikayaki.FILE_TYPE));
                     int returnVal = chooser.showOpenDialog(MainViewPanel.this);
 

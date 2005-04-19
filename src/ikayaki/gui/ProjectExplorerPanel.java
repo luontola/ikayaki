@@ -152,7 +152,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
 
         // set current directory to project dir or latest directory history dir
         if (project != null) setDirectory(project.getFile().getParentFile());
-        else setDirectory(Settings.instance().getLastDirectory());
+        else setDirectory(Settings.getLastDirectory());
 
         // scroll to the end of the combo box's text field (after setting directory) -- seems to happen anyway
         // setBrowserFieldCursorToEnd();
@@ -318,7 +318,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
      * @return current directory history. Should never return null.
      */
     private File[] getDirectoryHistory() {
-        return Settings.instance().getDirectoryHistory();
+        return Settings.getDirectoryHistory();
     }
 
     /**

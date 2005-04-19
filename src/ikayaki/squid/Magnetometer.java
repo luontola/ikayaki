@@ -70,7 +70,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     public Magnetometer() throws SerialIOException {
         this.serialIO = SerialIO.openPort(
-                new SerialParameters(Settings.instance().getMagnetometerPort(), 1200, 0, 0, 8, 1, 0));
+                new SerialParameters(Settings.getMagnetometerPort(), 1200, 0, 0, 8, 1, 0));
         serialIO.addSerialIOListener(this);
         messageBuffer = new Stack<String>();
         queue = new SynchronousQueue<String>();
@@ -330,9 +330,9 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         Double[] result = new Double[3];
 
         //when to use flux counting and when not? TODO
-        result[0] = (counterX + analogX) * Settings.instance().getMagnetometerXAxisCalibration();
-        result[1] = (counterY + analogY) * Settings.instance().getMagnetometerYAxisCalibration();
-        result[2] = (counterZ + analogZ) * Settings.instance().getMagnetometerZAxisCalibration();
+        result[0] = (counterX + analogX) * Settings.getMagnetometerXAxisCalibration();
+        result[1] = (counterY + analogY) * Settings.getMagnetometerYAxisCalibration();
+        result[2] = (counterZ + analogZ) * Settings.getMagnetometerZAxisCalibration();
 
         return result;
     }

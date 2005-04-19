@@ -1951,7 +1951,7 @@ project listeners.
                     checkAborted();
 
                     // measure with the set amount of handler rotations
-                    int rotations = Settings.instance().getMeasurementRotations();
+                    int rotations = Settings.getMeasurementRotations();
                     if (rotations == 0) {
 
                         // quick measure with no rotations

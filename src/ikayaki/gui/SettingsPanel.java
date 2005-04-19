@@ -202,27 +202,27 @@ public class SettingsPanel
     setLayout(new BorderLayout());
     add(contentPane, BorderLayout.CENTER);
 
-    this.acceleration.setValue(Settings.instance().getHandlerAcceleration());
-    this.deceleration.setValue(Settings.instance().getHandlerDeceleration());
-    this.axialAFPosition.setValue(Settings.instance().getHandlerAxialAFPosition());
-    this.transverseYAFPosition.setValue(Settings.instance().
+    this.acceleration.setValue(Settings.getHandlerAcceleration());
+    this.deceleration.setValue(Settings.getHandlerDeceleration());
+    this.axialAFPosition.setValue(Settings.getHandlerAxialAFPosition());
+    this.transverseYAFPosition.setValue(Settings.
                                         getHandlerTransverseYAFPosition());
-    this.measurementPosition.setValue(Settings.instance().
+    this.measurementPosition.setValue(Settings.
                                       getHandlerMeasurementPosition());
-    this.velocity.setValue(Settings.instance().getHandlerVelocity());
-    this.measurementVelocity.setValue(Settings.instance().
+    this.velocity.setValue(Settings.getHandlerVelocity());
+    this.measurementVelocity.setValue(Settings.
                                       getHandlerMeasurementVelocity());
-    this.xAxisCalibration.setValue(Settings.instance().
+    this.xAxisCalibration.setValue(Settings.
                                    getMagnetometerXAxisCalibration());
-    this.yAxisCalibration.setValue(Settings.instance().
+    this.yAxisCalibration.setValue(Settings.
                                    getMagnetometerYAxisCalibration());
-    this.zAxisCalibration.setValue(Settings.instance().
+    this.zAxisCalibration.setValue(Settings.
                                    getMagnetometerZAxisCalibration());
     this.demagRamp.addItem(3);
     this.demagRamp.addItem(5);
     this.demagRamp.addItem(7);
     this.demagRamp.addItem(9);
-    int rampValue = Settings.instance().getDegausserRamp();
+    int rampValue = Settings.getDegausserRamp();
     if (rampValue == 3) {
       this.demagRamp.setSelectedIndex(0);
     }
@@ -238,19 +238,19 @@ public class SettingsPanel
     for (int i = 1; i < 10; i++) {
       this.demagDelay.addItem(i);
     }
-    this.demagRamp.setSelectedIndex(Settings.instance().getDegausserDelay() - 1);
-    this.sampleLoadPosition.setValue(Settings.instance().
+    this.demagRamp.setSelectedIndex(Settings.getDegausserDelay() - 1);
+    this.sampleLoadPosition.setValue(Settings.
                                      getHandlerSampleLoadPosition());
-    this.backgroundPosition.setValue(Settings.instance().
+    this.backgroundPosition.setValue(Settings.
                                      getHandlerBackgroundPosition());
-    this.rotation.setValue(Settings.instance().getHandlerRotation());
-    this.rotationVelocity.setValue(Settings.instance().getHandlerRotationVelocity());
-    this.rotationAcc.setValue(Settings.instance().getHandlerAcceleration());
-    this.rotationDec.setValue(Settings.instance().getHandlerDeceleration());
-    this.maximumField.setValue(Settings.instance().getDegausserMaximumField());
+    this.rotation.setValue(Settings.getHandlerRotation());
+    this.rotationVelocity.setValue(Settings.getHandlerRotationVelocity());
+    this.rotationAcc.setValue(Settings.getHandlerAcceleration());
+    this.rotationDec.setValue(Settings.getHandlerDeceleration());
+    this.maximumField.setValue(Settings.getDegausserMaximumField());
     this.handlerRightLimit.addItem("plus");
     this.handlerRightLimit.addItem("minus");
-    this.handlerRightLimit.setSelectedIndex(Settings.instance().
+    this.handlerRightLimit.setSelectedIndex(Settings.
                                             getHandlerRightLimit());
 
     /* Number-only Text Fields */
@@ -304,9 +304,9 @@ public class SettingsPanel
       this.demagnetizerPort.addItem(portList.get(i));
     }
 
-    this.magnetometerPort.setSelectedItem(Settings.instance().getMagnetometerPort());
-    this.handlerPort.setSelectedItem(Settings.instance().getHandlerPort());
-    this.demagnetizerPort.setSelectedItem(Settings.instance().getDegausserPort());
+    this.magnetometerPort.setSelectedItem(Settings.getMagnetometerPort());
+    this.handlerPort.setSelectedItem(Settings.getHandlerPort());
+    this.demagnetizerPort.setSelectedItem(Settings.getDegausserPort());
 
 
 /*
@@ -402,31 +402,31 @@ public class SettingsPanel
      */
     public void saveSettings() {
         try {
-            Settings.instance().setDegausserPort((String) this.demagnetizerPort.getSelectedItem());
-            Settings.instance().setDegausserDelay(((Number) this.demagDelay.getSelectedItem()).intValue());
-            Settings.instance().setDegausserRamp(((Number) this.demagRamp.getSelectedItem()).intValue());
-            Settings.instance().setDegausserMaximumField(((Number) this.maximumField.getValue()).intValue());
+            Settings.setDegausserPort((String) this.demagnetizerPort.getSelectedItem());
+            Settings.setDegausserDelay(((Number) this.demagDelay.getSelectedItem()).intValue());
+            Settings.setDegausserRamp(((Number) this.demagRamp.getSelectedItem()).intValue());
+            Settings.setDegausserMaximumField(((Number) this.maximumField.getValue()).intValue());
 
-            Settings.instance().setHandlerPort((String) this.handlerPort.getSelectedItem());
-            Settings.instance().setHandlerAcceleration(((Number) this.acceleration.getValue()).intValue());
-            Settings.instance().setHandlerAxialAFPosition(((Number) this.axialAFPosition.getValue()).intValue());
-            Settings.instance().setHandlerBackgroundPosition(((Number) this.backgroundPosition.getValue()).intValue());
-            Settings.instance().setHandlerDeceleration(((Number) this.deceleration.getValue()).intValue());
-            Settings.instance().setHandlerMeasurementPosition(((Number) this.measurementPosition.getValue()).intValue());
-            Settings.instance().setHandlerMeasurementVelocity(((Number) this.measurementVelocity.getValue()).intValue());
-            Settings.instance().setHandlerRightLimit(this.handlerRightLimit.getSelectedIndex());
-            Settings.instance().setHandlerRotation(((Number) this.rotation.getValue()).intValue());
-            Settings.instance().setHandlerSampleLoadPosition(((Number) this.sampleLoadPosition.getValue()).intValue());
-            Settings.instance().setHandlerTransverseYAFPosition(((Number) this.transverseYAFPosition.getValue()).intValue());
-            Settings.instance().setHandlerVelocity(((Number) this.velocity.getValue()).intValue());
-            Settings.instance().setHandlerRotationVelocity(((Number) this.rotationVelocity.getValue()).intValue());
-            Settings.instance().setHandlerRotationDeceleration(((Number) this.rotationDec.getValue()).intValue());
-            Settings.instance().setHandlerRotationAcceleration(((Number) this.rotationAcc.getValue()).intValue());
+            Settings.setHandlerPort((String) this.handlerPort.getSelectedItem());
+            Settings.setHandlerAcceleration(((Number) this.acceleration.getValue()).intValue());
+            Settings.setHandlerAxialAFPosition(((Number) this.axialAFPosition.getValue()).intValue());
+            Settings.setHandlerBackgroundPosition(((Number) this.backgroundPosition.getValue()).intValue());
+            Settings.setHandlerDeceleration(((Number) this.deceleration.getValue()).intValue());
+            Settings.setHandlerMeasurementPosition(((Number) this.measurementPosition.getValue()).intValue());
+            Settings.setHandlerMeasurementVelocity(((Number) this.measurementVelocity.getValue()).intValue());
+            Settings.setHandlerRightLimit(this.handlerRightLimit.getSelectedIndex());
+            Settings.setHandlerRotation(((Number) this.rotation.getValue()).intValue());
+            Settings.setHandlerSampleLoadPosition(((Number) this.sampleLoadPosition.getValue()).intValue());
+            Settings.setHandlerTransverseYAFPosition(((Number) this.transverseYAFPosition.getValue()).intValue());
+            Settings.setHandlerVelocity(((Number) this.velocity.getValue()).intValue());
+            Settings.setHandlerRotationVelocity(((Number) this.rotationVelocity.getValue()).intValue());
+            Settings.setHandlerRotationDeceleration(((Number) this.rotationDec.getValue()).intValue());
+            Settings.setHandlerRotationAcceleration(((Number) this.rotationAcc.getValue()).intValue());
 
-            Settings.instance().setMagnetometerPort((String) this.magnetometerPort.getSelectedItem());
-            Settings.instance().setMagnetometerXAxisCalibration(((Number) this.xAxisCalibration.getValue()).doubleValue());
-            Settings.instance().setMagnetometerYAxisCalibration(((Number) this.yAxisCalibration.getValue()).doubleValue());
-            Settings.instance().setMagnetometerZAxisCalibration(((Number) this.zAxisCalibration.getValue()).doubleValue());
+            Settings.setMagnetometerPort((String) this.magnetometerPort.getSelectedItem());
+            Settings.setMagnetometerXAxisCalibration(((Number) this.xAxisCalibration.getValue()).doubleValue());
+            Settings.setMagnetometerYAxisCalibration(((Number) this.yAxisCalibration.getValue()).doubleValue());
+            Settings.setMagnetometerZAxisCalibration(((Number) this.zAxisCalibration.getValue()).doubleValue());
             creator.closeWindow();
         } catch (Exception e) {
             e.printStackTrace();

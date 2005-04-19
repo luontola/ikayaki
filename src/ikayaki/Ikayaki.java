@@ -103,17 +103,17 @@ be closed.
         addComponentListener(new ComponentAdapter() {
             @Override public void componentResized(ComponentEvent e) {
                 if ((getExtendedState() & MAXIMIZED_BOTH) == 0) {
-                    Settings.instance().setWindowWidth(getWidth());
-                    Settings.instance().setWindowHeight(getHeight());
+                    Settings.setWindowWidth(getWidth());
+                    Settings.setWindowHeight(getHeight());
                 }
             }
         });
         addWindowStateListener(new WindowStateListener() {
             public void windowStateChanged(WindowEvent e) {
                 if ((getExtendedState() & MAXIMIZED_BOTH) != 0) {
-                    Settings.instance().setWindowMaximized(true);
+                    Settings.setWindowMaximized(true);
                 } else {
-                    Settings.instance().setWindowMaximized(false);
+                    Settings.setWindowMaximized(false);
                 }
             }
         });
@@ -126,7 +126,7 @@ be closed.
         });
 
         // restore size and position
-        setSize(Settings.instance().getWindowWidth(), Settings.instance().getWindowHeight());
+        setSize(Settings.getWindowWidth(), Settings.getWindowHeight());
         setLocationByPlatform(true);
         setVisible(true);
 
@@ -135,7 +135,7 @@ be closed.
                 getY() + getHeight() > maxBounds.height ? maxBounds.height - getHeight() : getY());
         setLocation(getX() < 0 ? 0 : getX(), getY() < 0 ? 0 : getY());
 
-        if (Settings.instance().getWindowMaximized() && System.getProperty("os.name").startsWith("Windows")) {
+        if (Settings.getWindowMaximized() && System.getProperty("os.name").startsWith("Windows")) {
             try {
                 // native code for maximizing the window
                 int hwnd = JUtil.getHwnd(getTitle());

@@ -162,7 +162,7 @@ public class MeasurementDetailsPanel extends ProjectComponent {
 
         public int getRowCount() {
             // the expected number of results based on measurement rotations
-            int expected = Math.max(1, 4 * Settings.instance().getMeasurementRotations()) + 2;
+            int expected = Math.max(1, 4 * Settings.getMeasurementRotations()) + 2;
 
             if (step == null) {
                 return expected;
