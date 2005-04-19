@@ -84,7 +84,7 @@ public class MagnetometerStatusPanel extends JPanel {
         this.setLayout(new OverlayLayout(this));
 
         this.manualControlsPanel = new ManualControlsPanel();
-        this.statusAnimator = new MagnetometerStatusAnimator(40);
+        this.statusAnimator = new MagnetometerStatusAnimator();
 
         // move-radiobuttons come left from status picture
         add(manualControlsPanel.moveLabel);
@@ -177,6 +177,7 @@ public class MagnetometerStatusPanel extends JPanel {
         this.position = position;
         this.rotation = rotation;
         updatePositions();
+        statusAnimator.gone();
         repaint();
     }
 
@@ -190,6 +191,7 @@ public class MagnetometerStatusPanel extends JPanel {
             this.rotation = this.handler.getRotation();
         }
         updatePositions();
+        statusAnimator.gone();
         repaint();
     }
 
@@ -251,7 +253,7 @@ public class MagnetometerStatusPanel extends JPanel {
         g2.drawRect(basex - box2w / 2, box2y, box2w, h - box2y - 2);
 
         // "sample"
-        Color bg = statusAnimator.going ? Color.MAGENTA : Color.WHITE;
+        Color bg = statusAnimator.going ? new Color(0xccccff) : Color.WHITE;
         drawFillOval(g2, bg, basex - samplew / 2, sampley - sampled, samplew, sampleh);
         drawFillSideRect(g2, bg, basex - samplew / 2, sampley - sampled + sampleh / 2, samplew, sampled);
         drawFillOval(g2, bg, basex - samplew / 2, sampley, samplew, sampleh);
@@ -316,15 +318,19 @@ public class MagnetometerStatusPanel extends JPanel {
      */
     private class MagnetometerStatusAnimator implements Runnable {
         // drawing delay in ms (fps = 1000 / delay), steps per second, rotation-steps per second
-        private int updateDelay, sps = 1000, rps = 500;
+        private int updateDelay, sps = 4000000, rps = 500;
 
-        // position & rotation we're going from and to
-        private int posFrom, rotateFrom, posTo, rotateTo;
+        // position & rotation we're going from, amount and direction (+/-1)
+        private int posFrom, rotateFrom, posAmount, rotateAmount, posDirection, rotateDirection;
 
         private long startTime;
         private boolean going;
 
         private Thread animatorThread;
+
+        public MagnetometerStatusAnimator() {
+            this(50);
+        }
 
         public MagnetometerStatusAnimator(int updateDelay) {
             this.updateDelay = updateDelay;
@@ -334,10 +340,17 @@ public class MagnetometerStatusPanel extends JPanel {
          * Starts to move...
          */
         synchronized public void going(int posTo, int rotateTo) {
+            // kill any running animator thread
+            killAnimatorThread();
+
             this.posFrom = position;
             this.rotateFrom = rotation;
-            this.posTo = posTo;
-            this.rotateTo = rotateTo;
+
+            this.posAmount = Math.abs(posTo - posFrom);
+            this.rotateAmount = Math.abs(rotateTo - rotateFrom);
+            this.posDirection = posTo < posFrom ? -1 : 1;
+            this.rotateDirection = rotateTo < rotateFrom ? -1 : 1;
+
             this.startTime = System.currentTimeMillis();
             this.going = true;
 
@@ -350,25 +363,51 @@ public class MagnetometerStatusPanel extends JPanel {
          * ...And we're done; called by updateStatus.
          */
         synchronized public void gone() {
+            if (animatorThread != null) {
+                long time = System.currentTimeMillis() - startTime;
+
+                // new speeds averaged with actual and guess
+                this.sps = ( (int) (posAmount * 1000L / time) + sps) / 2;
+                this.rps = ( (int) (rotateAmount * 1000L / time) + rps) / 2;
+
+                System.out.println("sps: " + sps + "  rps: " + rps);
+            }
+
+            killAnimatorThread();
+        }
+
+        private void killAnimatorThread() {
             this.going = false;
-            animatorThread.interrupt();
-            try {
-                synchronized (this) { animatorThread.join(); }
-            } catch (InterruptedException e) { }
+            if (animatorThread != null) {
+                animatorThread.interrupt();
+                try {
+                    animatorThread.join();
+                } catch (InterruptedException e) { }
+                animatorThread = null;
+            }
         }
 
         public void run() {
             while (going) {
                 try {
-                    synchronized (this) { wait(updateDelay); }
+                    animatorThread.sleep(updateDelay);
                 } catch (InterruptedException e) { }
+
+                if (!going) break;
 
                 long time = System.currentTimeMillis() - startTime;
 
-                position = posFrom + (int) (sps * time / 1000);
-                rotation = rotateFrom + (int) (rps * time / 1000);
+                int pos = (int) (sps * time / 1000);
+                int rotate = (int) (rps * time / 1000);
+                if (pos > posAmount) pos = posAmount;
+                if (rotate > rotateAmount) rotate = rotateAmount;
+
+                position = posFrom + pos * posDirection;
+                rotation = rotateFrom + rotate * rotateDirection;
 
                 MagnetometerStatusPanel.this.repaint();
+
+                if (pos == posAmount && rotate == rotateAmount) break;
             }
         }
     }
