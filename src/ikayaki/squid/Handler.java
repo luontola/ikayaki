@@ -351,31 +351,33 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @return true if given position was ok, otherwise false.
      */
     public boolean moveToPos(int pos) {
+      try {
+        boolean direction = true;
+        if (pos < 0) {
+          pos *= -1;
+          direction = false;
+        }
         if (pos < 0 || pos > 16777215) {
-            return false;
+          return false;
         }
-        try {
-          boolean direction = true;
-          if (pos < 0) {
-            pos *= -1;
-            direction = false;
-          }
-            //first need to set translate active
-            this.serialIO.writeMessage("O1,0");
-            if(direction)
-              this.serialIO.writeMessage("+N" + pos);
-            else
-              this.serialIO.writeMessage("-N" + pos);
-            //this.serialIO.writeMessage("P" + pos); //absolute
-            //no need to execute, Go will do it.
-            //this.serialIO.writeMessage(","); //execute command
-            this.go();
-            //this.currentPosition = pos; we cannot but relative position here
-            return true;
-        } catch (SerialIOException ex) {
-            System.err.println(ex);
-        }
-        return false;
+
+        //first need to set translate active
+        this.serialIO.writeMessage("O1,0");
+        if (direction)
+          this.serialIO.writeMessage("+N" + pos);
+        else
+          this.serialIO.writeMessage("-N" + pos);
+        //this.serialIO.writeMessage("P" + pos); //absolute
+        //no need to execute, Go will do it.
+        //this.serialIO.writeMessage(","); //execute command
+        this.go();
+        //this.currentPosition = pos; we cannot but relative position here
+        return true;
+      }
+      catch (SerialIOException ex) {
+        System.err.println(ex);
+      }
+      return false;
     }
 
     /**
@@ -484,7 +486,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @param v Velocity range is 50 to 20,000
      */
     protected void setVelocity(int v) {
-        if (v >= 50 && v < 20001) {
+        if (v >= 50 && v < 8501) {
             try {
                 this.serialIO.writeMessage("M" + v + ",");
                 //this.serialIO.writeMessage(","); //execute command
@@ -493,7 +495,6 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
                 System.err.println(ex);
             }
         }
-
     }
 
     /**

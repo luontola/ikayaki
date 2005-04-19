@@ -418,7 +418,7 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerVelocity(int value) {
-        if (value >= 50 && value <= 2000) {
+        if (value >= 50 && value <= 8500) {
             setProperty("squid.handler.velocity", Integer.toString(value));
             return true;
         } else {
@@ -432,7 +432,7 @@ public class Settings {
 
 
     public synchronized boolean setHandlerMeasurementVelocity(int value) {
-        if (value >= 50 && value <= 2000) {
+        if (value >= 50 && value <= 8500) {
             setProperty("squid.handler.measurementvelocity", Integer.toString(value));
             return true;
         } else {
@@ -445,7 +445,7 @@ public class Settings {
    }
 
    public synchronized boolean setHandlerRotationVelocity(int value) {
-        if (value >= 50 && value <= 2000) {
+        if (value >= 50 && value <= 8500) {
             setProperty("squid.handler.rotationvelocity", Integer.toString(value));
             return true;
         } else {
