@@ -247,7 +247,7 @@ public class SettingsPanel
     this.rotationVelocity.setValue(Settings.instance().getHandlerRotationVelocity());
     this.rotationAcc.setValue(Settings.instance().getHandlerAcceleration());
     this.rotationDec.setValue(Settings.instance().getHandlerDeceleration());
-    this.maximumField.setValue(Settings.instance().getMaximumField());
+    this.maximumField.setValue(Settings.instance().getDegausserMaximumField());
     this.handlerRightLimit.addItem("plus");
     this.handlerRightLimit.addItem("minus");
     this.handlerRightLimit.setSelectedIndex(Settings.instance().
@@ -397,63 +397,41 @@ public class SettingsPanel
     setVisible(false);
   }
 
-  /**
-   * Saves all settings to Settings-singleton and calls closeWindow().
-   */
-  public void saveSettings() {
-    try {
-      Settings.instance().setDegausserDelay(((Integer)this.
-          demagDelay.getSelectedItem()));
-      Settings.instance().setDegausserPort( (String)this.demagnetizerPort.
-                                           getSelectedItem());
-      Settings.instance().setDegausserRamp(((Integer)this.
-          demagRamp.getSelectedItem()));
-      Settings.instance().setMaximumField(((Integer)this.
-          maximumField.getValue()));
-      Settings.instance().setHandlerAcceleration(((Integer)this.
-          acceleration.getValue()));
-      Settings.instance().setHandlerAxialAFPosition(((Integer)this.
-          axialAFPosition.getValue()));
-      Settings.instance().setHandlerBackgroundPosition(((Integer)this.
-          backgroundPosition.getValue()));
-      Settings.instance().setHandlerDeceleration(((Integer)this.
-          deceleration.getValue()));
-      Settings.instance().setHandlerMeasurementPosition(((Integer)this.
-          measurementPosition.getValue()));
-      Settings.instance().setHandlerMeasurementVelocity(((Integer)this.
-          measurementVelocity.getValue()));
-      Settings.instance().setHandlerPort( (String)this.handlerPort.
-                                         getSelectedItem());
-      Settings.instance().setHandlerRightLimit(this.
-          handlerRightLimit.getSelectedIndex());
-      Settings.instance().setHandlerRotation(((Integer)this.rotation.
-          getValue()).intValue());
-      Settings.instance().setHandlerSampleLoadPosition(((Integer)this.
-          sampleLoadPosition.getValue()));
-      Settings.instance().setHandlerTransverseYAFPosition(((Integer)this.
-          transverseYAFPosition.getValue()));
-      Settings.instance().setHandlerVelocity(((Integer)this.velocity.
-          getValue()));
-      Settings.instance().setHandlerRotationVelocity(((Integer)this.rotationVelocity.
-          getValue()));
-      Settings.instance().setHandlerRotationDeceleration(((Integer)this.rotationDec.
-          getValue()));
-      Settings.instance().setHandlerRotationAcceleration(((Integer)this.rotationAcc.
-          getValue()));
-      Settings.instance().setMagnetometerPort( (String)this.magnetometerPort.
-                                              getSelectedItem());
-      Settings.instance().setMagnetometerXAxisCalibration(((Double)this.
-          xAxisCalibration.getValue()));
-      Settings.instance().setMagnetometerYAxisCalibration(((Double)this.
-          yAxisCalibration.getValue()));
-      Settings.instance().setMagnetometerZAxisCalibration(((Double)this.
-          zAxisCalibration.getValue()));
-      creator.closeWindow();
+    /**
+     * Saves all settings to Settings-singleton and calls closeWindow().
+     */
+    public void saveSettings() {
+        try {
+            Settings.instance().setDegausserPort((String) this.demagnetizerPort.getSelectedItem());
+            Settings.instance().setDegausserDelay(((Number) this.demagDelay.getSelectedItem()).intValue());
+            Settings.instance().setDegausserRamp(((Number) this.demagRamp.getSelectedItem()).intValue());
+            Settings.instance().setDegausserMaximumField(((Number) this.maximumField.getValue()).intValue());
+
+            Settings.instance().setHandlerPort((String) this.handlerPort.getSelectedItem());
+            Settings.instance().setHandlerAcceleration(((Number) this.acceleration.getValue()).intValue());
+            Settings.instance().setHandlerAxialAFPosition(((Number) this.axialAFPosition.getValue()).intValue());
+            Settings.instance().setHandlerBackgroundPosition(((Number) this.backgroundPosition.getValue()).intValue());
+            Settings.instance().setHandlerDeceleration(((Number) this.deceleration.getValue()).intValue());
+            Settings.instance().setHandlerMeasurementPosition(((Number) this.measurementPosition.getValue()).intValue());
+            Settings.instance().setHandlerMeasurementVelocity(((Number) this.measurementVelocity.getValue()).intValue());
+            Settings.instance().setHandlerRightLimit(this.handlerRightLimit.getSelectedIndex());
+            Settings.instance().setHandlerRotation(((Number) this.rotation.getValue()).intValue());
+            Settings.instance().setHandlerSampleLoadPosition(((Number) this.sampleLoadPosition.getValue()).intValue());
+            Settings.instance().setHandlerTransverseYAFPosition(((Number) this.transverseYAFPosition.getValue()).intValue());
+            Settings.instance().setHandlerVelocity(((Number) this.velocity.getValue()).intValue());
+            Settings.instance().setHandlerRotationVelocity(((Number) this.rotationVelocity.getValue()).intValue());
+            Settings.instance().setHandlerRotationDeceleration(((Number) this.rotationDec.getValue()).intValue());
+            Settings.instance().setHandlerRotationAcceleration(((Number) this.rotationAcc.getValue()).intValue());
+
+            Settings.instance().setMagnetometerPort((String) this.magnetometerPort.getSelectedItem());
+            Settings.instance().setMagnetometerXAxisCalibration(((Number) this.xAxisCalibration.getValue()).doubleValue());
+            Settings.instance().setMagnetometerYAxisCalibration(((Number) this.yAxisCalibration.getValue()).doubleValue());
+            Settings.instance().setMagnetometerZAxisCalibration(((Number) this.zAxisCalibration.getValue()).doubleValue());
+            creator.closeWindow();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
 
   //TODO: check COM ports
   private boolean correctValues() {

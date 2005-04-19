@@ -103,7 +103,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         queue = new SynchronousQueue<String>();
         this.degausserDelay = Settings.instance().getDegausserDelay();
         this.degausserRamp = Settings.instance().getDegausserRamp();
-        this.maximumField = Settings.instance().getMaximumField();
+        this.maximumField = Settings.instance().getDegausserMaximumField();
         lastCommandTime = System.currentTimeMillis();
         //needs to call new functions setDelay() and setRamp(). TODO
         waitSecond();
@@ -129,7 +129,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         // No check, only two options. Doesnt matter.
         this.degausserDelay = Settings.instance().getDegausserDelay();
         this.degausserRamp = Settings.instance().getDegausserRamp();
-        this.maximumField = Settings.instance().getMaximumField();
+        this.maximumField = Settings.instance().getDegausserMaximumField();
         waitSecond();
         try {
             this.serialIO.writeMessage("DCD " + this.degausserDelay + "\r");

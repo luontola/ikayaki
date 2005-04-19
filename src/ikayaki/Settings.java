@@ -45,16 +45,74 @@ import java.util.List;
  */
 public class Settings {
 
-    // TODO: make all methods static
-
-    private static final int DIRECTORY_HISTORY_SIZE = 30;   // TODO: make the history sizes variable
+    private static final int DIRECTORY_HISTORY_SIZE = 30;   // TODO: make methods for changing the history sizes
     private static final int PROJECT_HISTORY_SIZE = 10;
 
     private static final StyledWrapper defaultWrapper = new StyledWrapper();
     private static final StyledWrapper measuringWrapper = new StyledWrapper();
     private static final StyledWrapper doneRecentlyWrapper = new StyledWrapper();
 
+    /**
+     * Singleton instance of the Settings object.
+     */
+    private static Settings instance;
+
+    /**
+     * All properties in a map.
+     */
+    private static Properties properties = new Properties();
+
+    /**
+     * File where the properties will be saved in XML format
+     */
+    private static File propertiesFile = Ikayaki.PROPERTIES_FILE;
+
+    /**
+     * true if the properties have been modified, otherwise false
+     */
+    private static boolean propertiesModified = false;
+
+    /**
+     * All saved sequences
+     */
+    private static List<MeasurementSequence> sequences = new ArrayList<MeasurementSequence>();
+
+    /**
+     * File where the sequences will be saved in XML format
+     */
+    private static File sequencesFile = Ikayaki.SEQUENCES_FILE;
+
+    /**
+     * true if the sequences have been modified, otherwise false
+     */
+    private static boolean sequencesModified = false;
+
+    /**
+     * List for holding the recently used directories. Used to cache the values read from the properties.
+     */
+    private static List<File> directoryHistory = new LinkedList<File>();
+
+    /**
+     * List for holding the recently used project files. Used to cache the values read from the properties.
+     */
+    private static List<File> projectHistory = new LinkedList<File>();
+
+    /**
+     * Queue for scheduling save operations after properties/sequences have been changed
+     */
+    private static LastExecutor autosaveQueue = new LastExecutor(500, true);
+
+    /**
+     * Operation that will save the properties/sequences.
+     */
+    private static Runnable autosaveRunnable = new Runnable() {
+        public void run() {
+            saveNow();
+        }
+    };
+
     static {
+
         // ensure that the configuration files and directories exist
         if (!Ikayaki.CALIBRATION_PROJECT_DIR.exists()) {
             if (!Ikayaki.CALIBRATION_PROJECT_DIR.mkdir()) {
@@ -65,89 +123,6 @@ public class Settings {
             System.err.println("No such directory: " + Ikayaki.CALIBRATION_PROJECT_DIR);
         }
 
-        // set background colors for the styled wrappers
-        defaultWrapper.opaque = true;
-        defaultWrapper.background = new Color(0xFFFFFF);
-        defaultWrapper.selectedBackground = new Color(0xC3D4E8);
-        defaultWrapper.focusBackground = new Color(0xFFFFFF);
-        defaultWrapper.selectedFocusBackground = new Color(0xC3D4E8);
-
-        measuringWrapper.opaque = true;
-        measuringWrapper.background = new Color(0xEEBAEE);
-        measuringWrapper.selectedBackground = new Color(0xFFCCFF);
-        measuringWrapper.focusBackground = new Color(0xEEBAEE);
-        measuringWrapper.selectedFocusBackground = new Color(0xFFCCFF);
-
-        doneRecentlyWrapper.opaque = true;
-        doneRecentlyWrapper.background = new Color(0xBAEEBA);
-        doneRecentlyWrapper.selectedBackground = new Color(0xCCFFCC);
-        doneRecentlyWrapper.focusBackground = new Color(0xBAEEBA);
-        doneRecentlyWrapper.selectedFocusBackground = new Color(0xCCFFCC);
-    }
-
-    /**
-     * Singleton instance of the Settings object.
-     */
-    private static Settings instance;
-
-    /**
-     * All properties in a map.
-     */
-    private Properties properties = new Properties();
-
-    /**
-     * File where the properties will be saved in XML format
-     */
-    private File propertiesFile = Ikayaki.PROPERTIES_FILE;
-
-    /**
-     * true if the properties have been modified, otherwise false
-     */
-    private boolean propertiesModified = false;
-
-    /**
-     * All saved sequences
-     */
-    private List<MeasurementSequence> sequences = new ArrayList<MeasurementSequence>();
-
-    /**
-     * File where the sequences will be saved in XML format
-     */
-    private File sequencesFile = Ikayaki.SEQUENCES_FILE;
-
-    /**
-     * true if the sequences have been modified, otherwise false
-     */
-    private boolean sequencesModified = false;
-
-    /**
-     * Queue for scheduling save operations after properties/sequences have been changed
-     */
-    private LastExecutor autosaveQueue = new LastExecutor(500, true);
-
-    /**
-     * Operation that will save the properties/sequences.
-     */
-    private Runnable autosaveRunnable = new Runnable() {
-        public void run() {
-            saveNow();
-        }
-    };
-
-    /**
-     * Returns the global Settings object. If not yet created, will first create one.
-     */
-    public static Settings instance() {
-        if (instance == null) {
-            instance = new Settings();
-        }
-        return instance;
-    }
-
-    /**
-     * Creates a new Settings instance. Loads settings from the configuration files.
-     */
-    private Settings() {
         // load saved properties
         if (propertiesFile.exists()) {
             try {
@@ -186,13 +161,52 @@ public class Settings {
         // load custom properties
         loadDirectoryHistory();
         loadProjectHistory();
+
+        // set background colors for the styled wrappers
+        defaultWrapper.opaque = true;
+        defaultWrapper.background = new Color(0xFFFFFF);
+        defaultWrapper.selectedBackground = new Color(0xC3D4E8);
+        defaultWrapper.focusBackground = new Color(0xFFFFFF);
+        defaultWrapper.selectedFocusBackground = new Color(0xC3D4E8);
+
+        measuringWrapper.opaque = true;
+        measuringWrapper.background = new Color(0xEEBAEE);
+        measuringWrapper.selectedBackground = new Color(0xFFCCFF);
+        measuringWrapper.focusBackground = new Color(0xEEBAEE);
+        measuringWrapper.selectedFocusBackground = new Color(0xFFCCFF);
+
+        doneRecentlyWrapper.opaque = true;
+        doneRecentlyWrapper.background = new Color(0xBAEEBA);
+        doneRecentlyWrapper.selectedBackground = new Color(0xCCFFCC);
+        doneRecentlyWrapper.focusBackground = new Color(0xBAEEBA);
+        doneRecentlyWrapper.selectedFocusBackground = new Color(0xCCFFCC);
+    }
+
+    /**
+     * Returns the global Settings object. If not yet created, will first create one.
+     *
+     * @deprecated use the static class methods instead.
+     */
+    public static Settings instance() {
+        if (instance == null) {
+            instance = new Settings();
+        }
+        return instance;
+    }
+
+    /**
+     * Creates a new Settings instance. Loads settings from the configuration files.
+     *
+     * @deprecated use the static class methods instead.
+     */
+    private Settings() {
     }
 
     /**
      * Saves the settings after a while when no changes have come. The method call will return immediately and will not
      * wait for the file to be written.
      */
-    public synchronized void save() {
+    public static synchronized void save() {
         autosaveQueue.execute(autosaveRunnable);
     }
 
@@ -201,7 +215,7 @@ public class Settings {
      *
      * @return true if there were no errors in writing the files or everything was already saved. Otherwise false.
      */
-    public synchronized boolean saveNow() {
+    public static synchronized boolean saveNow() {
         boolean ok = true;
 
         // save properties to file
@@ -249,7 +263,7 @@ public class Settings {
      * @param key key whose associated value is to be returned.
      * @return the value associated with key, or null if none exists.
      */
-    private synchronized String getProperty(String key) {
+    private static synchronized String getProperty(String key) {
         return properties.getProperty(key);
     }
 
@@ -260,7 +274,7 @@ public class Settings {
      * @param defaultValue a default value
      * @return the value associated with key, or defaultValue if none exists.
      */
-    private synchronized String getProperty(String key, String defaultValue) {
+    private static synchronized String getProperty(String key, String defaultValue) {
         return properties.getProperty(key, defaultValue);
     }
 
@@ -271,7 +285,7 @@ public class Settings {
      * @param value value to be associated with the specified key, or null to remove the value.
      * @throws NullPointerException if key is null.
      */
-    private synchronized void setProperty(String key, String value) {
+    private static synchronized void setProperty(String key, String value) {
         if (value == null) {
             properties.remove(key);
         } else {
@@ -286,7 +300,7 @@ public class Settings {
      *
      * @return Value associated with key
      */
-    public synchronized Object getXXX() {
+    public static synchronized Object getXXX() {
         return null;
     }
 
@@ -295,75 +309,75 @@ public class Settings {
      *
      * @return true if value was correct, otherwise false.
      */
-    public synchronized boolean setXXX(Object value) {
+    public static synchronized boolean setXXX(Object value) {
         return false;
     }
 
     /* Serial ports */
 
-    public synchronized String getMagnetometerPort() {
+    public static synchronized String getMagnetometerPort() {
         return getProperty("squid.magnetometer.port", "");
     }
 
-    public synchronized boolean setMagnetometerPort(String value) {
+    public static synchronized boolean setMagnetometerPort(String value) {
         setProperty("squid.magnetometer.port", value);
         return true;
     }
 
-    public synchronized String getHandlerPort() {
+    public static synchronized String getHandlerPort() {
         return getProperty("squid.handler.port", "");
     }
 
-    public synchronized boolean setHandlerPort(String value) {
+    public static synchronized boolean setHandlerPort(String value) {
         setProperty("squid.handler.port", value);
         return true;
     }
 
-    public synchronized String getDegausserPort() {
+    public static synchronized String getDegausserPort() {
         return getProperty("squid.degausser.port", "");
     }
 
-    public synchronized boolean setDegausserPort(String value) {
+    public static synchronized boolean setDegausserPort(String value) {
         setProperty("squid.degausser.port", value);
         return true;
     }
 
     /* Magnetometer */
 
-    public synchronized double getMagnetometerXAxisCalibration() {
+    public static synchronized double getMagnetometerXAxisCalibration() {
         return Double.parseDouble(getProperty("squid.magnetometer.xaxiscalibration", "0.0"));
     }
 
-    public synchronized boolean setMagnetometerXAxisCalibration(double value) {
+    public static synchronized boolean setMagnetometerXAxisCalibration(double value) {
         setProperty("squid.magnetometer.xaxiscalibration", Double.toString(value));
         return true;
     }
 
-    public synchronized double getMagnetometerYAxisCalibration() {
+    public static synchronized double getMagnetometerYAxisCalibration() {
         return Double.parseDouble(getProperty("squid.magnetometer.yaxiscalibration", "0.0"));
     }
 
-    public synchronized boolean setMagnetometerYAxisCalibration(double value) {
+    public static synchronized boolean setMagnetometerYAxisCalibration(double value) {
         setProperty("squid.magnetometer.yaxiscalibration", Double.toString(value));
         return true;
     }
 
-    public synchronized double getMagnetometerZAxisCalibration() {
+    public static synchronized double getMagnetometerZAxisCalibration() {
         return Double.parseDouble(getProperty("squid.magnetometer.zaxiscalibration", "0.0"));
     }
 
-    public synchronized boolean setMagnetometerZAxisCalibration(double value) {
+    public static synchronized boolean setMagnetometerZAxisCalibration(double value) {
         setProperty("squid.magnetometer.zaxiscalibration", Double.toString(value));
         return true;
     }
 
     /* Degausser */
 
-    public synchronized int getDegausserRamp() {
+    public static synchronized int getDegausserRamp() {
         return Integer.parseInt(getProperty("squid.degausser.ramp", "0"));
     }
 
-    public synchronized boolean setDegausserRamp(int value) {
+    public static synchronized boolean setDegausserRamp(int value) {
         if (value == 3 || value == 5 || value == 7 || value == 9) {
             setProperty("squid.degausser.ramp", Integer.toString(value));
             return true;
@@ -372,11 +386,11 @@ public class Settings {
         }
     }
 
-    public synchronized int getDegausserDelay() {
+    public static synchronized int getDegausserDelay() {
         return Integer.parseInt(getProperty("squid.degausser.delay", "0"));
     }
 
-    public synchronized boolean setDegausserDelay(int value) {
+    public static synchronized boolean setDegausserDelay(int value) {
         if (value > 0 && value < 10) {
             setProperty("squid.degausser.delay", Integer.toString(value));
             return true;
@@ -385,79 +399,7 @@ public class Settings {
         }
     }
 
-    /* Sample handler */
-
-    public synchronized int getHandlerAcceleration() {
-        return Integer.parseInt(getProperty("squid.handler.acceleration", "0"));
-    }
-
-    public synchronized boolean setHandlerAcceleration(int value) {
-        if (value >= 0 && value <= 127) {
-            setProperty("squid.handler.acceleration", Integer.toString(value));
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public synchronized int getHandlerDeceleration() {
-        return Integer.parseInt(getProperty("squid.handler.deceleration", "0"));
-    }
-
-    public synchronized boolean setHandlerDeceleration(int value) {
-        if (value >= 0 && value <= 127) {
-            setProperty("squid.handler.deceleration", Integer.toString(value));
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public synchronized int getHandlerVelocity() {
-        return Integer.parseInt(getProperty("squid.handler.velocity", "0"));
-    }
-
-    public synchronized boolean setHandlerVelocity(int value) {
-        if (value >= 50 && value <= 8500) {
-            setProperty("squid.handler.velocity", Integer.toString(value));
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public synchronized int getHandlerMeasurementVelocity() {
-        return Integer.parseInt(getProperty("squid.handler.measurementvelocity", "0"));
-    }
-
-
-    public synchronized boolean setHandlerMeasurementVelocity(int value) {
-        if (value >= 50 && value <= 8500) {
-            setProperty("squid.handler.measurementvelocity", Integer.toString(value));
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public synchronized int getHandlerRotationVelocity() {
-       return Integer.parseInt(getProperty("squid.handler.rotationvelocity", "50"));
-   }
-
-   public synchronized boolean setHandlerRotationVelocity(int value) {
-        if (value >= 50 && value <= 8500) {
-            setProperty("squid.handler.rotationvelocity", Integer.toString(value));
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public synchronized int getHandlerRotationAcceleration() {
-       return Integer.parseInt(getProperty("squid.handler.rotationacceleration", "0"));
-   }
-
-   public synchronized boolean setMaximumField(int value) {
+    public static synchronized boolean setDegausserMaximumField(int value) {
         if (value >= 0 && value <= 4000) {
             setProperty("squid.degausser.maximumfield", Integer.toString(value));
             return true;
@@ -466,12 +408,82 @@ public class Settings {
         }
     }
 
-    public synchronized int getMaximumField() {
-       return Integer.parseInt(getProperty("squid.degausser.maximumfield", "0"));
-   }
+    public static synchronized int getDegausserMaximumField() {
+        return Integer.parseInt(getProperty("squid.degausser.maximumfield", "0"));
+    }
 
+    /* Sample handler */
 
-   public synchronized boolean setHandlerRotationAcceleration(int value) {
+    public static synchronized int getHandlerAcceleration() {
+        return Integer.parseInt(getProperty("squid.handler.acceleration", "0"));
+    }
+
+    public static synchronized boolean setHandlerAcceleration(int value) {
+        if (value >= 0 && value <= 127) {
+            setProperty("squid.handler.acceleration", Integer.toString(value));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static synchronized int getHandlerDeceleration() {
+        return Integer.parseInt(getProperty("squid.handler.deceleration", "0"));
+    }
+
+    public static synchronized boolean setHandlerDeceleration(int value) {
+        if (value >= 0 && value <= 127) {
+            setProperty("squid.handler.deceleration", Integer.toString(value));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static synchronized int getHandlerVelocity() {
+        return Integer.parseInt(getProperty("squid.handler.velocity", "0"));
+    }
+
+    public static synchronized boolean setHandlerVelocity(int value) {
+        if (value >= 50 && value <= 8500) {
+            setProperty("squid.handler.velocity", Integer.toString(value));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static synchronized int getHandlerMeasurementVelocity() {
+        return Integer.parseInt(getProperty("squid.handler.measurementvelocity", "0"));
+    }
+
+    public static synchronized boolean setHandlerMeasurementVelocity(int value) {
+        if (value >= 50 && value <= 8500) {
+            setProperty("squid.handler.measurementvelocity", Integer.toString(value));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static synchronized int getHandlerRotationVelocity() {
+        return Integer.parseInt(getProperty("squid.handler.rotationvelocity", "50"));
+    }
+
+    public static synchronized boolean setHandlerRotationVelocity(int value) {
+        if (value >= 50 && value <= 8500) {
+            setProperty("squid.handler.rotationvelocity", Integer.toString(value));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static synchronized int getHandlerRotationAcceleration() {
+        return Integer.parseInt(getProperty("squid.handler.rotationacceleration", "0"));
+    }
+
+    public static synchronized boolean setHandlerRotationAcceleration(int value) {
         if (value >= 0 && value <= 127) {
             setProperty("squid.handler.rotationacceleration", Integer.toString(value));
             return true;
@@ -480,11 +492,11 @@ public class Settings {
         }
     }
 
-    public synchronized int getHandlerRotationDeceleration() {
-       return Integer.parseInt(getProperty("squid.handler.rotationdeceleration", "0"));
-   }
+    public static synchronized int getHandlerRotationDeceleration() {
+        return Integer.parseInt(getProperty("squid.handler.rotationdeceleration", "0"));
+    }
 
-   public synchronized boolean setHandlerRotationDeceleration(int value) {
+    public static synchronized boolean setHandlerRotationDeceleration(int value) {
         if (value >= 50 && value <= 2000) {
             setProperty("squid.handler.rotationdeceleration", Integer.toString(value));
             return true;
@@ -493,11 +505,11 @@ public class Settings {
         }
     }
 
-    public synchronized int getHandlerTransverseYAFPosition() {
+    public static synchronized int getHandlerTransverseYAFPosition() {
         return Integer.parseInt(getProperty("squid.handler.pos.transverseyaf", "0"));
     }
 
-    public synchronized boolean setHandlerTransverseYAFPosition(int value) {
+    public static synchronized boolean setHandlerTransverseYAFPosition(int value) {
         if (value >= 1 && value <= 16777215) {
             setProperty("squid.handler.pos.transverseyaf", Integer.toString(value));
             return true;
@@ -506,11 +518,11 @@ public class Settings {
         }
     }
 
-    public synchronized int getHandlerAxialAFPosition() {
+    public static synchronized int getHandlerAxialAFPosition() {
         return Integer.parseInt(getProperty("squid.handler.pos.axialaf", "0"));
     }
 
-    public synchronized boolean setHandlerAxialAFPosition(int value) {
+    public static synchronized boolean setHandlerAxialAFPosition(int value) {
         if (value >= 1 && value <= 16777215) {
             setProperty("squid.handler.pos.axialaf", Integer.toString(value));
             return true;
@@ -519,11 +531,11 @@ public class Settings {
         }
     }
 
-    public synchronized int getHandlerSampleLoadPosition() {
+    public static synchronized int getHandlerSampleLoadPosition() {
         return Integer.parseInt(getProperty("squid.handler.pos.sampleload", "0"));
     }
 
-    public synchronized boolean setHandlerSampleLoadPosition(int value) {
+    public static synchronized boolean setHandlerSampleLoadPosition(int value) {
         if (value >= 0 && value <= 16777215) {
             setProperty("squid.handler.pos.sampleload", Integer.toString(value));
             return true;
@@ -532,11 +544,11 @@ public class Settings {
         }
     }
 
-    public synchronized int getHandlerBackgroundPosition() {
+    public static synchronized int getHandlerBackgroundPosition() {
         return Integer.parseInt(getProperty("squid.handler.pos.background", "0"));
     }
 
-    public synchronized boolean setHandlerBackgroundPosition(int value) {
+    public static synchronized boolean setHandlerBackgroundPosition(int value) {
         if (value >= 1 && value <= 16777215) {
             setProperty("squid.handler.pos.background", Integer.toString(value));
             return true;
@@ -545,11 +557,11 @@ public class Settings {
         }
     }
 
-    public synchronized int getHandlerMeasurementPosition() {
+    public static synchronized int getHandlerMeasurementPosition() {
         return Integer.parseInt(getProperty("squid.handler.pos.measurement", "0"));
     }
 
-    public synchronized boolean setHandlerMeasurementPosition(int value) {
+    public static synchronized boolean setHandlerMeasurementPosition(int value) {
         if (value >= 1 && value <= 16777215) {
             setProperty("squid.handler.pos.measurement", Integer.toString(value));
             return true;
@@ -558,11 +570,11 @@ public class Settings {
         }
     }
 
-    public synchronized int getHandlerRightLimit() {
+    public static synchronized int getHandlerRightLimit() {
         return Integer.parseInt(getProperty("squid.handler.pos.rightlimit", "0"));
     }
 
-    public synchronized boolean setHandlerRightLimit(int value) {
+    public static synchronized boolean setHandlerRightLimit(int value) {
         if (value == 0 || value == 1) {
             setProperty("squid.handler.pos.rightlimit", Integer.toString(value));
             return true;
@@ -571,11 +583,11 @@ public class Settings {
         }
     }
 
-    public synchronized int getHandlerRotation() {
+    public static synchronized int getHandlerRotation() {
         return Integer.parseInt(getProperty("squid.handler.rotation", "0"));
     }
 
-    public synchronized boolean setHandlerRotation(int value) {
+    public static synchronized boolean setHandlerRotation(int value) {
         setProperty("squid.handler.rotation", Integer.toString(value));
         return true;
     }
@@ -585,11 +597,11 @@ public class Settings {
     /**
      * How many times the handler should rotate itself when taking the measurements. Possible values are 0, 1 or more.
      */
-    public synchronized int getMeasurementRotations() {
+    public static synchronized int getMeasurementRotations() {
         return Integer.parseInt(getProperty("measurement.rotations", "1"));
     }
 
-    public synchronized boolean setMeasurementRotations(int value) { // TODO: gui for changing this value
+    public static synchronized boolean setMeasurementRotations(int value) { // TODO: gui for changing this value
         if (value >= 0) {
             setProperty("measurement.rotations", Integer.toString(value));
             return true;
@@ -600,7 +612,7 @@ public class Settings {
 
     /* Program window */
 
-    public synchronized int getWindowWidth() {
+    public static synchronized int getWindowWidth() {
         int i = Integer.parseInt(getProperty("gui.window.width", "1000"));
         Rectangle maxBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         if (i < 400) {
@@ -611,12 +623,12 @@ public class Settings {
         return i;
     }
 
-    public synchronized boolean setWindowWidth(int value) {
+    public static synchronized boolean setWindowWidth(int value) {
         setProperty("gui.window.width", Integer.toString(value));
         return true;
     }
 
-    public synchronized int getWindowHeight() {
+    public static synchronized int getWindowHeight() {
         int i = Integer.parseInt(getProperty("gui.window.height", "700"));
         Rectangle maxBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         if (i < 300) {
@@ -627,25 +639,23 @@ public class Settings {
         return i;
     }
 
-    public synchronized boolean setWindowHeight(int value) {
+    public static synchronized boolean setWindowHeight(int value) {
         setProperty("gui.window.height", Integer.toString(value));
         return true;
     }
 
-    public synchronized boolean getWindowMaximized() {
+    public static synchronized boolean getWindowMaximized() {
         return Boolean.parseBoolean(getProperty("gui.window.maximized", "false"));
     }
 
-    public synchronized boolean setWindowMaximized(boolean value) {
+    public static synchronized boolean setWindowMaximized(boolean value) {
         setProperty("gui.window.maximized", Boolean.toString(value));
         return true;
     }
 
     /* Directory history */
 
-    private List<File> directoryHistory = new LinkedList<File>();
-
-    public synchronized File getLastDirectory() {
+    public static synchronized File getLastDirectory() {
         File[] dirs = getDirectoryHistory();
         if (dirs.length > 0) {
             return dirs[0];
@@ -654,11 +664,11 @@ public class Settings {
         }
     }
 
-    public synchronized File[] getDirectoryHistory() {
+    public static synchronized File[] getDirectoryHistory() {
         return directoryHistory.toArray(new File[directoryHistory.size()]);
     }
 
-    public synchronized boolean updateDirectoryHistory(File visited) {
+    public static synchronized boolean updateDirectoryHistory(File visited) {
         if (!visited.isAbsolute()) {
             visited = visited.getAbsoluteFile();
         }
@@ -681,7 +691,7 @@ public class Settings {
         return true;
     }
 
-    private synchronized void loadDirectoryHistory() {
+    private static synchronized void loadDirectoryHistory() {
         // reset history list
         directoryHistory.clear();
 
@@ -703,13 +713,11 @@ public class Settings {
 
     /* Project history */
 
-    private List<File> projectHistory = new LinkedList<File>();
-
-    public synchronized File[] getProjectHistory() {
+    public static synchronized File[] getProjectHistory() {
         return projectHistory.toArray(new File[projectHistory.size()]);
     }
 
-    public synchronized boolean updateProjectHistory(File visited) {
+    public static synchronized boolean updateProjectHistory(File visited) {
         if (visited == null) {
             return false;
         }
@@ -735,7 +743,7 @@ public class Settings {
         return true;
     }
 
-    private synchronized void loadProjectHistory() {
+    private static synchronized void loadProjectHistory() {
         // reset history list
         projectHistory.clear();
 
@@ -758,14 +766,14 @@ public class Settings {
     /**
      * Returns all saved sequences in no particular order.
      */
-    public synchronized MeasurementSequence[] getSequences() {
+    public static synchronized MeasurementSequence[] getSequences() {
         return sequences.toArray(new MeasurementSequence[sequences.size()]);
     }
 
     /**
      * Adds a sequence to the sequence list. Each sequence may be added only once.
      */
-    public synchronized void addSequence(MeasurementSequence sequence) {
+    public static synchronized void addSequence(MeasurementSequence sequence) {
         if (sequence != null && !sequences.contains(sequence)) {
             sequences.add(sequence);
             sequencesModified = true;
@@ -776,7 +784,7 @@ public class Settings {
     /**
      * Removes a sequence from the sequence list. If the specified sequence is not in the list, it will be ignored.
      */
-    public synchronized void removeSequence(MeasurementSequence sequence) { // TODO: gui for renaming and removing sequences
+    public static synchronized void removeSequence(MeasurementSequence sequence) { // TODO: gui for renaming and removing sequences
         if (sequence != null) {
             sequences.remove(sequence);
             sequencesModified = true;
