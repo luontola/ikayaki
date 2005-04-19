@@ -244,7 +244,7 @@ public class SettingsPanel
     this.backgroundPosition.setValue(Settings.instance().
                                      getHandlerBackgroundPosition());
     this.rotation.setValue(Settings.instance().getHandlerRotation());
-    this.rotationVelocity.setValue(Settings.instance().getHandlerVelocity());
+    this.rotationVelocity.setValue(Settings.instance().getHandlerRotationVelocity());
     this.rotationAcc.setValue(Settings.instance().getHandlerAcceleration());
     this.rotationDec.setValue(Settings.instance().getHandlerDeceleration());
     this.maximumField.setValue(Settings.instance().getMaximumField());

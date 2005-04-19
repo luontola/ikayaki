@@ -524,7 +524,7 @@ public class Settings {
     }
 
     public synchronized boolean setHandlerSampleLoadPosition(int value) {
-        if (value >= 1 && value <= 16777215) {
+        if (value >= 0 && value <= 16777215) {
             setProperty("squid.handler.pos.sampleload", Integer.toString(value));
             return true;
         } else {
