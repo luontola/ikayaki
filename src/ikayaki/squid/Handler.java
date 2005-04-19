@@ -47,7 +47,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * Synchronous queue for waiting result message from handler
      */
     private SynchronousQueue<String> queue;
-
+    private int pollTimeout = 2;
 
     /**
      * Handlers current status.
@@ -124,9 +124,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private int currentRotation = 0;
 
     private boolean waitingForMessage = false;
-  private int rotationSpeed;
-  private int rotationAcceleration;
-  private int rotationDeceleration;
+
+    private int rotationSpeed;
+    private int rotationAcceleration;
+    private int rotationDeceleration;
 
   /**
      * Creates a new handler interface. Opens connection to handler COM port and reads settings from the Settings
@@ -220,7 +221,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.poll(60L,TimeUnit.SECONDS);
+          answer = (String) queue.poll(pollTimeout,TimeUnit.SECONDS);
           System.err.println("get:" + answer + " from queue(status)");
         }
         catch (InterruptedException ex1) {
@@ -627,8 +628,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             //this.serialIO.writeMessage(","); //execute command
             waitingForMessage = true;
             try {
-              String answer = (String) queue.take();//poll(60L, TimeUnit.SECONDS);
-              //System.err.println("get:" + answer + " from queue(join)");
+              String answer = (String) queue.take();//poll(pollTimeout, TimeUnit.SECONDS);
+              System.err.println("get:" + answer + " from queue(join)");
             }
             catch (InterruptedException ex1) {
             }
@@ -661,8 +662,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         String answer = null;
        // while(true) {
           try {
-            answer = (String) queue.take(); //(60L, TimeUnit.SECONDS);
-            //System.err.println("get:" + answer + " from queue(verify)");
+            answer = (String) queue.take(); //(pollTimeout, TimeUnit.SECONDS);
+            System.err.println("get:" + answer + " from queue(verify)");
             //if(answer != null) break;
             //Thread.sleep(1000);
           }
@@ -711,8 +712,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.poll(60L,TimeUnit.SECONDS);
-          //System.err.println("get:" + answer + " from queue(take)");
+          answer = (String) queue.poll(pollTimeout,TimeUnit.SECONDS);
+          System.err.println("get:" + answer + " from queue(take)");
         }
         catch (InterruptedException ex1) {
         }

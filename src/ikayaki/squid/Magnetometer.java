@@ -47,7 +47,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * Synchronous queue for waiting result message from magnetometer
      */
     private SynchronousQueue<String> queue;
-
+    private int pollTimeout = 2;
 
     /**
      * Magnetometer's current status.
@@ -264,7 +264,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.poll(60L,TimeUnit.SECONDS);
+          answer = (String) queue.poll(pollTimeout,TimeUnit.SECONDS);
         }
         catch (InterruptedException ex1) {
         }
