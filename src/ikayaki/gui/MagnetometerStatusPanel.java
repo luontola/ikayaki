@@ -104,13 +104,6 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     }
 
     /**
-     * @return Handler we command.
-     */
-    public Handler getHandler() {
-        return handler;
-    }
-
-    /**
      * Sets our Handler to command; called by MainViewPanel.
      *
      * @param handler sample handler to read positions and command with move/rotate commands.
@@ -118,6 +111,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     public void setHandler(Handler handler) {
         this.handler = handler;
         updateStatus();
+        manualControlsPanel.setEnabled();
     }
 
     /**
@@ -336,7 +330,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
      */
     private class MagnetometerStatusAnimator implements Runnable {
         // drawing delay in ms (fps = 1000 / delay), steps per second, rotation-steps per second
-        // TODO: save updated values somewhere?
+        // TODO: save updated values somewhere (Settings)?
         private int updateDelay, sps = 10000, rps = 500;
 
         // position & rotation we're going from, amount and direction (+/-1)
@@ -389,7 +383,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
                 this.sps = ( (int) (posAmount * 1000L / time) + sps) / 2;
                 this.rps = ( (int) (rotateAmount * 1000L / time) + rps) / 2;
 
-                System.out.println("sps: " + sps + "  rps: " + rps);
+                //System.out.println("animatorThread: sps " + sps + "  rps " + rps);
             }
 
             killAnimatorThread();
@@ -409,7 +403,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         public void run() {
             while (going) {
                 try {
-                    animatorThread.sleep(updateDelay); // TODO: shouldn't this read "Thread.sleep(long)" ?!
+                    Thread.sleep(updateDelay);
                 } catch (InterruptedException e) { }
 
                 if (!going) break;
@@ -429,15 +423,6 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
                 if (pos == posAmount && rotate == rotateAmount) break;
             }
         }
-    }
-
-    /**
-     * Begins handler in motion -animation.
-     *
-     * @param pos position where we're going.
-     */
-    private void startMoving(int pos, int rotate) { // TODO: this is never used. remove it?
-
     }
 
     /**
@@ -524,7 +509,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
          * Resets X, Y and Z by calling project.doManualReset()? Does what?
          */
         private final JButton resetAllButton = new JButton("Reset XYZ?");
-        private final ComponentFlasher resetAllButtonFlasher = new ComponentFlasher(resetAllButton); // TODO: this is never used. remove it?
+        // TODO: add some action here
+        private final ComponentFlasher resetAllButtonFlasher = new ComponentFlasher(resetAllButton);
 
         /**
          * Demagnetization amplitude in mT, used when demagZ/YButton is clicked.
@@ -538,7 +524,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
          */
         private final JButton demagButton = new JButton("Demag");
         private final String demagButtonBaseText = "Demag ";
-        private final ComponentFlasher demagButtonFlasher = new ComponentFlasher(demagButton); // TODO: this is never used. remove it?
+        // TODO: add some action here
+        private final ComponentFlasher demagButtonFlasher = new ComponentFlasher(demagButton);
 
         /**
          * Demagnetizes in Z (at current sample holder position) by calling project.doManualDemagZ(double).
@@ -821,6 +808,13 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
                     case 1500: rotate270.setSelected(true); break;
                 }
             }
+        }
+
+        /**
+         * Updates our enabled-status according to current project and handler-availability.
+         */
+        public void setEnabled() {
+            setProject(this.project);
         }
 
         /**
