@@ -229,12 +229,11 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     /**
      * Performs full sequence to demagnetize Z coil with the given amplitude. Blocking method.
      *
-     * @param amplitude amplitude to demag.
+     * @param amp amplitude to demag.
      * @return true if process was sended succesfully, otherwise false.
      */
-    public boolean demagnetizeZ(Double amp) {
-      amp *= 10;
-      int amplitude = amp.intValue();
+    public boolean demagnetizeZ(double amp) {
+      int amplitude = (int) (amp * 10.0);
       if (amp < 1 || amp > this.maximumField)
         throw new IllegalStateException("Invalid amplitude");
       this.setCoil('Z');
@@ -261,12 +260,11 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     /**
      * Performs full sequence to demagnetize Y (and X) coil with the given amplitude. Blocking method.
      *
-     * @param amplitude amplitude to demag.
+     * @param amp amplitude to demag.
      * @return true if process was sended succesfully, otherwise false.
      */
     public boolean demagnetizeY(Double amp) {
-      amp *= 10;
-      int amplitude = amp.intValue();
+      int amplitude = (int) (amp * 10.0);
       if (amp < 1 || amp > this.maximumField)
         throw new IllegalStateException("Invalid amplitude");
       this.setCoil('Y');

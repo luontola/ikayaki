@@ -1981,7 +1981,7 @@ project listeners.
                         checkAborted();
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
                         //need Gauss value
-                        getSquid().getDegausser().demagnetizeZ((int) Math.round(currentStep.getStepValue() * 10));
+                        getSquid().getDegausser().demagnetizeZ(currentStep.getStepValue());
                         // blocking method
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
                         checkAborted();
@@ -1994,7 +1994,7 @@ project listeners.
                         checkAborted();
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
                         //need Gauss value
-                        getSquid().getDegausser().demagnetizeY((int) Math.round(currentStep.getStepValue() * 10));
+                        getSquid().getDegausser().demagnetizeY(currentStep.getStepValue());
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
                         checkAborted();
 
@@ -2006,7 +2006,7 @@ project listeners.
                         checkAborted();
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
                         //need Gauss value
-                        getSquid().getDegausser().demagnetizeY((int) Math.round(currentStep.getStepValue() * 10));
+                        getSquid().getDegausser().demagnetizeY(currentStep.getStepValue());
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
                         checkAborted();
                         getSquid().getHandler().rotateTo(0);
@@ -2430,10 +2430,10 @@ project listeners.
             fireMeasurementEvent(null, DEMAGNETIZE_START);
             switch (axel) {
             case Y:
-                getSquid().getDegausser().demagnetizeY((int) (amplitude * 10));
+                getSquid().getDegausser().demagnetizeY(amplitude);
                 break;
             case Z:
-                getSquid().getDegausser().demagnetizeZ((int) (amplitude * 10));
+                getSquid().getDegausser().demagnetizeZ(amplitude);
                 break;
             default:
                 System.err.println("Invalid axel: " + axel);
