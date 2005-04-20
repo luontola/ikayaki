@@ -290,7 +290,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Commands the holder to move to home position. Blocking. More like Seek home.
+     * Commands the holder to move to home position.
      *
      */
     public void moveToHome() throws IllegalStateException {
@@ -435,8 +435,14 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             //first set rotation speed
             this.serialIO.writeMessage("M" + rotationSpeed);
             //then set rotation active
-            this.serialIO.writeMessage("O1,1");
-            this.serialIO.writeMessage("P" + angle + "G,");
+            if(angle == 0) {
+              this.serialIO.writeMessage("O1,1,");
+              this.serialIO.writeMessage("+H1,");
+            }
+            else {
+              this.serialIO.writeMessage("O1,1");
+              this.serialIO.writeMessage("P" + angle + "G,");
+            }
             this.currentRotation = angle;
            // this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException ex) {
