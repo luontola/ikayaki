@@ -54,7 +54,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     /**
      * Degaussers current status
      */
-    private String status;
+    private String status;  // TODO: this field is never used
 
     /**
      * COM port for communication.
@@ -64,12 +64,12 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     /**
      * (X, Y, Z) = (0,1,2) default axis Z
      */
-    private int degausserCoil;
+    private int degausserCoil;  // TODO: this field is never used
 
     /**
      * 0->3000 default amp 0
      */
-    private int degausserAmplitude;
+    private int degausserAmplitude; // TODO: this field is never used
 
     /**
      * 1-9 seconds default delay 1 second
@@ -84,7 +84,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     /**
      * Z=Zero, T=Tracking, ?=Unknown
      */
-    private char degausserStatus;
+    private char degausserStatus;   // TODO: this field is never used
 
     private long lastCommandTime;
 

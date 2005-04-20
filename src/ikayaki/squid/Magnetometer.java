@@ -52,7 +52,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     /**
      * Magnetometer's current status.
      */
-    private String status;
+    private String status;  // TODO: this field is never used
 
     /**
      * COM port for communication.

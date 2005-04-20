@@ -41,8 +41,6 @@ import java.awt.event.ActionEvent;
  */
 public class SquidFront extends JFrame {
 
-    private static boolean DEBUG = false; // debug the program without squid
-
     private JButton hupdateSettings;
     private JButton hgetStatus;
     private JButton hgetPosition;

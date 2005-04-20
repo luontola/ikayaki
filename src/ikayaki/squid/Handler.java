@@ -52,7 +52,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     /**
      * Handlers current status.
      */
-    private String status;
+    private String status;  // TODO: this field is never used
 
     /**
      * COM port for communication.
@@ -86,7 +86,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     /**
      * 5 end of move, previous G command complete, 7 hard limit stop, G motor is currently indexing.
      */
-    private String handlerStatus;
+    private String handlerStatus;   // TODO: this field is never used
 
     /**
      * Value between 1 and 16,777,215.
@@ -126,8 +126,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private boolean waitingForMessage = false;
 
     private int rotationSpeed;
-    private int rotationAcceleration;
-    private int rotationDeceleration;
+    private int rotationAcceleration;   // TODO: this field is assigned but never used
+    private int rotationDeceleration;   // TODO: this field is assigned but never used
 
   /**
      * Creates a new handler interface. Opens connection to handler COM port and reads settings from the Settings
@@ -474,7 +474,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             //on-the-fly speed change
             if(speedChangeT && speedChangeTimeT > 0) {
               try {
-                this.sleep(speedChangeTimeT);
+                Thread.sleep(speedChangeTimeT);
                 setVelocity(measurementVelocity);
               }
               catch (InterruptedException ex1) {

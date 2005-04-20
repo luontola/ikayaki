@@ -277,7 +277,7 @@ public class SquidEmulator {
                 }
                 else if(command.startsWith("F",0)) {
                   try {
-                    this.sleep(2000);
+                    Thread.sleep(2000);
                   }
                   catch (InterruptedException ex1) {
                   }
@@ -285,7 +285,7 @@ public class SquidEmulator {
                 }
               }
               try {
-                this.sleep(100);
+                Thread.sleep(100);
               }
               catch (InterruptedException ex) {
               }
@@ -353,7 +353,7 @@ public class SquidEmulator {
 */
             }
             try {
-              this.sleep(100);
+              Thread.sleep(100);
             }
             catch (InterruptedException ex) {
             }
@@ -406,7 +406,7 @@ public class SquidEmulator {
               }
             }
             try {
-              this.sleep(100);
+              Thread.sleep(100);
             }
             catch (InterruptedException ex) {
             }
