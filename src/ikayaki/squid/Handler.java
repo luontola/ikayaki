@@ -172,7 +172,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
       System.err.println("Deceleration set:" + this.verify('D'));
 
       //must be send to seek home position, so we can know where we are
-      this.moveToHome();
+      this.seekHome();
 
     }
 
@@ -265,10 +265,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Commands the holder to move to home position. Blocking. More like Seek home.
+     * Commands the holder to seek home position. Blocking.
      *
      */
-    public void moveToHome() {
+    public void seekHome() {
         try {
             setVelocity(velocity);
             this.serialIO.writeMessage("O1,0,");
@@ -286,6 +286,18 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             System.err.println(ex);
         }
     }
+
+    /**
+     * Commands the holder to move to home position. Blocking. More like Seek home.
+     *
+     */
+    public void moveToHome() {
+      setVelocity(velocity);
+      int pos = this.homePosition - currentPosition;
+      this.currentPosition = this.homePosition;
+      moveToPos(pos);
+    }
+
 
     /**
      * Commands the holder to move to degauss Z position. Only starts movement, needs to take with join() when movement
@@ -320,7 +332,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     public void moveToMeasurement() {
         // do we use now measurement velocity?
-        setVelocity(measurementVelocity);
+        if(currentPosition == this.backgroundPosition)
+          setVelocity(measurementVelocity);
+        else
+          setVelocity(velocity);
         int pos = this.measurementPosition - currentPosition;
         this.currentPosition = this.measurementPosition;
         moveToPos(pos);
