@@ -325,7 +325,7 @@ public abstract class MeasurementValue <T> {
                         sumLength += r.getSampleLength();
                         count++;
                     }
-                    if (count == 0) {
+                    if (count < 2) {
                         return null;
                     }
                     double avgLength = sumLength / count;
