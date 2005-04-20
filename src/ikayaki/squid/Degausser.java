@@ -263,7 +263,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @param amp amplitude to demag.
      * @return true if process was sended succesfully, otherwise false.
      */
-    public boolean demagnetizeY(Double amp) {
+    public boolean demagnetizeY(double amp) {
       int amplitude = (int) (amp * 10.0);
       if (amp < 1 || amp > this.maximumField)
         throw new IllegalStateException("Invalid amplitude");

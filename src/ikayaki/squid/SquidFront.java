@@ -635,7 +635,7 @@ public class SquidFront extends JFrame {
       this.ddemagnetizeY.setAction(new AbstractAction() {
         public void actionPerformed(ActionEvent e) {
           try {
-            Squid.instance().getDegausser().demagnetizeY(Integer.parseInt(param1.getText()));
+            Squid.instance().getDegausser().demagnetizeY(Double.parseDouble(param1.getText()));
           }
           catch (IOException ex) {
             degausserLog.append("demagnetizeY failed\r");
@@ -647,7 +647,7 @@ public class SquidFront extends JFrame {
       this.ddemagnetizeZ.setAction(new AbstractAction() {
         public void actionPerformed(ActionEvent e) {
           try {
-            Squid.instance().getDegausser().demagnetizeZ(Integer.parseInt(param1.getText()));
+            Squid.instance().getDegausser().demagnetizeZ(Double.parseDouble(param1.getText()));
           }
           catch (IOException ex) {
             degausserLog.append("demagnetizeZ failed\r");
