@@ -113,14 +113,26 @@ public class MeasurementResult {
         try {
             this.type = Type.valueOf(type);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid type: " + type);
+            // TODO: import old versions
+            //throw new IllegalArgumentException("Invalid type: " + type);
+            if (type.equals("BG")) {
+                this.type = Type.NOISE;
+            } else {
+                this.type = Type.SAMPLE;
+            }
         }
 
         // get rotation
         try {
             this.rotation = Integer.parseInt(element.getAttribute("rotation")) % 360;
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid rotation: " + e.getMessage());
+            // TODO: import old versions
+            //throw new IllegalArgumentException("Invalid rotation: " + e.getMessage());
+            if (type.equals("BG")) {
+                this.rotation = 0;
+            } else {
+                this.rotation = Integer.parseInt(type);
+            }
         }
 
         // get x, y, z
