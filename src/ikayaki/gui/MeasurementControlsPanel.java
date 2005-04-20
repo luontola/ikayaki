@@ -41,10 +41,6 @@ import java.awt.event.*;
  */
 public class MeasurementControlsPanel extends ProjectComponent {
 
-    /**
-     * Measure/pause -button; "Measure" when no measuring is being done, "Pause" when there is ongoing measuring
-     * sequence.
-     */
     private final JButton measureButton;
     private final JButton pauseButton;
     private final JButton stepButton;
@@ -101,9 +97,6 @@ public class MeasurementControlsPanel extends ProjectComponent {
         stepButtonFlasher = new ComponentFlasher(stepButton);
         abortButtonFlasher = new ComponentFlasher(abortButton);
 
-        //JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        //JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 2, 2)); // prevents button resize, looks a bit ugly
-        //JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 2, 2)); // prevents button resize, looks a bit ugly
         JPanel buttonPanel = new JPanel(new GridLayout(2, 2, 2, 2)); // prevents button resize, looks a bit ugly
         buttonPanel.add(measureButton);
         buttonPanel.add(stepButton);
@@ -124,16 +117,11 @@ public class MeasurementControlsPanel extends ProjectComponent {
         sampleInsertZPlusIcon = new ImageIcon(ClassLoader.getSystemResource("resources/zplus.png"));
         sampleInsertZMinusIcon = new ImageIcon(ClassLoader.getSystemResource("resources/zminus.png"));
         sampleInsertIconLabel = new JLabel();
-        //sampleInsertIconLabel.setHorizontalAlignment(JLabel.CENTER);
-        //zPlusRadioButton.setHorizontalAlignment(SwingConstants.RIGHT);
-        //zMinusRadioButton.setHorizontalAlignment(SwingConstants.LEFT);
 
         sampleInsertPanel = new JPanel(new BorderLayout(4, 4));
         sampleInsertPanel.add(sampleInsertTextLabel, BorderLayout.NORTH);
         sampleInsertPanel.add(zButtonPanel, BorderLayout.CENTER);
         sampleInsertPanel.add(sampleInsertIconLabel, BorderLayout.SOUTH);
-        //sampleInsertPanel.add(zPlusRadioButton, BorderLayout.WEST);
-        //sampleInsertPanel.add(zMinusRadioButton, BorderLayout.EAST);
 
         JPanel topPanel = new JPanel(new BorderLayout(0, 8));
         topPanel.add(buttonPanel, BorderLayout.CENTER);
@@ -149,9 +137,6 @@ public class MeasurementControlsPanel extends ProjectComponent {
         contentPane.add(manualControlsPanel, BorderLayout.SOUTH);
         this.setLayout(new BorderLayout());
         this.add(contentPane);
-
-        // size limit for the panel
-        //setPreferredSize(new Dimension(200, -1));
 
         /**
          * Event D: On zPlus/MinusRadioButton click - call project.setOrientation(boolean) where
@@ -227,14 +212,9 @@ public class MeasurementControlsPanel extends ProjectComponent {
      * Checks the current state of the active project and enables/disables the measurement controls accordingly.
      */
     private void updateActions() {
-        // TODO: the following line is for testing error notification
-        //if (true) return;
-
         if (getProject() != null) {
             getAutoStepAction().setEnabled(getProject().isAutoStepEnabled());
             getSingleStepAction().setEnabled(getProject().isSingleStepEnabled());
-//            getSingleStepAction().setEnabled(getProject().isSingleStepEnabled()   // TODO: this would cause the key shortcuts not to work
-//                    && getProject().getType() != Project.Type.CALIBRATION);
             getCalibrateAction().setEnabled(getProject().isSingleStepEnabled()
                     && getProject().getType() == Project.Type.CALIBRATION);
             getPauseAction().setEnabled(getProject().isPauseEnabled());
@@ -256,13 +236,6 @@ public class MeasurementControlsPanel extends ProjectComponent {
             zPlusRadioButton.setEnabled(false);
             zMinusRadioButton.setEnabled(false);
         }
-
-        // TODO: let's try how it looks when Measure and Pause buttons are separate
-//        if (getAutoStepAction().isEnabled()) {
-//            measureButton.setAction(getAutoStepAction());
-//        } else {
-//            measureButton.setAction(getPauseAction());
-//        }
     }
 
     /* Getters for Swing Actions */

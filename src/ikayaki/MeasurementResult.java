@@ -38,7 +38,7 @@ import javax.vecmath.Vector3d;
  */
 public class MeasurementResult {
 
-    // TODO: getters for returning copies of the vectors
+    // TODO: getters for returning copies of the vectors?
 
     /**
      * The type of this result.
@@ -225,27 +225,42 @@ public class MeasurementResult {
     /**
      * Returns the noise fixed, rotated and transformed X coordinate of this result. The value is in geographic
      * coordinates.
+     *
+     * @throws IllegalStateException if this result's type is not SAMPLE, in which case it should make no sense to call
+     *                               this method.
      */
     public double getGeographicX() {
-        // TODO: throw exception if not a SAMPLE measurement
+        if (type != Type.SAMPLE) {
+            throw new IllegalStateException();
+        }
         return geographicVector.x;
     }
 
     /**
      * Returns the noise fixed, rotated and transformed Y coordinate of this result. The value is in geographic
      * coordinates.
+     *
+     * @throws IllegalStateException if this result's type is not SAMPLE, in which case it should make no sense to call
+     *                               this method.
      */
     public double getGeographicY() {
-        // TODO: throw exception if not a SAMPLE measurement
+        if (type != Type.SAMPLE) {
+            throw new IllegalStateException();
+        }
         return geographicVector.y;
     }
 
     /**
      * Returns the noise fixed, rotated and transformed Z coordinate of this result. The value is in geographic
      * coordinates.
+     *
+     * @throws IllegalStateException if this result's type is not SAMPLE, in which case it should make no sense to call
+     *                               this method.
      */
     public double getGeographicZ() {
-        // TODO: throw exception if not a SAMPLE measurement
+        if (type != Type.SAMPLE) {
+            throw new IllegalStateException();
+        }
         return geographicVector.z;
     }
 
