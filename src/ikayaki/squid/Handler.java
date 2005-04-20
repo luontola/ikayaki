@@ -268,7 +268,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * Commands the holder to seek home position. Blocking.
      *
      */
-    public void seekHome() {
+    public void seekHome() throws IllegalStateException {
+        if(this.waitingForMessage)
+          throw new IllegalStateException("Tried to command handler while waiting for message");
         try {
             setVelocity(velocity);
             this.serialIO.writeMessage("O1,0,");
@@ -291,7 +293,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * Commands the holder to move to home position. Blocking. More like Seek home.
      *
      */
-    public void moveToHome() {
+    public void moveToHome() throws IllegalStateException {
+      if(this.waitingForMessage)
+        throw new IllegalStateException("Tried to command handler while waiting for message");
       setVelocity(velocity);
       int pos = this.homePosition - currentPosition;
       this.currentPosition = this.homePosition;
@@ -303,7 +307,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * Commands the holder to move to degauss Z position. Only starts movement, needs to take with join() when movement
      * is finished.
      */
-    public void moveToDegausserZ() {
+    public void moveToDegausserZ() throws IllegalStateException {
+        if(this.waitingForMessage)
+          throw new IllegalStateException("Tried to command handler while waiting for message");
         setVelocity(velocity);
         int pos = this.axialAFPosition - currentPosition;
         this.currentPosition = this.axialAFPosition;
@@ -316,7 +322,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * Commands the holder to move to degauss Y (and X) position. Only starts movement, needs to take with join() when
      * movement is finished.
      */
-    public void moveToDegausserY() {
+    public void moveToDegausserY() throws IllegalStateException {
+        if(this.waitingForMessage)
+          throw new IllegalStateException("Tried to command handler while waiting for message");
         setVelocity(velocity);
         int pos = this.transverseYAFPosition - currentPosition;
         this.currentPosition = this.transverseYAFPosition;
@@ -330,7 +338,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * Commands the holder to move to measure position. Only starts movement, needs to take with join() when movement is
      * finished.
      */
-    public void moveToMeasurement() {
+    public void moveToMeasurement() throws IllegalStateException {
+        if(this.waitingForMessage)
+          throw new IllegalStateException("Tried to command handler while waiting for message");
         // do we use now measurement velocity?
         if(currentPosition == this.backgroundPosition)
           setVelocity(measurementVelocity);
@@ -348,7 +358,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * Commands the holder to move to background position. Only starts movement, needs to take with join() when movement
      * is finished.
      */
-    public void moveToBackground() {
+    public void moveToBackground() throws IllegalStateException {
+        if(this.waitingForMessage)
+          throw new IllegalStateException("Tried to command handler while waiting for message");
         setVelocity(velocity);
         int pos = this.backgroundPosition - currentPosition;
         this.currentPosition = this.backgroundPosition;
@@ -414,7 +426,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *
      * @param angle the angle in degrees to rotate the handler to.
      */
-    public void rotateTo(int angle) {
+    public void rotateTo(int angle) throws IllegalStateException {
+        if(this.waitingForMessage)
+          throw new IllegalStateException("Tried to command handler while waiting for message");
         angle = angle % 360;
         angle = (int) (((double) angle) / 360.0 * Settings.getHandlerRotation());
         try {

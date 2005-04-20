@@ -1735,11 +1735,18 @@ project listeners.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualMove(int position) {
+      try {
         getSquid().getHandler().moveToPos(position);
         fireMeasurementEvent(currentStep, HANDLER_ROTATE);
         getSquid().getHandler().join();
         fireMeasurementEvent(currentStep, HANDLER_STOP);
-        return true;
+      }
+      catch (IllegalStateException e) {
+        e.printStackTrace();
+        return false;
+      }
+
+      return true;
     }
 
     /**
@@ -1751,11 +1758,17 @@ project listeners.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualRotate(int angle) {
+      try {
         getSquid().getHandler().rotateTo(angle);
         fireMeasurementEvent(currentStep, HANDLER_ROTATE);
         getSquid().getHandler().join();
         fireMeasurementEvent(currentStep, HANDLER_STOP);
-        return true;
+      }
+      catch (IllegalStateException e) {
+        e.printStackTrace();
+        return false;
+      }
+      return true;
     }
 
     /**
@@ -2031,7 +2044,11 @@ project listeners.
                     } else {
                         e.printStackTrace();
                     }
-                } finally {
+                }
+                catch (IllegalStateException e) {
+                  e.printStackTrace();
+                }
+                finally {
 
                     // complete the step
                     currentStep.setDone();
