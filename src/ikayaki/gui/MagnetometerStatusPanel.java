@@ -62,10 +62,10 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     // TODO: some way to get the actual max-position?
     private int maxposition = 50000, maxrotation = 360;
 
-    // handler positions, read from Settings, thank you autoboxing!
+    // handler positions, read from Settings
     // WARNING: all of these must differ or we have trouble...
-    private int posMove = -1;
-    private int posLeft = 0;
+    private int posMove = -2;
+    private int posLeft = -1;
     private int posHome;
     private int posDemagZ;
     private int posDemagY;
