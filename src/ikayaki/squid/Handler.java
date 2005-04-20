@@ -245,10 +245,12 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     /**
      * Returns current known rotation.
      *
-     * @return Value between 0 and 2000
+     * @return Value between 0 and 360 degrees
      */
     public int getRotation() {
-        return this.currentRotation;
+        Double angle = new Integer(currentRotation).doubleValue() / new Integer(Settings.getHandlerRotation()).doubleValue();
+        angle *= 360;
+        return angle.intValue();
     }
 
     /**
