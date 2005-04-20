@@ -60,7 +60,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
     // handler max position and max rotation for drawing
     // TODO: some way to get the actual max-position?
-    private final int maxposition = 50000, maxrotation = 360;
+    private int maxposition = 50000, maxrotation = 360;
 
     // handler positions, read from Settings, thank you autoboxing!
     // WARNING: all of these must differ or we have trouble...
@@ -142,6 +142,14 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
      * Updates moveButtons' positions. Stacks 'em up nicely so that noone is on top of another or out of screen.
      */
     private void updateButtonPositions() {
+        maxposition = (int) (
+                Math.max(
+                    Math.max(posMove, posHome),
+                    Math.max(
+                        Math.max(posDemagZ, posDemagY),
+                        Math.max(posBG, posMeasure)
+                    )
+                ) * 1.2);
         int height = getHeight(), nextpos = 0;
         for (int position : moveButtons.keySet()) {
             JComponent c = moveButtons.get(position);
