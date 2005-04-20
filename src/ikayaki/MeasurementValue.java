@@ -330,7 +330,7 @@ public abstract class MeasurementValue <T> {
                     }
                     double avgLength = sumLength / count;
 
-                    double N = avgLength * count;
+                    double N = sumLength;
                     double R = sqrt((sumX * sumX) + (sumY * sumY) + (sumZ * sumZ));
                     double k = (N - avgLength) / (N - R);
                     return 81.0 / sqrt(k);
