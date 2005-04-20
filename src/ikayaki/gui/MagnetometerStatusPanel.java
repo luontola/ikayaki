@@ -633,52 +633,59 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
             moveLeft.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    statusAnimator.going(posLeft, rotation);
-                    handler.moveToPos(posLeft);
+                    project.doManualMove(posLeft);
+                    //statusAnimator.going(posLeft, rotation);
+                    //handler.moveToPos(posLeft);
                 }
             });
 
             moveHome.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    statusAnimator.going(posHome, rotation);
-                    handler.moveToHome();
+                    project.doManualMove(posHome);
+                    //statusAnimator.going(posHome, rotation);
+                    //handler.moveToHome();
                 }
             });
 
             moveDemagZ.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    statusAnimator.going(posDemagZ, rotation);
-                    handler.moveToDegausserZ();
+                    project.doManualMove(posDemagZ);
+                    //statusAnimator.going(posDemagZ, rotation);
+                    //handler.moveToDegausserZ();
                     demagButton.setText(demagButtonBaseText + (rotation == 0 || rotation == 180 ? "Z" : "X"));
                 }
             });
 
             moveDemagY.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    statusAnimator.going(posDemagY, rotation);
-                    handler.moveToDegausserY();
+                    project.doManualMove(posDemagY);
+                    //statusAnimator.going(posDemagY, rotation);
+                    //handler.moveToDegausserY();
                     demagButton.setText(demagButtonBaseText + "Y");
                 }
             });
 
             moveBG.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    statusAnimator.going(posBG, rotation);
-                    handler.moveToBackground();
+                    project.doManualMove(posBG);
+                    //statusAnimator.going(posBG, rotation);
+                    //handler.moveToBackground();
                 }
             });
 
             moveMeasure.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    statusAnimator.going(posMeasure, rotation);
-                    handler.moveToMeasurement();
+                    project.doManualMove(posMeasure);
+                    //statusAnimator.going(posMeasure, rotation);
+                    //handler.moveToMeasurement();
                 }
             });
 
             moveRight.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    statusAnimator.going(posRight, rotation);
-                    handler.moveToPos(posRight);
+                    project.doManualMove(posRight);
+                    //statusAnimator.going(posRight, rotation);
+                    //handler.moveToPos(posRight);
                 }
             });
 
@@ -689,29 +696,33 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
             rotate0.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    statusAnimator.going(position, 0);
-                    handler.rotateTo(0);
+                    project.doManualRotate(0);
+                    //statusAnimator.going(position, 0);
+                    //handler.rotateTo(0);
                 }
             });
 
             rotate90.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    statusAnimator.going(position, 500);
-                    handler.rotateTo(90);
+                    project.doManualRotate(90);
+                    //statusAnimator.going(position, 500);
+                    //handler.rotateTo(90);
                 }
             });
 
             rotate180.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    statusAnimator.going(position, 1000);
-                    handler.rotateTo(180);
+                    project.doManualRotate(180);
+                    //statusAnimator.going(position, 1000);
+                    //handler.rotateTo(180);
                 }
             });
 
             rotate270.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    statusAnimator.going(position, 1500);
-                    handler.rotateTo(270);
+                    project.doManualRotate(270);
+                    //statusAnimator.going(position, 1500);
+                    //handler.rotateTo(270);
                 }
             });
 
