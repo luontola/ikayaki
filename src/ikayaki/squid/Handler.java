@@ -286,6 +286,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             this.serialIO.writeMessage("+H1,");
             this.join();
             this.currentPosition = this.homePosition;
+            this.currentRotation = 0;
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -318,8 +319,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
       }
       else {
         int pos = this.homePosition - currentPosition;
-        this.currentPosition = this.homePosition;
         moveToPos(pos);
+        this.currentPosition = this.homePosition;
       }
     }
 
@@ -330,10 +331,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     public void moveToDegausserZ() throws IllegalStateException {
         if(this.waitingForMessage)
           throw new IllegalStateException("Tried to command handler while waiting for message");
-        setVelocity(velocity);
+        //setVelocity(velocity);
         int pos = this.axialAFPosition - currentPosition;
-        this.currentPosition = this.axialAFPosition;
         moveToPos(pos);
+        this.currentPosition = this.axialAFPosition;
         //moveToPos(this.axialAFPosition);
         //this.go();
     }
@@ -345,10 +346,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     public void moveToDegausserY() throws IllegalStateException {
         if(this.waitingForMessage)
           throw new IllegalStateException("Tried to command handler while waiting for message");
-        setVelocity(velocity);
+        //setVelocity(velocity);
         int pos = this.transverseYAFPosition - currentPosition;
-        this.currentPosition = this.transverseYAFPosition;
         moveToPos(pos);
+        this.currentPosition = this.transverseYAFPosition;
         //moveToPos(this.transverseYAFPosition);
         //this.go();
     }
@@ -362,13 +363,14 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         if(this.waitingForMessage)
           throw new IllegalStateException("Tried to command handler while waiting for message");
         // do we use now measurement velocity?
-        if(currentPosition == this.backgroundPosition)
+        /*if(currentPosition == this.backgroundPosition)
           setVelocity(measurementVelocity);
         else
           setVelocity(velocity);
+         */
         int pos = this.measurementPosition - currentPosition;
-        this.currentPosition = this.measurementPosition;
         moveToPos(pos);
+        this.currentPosition = this.measurementPosition;
         //moveToPos(this.measurementPosition);
         //this.go();
 
@@ -381,10 +383,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     public void moveToBackground() throws IllegalStateException {
         if(this.waitingForMessage)
           throw new IllegalStateException("Tried to command handler while waiting for message");
-        setVelocity(velocity);
+        //setVelocity(velocity);
         int pos = this.backgroundPosition - currentPosition;
-        this.currentPosition = this.backgroundPosition;
         moveToPos(pos);
+        this.currentPosition = this.backgroundPosition;
         //moveToPos(this.backgroundPosition);
         //this.go();
     }
@@ -415,44 +417,77 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         this.performSlew();
     }
 
-
     /**
      * Commands the holder to move to the specified position. Value must be between 1 and 16,777,215. Return true if
      * good pos-value and moves handler there. Only starts movement, needs to take with join() when movement is
-     * finished. Positions is in relation to Home.
+     * finished. Positions is in relation to Home. Changes speed if needed.
      *
      * @param pos the position where the handler will move to.
      * @return true if given position was ok, otherwise false.
      */
     public boolean moveToPos(int pos) {
-      try {
-        boolean direction = true;
-        if (pos < 0) {
-          pos *= -1;
-          direction = false;
-        }
-        if (pos < 0 || pos > 16777215) {
-          return false;
-        }
+      if(this.waitingForMessage)
+          throw new IllegalStateException("Tried to command handler while waiting for message");
+      boolean direction = true;
+      boolean speedChange = false;
+      int speedChangeTime = 0; // in milliseconds
 
-        //first need to set translate active
-        this.serialIO.writeMessage("O1,0");
-        if (direction)
-          this.serialIO.writeMessage("+N" + pos);
-        else
-          this.serialIO.writeMessage("-N" + pos);
-        //this.serialIO.writeMessage("P" + pos); //absolute
-        //no need to execute, Go will do it.
-        //this.serialIO.writeMessage(","); //execute command
-        this.go();
-        //this.currentPosition = pos; we cannot but relative position here
-        return true;
+      // check if we are going to measurement position, change speed on-the-fly if needed
+      if((currentPosition + pos) == measurementPosition) {
+        int distanceToMeasure = backgroundPosition - currentPosition;
+        speedChangeTime = distanceToMeasure/velocity*1000;
+        if(speedChangeTime < 0) speedChangeTime *= -1;
       }
-      catch (SerialIOException ex) {
-        System.err.println(ex);
+
+      if (pos < 0) {
+        pos *= -1;
+        direction = false;
       }
-      return false;
-    }
+      if (pos < 0 || pos > 16777215) {
+        return false;
+      }
+
+      final int posT = pos;
+      final boolean directionT = direction;
+      final boolean speedChangeT = speedChange;
+      final int speedChangeTimeT = speedChangeTime;
+
+
+      new Thread() {
+        @Override public void run() {
+          try {
+
+            //select speed
+            if(speedChangeT && speedChangeTimeT == 0)
+              setVelocity(measurementVelocity);
+            else
+              setVelocity(velocity);
+
+            //first need to set translate active
+            serialIO.writeMessage("O1,0");
+            if (directionT)
+              serialIO.writeMessage("+N" + posT);
+            else
+              serialIO.writeMessage("-N" + posT);
+            go();
+
+            //on-the-fly speed change
+            if(speedChangeT && speedChangeTimeT > 0) {
+              try {
+                this.sleep(speedChangeTimeT);
+                setVelocity(measurementVelocity);
+              }
+              catch (InterruptedException ex1) {
+              }
+            }
+          }
+          catch (SerialIOException ex) {
+            System.err.println(ex);
+          }
+        }
+      }.start();
+      return true;
+  }
 
     /**
      * Commands the handler to stop its current job.
@@ -725,8 +760,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     public void join() {
         try {
-            this.serialIO.writeMessage("F%,");
-            //this.serialIO.writeMessage(","); //execute command
+            //this.serialIO.writeMessage("F%,");
+            //We want to possible change speed while moving so lets use only %
+            this.serialIO.writeMessage("%,");
             waitingForMessage = true;
             try {
               String answer = (String) queue.take();//poll(pollTimeout, TimeUnit.SECONDS);
