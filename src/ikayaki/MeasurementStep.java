@@ -44,7 +44,11 @@ import static ikayaki.MeasurementStep.State.*;
  *
  * @author Esko Luontola
  */
-public class MeasurementStep {  // TODO: make this class Iterable so that it would be easy to foreach all results
+public class MeasurementStep {
+
+    // TODO: make this class Iterable so that it would be easy to foreach all results
+
+    // TODO: how to add handler calibrations to this step? must make a global access point to the latest calibration through the Settings class. need a file chooser to the options dialog.
 
     /**
      * The project that owns this step, or null if there is no owner.
