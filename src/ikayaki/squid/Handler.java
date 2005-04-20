@@ -296,14 +296,32 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *
      */
     public void moveToHome() throws IllegalStateException {
-      if(this.waitingForMessage)
-        throw new IllegalStateException("Tried to command handler while waiting for message");
+      if (this.waitingForMessage)
+        throw new IllegalStateException(
+            "Tried to command handler while waiting for message");
       setVelocity(velocity);
-      int pos = this.homePosition - currentPosition;
-      this.currentPosition = this.homePosition;
-      moveToPos(pos);
+      if (currentPosition == Integer.MAX_VALUE) {
+        try {
+          this.serialIO.writeMessage("O1,0,");
+          this.serialIO.writeMessage("-H1,");
+        }
+        catch (SerialIOException ex) {
+        }
+      }
+      else if (currentPosition == Integer.MIN_VALUE) {
+        try {
+          this.serialIO.writeMessage("O1,0,");
+          this.serialIO.writeMessage("+H1,");
+        }
+        catch (SerialIOException ex) {
+        }
+      }
+      else {
+        int pos = this.homePosition - currentPosition;
+        this.currentPosition = this.homePosition;
+        moveToPos(pos);
+      }
     }
-
 
     /**
      * Commands the holder to move to degauss Z position. Only starts movement, needs to take with join() when movement
@@ -370,6 +388,33 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         //moveToPos(this.backgroundPosition);
         //this.go();
     }
+
+    /**
+     * Commands the holder to go to left limit. Only starts movement, needs to take with join() when movement
+     * is finished.
+     */
+    public void moveToLeftLimit() throws IllegalStateException {
+        if(this.waitingForMessage)
+          throw new IllegalStateException("Tried to command handler while waiting for message");
+        setVelocity(velocity);
+        this.currentPosition = Integer.MIN_VALUE;
+        this.setMotorNegative();
+        this.performSlew();
+    }
+
+    /**
+     * Commands the holder to go to right limit. Only starts movement, needs to take with join() when movement
+     * is finished.
+     */
+    public void moveToRightLimit() throws IllegalStateException {
+        if(this.waitingForMessage)
+          throw new IllegalStateException("Tried to command handler while waiting for message");
+        setVelocity(velocity);
+        this.currentPosition = Integer.MAX_VALUE;
+        this.setMotorPositive();
+        this.performSlew();
+    }
+
 
     /**
      * Commands the holder to move to the specified position. Value must be between 1 and 16,777,215. Return true if

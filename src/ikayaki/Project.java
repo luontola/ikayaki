@@ -1734,7 +1734,9 @@ project listeners.
      * @param position the position to move the handler to.
      * @return true if the operation was started, otherwise false.
      */
+
     public synchronized boolean doManualMove(int position) {
+      if(!isManualControlEnabled()) return false;
       try {
         getSquid().getHandler().moveToPos(position);
         fireMeasurementEvent(currentStep, HANDLER_ROTATE);
@@ -1749,15 +1751,181 @@ project listeners.
       return true;
     }
 
+  /**
+     * Moves the sample handler to the DegausserY position. Will do nothing if isManualControlEnabled() is false.
+     * <p/>
+     *
+     * Blocking, wait movement to end.
+     *
+     * @return true if the operation was started, otherwise false.
+     */
+    public synchronized boolean doManualMoveDegausserY() {
+      if(!isManualControlEnabled()) return false;
+      try {
+        getSquid().getHandler().moveToDegausserY();
+        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
+        getSquid().getHandler().join();
+        fireMeasurementEvent(currentStep, HANDLER_STOP);
+      }
+      catch (IllegalStateException e) {
+        e.printStackTrace();
+        return false;
+      }
+      return true;
+    }
+
+    /**
+    * Moves the sample handler to the DegausserZ position. Will do nothing if isManualControlEnabled() is false.
+    * <p/>
+    *
+    * Blocking, wait movement to end.
+    *
+    * @return true if the operation was started, otherwise false.
+    */
+    public synchronized boolean doManualMoveDegausserZ() {
+      if(!isManualControlEnabled()) return false;
+      try {
+        getSquid().getHandler().moveToDegausserZ();
+        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
+        getSquid().getHandler().join();
+        fireMeasurementEvent(currentStep, HANDLER_STOP);
+      }
+      catch (IllegalStateException e) {
+        e.printStackTrace();
+        return false;
+      }
+      return true;
+    }
+
+    /**
+        * Moves the sample handler to the Background position. Will do nothing if isManualControlEnabled() is false.
+        * <p/>
+        *
+        * Blocking, wait movement to end.
+        *
+        * @return true if the operation was started, otherwise false.
+     */
+    public synchronized boolean doManualMoveBackground() {
+      if(!isManualControlEnabled()) return false;
+      try {
+        getSquid().getHandler().moveToBackground();
+        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
+        getSquid().getHandler().join();
+        fireMeasurementEvent(currentStep, HANDLER_STOP);
+      }
+      catch (IllegalStateException e) {
+        e.printStackTrace();
+        return false;
+      }
+      return true;
+    }
+
+    /**
+    * Moves the sample handler to the Measurement position. Will do nothing if isManualControlEnabled() is false.
+    * <p/>
+    *
+    * Blocking, wait movement to end.
+    *
+    * @return true if the operation was started, otherwise false.
+    */
+    public synchronized boolean doManualMoveMeasurement() {
+      if(!isManualControlEnabled()) return false;
+      try {
+        getSquid().getHandler().moveToMeasurement();
+        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
+        getSquid().getHandler().join();
+        fireMeasurementEvent(currentStep, HANDLER_STOP);
+      }
+      catch (IllegalStateException e) {
+        e.printStackTrace();
+        return false;
+      }
+      return true;
+    }
+
+    /**
+    * Moves the sample handler to the Home position. Will do nothing if isManualControlEnabled() is false.
+    * <p/>
+    *
+    * Blocking, wait movement to end.
+    *
+    * @return true if the operation was started, otherwise false.
+    */
+
+    public synchronized boolean doManualMoveHome() {
+      if(!isManualControlEnabled()) return false;
+      try {
+        getSquid().getHandler().moveToHome();
+        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
+        getSquid().getHandler().join();
+        fireMeasurementEvent(currentStep, HANDLER_STOP);
+      }
+      catch (IllegalStateException e) {
+        e.printStackTrace();
+        return false;
+      }
+      return true;
+    }
+
+    /**
+    * Moves the sample handler to the RightLimit position. Will do nothing if isManualControlEnabled() is false.
+    * <p/>
+    *
+    * Blocking, wait movement to end.
+    *
+    * @return true if the operation was started, otherwise false.
+    */
+
+    public synchronized boolean doManualMoveRightLimit() {
+      if(!isManualControlEnabled()) return false;
+      try {
+        getSquid().getHandler().moveToRightLimit();
+        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
+        getSquid().getHandler().join();
+        fireMeasurementEvent(currentStep, HANDLER_STOP);
+      }
+      catch (IllegalStateException e) {
+        e.printStackTrace();
+        return false;
+      }
+      return true;
+    }
+
+    /**
+    * Moves the sample handler to the LeftLimit position. Will do nothing if isManualControlEnabled() is false.
+    * <p/>
+    *
+    * Blocking, wait movement to end.
+    *
+    * @return true if the operation was started, otherwise false.
+    */
+
+    public synchronized boolean doManualLeftLimit() {
+      if(!isManualControlEnabled()) return false;
+      try {
+        getSquid().getHandler().moveToLeftLimit();
+        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
+        getSquid().getHandler().join();
+        fireMeasurementEvent(currentStep, HANDLER_STOP);
+      }
+      catch (IllegalStateException e) {
+        e.printStackTrace();
+        return false;
+      }
+      return true;
+    }
+
+
     /**
      * Rotates the sample handler to the specified angle. Will do nothing if isManualControlEnabled() is false.
      * <p/>
-     * The operation will run in its own thread, and this method will not wait for it to finish.
+     * The operation will run in its own thread, Blocking.
      *
      * @param angle the angle to rotate the handler to.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualRotate(int angle) {
+      if(!isManualControlEnabled()) return false;
       try {
         getSquid().getHandler().rotateTo(angle);
         fireMeasurementEvent(currentStep, HANDLER_ROTATE);
@@ -1775,11 +1943,12 @@ project listeners.
      * Measures the X, Y and Z of the sample. Adds the results as a new measurement step to the project. Will do nothing
      * if isManualControlEnabled() is false.
      * <p/>
-     * The operation will run in its own thread, and this method will not wait for it to finish.
+     * The operation will run in its own thread, Blocking.
      *
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualMeasure() {
+        if(!isManualControlEnabled()) return false;
         Double[] results = null;
         results = getSquid().getMagnetometer().readData();
 
@@ -1793,12 +1962,13 @@ project listeners.
      * Demagnetizes the sample in Z direction with the specified amplitude. Will do nothing if isManualControlEnabled()
      * is false.
      * <p/>
-     * The operation will run in its own thread, and this method will not wait for it to finish.
+     * The operation will run in its own thread, Blocking.
      *
      * @param amplitude the amplitude to demagnetize in mT.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualDemagZ(double amplitude) {
+        if(!isManualControlEnabled()) return false;
         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
         //need Gauss value
 
@@ -1813,12 +1983,13 @@ project listeners.
      * Demagnetizes the sample in Y direction with the specified amplitude. Will do nothing if isManualControlEnabled()
      * is false.
      * <p/>
-     * The operation will run in its own thread, and this method will not wait for it to finish.
+     * The operation will run in its own thread, Blocking.
      *
      * @param amplitude the amplitude to demagnetize in mT.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualDemagY(double amplitude) {
+        if(!isManualControlEnabled()) return false;
         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
         //need Gauss value
 
