@@ -416,8 +416,8 @@ public enum SequenceColumn {
     THETA63(MeasurementValue.THETA63) {
         {
             // one decimal should be enough
-            getNumberFormat().setMinimumFractionDigits(1);
-            getNumberFormat().setMaximumFractionDigits(1);
+            getNumberFormat().setMinimumFractionDigits(8);
+            getNumberFormat().setMaximumFractionDigits(8);
         }
     };
 

@@ -186,9 +186,31 @@ public class MeasurementResult {
         }
 
         // apply rotation fix
-        Matrix3d rotate = new Matrix3d();
-        rotate.rotZ(Math.toRadians(rotation));
-        rotate.transform(sampleVector);
+        if (rotation % 90 == 0) {
+            // accurate and fast algorithm for trivial angles
+            switch (rotation) {
+            case 0:
+                // NO NEED TO ROTATE
+                break;
+            case 90:
+                sampleVector.set(-sampleVector.y, sampleVector.x, sampleVector.z);
+                break;
+            case 180:
+                sampleVector.set(-sampleVector.x, -sampleVector.y, sampleVector.z);
+                break;
+            case 270:
+                sampleVector.set(sampleVector.y, -sampleVector.x, sampleVector.z);
+                break;
+            default:
+                assert false;
+                throw new IllegalStateException("rotation = " + rotation);
+            }
+        } else {
+            // rotate all non-trivial angles by using a matrix
+            Matrix3d rotate = new Matrix3d();
+            rotate.rotZ(Math.toRadians(rotation));
+            rotate.transform(sampleVector);
+        }
 
         // reset geographic vector
         setTransform(null);
@@ -327,85 +349,7 @@ public class MeasurementResult {
         return rawVector.length();
     }
 
-//    @Override public String toString() {
-//        return "[result type=" + type + " value=(" + geographicVector.x + ", " + geographicVector.y + ", " + geographicVector.z + ")]";
-//    }
-
-
     public enum Type {
         SAMPLE, HOLDER, NOISE
     }
-
-//    /**
-//     * The orientation of the sample when it was measured.
-//     *
-//     * @author Esko Luontola
-//     */
-//    public enum Type {
-//        BG("BG"), DEG0("0"), DEG90("90"), DEG180("180"), DEG270("270");
-//
-//        private String name;
-//
-//        private Type(String name) {
-//            this.name = name;
-//        }
-//
-//        /**
-//         * Returns "BG", "0", "90", "180" or "270".
-//         */
-//        public String getName() {
-//            return name;
-//        }
-//
-//        /**
-//         * Returns the same as getName().
-//         */
-//        @Override public String toString() {
-//            return getName();
-//        }
-//
-//        /**
-//         * Rotates the specified vector from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will
-//         * just copy the values directly.
-//         *
-//         * @param t old values that need to be rotated.
-//         * @return a new object with the rotated values.
-//         */
-//        public Vector3d rotate(Vector3d t) {
-//            return rotate(t, null);
-//        }
-//
-//        /**
-//         * Rotates the specified vector from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will
-//         * just copy the values directly.
-//         *
-//         * @param t      old values that need to be rotated.
-//         * @param result where the new values will be saved.
-//         * @return the same as the result parameter, or a new object if it was null.
-//         */
-//        public Vector3d rotate(Vector3d t, Vector3d result) {
-//            if (result == null) {
-//                result = new Vector3d();
-//            }
-//            switch (this) {
-//            case BG:
-//            case DEG0:
-//                result.set(t.x, t.y, t.z);
-//                break;
-//            case DEG90:
-//                result.set(-t.y, t.x, t.z);
-//                break;
-//            case DEG180:
-//                result.set(-t.x, -t.y, t.z);
-//                break;
-//            case DEG270:
-//                result.set(t.y, -t.x, t.z);
-//                break;
-//            default:
-//                assert false;
-//                break;
-//            }
-//            return result;
-//        }
-//    }
 }

@@ -299,7 +299,7 @@ public abstract class MeasurementValue <T> {
     /**
      * Calculates the angular standard deviation (Theta 63) from the measurement result set.
      */
-    public static final MeasurementValue<Double> THETA63 =
+    public static final MeasurementValue<Double> THETA63 =  // TODO: does this work?
             new MeasurementValue<Double>("\u03b863", "\u00b0", "Angular standard deviation") {
                 public Double getValue(MeasurementStep step) {
                     int sampleCount = 0;
@@ -315,12 +315,20 @@ public abstract class MeasurementValue <T> {
                         }
                         sampleCount++;
 
+                        System.out.print("    x: "+r.getSampleX());
+                        System.out.print(" y: "+r.getSampleY());
+                        System.out.println(" z: "+r.getSampleZ());
+                        System.out.print("raw x: "+r.getRawX());
+                        System.out.print(" y: "+r.getRawY());
+                        System.out.println(" z: "+r.getRawZ());
                         sumX += r.getSampleX();
                         sumY += r.getSampleY();
                         sumZ += r.getSampleZ();
                         sumLength += r.getSampleLength();
                     }
-
+                    System.out.print("x: "+sumX);
+                    System.out.print(" y: "+sumY);
+                    System.out.println(" z: "+sumZ);
                     if (sampleCount == 0) {
                         return null;
                     }
