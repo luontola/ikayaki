@@ -84,7 +84,6 @@ JUnit is simple java-based framework for testing your java classes. We use it in
 First you need to download JUnit from http://sourceforge.net/project/showfiles.php?group \_id=15278 and extract it to directory (different than java directory) and set classpath for it.
 
 Then you must write test class for every class to be tested. Test classes extend TestCase. They will have test methods, one for each Test Case. Test class also need suite()-method and Main for run. Sample test class:
-{\tt
 \begin{verbatim}
   import java.util.*;
   import junit.framework.*;
@@ -109,7 +108,6 @@ Then you must write test class for every class to be tested. Test classes extend
   }
 }
 \end{verbatim}
-}
 
 Type "java junit.swingui.TestRunner SimpleTest" to run test cases for Simple.
 
@@ -132,6 +130,8 @@ Type "java junit.swingui.TestRunner SimpleTest" to run test cases for Simple.
 \label{sec:guicase}
 
 Here are listed test cases for gui-classes, these are done manually just clicking and changing values.
+
+\input{uc_ikayaki}
 
 \input{uc_gui-explorer}
 \input{uc_gui-calibration}

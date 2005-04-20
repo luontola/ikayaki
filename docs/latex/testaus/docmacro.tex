@@ -16,19 +16,20 @@
 }
 % TODO: condition and result on same line with \begin{tabular}{lr} or \begin{tabbing}\`
 \newcommand{\condition}[1] {
-	\item #1\\
+	\item #1
 }
 \newcommand{\testDescription}[1] {
-	Test: #1
+	\\Test: #1
 }
 \newcommand{\testResultTrue}[0] {
 	% \begin{flushright}OK\end{flushright}
-	OK
+	\\Result: OK
 	\stepcounter{overallTest}
 	\stepcounter{successTest}
 }
 \newcommand{\testResultFalse}[0] {
-	\textbf{FAILED!}
+	% \begin{flushright}\textbf{FAILED!}\end{flushright}
+	\\Result: \textbf{FAILED!}
 	\stepcounter{overallTest}
 }
 \newcommand{\closeCase}[0] {
