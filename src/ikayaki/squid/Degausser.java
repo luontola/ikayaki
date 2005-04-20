@@ -232,24 +232,29 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @param amplitude amplitude to demag.
      * @return true if process was sended succesfully, otherwise false.
      */
-    public boolean demagnetizeZ(int amplitude) {
-        this.setCoil('Z');
-        this.setAmplitude(amplitude);
-        this.executeRampCycle();
-        //we need to take for DONE message or TRACK ERROR message
-        waitingForMessage = true;
-        String answer = null;
-        try {
-          answer = queue.take();
-        }
-        catch (InterruptedException ex) {
-        }
-        waitingForMessage = false;
-        if (answer.equals("DONE")) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean demagnetizeZ(Double amp) {
+      amp *= 10;
+      int amplitude = amp.intValue();
+      if (amp < 1 || amp > this.maximumField)
+        throw new IllegalStateException("Invalid amplitude");
+      this.setCoil('Z');
+      this.setAmplitude(amplitude);
+      this.executeRampCycle();
+      //we need to take for DONE message or TRACK ERROR message
+      waitingForMessage = true;
+      String answer = null;
+      try {
+        answer = queue.take();
+      }
+      catch (InterruptedException ex) {
+      }
+      waitingForMessage = false;
+      if (answer.equals("DONE")) {
+        return true;
+      }
+      else {
+        return false;
+      }
 
     }
 
@@ -259,24 +264,29 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @param amplitude amplitude to demag.
      * @return true if process was sended succesfully, otherwise false.
      */
-    public boolean demagnetizeY(int amplitude) {
-        this.setCoil('Y');
-        this.setAmplitude(amplitude);
-        this.executeRampCycle();
-        //we need to take for DONE message or TRACK ERROR message
-        waitingForMessage = true;
-        String answer = null;
-        try {
-          answer = (String) queue.take();
-        }
-        catch (InterruptedException ex) {
-        }
-        waitingForMessage = false;
-        if (answer.equals("DONE")) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean demagnetizeY(Double amp) {
+      amp *= 10;
+      int amplitude = amp.intValue();
+      if (amp < 1 || amp > this.maximumField)
+        throw new IllegalStateException("Invalid amplitude");
+      this.setCoil('Y');
+      this.setAmplitude(amplitude);
+      this.executeRampCycle();
+      //we need to take for DONE message or TRACK ERROR message
+      waitingForMessage = true;
+      String answer = null;
+      try {
+        answer = (String) queue.take();
+      }
+      catch (InterruptedException ex) {
+      }
+      waitingForMessage = false;
+      if (answer.equals("DONE")) {
+        return true;
+      }
+      else {
+        return false;
+      }
     }
 
     /**
