@@ -27,10 +27,6 @@ import org.w3c.dom.Element;
 
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Vector3d;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import static ikayaki.MeasurementResult.Type.*;
 
 /**
  * A set of X, Y and Z values measured by the magnetometer. The raw XYZ values will be rotated in 3D space by using a
@@ -42,17 +38,17 @@ import static ikayaki.MeasurementResult.Type.*;
  */
 public class MeasurementResult {
 
-    // TODO: change the Type values to SAMPLE, NOISE, HOLDER
-
-    // TODO: add property "int rotation" and getters for it. allow rotations also others than 0, 90, 180, 270.
-
     // TODO: getters for returning copies of the vectors
 
     /**
-     * The type of this result. Can be either a background noise measurement, or a sample in one of four rotations (0,
-     * 90, 180 or 270 degrees).
+     * The type of this result.
      */
     private Type type;
+
+    /**
+     * The rotation that the sample holder was in when this result was measured. The value is in range 0..360 degrees.
+     */
+    private int rotation;
 
     /**
      * The unmodified measurements recieved from the squid. Will not change after it has been once set.
@@ -60,37 +56,43 @@ public class MeasurementResult {
     private Vector3d rawVector = new Vector3d();
 
     /**
-     * The measurements with the rotation applied. Will not change after it has been once set.
+     * The measurements in sample coordinates. Has the rotation, noise and holder fixes applied to itself.
      */
     private Vector3d sampleVector = new Vector3d();
 
     /**
-     * The measurements with the rotation and transformation matrix applied.
+     * The measurements in geographic coordinates. Equals the sample coordinates with the transformation matrix
+     * applied.
      */
     private Vector3d geographicVector = new Vector3d();
 
     /**
      * Creates a new measurement result. All units are mA/m.
+     * <p/>
+     * The sample and geographic coordinates are NOT set when a MeasurementResult is created.
      *
-     * @param type the type (background or rotation) of this result.
-     * @param x    the measured X coordinate value.
-     * @param y    the measured Y coordinate value.
-     * @param z    the measured Z coordinate value.
+     * @param type     the type (background or rotation) of this result.
+     * @param rotation the rotation of the sample holder in degrees (0..360).
+     * @param x        the measured X coordinate value.
+     * @param y        the measured Y coordinate value.
+     * @param z        the measured Z coordinate value.
      * @throws NullPointerException if type is null.
      */
-    public MeasurementResult(Type type, double x, double y, double z) {
+    public MeasurementResult(Type type, int rotation, double x, double y, double z) {
         if (type == null) {
             throw new NullPointerException();
         }
         this.type = type;
+        this.rotation = rotation % 360;
         rawVector.set(x, y, z);
-        this.type.rotate(rawVector, sampleVector);
+        applyFixes(null);
         setTransform(null);
     }
 
     /**
-     * Creates a measurement result from the specified element. This will not apply the transformation matrix, so the
-     * user must apply it manually.
+     * Creates a measurement result from the specified element.
+     * <p/>
+     * The sample and geographic coordinates are NOT set when a MeasurementResult is created.
      *
      * @param element the element from which this result will be created.
      * @throws NullPointerException     if element is null.
@@ -108,18 +110,17 @@ public class MeasurementResult {
 
         // get type
         String type = element.getAttribute("type");
-        if (type.equals(BG.toString())) {
-            this.type = BG;
-        } else if (type.equals(DEG0.toString())) {
-            this.type = DEG0;
-        } else if (type.equals(DEG90.toString())) {
-            this.type = DEG90;
-        } else if (type.equals(DEG180.toString())) {
-            this.type = DEG180;
-        } else if (type.equals(DEG270.toString())) {
-            this.type = DEG270;
-        } else {
+        try {
+            this.type = Type.valueOf(type);
+        } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid type: " + type);
+        }
+
+        // get rotation
+        try {
+            this.rotation = Integer.parseInt(element.getAttribute("rotation")) % 360;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid rotation: " + e.getMessage());
         }
 
         // get x, y, z
@@ -128,11 +129,11 @@ public class MeasurementResult {
                     Double.parseDouble(element.getAttribute("y")),
                     Double.parseDouble(element.getAttribute("z")));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid number: " + e.getMessage());
+            throw new IllegalArgumentException("Invalid x, y, z: " + e.getMessage());
         }
 
         // initialize sampleVector and geographicVector
-        this.type.rotate(rawVector, sampleVector);
+        applyFixes(null);
         setTransform(null);
     }
 
@@ -144,7 +145,8 @@ public class MeasurementResult {
     public Element getElement(Document document) {
         Element element = document.createElement("result");
 
-        element.setAttribute("type", type.toString());
+        element.setAttribute("type", type.name());
+        element.setAttribute("rotation", Integer.toString(rotation));
         element.setAttribute("x", Double.toString(rawVector.x));
         element.setAttribute("y", Double.toString(rawVector.y));
         element.setAttribute("z", Double.toString(rawVector.z));
@@ -153,25 +155,64 @@ public class MeasurementResult {
     }
 
     /**
-     * Applies a transformation matrix to this result.
+     * Applies the holder, noise and rotation fixes and saves the results as the sample vector. Resets the geographic
+     * vector to a copy of the sample vector. This method must be called before setTransform().
+     *
+     * @param step the measurement step that includes the holder and noise calibration values. If null, the holder and
+     *             noise fixes are not applied.
+     */
+    protected void applyFixes(MeasurementStep step) {
+        sampleVector.set(rawVector);
+
+        // apply holder and noise fixes
+        if (step != null) {
+            Vector3d holder = step.getHolder();
+            Vector3d noise = step.getNoise();
+            sampleVector.x = sampleVector.x - holder.x - noise.x;
+            sampleVector.y = sampleVector.y - holder.y - noise.y;
+            sampleVector.z = sampleVector.z - holder.z - noise.z;
+        }
+
+        // apply rotation fix
+        Matrix3d rotate = new Matrix3d();
+        rotate.rotZ(Math.toRadians(rotation));
+        rotate.transform(sampleVector);
+
+        // reset geographic vector
+        setTransform(null);
+    }
+
+    /**
+     * Applies a transformation matrix to the sample vector and saves the results as the geographic vector. This method
+     * must be called after applyFixes().
      *
      * @param transform the matrix to be applied. If null, will assume identity matrix.
      */
     protected void setTransform(Matrix3d transform) {
         if (transform != null) {
             transform.transform(sampleVector, geographicVector);
+        } else {
+            geographicVector.set(sampleVector);
         }
     }
 
     /**
-     * Returns the type of this result (background or rotation).
+     * Returns the type of this result.
      */
     public Type getType() {
         return type;
     }
 
     /**
-     * Returns the rotated and transformed X coordinate of this result. The value is in geographic coordinates.
+     * Returns the rotation of this result. The value is in range 0..360 degrees.
+     */
+    public int getRotation() {
+        return rotation;
+    }
+
+    /**
+     * Returns the noise fixed, rotated and transformed X coordinate of this result. The value is in geographic
+     * coordinates.
      */
     public double getGeographicX() {
         // TODO: throw exception if not a SAMPLE measurement
@@ -179,7 +220,8 @@ public class MeasurementResult {
     }
 
     /**
-     * Returns the rotated and transformed Y coordinate of this result. The value is in geographic coordinates.
+     * Returns the noise fixed, rotated and transformed Y coordinate of this result. The value is in geographic
+     * coordinates.
      */
     public double getGeographicY() {
         // TODO: throw exception if not a SAMPLE measurement
@@ -187,7 +229,8 @@ public class MeasurementResult {
     }
 
     /**
-     * Returns the rotated and transformed Z coordinate of this result. The value is in geographic coordinates.
+     * Returns the noise fixed, rotated and transformed Z coordinate of this result. The value is in geographic
+     * coordinates.
      */
     public double getGeographicZ() {
         // TODO: throw exception if not a SAMPLE measurement
@@ -195,24 +238,38 @@ public class MeasurementResult {
     }
 
     /**
-     * Returns the rotated X coordinate of this result. The value is in sample coordinates.
+     * Returns the length of the geographic vector. Should be always the same as the sample vector.
+     */
+    public double getGeographicLength() {
+        return geographicVector.length();
+    }
+
+    /**
+     * Returns the noise fixed and rotated X coordinate of this result. The value is in sample coordinates.
      */
     public double getSampleX() {
         return sampleVector.x;
     }
 
     /**
-     * Returns the rotated Y coordinate of this result. The value is in sample coordinates.
+     * Returns the noise fixed and rotated Y coordinate of this result. The value is in sample coordinates.
      */
     public double getSampleY() {
         return sampleVector.y;
     }
 
     /**
-     * Returns the rotated Z coordinate of this result. The value is in sample coordinates.
+     * Returns the noise fixed and rotated Z coordinate of this result. The value is in sample coordinates.
      */
     public double getSampleZ() {
         return sampleVector.z;
+    }
+
+    /**
+     * Returns the length of the sample vector.
+     */
+    public double getSampleLength() {
+        return sampleVector.length();
     }
 
     /**
@@ -236,102 +293,92 @@ public class MeasurementResult {
         return rawVector.z;
     }
 
-    @Override public String toString() {
-        return "[result type=" + type + " value=(" + geographicVector.x + ", " + geographicVector.y + ", " + geographicVector.z + ")]";
-    }
-
     /**
-     * The orientation of the sample when it was measured.
-     *
-     * @author Esko Luontola
+     * Returns the length of the raw vector.
      */
+    public double getRawLength() {
+        return rawVector.length();
+    }
+
+//    @Override public String toString() {
+//        return "[result type=" + type + " value=(" + geographicVector.x + ", " + geographicVector.y + ", " + geographicVector.z + ")]";
+//    }
+
+
     public enum Type {
-        BG("BG"), DEG0("0"), DEG90("90"), DEG180("180"), DEG270("270");
-
-        private String name;
-
-        private Type(String name) {
-            this.name = name;
-        }
-
-        /**
-         * Returns "BG", "0", "90", "180" or "270".
-         */
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * Returns the same as getName().
-         */
-        @Override public String toString() {
-            return getName();
-        }
-
-        /**
-         * Rotates the specified vector from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will
-         * just copy the values directly.
-         *
-         * @param t old values that need to be rotated.
-         * @return a new object with the rotated values.
-         */
-        public Vector3d rotate(Vector3d t) {
-            return rotate(t, null);
-        }
-
-        /**
-         * Rotates the specified vector from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will
-         * just copy the values directly.
-         *
-         * @param t      old values that need to be rotated.
-         * @param result where the new values will be saved.
-         * @return the same as the result parameter, or a new object if it was null.
-         */
-        public Vector3d rotate(Vector3d t, Vector3d result) {
-            if (result == null) {
-                result = new Vector3d();
-            }
-            switch (this) {
-            case BG:
-            case DEG0:
-                result.set(t.x, t.y, t.z);
-                break;
-            case DEG90:
-                result.set(-t.y, t.x, t.z);
-                break;
-            case DEG180:
-                result.set(-t.x, -t.y, t.z);
-                break;
-            case DEG270:
-                result.set(t.y, -t.x, t.z);
-                break;
-            default:
-                assert false;
-                break;
-            }
-            return result;
-        }
+        SAMPLE, HOLDER, NOISE
     }
 
-    public static void main(String[] args) {
-        Document document = null;
-        try {
-            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-
-        MeasurementResult r = new MeasurementResult(DEG90, 1, 2.15019801981090189109019091098, 3);
-        System.out.println(r);
-        System.out.println(new MeasurementResult(r.getElement(document)));
-
-        for (int j = 0; j < 10; j++) {
-            long time = System.currentTimeMillis();
-            for (int i = 0; i < 10000; i++) {
-                r.getElement(document);
-            }
-            time = System.currentTimeMillis() - time;
-            System.out.println("getElement(): " + time / 10000.0 + " ms/call");
-        }
-    }
+//    /**
+//     * The orientation of the sample when it was measured.
+//     *
+//     * @author Esko Luontola
+//     */
+//    public enum Type {
+//        BG("BG"), DEG0("0"), DEG90("90"), DEG180("180"), DEG270("270");
+//
+//        private String name;
+//
+//        private Type(String name) {
+//            this.name = name;
+//        }
+//
+//        /**
+//         * Returns "BG", "0", "90", "180" or "270".
+//         */
+//        public String getName() {
+//            return name;
+//        }
+//
+//        /**
+//         * Returns the same as getName().
+//         */
+//        @Override public String toString() {
+//            return getName();
+//        }
+//
+//        /**
+//         * Rotates the specified vector from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will
+//         * just copy the values directly.
+//         *
+//         * @param t old values that need to be rotated.
+//         * @return a new object with the rotated values.
+//         */
+//        public Vector3d rotate(Vector3d t) {
+//            return rotate(t, null);
+//        }
+//
+//        /**
+//         * Rotates the specified vector from the orientation of this object to that of DEG0. Rotating a BG or DEG0 will
+//         * just copy the values directly.
+//         *
+//         * @param t      old values that need to be rotated.
+//         * @param result where the new values will be saved.
+//         * @return the same as the result parameter, or a new object if it was null.
+//         */
+//        public Vector3d rotate(Vector3d t, Vector3d result) {
+//            if (result == null) {
+//                result = new Vector3d();
+//            }
+//            switch (this) {
+//            case BG:
+//            case DEG0:
+//                result.set(t.x, t.y, t.z);
+//                break;
+//            case DEG90:
+//                result.set(-t.y, t.x, t.z);
+//                break;
+//            case DEG180:
+//                result.set(-t.x, -t.y, t.z);
+//                break;
+//            case DEG270:
+//                result.set(t.y, -t.x, t.z);
+//                break;
+//            default:
+//                assert false;
+//                break;
+//            }
+//            return result;
+//        }
+//    }
 }

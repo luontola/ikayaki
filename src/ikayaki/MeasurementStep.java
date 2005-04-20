@@ -27,13 +27,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import javax.vecmath.Matrix3d;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.OutputStreamWriter;
+import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -356,8 +350,8 @@ public class MeasurementStep {
     }
 
     /**
-     * Updates all of the measurement results with the owner project's transformation matrix. If there is no owner, an
-     * identity matrix will be used.
+     * Updates all of the measurement results with the owner project's transformation matrix and applies the noise and
+     * holder fixes. If there is no owner, an identity matrix will be used.
      */
     protected synchronized void updateTransforms() {
         Matrix3d transform = null;
@@ -365,6 +359,7 @@ public class MeasurementStep {
             transform = project.getTransform();
         }
         for (MeasurementResult result : results) {
+            result.applyFixes(this);
             result.setTransform(transform);
         }
     }
@@ -442,6 +437,54 @@ public class MeasurementStep {
         }
     }
 
+    /**
+     * Returns the average of the holder results (raw values). If there are no holder results, will return a zero-filled
+     * vector.
+     */
+    public Vector3d getHolder() {
+        Vector3d v = new Vector3d();
+        int count = 0;
+        for (MeasurementResult result : results) {
+            if (result.getType() != MeasurementResult.Type.HOLDER) {
+                continue;
+            }
+            v.x += result.getRawX();
+            v.y += result.getRawY();
+            v.z += result.getRawZ();
+            count++;
+        }
+        if (count > 0) {
+            v.x /= count;
+            v.y /= count;
+            v.z /= count;
+        }
+        return v;
+    }
+
+    /**
+     * Returns the average of the noise results (raw values). If there are no noise results, will return a zero-filled
+     * vector.
+     */
+    public Vector3d getNoise() {
+        Vector3d v = new Vector3d();
+        int count = 0;
+        for (MeasurementResult result : results) {
+            if (result.getType() != MeasurementResult.Type.NOISE) {
+                continue;
+            }
+            v.x += result.getRawX();
+            v.y += result.getRawY();
+            v.z += result.getRawZ();
+            count++;
+        }
+        if (count > 0) {
+            v.x /= count;
+            v.y /= count;
+            v.z /= count;
+        }
+        return v;
+    }
+
     @Override public String toString() {
         StringBuffer sb = new StringBuffer();
 
@@ -485,49 +528,5 @@ public class MeasurementStep {
         public boolean isDone() {
             return done;
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-
-        MeasurementStep step = new MeasurementStep();
-        System.out.println(step);
-        Thread.sleep(100);
-        step.addResult(new MeasurementResult(MeasurementResult.Type.BG, 1, 2, 3));
-        System.out.println(step);
-        Thread.sleep(100);
-        step.addResult(new MeasurementResult(MeasurementResult.Type.DEG0, 1, 2, 3));
-        System.out.println(step);
-        Thread.sleep(100);
-        step.addResult(new MeasurementResult(MeasurementResult.Type.DEG90, 1, 2, 3));
-        System.out.println(step);
-        Thread.sleep(100);
-        step.addResult(new MeasurementResult(MeasurementResult.Type.DEG180, 1, 2, 3));
-        System.out.println(step);
-        Thread.sleep(100);
-        step.addResult(new MeasurementResult(MeasurementResult.Type.DEG270, 1, 2, 3));
-        System.out.println(step);
-        Thread.sleep(100);
-        step.addResult(new MeasurementResult(MeasurementResult.Type.BG, 1, 2, 3));
-        System.out.println(step);
-        Thread.sleep(100);
-        step.setDone();
-        System.out.println(step);
-
-        Element element = step.getElement(document);
-        document.appendChild(element);
-
-        step = new MeasurementStep(element);
-        System.out.println(step);
-
-        TransformerFactory tf = TransformerFactory.newInstance();
-        tf.setAttribute("indent-number", new Integer(2));
-
-        Transformer t = tf.newTransformer();
-        t.setOutputProperty(OutputKeys.INDENT, "yes");
-
-        DOMSource source = new DOMSource(document);
-        StreamResult result = new StreamResult(new OutputStreamWriter(System.out, "utf-8"));
-        t.transform(source, result);
     }
 }

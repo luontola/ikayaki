@@ -63,7 +63,7 @@ import static ikayaki.ProjectEvent.Type.*;
  */
 public class Project {
 
-    private static final boolean DEBUG = false;      // TODO: used for testing the measurements without a Squid
+    private static final boolean DEBUG = true;      // TODO: used for testing the measurements without a Squid
 
 /*
 Event A: On property change - Autosaving will be invoked and the project written to file
@@ -2028,7 +2028,8 @@ project listeners.
                     getSquid().getMagnetometer().clearFlux('a');
                     getSquid().getMagnetometer().join();
                     Double[] results = getSquid().getMagnetometer().readData();
-                    currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
+                    currentStep.addResult(
+                            new MeasurementResult(NOISE, 0, results[0], results[1], results[2]));
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
                     checkAborted();
 
@@ -2045,7 +2046,8 @@ project listeners.
 
                         // quick measure with no rotations
                         results = getSquid().getMagnetometer().readData();
-                        currentStep.addResult(new MeasurementResult(DEG0, results[0], results[1], results[2]));
+                        currentStep.addResult(
+                                new MeasurementResult(SAMPLE, 0, results[0], results[1], results[2]));
                         fireMeasurementEvent(currentStep, VALUE_MEASURED);
                         checkAborted();
                     } else {
@@ -2055,7 +2057,8 @@ project listeners.
 
                             // measure at 0 degrees
                             results = getSquid().getMagnetometer().readData();
-                            currentStep.addResult(new MeasurementResult(DEG0, results[0], results[1], results[2]));
+                            currentStep.addResult(
+                                    new MeasurementResult(SAMPLE, 0, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
@@ -2066,7 +2069,8 @@ project listeners.
                             fireMeasurementEvent(currentStep, HANDLER_STOP);
                             checkAborted();
                             results = getSquid().getMagnetometer().readData();
-                            currentStep.addResult(new MeasurementResult(DEG90, results[0], results[1], results[2]));
+                            currentStep.addResult(
+                                    new MeasurementResult(SAMPLE, 90, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
@@ -2077,7 +2081,8 @@ project listeners.
                             fireMeasurementEvent(currentStep, HANDLER_STOP);
                             checkAborted();
                             results = getSquid().getMagnetometer().readData();
-                            currentStep.addResult(new MeasurementResult(DEG180, results[0], results[1], results[2]));
+                            currentStep.addResult(
+                                    new MeasurementResult(SAMPLE, 180, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
@@ -2088,7 +2093,8 @@ project listeners.
                             fireMeasurementEvent(currentStep, HANDLER_STOP);
                             checkAborted();
                             results = getSquid().getMagnetometer().readData();
-                            currentStep.addResult(new MeasurementResult(DEG270, results[0], results[1], results[2]));
+                            currentStep.addResult(
+                                    new MeasurementResult(SAMPLE, 270, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
@@ -2108,7 +2114,8 @@ project listeners.
                     fireMeasurementEvent(currentStep, HANDLER_STOP);
                     checkAborted();
                     results = getSquid().getMagnetometer().readData();
-                    currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
+                    currentStep.addResult(
+                            new MeasurementResult(NOISE, 0, results[0], results[1], results[2]));
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
                     checkAborted();
 
@@ -2178,7 +2185,7 @@ project listeners.
                         setState(IDLE);
                         return;
                     }
-                    currentStep.addResult(new MeasurementResult(BG,
+                    currentStep.addResult(new MeasurementResult(NOISE, 0,
                             Math.random() * 0.000001, Math.random() * 0.000001, Math.random() * 0.000001));
                     System.out.println("Result added");
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
@@ -2191,7 +2198,7 @@ project listeners.
                         currentStep.setDone();
                         return;
                     }
-                    currentStep.addResult(new MeasurementResult(DEG0,
+                    currentStep.addResult(new MeasurementResult(SAMPLE, 0,
                             Math.random() * 0.0001, Math.random() * 0.0001, Math.random() * 0.0001));
                     System.out.println("Result added");
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
@@ -2204,7 +2211,7 @@ project listeners.
                         currentStep.setDone();
                         return;
                     }
-                    currentStep.addResult(new MeasurementResult(DEG90,
+                    currentStep.addResult(new MeasurementResult(SAMPLE, 90,
                             Math.random() * 0.0001, Math.random() * 0.0001, Math.random() * 0.0001));
                     System.out.println("Result added");
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
@@ -2217,7 +2224,7 @@ project listeners.
                         currentStep.setDone();
                         return;
                     }
-                    currentStep.addResult(new MeasurementResult(DEG180,
+                    currentStep.addResult(new MeasurementResult(SAMPLE, 180,
                             Math.random() * 0.0001, Math.random() * 0.0001, Math.random() * 0.0001));
                     System.out.println("Result added");
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
@@ -2230,7 +2237,7 @@ project listeners.
                         currentStep.setDone();
                         return;
                     }
-                    currentStep.addResult(new MeasurementResult(DEG270,
+                    currentStep.addResult(new MeasurementResult(SAMPLE, 270,
                             Math.random() * 0.0001, Math.random() * 0.0001, Math.random() * 0.0001));
                     System.out.println("Result added");
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
@@ -2243,7 +2250,7 @@ project listeners.
                         currentStep.setDone();
                         return;
                     }
-                    currentStep.addResult(new MeasurementResult(BG,
+                    currentStep.addResult(new MeasurementResult(NOISE, 0,
                             Math.random() * 0.000001, Math.random() * 0.000001, Math.random() * 0.000001));
                     System.out.println("Result added");
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
@@ -2379,8 +2386,9 @@ project listeners.
 
             Double[] results = getSquid().getMagnetometer().readData();
 
-            //TODO: check where we are and change BG to something else.
-            currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
+            //TODO: check where we are and change SAMPLE to something else.
+            currentStep.addResult(new MeasurementResult(SAMPLE, getSquid().getHandler().getRotation(),
+                    results[0], results[1], results[2]));
             fireMeasurementEvent(currentStep, VALUE_MEASURED);
 
             setState(IDLE);

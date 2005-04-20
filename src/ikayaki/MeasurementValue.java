@@ -22,10 +22,8 @@
 
 package ikayaki;
 
-import static ikayaki.MeasurementResult.Type.BG;
+import static ikayaki.MeasurementResult.Type.*;
 import static java.lang.Math.atan2;
-import static java.lang.Math.sin;
-import static java.lang.Math.cos;
 import static java.lang.Math.PI;
 import static java.lang.Math.atan;
 import static java.lang.Math.pow;
@@ -48,9 +46,11 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
-                        if (step.getResult(i).getType() != BG) {
-                            sum += step.getResult(i).getGeographicX();
+                        MeasurementResult r = step.getResult(i);
+                        if (r.getType() != SAMPLE) {
+                            continue;
                         }
+                        sum += r.getGeographicX();
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -69,9 +69,11 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
-                        if (step.getResult(i).getType() != BG) {
-                            sum += step.getResult(i).getGeographicY();
+                        MeasurementResult r = step.getResult(i);
+                        if (r.getType() != SAMPLE) {
+                            continue;
                         }
+                        sum += r.getGeographicY();
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -90,9 +92,11 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
-                        if (step.getResult(i).getType() != BG) {
-                            sum += step.getResult(i).getGeographicZ();
+                        MeasurementResult r = step.getResult(i);
+                        if (r.getType() != SAMPLE) {
+                            continue;
                         }
+                        sum += r.getGeographicZ();
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -111,9 +115,11 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
-                        if (step.getResult(i).getType() != BG) {
-                            sum += step.getResult(i).getSampleX();
+                        MeasurementResult r = step.getResult(i);
+                        if (r.getType() != SAMPLE) {
+                            continue;
                         }
+                        sum += r.getSampleX();
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -132,9 +138,11 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
-                        if (step.getResult(i).getType() != BG) {
-                            sum += step.getResult(i).getSampleY();
+                        MeasurementResult r = step.getResult(i);
+                        if (r.getType() != SAMPLE) {
+                            continue;
                         }
+                        sum += r.getSampleY();
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -153,9 +161,11 @@ public abstract class MeasurementValue <T> {
                     double sum = 0.0;
                     int count = step.getResults();
                     for (int i = 0; i < count; i++) {
-                        if (step.getResult(i).getType() != BG) {
-                            sum += step.getResult(i).getSampleZ();
+                        MeasurementResult r = step.getResult(i);
+                        if (r.getType() != SAMPLE) {
+                            continue;
                         }
+                        sum += r.getSampleZ();
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -292,31 +302,68 @@ public abstract class MeasurementValue <T> {
     public static final MeasurementValue<Double> THETA63 =
             new MeasurementValue<Double>("\u03b863", "\u00b0", "Angular standard deviation") {
                 public Double getValue(MeasurementStep step) {
-                    if (step.getResults() == 0) {
-                        return null;
-                    }
-                    double sumL2 = 0.0;
-                    double sumM2 = 0.0;
-                    double sumN2 = 0.0;
+                    int sampleCount = 0;
+                    double sumX = 0.0;
+                    double sumY = 0.0;
+                    double sumZ = 0.0;
+                    double sumLength = 0.0;
 
                     for (int i = 0; i < step.getResults(); i++) {
                         MeasurementResult r = step.getResult(i);
-                        double declination = atan(r.getSampleX() / r.getSampleY());
-                        double inclination = atan(r.getSampleZ() /
-                                sqrt(pow(r.getSampleX(), 2) + pow(r.getSampleY(), 2)));
-                        double l = cos(declination) * cos(inclination);
-                        double m = sin(declination) * cos(inclination);
-                        double n = sin(inclination);
-                        sumL2 += l * l;
-                        sumM2 += m * m;
-                        sumN2 += n * n;
+                        if (r.getType() != SAMPLE) {
+                            continue;
+                        }
+                        sampleCount++;
+
+                        sumX += r.getSampleX();
+                        sumY += r.getSampleY();
+                        sumZ += r.getSampleZ();
+                        sumLength += r.getSampleLength();
                     }
 
-                    double R = sqrt(sumL2 + sumM2 + sumN2);
-                    double k = (step.getResults() - 1) / (step.getResults() - R);
+                    if (sampleCount == 0) {
+                        return null;
+                    }
+                    double avgLength = sumLength / sampleCount;
+
+                    double N = avgLength * sampleCount;
+                    double R = sqrt((sumX * sumX) + (sumY * sumY) + (sumZ * sumZ));
+                    double k = (N - avgLength) / (N - R);
                     return 81.0 / sqrt(k);
                 }
             };
+
+//    /**
+//     * Calculates the angular standard deviation (Theta 63) from the measurement result set.
+//     */
+//    public static final MeasurementValue<Double> THETA63_BAK = // this one does not work right
+//            new MeasurementValue<Double>("\u03b863", "\u00b0", "Angular standard deviation") {
+//                public Double getValue(MeasurementStep step) {
+//                    if (step.getResults() == 0) {
+//                        return null;
+//                    }
+//                    double sumL2 = 0.0;
+//                    double sumM2 = 0.0;
+//                    double sumN2 = 0.0;
+//
+//                    for (int i = 0; i < step.getResults(); i++) {
+//                        MeasurementResult r = step.getResult(i);
+//                        double declination = atan(r.getSampleX() / r.getSampleY());
+//                        double inclination = atan(r.getSampleZ() /
+//                                sqrt(pow(r.getSampleX(), 2) + pow(r.getSampleY(), 2)));
+//                        double l = cos(declination) * cos(inclination);
+//                        double m = sin(declination) * cos(inclination);
+//                        double n = sin(inclination);
+//                        sumL2 += l * l;
+//                        sumM2 += m * m;
+//                        sumN2 += n * n;
+//                    }
+//
+//                    double R = sqrt(sumL2 + sumM2 + sumN2);
+//                    double k = (step.getResults() - 1) / (step.getResults() - R);
+//                    return 81.0 / sqrt(k);
+//                }
+//            };
 
     /**
      * A short name for the value.

@@ -176,7 +176,7 @@ public class MeasurementDetailsPanel extends ProjectComponent {
                 int count = step.getResults();
                 
                 // if the last step is not BG, there are more steps coming
-                if (count >= 2 && step.getResult(count - 1).getType() != MeasurementResult.Type.BG) {
+                if (count >= 2 && step.getResult(count - 1).getType() != MeasurementResult.Type.NOISE) {
                     count++;
                 }
                 return Math.max(expected, count);
@@ -202,7 +202,21 @@ public class MeasurementDetailsPanel extends ProjectComponent {
                 // get the values from the step
                 switch (columnIndex) {
                 case HEADER_COLUMN:
-                    value = step.getResult(rowIndex).getType().toString();
+                    switch (step.getResult(rowIndex).getType()) {
+                    case HOLDER:
+                        value = "Holder";
+                        break;
+                    case NOISE:
+                        value = "BG";
+                        break;
+                    case SAMPLE:
+                        value = Integer.toString(step.getResult(rowIndex).getRotation());
+                        break;
+                    default:
+                        assert false;
+                        value = null;
+                        break;
+                    }
                     break;
                 case X_COLUMN:
                     value = numberFormat.format(step.getResult(rowIndex).getRawX());
@@ -224,20 +238,20 @@ public class MeasurementDetailsPanel extends ProjectComponent {
                 // try to guess the values
                 if (columnIndex == HEADER_COLUMN) {
                     if (rowIndex == 0 || rowIndex == getRowCount() - 1) {
-                        value = MeasurementResult.Type.BG.toString();
+                        value = "BG";
                     } else {
                         switch ((rowIndex - 1) % 4) {
                         case 0:
-                            value = MeasurementResult.Type.DEG0.toString();
+                            value = "0";
                             break;
                         case 1:
-                            value = MeasurementResult.Type.DEG90.toString();
+                            value = "90";
                             break;
                         case 2:
-                            value = MeasurementResult.Type.DEG180.toString();
+                            value = "180";
                             break;
                         case 3:
-                            value = MeasurementResult.Type.DEG270.toString();
+                            value = "270";
                             break;
                         default:
                             assert false;
