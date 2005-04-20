@@ -60,7 +60,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
     // handler max position and max rotation for drawing
     // TODO: some way to get the actual max-position?
-    private final int maxposition = 50000, maxrotation = 2000;
+    private final int maxposition = 50000, maxrotation = 360;
 
     // handler positions, read from Settings, thank you autoboxing!
     // WARNING: all of these must differ or we have trouble...
@@ -173,7 +173,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
      * Updates magnetometer status picture and handler positions.
      * Reads current handler position and rotation from Handler saved to this.handler.
      */
-    private void updateStatus() {
+    public void updateStatus() {
         if (this.handler != null) {
             this.position = this.handler.getPosition();
             this.rotation = this.handler.getRotation();
@@ -195,15 +195,16 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             rotate = this.handler.getRotation();
         }
 
+        // null means that configuration might have changed :)
+        if (e == null) updatePositions();
         // if stopped moving, stop animation
-        if (e.getType() == MeasurementEvent.Type.HANDLER_STOP) {
+        else if (e.getType() == MeasurementEvent.Type.HANDLER_STOP) {
             this.position = pos;
             this.rotation = rotate;
             statusAnimator.gone();
         // if started moving, start animation; Handler gave us target position and rotation
         } else statusAnimator.going(pos, rotate);
 
-        updatePositions();
         repaint();
     }
 
@@ -329,9 +330,11 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
      * Animator-thread for updating magnetometer status pic.
      */
     private class MagnetometerStatusAnimator implements Runnable {
-        // drawing delay in ms (fps = 1000 / delay), steps per second, rotation-steps per second
-        // TODO: save updated values somewhere (Settings)?
-        private int updateDelay, sps = 10000, rps = 500;
+        // drawing delay in ms (fps = 1000 / delay)
+        private int updateDelay;
+
+        // steps per second (normal and in measurement zone), rotation-angles per second
+        private int sps, msps, rps;
 
         // position & rotation we're going from, amount and direction (+/-1)
         private int posFrom, rotateFrom, posAmount, rotateAmount, posDirection, rotateDirection;
@@ -346,6 +349,9 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         }
 
         public MagnetometerStatusAnimator(int updateDelay) {
+            this.sps = Settings.getHandlerVelocity();
+            this.sps = Settings.getHandlerMeasurementVelocity();
+            this.rps = Settings.getHandlerRotationVelocity();
             this.updateDelay = updateDelay;
         }
 
@@ -410,6 +416,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
                 long time = System.currentTimeMillis() - startTime;
 
+                // TODO: different speed in measurement zone
                 int pos = (int) (sps * time / 1000);
                 int rotate = (int) (rps * time / 1000);
                 if (pos > posAmount) pos = posAmount;
@@ -705,7 +712,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             rotate90.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     project.doManualRotate(90);
-                    //statusAnimator.going(position, 500);
+                    //statusAnimator.going(position, 90);
                     //handler.rotateTo(90);
                 }
             });
@@ -713,7 +720,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             rotate180.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     project.doManualRotate(180);
-                    //statusAnimator.going(position, 1000);
+                    //statusAnimator.going(position, 180);
                     //handler.rotateTo(180);
                 }
             });
@@ -721,7 +728,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             rotate270.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     project.doManualRotate(270);
-                    //statusAnimator.going(position, 1500);
+                    //statusAnimator.going(position, 270);
                     //handler.rotateTo(270);
                 }
             });
@@ -814,9 +821,9 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
                 switch (rotation) {
                     case 0: rotate0.setSelected(true); break;
-                    case 500: rotate90.setSelected(true); break;
-                    case 1000: rotate180.setSelected(true); break;
-                    case 1500: rotate270.setSelected(true); break;
+                    case 90: rotate90.setSelected(true); break;
+                    case 180: rotate180.setSelected(true); break;
+                    case 270: rotate270.setSelected(true); break;
                 }
             }
         }
