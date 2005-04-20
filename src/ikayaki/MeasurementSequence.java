@@ -46,7 +46,7 @@ public class MeasurementSequence implements Comparable<MeasurementSequence> {
     /**
      * The measurement steps of this sequence.
      */
-    private List<MeasurementStep> steps = new ArrayList<MeasurementStep>();
+    private final List<MeasurementStep> steps = new ArrayList<MeasurementStep>();
 
     /**
      * Creates an empty sequence with no name.
@@ -214,6 +214,4 @@ public class MeasurementSequence implements Comparable<MeasurementSequence> {
     @Override public String toString() {
         return getName();
     }
-
-
 }

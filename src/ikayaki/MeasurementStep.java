@@ -53,7 +53,7 @@ public class MeasurementStep {
     /**
      * The project that owns this step, or null if there is no owner.
      */
-    private Project project;
+    private final Project project;
 
     /**
      * Tells if this step has been completed or not, or if a measurement is still running.
@@ -91,7 +91,7 @@ public class MeasurementStep {
     /**
      * The individual measurement results that are part of this measurement step.
      */
-    private List<MeasurementResult> results = new ArrayList<MeasurementResult>();
+    private final List<MeasurementResult> results = new ArrayList<MeasurementResult>();
 
     /**
      * Creates a blank measurement step.
@@ -445,7 +445,7 @@ public class MeasurementStep {
      * Returns the average of the holder results (raw values). If there are no holder results, will return a zero-filled
      * vector.
      */
-    public Vector3d getHolder() {
+    public synchronized Vector3d getHolder() {
         Vector3d v = new Vector3d();
         int count = 0;
         for (MeasurementResult result : results) {
@@ -469,7 +469,7 @@ public class MeasurementStep {
      * Returns the average of the noise results (raw values). If there are no noise results, will return a zero-filled
      * vector.
      */
-    public Vector3d getNoise() {
+    public synchronized Vector3d getNoise() {
         Vector3d v = new Vector3d();
         int count = 0;
         for (MeasurementResult result : results) {
@@ -489,30 +489,30 @@ public class MeasurementStep {
         return v;
     }
 
-    @Override public String toString() {
-        StringBuffer sb = new StringBuffer();
-
-        sb.append("[step");
-        sb.append(" state=" + state);
-        sb.append(" timestamp=" + (timestamp == null ? "null" : "" + timestamp.getTime()));
-        sb.append(" stepvalue=" + stepValue);
-        sb.append(" mass=" + mass);
-        sb.append(" volume=" + volume);
-
-        sb.append(" results=(");
-        boolean first = true;
-        for (MeasurementResult result : results) {
-            if (!first) {
-                sb.append(",");
-            } else {
-                first = false;
-            }
-            sb.append(result.toString());
-        }
-        sb.append(")]");
-
-        return sb.toString();
-    }
+//    @Override public String toString() {
+//        StringBuffer sb = new StringBuffer();
+//
+//        sb.append("[step");
+//        sb.append(" state=" + state);
+//        sb.append(" timestamp=" + (timestamp == null ? "null" : "" + timestamp.getTime()));
+//        sb.append(" stepvalue=" + stepValue);
+//        sb.append(" mass=" + mass);
+//        sb.append(" volume=" + volume);
+//
+//        sb.append(" results=(");
+//        boolean first = true;
+//        for (MeasurementResult result : results) {
+//            if (!first) {
+//                sb.append(",");
+//            } else {
+//                first = false;
+//            }
+//            sb.append(result.toString());
+//        }
+//        sb.append(")]");
+//
+//        return sb.toString();
+//    }
 
     /**
      * The state of a measurement step.

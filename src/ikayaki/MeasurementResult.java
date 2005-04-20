@@ -43,28 +43,28 @@ public class MeasurementResult {
     /**
      * The type of this result.
      */
-    private Type type;
+    private Type type;  // TODO: make final, after the import code for old versions has been removed
 
     /**
      * The rotation that the sample holder was in when this result was measured. The value is in range 0..360 degrees.
      */
-    private int rotation;
+    private int rotation;   // TODO: make final, after the import code for old versions has been removed
 
     /**
      * The unmodified measurements recieved from the squid. Will not change after it has been once set.
      */
-    private Vector3d rawVector = new Vector3d();
+    private final Vector3d rawVector = new Vector3d();
 
     /**
      * The measurements in sample coordinates. Has the rotation, noise and holder fixes applied to itself.
      */
-    private Vector3d sampleVector = new Vector3d();
+    private final Vector3d sampleVector = new Vector3d();
 
     /**
      * The measurements in geographic coordinates. Equals the sample coordinates with the transformation matrix
      * applied.
      */
-    private Vector3d geographicVector = new Vector3d();
+    private final Vector3d geographicVector = new Vector3d();
 
     /**
      * Creates a new measurement result. All units are mA/m.

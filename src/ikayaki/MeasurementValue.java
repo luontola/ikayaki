@@ -368,21 +368,20 @@ public abstract class MeasurementValue <T> {
             };
 
 
-
-
-
     /**
      * A short name for the value.
      */
-    private String caption;
+    private final String caption;
+
     /**
      * The unit of the value.
      */
-    private String unit;
+    private final String unit;
+
     /**
      * A long description of the value.
      */
-    private String description;
+    private final String description;
 
     /**
      * Creates a new measurement value.
