@@ -2,18 +2,25 @@
 
 \beginCase{MeasurementDetails-table}
 \condition{Shows measurement details in useful and readable form}
+\testResultTrue
 \condition{Numbers are correct for measurements}
+\testResultTrue
 \condition{Shows right number of rows initially, defined by project}
+\testResultTrue
 \condition{Table extends as needed}
+\testResultTrue
 \closeCase{}
 
 \beginCase{ErrorDetails-table}
 \condition{Shows error in useful and readable form}
+\testResultFalse
 \condition{Error is calculated correctly}
+\testResultFalse
 \closeCase{}
 
 \beginCase{Project change}
 \condition{Tables show information of the new project}
+\testResultTrue
 \closeCase{}
 
 \closeTestedClass
