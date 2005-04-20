@@ -22,10 +22,7 @@
 
 package ikayaki.gui;
 
-import ikayaki.MeasurementEvent;
-import ikayaki.MeasurementResult;
-import ikayaki.MeasurementStep;
-import ikayaki.Settings;
+import ikayaki.*;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -105,7 +102,7 @@ public class MeasurementDetailsPanel extends ProjectComponent {
         scrollPane.setBorder(null);
         this.setLayout(new BorderLayout());
         this.add(scrollPane);
-        this.setMinimumSize(new Dimension(0, 205));
+        this.setMinimumSize(new Dimension(0, 225));
     }
 
     public MeasurementStep getStep() {
@@ -162,7 +159,7 @@ public class MeasurementDetailsPanel extends ProjectComponent {
 
         public int getRowCount() {
             // the expected number of results based on measurement rotations
-            int expected = Math.max(1, 4 * Settings.getMeasurementRotations()) + 2;
+            int expected = Math.max(1, 4 * Settings.getMeasurementRotations()) + 3;
 
             if (step == null) {
                 return expected;
@@ -176,7 +173,7 @@ public class MeasurementDetailsPanel extends ProjectComponent {
                 int count = step.getResults();
                 
                 // if the last step is not BG, there are more steps coming
-                if (count >= 2 && step.getResult(count - 1).getType() != MeasurementResult.Type.NOISE) {
+                if (count >= 3 && step.getResult(count - 1).getType() != MeasurementResult.Type.NOISE) {
                     count++;
                 }
                 return Math.max(expected, count);
@@ -237,7 +234,9 @@ public class MeasurementDetailsPanel extends ProjectComponent {
 
                 // try to guess the values
                 if (columnIndex == HEADER_COLUMN) {
-                    if (rowIndex == 0 || rowIndex == getRowCount() - 1) {
+                    if (rowIndex == 0) {
+                        value = "Holder";
+                    } else if (rowIndex == 1 || rowIndex == getRowCount() - 1) {
                         value = "BG";
                     } else {
                         switch ((rowIndex - 1) % 4) {
@@ -291,11 +290,11 @@ public class MeasurementDetailsPanel extends ProjectComponent {
 
         private MeasurementStep step;
 
-        private final String[] COLUMNS = new String[]{" ", "Signal/Drift", "Signal/Holder", "Signal/Noise"};
+        private final String[] COLUMNS = new String[]{" ", "Signal/Noise", "Signal/Drift", "Signal/Holder"};
         private final int HEADER_COLUMN = 0;
-        private final int SIGNAL_DRIFT_COLUMN = 1;
-        private final int SIGNAL_HOLDER_COLUMN = 2;
-        private final int SIGNAL_NOISE_COLUMN = 3;
+        private final int SIGNAL_NOISE_COLUMN = 1;
+        private final int SIGNAL_DRIFT_COLUMN = 2;
+        private final int SIGNAL_HOLDER_COLUMN = 3;
 
         private StyledWrapper defaultWrapper = new StyledWrapper();
         private StyledWrapper headerWrapper = new StyledWrapper();
@@ -337,14 +336,14 @@ public class MeasurementDetailsPanel extends ProjectComponent {
             case HEADER_COLUMN:
                 value = "Error";
                 break;
+            case SIGNAL_NOISE_COLUMN:
+                value = MeasurementValue.SIGNAL_TO_NOISE.getValue(step);
+                break;
             case SIGNAL_DRIFT_COLUMN:
-                value = "TODO"; // TODO
+                value = MeasurementValue.SIGNAL_TO_DRIFT.getValue(step);
                 break;
             case SIGNAL_HOLDER_COLUMN:
-                value = "TODO"; // TODO
-                break;
-            case SIGNAL_NOISE_COLUMN:
-                value = "TODO"; // TODO
+                value = MeasurementValue.SIGNAL_TO_HOLDER.getValue(step);
                 break;
             default:
                 value = null;

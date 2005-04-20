@@ -337,37 +337,39 @@ public abstract class MeasurementValue <T> {
                 }
             };
 
-//    /**
-//     * Calculates the angular standard deviation (Theta 63) from the measurement result set.
-//     */
-//    public static final MeasurementValue<Double> THETA63_BAK = // this one does not work right
-//            new MeasurementValue<Double>("\u03b863", "\u00b0", "Angular standard deviation") {
-//                public Double getValue(MeasurementStep step) {
-//                    if (step.getResults() == 0) {
-//                        return null;
-//                    }
-//                    double sumL2 = 0.0;
-//                    double sumM2 = 0.0;
-//                    double sumN2 = 0.0;
-//
-//                    for (int i = 0; i < step.getResults(); i++) {
-//                        MeasurementResult r = step.getResult(i);
-//                        double declination = atan(r.getSampleX() / r.getSampleY());
-//                        double inclination = atan(r.getSampleZ() /
-//                                sqrt(pow(r.getSampleX(), 2) + pow(r.getSampleY(), 2)));
-//                        double l = cos(declination) * cos(inclination);
-//                        double m = sin(declination) * cos(inclination);
-//                        double n = sin(inclination);
-//                        sumL2 += l * l;
-//                        sumM2 += m * m;
-//                        sumN2 += n * n;
-//                    }
-//
-//                    double R = sqrt(sumL2 + sumM2 + sumN2);
-//                    double k = (step.getResults() - 1) / (step.getResults() - R);
-//                    return 81.0 / sqrt(k);
-//                }
-//            };
+    /**
+     * TODO
+     */
+    public static final MeasurementValue<Double> SIGNAL_TO_NOISE =
+            new MeasurementValue<Double>("caption", "unit", "description") {
+                public Double getValue(MeasurementStep step) {
+                    return null;
+                }
+            };
+
+    /**
+     * TODO
+     */
+    public static final MeasurementValue<Double> SIGNAL_TO_DRIFT =
+            new MeasurementValue<Double>("caption", "unit", "description") {
+                public Double getValue(MeasurementStep step) {
+                    return null;
+                }
+            };
+
+    /**
+     * TODO
+     */
+    public static final MeasurementValue<Double> SIGNAL_TO_HOLDER =
+            new MeasurementValue<Double>("caption", "unit", "description") {
+                public Double getValue(MeasurementStep step) {
+                    return null;
+                }
+            };
+
+
+
+
 
     /**
      * A short name for the value.
@@ -406,7 +408,7 @@ public abstract class MeasurementValue <T> {
      * @return the calculated value, or null if it was not possible to calculate it.
      * @throws NullPointerException if step is null.
      */
-    protected abstract T getValue(MeasurementStep step);
+    public abstract T getValue(MeasurementStep step);
 
     /**
      * Returns a short name for the value.
