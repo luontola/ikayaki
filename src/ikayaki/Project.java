@@ -63,7 +63,7 @@ import static ikayaki.ProjectEvent.Type.*;
  */
 public class Project {
 
-    private static final boolean DEBUG = true;      // TODO: used for testing the measurements without a Squid
+    private static final boolean DEBUG = false;      // TODO: used for testing the measurements without a Squid
 
 /*
 Event A: On property change - Autosaving will be invoked and the project written to file

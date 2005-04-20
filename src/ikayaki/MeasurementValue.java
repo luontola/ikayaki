@@ -319,6 +319,7 @@ public abstract class MeasurementValue <T> {
                         if (r.getType() != SAMPLE) {
                             continue;
                         }
+                        // TODO: should there be the full vectors, or normalized vectors (length=1)?
                         sumX += r.getSampleX();
                         sumY += r.getSampleY();
                         sumZ += r.getSampleZ();
