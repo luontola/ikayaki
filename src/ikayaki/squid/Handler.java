@@ -47,7 +47,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * Synchronous queue for waiting result message from handler
      */
     private SynchronousQueue<String> queue;
-    private int pollTimeout = 2;
+    private int pollTimeout = 60;
 
     /**
      * Handlers current status.

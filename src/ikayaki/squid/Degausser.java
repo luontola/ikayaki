@@ -49,7 +49,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * Synchronous queue for waiting result message from degausser
      */
     private SynchronousQueue<String> queue;
-    private int pollTimeout = 2;
+    private int pollTimeout = 60;
 
     /**
      * Degaussers current status
