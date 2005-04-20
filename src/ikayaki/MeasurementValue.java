@@ -44,13 +44,14 @@ public abstract class MeasurementValue <T> {
             new MeasurementValue<Double>("X'", "mA/m", "Mean X (geographic coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
-                    int count = step.getResults();
-                    for (int i = 0; i < count; i++) {
+                    int count = 0;
+                    for (int i = 0; i < step.getResults(); i++) {
                         MeasurementResult r = step.getResult(i);
                         if (r.getType() != SAMPLE) {
                             continue;
                         }
                         sum += r.getGeographicX();
+                        count++;
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -67,13 +68,14 @@ public abstract class MeasurementValue <T> {
             new MeasurementValue<Double>("Y'", "mA/m", "Mean Y (geographic coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
-                    int count = step.getResults();
-                    for (int i = 0; i < count; i++) {
+                    int count = 0;
+                    for (int i = 0; i < step.getResults(); i++) {
                         MeasurementResult r = step.getResult(i);
                         if (r.getType() != SAMPLE) {
                             continue;
                         }
                         sum += r.getGeographicY();
+                        count++;
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -90,13 +92,14 @@ public abstract class MeasurementValue <T> {
             new MeasurementValue<Double>("Z'", "mA/m", "Mean Z (geographic coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
-                    int count = step.getResults();
-                    for (int i = 0; i < count; i++) {
+                    int count = 0;
+                    for (int i = 0; i < step.getResults(); i++) {
                         MeasurementResult r = step.getResult(i);
                         if (r.getType() != SAMPLE) {
                             continue;
                         }
                         sum += r.getGeographicZ();
+                        count++;
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -113,13 +116,14 @@ public abstract class MeasurementValue <T> {
             new MeasurementValue<Double>("X", "mA/m", "Mean X (sample coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
-                    int count = step.getResults();
-                    for (int i = 0; i < count; i++) {
+                    int count = 0;
+                    for (int i = 0; i < step.getResults(); i++) {
                         MeasurementResult r = step.getResult(i);
                         if (r.getType() != SAMPLE) {
                             continue;
                         }
                         sum += r.getSampleX();
+                        count++;
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -136,13 +140,14 @@ public abstract class MeasurementValue <T> {
             new MeasurementValue<Double>("Y", "mA/m", "Mean Y (sample coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
-                    int count = step.getResults();
-                    for (int i = 0; i < count; i++) {
+                    int count = 0;
+                    for (int i = 0; i < step.getResults(); i++) {
                         MeasurementResult r = step.getResult(i);
                         if (r.getType() != SAMPLE) {
                             continue;
                         }
                         sum += r.getSampleY();
+                        count++;
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -159,13 +164,14 @@ public abstract class MeasurementValue <T> {
             new MeasurementValue<Double>("Z", "mA/m", "Mean Z (sample coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
-                    int count = step.getResults();
-                    for (int i = 0; i < count; i++) {
+                    int count = 0;
+                    for (int i = 0; i < step.getResults(); i++) {
                         MeasurementResult r = step.getResult(i);
                         if (r.getType() != SAMPLE) {
                             continue;
                         }
                         sum += r.getSampleZ();
+                        count++;
                     }
                     if (count > 0) {
                         return new Double(sum / count);
@@ -299,10 +305,10 @@ public abstract class MeasurementValue <T> {
     /**
      * Calculates the angular standard deviation (Theta 63) from the measurement result set.
      */
-    public static final MeasurementValue<Double> THETA63 =  // TODO: does this work?
+    public static final MeasurementValue<Double> THETA63 =
             new MeasurementValue<Double>("\u03b863", "\u00b0", "Angular standard deviation") {
                 public Double getValue(MeasurementStep step) {
-                    int sampleCount = 0;
+                    int count = 0;
                     double sumX = 0.0;
                     double sumY = 0.0;
                     double sumZ = 0.0;
@@ -313,28 +319,18 @@ public abstract class MeasurementValue <T> {
                         if (r.getType() != SAMPLE) {
                             continue;
                         }
-                        sampleCount++;
-
-                        System.out.print("    x: "+r.getSampleX());
-                        System.out.print(" y: "+r.getSampleY());
-                        System.out.println(" z: "+r.getSampleZ());
-                        System.out.print("raw x: "+r.getRawX());
-                        System.out.print(" y: "+r.getRawY());
-                        System.out.println(" z: "+r.getRawZ());
                         sumX += r.getSampleX();
                         sumY += r.getSampleY();
                         sumZ += r.getSampleZ();
                         sumLength += r.getSampleLength();
+                        count++;
                     }
-                    System.out.print("x: "+sumX);
-                    System.out.print(" y: "+sumY);
-                    System.out.println(" z: "+sumZ);
-                    if (sampleCount == 0) {
+                    if (count == 0) {
                         return null;
                     }
-                    double avgLength = sumLength / sampleCount;
+                    double avgLength = sumLength / count;
 
-                    double N = avgLength * sampleCount;
+                    double N = avgLength * count;
                     double R = sqrt((sumX * sumX) + (sumY * sumY) + (sumZ * sumZ));
                     double k = (N - avgLength) / (N - R);
                     return 81.0 / sqrt(k);

@@ -44,7 +44,7 @@ import static ikayaki.MeasurementStep.State.*;
  *
  * @author Esko Luontola
  */
-public class MeasurementStep {
+public class MeasurementStep {  // TODO: make this class Iterable so that it would be easy to foreach all results
 
     /**
      * The project that owns this step, or null if there is no owner.
