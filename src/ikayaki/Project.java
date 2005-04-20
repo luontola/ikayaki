@@ -1541,17 +1541,20 @@ project listeners.
      * this project.
      */
     public synchronized boolean isManualControlEnabled() {
-        if (type == CALIBRATION) {
+        if (getSquid() == null) {
             return false;
-        } else if (type == AF || type == THELLIER || type == THERMAL) {
-            if (getState() == IDLE) {
-                return true;
-            } else {
-                return false;
-            }
+        }
+//        if (type == CALIBRATION) {
+//            return false;
+//        } else if (type == AF || type == THELLIER || type == THERMAL) {
+        if (getState() == IDLE) {
+            return true;
         } else {
             return false;
         }
+//        } else {
+//            return false;
+//        }
     }
 
     /**
@@ -1734,227 +1737,127 @@ project listeners.
      * @param position the position to move the handler to.
      * @return true if the operation was started, otherwise false.
      */
-
-    public synchronized boolean doManualMove(int position) {
-      if(!isManualControlEnabled()) return false;
-      try {
-        getSquid().getHandler().moveToPos(position);
-        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-        getSquid().getHandler().join();
-        fireMeasurementEvent(currentStep, HANDLER_STOP);
-      }
-      catch (IllegalStateException e) {
-        e.printStackTrace();
-        return false;
-      }
-
-      return true;
+    private synchronized boolean doManualMove(ManualMovePosition position) {
+        if (!isManualControlEnabled()) {
+            return false;
+        }
+        setState(MEASURING);
+        new Thread(new ManualMove(position)).start();
+        return true;
     }
 
-  /**
+    /**
      * Moves the sample handler to the DegausserY position. Will do nothing if isManualControlEnabled() is false.
      * <p/>
-     *
-     * Blocking, wait movement to end.
+     * The operation will run in its own thread, and this method will not wait for it to finish.
      *
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualMoveDegausserY() {
-      if(!isManualControlEnabled()) return false;
-      try {
-        getSquid().getHandler().moveToDegausserY();
-        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-        getSquid().getHandler().join();
-        fireMeasurementEvent(currentStep, HANDLER_STOP);
-      }
-      catch (IllegalStateException e) {
-        e.printStackTrace();
-        return false;
-      }
-      return true;
+        return doManualMove(ManualMovePosition.DEGAUSSER_Y);
     }
 
     /**
-    * Moves the sample handler to the DegausserZ position. Will do nothing if isManualControlEnabled() is false.
-    * <p/>
-    *
-    * Blocking, wait movement to end.
-    *
-    * @return true if the operation was started, otherwise false.
-    */
+     * Moves the sample handler to the DegausserZ position. Will do nothing if isManualControlEnabled() is false.
+     * <p/>
+     * The operation will run in its own thread, and this method will not wait for it to finish.
+     *
+     * @return true if the operation was started, otherwise false.
+     */
     public synchronized boolean doManualMoveDegausserZ() {
-      if(!isManualControlEnabled()) return false;
-      try {
-        getSquid().getHandler().moveToDegausserZ();
-        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-        getSquid().getHandler().join();
-        fireMeasurementEvent(currentStep, HANDLER_STOP);
-      }
-      catch (IllegalStateException e) {
-        e.printStackTrace();
-        return false;
-      }
-      return true;
+        return doManualMove(ManualMovePosition.DEGAUSSER_Z);
     }
 
     /**
-        * Moves the sample handler to the Background position. Will do nothing if isManualControlEnabled() is false.
-        * <p/>
-        *
-        * Blocking, wait movement to end.
-        *
-        * @return true if the operation was started, otherwise false.
+     * Moves the sample handler to the Background position. Will do nothing if isManualControlEnabled() is false.
+     * <p/>
+     * The operation will run in its own thread, and this method will not wait for it to finish.
+     *
+     * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualMoveBackground() {
-      if(!isManualControlEnabled()) return false;
-      try {
-        getSquid().getHandler().moveToBackground();
-        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-        getSquid().getHandler().join();
-        fireMeasurementEvent(currentStep, HANDLER_STOP);
-      }
-      catch (IllegalStateException e) {
-        e.printStackTrace();
-        return false;
-      }
-      return true;
+        return doManualMove(ManualMovePosition.BACKGROUND);
     }
 
     /**
-    * Moves the sample handler to the Measurement position. Will do nothing if isManualControlEnabled() is false.
-    * <p/>
-    *
-    * Blocking, wait movement to end.
-    *
-    * @return true if the operation was started, otherwise false.
-    */
+     * Moves the sample handler to the Measurement position. Will do nothing if isManualControlEnabled() is false.
+     * <p/>
+     * The operation will run in its own thread, and this method will not wait for it to finish.
+     *
+     * @return true if the operation was started, otherwise false.
+     */
     public synchronized boolean doManualMoveMeasurement() {
-      if(!isManualControlEnabled()) return false;
-      try {
-        getSquid().getHandler().moveToMeasurement();
-        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-        getSquid().getHandler().join();
-        fireMeasurementEvent(currentStep, HANDLER_STOP);
-      }
-      catch (IllegalStateException e) {
-        e.printStackTrace();
-        return false;
-      }
-      return true;
+        return doManualMove(ManualMovePosition.MEASUREMENT);
     }
 
     /**
-    * Moves the sample handler to the Home position. Will do nothing if isManualControlEnabled() is false.
-    * <p/>
-    *
-    * Blocking, wait movement to end.
-    *
-    * @return true if the operation was started, otherwise false.
-    */
+     * Moves the sample handler to the Home position. Will do nothing if isManualControlEnabled() is false.
+     * <p/>
+     * The operation will run in its own thread, and this method will not wait for it to finish.
+     *
+     * @return true if the operation was started, otherwise false.
+     */
 
     public synchronized boolean doManualMoveHome() {
-      if(!isManualControlEnabled()) return false;
-      try {
-        getSquid().getHandler().moveToHome();
-        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-        getSquid().getHandler().join();
-        fireMeasurementEvent(currentStep, HANDLER_STOP);
-      }
-      catch (IllegalStateException e) {
-        e.printStackTrace();
-        return false;
-      }
-      return true;
+        return doManualMove(ManualMovePosition.HOME);
     }
 
     /**
-    * Moves the sample handler to the RightLimit position. Will do nothing if isManualControlEnabled() is false.
-    * <p/>
-    *
-    * Blocking, wait movement to end.
-    *
-    * @return true if the operation was started, otherwise false.
-    */
+     * Moves the sample handler to the RightLimit position. Will do nothing if isManualControlEnabled() is false.
+     * <p/>
+     * The operation will run in its own thread, and this method will not wait for it to finish.
+     *
+     * @return true if the operation was started, otherwise false.
+     */
 
     public synchronized boolean doManualMoveRightLimit() {
-      if(!isManualControlEnabled()) return false;
-      try {
-        getSquid().getHandler().moveToRightLimit();
-        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-        getSquid().getHandler().join();
-        fireMeasurementEvent(currentStep, HANDLER_STOP);
-      }
-      catch (IllegalStateException e) {
-        e.printStackTrace();
-        return false;
-      }
-      return true;
+        return doManualMove(ManualMovePosition.RIGHT_LIMIT);
     }
 
     /**
-    * Moves the sample handler to the LeftLimit position. Will do nothing if isManualControlEnabled() is false.
-    * <p/>
-    *
-    * Blocking, wait movement to end.
-    *
-    * @return true if the operation was started, otherwise false.
-    */
+     * Moves the sample handler to the LeftLimit position. Will do nothing if isManualControlEnabled() is false.
+     * <p/>
+     * The operation will run in its own thread, and this method will not wait for it to finish.
+     *
+     * @return true if the operation was started, otherwise false.
+     */
 
-    public synchronized boolean doManualLeftLimit() {
-      if(!isManualControlEnabled()) return false;
-      try {
-        getSquid().getHandler().moveToLeftLimit();
-        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-        getSquid().getHandler().join();
-        fireMeasurementEvent(currentStep, HANDLER_STOP);
-      }
-      catch (IllegalStateException e) {
-        e.printStackTrace();
-        return false;
-      }
-      return true;
+    public synchronized boolean doManualMoveLeftLimit() {
+        return doManualMove(ManualMovePosition.LEFT_LIMIT);
     }
 
 
     /**
      * Rotates the sample handler to the specified angle. Will do nothing if isManualControlEnabled() is false.
      * <p/>
-     * The operation will run in its own thread, Blocking.
+     * The operation will run in its own thread, and this method will not wait for it to finish.
      *
      * @param angle the angle to rotate the handler to.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualRotate(int angle) {
-      if(!isManualControlEnabled()) return false;
-      try {
-        getSquid().getHandler().rotateTo(angle);
-        fireMeasurementEvent(currentStep, HANDLER_ROTATE);
-        getSquid().getHandler().join();
-        fireMeasurementEvent(currentStep, HANDLER_STOP);
-      }
-      catch (IllegalStateException e) {
-        e.printStackTrace();
-        return false;
-      }
-      return true;
+        if (!isManualControlEnabled()) {
+            return false;
+        }
+        setState(MEASURING);
+        new Thread(new ManualRotate(angle)).start();
+        return true;
     }
 
     /**
      * Measures the X, Y and Z of the sample. Adds the results as a new measurement step to the project. Will do nothing
      * if isManualControlEnabled() is false.
      * <p/>
-     * The operation will run in its own thread, Blocking.
+     * The operation will run in its own thread, and this method will not wait for it to finish.
      *
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualMeasure() {
-        if(!isManualControlEnabled()) return false;
-        Double[] results = null;
-        results = getSquid().getMagnetometer().readData();
-
-        //TODO: check where we are
-        currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
-        fireMeasurementEvent(currentStep, VALUE_MEASURED);
+        if (!isManualControlEnabled()) {
+            return false;
+        }
+        setState(MEASURING);
+        new Thread(new ManualMeasure()).start();
         return true;
     }
 
@@ -1962,20 +1865,17 @@ project listeners.
      * Demagnetizes the sample in Z direction with the specified amplitude. Will do nothing if isManualControlEnabled()
      * is false.
      * <p/>
-     * The operation will run in its own thread, Blocking.
+     * The operation will run in its own thread, and this method will not wait for it to finish.
      *
      * @param amplitude the amplitude to demagnetize in mT.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualDemagZ(double amplitude) {
-        if(!isManualControlEnabled()) return false;
-        fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
-        //need Gauss value
-
-        getSquid().getDegausser().demagnetizeZ((int) (currentStep.getStepValue() * 10));
-
-        // blocking method
-        fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
+        if (!isManualControlEnabled()) {
+            return false;
+        }
+        setState(MEASURING);
+        new Thread(new ManualDemag(ManualDemagAxel.Z, amplitude)).start();
         return true;
     }
 
@@ -1983,20 +1883,17 @@ project listeners.
      * Demagnetizes the sample in Y direction with the specified amplitude. Will do nothing if isManualControlEnabled()
      * is false.
      * <p/>
-     * The operation will run in its own thread, Blocking.
+     * The operation will run in its own thread, and this method will not wait for it to finish.
      *
      * @param amplitude the amplitude to demagnetize in mT.
      * @return true if the operation was started, otherwise false.
      */
     public synchronized boolean doManualDemagY(double amplitude) {
-        if(!isManualControlEnabled()) return false;
-        fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
-        //need Gauss value
-
-        getSquid().getDegausser().demagnetizeY((int) (currentStep.getStepValue() * 10));
-
-        // blocking method
-        fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
+        if (!isManualControlEnabled()) {
+            return false;
+        }
+        setState(MEASURING);
+        new Thread(new ManualDemag(ManualDemagAxel.Y, amplitude)).start();
         return true;
     }
 
@@ -2046,10 +1943,18 @@ project listeners.
     }
 
     /**
-     * Runs the measurements and adds the measurement data to this project.
+     * Runs the measurements and adds the measurement data to this project. The project's state must be non-IDLE before
+     * starting this thread.
      */
     private class Measurement implements Runnable {
         public void run() {
+            if (getState() == IDLE) {
+                throw new IllegalStateException();
+            }
+            if (getSquid() == null) {
+                throw new IllegalStateException();
+            }
+
             for (int i = getCompletedSteps(); i < getSteps(); i++) {
 
                 // begin measuring the first uncomplete step
@@ -2066,7 +1971,7 @@ project listeners.
                     checkAborted();
 
                     // demagnetizing
-                    if (currentStep.getStepValue() > 0.0) {
+                    if (currentStep.getStepValue() > 0.05 && isDegaussingEnabled()) {
 
                         // demagnetize Z
                         getSquid().getHandler().moveToDegausserZ();
@@ -2076,7 +1981,7 @@ project listeners.
                         checkAborted();
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
                         //need Gauss value
-                        getSquid().getDegausser().demagnetizeZ((int) (currentStep.getStepValue() * 10));
+                        getSquid().getDegausser().demagnetizeZ((int) Math.round(currentStep.getStepValue() * 10));
                         // blocking method
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
                         checkAborted();
@@ -2089,7 +1994,7 @@ project listeners.
                         checkAborted();
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
                         //need Gauss value
-                        getSquid().getDegausser().demagnetizeY((int) (currentStep.getStepValue() * 10));
+                        getSquid().getDegausser().demagnetizeY((int) Math.round(currentStep.getStepValue() * 10));
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
                         checkAborted();
 
@@ -2101,7 +2006,7 @@ project listeners.
                         checkAborted();
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
                         //need Gauss value
-                        getSquid().getDegausser().demagnetizeY((int) (currentStep.getStepValue() * 10));
+                        getSquid().getDegausser().demagnetizeY((int) Math.round(currentStep.getStepValue() * 10));
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
                         checkAborted();
                         getSquid().getHandler().rotateTo(0);
@@ -2215,11 +2120,9 @@ project listeners.
                     } else {
                         e.printStackTrace();
                     }
-                }
-                catch (IllegalStateException e) {
-                  e.printStackTrace();
-                }
-                finally {
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                } finally {
 
                     // complete the step
                     currentStep.setDone();
@@ -2232,6 +2135,7 @@ project listeners.
                     return;
                 }
             }
+            setState(IDLE);
         }
 
         /**
@@ -2249,10 +2153,15 @@ project listeners.
     }
 
     /**
-     * A measurement that gives random data for testing purposes.
+     * A measurement that gives random data for testing purposes. The project's state must be non-IDLE before starting
+     * this thread.
      */
     private class DummyMeasurement implements Runnable {
         public void run() {
+            if (getState() == IDLE) {
+                throw new IllegalStateException();
+            }
+
             System.out.println("Measurement started");
             for (int i = getCompletedSteps(); i < getSteps(); i++) {
 
@@ -2356,6 +2265,176 @@ project listeners.
                 }
             }
             System.out.println("Measurement ended");
+            setState(IDLE);
+        }
+    }
+
+    private enum ManualMovePosition {
+        DEGAUSSER_Y,
+        DEGAUSSER_Z,
+        BACKGROUND,
+        MEASUREMENT,
+        HOME,
+        RIGHT_LIMIT,
+        LEFT_LIMIT
+    }
+
+    /**
+     * Runs a manual move command. The project's state must be non-IDLE before starting this thread.
+     */
+    private class ManualMove implements Runnable {
+
+        private ManualMovePosition pos;
+
+        public ManualMove(ManualMovePosition pos) {
+            this.pos = pos;
+        }
+
+        public void run() {
+            if (getState() == IDLE) {
+                throw new IllegalStateException();
+            }
+            if (getSquid() == null) {
+                throw new IllegalStateException();
+            }
+
+            switch (pos) {
+            case DEGAUSSER_Y:
+                getSquid().getHandler().moveToDegausserY();
+                break;
+            case DEGAUSSER_Z:
+                getSquid().getHandler().moveToDegausserZ();
+                break;
+            case BACKGROUND:
+                getSquid().getHandler().moveToBackground();
+                break;
+            case MEASUREMENT:
+                getSquid().getHandler().moveToMeasurement();
+                break;
+            case HOME:
+                getSquid().getHandler().moveToHome();
+                break;
+            case RIGHT_LIMIT:
+                getSquid().getHandler().moveToRightLimit();
+                break;
+            case LEFT_LIMIT:
+                getSquid().getHandler().moveToLeftLimit();
+                break;
+            default:
+                System.err.println("Invalid pos: " + pos);
+                assert false;
+                break;
+            }
+            fireMeasurementEvent(null, HANDLER_MOVE);
+
+            getSquid().getHandler().join();
+            fireMeasurementEvent(null, HANDLER_STOP);
+            setState(IDLE);
+        }
+    }
+
+    /**
+     * Runs a manual rotate command. The project's state must be non-IDLE before starting this thread.
+     */
+    private class ManualRotate implements Runnable {
+
+        private int angle;
+
+        public ManualRotate(int angle) {
+            this.angle = angle;
+        }
+
+        public void run() {
+            if (getState() == IDLE) {
+                throw new IllegalStateException();
+            }
+            if (getSquid() == null) {
+                throw new IllegalStateException();
+            }
+
+            getSquid().getHandler().rotateTo(angle);
+            fireMeasurementEvent(null, HANDLER_ROTATE);
+
+            getSquid().getHandler().join();
+            fireMeasurementEvent(null, HANDLER_STOP);
+
+            setState(IDLE);
+        }
+    }
+
+    /**
+     * Runs a manual measure command and adds a new step to this project with the measurement data. The project's state
+     * must be non-IDLE before starting this thread.
+     */
+    private class ManualMeasure implements Runnable {
+        public void run() {
+            if (getState() == IDLE) {
+                throw new IllegalStateException();
+            }
+            if (getSquid() == null) {
+                throw new IllegalStateException();
+            }
+
+            // TODO: add a measurement step
+
+            Double[] results = getSquid().getMagnetometer().readData();
+
+            //TODO: check where we are and change BG to something else.
+            currentStep.addResult(new MeasurementResult(BG, results[0], results[1], results[2]));
+            fireMeasurementEvent(currentStep, VALUE_MEASURED);
+
+            setState(IDLE);
+        }
+    }
+
+    private enum ManualDemagAxel {
+        Z,
+        Y
+    }
+
+    /**
+     * Runs a manual demag command and adds a new step to this project with the demag value. The project's state must be
+     * non-IDLE before starting this thread.
+     */
+    private class ManualDemag implements Runnable {
+
+        private ManualDemagAxel axel;
+        private double amplitude;
+
+        public ManualDemag(ManualDemagAxel axel, double amplitude) {
+            this.axel = axel;
+            this.amplitude = amplitude;
+        }
+
+        public void run() {
+            if (getState() == IDLE) {
+                throw new IllegalStateException();
+            }
+            if (getSquid() == null) {
+                throw new IllegalStateException();
+            }
+            if (!isDegaussingEnabled()) {
+                throw new IllegalStateException();
+            }
+
+            // TODO: add a measurement step
+
+            fireMeasurementEvent(null, DEMAGNETIZE_START);
+            switch (axel) {
+            case Y:
+                getSquid().getDegausser().demagnetizeY((int) (amplitude * 10));
+                break;
+            case Z:
+                getSquid().getDegausser().demagnetizeZ((int) (amplitude * 10));
+                break;
+            default:
+                System.err.println("Invalid axel: " + axel);
+                assert false;
+                break;
+            }
+            fireMeasurementEvent(null, DEMAGNETIZE_END);
+
+            setState(IDLE);
         }
     }
 

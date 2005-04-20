@@ -640,7 +640,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
             moveLeft.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    project.doManualMove(posLeft);
+                    project.doManualMoveLeftLimit();
                     //statusAnimator.going(posLeft, rotation);
                     //handler.moveToPos(posLeft);
                 }
@@ -648,7 +648,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
             moveHome.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    project.doManualMove(posHome);
+                    project.doManualMoveHome();
                     //statusAnimator.going(posHome, rotation);
                     //handler.moveToHome();
                 }
@@ -656,7 +656,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
             moveDemagZ.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    project.doManualMove(posDemagZ);
+                    project.doManualMoveDegausserZ();
                     //statusAnimator.going(posDemagZ, rotation);
                     //handler.moveToDegausserZ();
                     demagButton.setText(demagButtonBaseText + (rotation == 0 || rotation == 180 ? "Z" : "X"));
@@ -665,7 +665,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
             moveDemagY.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    project.doManualMove(posDemagY);
+                    project.doManualMoveDegausserY();
                     //statusAnimator.going(posDemagY, rotation);
                     //handler.moveToDegausserY();
                     demagButton.setText(demagButtonBaseText + "Y");
@@ -674,7 +674,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
             moveBG.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    project.doManualMove(posBG);
+                    project.doManualMoveBackground();
                     //statusAnimator.going(posBG, rotation);
                     //handler.moveToBackground();
                 }
@@ -682,7 +682,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
             moveMeasure.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    project.doManualMove(posMeasure);
+                    project.doManualMoveMeasurement();
                     //statusAnimator.going(posMeasure, rotation);
                     //handler.moveToMeasurement();
                 }
@@ -690,7 +690,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
             moveRight.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    project.doManualMove(posRight);
+                    project.doManualMoveRightLimit();
                     //statusAnimator.going(posRight, rotation);
                     //handler.moveToPos(posRight);
                 }

@@ -72,7 +72,7 @@ public class MeasurementEvent extends EventObject {
     }
 
     /**
-     * Returns the measurement that sent this event.
+     * Returns the measurement that sent this event. Can be null, if this event was sent by a manual command.
      */
     public MeasurementStep getStep() {
         return step;
