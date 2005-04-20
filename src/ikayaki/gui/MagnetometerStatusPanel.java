@@ -50,9 +50,10 @@ public class MagnetometerStatusPanel extends JPanel {
     private final MagnetometerStatusAnimator statusAnimator;
 
     /**
-     * Sample hanlder to read and command current position and rotation from/to.
+     * Sample hanlder to read and command current position and rotation from/to. Is null if the current project does not
+     * have access to the Squid.
      */
-    private Handler handler;
+    private Handler handler;    // TODO: everywhere where the handler is used, check if it is null. or disable all controls when the project does not own the squid.
 
     // handler current position and rotation
     private int position, rotation;
