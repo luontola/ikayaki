@@ -248,9 +248,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @return Value between 0 and 360 degrees
      */
     public int getRotation() {
-        Double angle = new Integer(currentRotation).doubleValue() / new Integer(Settings.getHandlerRotation()).doubleValue();
+        double angle = (double) (currentRotation) / Settings.getHandlerRotation();
         angle *= 360;
-        return angle.intValue();
+        return (int) angle;
     }
 
     /**
