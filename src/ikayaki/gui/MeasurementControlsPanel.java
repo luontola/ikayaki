@@ -202,13 +202,12 @@ public class MeasurementControlsPanel extends ProjectComponent {
     }
 
     /**
-     * Event F: On MeasurementEvent - call magnetometerStatusPanel.updateStatus().
+     * Event F: On MeasurementEvent - call magnetometerStatusPanel.measurementUpdated(MeasurementEvent).
      *
      * @param event MeasurementEvent received.
      */
     @Override public void measurementUpdated(MeasurementEvent event) {
-        // MeasurementEvent won't tell handler position and rotation; MagnetometerStatusPanel asks them from Squid
-        magnetometerStatusPanel.updateStatus();
+        magnetometerStatusPanel.measurementUpdated(event);
     }
 
     /**

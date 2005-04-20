@@ -37,7 +37,7 @@ import java.util.TreeMap;
  *
  * @author Samuli Kaipiainen
  */
-public class MagnetometerStatusPanel extends JPanel {
+public class MagnetometerStatusPanel extends JPanel implements MeasurementListener {
 
     /**
      * ManualControlsPanel whose move-radiobuttons to show.
@@ -58,19 +58,20 @@ public class MagnetometerStatusPanel extends JPanel {
     // handler current position and rotation
     private int position, rotation;
 
-    // handler hard-coded max position and max rotation
-    private final int maxposition = 1 << 24, maxrotation = 2000;
+    // handler max position and max rotation for drawing
+    // TODO: some way to get the actual max-position?
+    private final int maxposition = 50000, maxrotation = 2000;
 
     // handler positions, read from Settings, thank you autoboxing!
     // WARNING: all of these must differ or we have trouble...
-    private int posMove = 0;
-    private int posLeft = 1;
+    private int posMove = -1;
+    private int posLeft = 0;
     private int posHome;
     private int posDemagZ;
     private int posDemagY;
     private int posBG;
     private int posMeasure;
-    private int posRight = maxposition - 1;
+    private int posRight = 2 << 24 - 1;
 
     /**
      * Sorted map for move-radiobuttons' positions.
@@ -99,27 +100,21 @@ public class MagnetometerStatusPanel extends JPanel {
         setPreferredSize(new Dimension(150, 400));
         //setMinimumSize(new Dimension(150, 400));
 
-//        // sample handler to read positions and command with move/rotate commands
-//        readHandler();
-
-        //updateStatus();
-        updateStatus(14000000, 500); // NOTE: for testing
+        updateStatus();
     }
 
-//    /**
-//     * Reads current sample handler from Squid.instance().getHandler(), saves it to this.handler.
-//     */
-//    private void readHandler() {
-//        // TODO: it might be necessary to put this to its own thread. maybe otherwise the GUI will freeze on program start?
-//        try {
-//            this.handler = Squid.instance().getHandler();
-//        } catch (IOException ex) { }
-//    }
-
+    /**
+     * @return Handler we command.
+     */
     public Handler getHandler() {
         return handler;
     }
 
+    /**
+     * Sets our Handler to command; called by MainViewPanel.
+     *
+     * @param handler sample handler to read positions and command with move/rotate commands.
+     */
     public void setHandler(Handler handler) {
         this.handler = handler;
         updateStatus();
@@ -166,17 +161,31 @@ public class MagnetometerStatusPanel extends JPanel {
     }
 
     /**
-     * Updates magnetometer status picture; called by MeasurementControlsPanel when it receives MeasurementEvent.
+     * Updates magnetometer status picture and handler positions.
      *
      * @param position sample holder position, from 1 to 16777215.
      * @param rotation sample holder rotation, from 0 (angle 0) to 2000 (angle 360).
-     * @deprecated we read position and rotation ourself in updateStatus().
+     * @deprecated we read position and rotation ourself in updateStatus.
      */
-    public void updateStatus(int position, int rotation) {
+    private void updateStatus(int position, int rotation) {
         this.position = position;
         this.rotation = rotation;
-        updatePositions();
         statusAnimator.gone();
+        updatePositions();
+        repaint();
+    }
+
+    /**
+     * Updates magnetometer status picture and handler positions.
+     * Reads current handler position and rotation from Handler saved to this.handler.
+     */
+    private void updateStatus() {
+        if (this.handler != null) {
+            this.position = this.handler.getPosition();
+            this.rotation = this.handler.getRotation();
+        }
+        statusAnimator.gone();
+        updatePositions();
         repaint();
     }
 
@@ -184,13 +193,20 @@ public class MagnetometerStatusPanel extends JPanel {
      * Updates magnetometer status picture; called by MeasurementControlsPanel when it receives MeasurementEvent.
      * Reads current handler position and rotation from Handler saved to this.handler.
      */
-    public void updateStatus() {
+    public void measurementUpdated(MeasurementEvent e) {
+        // MeasurementEvent won't tell handler position and rotation; ask them from Handler
+        int pos = 0, rotate = 0;
         if (this.handler != null) {
-            this.position = this.handler.getPosition();
-            this.rotation = this.handler.getRotation();
+            pos = this.handler.getPosition();
+            rotate = this.handler.getRotation();
         }
+
+        // if stopped moving, stop animation; else --
+        // if started moving, start animation; Handler gave us target position and rotation
+        if (e.getType() == MeasurementEvent.Type.HANDLER_STOP) statusAnimator.gone();
+        else statusAnimator.going(pos, rotate);
+
         updatePositions();
-        statusAnimator.gone();
         repaint();
     }
 
@@ -317,7 +333,8 @@ public class MagnetometerStatusPanel extends JPanel {
      */
     private class MagnetometerStatusAnimator implements Runnable {
         // drawing delay in ms (fps = 1000 / delay), steps per second, rotation-steps per second
-        private int updateDelay, sps = 4000000, rps = 500;
+        // TODO: save updated values somewhere?
+        private int updateDelay, sps = 10000, rps = 500;
 
         // position & rotation we're going from, amount and direction (+/-1)
         private int posFrom, rotateFrom, posAmount, rotateAmount, posDirection, rotateDirection;
