@@ -487,8 +487,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
               this.serialIO.writeMessage("+H1,");
             }
             else {
+              int rotation = angle - currentRotation;
               this.serialIO.writeMessage("O1,1");
-              this.serialIO.writeMessage("P" + angle + "G,");
+              this.serialIO.writeMessage("N" + rotation + "G,");
             }
             this.currentRotation = angle;
            // this.serialIO.writeMessage(","); //execute command
