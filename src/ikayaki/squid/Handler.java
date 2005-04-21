@@ -159,37 +159,39 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * class.
      */
     protected Handler() throws SerialIOException {
-        this.serialIO = SerialIO.openPort(new SerialParameters(Settings.getHandlerPort(), 1200, 0, 0, 8, 1, 0));
-        this.serialIO.addSerialIOListener(this);
-        this.acceleration = Settings.getHandlerAcceleration();
-        this.deceleration = Settings.getHandlerDeceleration();
-        this.axialAFPosition = Settings.getHandlerAxialAFPosition();
-        this.backgroundPosition = Settings.getHandlerBackgroundPosition();
-        this.sampleLoadPosition = Settings.getHandlerSampleLoadPosition();
-        this.measurementPosition = Settings.getHandlerMeasurementPosition();
-        this.measurementVelocity = Settings.getHandlerMeasurementVelocity();
-        this.transverseYAFPosition = Settings.getHandlerTransverseYAFPosition();
-        this.velocity = Settings.getHandlerVelocity();
-        this.rotationSpeed = Settings.getHandlerRotationVelocity();
-        this.rotationAcceleration = Settings.getHandlerRotationAcceleration();
-        this.rotationDeceleration = Settings.getHandlerRotationDeceleration();
+        serialIO = SerialIO.openPort(new SerialParameters(Settings.getHandlerPort(), 1200, 0, 0, 8, 1, 0));
+        serialIO.addSerialIOListener(this);
+        acceleration = Settings.getHandlerAcceleration();
+        deceleration = Settings.getHandlerDeceleration();
+        axialAFPosition = Settings.getHandlerAxialAFPosition();
+        backgroundPosition = Settings.getHandlerBackgroundPosition();
+        sampleLoadPosition = Settings.getHandlerSampleLoadPosition();
+        measurementPosition = Settings.getHandlerMeasurementPosition();
+        measurementVelocity = Settings.getHandlerMeasurementVelocity();
+        transverseYAFPosition = Settings.getHandlerTransverseYAFPosition();
+        velocity = Settings.getHandlerVelocity();
+        rotationSpeed = Settings.getHandlerRotationVelocity();
+        rotationAcceleration = Settings.getHandlerRotationAcceleration();
+        rotationDeceleration = Settings.getHandlerRotationDeceleration();
     }
 
+    /**
+     * Starts up the handler and seeks the home position. Will wait until the handler is ready for operation.
+     */
     protected void setUp() {
         //first put system online
-        this.setOnline();
+        setOnline();
 
-        //set all settings
-        this.setAcceleration(this.acceleration);
-        System.err.println("Acceleration set:" + this.verify('A'));
-        this.setVelocity(this.velocity);
-        System.err.println("Velocity set:" + this.verify('M'));
-        this.setDeceleration(this.deceleration);
-        System.err.println("Deceleration set:" + this.verify('D'));
+        // set all settings
+        setAcceleration(acceleration);
+        System.err.println("Acceleration set:" + verify('A'));
+        setVelocity(velocity);
+        System.err.println("Velocity set:" + verify('M'));
+        setDeceleration(deceleration);
+        System.err.println("Deceleration set:" + verify('D'));
 
-        //must be send to seek home position, so we can know where we are
-        this.seekHome();
-
+        // must be send to seek home position, so we can know where we are
+        seekHome();
     }
 
     /**
@@ -197,23 +199,23 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * class.
      */
     protected void updateSettings() {
-        this.acceleration = Settings.getHandlerAcceleration();
-        this.deceleration = Settings.getHandlerDeceleration();
-        this.axialAFPosition = Settings.getHandlerAxialAFPosition();
-        this.backgroundPosition = Settings.getHandlerBackgroundPosition();
-        this.sampleLoadPosition = Settings.getHandlerSampleLoadPosition();
-        this.measurementPosition = Settings.getHandlerMeasurementPosition();
-        this.measurementVelocity = Settings.getHandlerMeasurementVelocity();
-        this.transverseYAFPosition = Settings.getHandlerTransverseYAFPosition();
-        this.rotationSpeed = Settings.getHandlerRotationVelocity();
-        this.rotationAcceleration = Settings.getHandlerRotationAcceleration();
-        this.rotationDeceleration = Settings.getHandlerRotationDeceleration();
-        this.velocity = Settings.getHandlerVelocity();
+        acceleration = Settings.getHandlerAcceleration();
+        deceleration = Settings.getHandlerDeceleration();
+        axialAFPosition = Settings.getHandlerAxialAFPosition();
+        backgroundPosition = Settings.getHandlerBackgroundPosition();
+        sampleLoadPosition = Settings.getHandlerSampleLoadPosition();
+        measurementPosition = Settings.getHandlerMeasurementPosition();
+        measurementVelocity = Settings.getHandlerMeasurementVelocity();
+        transverseYAFPosition = Settings.getHandlerTransverseYAFPosition();
+        rotationSpeed = Settings.getHandlerRotationVelocity();
+        rotationAcceleration = Settings.getHandlerRotationAcceleration();
+        rotationDeceleration = Settings.getHandlerRotationDeceleration();
+        velocity = Settings.getHandlerVelocity();
 
         //set all settings.. only three. Let's do it..! Rock'N'Roll
-        this.setAcceleration(this.acceleration);
-        this.setVelocity(this.velocity);
-        this.setDeceleration(this.deceleration);
+        setAcceleration(acceleration);
+        setVelocity(velocity);
+        setDeceleration(deceleration);
     }
 
     /**
@@ -246,39 +248,35 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Commands the holder to seek home position and rotation. Only starts the movement and will not wait for it to
-     * finish.
+     * Commands the holder to seek home position and rotation. Waits for the home to be found and resets the home
+     * position and rotation.
      */
-    public void seekHome() {
-        workQueue.execute(new Runnable() {
-            public void run() {
-                try {
-                    // seek home position
-                    setVelocity(velocity);
-                    setAcceleration(acceleration);
-                    setDeceleration(deceleration);
-                    serialIO.writeMessage("O1,0,");
-                    serialIO.writeMessage("+S,");
-                    waitForMessage();
+    protected void seekHome() {
+        try {
+            // seek home position
+            setVelocity(velocity);
+            setAcceleration(acceleration);
+            setDeceleration(deceleration);
+            serialIO.writeMessage("O1,0,");
+            serialIO.writeMessage("+S,");
+            waitForMessage();
 
-                    serialIO.writeMessage("-H1,");
-                    waitForMessage();
-                    currentPosition = 0;
+            serialIO.writeMessage("-H1,");
+            waitForMessage();
+            currentPosition = 0;
 
-                    // seek home rotation
-                    setVelocity(rotationSpeed);
-                    setAcceleration(rotationAcceleration);
-                    setDeceleration(rotationDeceleration);
-                    serialIO.writeMessage("O1,1,");
-                    serialIO.writeMessage("+H1,");
-                    waitForMessage();
-                    currentRotation = 0;
+            // seek home rotation
+            setVelocity(rotationSpeed);
+            setAcceleration(rotationAcceleration);
+            setDeceleration(rotationDeceleration);
+            serialIO.writeMessage("O1,1,");
+            serialIO.writeMessage("+H1,");
+            waitForMessage();
+            currentRotation = 0;
 
-                } catch (SerialIOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        } catch (SerialIOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
