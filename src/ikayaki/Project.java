@@ -2325,7 +2325,7 @@ project listeners.
                 getSquid().getHandler().moveToMeasurement();
                 break;
             case HOME:
-                getSquid().getHandler().moveToHome();
+                getSquid().getHandler().moveToSampleLoad();
                 break;
             case RIGHT_LIMIT:
                 getSquid().getHandler().moveToRightLimit();

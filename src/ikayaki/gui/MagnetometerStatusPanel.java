@@ -660,7 +660,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
                 public void actionPerformed(ActionEvent e) {
                     project.doManualMoveHome();
                     //statusAnimator.going(posHome, rotation);
-                    //handler.moveToHome();
+                    //handler.moveToSampleLoad();
                 }
             });
 
