@@ -157,7 +157,7 @@ message from serial port is received.
         // Set notifyOnDataAvailable to true to allow event driven input.
         sPort.notifyOnDataAvailable(true);
 
-        // Set notifyOnBreakInterrup to allow event driven break handling. Unneccessary?
+        // Set notifyOnBreakInterrup to allow event driven break handling. //Unneccessary?
         //sPort.notifyOnBreakInterrupt(true);
 
         // Set receive timeout to allow breaking out of polling loop during

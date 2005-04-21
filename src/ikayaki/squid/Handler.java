@@ -297,7 +297,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      *
      */
     public void moveToHome() throws IllegalStateException {
-      if (this.waitingForMessage)
+       if (this.waitingForMessage)
         throw new IllegalStateException(
             "Tried to command handler while waiting for message");
       setVelocity(velocity);
@@ -426,7 +426,11 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @return true if given position was ok, otherwise false.
      */
     public boolean moveToPos(int pos) {
-      if(this.waitingForMessage)
+       // TODO Tassa on vikaa.
+       // current position ei paivity aina oikein. Vaikka liikutettiin esim. 0 -> 1000 
+       // ja handle liikkui taysin oikein, getPosition()palautti edelleen 0
+   
+       if(this.waitingForMessage)
           throw new IllegalStateException("Tried to command handler while waiting for message");
       boolean direction = true;
       boolean speedChange = false;
@@ -509,7 +513,12 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * @param angle the angle in degrees to rotate the handler to.
      */
     public void rotateTo(int angle) throws IllegalStateException {
-        if(this.waitingForMessage)
+       // TODO rotation korjattava siten etta - ja + merkit annetaan 
+       // riippuen nykyisesta positiosta.
+       // Handler.java:n tulisi varmaan muistaa rotatio-moottorille asetettu suunta (+/-)?
+       // 
+       
+       if(this.waitingForMessage)
           throw new IllegalStateException("Tried to command handler while waiting for message");
         angle = angle % 360;
         angle = (int) (((double) angle) / 360.0 * Settings.getHandlerRotation());
