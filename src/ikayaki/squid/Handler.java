@@ -538,7 +538,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         setDeceleration(deceleration);
 
         try {
-            serialIO.writeMessage("O1,0");
+            serialIO.writeMessage("O1,0,");
             serialIO.writeMessage(direction + "N" + steps);
             go();
         } catch (SerialIOException e) {
@@ -656,7 +656,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
                         serialIO.writeMessage("O1,1,");
                         serialIO.writeMessage("+H1,");
                     } else {
-                        serialIO.writeMessage("O1,1");
+                        serialIO.writeMessage("O1,1,");
                         serialIO.writeMessage("+N" + (steps - currentRotation) + "G,");
                     }
                     currentRotation = steps;
