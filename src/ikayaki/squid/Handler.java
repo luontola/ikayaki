@@ -227,9 +227,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Returns current known rotation.
+     * Returns the handler's current rotation, or where it is rotating to right now.
      *
-     * @return value between 0 and 360 degrees
+     * @return rotation in range of 0 to 359 degrees
      */
     public int getRotation() {
         double angle = (double) (currentRotation) / Settings.getHandlerRotation() * 360.0;
@@ -483,7 +483,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
                     moveSteps(backgroundPosition - currentPosition);
                     currentPosition = backgroundPosition;
                     waitForMessage();
-                    moveToPosition(position);
+                    moveToPosition(position);   // continue movement from BG position
                 } else {
                     // keep the same speed all the way
                     moveSteps(position - currentPosition);
@@ -501,7 +501,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
                     moveSteps(backgroundPosition - currentPosition);
                     currentPosition = backgroundPosition;
                     waitForMessage();
-                    moveToPosition(position);
+                    moveToPosition(position);   // continue movement from BG position
                 } else {
                     // keep the same speed all the way
                     moveSteps(position - currentPosition);
@@ -662,6 +662,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
                         serialIO.writeMessage("+N" + (steps - currentRotation) + "G,");
                     }
                     currentRotation = steps;
+                    waitForMessage();
 
                 } catch (SerialIOException e) {
                     e.printStackTrace();
