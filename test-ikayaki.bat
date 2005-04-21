@@ -8,27 +8,31 @@ set CLASSPATH=classes;lib\comm.jar;lib\forms_rt.jar;lib\junit.jar;lib\looks.jar;
 :: doesn't work
 :: for %%f in (classes lib\*.jar) do set CLASSPATH=%CLASSPATH%;%%f
 
-echo -- starting without parameters...
+echo -- 1/6 starting without parameters...
 java ikayaki.Ikayaki
 echo.
 
 set ikayaki=*/?
-echo -- starting with parameter "%ikayaki%"...
+echo -- 2/6 starting with parameter "%ikayaki%"...
 java ikayaki.Ikayaki %ikayaki%
 echo.
 
 set ikayaki=projects\test.ika
-echo -- starting with parameter "%ikayaki%"...
+echo -- 3/6 starting with parameter "%ikayaki%"...
 java ikayaki.Ikayaki %ikayaki%
 echo.
 
 ren ikayaki.config ikayaki.config.test
-echo -- starting without parameters AND without config file...
+echo -- 4/6 starting without parameters AND without config file...
+java ikayaki.Ikayaki
+echo.
+
+echo -- 5/6 starting without parameters, with config file left from previous...
 java ikayaki.Ikayaki
 echo.
 
 del ikayaki.config
-echo -- starting with parameter "%ikayaki%" AND without config file...
+echo -- 6/6 starting with parameter "%ikayaki%" AND without config file...
 java ikayaki.Ikayaki %ikayaki%
 echo.
 

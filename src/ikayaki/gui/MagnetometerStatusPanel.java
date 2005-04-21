@@ -821,7 +821,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
          */
         public void setEnabled(boolean enabled) {
             super.setEnabled(enabled);
-            // TEST if (handler == null) enabled = false;
+            if (handler == null) enabled = false;
             for (Component component : components) component.setEnabled(enabled);
 
             // set selected radioboxes according to current handler status
