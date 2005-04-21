@@ -184,7 +184,7 @@ public class SquidFront extends JFrame {
       this.hmoveToHome.setAction(new AbstractAction() {
         public void actionPerformed(ActionEvent e) {
           try {
-            Squid.instance().getHandler().moveToHome();
+            Squid.instance().getHandler().moveToSampleLoad();
           }
           catch (IOException ex) {
             handlerLog.append("MoveToHome failed\r");

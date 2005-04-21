@@ -147,12 +147,12 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     /**
      * Value between 0 and 127.
      */
-    private int rotationAcceleration;   // TODO: this field is assigned but never used
+    private int rotationAcceleration;
 
     /**
      * Value between 0 and 127.
      */
-    private int rotationDeceleration;   // TODO: this field is assigned but never used
+    private int rotationDeceleration;
 
     /**
      * Creates a new handler interface. Opens connection to handler COM port and reads settings from the Settings
