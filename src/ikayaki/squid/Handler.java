@@ -709,7 +709,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     protected void setOnline() {
         try {
-            this.serialIO.writeMessage("@0" + ",");
+            serialIO.writeMessage("@0" + ",");
             //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException e) {
             e.printStackTrace();
@@ -725,9 +725,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     protected void setAcceleration(int a) {
         if (a >= 0 && a < 128) {
             try {
-                this.serialIO.writeMessage("A" + a + ",");
+                serialIO.writeMessage("A" + a + ",");
                 //this.serialIO.writeMessage(","); //execute command
-                this.acceleration = a;
+                acceleration = a;
             } catch (SerialIOException e) {
                 e.printStackTrace();
             }
@@ -745,8 +745,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     protected void setDeceleration(int d) {
         if (d >= 0 && d < 128) {
             try {
-                this.serialIO.writeMessage("D" + d + ",");
-                this.deceleration = d;
+                serialIO.writeMessage("D" + d + ",");
+                deceleration = d;
             } catch (SerialIOException e) {
                 e.printStackTrace();
             }
@@ -764,8 +764,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     protected void setVelocity(int v) {
         if (v >= 50 && v < 8501) {
             try {
-                this.serialIO.writeMessage("M" + v + ",");
-                this.velocity = v;
+                serialIO.writeMessage("M" + v + ",");
+                velocity = v;
             } catch (SerialIOException e) {
                 e.printStackTrace();
             }
@@ -780,7 +780,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     protected void stopExecution() {
         try {
-            this.serialIO.writeMessage("Q,");
+            serialIO.writeMessage("Q,");
             //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException e) {
             e.printStackTrace();
@@ -793,7 +793,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     protected void performSlew() {
         try {
-            this.serialIO.writeMessage("S,");
+            serialIO.writeMessage("S,");
             //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException e) {
             e.printStackTrace();
@@ -805,7 +805,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     protected void setMotorPositive() {
         try {
-            this.serialIO.writeMessage("+");
+            serialIO.writeMessage("+");
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
@@ -816,7 +816,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     protected void setMotorNegative() {
         try {
-            this.serialIO.writeMessage("-");
+            serialIO.writeMessage("-");
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
@@ -827,7 +827,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     protected void go() {
         try {
-            this.serialIO.writeMessage("G,");
+            serialIO.writeMessage("G,");
             //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException e) {
             e.printStackTrace();
@@ -845,7 +845,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     protected void waitForMessage() {
         try {
             //This blocks all messages for handler
-            this.serialIO.writeMessage("F%,");
+            serialIO.writeMessage("F%,");
             //this just polls for messages, we might get old messages waiting there? Use take message.
             //this.serialIO.writeMessage("%,");
             waitingForMessage = true;
@@ -875,7 +875,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     protected String verify(char v) {
         try {
-            this.serialIO.writeMessage("V" + v + ",");
+            serialIO.writeMessage("V" + v + ",");
             //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException e) {
             e.printStackTrace();
@@ -909,7 +909,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     protected char takeMessage() {
         try {
-            this.serialIO.writeMessage("%,");
+            serialIO.writeMessage("%,");
             //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException e) {
             e.printStackTrace();
