@@ -150,6 +150,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
                         Math.max(posBG, posMeasure)
                     )
                 ) * 1.2);
+        maxposition = Math.max(1, maxposition);
+
         int height = getHeight(), nextpos = 0;
         for (int position : moveButtons.keySet()) {
             JComponent c = moveButtons.get(position);
