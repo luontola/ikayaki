@@ -35,9 +35,6 @@ import java.util.concurrent.TimeUnit;
  * @author Aki Korpua
  */
 public class Handler implements SerialIOListener {
-/*
-Event A: On SerialIOEvent - reads message and puts it in a buffer
-*/
 
     /**
      * Buffer for incoming messages, readed when needed.
@@ -59,11 +56,6 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * timeout how long we wait answer from Squid-system
      */
     private int pollTimeout = 60;
-
-    /**
-     * Handlers current status.
-     */
-    private String status;  // TODO: this field is never used
 
     /**
      * COM port for communication.
@@ -93,11 +85,6 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * Speed in measurement, should be small.
      */
     private int measurementVelocity;
-
-    /**
-     * 5 end of move, previous G command complete, 7 hard limit stop, G motor is currently indexing.
-     */
-    private String handlerStatus;   // TODO: this field is never used
 
     /**
      * The position where the handler is currently, or where it is heading right now.
@@ -179,7 +166,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * Starts up the handler and seeks the home position. Will wait until the handler is ready for operation.
      */
     protected void setUp() {
-        //first put system online
+        // put the system online
         setOnline();
 
         // set all settings
@@ -190,7 +177,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         setDeceleration(deceleration);
         System.err.println("Deceleration set:" + verify('D'));
 
-        // must be send to seek home position, so we can know where we are
+        // seek the home position, so we can know where we are
         seekHome();
     }
 
@@ -257,7 +244,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             setVelocity(velocity);
             setAcceleration(acceleration);
             setDeceleration(deceleration);
-            serialIO.writeMessage("O1,0,");
+            selectMovement()
             serialIO.writeMessage("+S,");
             waitForMessage();
 
@@ -269,7 +256,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             setVelocity(rotationSpeed);
             setAcceleration(rotationAcceleration);
             setDeceleration(rotationDeceleration);
-            serialIO.writeMessage("O1,1,");
+            selectRotation();
             serialIO.writeMessage("+H1,");
             waitForMessage();
             currentRotation = 0;
@@ -538,7 +525,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         setDeceleration(deceleration);
 
         try {
-            serialIO.writeMessage("O1,0,");
+            selectMovement();
             serialIO.writeMessage(direction + "N" + steps);
             go();
         } catch (SerialIOException e) {
@@ -653,10 +640,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
 
                     // then set rotation active
                     if (angle == 0) {
-                        serialIO.writeMessage("O1,1,");
+                        selectRotation();
                         serialIO.writeMessage("+H1,");
                     } else {
-                        serialIO.writeMessage("O1,1,");
+                        selectRotation();
                         serialIO.writeMessage("+N" + (steps - currentRotation) + "G,");
                     }
                     currentRotation = steps;
@@ -711,6 +698,28 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         try {
             serialIO.writeMessage("@0" + ",");
             //this.serialIO.writeMessage(","); //execute command
+        } catch (SerialIOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Selects the movement motor to recieve all commands.
+     */
+    protected void selectMovement() {
+        try {
+            serialIO.writeMessage("O1,0,");
+        } catch (SerialIOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Selects the rotation motor to recieve all commands.
+     */
+    protected void selectRotation() {
+        try {
+            serialIO.writeMessage("O1,1,");
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
