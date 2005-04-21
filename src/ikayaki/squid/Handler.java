@@ -454,6 +454,8 @@ public class Handler implements SerialIOListener {
                 } else {
                     setVelocity(velocity);
                 }
+
+                // move to the target position and stop there
                 moveSteps(position - currentPosition);
                 currentPosition = position;
                 waitForMessage();
@@ -497,7 +499,6 @@ public class Handler implements SerialIOListener {
             } else {
                 assert false;
             }
-
         }
     }
 
@@ -633,17 +634,15 @@ public class Handler implements SerialIOListener {
                 int steps = (int) (((double) angle) / 360.0 * Settings.getHandlerRotation());
 
                 try {
-                    // first set rotation speed, acceleration and deceleration
                     setVelocity(rotationSpeed);
                     setAcceleration(rotationAcceleration);
                     setDeceleration(rotationDeceleration);
 
-                    // then set rotation active
+                    // re-seek home always rotating to zero, otherwise use the counter
+                    selectRotation();
                     if (angle == 0) {
-                        selectRotation();
                         serialIO.writeMessage("+H1,");
                     } else {
-                        selectRotation();
                         serialIO.writeMessage("+N" + (steps - currentRotation) + "G,");
                     }
                     currentRotation = steps;

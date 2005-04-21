@@ -2340,7 +2340,11 @@ project listeners.
             }
             fireMeasurementEvent(null, HANDLER_MOVE);
 
-            getSquid().getHandler().join();
+            try {
+                getSquid().getHandler().join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             fireMeasurementEvent(null, HANDLER_STOP);
             setState(IDLE);
         }
@@ -2368,7 +2372,11 @@ project listeners.
             getSquid().getHandler().rotateTo(angle);
             fireMeasurementEvent(null, HANDLER_ROTATE);
 
-            getSquid().getHandler().join();
+            try {
+                getSquid().getHandler().join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             fireMeasurementEvent(null, HANDLER_STOP);
 
             setState(IDLE);

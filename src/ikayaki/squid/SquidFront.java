@@ -243,12 +243,12 @@ public class SquidFront extends JFrame {
 
       this.hmoveToPos.setAction(new AbstractAction() {
         public void actionPerformed(ActionEvent e) {
-          try {
-            handlerLog.append(Squid.instance().getHandler().moveToPos(Integer.parseInt(param1.getText()))+ "\r");
-          }
-          catch (IOException ex) {
-            handlerLog.append("MoveToPos failed\r");
-          }
+//          try {
+//            handlerLog.append(Squid.instance().getHandler().moveToPos(Integer.parseInt(param1.getText()))+ "\r");
+//          }
+//          catch (IOException ex) {
+//            handlerLog.append("MoveToPos failed\r");
+//          }
         }
       });
       this.hmoveToPos.getAction().putValue(Action.NAME, "MoveToPos(int)");
@@ -320,6 +320,8 @@ public class SquidFront extends JFrame {
           }
           catch (IOException ex) {
             handlerLog.append("join failed\r");
+          } catch (InterruptedException e1) {
+            handlerLog.append("join failed\r");
           }
         }
       });
@@ -339,12 +341,12 @@ public class SquidFront extends JFrame {
 
       this.hstop.setAction(new AbstractAction() {
         public void actionPerformed(ActionEvent e) {
-          try {
-            Squid.instance().getHandler().stop();
-          }
-          catch (IOException ex) {
-            handlerLog.append("stop failed\r");
-          }
+//          try {
+//            Squid.instance().getHandler().stop();
+//          }
+//          catch (IOException ex) {
+//            handlerLog.append("stop failed\r");
+//          }
         }
       });
       this.hstop.getAction().putValue(Action.NAME, "stop()");
@@ -375,24 +377,24 @@ public class SquidFront extends JFrame {
 
       this.hsetSteps.setAction(new AbstractAction() {
         public void actionPerformed(ActionEvent e) {
-          try {
-            Squid.instance().getHandler().setSteps(Integer.parseInt(param1.getText()));
-          }
-          catch (IOException ex) {
-            handlerLog.append("setSteps failed\r");
-          }
+//          try {
+//            Squid.instance().getHandler().setSteps(Integer.parseInt(param1.getText()));
+//          }
+//          catch (IOException ex) {
+//            handlerLog.append("setSteps failed\r");
+//          }
         }
       });
       this.hsetSteps.getAction().putValue(Action.NAME, "setSteps(int steps)");
 
       this.hmoveToPos.setAction(new AbstractAction() {
         public void actionPerformed(ActionEvent e) {
-          try {
-            Squid.instance().getHandler().moveToPos(Integer.parseInt(param1.getText()));
-          }
-          catch (IOException ex) {
-            handlerLog.append("MoveToPos failed\r");
-          }
+//          try {
+//            Squid.instance().getHandler().moveToPos(Integer.parseInt(param1.getText()));
+//          }
+//          catch (IOException ex) {
+//            handlerLog.append("MoveToPos failed\r");
+//          }
         }
       });
       this.hmoveToPos.getAction().putValue(Action.NAME, "moveToPos(int position)");
