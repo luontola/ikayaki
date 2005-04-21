@@ -244,7 +244,7 @@ public class Handler implements SerialIOListener {
             setVelocity(velocity);
             setAcceleration(acceleration);
             setDeceleration(deceleration);
-            selectMovement()
+            selectMovement();
             serialIO.writeMessage("+S,");
             waitForMessage();
 
