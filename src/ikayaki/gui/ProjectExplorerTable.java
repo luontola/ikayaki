@@ -260,13 +260,21 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
 
         // update table data and selected project file
         explorerTableModel.fireTableDataChanged();
-        if (selectedFile != -1) setRowSelectionInterval(selectedFile, selectedFile);
+        if (selectedFile != -1) {
+            setRowSelectionInterval(selectedFile, selectedFile);
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    scrollToRow(selectedFile);
+                }
+            });
+        }
+    }
 
-        /* TODO:
-         * When opening a project file with File > Open or File > Open Recent in a folder that contains
-         * many files, the selected project will not become visible. Take a look at MeasurementSequencePanel's
-         * method scrollToRow(int) and the places where it is being used for a solution.
-         */
+    /**
+     * Scrolls the table to show the specified row.
+     */
+    private void scrollToRow(int rowIndex) {
+        scrollRectToVisible(getCellRect(rowIndex, rowIndex, true));
     }
 
     /**
