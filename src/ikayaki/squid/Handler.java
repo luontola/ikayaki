@@ -400,14 +400,22 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
       if(this.waitingForMessage)
           throw new IllegalStateException("Tried to command handler while waiting for message");
       boolean direction = true;
-      boolean speedChange = false;
+      int speedChange = 0; // 0: no change, 1: change to measurement , 2: change to normal later
       int speedChangeTime = 0; // in milliseconds
 
       // check if we are going to measurement position, change speed on-the-fly if needed
       if((currentPosition + pos) == measurementPosition) {
         int distanceToMeasure = backgroundPosition - currentPosition;
+        speedChange = 1;
         speedChangeTime = distanceToMeasure/velocity*1000;
         if(speedChangeTime < 0) speedChangeTime *= -1;
+      }
+      else if(currentPosition == measurementPosition) {
+        int distanceToBackground = backgroundPosition - currentPosition;
+        speedChange = 2;
+        speedChangeTime = distanceToBackground/velocity*1000;
+        if(speedChangeTime < 0) speedChangeTime *= -1;
+
       }
 
       //if negative value, then we send "-" command and change
@@ -421,16 +429,17 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
 
       final int posT = pos;
       final boolean directionT = direction;
-      final boolean speedChangeT = speedChange;
+      final int speedChangeT = speedChange;
       final int speedChangeTimeT = speedChangeTime;
-
 
       new Thread() {
         @Override public void run() {
           try {
 
             //select speed
-            if(speedChangeT && speedChangeTimeT == 0)
+            if(speedChangeT == 1 && speedChangeTimeT == 0)
+              setVelocity(measurementVelocity);
+            else if(speedChangeT == 2)
               setVelocity(measurementVelocity);
             else
               setVelocity(velocity);
@@ -446,13 +455,22 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
             go();
 
             //on-the-fly speed change
-            if(speedChangeT && speedChangeTimeT > 0) {
+            if(speedChangeT == 1 && speedChangeTimeT > 0) {
               try {
                 Thread.sleep(speedChangeTimeT);
                 setVelocity(measurementVelocity);
               }
               catch (InterruptedException ex1) {
               }
+            }
+            else if (speedChangeT == 2) {
+              try {
+                Thread.sleep(speedChangeTimeT);
+                setVelocity(velocity);
+              }
+              catch (InterruptedException ex1) {
+              }
+
             }
           }
           catch (SerialIOException ex) {
