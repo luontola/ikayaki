@@ -284,6 +284,7 @@ project listeners.
             return null;
         }
         projectCache.put(file, project);
+        projectTypeCache.put(file, project.getType());
         return project;
     }
 
@@ -322,6 +323,7 @@ project listeners.
             }
             project = new Project(file, document);
             projectCache.put(file, project);
+            projectTypeCache.put(file, project.getType());
 
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

@@ -53,11 +53,6 @@ public class Settings {
     private static final StyledWrapper doneRecentlyWrapper = new StyledWrapper();
 
     /**
-     * Singleton instance of the Settings object.
-     */
-    private static Settings instance;
-
-    /**
      * All properties in a map.
      */
     private static Properties properties = new Properties();
@@ -183,26 +178,6 @@ public class Settings {
     }
 
     /**
-     * Returns the global Settings object. If not yet created, will first create one.
-     *
-     * @deprecated use the static class methods instead.
-     */
-    public static Settings instance() {
-        if (instance == null) {
-            instance = new Settings();
-        }
-        return instance;
-    }
-
-    /**
-     * Creates a new Settings instance. Loads settings from the configuration files.
-     *
-     * @deprecated use the static class methods instead.
-     */
-    private Settings() {
-    }
-
-    /**
      * Saves the settings after a while when no changes have come. The method call will return immediately and will not
      * wait for the file to be written.
      */
@@ -310,6 +285,7 @@ public class Settings {
      * @return true if value was correct, otherwise false.
      */
     public static synchronized boolean setXXX(Object value) {
+        if (value == null); // just to avoid "value is never used" warnings ;)
         return false;
     }
 
