@@ -47,6 +47,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      * Synchronous queue for waiting result message from handler
      */
     private SynchronousQueue<String> queue;
+
+    /**
+     * timeout how leng we wait answer from Squid-system
+     */
     private int pollTimeout = 60;
 
     /**
@@ -89,17 +93,17 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     private String handlerStatus;   // TODO: this field is never used
 
     /**
-     * Value between 1 and 16,777,215.
+     * Value between 1 and 16,777,215. Relative to Home.
      */
     private int currentPosition;
 
     /**
-     * Value between 1 and 16,777,215.
+     * Value between 1 and 16,777,215. Relative to Home.
      */
     private int homePosition;
 
     /**
-     * AF demag position for transverse.
+     * AF demag position for transverse. Relative to Home.
      */
     private int transverseYAFPosition;
 
@@ -123,10 +127,24 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     private int currentRotation = 0;
 
+    /**
+     * Only one at time can be waiting for answer, works like semaphore for commanding handler
+     */
     private boolean waitingForMessage = false;
 
+    /**
+     * Value between 50 and 8500, but should be small
+     */
     private int rotationSpeed;
+
+    /**
+     * Value between 0 and 127.
+     */
     private int rotationAcceleration;   // TODO: this field is assigned but never used
+
+    /**
+     * Value between 0 and 127.
+     */
     private int rotationDeceleration;   // TODO: this field is assigned but never used
 
   /**
@@ -163,7 +181,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
       //first put system online
       this.setOnline();
 
-      //set all settings TODO: do we need to check values? (original does)
+      //set all settings
       this.setAcceleration(this.acceleration);
       System.err.println("Acceleration set:" + this.verify('A'));
       this.setVelocity(this.velocity);
@@ -198,38 +216,6 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         this.setAcceleration(this.acceleration);
         this.setVelocity(this.velocity);
         this.setDeceleration(this.deceleration);
-    }
-
-    /**
-     * Returns current status on Sample Handler.
-     *
-     * @return 0 Normal, no service required <br/>1 Command error, illegal command sent <br/>2 Range error, an out of
-     *         range numeric parameter was sent <br/>3 Command invalid while moving (e.g. G, S, H) <br/>4 Command only
-     *         valid in program (e.g. I, U, L) <br/>5 End of move notice, a previous G command is complete <br/>6 End of
-     *         wait notice, a previousW command is complete <br/>7 Hard limit stop, the move was stopped by the hard
-     *         limit <br/>8 End of program notice, internal program has completed <br/>G Motor is indexing and no other
-     *         notice pending.
-     */
-    public char getStatus() {
-        try {
-            this.serialIO.writeMessage("%");
-            this.serialIO.writeMessage(","); //execute command
-        } catch (SerialIOException ex) {
-            System.err.println(ex);
-            return 'E';
-        }
-        waitingForMessage = true;
-        String answer = null;
-        try {
-          answer = (String) queue.poll(pollTimeout,TimeUnit.SECONDS);
-          System.err.println("get:" + answer + " from queue(status)");
-        }
-        catch (InterruptedException ex1) {
-        }
-        waitingForMessage = false;
-        return answer.charAt(0);
-
-
     }
 
     /**
@@ -275,13 +261,16 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
           throw new IllegalStateException("Tried to command handler while waiting for message");
         try {
             setVelocity(velocity);
+            setAcceleration(acceleration);
+            setDeceleration(deceleration);
             this.serialIO.writeMessage("O1,0,");
             this.serialIO.writeMessage("+S,");
             this.join();
             this.serialIO.writeMessage("-H1,");
             this.join();
-            //this.serialIO.writeMessage("+H,");
-            //this.join();
+            setVelocity(rotationSpeed);
+            setAcceleration(rotationAcceleration);
+            setDeceleration(rotationDeceleration);
             this.serialIO.writeMessage("O1,1,");
             this.serialIO.writeMessage("+H1,");
             this.join();
@@ -319,7 +308,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
       }
       else {
         int pos = this.homePosition - currentPosition;
-        moveToPos(pos);
+        moveSteps(pos);
         this.currentPosition = this.homePosition;
       }
     }
@@ -331,12 +320,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     public void moveToDegausserZ() throws IllegalStateException {
         if(this.waitingForMessage)
           throw new IllegalStateException("Tried to command handler while waiting for message");
-        //setVelocity(velocity);
         int pos = this.axialAFPosition - currentPosition;
-        moveToPos(pos);
+        moveSteps(pos);
         this.currentPosition = this.axialAFPosition;
-        //moveToPos(this.axialAFPosition);
-        //this.go();
     }
 
     /**
@@ -346,12 +332,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     public void moveToDegausserY() throws IllegalStateException {
         if(this.waitingForMessage)
           throw new IllegalStateException("Tried to command handler while waiting for message");
-        //setVelocity(velocity);
         int pos = this.transverseYAFPosition - currentPosition;
-        moveToPos(pos);
+        moveSteps(pos);
         this.currentPosition = this.transverseYAFPosition;
-        //moveToPos(this.transverseYAFPosition);
-        //this.go();
     }
 
 
@@ -362,17 +345,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     public void moveToMeasurement() throws IllegalStateException {
         if(this.waitingForMessage)
           throw new IllegalStateException("Tried to command handler while waiting for message");
-        // do we use now measurement velocity?
-        /*if(currentPosition == this.backgroundPosition)
-          setVelocity(measurementVelocity);
-        else
-          setVelocity(velocity);
-         */
         int pos = this.measurementPosition - currentPosition;
-        moveToPos(pos);
+        moveSteps(pos);
         this.currentPosition = this.measurementPosition;
-        //moveToPos(this.measurementPosition);
-        //this.go();
 
     }
 
@@ -383,12 +358,9 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     public void moveToBackground() throws IllegalStateException {
         if(this.waitingForMessage)
           throw new IllegalStateException("Tried to command handler while waiting for message");
-        //setVelocity(velocity);
         int pos = this.backgroundPosition - currentPosition;
-        moveToPos(pos);
+        moveSteps(pos);
         this.currentPosition = this.backgroundPosition;
-        //moveToPos(this.backgroundPosition);
-        //this.go();
     }
 
     /**
@@ -398,7 +370,6 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     public void moveToLeftLimit() throws IllegalStateException {
         if(this.waitingForMessage)
           throw new IllegalStateException("Tried to command handler while waiting for message");
-        setVelocity(velocity);
         this.currentPosition = Integer.MIN_VALUE;
         this.setMotorNegative();
         this.performSlew();
@@ -418,19 +389,15 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Commands the holder to move to the specified position. Value must be between 1 and 16,777,215. Return true if
+     * Commands the holder to move to the relative position. Return true if
      * good pos-value and moves handler there. Only starts movement, needs to take with join() when movement is
      * finished. Positions is in relation to Home. Changes speed if needed.
      *
-     * @param pos the position where the handler will move to.
+     * @param pos the position where the handler will move to
      * @return true if given position was ok, otherwise false.
      */
-    public boolean moveToPos(int pos) {
-       // TODO Tassa on vikaa.
-       // current position ei paivity aina oikein. Vaikka liikutettiin esim. 0 -> 1000 
-       // ja handle liikkui taysin oikein, getPosition()palautti edelleen 0
-   
-       if(this.waitingForMessage)
+    public boolean moveSteps(int pos) {
+      if(this.waitingForMessage)
           throw new IllegalStateException("Tried to command handler while waiting for message");
       boolean direction = true;
       boolean speedChange = false;
@@ -443,6 +410,7 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         if(speedChangeTime < 0) speedChangeTime *= -1;
       }
 
+      //if negative value, then we send "-" command and change
       if (pos < 0) {
         pos *= -1;
         direction = false;
@@ -466,6 +434,8 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
               setVelocity(measurementVelocity);
             else
               setVelocity(velocity);
+            setAcceleration(acceleration);
+            setDeceleration(deceleration);
 
             //first need to set translate active
             serialIO.writeMessage("O1,0");
@@ -494,37 +464,26 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
   }
 
     /**
-     * Commands the handler to stop its current job.
-     */
-    public void stop() {
-        try {
-            this.serialIO.writeMessage("Q,");
-            //this.serialIO.writeMessage(","); //execute command
-        } catch (SerialIOException ex) {
-            System.err.println(ex);
-        }
-
-    }
-
-    /**
      * Rotates the handler to the specified angle. If angle is over than 360 or lower than 0, it is divided by 360 and
      * value is remainder. Only starts movement, needs to take with join() when movement is finished.
      *
      * @param angle the angle in degrees to rotate the handler to.
      */
     public void rotateTo(int angle) throws IllegalStateException {
-       // TODO rotation korjattava siten etta - ja + merkit annetaan 
+       // TODO rotation korjattava siten etta - ja + merkit annetaan
        // riippuen nykyisesta positiosta.
        // Handler.java:n tulisi varmaan muistaa rotatio-moottorille asetettu suunta (+/-)?
-       // 
-       
+       //
+
        if(this.waitingForMessage)
           throw new IllegalStateException("Tried to command handler while waiting for message");
         angle = angle % 360;
         angle = (int) (((double) angle) / 360.0 * Settings.getHandlerRotation());
         try {
-            //first set rotation speed
-            this.serialIO.writeMessage("M" + rotationSpeed);
+            //first set rotation speed,acceleration and deceleration
+            setVelocity(rotationSpeed);
+            setAcceleration(rotationAcceleration);
+            setDeceleration(rotationDeceleration);
             //then set rotation active
             if(angle == 0) {
               this.serialIO.writeMessage("O1,1,");
@@ -536,7 +495,6 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
               this.serialIO.writeMessage("N" + rotation + "G,");
             }
             this.currentRotation = angle;
-           // this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException ex) {
             System.err.println(ex);
         }
@@ -581,7 +539,6 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         if (d >= 0 && d < 128) {
             try {
                 this.serialIO.writeMessage("D" + d + ",");
-                //this.serialIO.writeMessage(","); //execute command
                 this.deceleration = d;
             } catch (SerialIOException ex) {
                 System.err.println(ex);
@@ -590,71 +547,15 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Sends message to handler to set base speed. Base rate is the speed at which the motor motion starts and stops.
-     * (Bb).
-     *
-     * @param b Base Speed is pulses per second and has a range of 50 to 5000.
-     */
-    protected void setBaseSpeed(int b) {
-        if (b >= 50 && b < 5001) {
-            try {
-                this.serialIO.writeMessage("B" + b + ",");
-                //this.serialIO.writeMessage(","); //execute command
-            } catch (SerialIOException ex) {
-                System.err.println(ex);
-            }
-        }
-
-    }
-
-    /**
      * Sends message to handler to set maximum velocity (Mv).
      *
-     * @param v Velocity range is 50 to 20,000
+     * @param v Velocity range is 50 to 8,500
      */
     protected void setVelocity(int v) {
         if (v >= 50 && v < 8501) {
             try {
                 this.serialIO.writeMessage("M" + v + ",");
-                //this.serialIO.writeMessage(","); //execute command
                 this.velocity = v;
-            } catch (SerialIOException ex) {
-                System.err.println(ex);
-            }
-        }
-    }
-
-    /**
-     * This command causes the POWER pin to be pulled low within a specified number of ticks after a move of the motor
-     * is completed and it will stay low until just prior to the start of the next move command. This command allows the
-     * holding torque of the motor to be turned off automatically after a delay for the mechanical system stabilize thus
-     * reducing power consumption and allowing the motor to be turned by hand if this feature is required. If the value
-     * is zero then the power is left on forever. (CH h).
-     *
-     * @param h value from 0 to 127 representing the number of clock ticks to leave power on the motor after a move.
-     */
-    protected void setHoldTime(int h) {
-        try {
-            this.serialIO.writeMessage("CH" + h + ",");
-            //this.serialIO.writeMessage(","); //execute command
-        } catch (SerialIOException ex) {
-            System.err.println(ex);
-        }
-
-    }
-
-    /**
-     * Set the crystal frequency to the value of rrrrrr. The range of values is 4,000,000 to 8,000.000. This command
-     * does not check for out of range numbers. The crystal frequency is used by the chip for setting the base speed and
-     * maximum speed and for controlling the time for the wait command. (CX cf).
-     *
-     * @param cf frequence range is 4,000,000 to 8,000.000
-     */
-    protected void setCrystalFrequence(int cf) {
-        if (cf >= 4000000 && cf <= 8000000) {
-            try {
-                this.serialIO.writeMessage("CX" + cf + ",");
-                //this.serialIO.writeMessage(","); //execute command
             } catch (SerialIOException ex) {
                 System.err.println(ex);
             }
@@ -713,41 +614,6 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
     }
 
     /**
-     * Set the number of steps to move for the G command. (N s).
-     *
-     * @param s steps range is 0 to 16,777,215
-     */
-    protected void setSteps(int s) {
-        if (s >= 0 && s <= 16777216) {
-            try {
-                this.serialIO.writeMessage("N" + s + ",");
-                //this.serialIO.writeMessage(","); //execute command
-            } catch (SerialIOException ex) {
-                System.err.println(ex);
-            }
-        }
-    }
-
-    /**
-     * Set absolute position to move for the G command. (P p).
-     *
-     * @param p position range is 0 to 16,777,215
-     */
-    protected void setPosition(int p) {
-        if (p > 0 && p < 16777215) {
-            try {
-                //first need to set translate active
-                this.serialIO.writeMessage("O1,0");
-                this.serialIO.writeMessage("P" + p + ",");
-                this.currentPosition = p;
-            } catch (SerialIOException ex) {
-                System.err.println(ex);
-            }
-        }
-
-    }
-
-    /**
      * Send handler on move (G).
      */
     protected void go() {
@@ -769,9 +635,10 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
      */
     public void join() {
         try {
-            //this.serialIO.writeMessage("F%,");
-            //We want to possible change speed while moving so lets use only %
-            this.serialIO.writeMessage("%,");
+            //This blocks all messages for handler
+            this.serialIO.writeMessage("F%,");
+            //this just polls for messages, we might get old messages waiting there? Use take message.
+            //this.serialIO.writeMessage("%,");
             waitingForMessage = true;
             try {
               String answer = (String) queue.take();//poll(pollTimeout, TimeUnit.SECONDS);
@@ -820,22 +687,6 @@ Event A: On SerialIOEvent - reads message and puts it in a buffer
         waitingForMessage = false;
         return answer;
 
-    }
-
-    /**
-     * Set the position register. This command sets the internal absolute position counter to the value of r. (Z r).
-     *
-     * @param r position range is 0 to 16,777,215
-     */
-    protected void setPositionRegister(int r) {
-        if (r > 0 && r < 16777215) {
-            try {
-                this.serialIO.writeMessage("Z" + r + ",");
-                //this.serialIO.writeMessage(","); //execute command
-            } catch (SerialIOException ex) {
-                System.err.println(ex);
-            }
-        }
     }
 
     /**

@@ -275,7 +275,7 @@ public class SquidEmulator {
                 if(command.startsWith("V",0)) {
                   writeMessage("100" + command, handlerPort);
                 }
-                else if(command.startsWith("F",0)) {
+                else if(command.startsWith("F",0) || command.startsWith("%",0)) {
                   try {
                     Thread.sleep(2000);
                   }
