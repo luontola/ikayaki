@@ -60,7 +60,7 @@ public class Handler implements SerialIOListener {
     /**
      * COM port for communication.
      */
-    private SerialIO serialIO;
+    protected SerialIO serialIO;
 
     /**
      * Value between 0 and 127 default 5. Settings in the 20-50 range are usually employed.
@@ -169,13 +169,13 @@ public class Handler implements SerialIOListener {
         // put the system online
         setOnline();
 
-        // set all settings
-        setAcceleration(acceleration);
-        System.err.println("Acceleration set:" + verify('A'));
-        setVelocity(velocity);
-        System.err.println("Velocity set:" + verify('M'));
-        setDeceleration(deceleration);
-        System.err.println("Deceleration set:" + verify('D'));
+//        // set all settings
+//        setAcceleration(acceleration);
+//        System.err.println("Acceleration set:" + verify('A'));
+//        setVelocity(velocity);
+//        System.err.println("Velocity set:" + verify('M'));
+//        setDeceleration(deceleration);
+//        System.err.println("Deceleration set:" + verify('D'));
 
         // seek the home position, so we can know where we are
         seekHome();
@@ -773,7 +773,7 @@ public class Handler implements SerialIOListener {
         if (v >= 50 && v < 8501) {
             try {
                 serialIO.writeMessage("M" + v + ",");
-                velocity = v;
+//                velocity = v;
             } catch (SerialIOException e) {
                 e.printStackTrace();
             }

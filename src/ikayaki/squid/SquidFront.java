@@ -33,6 +33,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Graphical front-end for using the SQUID Interface's protocol level commands.
@@ -117,6 +118,13 @@ public class SquidFront extends JFrame {
 
     private Squid squid;
 
+    private JTextField hRawCommand;
+    private JButton hRawSend;
+    private JTextField dRawCommand;
+    private JButton dRawSend;
+    private JTextField mRawCommand;
+    private JButton mRawSend;
+
     public SquidFront() throws HeadlessException {
         super("SQUID Front");
 
@@ -144,7 +152,7 @@ public class SquidFront extends JFrame {
             }
         }.start();
 
-
+        initRawActions();
         initHandlerActions();
         initMagnetometerActions();
         initDegausserActions();
@@ -174,6 +182,39 @@ public class SquidFront extends JFrame {
             throw new IllegalStateException();
         }
         this.squid = squid;
+    }
+
+    private void initRawActions() {
+        hRawSend.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String command = hRawCommand.getText().trim().toUpperCase();
+                try {
+                    squid.getHandler().serialIO.writeMessage(command);
+                } catch (SerialIOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        mRawSend.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String command = mRawCommand.getText().trim().toUpperCase();
+                try {
+                    squid.getMagnetometer().serialIO.writeMessage(command+"\r");
+                } catch (SerialIOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        dRawSend.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String command = dRawCommand.getText().trim().toUpperCase();
+                try {
+                    squid.getDegausser().serialIO.writeMessage(command+"\r");
+                } catch (SerialIOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 
 
@@ -784,23 +825,347 @@ public class SquidFront extends JFrame {
      * code!
      */
     private void $$$setupUI$$$() {
-        contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), 6, -1));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
-        contentPane.add(panel1,
+        panel1.setLayout(new GridLayoutManager(4, 3, new Insets(0, 0, 0, 0), -1, -1));
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panel2,
+                new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        panel2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
+        final JLabel label1 = new JLabel();
+        label1.setText("Degausser");
+        panel2.add(label1,
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new GridLayoutManager(14, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel2.add(panel3,
                 new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
-        panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
-        final JLabel label1 = new JLabel();
-        label1.setText("Handler");
-        panel1.add(label1,
+        dupdateSettings = new JButton();
+        dupdateSettings.setHorizontalAlignment(2);
+        dupdateSettings.setText("updateSettings():void");
+        panel3.add(dupdateSettings,
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        dsetCoil = new JButton();
+        dsetCoil.setHorizontalAlignment(2);
+        dsetCoil.setText("setCoil(char coil):void");
+        panel3.add(dsetCoil,
+                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        dsetAmplitude = new JButton();
+        dsetAmplitude.setHorizontalAlignment(2);
+        dsetAmplitude.setText("setAmplitude(int amplitude):void");
+        panel3.add(dsetAmplitude,
+                new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        dexecuteRampUp = new JButton();
+        dexecuteRampUp.setHorizontalAlignment(2);
+        dexecuteRampUp.setText("executeRampUp():void");
+        panel3.add(dexecuteRampUp,
+                new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        dexecuteRampDown = new JButton();
+        dexecuteRampDown.setHorizontalAlignment(2);
+        dexecuteRampDown.setText("executeRampDown():void");
+        panel3.add(dexecuteRampDown,
+                new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        dexecuteRampCycle = new JButton();
+        dexecuteRampCycle.setHorizontalAlignment(2);
+        dexecuteRampCycle.setText("executeRampCycle():void");
+        panel3.add(dexecuteRampCycle,
+                new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        ddemagnetizeZ = new JButton();
+        ddemagnetizeZ.setHorizontalAlignment(2);
+        ddemagnetizeZ.setText("demagnetizeZ(int amplitude):boolean");
+        panel3.add(ddemagnetizeZ,
+                new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        ddemagnetizeY = new JButton();
+        ddemagnetizeY.setHorizontalAlignment(2);
+        ddemagnetizeY.setText("demagnetizeY(int amplitude):boolean");
+        panel3.add(ddemagnetizeY,
+                new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        dgetRampStatus = new JButton();
+        dgetRampStatus.setHorizontalAlignment(2);
+        dgetRampStatus.setText("getRampStatus():char");
+        panel3.add(dgetRampStatus,
+                new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        dgetRamp = new JButton();
+        dgetRamp.setHorizontalAlignment(2);
+        dgetRamp.setText("getRamp():int");
+        panel3.add(dgetRamp,
+                new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        dgetDelay = new JButton();
+        dgetDelay.setHorizontalAlignment(2);
+        dgetDelay.setText("getDelay():int");
+        panel3.add(dgetDelay,
+                new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        dgetCoil = new JButton();
+        dgetCoil.setEnabled(true);
+        dgetCoil.setHorizontalAlignment(2);
+        dgetCoil.setText("getCoil():char");
+        panel3.add(dgetCoil,
+                new GridConstraints(11, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        dgetAmplitude = new JButton();
+        dgetAmplitude.setHorizontalAlignment(2);
+        dgetAmplitude.setText("getAmplitude():int");
+        panel3.add(dgetAmplitude,
+                new GridConstraints(12, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        disOK = new JButton();
+        disOK.setHorizontalAlignment(2);
+        disOK.setText("isOK():boolean");
+        panel3.add(disOK,
+                new GridConstraints(13, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final Spacer spacer1 = new Spacer();
+        panel2.add(spacer1,
+                new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
+                        GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null));
+        final JPanel panel4 = new JPanel();
+        panel4.setLayout(new GridLayoutManager(2, 4, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panel4,
+                new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        param1 = new JTextField();
+        panel4.add(param1,
+                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(100, -1), null));
+        param2 = new JTextField();
+        panel4.add(param2,
+                new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(100, -1), null));
+        final JLabel label2 = new JLabel();
+        label2.setText("param2");
+        panel4.add(label2,
+                new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label3 = new JLabel();
+        label3.setText("param1");
+        panel4.add(label3,
                 new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridLayoutManager(16, 2, new Insets(0, 0, 0, 0), -1, -1));
-        panel1.add(panel2,
+        param3 = new JTextField();
+        panel4.add(param3,
+                new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(100, -1), null));
+        final JLabel label4 = new JLabel();
+        label4.setText("param3");
+        panel4.add(label4,
+                new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final Spacer spacer2 = new Spacer();
+        panel4.add(spacer2,
+                new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
+        final JScrollPane scrollPane1 = new JScrollPane();
+        scrollPane1.setHorizontalScrollBarPolicy(30);
+        scrollPane1.setVerticalScrollBarPolicy(22);
+        panel1.add(scrollPane1,
+                new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null));
+        magnetometerLog = new JTextArea();
+        magnetometerLog.setRows(6);
+        scrollPane1.setViewportView(magnetometerLog);
+        final JPanel panel5 = new JPanel();
+        panel5.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panel5,
+                new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        panel5.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
+        final JLabel label5 = new JLabel();
+        label5.setText("Magnetometer");
+        panel5.add(label5,
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final Spacer spacer3 = new Spacer();
+        panel5.add(spacer3,
+                new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
+                        GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null));
+        final JPanel panel6 = new JPanel();
+        panel6.setLayout(new GridLayoutManager(16, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel5.add(panel6,
+                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        mupdateSettings = new JButton();
+        mupdateSettings.setHorizontalAlignment(2);
+        mupdateSettings.setText("updateSettings():void");
+        panel6.add(mupdateSettings,
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        mreset = new JButton();
+        mreset.setHorizontalAlignment(2);
+        mreset.setText("reset(char axis):void");
+        panel6.add(mreset,
+                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        mresetCounter = new JButton();
+        mresetCounter.setHorizontalAlignment(2);
+        mresetCounter.setText("resetCounter(char axis):void");
+        panel6.add(mresetCounter,
+                new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        mconfigure = new JButton();
+        mconfigure.setHorizontalAlignment(2);
+        mconfigure.setText("configure(char axis, char subcommand, char option):void");
+        panel6.add(mconfigure,
+                new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        mlatchAnalog = new JButton();
+        mlatchAnalog.setHorizontalAlignment(2);
+        mlatchAnalog.setText("latchAnalog(char axis):void");
+        panel6.add(mlatchAnalog,
+                new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        mlatchCounter = new JButton();
+        mlatchCounter.setHorizontalAlignment(2);
+        mlatchCounter.setText("latchCounter(char axis):void");
+        panel6.add(mlatchCounter,
+                new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        mgetData = new JButton();
+        mgetData.setHorizontalAlignment(2);
+        mgetData.setText("getData(char axis, char command, String datavalues):String");
+        panel6.add(mgetData,
+                new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        mopenLoop = new JButton();
+        mopenLoop.setHorizontalAlignment(2);
+        mopenLoop.setText("openLoop(char axis):void");
+        panel6.add(mopenLoop,
+                new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        mclearFlux = new JButton();
+        mclearFlux.setHorizontalAlignment(2);
+        mclearFlux.setText("clearFlux(char axis):void");
+        panel6.add(mclearFlux,
+                new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        mjoin = new JButton();
+        mjoin.setHorizontalAlignment(2);
+        mjoin.setText("join():void");
+        panel6.add(mjoin,
+                new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        mreadData = new JButton();
+        mreadData.setHorizontalAlignment(2);
+        mreadData.setText("readData():Double[3]");
+        panel6.add(mreadData,
+                new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        mgetFilters = new JButton();
+        mgetFilters.setHorizontalAlignment(2);
+        mgetFilters.setText("getFilters():char[3]");
+        panel6.add(mgetFilters,
+                new GridConstraints(11, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        mgetRange = new JButton();
+        mgetRange.setHorizontalAlignment(2);
+        mgetRange.setText("getRange():char[3]");
+        panel6.add(mgetRange,
+                new GridConstraints(12, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        mgetSlew = new JButton();
+        mgetSlew.setHorizontalAlignment(2);
+        mgetSlew.setText("getSlew():boolean[3]");
+        panel6.add(mgetSlew,
+                new GridConstraints(13, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        mgetLoop = new JButton();
+        mgetLoop.setHorizontalAlignment(2);
+        mgetLoop.setText("getLoop():boolean[3]");
+        panel6.add(mgetLoop,
+                new GridConstraints(14, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        misOK = new JButton();
+        misOK.setHorizontalAlignment(2);
+        misOK.setText("isOK():boolean");
+        panel6.add(misOK,
+                new GridConstraints(15, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JScrollPane scrollPane2 = new JScrollPane();
+        scrollPane2.setVerticalScrollBarPolicy(22);
+        panel1.add(scrollPane2,
+                new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null));
+        handlerLog = new JTextArea();
+        handlerLog.setRows(6);
+        scrollPane2.setViewportView(handlerLog);
+        final JScrollPane scrollPane3 = new JScrollPane();
+        scrollPane3.setHorizontalScrollBarPolicy(30);
+        scrollPane3.setVerticalScrollBarPolicy(22);
+        panel1.add(scrollPane3,
+                new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null));
+        degausserLog = new JTextArea();
+        degausserLog.setRows(6);
+        scrollPane3.setViewportView(degausserLog);
+        final JPanel panel7 = new JPanel();
+        panel7.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panel7,
+                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        panel7.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
+        final JLabel label6 = new JLabel();
+        label6.setText("Handler");
+        panel7.add(label6,
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JPanel panel8 = new JPanel();
+        panel8.setLayout(new GridLayoutManager(16, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel7.add(panel8,
                 new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
@@ -809,547 +1174,286 @@ public class SquidFront extends JFrame {
         hupdateSettings.setHorizontalTextPosition(11);
         hupdateSettings.setText("updateSettings():void");
         hupdateSettings.setVerticalTextPosition(0);
-        panel2.add(hupdateSettings,
+        panel8.add(hupdateSettings,
                 new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hgetStatus = new JButton();
         hgetStatus.setHorizontalAlignment(2);
         hgetStatus.setText("getStatus():char");
-        panel2.add(hgetStatus,
+        panel8.add(hgetStatus,
                 new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hgetPosition = new JButton();
         hgetPosition.setHorizontalAlignment(2);
         hgetPosition.setText("getPosition():int");
-        panel2.add(hgetPosition,
+        panel8.add(hgetPosition,
                 new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hgetRotation = new JButton();
         hgetRotation.setHorizontalAlignment(2);
         hgetRotation.setText("getRotation():int");
-        panel2.add(hgetRotation,
+        panel8.add(hgetRotation,
                 new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hisOK = new JButton();
         hisOK.setHorizontalAlignment(2);
         hisOK.setText("isOK():boolean");
-        panel2.add(hisOK,
+        panel8.add(hisOK,
                 new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hmoveToHome = new JButton();
         hmoveToHome.setHorizontalAlignment(2);
         hmoveToHome.setText("moveToHome():void");
-        panel2.add(hmoveToHome,
+        panel8.add(hmoveToHome,
                 new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hmoveToDegausserZ = new JButton();
         hmoveToDegausserZ.setHorizontalAlignment(2);
         hmoveToDegausserZ.setText("moveToDegausserZ():void");
-        panel2.add(hmoveToDegausserZ,
+        panel8.add(hmoveToDegausserZ,
                 new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hmoveToDegausserY = new JButton();
         hmoveToDegausserY.setHorizontalAlignment(2);
         hmoveToDegausserY.setText("moveToDegausserY():void");
-        panel2.add(hmoveToDegausserY,
+        panel8.add(hmoveToDegausserY,
                 new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hmoveToMeasurement = new JButton();
         hmoveToMeasurement.setHorizontalAlignment(2);
         hmoveToMeasurement.setText("moveToMeasurement():void");
-        panel2.add(hmoveToMeasurement,
+        panel8.add(hmoveToMeasurement,
                 new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hmoveToBackground = new JButton();
         hmoveToBackground.setHorizontalAlignment(2);
         hmoveToBackground.setText("moveToBackground():void");
-        panel2.add(hmoveToBackground,
+        panel8.add(hmoveToBackground,
                 new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hmoveToPos = new JButton();
         hmoveToPos.setHorizontalAlignment(2);
         hmoveToPos.setText("moveToPos(int pos):boolean");
-        panel2.add(hmoveToPos,
+        panel8.add(hmoveToPos,
                 new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hstop = new JButton();
         hstop.setHorizontalAlignment(2);
         hstop.setText("stop():void");
-        panel2.add(hstop,
+        panel8.add(hstop,
                 new GridConstraints(11, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hrotateTo = new JButton();
         hrotateTo.setHorizontalAlignment(2);
         hrotateTo.setText("rotateTo(int angle):void");
-        panel2.add(hrotateTo,
+        panel8.add(hrotateTo,
                 new GridConstraints(12, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hsetOnline = new JButton();
         hsetOnline.setHorizontalAlignment(2);
         hsetOnline.setText("setOnline():void");
-        panel2.add(hsetOnline,
+        panel8.add(hsetOnline,
                 new GridConstraints(13, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hsetAcceleration = new JButton();
         hsetAcceleration.setHorizontalAlignment(2);
         hsetAcceleration.setText("setAcceleration(int a):void");
-        panel2.add(hsetAcceleration,
+        panel8.add(hsetAcceleration,
                 new GridConstraints(14, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hsetDeceleration = new JButton();
         hsetDeceleration.setHorizontalAlignment(2);
         hsetDeceleration.setText("setDeceleration(int d):void");
-        panel2.add(hsetDeceleration,
+        panel8.add(hsetDeceleration,
                 new GridConstraints(15, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hsetBaseSpeed = new JButton();
         hsetBaseSpeed.setHorizontalAlignment(2);
         hsetBaseSpeed.setText("setBaseSpeed(int b):void");
-        panel2.add(hsetBaseSpeed,
+        panel8.add(hsetBaseSpeed,
                 new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hsetVelocity = new JButton();
         hsetVelocity.setHorizontalAlignment(2);
         hsetVelocity.setText("setVelocity(int v):void");
-        panel2.add(hsetVelocity,
+        panel8.add(hsetVelocity,
                 new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hsetHoldTime = new JButton();
         hsetHoldTime.setHorizontalAlignment(2);
         hsetHoldTime.setText("setHoldTime(int h):void");
-        panel2.add(hsetHoldTime,
+        panel8.add(hsetHoldTime,
                 new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hsetCrystalFrequence = new JButton();
         hsetCrystalFrequence.setHorizontalAlignment(2);
         hsetCrystalFrequence.setText("setCrystalFrequence(int cf):void");
-        panel2.add(hsetCrystalFrequence,
+        panel8.add(hsetCrystalFrequence,
                 new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hstopExecution = new JButton();
         hstopExecution.setHorizontalAlignment(2);
         hstopExecution.setText("stopExecution():void");
-        panel2.add(hstopExecution,
+        panel8.add(hstopExecution,
                 new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hperformSlew = new JButton();
         hperformSlew.setHorizontalAlignment(2);
         hperformSlew.setText("performSlew():void");
-        panel2.add(hperformSlew,
+        panel8.add(hperformSlew,
                 new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hsetMotorPositive = new JButton();
         hsetMotorPositive.setHorizontalAlignment(2);
         hsetMotorPositive.setText("setMotorPositive():void");
-        panel2.add(hsetMotorPositive,
+        panel8.add(hsetMotorPositive,
                 new GridConstraints(6, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hsetMotorNegative = new JButton();
         hsetMotorNegative.setHorizontalAlignment(2);
         hsetMotorNegative.setText("setMotorNegative():void");
-        panel2.add(hsetMotorNegative,
+        panel8.add(hsetMotorNegative,
                 new GridConstraints(7, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hsetSteps = new JButton();
         hsetSteps.setHorizontalAlignment(2);
         hsetSteps.setText("setSteps(int s):void");
-        panel2.add(hsetSteps,
+        panel8.add(hsetSteps,
                 new GridConstraints(8, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hsetPosition = new JButton();
         hsetPosition.setHorizontalAlignment(2);
         hsetPosition.setText("setPosition(int p):void");
-        panel2.add(hsetPosition,
+        panel8.add(hsetPosition,
                 new GridConstraints(9, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hgo = new JButton();
         hgo.setHorizontalAlignment(2);
         hgo.setText("go():void");
-        panel2.add(hgo,
+        panel8.add(hgo,
                 new GridConstraints(10, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hjoin = new JButton();
         hjoin.setHorizontalAlignment(2);
         hjoin.setText("join():void");
-        panel2.add(hjoin,
+        panel8.add(hjoin,
                 new GridConstraints(11, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hverify = new JButton();
         hverify.setHorizontalAlignment(2);
         hverify.setText("verify(char v):String");
-        panel2.add(hverify,
+        panel8.add(hverify,
                 new GridConstraints(12, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         hsetPositionRegister = new JButton();
         hsetPositionRegister.setHorizontalAlignment(2);
         hsetPositionRegister.setText("setPositionRegister(int r):void");
-        panel2.add(hsetPositionRegister,
+        panel8.add(hsetPositionRegister,
                 new GridConstraints(13, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         htakeMessage = new JButton();
         htakeMessage.setHorizontalAlignment(2);
         htakeMessage.setText("takeMessage():char");
-        panel2.add(htakeMessage,
+        panel8.add(htakeMessage,
                 new GridConstraints(14, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final Spacer spacer1 = new Spacer();
-        panel1.add(spacer1,
-                new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null));
-        final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
-        contentPane.add(panel3,
-                new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
-        panel3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
-        final JLabel label2 = new JLabel();
-        label2.setText("Degausser");
-        panel3.add(label2,
-                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JPanel panel4 = new JPanel();
-        panel4.setLayout(new GridLayoutManager(14, 1, new Insets(0, 0, 0, 0), -1, -1));
-        panel3.add(panel4,
-                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
-        dupdateSettings = new JButton();
-        dupdateSettings.setHorizontalAlignment(2);
-        dupdateSettings.setText("updateSettings():void");
-        panel4.add(dupdateSettings,
-                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        dsetCoil = new JButton();
-        dsetCoil.setHorizontalAlignment(2);
-        dsetCoil.setText("setCoil(char coil):void");
-        panel4.add(dsetCoil,
-                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        dsetAmplitude = new JButton();
-        dsetAmplitude.setHorizontalAlignment(2);
-        dsetAmplitude.setText("setAmplitude(int amplitude):void");
-        panel4.add(dsetAmplitude,
-                new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        dexecuteRampUp = new JButton();
-        dexecuteRampUp.setHorizontalAlignment(2);
-        dexecuteRampUp.setText("executeRampUp():void");
-        panel4.add(dexecuteRampUp,
-                new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        dexecuteRampDown = new JButton();
-        dexecuteRampDown.setHorizontalAlignment(2);
-        dexecuteRampDown.setText("executeRampDown():void");
-        panel4.add(dexecuteRampDown,
-                new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        dexecuteRampCycle = new JButton();
-        dexecuteRampCycle.setHorizontalAlignment(2);
-        dexecuteRampCycle.setText("executeRampCycle():void");
-        panel4.add(dexecuteRampCycle,
-                new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        ddemagnetizeZ = new JButton();
-        ddemagnetizeZ.setHorizontalAlignment(2);
-        ddemagnetizeZ.setText("demagnetizeZ(int amplitude):boolean");
-        panel4.add(ddemagnetizeZ,
-                new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        ddemagnetizeY = new JButton();
-        ddemagnetizeY.setHorizontalAlignment(2);
-        ddemagnetizeY.setText("demagnetizeY(int amplitude):boolean");
-        panel4.add(ddemagnetizeY,
-                new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        dgetRampStatus = new JButton();
-        dgetRampStatus.setHorizontalAlignment(2);
-        dgetRampStatus.setText("getRampStatus():char");
-        panel4.add(dgetRampStatus,
-                new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        dgetRamp = new JButton();
-        dgetRamp.setHorizontalAlignment(2);
-        dgetRamp.setText("getRamp():int");
-        panel4.add(dgetRamp,
-                new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        dgetDelay = new JButton();
-        dgetDelay.setHorizontalAlignment(2);
-        dgetDelay.setText("getDelay():int");
-        panel4.add(dgetDelay,
-                new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        dgetCoil = new JButton();
-        dgetCoil.setEnabled(true);
-        dgetCoil.setHorizontalAlignment(2);
-        dgetCoil.setText("getCoil():char");
-        panel4.add(dgetCoil,
-                new GridConstraints(11, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        dgetAmplitude = new JButton();
-        dgetAmplitude.setHorizontalAlignment(2);
-        dgetAmplitude.setText("getAmplitude():int");
-        panel4.add(dgetAmplitude,
-                new GridConstraints(12, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        disOK = new JButton();
-        disOK.setHorizontalAlignment(2);
-        disOK.setText("isOK():boolean");
-        panel4.add(disOK,
-                new GridConstraints(13, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final Spacer spacer2 = new Spacer();
-        panel3.add(spacer2,
-                new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null));
-        final JPanel panel5 = new JPanel();
-        panel5.setLayout(new GridLayoutManager(2, 4, new Insets(0, 0, 0, 0), -1, -1));
-        contentPane.add(panel5,
-                new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
-        param1 = new JTextField();
-        panel5.add(param1,
-                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(100, -1), null));
-        param2 = new JTextField();
-        panel5.add(param2,
-                new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(100, -1), null));
-        final JLabel label3 = new JLabel();
-        label3.setText("param2");
-        panel5.add(label3,
-                new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label4 = new JLabel();
-        label4.setText("param1");
-        panel5.add(label4,
-                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        param3 = new JTextField();
-        panel5.add(param3,
-                new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(100, -1), null));
-        final JLabel label5 = new JLabel();
-        label5.setText("param3");
-        panel5.add(label5,
-                new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final Spacer spacer3 = new Spacer();
-        panel5.add(spacer3,
-                new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
-        final JScrollPane scrollPane1 = new JScrollPane();
-        scrollPane1.setVerticalScrollBarPolicy(22);
-        contentPane.add(scrollPane1,
-                new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null));
-        handlerLog = new JTextArea();
-        handlerLog.setRows(6);
-        scrollPane1.setViewportView(handlerLog);
-        final JScrollPane scrollPane2 = new JScrollPane();
-        scrollPane2.setHorizontalScrollBarPolicy(30);
-        scrollPane2.setVerticalScrollBarPolicy(22);
-        contentPane.add(scrollPane2,
-                new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null));
-        degausserLog = new JTextArea();
-        degausserLog.setRows(6);
-        scrollPane2.setViewportView(degausserLog);
-        final JScrollPane scrollPane3 = new JScrollPane();
-        scrollPane3.setHorizontalScrollBarPolicy(30);
-        scrollPane3.setVerticalScrollBarPolicy(22);
-        contentPane.add(scrollPane3,
-                new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null));
-        magnetometerLog = new JTextArea();
-        magnetometerLog.setRows(6);
-        scrollPane3.setViewportView(magnetometerLog);
-        final JPanel panel6 = new JPanel();
-        panel6.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
-        contentPane.add(panel6,
-                new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
-        panel6.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
-        final JLabel label6 = new JLabel();
-        label6.setText("Magnetometer");
-        panel6.add(label6,
-                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final Spacer spacer4 = new Spacer();
-        panel6.add(spacer4,
+        panel7.add(spacer4,
                 new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
                         GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null));
-        final JPanel panel7 = new JPanel();
-        panel7.setLayout(new GridLayoutManager(16, 1, new Insets(0, 0, 0, 0), -1, -1));
-        panel6.add(panel7,
-                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+        contentPane = new JPanel();
+        contentPane.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(contentPane,
+                new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
-        mupdateSettings = new JButton();
-        mupdateSettings.setHorizontalAlignment(2);
-        mupdateSettings.setText("updateSettings():void");
-        panel7.add(mupdateSettings,
-                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+        hRawCommand = new JTextField();
+        contentPane.add(hRawCommand,
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(100, -1), null));
+        hRawSend = new JButton();
+        hRawSend.setText("Send");
+        contentPane.add(hRawSend,
+                new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        mreset = new JButton();
-        mreset.setHorizontalAlignment(2);
-        mreset.setText("reset(char axis):void");
-        panel7.add(mreset,
-                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+        final Spacer spacer5 = new Spacer();
+        contentPane.add(spacer5,
+                new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
+        final JPanel panel9 = new JPanel();
+        panel9.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panel9,
+                new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        mRawCommand = new JTextField();
+        panel9.add(mRawCommand,
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(100, -1), null));
+        mRawSend = new JButton();
+        mRawSend.setText("Send");
+        panel9.add(mRawSend,
+                new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        mresetCounter = new JButton();
-        mresetCounter.setHorizontalAlignment(2);
-        mresetCounter.setText("resetCounter(char axis):void");
-        panel7.add(mresetCounter,
-                new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+        final Spacer spacer6 = new Spacer();
+        panel9.add(spacer6,
+                new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
+        final JPanel panel10 = new JPanel();
+        panel10.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panel10,
+                new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        dRawCommand = new JTextField();
+        panel10.add(dRawCommand,
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(100, -1), null));
+        dRawSend = new JButton();
+        dRawSend.setText("Send");
+        panel10.add(dRawSend,
+                new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        mconfigure = new JButton();
-        mconfigure.setHorizontalAlignment(2);
-        mconfigure.setText("configure(char axis, char subcommand, char option):void");
-        panel7.add(mconfigure,
-                new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        mlatchAnalog = new JButton();
-        mlatchAnalog.setHorizontalAlignment(2);
-        mlatchAnalog.setText("latchAnalog(char axis):void");
-        panel7.add(mlatchAnalog,
-                new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        mlatchCounter = new JButton();
-        mlatchCounter.setHorizontalAlignment(2);
-        mlatchCounter.setText("latchCounter(char axis):void");
-        panel7.add(mlatchCounter,
-                new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        mgetData = new JButton();
-        mgetData.setHorizontalAlignment(2);
-        mgetData.setText("getData(char axis, char command, String datavalues):String");
-        panel7.add(mgetData,
-                new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        mopenLoop = new JButton();
-        mopenLoop.setHorizontalAlignment(2);
-        mopenLoop.setText("openLoop(char axis):void");
-        panel7.add(mopenLoop,
-                new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        mclearFlux = new JButton();
-        mclearFlux.setHorizontalAlignment(2);
-        mclearFlux.setText("clearFlux(char axis):void");
-        panel7.add(mclearFlux,
-                new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        mjoin = new JButton();
-        mjoin.setHorizontalAlignment(2);
-        mjoin.setText("join():void");
-        panel7.add(mjoin,
-                new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        mreadData = new JButton();
-        mreadData.setHorizontalAlignment(2);
-        mreadData.setText("readData():Double[3]");
-        panel7.add(mreadData,
-                new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        mgetFilters = new JButton();
-        mgetFilters.setHorizontalAlignment(2);
-        mgetFilters.setText("getFilters():char[3]");
-        panel7.add(mgetFilters,
-                new GridConstraints(11, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        mgetRange = new JButton();
-        mgetRange.setHorizontalAlignment(2);
-        mgetRange.setText("getRange():char[3]");
-        panel7.add(mgetRange,
-                new GridConstraints(12, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        mgetSlew = new JButton();
-        mgetSlew.setHorizontalAlignment(2);
-        mgetSlew.setText("getSlew():boolean[3]");
-        panel7.add(mgetSlew,
-                new GridConstraints(13, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        mgetLoop = new JButton();
-        mgetLoop.setHorizontalAlignment(2);
-        mgetLoop.setText("getLoop():boolean[3]");
-        panel7.add(mgetLoop,
-                new GridConstraints(14, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        misOK = new JButton();
-        misOK.setHorizontalAlignment(2);
-        misOK.setText("isOK():boolean");
-        panel7.add(misOK,
-                new GridConstraints(15, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final Spacer spacer7 = new Spacer();
+        panel10.add(spacer7,
+                new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
     }
 }

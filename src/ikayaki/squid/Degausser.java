@@ -59,7 +59,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     /**
      * COM port for communication.
      */
-    private SerialIO serialIO;
+    protected SerialIO serialIO;
 
     /**
      * (X, Y, Z) = (0,1,2) default axis Z

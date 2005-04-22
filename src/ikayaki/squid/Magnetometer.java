@@ -57,7 +57,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     /**
      * COM port for communication.
      */
-    private SerialIO serialIO;
+    protected SerialIO serialIO;
 
     private boolean waitingForMessage = false;
 
