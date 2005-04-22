@@ -108,13 +108,13 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitSecond();
         //TODO: do we need to check values? (original does)
         try {
-            this.serialIO.writeMessage("DCD" + this.degausserDelay + "\r");
+            blockingWrite("DCD" + this.degausserDelay);
         } catch (SerialIOException ex1) {
             System.err.println("Error using port in degausser:" + ex1);
         }
         waitSecond();
         try {
-            this.serialIO.writeMessage("DCR" + this.degausserRamp + "\r");
+            blockingWrite("DCR" + this.degausserRamp);
         } catch (SerialIOException ex1) {
             System.err.println("Error using port in degausser:" + ex1);
         }
@@ -131,13 +131,13 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         this.maximumField = Settings.getDegausserMaximumField();
         waitSecond();
         try {
-            this.serialIO.writeMessage("DCD " + this.degausserDelay + "\r");
+            blockingWrite("DCD " + this.degausserDelay);
         } catch (SerialIOException ex1) {
             System.err.println("Error using port in degausser:" + ex1);
         }
         waitSecond();
         try {
-            this.serialIO.writeMessage("DCR " + this.degausserRamp + "\r");
+            blockingWrite("DCR " + this.degausserRamp);
         } catch (SerialIOException ex1) {
             System.err.println("Error using port in degausser:" + ex1);
         }
@@ -152,7 +152,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitSecond();
         if (coil == 'X' || coil == 'Y' || coil == 'X') {
             try {
-                this.serialIO.writeMessage("DCC " + coil + "\r");
+                blockingWrite("DCC " + coil);
             } catch (SerialIOException e) {
                 e.printStackTrace();
             }
@@ -171,11 +171,11 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         if (amplitude >= 1 && amplitude <= maximumField) {
             try {
                 if (amplitude < 10) {
-                    this.serialIO.writeMessage("DCA 000" + amplitude + "\r");
+                    blockingWrite("DCA 000" + amplitude);
                 } else if (amplitude < 100) {
-                    this.serialIO.writeMessage("DCA 00" + amplitude + "\r");
+                    blockingWrite("DCA 00" + amplitude);
                 } else if (amplitude < 1000) {
-                    this.serialIO.writeMessage("DCA 0" + amplitude + "\r");
+                    blockingWrite("DCA 0" + amplitude);
                 }
             } catch (SerialIOException e) {
                 e.printStackTrace();
@@ -191,7 +191,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     protected void executeRampUp() {
         waitSecond();
         try {
-            this.serialIO.writeMessage("DERU\r");
+            blockingWrite("DERU");
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
@@ -203,7 +203,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     protected void executeRampDown() {
         waitSecond();
         try {
-            this.serialIO.writeMessage("DERD\r");
+            blockingWrite("DERD");
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
@@ -215,8 +215,25 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     protected void executeRampCycle() {
         waitSecond();
         try {
-            this.serialIO.writeMessage("DERC\r");
+            blockingWrite("DERC");
         } catch (SerialIOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void blockingWrite(String command) throws SerialIOException {
+        try {
+            serialIO.writeMessage(command + "\r");
+
+            waitingForMessage = true;
+            String answer = queue.take();
+            waitingForMessage = false;
+
+            if (!command.equals(answer)) {
+                throw new IllegalArgumentException("sent: " + command + " recieved: " + answer);
+            }
+
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -301,7 +318,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     public char getRampStatus() {
         try {
-            this.serialIO.writeMessage("DSS\r");
+            blockingWrite("DSS");
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
@@ -323,7 +340,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     public int getRamp() {
         try {
-            this.serialIO.writeMessage("DSS\r");
+            blockingWrite("DSS");
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
@@ -346,7 +363,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     public int getDelay() {
         try {
-            this.serialIO.writeMessage("DSS\r");
+            blockingWrite("DSS");
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
@@ -369,7 +386,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     public char getCoil() {
         try {
-            this.serialIO.writeMessage("DSS\r");
+            blockingWrite("DSS");
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
@@ -392,7 +409,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     public int getAmplitude() {
         try {
-            this.serialIO.writeMessage("DSS\r");
+            blockingWrite("DSS");
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
