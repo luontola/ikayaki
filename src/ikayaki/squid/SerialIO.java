@@ -282,12 +282,12 @@ message from serial port is received.
                     if (newData == -1) {
                         break;
                     }
-                    if ('\r' == (char) newData) {
-                        //inputBuffer.append('\n'); // '\r' chars should be skipped I guess..
-                    } else {
+//                    if (false && '\r' == (char) newData) {
+//                        //inputBuffer.append('\n'); // '\r' chars should be skipped I guess..
+//                    } else {
                         newByte[0] = new Integer(newData).byteValue();
                         inputBuffer.append(new String(newByte, "US-ASCII"));
-                    }
+//                    }
                 } catch (IOException ex) {
                     System.err.println(ex);
                     return;
@@ -396,5 +396,9 @@ message from serial port is received.
      */
     private String padn(int n) {
         return (n < 10 ? "0" : "") + n;
+    }
+
+    public String getPortName() {
+        return portName;
     }
 }

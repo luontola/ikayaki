@@ -295,14 +295,14 @@ public class SquidEmulator {
         public void serialIOEvent(SerialIOEvent event) {
             int i;
             try {
-              logWriter.write("HANDLER_RECIEVE:" + event.getMessage() + "\n");
+              logWriter.write("HANDLER_RECIEVE:" + event.getCleanMessage() + "\n");
               logWriter.flush();
             }
             catch (IOException ex) {
             }
-            commandStack.add(event.getMessage());
+            commandStack.add(event.getCleanMessage());
             /*
-            String message = lastMessagePart + event.getMessage();
+            String message = lastMessagePart + event.getCleanMessage();
             String[] commands = message.split(",");
             for (i = 0; i < commands.length - 1; i++) {
                 commandStack.add(commands[i]);
@@ -363,13 +363,13 @@ public class SquidEmulator {
 
         public void serialIOEvent(SerialIOEvent event) {
           try {
-            logWriter.write("MAGNETOMETER_RECIEVE:" + event.getMessage() + "\n");
+            logWriter.write("MAGNETOMETER_RECIEVE:" + event.getCleanMessage() + "\n");
             logWriter.flush();
           }
           catch (IOException ex) {
           }
 
-            String message = event.getMessage();
+            String message = event.getCleanMessage();
             String[] commands = message.split("/r");
             //we only accept first "part". And only if it starts with A,X,Y,Z
             if (commands[0].charAt(0) == 'A' || commands[0].charAt(0) == 'X' || commands[0].charAt(0) == 'Y' || commands[0].charAt(
@@ -416,13 +416,13 @@ public class SquidEmulator {
 
         public void serialIOEvent(SerialIOEvent event) {
           try {
-            logWriter.write("DEGAUSSER_RECIEVE:" + event.getMessage() + "\n");
+            logWriter.write("DEGAUSSER_RECIEVE:" + event.getCleanMessage() + "\n");
             logWriter.flush();
           }
           catch (IOException ex) {
           }
 
-            String message = event.getMessage();
+            String message = event.getCleanMessage();
             String[] commands = message.split("/r");
             //we only accept first "part". And only if it starts with D
             if (commands[0].charAt(0) == 'D') {

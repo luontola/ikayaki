@@ -127,7 +127,7 @@ public class MeasurementResult {
             this.rotation = Integer.parseInt(element.getAttribute("rotation")) % 360;
         } catch (NumberFormatException e) {
             // TODO: import old versions
-            //throw new IllegalArgumentException("Invalid rotation: " + e.getMessage());
+            //throw new IllegalArgumentException("Invalid rotation: " + e.getCleanMessage());
             if (type.equals("BG")) {
                 this.rotation = 0;
             } else {

@@ -411,7 +411,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
 
     public void serialIOEvent(SerialIOEvent event) {
         //TODO: problem when Degausser and Magnetometer uses same port :/
-        String message = event.getMessage();
+        String message = event.getCleanMessage();
         if(message != null) {
           if (waitingForMessage) {
             try {

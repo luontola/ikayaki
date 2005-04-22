@@ -49,4 +49,13 @@ public class SerialIOEvent extends EventObject {
     public String getMessage() {
         return this.message;
     }
+
+    /**
+     * Returns received serial message with leading an trailing whitespace removed.
+     *
+     * @return The message in ASCII form that was received from serial port.
+     */
+    public String getCleanMessage() {
+        return this.message.trim();
+    }
 }

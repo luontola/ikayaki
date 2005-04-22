@@ -945,8 +945,8 @@ public class Handler implements SerialIOListener {
     }
 
     public void serialIOEvent(SerialIOEvent event) {
-        //System.err.println("new event:" + event.getMessage());
-        String message = event.getMessage();
+        //System.err.println("new event:" + event.getCleanMessage());
+        String message = event.getCleanMessage();
         if (message != null) {
             if (waitingForMessage) {
                 try {

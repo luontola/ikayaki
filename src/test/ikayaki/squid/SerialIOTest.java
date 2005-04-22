@@ -68,7 +68,7 @@ public class SerialIOTest
 
     public void serialIOEvent(SerialIOEvent event) {
         try {
-            queue.put(event.getMessage());
+            queue.put(event.getCleanMessage());
         } catch (InterruptedException e) {
             System.err.println("Interrupted message event");
         } catch (NullPointerException e) {

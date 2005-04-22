@@ -42,8 +42,8 @@ public class SerialProxy {
         try {
             portOne = SerialIO.openPort(new SerialParameters(args[0]));
             portTwo = SerialIO.openPort(new SerialParameters(args[1]));
-            new Forwarder(portOne, portTwo);
-            new Forwarder(portTwo, portOne);
+            new Forwarder(portOne, portTwo, System.out);
+            new Forwarder(portTwo, portOne, System.out);
 
             //wait for signal to quit 8)
             System.in.read();
@@ -57,6 +57,7 @@ public class SerialProxy {
 
     private static class Forwarder implements SerialIOListener {
 
+        private SerialIO in;
         private SerialIO out;
         private PrintStream log;
         private DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
@@ -67,6 +68,7 @@ public class SerialProxy {
 
         public Forwarder(SerialIO in, SerialIO out, PrintStream log) {
             in.addSerialIOListener(this);
+            this.in = in;
             this.out = out;
             this.log = log;
         }
@@ -74,7 +76,7 @@ public class SerialProxy {
         public void serialIOEvent(SerialIOEvent event) {
             try {
                 if (log != null) {
-                    log.println(dateFormat.format(new Date()) + "\t" + event.getMessage());
+                    log.println(dateFormat.format(new Date()) + "\t" + in.getPortName() + "\t" + event.getMessage());
                 }
                 out.writeMessage(event.getMessage());
             } catch (SerialIOException ex) {
