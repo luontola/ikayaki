@@ -76,7 +76,7 @@ public class SerialProxy {
         public void serialIOEvent(SerialIOEvent event) {
             try {
                 if (log != null) {
-                    log.println(dateFormat.format(new Date()) + "\t" + in.getPortName() + "\t" + event.getMessage());
+                    log.println(dateFormat.format(new Date()) + "\t" + in.getPortName() + "\t" + event.getLogMessage());
                 }
                 out.writeMessage(event.getMessage());
             } catch (SerialIOException ex) {

@@ -51,11 +51,37 @@ public class SerialIOEvent extends EventObject {
     }
 
     /**
-     * Returns received serial message with leading an trailing whitespace removed.
+     * Returns received serial message with all '\r' characters removed.
      *
      * @return The message in ASCII form that was received from serial port.
      */
     public String getCleanMessage() {
-        return this.message.trim();
+        String result = "";
+        for (int i = 0; i < message.length(); i++) {
+            char c = message.charAt(i);
+            if (c != '\r') {
+                result += c;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns received serial message with all non-space whitespace replaced with their keycodes.
+     *
+     * @return The message in ASCII form that was received from serial port.
+     */
+    public String getLogMessage() {
+        String result = "";
+        for (int i = 0; i < message.length(); i++) {
+            char c = message.charAt(i);
+            if (c < ' ') {
+                result += "&#" + (int) c + ";";
+            } else {
+                result += c;
+            }
+
+        }
+        return result;
     }
 }
