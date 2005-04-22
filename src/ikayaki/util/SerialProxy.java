@@ -31,7 +31,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * @author Aki Korpua
+ * Forwards commands sent between two serial ports and logs them.
+ * 
+ * @author Aki Korpua, Esko Luontola
  */
 public class SerialProxy {
 
