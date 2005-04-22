@@ -35,13 +35,23 @@ import java.util.Date;
  */
 public class SerialProxy {
 
+    private static DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+
     public static void main(String[] args) {
+        if (args.length != 2) {
+            System.out.println("Forwards commands sent between two serial ports and logs them.");
+            System.out.println("Usage: serialproxy <COM#> <COM#>");
+            System.out.println("Example: serialproxy COM2 COM5");
+            return;
+        }
         SerialIO portOne;
         SerialIO portTwo;
 
         try {
             portOne = SerialIO.openPort(new SerialParameters(args[0]));
             portTwo = SerialIO.openPort(new SerialParameters(args[1]));
+
+            System.out.println("Timestamp\tSender\tMessage");
             new Forwarder(portOne, portTwo, System.out);
             new Forwarder(portTwo, portOne, System.out);
 
@@ -60,7 +70,6 @@ public class SerialProxy {
         private SerialIO in;
         private SerialIO out;
         private PrintStream log;
-        private DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 
         public Forwarder(SerialIO in, SerialIO out) {
             this(in, out, null);
