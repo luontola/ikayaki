@@ -52,11 +52,11 @@ public class MeasurementEvent extends EventObject {
      * @param project the project whose measurement sent this event.
      * @param step    the measurement that sent this event.
      * @param type    the type of event this is.
-     * @throws NullPointerException if any of the arguments is null.
+     * @throws NullPointerException if project or type is null.
      */
     public MeasurementEvent(Project project, MeasurementStep step, Type type) {
         super(project);
-        if (project == null || step == null || type == null) {
+        if (project == null || /* step == null || */ type == null) {
             throw new NullPointerException();
         }
         this.project = project;
