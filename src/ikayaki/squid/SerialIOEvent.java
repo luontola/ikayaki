@@ -67,7 +67,7 @@ public class SerialIOEvent extends EventObject {
     }
 
     /**
-     * Returns received serial message with all non-space whitespace replaced with their keycodes.
+     * Returns received serial message with all '\r' characters replaced with the string "\r" and '\n' with "\n".
      *
      * @return The message in ASCII form that was received from serial port.
      */
@@ -75,8 +75,10 @@ public class SerialIOEvent extends EventObject {
         String result = "";
         for (int i = 0; i < message.length(); i++) {
             char c = message.charAt(i);
-            if (c < ' ') {
-                result += "&#" + (int) c + ";";
+            if (c == '\r') {
+                result += "\\r";
+            } else if (c == '\n') {
+                result += "\\n";
             } else {
                 result += c;
             }
