@@ -352,8 +352,12 @@ project listeners.
 
         synchronized (project) {
             // save the project to file and remove it from cache
+            if (project.getState() == null) {
+                new Exception("closeProject success: the project is already closed!").printStackTrace();
+                return true;
+            }
             if (project.getState() != IDLE) {
-                System.err.println("closeProject failed: the project is not idle");
+                System.err.println("closeProject failed: the project's state is " + project.getState());
                 return false;
             }
             if (!project.setSquid(null) || !project.saveNow()) {
@@ -2030,8 +2034,7 @@ project listeners.
                     getSquid().getMagnetometer().clearFlux('a');
                     getSquid().getMagnetometer().join();
                     Double[] results = getSquid().getMagnetometer().readData();
-                    currentStep.addResult(
-                            new MeasurementResult(NOISE, 0, results[0], results[1], results[2]));
+                    currentStep.addResult(new MeasurementResult(NOISE, 0, results[0], results[1], results[2]));
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
                     checkAborted();
 
@@ -2049,8 +2052,7 @@ project listeners.
                         // quick measure with no rotations
                         getSquid().getMagnetometer().join();
                         results = getSquid().getMagnetometer().readData();
-                        currentStep.addResult(
-                                new MeasurementResult(SAMPLE, 0, results[0], results[1], results[2]));
+                        currentStep.addResult(new MeasurementResult(SAMPLE, 0, results[0], results[1], results[2]));
                         fireMeasurementEvent(currentStep, VALUE_MEASURED);
                         checkAborted();
                     } else {
@@ -2061,8 +2063,7 @@ project listeners.
                             // measure at 0 degrees
                             getSquid().getMagnetometer().join();
                             results = getSquid().getMagnetometer().readData();
-                            currentStep.addResult(
-                                    new MeasurementResult(SAMPLE, 0, results[0], results[1], results[2]));
+                            currentStep.addResult(new MeasurementResult(SAMPLE, 0, results[0], results[1], results[2]));
                             fireMeasurementEvent(currentStep, VALUE_MEASURED);
                             checkAborted();
 
@@ -2122,8 +2123,7 @@ project listeners.
                     checkAborted();
                     getSquid().getMagnetometer().join();
                     results = getSquid().getMagnetometer().readData();
-                    currentStep.addResult(
-                            new MeasurementResult(NOISE, 0, results[0], results[1], results[2]));
+                    currentStep.addResult(new MeasurementResult(NOISE, 0, results[0], results[1], results[2]));
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
                     checkAborted();
 
