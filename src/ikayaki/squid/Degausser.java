@@ -170,13 +170,12 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitSecond();
         if (amplitude >= 1 && amplitude <= maximumField) {
             try {
-                if (amplitude < 10) {
-                    blockingWrite("DCA 000" + amplitude);
-                } else if (amplitude < 100) {
-                    blockingWrite("DCA 00" + amplitude);
-                } else if (amplitude < 1000) {
-                    blockingWrite("DCA 0" + amplitude);
+                String amps = Integer.toString(amplitude);
+                while (amps.length() < 4) {
+                    amps = "0" + amps;
                 }
+                blockingWrite("DCA " + amps);
+
             } catch (SerialIOException e) {
                 e.printStackTrace();
             }
@@ -231,7 +230,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
 
             if (!command.equals(answer)) {
                 for (int i = 0; i < answer.length(); i++) {
-                    System.out.println((int)answer.charAt(i));
+                    System.out.println((int) answer.charAt(i));
                 }
                 throw new IllegalArgumentException("sent: " + command + " recieved: " + answer);
             }
@@ -245,14 +244,14 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * Waits 1 second between command, neccessary because Degausser is slow :)
      */
     private void waitSecond() {
-        long waitTime = 1000 - (System.currentTimeMillis() - lastCommandTime);
-        if (waitTime > 0) {
-            try {
-                Thread.sleep(waitTime);
-            } catch (InterruptedException e) {
-            }
-        }
-        lastCommandTime = System.currentTimeMillis();
+//        long waitTime = 1000 - (System.currentTimeMillis() - lastCommandTime);
+//        if (waitTime > 0) {
+//            try {
+//                Thread.sleep(waitTime);
+//            } catch (InterruptedException e) {
+//            }
+//        }
+//        lastCommandTime = System.currentTimeMillis();
     }
 
     /**
@@ -266,9 +265,9 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         if (amp < 1 || amp > this.maximumField) {
             throw new IllegalStateException("Invalid amplitude");
         }
-        this.setCoil('Z');
-        this.setAmplitude(amplitude);
-        this.executeRampCycle();
+        setAmplitude(amplitude);
+        setCoil('Z');
+        executeRampCycle();
         //we need to take for DONE message or TRACK ERROR message
         waitingForMessage = true;
         String answer = null;
@@ -296,9 +295,9 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         if (amp < 1 || amp > this.maximumField) {
             throw new IllegalStateException("Invalid amplitude");
         }
-        this.setCoil('Y');
-        this.setAmplitude(amplitude);
-        this.executeRampCycle();
+        setAmplitude(amplitude);
+        setCoil('Y');
+        executeRampCycle();
         //we need to take for DONE message or TRACK ERROR message
         waitingForMessage = true;
         String answer = null;
