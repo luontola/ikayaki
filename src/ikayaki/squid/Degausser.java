@@ -263,7 +263,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public boolean demagnetizeZ(double amp) {
         int amplitude = (int) (amp * 10.0);
         if (amp < 1 || amp > this.maximumField) {
-            throw new IllegalStateException("Invalid amplitude");
+            throw new IllegalArgumentException("Invalid amplitude");
         }
         setAmplitude(amplitude);
         setCoil('Z');
@@ -273,7 +273,8 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         String answer = null;
         try {
             answer = queue.take();
-        } catch (InterruptedException ex) {
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         waitingForMessage = false;
         if (answer.equals("DONE")) {
@@ -293,7 +294,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public boolean demagnetizeY(double amp) {
         int amplitude = (int) (amp * 10.0);
         if (amp < 1 || amp > this.maximumField) {
-            throw new IllegalStateException("Invalid amplitude");
+            throw new IllegalArgumentException("Invalid amplitude");
         }
         setAmplitude(amplitude);
         setCoil('Y');
@@ -303,7 +304,8 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         String answer = null;
         try {
             answer = (String) queue.take();
-        } catch (InterruptedException ex) {
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         waitingForMessage = false;
         if (answer.equals("DONE")) {

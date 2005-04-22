@@ -292,6 +292,10 @@ public class MeasurementStep {
         if (stepValue < 0.0) {
             stepValue = -1.0;
         }
+        if (getProject() != null && getProject().getType() == Project.Type.AF
+                && (int) (stepValue * 10.0) > Settings.getDegausserMaximumField()) {
+            stepValue = Settings.getDegausserMaximumField() / 10.0;
+        }
         this.stepValue = stepValue;
         save();
     }
