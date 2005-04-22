@@ -437,6 +437,7 @@ public class MeasurementStep {
             } else {
                 state = DONE_RECENTLY;
             }
+            updateTransforms();     // need to update NOISE fixes
             save();
         }
     }

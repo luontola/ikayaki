@@ -2025,7 +2025,7 @@ project listeners.
                     fireMeasurementEvent(currentStep, HANDLER_STOP);
                     checkAborted();
                     // Begin by pulsing feedback loop for each axis And by clearing flux counter for each axis
-                    getSquid().getMagnetometer().openLoop('a');
+                    getSquid().getMagnetometer().pulseReset('a');
                     getSquid().getMagnetometer().join();
                     getSquid().getMagnetometer().clearFlux('a');
                     getSquid().getMagnetometer().join();

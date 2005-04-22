@@ -78,15 +78,16 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
           //Original sets range and filter to 1x and disable fast-slew, TODO: check if right, do we need status confirm?
           serialIO.writeMessage("XCR1\r");
           serialIO.writeMessage("XCF1\r");
-          serialIO.writeMessage("XCSD\r");
+          serialIO.writeMessage("XCSE\r");
           serialIO.writeMessage("YCR1\r");
           serialIO.writeMessage("YCF1\r");
-          serialIO.writeMessage("YCSD\r");
+          serialIO.writeMessage("YCSE\r");
           serialIO.writeMessage("ZCR1\r");
           serialIO.writeMessage("ZCF1\r");
-          serialIO.writeMessage("ZCSD\r");
+          serialIO.writeMessage("ZCSE\r");
           //and original resets all
-          this.configure('a','L','P');
+            this.configure('a','L','P');
+            this.configure('a','L','C');
           this.resetCounter('a');
         }
         catch (SerialIOException ex1) {
@@ -273,12 +274,13 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     }
 
     /**
-     * Pulse reset and opens feedback loop for axis. Need to be done before measuring.
+     * Pulse reset (open then close) feedback loop for axis. Need to be done before measuring.
      *
      * @param axis x,y,z or a (all). In lower case.
      */
-    public void openLoop(char axis) {
+    public void pulseReset(char axis) {
         this.configure(axis, 'L', 'P');
+        this.configure(axis, 'L', 'C');
     }
 
     /**

@@ -594,14 +594,14 @@ public class SquidFront extends JFrame {
     this.mopenLoop.setAction(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
         try {
-          Squid.instance().getMagnetometer().openLoop(param1.getText().charAt(0));
+          Squid.instance().getMagnetometer().pulseReset(param1.getText().charAt(0));
         }
         catch (IOException ex) {
-          magnetometerLog.append("openLoop failed\r");
+          magnetometerLog.append("pulseReset failed\r");
         }
       }
     });
-    this.mopenLoop.getAction().putValue(Action.NAME, "openLoop(char axis)");
+    this.mopenLoop.getAction().putValue(Action.NAME, "pulseReset(char axis)");
 
     this.mreadData.setAction(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
@@ -611,7 +611,7 @@ public class SquidFront extends JFrame {
 
         }
         catch (IOException ex) {
-          magnetometerLog.append("openLoop failed\r");
+          magnetometerLog.append("pulseReset failed\r");
         }
       }
     });

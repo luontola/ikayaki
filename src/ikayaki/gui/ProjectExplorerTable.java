@@ -495,7 +495,11 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                 File file = event.getProject().getFile();
                 boolean repaintTable = false;
 
-                switch (event.getProject().getState()) {
+                Project.State state = event.getProject().getState();
+                if (state == null) {
+                    state = Project.State.IDLE; // avoid NullPointerException when recieving events from closed projects
+                }
+                switch (state) {
                 case IDLE:
                     if (file.equals(measuringProjectFile)) {
                         // the project's measurement has just ended
