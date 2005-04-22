@@ -115,6 +115,11 @@ project listeners.
     private State state = IDLE;
 
     /**
+     * Tells if this project been closed with closeProject().
+     */
+    private boolean closed = false;
+
+    /**
      * Pointer to the SQUID device interface, or null if this project is not its owner.
      */
     private Squid squid = null;
@@ -352,7 +357,7 @@ project listeners.
 
         synchronized (project) {
             // save the project to file and remove it from cache
-            if (project.getState() == null) {
+            if (project.isClosed()) {
                 new Exception("closeProject success: the project is already closed!").printStackTrace();
                 return true;
             }
@@ -367,7 +372,7 @@ project listeners.
             projectCache.remove(project.getFile());
 
             // mark the project as closed
-            project.state = null;
+            project.closed = true;
             project.autosaveRunnable = new Runnable() {
                 public void run() {
                     assert false : "This should never have been executed. Maybe something set the state to non-null?";
@@ -721,7 +726,7 @@ project listeners.
      * @throws IllegalStateException if this project has already been closed.
      */
     public synchronized void save() {
-        if (getState() == null) {
+        if (isClosed()) {
             throw new IllegalStateException("The project is closed");
         }
         modified = true;
@@ -736,7 +741,7 @@ project listeners.
      * @throws IllegalStateException if this project has already been closed.
      */
     public boolean saveNow() {
-        if (getState() == null) {
+        if (isClosed()) {
             throw new IllegalStateException("The project is closed");
         }
         File file;
@@ -831,6 +836,14 @@ project listeners.
     private void setState(State state) {
         this.state = state;
         fireProjectEvent(STATE_CHANGED);
+    }
+
+    /**
+     * Returns true if this project has been closed with closeProject(). If it has been closed, no modifications to the
+     * project will be allowed.
+     */
+    public boolean isClosed() {
+        return closed;
     }
 
     /**
