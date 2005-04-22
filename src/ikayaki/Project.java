@@ -1549,7 +1549,7 @@ project listeners.
 //        if (type == CALIBRATION) {
 //            return false;
 //        } else if (type == AF || type == THELLIER || type == THERMAL) {
-        if (true || getState() == IDLE) {
+        if (getState() == IDLE) {
             return true;
         } else {
             return false;
