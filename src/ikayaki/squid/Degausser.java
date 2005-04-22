@@ -150,7 +150,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     protected void setCoil(char coil) {
         waitSecond();
-        if (coil == 'X' || coil == 'Y' || coil == 'X') {
+        if (coil == 'X' || coil == 'Y' || coil == 'Z') {
             try {
                 blockingWrite("DCC " + coil);
             } catch (SerialIOException e) {

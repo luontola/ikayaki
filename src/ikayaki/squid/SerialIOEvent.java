@@ -51,7 +51,7 @@ public class SerialIOEvent extends EventObject {
     }
 
     /**
-     * Returns received serial message with all '\r' characters removed.
+     * Returns received serial message with all '\r' characters removed and trimmed.
      *
      * @return The message in ASCII form that was received from serial port.
      */
@@ -63,7 +63,7 @@ public class SerialIOEvent extends EventObject {
                 result += c;
             }
         }
-        return result;
+        return result.trim();
     }
 
     /**

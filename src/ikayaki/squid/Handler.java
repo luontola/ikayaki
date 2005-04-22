@@ -869,7 +869,6 @@ public class Handler implements SerialIOListener {
             waitingForMessage = true;
             try {
                 String answer = (String) answerQueue.take();//poll(pollTimeout, TimeUnit.SECONDS);
-                System.err.println("get:" + answer + " from queue(join)");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -903,7 +902,6 @@ public class Handler implements SerialIOListener {
         // while(true) {
         try {
             answer = (String) answerQueue.take(); //(pollTimeout, TimeUnit.SECONDS);
-            System.err.println("get:" + answer + " from queue(verify)");
             //if(answer != null) break;
             //Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -936,7 +934,6 @@ public class Handler implements SerialIOListener {
         String answer = null;
         try {
             answer = (String) answerQueue.poll(pollTimeout, TimeUnit.SECONDS);
-            System.err.println("get:" + answer + " from queue(take)");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
