@@ -36,9 +36,6 @@ import java.util.concurrent.TimeUnit;
  * @author Aki Korpua
  */
 public class Degausser implements SerialIOListener {
-/*
-Event A: On SerialIOEvent - reads the message and puts it in a buffer
-*/
 
     /**
      * buffer for incoming messages, readed when needed.
@@ -131,13 +128,13 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         this.maximumField = Settings.getDegausserMaximumField();
         waitSecond();
         try {
-            blockingWrite("DCD " + this.degausserDelay);
+            blockingWrite("DCD" + this.degausserDelay);
         } catch (SerialIOException ex1) {
             System.err.println("Error using port in degausser:" + ex1);
         }
         waitSecond();
         try {
-            blockingWrite("DCR " + this.degausserRamp);
+            blockingWrite("DCR" + this.degausserRamp);
         } catch (SerialIOException ex1) {
             System.err.println("Error using port in degausser:" + ex1);
         }
@@ -152,7 +149,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitSecond();
         if (coil == 'X' || coil == 'Y' || coil == 'Z') {
             try {
-                blockingWrite("DCC " + coil);
+                blockingWrite("DCC" + coil);
             } catch (SerialIOException e) {
                 e.printStackTrace();
             }
@@ -174,9 +171,12 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
                 while (amps.length() < 4) {
                     amps = "0" + amps;
                 }
-                blockingWrite("DCA " + amps);
+                blockingWrite("DCA" + amps);
+                Thread.sleep(1500);     // needs to wait for the degausser to process the command                 
 
             } catch (SerialIOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         } else {
@@ -229,10 +229,10 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
             waitingForMessage = false;
 
             if (!command.equals(answer)) {
-                for (int i = 0; i < answer.length(); i++) {
-                    System.out.println((int) answer.charAt(i));
-                }
-                throw new IllegalArgumentException("sent: " + command + " recieved: " + answer);
+//                for (int i = 0; i < answer.length(); i++) {
+//                    System.out.println((int) answer.charAt(i));
+//                }
+//                throw new IllegalArgumentException("sent: " + command + " recieved: " + answer);
             }
 
         } catch (InterruptedException e) {
@@ -357,7 +357,6 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         }
         waitingForMessage = false;
         return (int) answer.charAt(4);
-
     }
 
     /**
@@ -380,7 +379,6 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         }
         waitingForMessage = false;
         return (int) answer.charAt(7);
-
     }
 
     /**
@@ -403,7 +401,6 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         }
         waitingForMessage = false;
         return answer.charAt(10);
-
     }
 
     /**

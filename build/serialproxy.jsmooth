@@ -6,6 +6,7 @@
 <JVMSearchPath>jdkpath</JVMSearchPath>
 <JVMSearchPath>exepath</JVMSearchPath>
 <JVMSearchPath>jview</JVMSearchPath>
+<arguments></arguments>
 <bundledJVMPath>jre</bundledJVMPath>
 <classPath>ikayaki.jar</classPath>
 <classPath>lib\comm.jar</classPath>
@@ -15,10 +16,10 @@
 <classPath>lib\vecmath.jar</classPath>
 <currentDirectory>.</currentDirectory>
 <embeddedJar>false</embeddedJar>
-<executableName>squidfront.exe</executableName>
+<executableName>serialproxy.exe</executableName>
 <iconLocation>..\resources\ikayaki.ico</iconLocation>
 <initialMemoryHeap>-1</initialMemoryHeap>
-<mainClassName>ikayaki.squid.SquidFront</mainClassName>
+<mainClassName>ikayaki.util.SerialProxy</mainClassName>
 <maximumMemoryHeap>-1</maximumMemoryHeap>
 <maximumVersion></maximumVersion>
 <minimumVersion>1.5.0</minimumVersion>
@@ -29,10 +30,10 @@
 </skeletonProperties>
 <skeletonProperties>
 <key>PressKey</key>
-<value>1</value>
+<value>0</value>
 </skeletonProperties>
 <skeletonProperties>
 <key>Debug</key>
-<value>1</value>
+<value>0</value>
 </skeletonProperties>
 </jsmoothproject>
