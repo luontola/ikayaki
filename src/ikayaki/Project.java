@@ -1549,7 +1549,7 @@ project listeners.
 //        if (type == CALIBRATION) {
 //            return false;
 //        } else if (type == AF || type == THELLIER || type == THERMAL) {
-        if (getState() == IDLE) {
+        if (true || getState() == IDLE) {
             return true;
         } else {
             return false;
@@ -1743,7 +1743,7 @@ project listeners.
         if (!isManualControlEnabled()) {
             return false;
         }
-        setState(MEASURING);
+        setState(PAUSED);
         new Thread(new ManualMove(position)).start();
         return true;
     }
@@ -1841,7 +1841,7 @@ project listeners.
         if (!isManualControlEnabled()) {
             return false;
         }
-        setState(MEASURING);
+        setState(PAUSED);
         new Thread(new ManualRotate(angle)).start();
         return true;
     }
@@ -1858,7 +1858,7 @@ project listeners.
         if (!isManualControlEnabled()) {
             return false;
         }
-        setState(MEASURING);
+        setState(PAUSED);
         new Thread(new ManualMeasure()).start();
         return true;
     }
@@ -1876,7 +1876,7 @@ project listeners.
         if (!isManualControlEnabled()) {
             return false;
         }
-        setState(MEASURING);
+        setState(PAUSED);
         new Thread(new ManualDemag(ManualDemagAxel.Z, amplitude)).start();
         return true;
     }
@@ -1894,7 +1894,7 @@ project listeners.
         if (!isManualControlEnabled()) {
             return false;
         }
-        setState(MEASURING);
+        setState(PAUSED);
         new Thread(new ManualDemag(ManualDemagAxel.Y, amplitude)).start();
         return true;
     }

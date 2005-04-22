@@ -241,22 +241,24 @@ public class Handler implements SerialIOListener {
     protected void seekHome() {
         try {
             // seek home position
+            selectMovement();
             setVelocity(velocity);
             setAcceleration(acceleration);
             setDeceleration(deceleration);
-            selectMovement();
-            serialIO.writeMessage("+S,");
-            waitForMessage();
+            if (currentPosition != Integer.MAX_VALUE) {
+                serialIO.writeMessage("+S,");
+                waitForMessage();
+            }
 
             serialIO.writeMessage("-H1,");
             waitForMessage();
             currentPosition = 0;
 
             // seek home rotation
+            selectRotation();
             setVelocity(rotationSpeed);
             setAcceleration(rotationAcceleration);
             setDeceleration(rotationDeceleration);
-            selectRotation();
             serialIO.writeMessage("+H1,");
             waitForMessage();
             currentRotation = 0;
@@ -418,6 +420,8 @@ public class Handler implements SerialIOListener {
      *                 If equal to Integer.MAX_VALUE, will go to right limit.
      */
     protected void moveToPosition(int position) {
+        selectMovement();
+
         if (currentPosition == position) {
             // do not move if we are already there
             return;
@@ -513,6 +517,7 @@ public class Handler implements SerialIOListener {
         if (steps < -16777215 || steps > 16777215) {
             throw new IllegalArgumentException("steps is: " + steps);
         }
+        selectMovement();
 
         String direction;
         if (steps >= 0) {
@@ -526,7 +531,6 @@ public class Handler implements SerialIOListener {
         setDeceleration(deceleration);
 
         try {
-            selectMovement();
             serialIO.writeMessage(direction + "N" + steps);
             go();
         } catch (SerialIOException e) {
@@ -632,6 +636,7 @@ public class Handler implements SerialIOListener {
             public void run() {
                 int angle = rotationAngle % 360;
                 int steps = (int) (((double) angle) / 360.0 * Settings.getHandlerRotation());
+                selectRotation();
 
                 try {
                     setVelocity(rotationSpeed);
@@ -639,11 +644,15 @@ public class Handler implements SerialIOListener {
                     setDeceleration(rotationDeceleration);
 
                     // re-seek home always rotating to zero, otherwise use the counter
-                    selectRotation();
                     if (angle == 0) {
                         serialIO.writeMessage("+H1,");
                     } else {
-                        serialIO.writeMessage("+N" + (steps - currentRotation) + "G,");
+                        int relativeSteps = steps - currentRotation;
+                        while (relativeSteps < 0) {
+                            relativeSteps += Settings.getHandlerRotation();
+                        }
+                        relativeSteps = relativeSteps % Settings.getHandlerRotation();
+                        serialIO.writeMessage("+N" + relativeSteps + "G,");
                     }
                     currentRotation = steps;
                     waitForMessage();
@@ -735,7 +744,7 @@ public class Handler implements SerialIOListener {
             try {
                 serialIO.writeMessage("A" + a + ",");
                 //this.serialIO.writeMessage(","); //execute command
-                acceleration = a;
+//                acceleration = a;
             } catch (SerialIOException e) {
                 e.printStackTrace();
             }
@@ -754,7 +763,7 @@ public class Handler implements SerialIOListener {
         if (d >= 0 && d < 128) {
             try {
                 serialIO.writeMessage("D" + d + ",");
-                deceleration = d;
+//                deceleration = d;
             } catch (SerialIOException e) {
                 e.printStackTrace();
             }
@@ -797,9 +806,10 @@ public class Handler implements SerialIOListener {
 
     /**
      * Slew the motor up to maximum speed and continue until reaching a hard limit switch or receiving a quit (Q)
-     * command. (S).
+     * command. (S). Automatically runs selectMovement() before slewing.
      */
     protected void performSlew() {
+        selectMovement();
         try {
             serialIO.writeMessage("S,");
             //this.serialIO.writeMessage(","); //execute command
