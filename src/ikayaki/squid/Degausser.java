@@ -230,6 +230,9 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
             waitingForMessage = false;
 
             if (!command.equals(answer)) {
+                for (int i = 0; i < answer.length(); i++) {
+                    System.out.println((int)answer.charAt(i));
+                }
                 throw new IllegalArgumentException("sent: " + command + " recieved: " + answer);
             }
 
