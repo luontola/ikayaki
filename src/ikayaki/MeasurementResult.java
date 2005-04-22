@@ -178,11 +178,11 @@ public class MeasurementResult {
 
         // apply holder and noise fixes
         if (step != null) {
-            Vector3d holder = step.getHolder();
-            Vector3d noise = step.getNoise();
-            sampleVector.x = sampleVector.x - holder.x - noise.x;
-            sampleVector.y = sampleVector.y - holder.y - noise.y;
-            sampleVector.z = sampleVector.z - holder.z - noise.z;
+//            Vector3d holder = step.getHolder();
+//            Vector3d noise = step.getNoise();
+//            sampleVector.x = sampleVector.x - holder.x - noise.x;
+//            sampleVector.y = sampleVector.y - holder.y - noise.y;
+//            sampleVector.z = sampleVector.z - holder.z - noise.z;
         }
 
         // apply rotation fix
@@ -193,13 +193,13 @@ public class MeasurementResult {
                 // NO NEED TO ROTATE
                 break;
             case 90:
-                sampleVector.set(-sampleVector.y, sampleVector.x, sampleVector.z);
+                sampleVector.set(sampleVector.y, -sampleVector.x, sampleVector.z);
                 break;
             case 180:
                 sampleVector.set(-sampleVector.x, -sampleVector.y, sampleVector.z);
                 break;
             case 270:
-                sampleVector.set(sampleVector.y, -sampleVector.x, sampleVector.z);
+                sampleVector.set(-sampleVector.y, sampleVector.x, sampleVector.z);
                 break;
             default:
                 assert false;
@@ -208,7 +208,7 @@ public class MeasurementResult {
         } else {
             // rotate all non-trivial angles by using a matrix
             Matrix3d rotate = new Matrix3d();
-            rotate.rotZ(Math.toRadians(rotation));
+            rotate.rotZ(Math.toRadians(-rotation));
             rotate.transform(sampleVector);
         }
 
