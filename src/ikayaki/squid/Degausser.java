@@ -89,9 +89,9 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     private long lastCommandTime;
 
     private boolean waitingForMessage = false;
-  private int maximumField;
+    private int maximumField;
 
-  /**
+    /**
      * Creates a new degausser interface. Opens connection to degausser COM port (if not open yet) and reads settings
      * from the Setting class.
      */
@@ -153,8 +153,11 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         if (coil == 'X' || coil == 'Y' || coil == 'X') {
             try {
                 this.serialIO.writeMessage("DCC " + coil + "\r");
-            } catch (SerialIOException ex) {
+            } catch (SerialIOException e) {
+                e.printStackTrace();
             }
+        } else {
+            throw new IllegalArgumentException("coil = " + coil);
         }
     }
 
@@ -174,8 +177,11 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
                 } else if (amplitude < 1000) {
                     this.serialIO.writeMessage("DCA 0" + amplitude + "\r");
                 }
-            } catch (SerialIOException ex) {
+            } catch (SerialIOException e) {
+                e.printStackTrace();
             }
+        } else {
+            throw new IllegalArgumentException("amplitude = " + amplitude);
         }
     }
 
@@ -186,7 +192,8 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitSecond();
         try {
             this.serialIO.writeMessage("DERU\r");
-        } catch (SerialIOException ex) {
+        } catch (SerialIOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -197,7 +204,8 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitSecond();
         try {
             this.serialIO.writeMessage("DERD\r");
-        } catch (SerialIOException ex) {
+        } catch (SerialIOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -208,7 +216,8 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
         waitSecond();
         try {
             this.serialIO.writeMessage("DERC\r");
-        } catch (SerialIOException ex) {
+        } catch (SerialIOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -233,27 +242,26 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @return true if process was sended succesfully, otherwise false.
      */
     public boolean demagnetizeZ(double amp) {
-      int amplitude = (int) (amp * 10.0);
-      if (amp < 1 || amp > this.maximumField)
-        throw new IllegalStateException("Invalid amplitude");
-      this.setCoil('Z');
-      this.setAmplitude(amplitude);
-      this.executeRampCycle();
-      //we need to take for DONE message or TRACK ERROR message
-      waitingForMessage = true;
-      String answer = null;
-      try {
-        answer = queue.take();
-      }
-      catch (InterruptedException ex) {
-      }
-      waitingForMessage = false;
-      if (answer.equals("DONE")) {
-        return true;
-      }
-      else {
-        return false;
-      }
+        int amplitude = (int) (amp * 10.0);
+        if (amp < 1 || amp > this.maximumField) {
+            throw new IllegalStateException("Invalid amplitude");
+        }
+        this.setCoil('Z');
+        this.setAmplitude(amplitude);
+        this.executeRampCycle();
+        //we need to take for DONE message or TRACK ERROR message
+        waitingForMessage = true;
+        String answer = null;
+        try {
+            answer = queue.take();
+        } catch (InterruptedException ex) {
+        }
+        waitingForMessage = false;
+        if (answer.equals("DONE")) {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 
@@ -264,27 +272,26 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @return true if process was sended succesfully, otherwise false.
      */
     public boolean demagnetizeY(double amp) {
-      int amplitude = (int) (amp * 10.0);
-      if (amp < 1 || amp > this.maximumField)
-        throw new IllegalStateException("Invalid amplitude");
-      this.setCoil('Y');
-      this.setAmplitude(amplitude);
-      this.executeRampCycle();
-      //we need to take for DONE message or TRACK ERROR message
-      waitingForMessage = true;
-      String answer = null;
-      try {
-        answer = (String) queue.take();
-      }
-      catch (InterruptedException ex) {
-      }
-      waitingForMessage = false;
-      if (answer.equals("DONE")) {
-        return true;
-      }
-      else {
-        return false;
-      }
+        int amplitude = (int) (amp * 10.0);
+        if (amp < 1 || amp > this.maximumField) {
+            throw new IllegalStateException("Invalid amplitude");
+        }
+        this.setCoil('Y');
+        this.setAmplitude(amplitude);
+        this.executeRampCycle();
+        //we need to take for DONE message or TRACK ERROR message
+        waitingForMessage = true;
+        String answer = null;
+        try {
+            answer = (String) queue.take();
+        } catch (InterruptedException ex) {
+        }
+        waitingForMessage = false;
+        if (answer.equals("DONE")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -295,14 +302,15 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public char getRampStatus() {
         try {
             this.serialIO.writeMessage("DSS\r");
-        } catch (SerialIOException ex) {
+        } catch (SerialIOException e) {
+            e.printStackTrace();
         }
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.poll(pollTimeout,TimeUnit.SECONDS);
-        }
-        catch (InterruptedException ex1) {
+            answer = (String) queue.poll(pollTimeout, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         waitingForMessage = false;
         return answer.charAt(1);
@@ -316,14 +324,15 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public int getRamp() {
         try {
             this.serialIO.writeMessage("DSS\r");
-        } catch (SerialIOException ex) {
+        } catch (SerialIOException e) {
+            e.printStackTrace();
         }
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.poll(pollTimeout,TimeUnit.SECONDS);
-        }
-        catch (InterruptedException ex1) {
+            answer = (String) queue.poll(pollTimeout, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         waitingForMessage = false;
         return (int) answer.charAt(4);
@@ -338,14 +347,15 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public int getDelay() {
         try {
             this.serialIO.writeMessage("DSS\r");
-        } catch (SerialIOException ex) {
+        } catch (SerialIOException e) {
+            e.printStackTrace();
         }
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.poll(pollTimeout,TimeUnit.SECONDS);
-        }
-        catch (InterruptedException ex1) {
+            answer = (String) queue.poll(pollTimeout, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         waitingForMessage = false;
         return (int) answer.charAt(7);
@@ -360,14 +370,15 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public char getCoil() {
         try {
             this.serialIO.writeMessage("DSS\r");
-        } catch (SerialIOException ex) {
+        } catch (SerialIOException e) {
+            e.printStackTrace();
         }
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.poll(pollTimeout,TimeUnit.SECONDS);
-        }
-        catch (InterruptedException ex1) {
+            answer = (String) queue.poll(pollTimeout, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         waitingForMessage = false;
         return answer.charAt(10);
@@ -382,14 +393,15 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public int getAmplitude() {
         try {
             this.serialIO.writeMessage("DSS\r");
-        } catch (SerialIOException ex) {
+        } catch (SerialIOException e) {
+            e.printStackTrace();
         }
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.poll(pollTimeout,TimeUnit.SECONDS);
-        }
-        catch (InterruptedException ex1) {
+            answer = (String) queue.poll(pollTimeout, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         waitingForMessage = false;
 
@@ -412,19 +424,17 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public void serialIOEvent(SerialIOEvent event) {
         //TODO: problem when Degausser and Magnetometer uses same port :/
         String message = event.getCleanMessage();
-        if(message != null) {
-          if (waitingForMessage) {
-            try {
-              queue.put(message);
+        if (message != null) {
+            if (waitingForMessage) {
+                try {
+                    queue.put(message);
+                } catch (InterruptedException e) {
+                    System.err.println("Interrupted Degausser message event");
+                } catch (NullPointerException e) {
+                    System.err.println("Null from SerialEvent in Degausser");
+                }
             }
-            catch (InterruptedException e) {
-              System.err.println("Interrupted Degausser message event");
-            }
-            catch (NullPointerException e) {
-              System.err.println("Null from SerialEvent in Degausser");
-            }
-          }
-          messageBuffer.add(message);
+            messageBuffer.add(message);
         }
     }
 }

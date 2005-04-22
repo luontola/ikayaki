@@ -1998,9 +1998,9 @@ project listeners.
                         fireMeasurementEvent(currentStep, HANDLER_STOP);
                         checkAborted();
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
-                        //need Gauss value
-                        getSquid().getDegausser().demagnetizeZ(currentStep.getStepValue());
-                        // blocking method
+                        if (!getSquid().getDegausser().demagnetizeZ(currentStep.getStepValue())) {
+                            throw new InterruptedException("demagnetizeZ = false");
+                        }
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
                         checkAborted();
 
@@ -2011,8 +2011,9 @@ project listeners.
                         fireMeasurementEvent(currentStep, HANDLER_STOP);
                         checkAborted();
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
-                        //need Gauss value
-                        getSquid().getDegausser().demagnetizeY(currentStep.getStepValue());
+                        if (!getSquid().getDegausser().demagnetizeY(currentStep.getStepValue())) {
+                            throw new InterruptedException("demagnetizeY = false");
+                        }
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
                         checkAborted();
 
@@ -2023,8 +2024,9 @@ project listeners.
                         fireMeasurementEvent(currentStep, HANDLER_STOP);
                         checkAborted();
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
-                        //need Gauss value
-                        getSquid().getDegausser().demagnetizeY(currentStep.getStepValue());
+                        if (!getSquid().getDegausser().demagnetizeY(currentStep.getStepValue())) {
+                            throw new InterruptedException("demagnetizeY = false");
+                        }
                         fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
                         checkAborted();
                         getSquid().getHandler().rotateTo(0);
