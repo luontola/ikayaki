@@ -207,7 +207,7 @@ public class MeasurementSequence implements Comparable<MeasurementSequence> {
         if (val == 0) {
             return this.hashCode() - other.hashCode();
         } else {
-            return 0;
+            return val;
         }
     }
 

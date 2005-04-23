@@ -27,8 +27,10 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import ikayaki.Ikayaki;
 import ikayaki.Settings;
+import ikayaki.MeasurementSequence;
 
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
@@ -126,7 +128,7 @@ public class ProgramSettingsPanel extends JPanel {
 
         /* Saved Sequences */
 
-        
+        sequencesTable.setModel(new EditSequencesTableModel());
 
         /* Default Columns */
 
@@ -299,4 +301,30 @@ public class ProgramSettingsPanel extends JPanel {
                 new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
     }
+
+    private class EditSequencesTableModel extends AbstractTableModel {
+
+        private MeasurementSequence[] sequences;
+
+        public EditSequencesTableModel() {
+            updateSequences();
+        }
+
+        private void updateSequences() {
+            sequences = Settings.getSequences();
+        }
+
+        public int getRowCount() {
+            return 0;
+        }
+
+        public int getColumnCount() {
+            return 0;
+        }
+
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            return null;
+        }
+    }
+
 }
