@@ -79,10 +79,15 @@ public class ProgramSettingsPanel extends JPanel {
                 Settings.setMeasurementRotations(value);
             }
         });
+        
         measurementRotationsField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
-                System.out.println(e);
-                measurementRotationsField.setCaretPosition(measurementRotationsField.getText().length());
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        measurementRotationsField.setSelectionStart(0);
+                        measurementRotationsField.setSelectionEnd(measurementRotationsField.getText().length());
+                    }
+                });
             }
 
             public void focusLost(FocusEvent e) {

@@ -245,7 +245,7 @@ public class MeasurementDetailsPanel extends ProjectComponent {
                     } else if (rowIndex == 1 || rowIndex == getRowCount() - 1) {
                         value = "BG";
                     } else {
-                        switch ((rowIndex - 1) % 4) {
+                        switch ((rowIndex - 2) % 4) {
                         case 0:
                             value = "0";
                             break;
