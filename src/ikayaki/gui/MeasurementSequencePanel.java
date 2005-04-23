@@ -35,7 +35,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static ikayaki.gui.SequenceColumn.*;
@@ -284,11 +283,8 @@ public class MeasurementSequencePanel extends ProjectComponent {
      * Rebuilds the contents of the loadSequenceBox combobox by getting the saved sequences from the settings.
      */
     private void resetLoadSequenceBox() {
-        // save old selection
-        Object selected = loadSequenceBox.getSelectedItem();
+        // remove old and get new items
         loadSequenceBox.removeAllItems();
-
-        // get new items
         MeasurementSequence[] sequences = Settings.getSequences();
 
         // insert new items and restore old selection
@@ -296,7 +292,6 @@ public class MeasurementSequencePanel extends ProjectComponent {
         for (MeasurementSequence sequence : sequences) {
             loadSequenceBox.addItem(sequence);
         }
-        loadSequenceBox.setSelectedItem(selected);
     }
 
     /**
@@ -770,9 +765,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
                     }
 
                     // ask for a name for the sequence
-                    String name = JOptionPane.showInputDialog(getParentFrame(),
-                            "Enter a name for the sequence",
-                            "Save Selected As...", JOptionPane.PLAIN_MESSAGE);
+                    String name = showSequenceNameDialog("Enter a name for the sequence", "Save Selected As...");
                     if (name == null) {
                         return;
                     }
@@ -802,9 +795,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
                     MeasurementSequence sequence = getProject().copySequence(0, getProject().getSteps() - 1);
 
                     // ask for a name for the sequence
-                    String name = JOptionPane.showInputDialog(getParentFrame(),
-                            "Enter a name for the sequence",
-                            "Save All As...", JOptionPane.PLAIN_MESSAGE);
+                    String name = showSequenceNameDialog("Enter a name for the sequence", "Save All As...");
                     if (name == null) {
                         return;
                     }
@@ -824,6 +815,57 @@ public class MeasurementSequencePanel extends ProjectComponent {
                 action.setEnabled(false);
             }
             return action;
+        }
+
+        private String showSequenceNameDialog(String message, String title) {
+            String name = null;
+            boolean ok = false;
+
+            while (!ok) {
+
+                // ask for a name for the sequence
+                name = (String) JOptionPane.showInputDialog(getParentFrame(),
+                        message, title, JOptionPane.PLAIN_MESSAGE, null, null, name);
+                if (name == null) {
+                    return null;
+                } else if (name.equals("")) {
+                    continue;
+                }
+
+                // check for a duplicate name
+                ok = true;
+                MeasurementSequence[] savedSequences = Settings.getSequences();
+                for (MeasurementSequence savedSequence : savedSequences) {
+
+                    if (savedSequence.getName().equals(name)) {
+
+                        // duplicate name found, ask for how to continue
+                        int response = JOptionPane.showConfirmDialog(getParentFrame(),
+                                "Another sequence with the name \"" + name + "\" exists. Do you wish to overwrite it?",
+                                "Overwrite?", JOptionPane.YES_NO_CANCEL_OPTION);
+
+                        if (response == JOptionPane.YES_OPTION) {
+                            // overwrite the old sequence
+                            Settings.removeSequence(savedSequence);
+                            ok = true;
+                            break;
+
+                        } else if (response == JOptionPane.NO_OPTION) {
+                            // ask for a new name
+                            ok = false;
+                            break;
+
+                        } else if (response == JOptionPane.CANCEL_OPTION) {
+                            // cancel the operation
+                            return null;
+
+                        } else {
+                            throw new IllegalArgumentException("response = " + response);
+                        }
+                    }
+                }
+            }
+            return name;
         }
 
         /**
