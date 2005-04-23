@@ -34,6 +34,8 @@ import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
+import java.awt.event.FocusEvent;
 import java.io.File;
 import java.util.List;
 import java.beans.PropertyChangeListener;
@@ -70,10 +72,21 @@ public class ProgramSettingsPanel extends JPanel {
         format.setMaximum(new Integer(999));
         measurementRotationsField.setFormatterFactory(new DefaultFormatterFactory(format));
         measurementRotationsField.setValue(new Integer(Settings.getMeasurementRotations()));
+
         measurementRotationsField.addPropertyChangeListener("value", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 int value = ((Number) measurementRotationsField.getValue()).intValue();
                 Settings.setMeasurementRotations(value);
+            }
+        });
+        measurementRotationsField.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                System.out.println(e);
+                measurementRotationsField.setCaretPosition(measurementRotationsField.getText().length());
+            }
+
+            public void focusLost(FocusEvent e) {
+                // DO NOTHING
             }
         });
 
