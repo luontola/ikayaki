@@ -436,17 +436,25 @@ public class MeasurementSequencePanel extends ProjectComponent {
             return;
         }
 
+        // must use integers for added accuracy
+        final double ratio = Settings.getDegausserMinimumFieldIncrement();
+        int istartVal = (int) Math.round(startVal / ratio);
+        int istepVal = (int) Math.round(stepVal / ratio);
+        int istopVal = (int) Math.round(stopVal / ratio);
+        int imin = (int) Math.round(Settings.getDegausserMinimumField() / ratio);
+        int imax = (int) Math.round(Settings.getDegausserMaximumField() / ratio);
+
         // add the steps to the sequence
         MeasurementStep step = new MeasurementStep();
-        for (double d = startVal; d <= stopVal; d += stepVal) {
-            if (d > 0.0 && d < Settings.getDegausserMinimumField()) {
-                d = Settings.getDegausserMinimumField();
+        for (int i = istartVal; i <= istopVal; i += istepVal) {
+            if (i > 0 && i < imin) {
+                i = imin;
             }
             if (getProject().getSteps() > 0
-                    && Math.abs(d - getLastStepValue()) < Settings.getDegausserMinimumFieldIncrement()) {
+                    && (i - (int) Math.round(getLastStepValue() / ratio)) < 1) {
                 continue;
             }
-            step.setStepValue(d);
+            step.setStepValue(i * ratio);
             getProject().addStep(step);
         }
 
