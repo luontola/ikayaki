@@ -29,13 +29,12 @@ import ikayaki.Ikayaki;
 import ikayaki.Settings;
 
 import javax.swing.*;
+import javax.swing.event.AncestorListener;
+import javax.swing.event.AncestorEvent;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -64,9 +63,6 @@ public class ProgramSettingsPanel extends JPanel {
         $$$setupUI$$$();
         setLayout(new BorderLayout());
         add(contentPane, BorderLayout.CENTER);
-
-        System.out.println(getParent());
-
 
         /* Measurement Rotations */
 
@@ -163,6 +159,19 @@ public class ProgramSettingsPanel extends JPanel {
         closeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 creator.setVisible(false);
+            }
+        });
+
+        this.addHierarchyListener(new HierarchyListener() {
+            public void hierarchyChanged(HierarchyEvent e) {
+                getRootPane().setDefaultButton(closeButton);
+            }
+        });
+        
+        // avoid the need to press enter twise in the measurementRotationsField to close the window
+        measurementRotationsField.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                closeButton.doClick();
             }
         });
     }
