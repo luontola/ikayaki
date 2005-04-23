@@ -195,7 +195,8 @@ public class DeviceSettingsPanel extends JPanel {
         add(contentPane, BorderLayout.CENTER);
 
         warningLabel.setFont(warningLabel.getFont().deriveFont(Font.BOLD, 14.0F));
-        warningLabel.setForeground(Color.RED);
+        warningLabel.setForeground(new Color(0x993333));
+//        warningLabel.setForeground(Color.RED);
 
         this.acceleration.setValue(Settings.getHandlerAcceleration());
         this.deceleration.setValue(Settings.getHandlerDeceleration());
@@ -857,7 +858,7 @@ public class DeviceSettingsPanel extends JPanel {
         warningLabel = new JLabel();
         warningLabel.setHorizontalAlignment(0);
         warningLabel.setHorizontalTextPosition(0);
-        warningLabel.setText("WARNING! Incorrect configurations may damage the equipment");
+        warningLabel.setText("WARNING! Incorrect configuration may damage the equipment.");
         contentPane.add(warningLabel,
                 new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));

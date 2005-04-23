@@ -688,7 +688,7 @@
         <properties>
           <horizontalAlignment value="0"/>
           <horizontalTextPosition value="0"/>
-          <text value="WARNING! Incorrect configurations may damage the equipment"/>
+          <text value="WARNING! Incorrect configuration may damage the equipment."/>
         </properties>
       </component>
     </children>
