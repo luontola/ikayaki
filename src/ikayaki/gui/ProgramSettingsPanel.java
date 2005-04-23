@@ -30,6 +30,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.*;
+import java.util.List;
+
+import ikayaki.Settings;
 
 /**
  * Controls for editing the program settings.
@@ -61,8 +65,33 @@ public class ProgramSettingsPanel extends JPanel {
 
         /* Default Columns */
 
-        Box b = new Box(BoxLayout.Y_AXIS);
+        SequenceColumn[] allColumns = SequenceColumn.getAllColumns();
+        List<SequenceColumn> defaultColumns = Settings.getDefaultColumns();
 
+        defaultColumnsPane.setLayout(new GridBagLayout());
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.fill = GridBagConstraints.BOTH;
+        gc.ipadx = 10;
+        gc.gridy = 0;
+
+        for (final SequenceColumn column : allColumns) {
+
+            // add all of the columns to the list as checkboxes
+            final JCheckBox checkBox = new JCheckBox(column.getColumnName(null));
+            JLabel description = new JLabel(column.getToolTipText(null));
+            checkBox.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    Settings.setDefaultColumn(column, checkBox.isSelected());
+                }
+            });
+            checkBox.setSelected(defaultColumns.contains(column));
+
+            gc.gridx = 0;
+            defaultColumnsPane.add(checkBox, gc);
+            gc.gridx = 1;
+            defaultColumnsPane.add(description, gc);
+            gc.gridy++;
+        }
 
         /* Close */
 
@@ -86,7 +115,7 @@ public class ProgramSettingsPanel extends JPanel {
      */
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
+        contentPane.setLayout(new GridLayoutManager(3, 2, new Insets(11, 11, 11, 11), -1, -1));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel1,

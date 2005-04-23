@@ -397,7 +397,7 @@ public enum SequenceColumn {
 
         @Override public String getColumnName(Project project) {
             String[] units = value.getUnit().split(",");
-            if (project.getNormalization() == Project.Normalization.VOLUME) {
+            if (project == null || project.getNormalization() == Project.Normalization.VOLUME) {
                 return value.getCaption() + " (" + units[0] + ")";
             } else if (project.getNormalization() == Project.Normalization.MASS) {
                 return value.getCaption() + " (" + units[1] + ")";
