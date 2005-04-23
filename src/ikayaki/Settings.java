@@ -46,7 +46,7 @@ import java.util.List;
  */
 public class Settings {
 
-    private static final int DIRECTORY_HISTORY_SIZE = 30;   // TODO: make methods for changing the history sizes
+    private static final int DIRECTORY_HISTORY_SIZE = 30;
     private static final int PROJECT_HISTORY_SIZE = 10;
 
     private static final StyledWrapper defaultWrapper = new StyledWrapper();
@@ -72,11 +72,6 @@ public class Settings {
      * All saved sequences
      */
     private static List<MeasurementSequence> sequences = new ArrayList<MeasurementSequence>();
-
-    /**
-     * Default visible columns for projects.
-     */
-    private static List<SequenceColumn> defaultColumns = null;
 
     /**
      * File where the sequences will be saved in XML format
@@ -606,7 +601,7 @@ public class Settings {
         return Integer.parseInt(getProperty("measurement.rotations", "1"));
     }
 
-    public static synchronized boolean setMeasurementRotations(int value) { // TODO: gui for changing this value
+    public static synchronized boolean setMeasurementRotations(int value) {
         if (value >= 0) {
             setProperty("measurement.rotations", Integer.toString(value));
             return true;
@@ -792,7 +787,7 @@ public class Settings {
     /**
      * Removes a sequence from the sequence list. If the specified sequence is not in the list, it will be ignored.
      */
-    public static synchronized void removeSequence(MeasurementSequence sequence) { // TODO: gui for renaming and removing sequences
+    public static synchronized void removeSequence(MeasurementSequence sequence) {
         if (sequence != null) {
             sequences.remove(sequence);
             fireSequencesModified();

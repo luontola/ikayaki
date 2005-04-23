@@ -126,12 +126,22 @@ public class MainMenuBar extends JMenuBar {
                 // rebuild project history
                 openRecentProjectMenu.removeAll();
                 File[] files = Settings.getProjectHistory();
-                if (files.length == 0 /*|| MainMenuBar.this.main.getProject().getState() != Project.State.IDLE*/) {
+                if (files.length == 0) {
                     openRecentProjectMenu.setEnabled(false);
                 } else {
                     openRecentProjectMenu.setEnabled(true);
-                    for (final File file : files) {
-                        JMenuItem item = new JMenuItem(file.getAbsolutePath());
+
+                    for (int i = 0; i < files.length; i++) {
+                        final File file = files[i];
+                        JMenuItem item;
+                        if (i < 10) {
+                            int j = (i + 1) % 10;
+                            item = new JMenuItem(j + ":   " + file.getAbsolutePath());
+                            item.setMnemonic(KeyEvent.VK_0 + j);
+                        } else {
+                            item = new JMenuItem(file.getAbsolutePath());
+                        }
+
                         item.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
                                 MainMenuBar.this.main.loadProject(file);
