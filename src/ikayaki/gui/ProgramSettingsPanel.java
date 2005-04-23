@@ -70,6 +70,7 @@ public class ProgramSettingsPanel extends JPanel {
         measurementRotationsField.setFormatterFactory(new DefaultFormatterFactory(format));
         measurementRotationsField.setValue(new Integer(Settings.getMeasurementRotations()));
 
+        // autosaving
         measurementRotationsField.addPropertyChangeListener("value", new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 int value = ((Number) measurementRotationsField.getValue()).intValue();
@@ -77,6 +78,7 @@ public class ProgramSettingsPanel extends JPanel {
             }
         });
 
+        // automatically select all text to make the entering of a new value easy
         measurementRotationsField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
@@ -98,6 +100,7 @@ public class ProgramSettingsPanel extends JPanel {
         File holderCalibrationFile = Settings.getHolderCalibrationFile();
         holderCalibrationCombo.addItem("");     // option for selecting no file
 
+        // add all calibration projects to the list
         for (int i = 0; i < calibrationFiles.length; i++) {
             File file = calibrationFiles[i];
             String name = file.getName().substring(0, file.getName().lastIndexOf(Ikayaki.FILE_TYPE));
@@ -108,6 +111,7 @@ public class ProgramSettingsPanel extends JPanel {
             }
         }
 
+        // autosaving
         holderCalibrationCombo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int index = holderCalibrationCombo.getSelectedIndex();
@@ -122,6 +126,8 @@ public class ProgramSettingsPanel extends JPanel {
 
         /* Saved Sequences */
 
+        
+
         /* Default Columns */
 
         SequenceColumn[] allColumns = SequenceColumn.getAllColumns();
@@ -133,11 +139,12 @@ public class ProgramSettingsPanel extends JPanel {
         gc.ipadx = 10;
         gc.gridy = 0;
 
+        // add all columns to the list as checkboxes
         for (final SequenceColumn column : allColumns) {
-
-            // add all of the columns to the list as checkboxes
             final JCheckBox checkBox = new JCheckBox(column.getColumnName(null));
             JLabel description = new JLabel(column.getToolTipText(null));
+
+            // autosaving
             checkBox.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     Settings.setDefaultColumn(column, checkBox.isSelected());

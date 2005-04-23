@@ -756,10 +756,12 @@ public class Settings {
     /* Saves sequences */
 
     /**
-     * Returns all saved sequences in no particular order.
+     * Returns all saved sequences in sorted order.
      */
     public static synchronized MeasurementSequence[] getSequences() {
-        return sequences.toArray(new MeasurementSequence[sequences.size()]);
+        MeasurementSequence[] s = sequences.toArray(new MeasurementSequence[sequences.size()]);
+        Arrays.sort(s);
+        return s;
     }
 
     /**

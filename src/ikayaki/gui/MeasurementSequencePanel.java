@@ -291,7 +291,6 @@ public class MeasurementSequencePanel extends ProjectComponent {
 
         // get new items
         MeasurementSequence[] sequences = Settings.getSequences();
-        Arrays.sort(sequences);
 
         // insert new items and restore old selection
         loadSequenceBox.addItem(null);  // the first item is empty
