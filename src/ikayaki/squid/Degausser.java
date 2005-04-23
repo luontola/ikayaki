@@ -49,24 +49,9 @@ public class Degausser implements SerialIOListener {
     private int pollTimeout = 60;
 
     /**
-     * Degaussers current status
-     */
-    private String status;  // TODO: this field is never used
-
-    /**
      * COM port for communication.
      */
     protected SerialIO serialIO;
-
-    /**
-     * (X, Y, Z) = (0,1,2) default axis Z
-     */
-    private int degausserCoil;  // TODO: this field is never used
-
-    /**
-     * 0->3000 default amp 0
-     */
-    private int degausserAmplitude; // TODO: this field is never used
 
     /**
      * 1-9 seconds default delay 1 second
@@ -78,15 +63,8 @@ public class Degausser implements SerialIOListener {
      */
     private int degausserRamp;
 
-    /**
-     * Z=Zero, T=Tracking, ?=Unknown
-     */
-    private char degausserStatus;   // TODO: this field is never used
-
-    private long lastCommandTime;
-
     private boolean waitingForMessage = false;
-    private int maximumField;
+    private double maximumField;
 
     /**
      * Creates a new degausser interface. Opens connection to degausser COM port (if not open yet) and reads settings
@@ -100,16 +78,14 @@ public class Degausser implements SerialIOListener {
         this.degausserDelay = Settings.getDegausserDelay();
         this.degausserRamp = Settings.getDegausserRamp();
         this.maximumField = Settings.getDegausserMaximumField();
-        lastCommandTime = System.currentTimeMillis();
+
         //needs to call new functions setDelay() and setRamp(). TODO
-        waitSecond();
         //TODO: do we need to check values? (original does)
         try {
             blockingWrite("DCD" + this.degausserDelay);
         } catch (SerialIOException ex1) {
             System.err.println("Error using port in degausser:" + ex1);
         }
-        waitSecond();
         try {
             blockingWrite("DCR" + this.degausserRamp);
         } catch (SerialIOException ex1) {
@@ -126,13 +102,11 @@ public class Degausser implements SerialIOListener {
         this.degausserDelay = Settings.getDegausserDelay();
         this.degausserRamp = Settings.getDegausserRamp();
         this.maximumField = Settings.getDegausserMaximumField();
-        waitSecond();
         try {
             blockingWrite("DCD" + this.degausserDelay);
         } catch (SerialIOException ex1) {
             System.err.println("Error using port in degausser:" + ex1);
         }
-        waitSecond();
         try {
             blockingWrite("DCR" + this.degausserRamp);
         } catch (SerialIOException ex1) {
@@ -146,7 +120,6 @@ public class Degausser implements SerialIOListener {
      * @param coil coil to set on.
      */
     protected void setCoil(char coil) {
-        waitSecond();
         if (coil == 'X' || coil == 'Y' || coil == 'Z') {
             try {
                 blockingWrite("DCC" + coil);
@@ -159,13 +132,15 @@ public class Degausser implements SerialIOListener {
     }
 
     /**
-     * Sets amplitude to ramp, range 1.1 to 300.0.
+     * Sets amplitude to ramp, range 1.0 to maximumField. A value of 1.0 will actually be rounded to 1.1 which is the
+     * actual minimum amplitude of the degausser.
      *
      * @param amplitude amplitude to demag.
+     * @throws IllegalArgumentException if the amplitude is not in the allowed range.
      */
     protected void setAmplitude(double amplitude) {
-        waitSecond();
-        if (amplitude >= 1.1 && amplitude <= maximumField) {
+        if (amplitude >= 1.0 && amplitude <= maximumField) {
+            amplitude = Math.max(amplitude, 1.1);       // the degausser's minimum amplitude is 1.1
             try {
                 String amps = Integer.toString((int) (amplitude * 10.0));
                 while (amps.length() < 4) {
@@ -188,7 +163,6 @@ public class Degausser implements SerialIOListener {
      * Performs Ramp up. If this is used, make sure you Ramp down in less than 10 seconds because it can damage coil
      */
     protected void executeRampUp() {
-        waitSecond();
         try {
             blockingWrite("DERU");
         } catch (SerialIOException e) {
@@ -200,7 +174,6 @@ public class Degausser implements SerialIOListener {
      * Brings Ramp down.
      */
     protected void executeRampDown() {
-        waitSecond();
         try {
             blockingWrite("DERD");
         } catch (SerialIOException e) {
@@ -212,7 +185,6 @@ public class Degausser implements SerialIOListener {
      * Performs Ramp up and down.
      */
     protected void executeRampCycle() {
-        waitSecond();
         try {
             blockingWrite("DERC");
         } catch (SerialIOException e) {
@@ -233,25 +205,12 @@ public class Degausser implements SerialIOListener {
 //                    System.out.println((int) answer.charAt(i));
 //                }
 //                throw new IllegalArgumentException("sent: " + command + " recieved: " + answer);
+                System.err.println("Degausser.blockingWrite() sent: " + command + " recieved: " + answer);
             }
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Waits 1 second between command, neccessary because Degausser is slow :)
-     */
-    private void waitSecond() {
-//        long waitTime = 1000 - (System.currentTimeMillis() - lastCommandTime);
-//        if (waitTime > 0) {
-//            try {
-//                Thread.sleep(waitTime);
-//            } catch (InterruptedException e) {
-//            }
-//        }
-//        lastCommandTime = System.currentTimeMillis();
     }
 
     /**
@@ -261,10 +220,6 @@ public class Degausser implements SerialIOListener {
      * @return true if process was sended succesfully, otherwise false.
      */
     public boolean demagnetizeZ(double amp) {
-        //int amplitude = (int) (amp * 10.0);
-        if (amp < 1.1 || amp > this.maximumField) {
-            throw new IllegalArgumentException("Invalid amplitude");
-        }
         setAmplitude(amp);
         setCoil('Z');
         executeRampCycle();
@@ -292,9 +247,6 @@ public class Degausser implements SerialIOListener {
      * @return true if process was sended succesfully, otherwise false.
      */
     public boolean demagnetizeY(double amp) {
-        if (amp < 1.1 || amp > this.maximumField) {
-            throw new IllegalArgumentException("Invalid amplitude");
-        }
         setAmplitude(amp);
         setCoil('Y');
         executeRampCycle();

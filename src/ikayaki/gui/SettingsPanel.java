@@ -405,7 +405,7 @@ public class SettingsPanel
             Settings.setDegausserPort((String) this.demagnetizerPort.getSelectedItem());
             Settings.setDegausserDelay(((Number) this.demagDelay.getSelectedItem()).intValue());
             Settings.setDegausserRamp(((Number) this.demagRamp.getSelectedItem()).intValue());
-            Settings.setDegausserMaximumField(((Number) this.maximumField.getValue()).intValue());
+            Settings.setDegausserMaximumField(((Number) this.maximumField.getValue()).doubleValue());
 
             Settings.setHandlerPort((String) this.handlerPort.getSelectedItem());
             Settings.setHandlerAcceleration(((Number) this.acceleration.getValue()).intValue());

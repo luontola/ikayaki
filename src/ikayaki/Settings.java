@@ -375,17 +375,17 @@ public class Settings {
         }
     }
 
-    public static synchronized boolean setDegausserMaximumField(int value) {
-        if (value >= 0 && value <= 4000) {
-            setProperty("squid.degausser.maximumfield", Integer.toString(value));
+    public static synchronized boolean setDegausserMaximumField(double value) {
+        if (value >= 0.0 && value <= 300.0) {
+            setProperty("squid.degausser.maximumfield", Double.toString(value));
             return true;
         } else {
             return false;
         }
     }
 
-    public static synchronized int getDegausserMaximumField() {
-        return Integer.parseInt(getProperty("squid.degausser.maximumfield", "0"));
+    public static synchronized double getDegausserMaximumField() {
+        return Integer.parseInt(getProperty("squid.degausser.maximumfield", "0.0"));
     }
 
     /* Sample handler */
