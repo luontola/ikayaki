@@ -899,6 +899,14 @@ public class SettingsPanel
         format.setMaximumFractionDigits(12);
         formatter = new NumberFormatter(format);
       }
+      else if(tf == maximumField) {
+        DecimalFormat format = new DecimalFormat();
+        format.setDecimalSeparatorAlwaysShown(true);
+        format.setGroupingUsed(true);
+        format.setMaximumFractionDigits(1);
+        formatter = new NumberFormatter(format);
+
+      }
       else {
         // show Integer
         NumberFormat format = NumberFormat.getIntegerInstance();
@@ -927,8 +935,8 @@ public class SettingsPanel
         formatter.setMaximum(new Integer(Integer.MAX_VALUE));
       }
       else if(tf == maximumField) {
-        formatter.setMinimum(new Integer(0));
-        formatter.setMaximum(new Integer(4000));
+        formatter.setMinimum(new Double(1.1));
+        formatter.setMaximum(new Double(300.0));
       }
       return formatter;
     }

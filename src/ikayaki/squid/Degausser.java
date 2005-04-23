@@ -159,20 +159,20 @@ public class Degausser implements SerialIOListener {
     }
 
     /**
-     * Sets amplitude to ramp, range 0 to 3000.
+     * Sets amplitude to ramp, range 1.1 to 300.0.
      *
      * @param amplitude amplitude to demag.
      */
-    protected void setAmplitude(int amplitude) {
+    protected void setAmplitude(double amplitude) {
         waitSecond();
-        if (amplitude >= 1 && amplitude <= maximumField) {
+        if (amplitude >= 1.1 && amplitude <= maximumField) {
             try {
-                String amps = Integer.toString(amplitude);
+                String amps = Integer.toString((int) (amplitude * 10.0));
                 while (amps.length() < 4) {
                     amps = "0" + amps;
                 }
                 blockingWrite("DCA" + amps);
-                Thread.sleep(1500);     // needs to wait for the degausser to process the command                 
+                Thread.sleep(1500);     // needs to wait for the degausser to process the command
 
             } catch (SerialIOException e) {
                 e.printStackTrace();
@@ -261,11 +261,11 @@ public class Degausser implements SerialIOListener {
      * @return true if process was sended succesfully, otherwise false.
      */
     public boolean demagnetizeZ(double amp) {
-        int amplitude = (int) (amp * 10.0);
-        if (amp < 1 || amp > this.maximumField) {
+        //int amplitude = (int) (amp * 10.0);
+        if (amp < 1.1 || amp > this.maximumField) {
             throw new IllegalArgumentException("Invalid amplitude");
         }
-        setAmplitude(amplitude);
+        setAmplitude(amp);
         setCoil('Z');
         executeRampCycle();
         //we need to take for DONE message or TRACK ERROR message
@@ -292,11 +292,10 @@ public class Degausser implements SerialIOListener {
      * @return true if process was sended succesfully, otherwise false.
      */
     public boolean demagnetizeY(double amp) {
-        int amplitude = (int) (amp * 10.0);
-        if (amp < 1 || amp > this.maximumField) {
+        if (amp < 1.1 || amp > this.maximumField) {
             throw new IllegalArgumentException("Invalid amplitude");
         }
-        setAmplitude(amplitude);
+        setAmplitude(amp);
         setCoil('Y');
         executeRampCycle();
         //we need to take for DONE message or TRACK ERROR message
