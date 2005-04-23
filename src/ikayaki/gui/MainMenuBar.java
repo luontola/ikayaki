@@ -57,8 +57,9 @@ public class MainMenuBar extends JMenuBar {
     private Action pause;
     private Action abort;
 
-    private JMenu optionsMenu;
-    private Action configuration;
+    private JMenu toolsMenu;
+    private Action programSettings;
+    private Action deviceSettings;
 
     private JMenu helpMenu;
     private Action help;
@@ -101,10 +102,11 @@ public class MainMenuBar extends JMenuBar {
         measurementMenu.add(abort);
         add(measurementMenu);
 
-        optionsMenu = new JMenu("Options");
-        optionsMenu.setMnemonic(KeyEvent.VK_O);
-        optionsMenu.add(configuration);
-        add(optionsMenu);
+        toolsMenu = new JMenu("Tools");
+        toolsMenu.setMnemonic(KeyEvent.VK_T);
+        toolsMenu.add(programSettings);
+        toolsMenu.add(deviceSettings);
+        add(toolsMenu);
 
         helpMenu = new JMenu("Help");
         helpMenu.setMnemonic(KeyEvent.VK_H);
@@ -169,8 +171,9 @@ public class MainMenuBar extends JMenuBar {
         pause = main.getMeasurementControlsPanel().getPauseAction();
         abort = main.getMeasurementControlsPanel().getAbortAction();
 
-        /* Options Menu */
-        configuration = main.getConfigurationAction();
+        /* Tools Menu */
+        programSettings = main.getProgramSettingsAction();
+        deviceSettings = main.getDeviceSettingsAction();
 
         /* Help Menu */
         help = main.getHelpAction();

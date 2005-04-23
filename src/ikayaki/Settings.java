@@ -22,6 +22,7 @@
 
 package ikayaki;
 
+import ikayaki.gui.SequenceColumn;
 import ikayaki.gui.StyledWrapper;
 import ikayaki.util.DocumentUtilities;
 import ikayaki.util.LastExecutor;
@@ -71,6 +72,11 @@ public class Settings {
      * All saved sequences
      */
     private static List<MeasurementSequence> sequences = new ArrayList<MeasurementSequence>();
+
+    /**
+     * Default visible columns for projects.
+     */
+    private static List<SequenceColumn> defaultColumns = null;
 
     /**
      * File where the sequences will be saved in XML format
@@ -747,6 +753,8 @@ public class Settings {
         }
     }
 
+    /* Saves sequences */
+
     /**
      * Returns all saved sequences in no particular order.
      */
@@ -777,6 +785,45 @@ public class Settings {
     }
 
     // TODO: method for notifying that somebody has changed the saved sequences (invoke autosave)
+
+    /* Sequence table settings */
+
+    public static synchronized List<SequenceColumn> getDefaultColumns() {
+        String s = getProperty("sequence.defaultcolumns",
+                "COUNT,STEP,DECLINATION,INCLINATION,RELATIVE_MAGNETIZATION,SAMPLE_X,SAMPLE_Y,SAMPLE_Z,THETA63");
+        String[] columnNames = s.split(",");
+        List<SequenceColumn> columns = new ArrayList<SequenceColumn>(columnNames.length);
+        for (String name : columnNames) {
+            try {
+                columns.add(SequenceColumn.valueOf(name));
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        }
+        return columns;
+    }
+
+    public static synchronized void setDefaultColumn(SequenceColumn column, boolean enabled) {
+        if (column == null) {
+            throw new NullPointerException();
+        }
+        List<SequenceColumn> columns = getDefaultColumns();
+        columns.remove(column);
+        if (enabled) {
+            columns.add(column);
+        }
+
+        String s = "";
+        for (SequenceColumn c : columns) {
+            if (s.length() > 0) {
+                s += ",";
+            }
+            s += c.name();
+        }
+        setProperty("sequence.defaultcolumns", s);
+    }
+
+    /* JTable styles */
 
     /**
      * Returns a copy of the default StyledWrapper.

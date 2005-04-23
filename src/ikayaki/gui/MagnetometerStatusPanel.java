@@ -205,17 +205,18 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             rotate = this.handler.getRotation();
         }
 
-        // null means that configuration might have changed :)
         if (e == null) {
+            // null means that configuration might have changed :)
             updatePositions();
-        }
-        // if stopped moving, stop animation
-        else if (e.getType() == MeasurementEvent.Type.HANDLER_STOP) {
+
+        } else if (e.getType() == MeasurementEvent.Type.HANDLER_STOP) {
+            // if stopped moving, stop animation
             this.position = pos;
             this.rotation = rotate;
             statusAnimator.gone();
-            // if started moving, start animation; Handler gave us target position and rotation
+
         } else {
+            // if started moving, start animation; Handler gave us target position and rotation
             statusAnimator.going(pos, rotate);
         }
 

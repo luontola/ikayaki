@@ -85,7 +85,8 @@ public class MainViewPanel extends ProjectComponent {
     private Action exportProjectToDTDAction;
     private Action exportProjectToSRMAction;
     private Action exitAction;
-    private Action configurationAction;
+    private Action programSettingsAction;
+    private Action deviceSettingsAction;
     private Action helpAction;
     private Action aboutAction;
 
@@ -686,19 +687,32 @@ public class MainViewPanel extends ProjectComponent {
         return exitAction;
     }
 
-    public Action getConfigurationAction() {
-        if (configurationAction == null) {
-            configurationAction = new AbstractAction() {
+    public Action getProgramSettingsAction() {
+        if (programSettingsAction == null) {
+            programSettingsAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    SettingsDialog.showDeviceSettingsDialog(getParentFrame(), "Configuration");
-                    // update magnetometer status picture since handler positions might have changed
-                    getMeasurementControlsPanel().measurementUpdated(null);
+                    SettingsDialog.showProgramSettingsDialog(getParentFrame(), "Options");
+                    setProject(getProject());   // sequence columns might have changed
                 }
             };
-            configurationAction.putValue(Action.NAME, "Configuration");
-            configurationAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
+            programSettingsAction.putValue(Action.NAME, "Options");
+            programSettingsAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_O);
         }
-        return configurationAction;
+        return programSettingsAction;
+    }
+
+    public Action getDeviceSettingsAction() {
+        if (deviceSettingsAction == null) {
+            deviceSettingsAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    SettingsDialog.showDeviceSettingsDialog(getParentFrame(), "Device Configuration");
+                    getMeasurementControlsPanel().measurementUpdated(null);     // handler positions might have changed
+                }
+            };
+            deviceSettingsAction.putValue(Action.NAME, "Device Configuration");
+            deviceSettingsAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
+        }
+        return deviceSettingsAction;
     }
 
     public Action getHelpAction() {

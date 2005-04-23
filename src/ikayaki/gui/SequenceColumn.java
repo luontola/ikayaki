@@ -483,6 +483,28 @@ public enum SequenceColumn {
         this.numberFormat.setGroupingUsed(false);
     }
 
+    public static SequenceColumn[] getAllColumns() {
+        return new SequenceColumn[]{
+            COUNT,
+            STEP,
+            VOLUME,
+            MASS,
+            SUSCEPTIBILITY,
+            DECLINATION,
+            INCLINATION,
+            MAGNETIZATION,
+            RELATIVE_MAGNETIZATION,
+            MOMENT,
+            GEOGRAPHIC_X,
+            GEOGRAPHIC_Y,
+            GEOGRAPHIC_Z,
+            SAMPLE_X,
+            SAMPLE_Y,
+            SAMPLE_Z,
+            THETA63
+        };
+    }
+
     /**
      * Wraps the specified object to a styled renderer's wrapper according to the state of the measurement step.
      *

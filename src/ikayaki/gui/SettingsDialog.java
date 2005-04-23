@@ -32,17 +32,16 @@ import java.awt.*;
  */
 public class SettingsDialog extends JDialog {
 
-    private static final int DEVICE_SETTINGS = 0;
-    private static final int PROGRAM_SETTINGS = 1;
+    private static final int DEVICE_SETTINGS = 1;
+    private static final int PROGRAM_SETTINGS = 2;
+    
+    private static int dialogType;
 
-    private int dialogType;
-
-    private SettingsDialog(Frame owner, String message, int dialogType) {
+    private SettingsDialog(Frame owner, String message) {
         super(owner, message, true);
         if (owner != null) {
             setLocationRelativeTo(owner);
         }
-        this.dialogType = dialogType;
     }
 
     /**
@@ -58,17 +57,21 @@ public class SettingsDialog extends JDialog {
             add(new DeviceSettingsPanel(this), BorderLayout.CENTER);
         } else if (dialogType == PROGRAM_SETTINGS) {
             add(new ProgramSettingsPanel(this), BorderLayout.CENTER);
+        } else {
+            throw new IllegalArgumentException("dialogType = " + dialogType);
         }
         pack();
     }
 
     public static void showDeviceSettingsDialog(Frame owner, String message) {
-        SettingsDialog d = new SettingsDialog(owner, message, DEVICE_SETTINGS);
+        dialogType = DEVICE_SETTINGS;
+        SettingsDialog d = new SettingsDialog(owner, message);
         d.setVisible(true);
     }
 
     public static void showProgramSettingsDialog(Frame owner, String message) {
-        SettingsDialog d = new SettingsDialog(owner, message, PROGRAM_SETTINGS);
+        dialogType = PROGRAM_SETTINGS;
+        SettingsDialog d = new SettingsDialog(owner, message);
         d.setVisible(true);
     }
 

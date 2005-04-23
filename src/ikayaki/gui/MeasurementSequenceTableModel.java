@@ -79,35 +79,17 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
 
         // set all possible columns, in order of appearance
         possibleColumns.clear();
-        possibleColumns.add(COUNT);
-        possibleColumns.add(STEP);
-        possibleColumns.add(VOLUME);
-        possibleColumns.add(MASS);
-        possibleColumns.add(SUSCEPTIBILITY);
-        possibleColumns.add(DECLINATION);
-        possibleColumns.add(INCLINATION);
-        possibleColumns.add(MAGNETIZATION);
-        possibleColumns.add(RELATIVE_MAGNETIZATION);
-        possibleColumns.add(MOMENT);
-        possibleColumns.add(GEOGRAPHIC_X);
-        possibleColumns.add(GEOGRAPHIC_Y);
-        possibleColumns.add(GEOGRAPHIC_Z);
-        possibleColumns.add(SAMPLE_X);
-        possibleColumns.add(SAMPLE_Y);
-        possibleColumns.add(SAMPLE_Z);
-        possibleColumns.add(THETA63);
+        SequenceColumn[] allColumns = SequenceColumn.getAllColumns();
+        for (SequenceColumn column : allColumns) {
+            possibleColumns.add(column);
+        }
 
         // show default columns
         visibleColumns.clear();
-        showColumn(COUNT, false);
-        showColumn(STEP, false);
-        showColumn(DECLINATION, false);
-        showColumn(INCLINATION, false);
-        showColumn(RELATIVE_MAGNETIZATION, false);
-        showColumn(SAMPLE_X, false);
-        showColumn(SAMPLE_Y, false);
-        showColumn(SAMPLE_Z, false);
-        showColumn(THETA63, false);
+        List<SequenceColumn> defaultColumns = Settings.getDefaultColumns();
+        for (SequenceColumn column : defaultColumns) {
+            showColumn(column, false);
+        }
 
         if (project != null) {
 
