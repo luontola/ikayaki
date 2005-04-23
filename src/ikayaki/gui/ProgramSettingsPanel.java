@@ -66,6 +66,9 @@ public class ProgramSettingsPanel extends JPanel {
         setLayout(new BorderLayout());
         add(contentPane, BorderLayout.CENTER);
 
+        sequencesDeleteButton.setMnemonic(KeyEvent.VK_D);
+        closeButton.setMnemonic(KeyEvent.VK_C);
+
         /* Measurement Rotations */
 
         NumberFormatter format = new NumberFormatter();
@@ -140,6 +143,10 @@ public class ProgramSettingsPanel extends JPanel {
         sequencesDeleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int index = sequencesTable.getSelectedRow();
+                if (sequencesTable.isEditing()) {
+                    // cancel the editing of the selected cell to avoid renaming the next sequence in the list
+                    sequencesTable.editCellAt(-1, -1);
+                }
                 if (index >= 0) {
                     tableModel.deleteSequence(index);
                 }
@@ -337,7 +344,7 @@ public class ProgramSettingsPanel extends JPanel {
          * MeasurementSequence if the table contents has changed.
          */
         private void updateSequences() {
-            
+
             // save selection
             MeasurementSequence selected = null;
             int selectedRow = sequencesTable.getSelectedRow();
