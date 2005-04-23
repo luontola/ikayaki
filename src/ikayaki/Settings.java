@@ -184,6 +184,22 @@ public class Settings {
     }
 
     /**
+     * Invokes autosaving for the properities.
+     */
+    public static synchronized void firePropertiesModified() {
+        propertiesModified = true;
+        save();
+    }
+
+    /**
+     * Invokes autosaving for the sequences.
+     */
+    public static synchronized void fireSequencesModified() {
+        sequencesModified = true;
+        save();
+    }
+
+    /**
      * Saves the settings after a while when no changes have come. The method call will return immediately and will not
      * wait for the file to be written.
      */
@@ -272,8 +288,7 @@ public class Settings {
         } else {
             properties.setProperty(key, value);
         }
-        propertiesModified = true;
-        save();
+        firePropertiesModified();
     }
 
     /**
@@ -770,8 +785,7 @@ public class Settings {
     public static synchronized void addSequence(MeasurementSequence sequence) {
         if (sequence != null && !sequences.contains(sequence)) {
             sequences.add(sequence);
-            sequencesModified = true;
-            save();
+            fireSequencesModified();
         }
     }
 
@@ -781,12 +795,9 @@ public class Settings {
     public static synchronized void removeSequence(MeasurementSequence sequence) { // TODO: gui for renaming and removing sequences
         if (sequence != null) {
             sequences.remove(sequence);
-            sequencesModified = true;
-            save();
+            fireSequencesModified();
         }
     }
-
-    // TODO: method for notifying that somebody has changed the saved sequences (invoke autosave)
 
     /* Sequence table settings */
 

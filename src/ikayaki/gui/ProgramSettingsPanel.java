@@ -26,8 +26,8 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import ikayaki.Ikayaki;
-import ikayaki.Settings;
 import ikayaki.MeasurementSequence;
+import ikayaki.Settings;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -312,18 +312,50 @@ public class ProgramSettingsPanel extends JPanel {
 
         private void updateSequences() {
             sequences = Settings.getSequences();
+            fireTableDataChanged();
         }
 
         public int getRowCount() {
-            return 0;
+            return sequences.length;
         }
 
         public int getColumnCount() {
-            return 0;
+            return 1;
+        }
+
+        @Override public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return true;
         }
 
         public Object getValueAt(int rowIndex, int columnIndex) {
-            return null;
+            return sequences[rowIndex].getName();
+        }
+
+        /**
+         * Change the name of a saved sequence.
+         *
+         * @param aValue      a new name for the sequence.
+         * @param rowIndex
+         * @param columnIndex
+         */
+        @Override public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            String name = aValue.toString();
+            MeasurementSequence target = sequences[rowIndex];
+
+            if (target.getName().equals(name)) {
+                return;     // no change
+            }
+
+            // check for a duplicate name
+            for (MeasurementSequence sequence : sequences) {
+                if (sequence.getName().equals(name)) {
+                    return;
+                }
+            }
+                
+            // set the new name
+            target.setName(name);
+            Settings.fireSequencesModified();
         }
     }
 
