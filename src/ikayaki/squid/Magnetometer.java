@@ -34,9 +34,6 @@ import java.util.concurrent.TimeUnit;
  * @author Aki Korpua
  */
 public class Magnetometer implements SerialIOListener {
-/*
-Event A: On SerialIOEvent - reads the message and puts it in a buffer
-*/
 
     /**
      * Buffer for incoming messages, readed when needed.
@@ -48,11 +45,6 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     private SynchronousQueue<String> queue;
     private int pollTimeout = 60;
-
-    /**
-     * Magnetometer's current status.
-     */
-    private String status;  // TODO: this field is never used
 
     /**
      * COM port for communication.
@@ -69,29 +61,29 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @throws SerialIOException
      */
     public Magnetometer() throws SerialIOException {
-        this.serialIO = SerialIO.openPort(
-                new SerialParameters(Settings.getMagnetometerPort(), 1200, 0, 0, 8, 1, 0));
+        this.serialIO = SerialIO.openPort(new SerialParameters(Settings.getMagnetometerPort(), 1200, 0, 0, 8, 1, 0));
         serialIO.addSerialIOListener(this);
         messageBuffer = new Stack<String>();
         queue = new SynchronousQueue<String>();
         try {
-          //Original sets range and filter to 1x and disable fast-slew, TODO: check if right, do we need status confirm?
-          serialIO.writeMessage("XCR1\r");
-          serialIO.writeMessage("XCF1\r");
-          serialIO.writeMessage("XCSE\r");
-          serialIO.writeMessage("YCR1\r");
-          serialIO.writeMessage("YCF1\r");
-          serialIO.writeMessage("YCSE\r");
-          serialIO.writeMessage("ZCR1\r");
-          serialIO.writeMessage("ZCF1\r");
-          serialIO.writeMessage("ZCSE\r");
-          //and original resets all
-            this.configure('a','L','P');
-            this.configure('a','L','C');
-          this.resetCounter('a');
-        }
-        catch (SerialIOException ex1) {
-          System.err.println("Error using port in degausser:" + ex1);
+            //Original sets range and filter to 1x and disable fast-slew, TODO: check if right, do we need status confirm?
+            serialIO.writeMessage("XCR1\r");
+            serialIO.writeMessage("XCF1\r");
+            serialIO.writeMessage("XCSE\r");
+            serialIO.writeMessage("YCR1\r");
+            serialIO.writeMessage("YCF1\r");
+            serialIO.writeMessage("YCSE\r");
+            serialIO.writeMessage("ZCR1\r");
+            serialIO.writeMessage("ZCF1\r");
+            serialIO.writeMessage("ZCSE\r");
+            //and original resets all
+            configure('A', 'L', 'P');
+            configure('A', 'L', 'C');
+            resetCounter('A');
+
+        } catch (SerialIOException e) {
+            System.err.println("Error using port in degausser:");
+            e.printStackTrace();
         }
     }
 
@@ -106,40 +98,28 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     /**
      * Reset settings for axis.
      *
-     * @param axis x,y,z or a (all). In lower case.
+     * @param axis 'X', 'Y', 'Z' or 'A' (all). All characters are in upper case.
      */
     protected void reset(char axis) {
-        //they should be upper case, duh :)
-        if (axis == 'x') {
-            axis = 'X';
-        } else if (axis == 'y') {
-            axis = 'Y';
-        } else if (axis == 'z') {
-            axis = 'Z';
-        } else if (axis == 'a') axis = 'A';
+        if (axis != 'X' && axis != 'Y' && axis != 'Z' && axis != 'A') {
+            throw new IllegalArgumentException("axis = " + axis);
+        }
         try {
-            //as a note: <CR> obviously means \r
             this.serialIO.writeMessage(axis + "R\r");
-        } catch (SerialIOException ex) {
-            System.err.println(ex);
+        } catch (SerialIOException e) {
+            e.printStackTrace();
         }
     }
 
     /**
      * Reset counter for axis.
      *
-     * @param axis x,y,z or a (all). In lower case.
+     * @param axis 'X', 'Y', 'Z' or 'A' (all). All characters are in upper case.
      */
     protected void resetCounter(char axis) {
-        //they should be upper case, duh :)
-        if (axis == 'x') {
-            axis = 'X';
-        } else if (axis == 'y') {
-            axis = 'Y';
-        } else if (axis == 'z') {
-            axis = 'Z';
-        } else if (axis == 'a') axis = 'A';
-
+        if (axis != 'X' && axis != 'Y' && axis != 'Z' && axis != 'A') {
+            throw new IllegalArgumentException("axis = " + axis);
+        }
         try {
             this.serialIO.writeMessage(axis + "RC\r");
         } catch (SerialIOException ex) {
@@ -150,7 +130,7 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     /**
      * Used for configuring Magnetometer parameters. See subcommand for usages.
      *
-     * @param axis       x,y,z or a (all)
+     * @param axis       'X', 'Y', 'Z' or 'A' (all). All characters are in upper case.
      * @param subcommand The CONFIGURE subcommands follow: <br/>"F" Set filter configuration. The data subfield sets the
      *                   filter to the indicated range. The four possible data values are: "1" One Hertz Filter; 1 Hz
      *                   "T" Ten Hertz Filter; 10 Hz "H" One hundred Hertz Filter; 100 Hz "W" Wide band filter; WB
@@ -165,14 +145,9 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @param option     see data values from subcommands.
      */
     protected void configure(char axis, char subcommand, char option) {
-        //they should be upper case, duh :)
-        if (axis == 'x') {
-            axis = 'X';
-        } else if (axis == 'y') {
-            axis = 'Y';
-        } else if (axis == 'z') {
-            axis = 'Z';
-        } else if (axis == 'a') axis = 'A';
+        if (axis != 'X' && axis != 'Y' && axis != 'Z' && axis != 'A') {
+            throw new IllegalArgumentException("axis = " + axis);
+        }
         try {
             this.serialIO.writeMessage(axis + "C" + subcommand + option + "\r");
         } catch (SerialIOException ex) {
@@ -181,51 +156,37 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     }
 
     /**
-     * axis is x,y,x or a (all).
-     *
-     * @param axis x,y,z or a (all). In lower case.
+     * @param axis 'X', 'Y', 'Z' or 'A' (all). All characters are in upper case.
      */
     protected void latchAnalog(char axis) {
-        //they should be upper case, duh :)
-        if (axis == 'x') {
-            axis = 'X';
-        } else if (axis == 'y') {
-            axis = 'Y';
-        } else if (axis == 'z') {
-            axis = 'Z';
-        } else if (axis == 'a') axis = 'A';
+        if (axis != 'X' && axis != 'Y' && axis != 'Z' && axis != 'A') {
+            throw new IllegalArgumentException("axis = " + axis);
+        }
         try {
             this.serialIO.writeMessage(axis + "LD\r");
-        } catch (SerialIOException ex) {
-            System.err.println(ex);
+        } catch (SerialIOException e) {
+            e.printStackTrace();
         }
     }
 
     /**
-     * axis is x,y,x or a (all).
-     *
-     * @param axis x,y,z or a (all). In lower case.
+     * @param axis 'X', 'Y', 'Z' or 'A' (all). All characters are in upper case.
      */
     protected void latchCounter(char axis) {
-        //they should be upper case, duh :)
-        if (axis == 'x') {
-            axis = 'X';
-        } else if (axis == 'y') {
-            axis = 'Y';
-        } else if (axis == 'z') {
-            axis = 'Z';
-        } else if (axis == 'a') axis = 'A';
+        if (axis != 'X' && axis != 'Y' && axis != 'Z' && axis != 'A') {
+            throw new IllegalArgumentException("axis = " + axis);
+        }
         try {
             this.serialIO.writeMessage(axis + "LC\r");
-        } catch (SerialIOException ex) {
-            System.err.println(ex);
+        } catch (SerialIOException e) {
+            e.printStackTrace();
         }
     }
 
     /**
      * Generic send message sender, use with caution and knowledge. Checks if commands are good.
      *
-     * @param axis       x,y,z. In lower case.
+     * @param axis       'X', 'Y' or 'Z'. All characters are in upper case.
      * @param command    "D" Send back the analog data last captured with the LATCH command. The data field is not
      *                   required. <br/>"C" Send back the counter value last captured with the LATCH command. The data
      *                   field is not required. <br/>"S" Send back status. Various pieces of status can be sent by the
@@ -236,14 +197,8 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @return Returns data wanted, see command and datavalue
      */
     protected String getData(char axis, char command, String datavalues) {
-        if (axis == 'x') {
-            axis = 'X';
-        } else if (axis == 'y') {
-            axis = 'Y';
-        } else if (axis == 'z') {
-            axis = 'Z';
-        } else {
-            return null; // invalid axis
+        if (axis != 'X' && axis != 'Y' && axis != 'Z') {
+            throw new IllegalArgumentException("axis = " + axis);
         }
         if (command == 'D' || command == 'C') {
             try {
@@ -260,14 +215,14 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
                 return null;
             }
         } else {
-            return null;
+            throw new IllegalArgumentException("command = " + command);
         }
         waitingForMessage = true;
         String answer = null;
         try {
-          answer = (String) queue.poll(pollTimeout,TimeUnit.SECONDS);
-        }
-        catch (InterruptedException ex1) {
+            answer = (String) queue.poll(pollTimeout, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         waitingForMessage = false;
         return answer;
@@ -276,31 +231,20 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     /**
      * Pulse reset (open then close) feedback loop for axis. Need to be done before measuring.
      *
-     * @param axis x,y,z or a (all). In lower case.
+     * @param axis 'X', 'Y', 'Z' or 'A' (all). All characters are in upper case.
      */
     public void pulseReset(char axis) {
-        this.configure(axis, 'L', 'P');
-        this.configure(axis, 'L', 'C');
+        configure(axis, 'L', 'P');
+        configure(axis, 'L', 'C');
     }
 
     /**
      * Clears flux counter for axis. Need to be done measuring.
      *
-     * @param axis x,y,z or a (all). In lower case.
+     * @param axis 'X', 'Y', 'Z' or 'A' (all). All characters are in upper case.
      */
     public void clearFlux(char axis) {
-        this.resetCounter(axis);
-    }
-
-    /**
-     * Waits for magnetometer to settle down. Blocking.
-     */
-    public void join() {
-        //mm.. this is in vain.
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-        }
+        resetCounter(axis);
     }
 
     /**
@@ -309,25 +253,29 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      * @return Returns 3 double values in following order: (x,y,z)
      */
     public Double[] readData() {
-        //should be done only before measurement cycle? Oh yeah..
-        //this.clearFlux('a');
-        //this.resetCounter('a');
 
-        this.latchCounter('a');
+        // wait for magnetometer to settle down
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        latchCounter('A');
 
         //read all latched counter values
-        Double counterX = Double.parseDouble(this.getData('x', 'C', ""));
-        Double counterY = Double.parseDouble(this.getData('y', 'C', ""));
-        Double counterZ = Double.parseDouble(this.getData('z', 'C', ""));
+        Double counterX = Double.parseDouble(getData('X', 'C', ""));
+        Double counterY = Double.parseDouble(getData('Y', 'C', ""));
+        Double counterZ = Double.parseDouble(getData('Z', 'C', ""));
 
-        this.latchAnalog('a');
+        latchAnalog('A');
 
         //Maybe need to read many times and take mean value.
         //But we do it only ones (default for old software)
         //read all latched analog values
-        Double analogX = Double.parseDouble(this.getData('x', 'D', ""));
-        Double analogY = Double.parseDouble(this.getData('y', 'D', ""));
-        Double analogZ = Double.parseDouble(this.getData('z', 'D', ""));
+        Double analogX = Double.parseDouble(getData('X', 'D', ""));
+        Double analogY = Double.parseDouble(getData('Y', 'D', ""));
+        Double analogZ = Double.parseDouble(getData('Z', 'D', ""));
 
         Double[] result = new Double[3];
 
@@ -347,12 +295,16 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     public char[] getFilters() {
         char[] data = new char[3];
-        String answer = this.getData('X', 'S', "F");
+
+        String answer = getData('X', 'S', "F");
         data[0] = answer.charAt(1);
-        answer = this.getData('Y', 'S', "F");
+
+        answer = getData('Y', 'S', "F");
         data[1] = answer.charAt(1);
-        answer = this.getData('Z', 'S', "F");
+
+        answer = getData('Z', 'S', "F");
         data[2] = answer.charAt(1);
+
         return data;
     }
 
@@ -364,12 +316,16 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     public char[] getRange() {
         char[] data = new char[3];
-        String answer = this.getData('X', 'S', "R");
+
+        String answer = getData('X', 'S', "R");
         data[0] = answer.charAt(1);
-        answer = this.getData('Y', 'S', "R");
+
+        answer = getData('Y', 'S', "R");
         data[1] = answer.charAt(1);
-        answer = this.getData('Z', 'S', "R");
+
+        answer = getData('Z', 'S', "R");
         data[2] = answer.charAt(1);
+
         return data;
 
     }
@@ -381,12 +337,16 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     public boolean[] getSlew() {
         boolean[] data = new boolean[3];
+
         String answer = this.getData('X', 'S', "S");
         data[0] = (!answer.equals("SD"));
+
         answer = this.getData('Y', 'S', "S");
         data[1] = (!answer.equals("SD"));
+
         answer = this.getData('Z', 'S', "S");
         data[2] = (!answer.equals("SD"));
+
         return data;
     }
 
@@ -397,12 +357,16 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
      */
     public boolean[] getLoop() {
         boolean[] data = new boolean[3];
+
         String answer = this.getData('X', 'S', "L");
         data[0] = (answer.equals("LO"));
+
         answer = this.getData('Y', 'S', "L");
         data[1] = (answer.equals("LO"));
+
         answer = this.getData('Z', 'S', "L");
         data[2] = (answer.equals("LO"));
+
         return data;
     }
 
@@ -421,19 +385,17 @@ Event A: On SerialIOEvent - reads the message and puts it in a buffer
     public void serialIOEvent(SerialIOEvent event) {
         //TODO: problem when Degausser and Magnetometer uses same port :/
         String message = event.getCleanMessage();
-        if(message != null) {
-          if (waitingForMessage) {
-            try {
-              queue.put(message);
+        if (message != null) {
+            if (waitingForMessage) {
+                try {
+                    queue.put(message);
+                } catch (InterruptedException e) {
+                    System.err.println("Interrupted Magnetometer message event");
+                } catch (NullPointerException e) {
+                    System.err.println("Null from SerialEvent in Magnetometer");
+                }
             }
-            catch (InterruptedException e) {
-              System.err.println("Interrupted Magnetometer message event");
-            }
-            catch (NullPointerException e) {
-              System.err.println("Null from SerialEvent in Magnetometer");
-            }
-          }
-          messageBuffer.add(message);
+            messageBuffer.add(message);
         }
     }
 }

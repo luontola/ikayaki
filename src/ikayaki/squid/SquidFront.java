@@ -555,17 +555,17 @@ public class SquidFront extends JFrame {
     });
     this.misOK.getAction().putValue(Action.NAME, "isOK()");
 
-    this.mjoin.setAction(new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        try {
-          Squid.instance().getMagnetometer().join();
-        }
-        catch (IOException ex) {
-          magnetometerLog.append("join failed\r");
-        }
-      }
-    });
-    this.mjoin.getAction().putValue(Action.NAME, "join()");
+//    this.mjoin.setAction(new AbstractAction() {
+//      public void actionPerformed(ActionEvent e) {
+//        try {
+//          Squid.instance().getMagnetometer().waitToSettleDown();
+//        }
+//        catch (IOException ex) {
+//          magnetometerLog.append("join failed\r");
+//        }
+//      }
+//    });
+//    this.mjoin.getAction().putValue(Action.NAME, "join()");
 
     this.mlatchAnalog.setAction(new AbstractAction() {
       public void actionPerformed(ActionEvent e) {

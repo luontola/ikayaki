@@ -169,14 +169,6 @@ public class Handler implements SerialIOListener {
         // put the system online
         setOnline();
 
-//        // set all settings
-//        setAcceleration(acceleration);
-//        System.err.println("Acceleration set:" + verify('A'));
-//        setVelocity(velocity);
-//        System.err.println("Velocity set:" + verify('M'));
-//        setDeceleration(deceleration);
-//        System.err.println("Deceleration set:" + verify('D'));
-
         // seek the home position, so we can know where we are
         seekHome();
     }
@@ -278,27 +270,6 @@ public class Handler implements SerialIOListener {
                 moveToPosition(sampleLoadPosition);
             }
         });
-
-//        setVelocity(velocity);
-//        if (currentPosition == Integer.MAX_VALUE) {
-//            try {
-//                this.serialIO.writeMessage("O1,0,");
-//                this.serialIO.writeMessage("-H1,");
-//            } catch (SerialIOException e) {
-//                e.printStackTrace();
-//            }
-//        } else if (currentPosition == Integer.MIN_VALUE) {
-//            try {
-//                this.serialIO.writeMessage("O1,0,");
-//                this.serialIO.writeMessage("+H1,");
-//            } catch (SerialIOException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            int pos = this.sampleLoadPosition - currentPosition;
-//            moveSteps(pos);
-//            this.currentPosition = this.sampleLoadPosition;
-//        }
     }
 
     /**
@@ -310,13 +281,6 @@ public class Handler implements SerialIOListener {
                 moveToPosition(axialAFPosition);
             }
         });
-
-//        if (this.waitingForMessage) {
-//            throw new IllegalStateException("Tried to command handler while waiting for message");
-//        }
-//        int pos = this.axialAFPosition - currentPosition;
-//        moveSteps(pos);
-//        this.currentPosition = this.axialAFPosition;
     }
 
     /**
@@ -329,13 +293,6 @@ public class Handler implements SerialIOListener {
                 moveToPosition(transverseYAFPosition);
             }
         });
-
-//        if (this.waitingForMessage) {
-//            throw new IllegalStateException("Tried to command handler while waiting for message");
-//        }
-//        int pos = this.transverseYAFPosition - currentPosition;
-//        moveSteps(pos);
-//        this.currentPosition = this.transverseYAFPosition;
     }
 
 
@@ -348,13 +305,6 @@ public class Handler implements SerialIOListener {
                 moveToPosition(measurementPosition);
             }
         });
-
-//        if (this.waitingForMessage) {
-//            throw new IllegalStateException("Tried to command handler while waiting for message");
-//        }
-//        int pos = this.measurementPosition - currentPosition;
-//        moveSteps(pos);
-//        this.currentPosition = this.measurementPosition;
     }
 
     /**
@@ -366,13 +316,6 @@ public class Handler implements SerialIOListener {
                 moveToPosition(backgroundPosition);
             }
         });
-
-//        if (this.waitingForMessage) {
-//            throw new IllegalStateException("Tried to command handler while waiting for message");
-//        }
-//        int pos = this.backgroundPosition - currentPosition;
-//        moveSteps(pos);
-//        this.currentPosition = this.backgroundPosition;
     }
 
     /**
@@ -384,13 +327,6 @@ public class Handler implements SerialIOListener {
                 moveToPosition(Integer.MIN_VALUE);
             }
         });
-
-//        if (this.waitingForMessage) {
-//            throw new IllegalStateException("Tried to command handler while waiting for message");
-//        }
-//        this.currentPosition = Integer.MIN_VALUE;
-//        this.setMotorNegative();
-//        this.performSlew();
     }
 
     /**
@@ -402,14 +338,6 @@ public class Handler implements SerialIOListener {
                 moveToPosition(Integer.MAX_VALUE);
             }
         });
-
-//        if (this.waitingForMessage) {
-//            throw new IllegalStateException("Tried to command handler while waiting for message");
-//        }
-//        setVelocity(velocity);
-//        this.currentPosition = Integer.MAX_VALUE;
-//        this.setMotorPositive();
-//        this.performSlew();
     }
 
     /**
@@ -536,88 +464,6 @@ public class Handler implements SerialIOListener {
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
-
-
-//        if (this.waitingForMessage) {
-//            throw new IllegalStateException("Tried to command handler while waiting for message");
-//        }
-//        boolean direction = true;
-//        int speedChange = 0; // 0: no change, 1: change to measurement , 2: change to normal later
-//        int speedChangeTime = 0; // in milliseconds
-//
-//        // check if we are going to measurement position, change speed on-the-fly if needed
-//        if ((currentPosition + pos) == measurementPosition) {
-//            int distanceToMeasure = backgroundPosition - currentPosition;
-//            speedChange = 1;
-//            speedChangeTime = distanceToMeasure / velocity * 1000;
-//            if (speedChangeTime < 0) speedChangeTime *= -1;
-//        } else if (currentPosition == measurementPosition) {
-//            int distanceToBackground = backgroundPosition - currentPosition;
-//            speedChange = 2;
-//            speedChangeTime = distanceToBackground / velocity * 1000;
-//            if (speedChangeTime < 0) speedChangeTime *= -1;
-//
-//        }
-//
-//        //if negative value, then we send "-" command and change
-//        if (pos < 0) {
-//            pos *= -1;
-//            direction = false;
-//        }
-//        if (pos < 0 || pos > 16777215) {
-//            return false;
-//        }
-//
-//        final int posT = pos;
-//        final boolean directionT = direction;
-//        final int speedChangeT = speedChange;
-//        final int speedChangeTimeT = speedChangeTime;
-//
-//        new Thread() {
-//            @Override public void run() {
-//                try {
-//
-//                    //select speed
-//                    if (speedChangeT == 1 && speedChangeTimeT == 0) {
-//                        setVelocity(measurementVelocity);
-//                    } else if (speedChangeT == 2) {
-//                        setVelocity(measurementVelocity);
-//                    } else {
-//                        setVelocity(velocity);
-//                    }
-//                    setAcceleration(acceleration);
-//                    setDeceleration(deceleration);
-//
-//                    //first need to set translate active
-//                    serialIO.writeMessage("O1,0");
-//                    if (directionT) {
-//                        serialIO.writeMessage("+N" + posT);
-//                    } else {
-//                        serialIO.writeMessage("-N" + posT);
-//                    }
-//                    go();
-//
-//                    //on-the-fly speed change
-//                    if (speedChangeT == 1 && speedChangeTimeT > 0) {
-//                        try {
-//                            Thread.sleep(speedChangeTimeT);
-//                            setVelocity(measurementVelocity);
-//                        } catch (InterruptedException ex1) {
-//                        }
-//                    } else if (speedChangeT == 2) {
-//                        try {
-//                            Thread.sleep(speedChangeTimeT);
-//                            setVelocity(velocity);
-//                        } catch (InterruptedException ex1) {
-//                        }
-//
-//                    }
-//                } catch (SerialIOException ex) {
-//                    System.err.println(ex);
-//                }
-//            }
-//        }.start();
-//        return true;
     }
 
     /**
@@ -627,11 +473,6 @@ public class Handler implements SerialIOListener {
      * @param rotationAngle the angle in degrees to rotate the handler to.
      */
     public void rotateTo(final int rotationAngle) {
-        // TODO rotation korjattava siten etta - ja + merkit annetaan
-        // riippuen nykyisesta positiosta.
-        // Handler.java:n tulisi varmaan muistaa rotatio-moottorille asetettu suunta (+/-)?
-        //
-
         workQueue.execute(new Runnable() {
             public void run() {
                 int angle = rotationAngle % 360;
@@ -662,31 +503,6 @@ public class Handler implements SerialIOListener {
                 }
             }
         });
-
-
-//        if (this.waitingForMessage) {
-//            throw new IllegalStateException("Tried to command handler while waiting for message");
-//        }
-//        angle = angle % 360;
-//        angle = (int) (((double) angle) / 360.0 * Settings.getHandlerRotation());
-//        try {
-//            //first set rotation speed,acceleration and deceleration
-//            setVelocity(rotationSpeed);
-//            setAcceleration(rotationAcceleration);
-//            setDeceleration(rotationDeceleration);
-//            //then set rotation active
-//            if (angle == 0) {
-//                this.serialIO.writeMessage("O1,1,");
-//                this.serialIO.writeMessage("+H1,");
-//            } else {
-//                int rotation = angle - currentRotation;
-//                this.serialIO.writeMessage("O1,1");
-//                this.serialIO.writeMessage("N" + rotation + "G,");
-//            }
-//            this.currentRotation = angle;
-//        } catch (SerialIOException ex) {
-//            System.err.println(ex);
-//        }
     }
 
     /**
@@ -704,8 +520,7 @@ public class Handler implements SerialIOListener {
      */
     protected void setOnline() {
         try {
-            serialIO.writeMessage("@0" + ",");
-            //this.serialIO.writeMessage(","); //execute command
+            serialIO.writeMessage("@0,");
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
@@ -743,8 +558,6 @@ public class Handler implements SerialIOListener {
         if (a >= 0 && a < 128) {
             try {
                 serialIO.writeMessage("A" + a + ",");
-                //this.serialIO.writeMessage(","); //execute command
-//                acceleration = a;
             } catch (SerialIOException e) {
                 e.printStackTrace();
             }
@@ -763,7 +576,6 @@ public class Handler implements SerialIOListener {
         if (d >= 0 && d < 128) {
             try {
                 serialIO.writeMessage("D" + d + ",");
-//                deceleration = d;
             } catch (SerialIOException e) {
                 e.printStackTrace();
             }
@@ -782,7 +594,6 @@ public class Handler implements SerialIOListener {
         if (v >= 50 && v < 8501) {
             try {
                 serialIO.writeMessage("M" + v + ",");
-//                velocity = v;
             } catch (SerialIOException e) {
                 e.printStackTrace();
             }
@@ -798,7 +609,6 @@ public class Handler implements SerialIOListener {
     protected void stopExecution() {
         try {
             serialIO.writeMessage("Q,");
-            //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
@@ -812,7 +622,6 @@ public class Handler implements SerialIOListener {
         selectMovement();
         try {
             serialIO.writeMessage("S,");
-            //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
@@ -846,7 +655,6 @@ public class Handler implements SerialIOListener {
     protected void go() {
         try {
             serialIO.writeMessage("G,");
-            //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
@@ -868,7 +676,7 @@ public class Handler implements SerialIOListener {
             //this.serialIO.writeMessage("%,");
             waitingForMessage = true;
             try {
-                String answer = (String) answerQueue.take();//poll(pollTimeout, TimeUnit.SECONDS);
+                answerQueue.take();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -893,22 +701,16 @@ public class Handler implements SerialIOListener {
     protected String verify(char v) {
         try {
             serialIO.writeMessage("V" + v + ",");
-            //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
         waitingForMessage = true;
         String answer = null;
-        // while(true) {
         try {
-            answer = (String) answerQueue.take(); //(pollTimeout, TimeUnit.SECONDS);
-            //if(answer != null) break;
-            //Thread.sleep(1000);
+            answer = (String) answerQueue.take();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        //}
-
         waitingForMessage = false;
         return answer;
     }
@@ -926,7 +728,6 @@ public class Handler implements SerialIOListener {
     protected char takeMessage() {
         try {
             serialIO.writeMessage("%,");
-            //this.serialIO.writeMessage(","); //execute command
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
@@ -942,12 +743,10 @@ public class Handler implements SerialIOListener {
     }
 
     public void serialIOEvent(SerialIOEvent event) {
-        //System.err.println("new event:" + event.getCleanMessage());
         String message = event.getCleanMessage();
         if (message != null) {
             if (waitingForMessage) {
                 try {
-                    //System.err.println("putted:" + message + " to queue");
                     answerQueue.put(message);
                 } catch (InterruptedException e) {
                     System.err.println("Interrupted Handler message event");
