@@ -64,6 +64,7 @@ public class Degausser implements SerialIOListener {
     private int degausserRamp;
 
     private boolean waitingForMessage = false;
+    private double minimumField;
     private double maximumField;
 
     /**
@@ -77,6 +78,7 @@ public class Degausser implements SerialIOListener {
         queue = new SynchronousQueue<String>();
         this.degausserDelay = Settings.getDegausserDelay();
         this.degausserRamp = Settings.getDegausserRamp();
+        this.minimumField = Settings.getDegausserMinimumField();
         this.maximumField = Settings.getDegausserMaximumField();
 
         //needs to call new functions setDelay() and setRamp(). TODO
@@ -101,6 +103,7 @@ public class Degausser implements SerialIOListener {
         // No check, only two options. Doesnt matter.
         this.degausserDelay = Settings.getDegausserDelay();
         this.degausserRamp = Settings.getDegausserRamp();
+        this.minimumField = Settings.getDegausserMinimumField();
         this.maximumField = Settings.getDegausserMaximumField();
         try {
             blockingWrite("DCD" + this.degausserDelay);
@@ -139,10 +142,9 @@ public class Degausser implements SerialIOListener {
      * @throws IllegalArgumentException if the amplitude is not in the allowed range.
      */
     protected void setAmplitude(double amplitude) {
-        if (amplitude >= 1.0 && amplitude <= maximumField) {
-            amplitude = Math.max(amplitude, 1.1);       // the degausser's minimum amplitude is 1.1
+        if (amplitude >= minimumField && amplitude <= maximumField) {
             try {
-                String amps = Integer.toString((int) (amplitude * 10.0));
+                String amps = Integer.toString((int) Math.round(amplitude * 10.0));
                 while (amps.length() < 4) {
                     amps = "0" + amps;
                 }
