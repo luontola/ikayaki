@@ -285,7 +285,7 @@ public class Settings {
      * @return true if value was correct, otherwise false.
      */
     public static synchronized boolean setXXX(Object value) {
-        if (value == null); // just to avoid "value is never used" warnings ;)
+        if (value == null) ; // just to avoid "value is never used" warnings ;)
         return false;
     }
 
@@ -385,7 +385,7 @@ public class Settings {
     }
 
     public static synchronized double getDegausserMaximumField() {
-        return Integer.parseInt(getProperty("squid.degausser.maximumfield", "0.0"));
+        return Double.parseDouble(getProperty("squid.degausser.maximumfield", "0.0"));
     }
 
     /* Sample handler */

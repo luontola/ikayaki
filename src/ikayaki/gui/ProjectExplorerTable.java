@@ -24,19 +24,24 @@ package ikayaki.gui;
 
 import ikayaki.*;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.*;
-import javax.swing.table.*;
-
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileFilter;
 import java.text.DateFormat;
-import java.util.Date;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Creates a list of project files in directory. Handles loading selected projects and showing export popup menu.
@@ -99,8 +104,8 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
     public static final int[] calibration_columns = {COLUMN_FILENAME, COLUMN_LASTMEASURE, COLUMN_UNMEASURED};
 
     /**
-     * Visible columns in this table (as in column translation table); can be set with setColumns(int[]).
-     * Initialized to new int[0] so that ProjectExplorerTableModel can be created.
+     * Visible columns in this table (as in column translation table); can be set with setColumns(int[]). Initialized to
+     * new int[0] so that ProjectExplorerTableModel can be created.
      */
     private int[] columns = new int[0];
 
@@ -116,7 +121,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
     /**
      * Builds ProjectExplorerTable.
      *
-     * @param parent the component whose setProject() method will be called on opening a new project file.
+     * @param parent        the component whose setProject() method will be called on opening a new project file.
      * @param isCalibration if true, this table will display only calibration projects and related columns.
      */
     public ProjectExplorerTable(ProjectComponent parent, boolean isCalibration) {
@@ -139,8 +144,11 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         // this.setPreferredScrollableViewportSize(new Dimension(280, 400));
 
         // set the right visible columns for table type
-        if (this.isCalibration) setColumns(calibration_columns);
-        else setColumns(default_columns);
+        if (this.isCalibration) {
+            setColumns(calibration_columns);
+        } else {
+            setColumns(default_columns);
+        }
 
         // ProjectExplorerTable events
 
@@ -169,8 +177,11 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                 // if load error, revert back to old selection
                 if (project == null) {
                     // TODO: flash selected row red for 100 ms, perhaps? - might require a custom cell renderer
-                    if (selectedFile == -1) clearSelection();
-                    else setRowSelectionInterval(selectedFile, selectedFile);
+                    if (selectedFile == -1) {
+                        clearSelection();
+                    } else {
+                        setRowSelectionInterval(selectedFile, selectedFile);
+                    }
                 } else {
                     ProjectExplorerTable.this.parent.setProject(project);
                 }
@@ -207,8 +218,9 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                 explorerTableSortColumn = cm.getColumn(viewColumn).getModelIndex();
 
                 // update all column headers and repaint header
-                for (int col = 0; col < getColumnCount(); col++)
+                for (int col = 0; col < getColumnCount(); col++) {
                     cm.getColumn(col).setHeaderValue(getColumnName(col));
+                }
                 getTableHeader().repaint();
 
                 // update table with sorted data, update selected file and table selection
@@ -222,7 +234,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
      *
      * @param columns int-table with COLUMN_xxx values, or null to just update table.
      */
-    public void setColumns(int [] columns) {
+    public void setColumns(int[] columns) {
         if (columns != null) this.columns = columns;
 
         // StructureChanged resets columns' PreferredWidths, so they must be set again...
@@ -232,11 +244,25 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         for (int col = 0; col < this.columns.length; col++) {
             TableColumn column = this.getColumnModel().getColumn(col);
             switch (this.columns[col]) {
-                case COLUMN_FILENAME:    column.setPreferredWidth(130); break;
-                case COLUMN_TYPE:        column.setMinWidth(55); column.setMaxWidth(55); break;
-                case COLUMN_LASTMOD:     column.setMinWidth(95); column.setMaxWidth(95); break;
-                case COLUMN_LASTMEASURE: column.setMinWidth(100); column.setMaxWidth(100); break;   // should be wide enough for dates like "22.12.2005 22:22"
-                case COLUMN_UNMEASURED:  column.setMinWidth(45); column.setMaxWidth(45); break;
+            case COLUMN_FILENAME:
+                column.setPreferredWidth(130);
+                break;
+            case COLUMN_TYPE:
+                column.setMinWidth(55);
+                column.setMaxWidth(55);
+                break;
+            case COLUMN_LASTMOD:
+                column.setMinWidth(95);
+                column.setMaxWidth(95);
+                break;
+            case COLUMN_LASTMEASURE:
+                column.setMinWidth(100);
+                column.setMaxWidth(100);
+                break;   // should be wide enough for dates like "22.12.2005 22:22"
+            case COLUMN_UNMEASURED:
+                column.setMinWidth(45);
+                column.setMaxWidth(45);
+                break;
             }
         }
     }
@@ -255,8 +281,11 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
 
         // search if any file in current directory matches currently open project file
         selectedFile = -1;
-        if (parent.getProject() != null) for (int n = 0; n < files.length; n++)
-            if (parent.getProject().getFile().equals(files[n])) selectedFile = n;
+        if (parent.getProject() != null) {
+            for (int n = 0; n < files.length; n++) {
+                if (parent.getProject().getFile().equals(files[n])) selectedFile = n;
+            }
+        }
 
         // update table data and selected project file
         explorerTableModel.fireTableDataChanged();
@@ -289,7 +318,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         File[] files = directory.listFiles(new FileFilter() {
             public boolean accept(File file) {
                 return file.isFile() && file.getName().endsWith(Ikayaki.FILE_TYPE)
-                    && (!isCalibration || Project.getType(file) == Project.Type.CALIBRATION);
+                        && (!isCalibration || Project.getType(file) == Project.Type.CALIBRATION);
             }
         });
 
@@ -302,7 +331,8 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         try {
             projectTypeCacher.interrupt();
             projectTypeCacher.join(); // wait for old thread to die
-        } catch (InterruptedException e) { }
+        } catch (InterruptedException e) {
+        }
 
         // need a copy of files to work on, as they might get sorted any time in setDirectory(File)
         final File[] cacheFiles = files.clone();
@@ -397,40 +427,46 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
             File file = files[row];
             Object value;
             switch (columns[column]) { // translate visible column -> all columns
-                case COLUMN_FILENAME:
-                    String filename = file.getName();
-                    value = filename.substring(0, filename.length() - Ikayaki.FILE_TYPE.length());
-                    break;
-                case COLUMN_TYPE:
-                    value = Project.getType(file);
-                    break;
-                case COLUMN_LASTMOD:
-                    value = DateFormat.getInstance().format(file.lastModified());
+            case COLUMN_FILENAME:
+                String filename = file.getName();
+                value = filename.substring(0, filename.length() - Ikayaki.FILE_TYPE.length());
+                break;
+            case COLUMN_TYPE:
+                value = Project.getType(file);
+                break;
+            case COLUMN_LASTMOD:
+                value = DateFormat.getInstance().format(file.lastModified());
 //                    value = "22.12.2005 22:22"; // testing if this fits to the table
-                    break;
-                case COLUMN_LASTMEASURE:
-                    Project p = Project.loadProject(file);
-                    if (p == null) {
-                        return null;
-                    }
-                    Date date = p.getTimestamp();
+                break;
+            case COLUMN_LASTMEASURE:
+                Project p = Project.loadProject(file);
+                if (p == null) {
+                    return null;
+                }
+                Date date = p.getTimestamp();
 //                    date = new Date(105, 11, 22, 22, 22, 22); // testing if this fits to the table
-                    if (date == null) value = null;
-                    else value = DateFormat.getInstance().format(date);
-                    break;
-                case COLUMN_UNMEASURED:
-                    p = Project.loadProject(file);
-                    if (p == null) {
-                        return null;
-                    }
-                    date = p.getTimestamp();
-                    if (date == null) value = null;
-                    else value = (new Date().getTime() - date.getTime()) / 3600000 + " h";
-                    break;
-                default:
-                    assert false;
+                if (date == null) {
                     value = null;
-                    break;
+                } else {
+                    value = DateFormat.getInstance().format(date);
+                }
+                break;
+            case COLUMN_UNMEASURED:
+                p = Project.loadProject(file);
+                if (p == null) {
+                    return null;
+                }
+                date = p.getTimestamp();
+                if (date == null) {
+                    value = null;
+                } else {
+                    value = (new Date().getTime() - date.getTime()) / 3600000 + " h";
+                }
+                break;
+            default:
+                assert false;
+                value = null;
+                break;
             }
 
             // choose the style according to the project's state
@@ -540,25 +576,25 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
     private class ProjectExplorerTableComparator implements Comparator<File> {
         public int compare(File a, File b) {
             switch (columns[explorerTableSortColumn]) { // translate sort column
-                case COLUMN_FILENAME:
-                    return a.compareTo(b);
-                case COLUMN_TYPE:
-                    // WARNING: might choke Project.getType(File) with O(n log n) requests
-                    Project.Type atype = Project.getType(a), btype = Project.getType(b);
-                    if (atype == null && btype == null) return 0;
-                    if (atype == null) return 1;
-                    if (btype == null) return -1;
-                    // NOTE: calibration-projects appear first because of enum-compareTo, but that's just fine, right?
-                    return atype.compareTo(btype);
-                case COLUMN_LASTMOD:
-                    long diff = a.lastModified() - b.lastModified();
-                    return diff == 0 ? 0 : (diff < 0 ? -1 : 1);
-                case COLUMN_LASTMEASURE:
-                    return compareTimestamps(a, b);
-                case COLUMN_UNMEASURED:
-                    return -compareTimestamps(a, b);
-                default:
-                    return 0;
+            case COLUMN_FILENAME:
+                return a.compareTo(b);
+            case COLUMN_TYPE:
+                // WARNING: might choke Project.getType(File) with O(n log n) requests
+                Project.Type atype = Project.getType(a), btype = Project.getType(b);
+                if (atype == null && btype == null) return 0;
+                if (atype == null) return 1;
+                if (btype == null) return -1;
+                // NOTE: calibration-projects appear first because of enum-compareTo, but that's just fine, right?
+                return atype.compareTo(btype);
+            case COLUMN_LASTMOD:
+                long diff = a.lastModified() - b.lastModified();
+                return diff == 0 ? 0 : (diff < 0 ? -1 : 1);
+            case COLUMN_LASTMEASURE:
+                return compareTimestamps(a, b);
+            case COLUMN_UNMEASURED:
+                return -compareTimestamps(a, b);
+            default:
+                return 0;
             }
         }
 
@@ -610,8 +646,11 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
             for (File dir : new File[]{null, directory, new File("A:/")}) {
                 for (String type : new String[]{"dat", "tdt", "srm"}) {
                     JMenuItem exportitem;
-                    if (dir == null) exportitem = new JMenuItem(type.toUpperCase() + " file...");
-                    else exportitem = new JMenuItem(new File(dir, basename + "." + type).toString());
+                    if (dir == null) {
+                        exportitem = new JMenuItem(type.toUpperCase() + " file...");
+                    } else {
+                        exportitem = new JMenuItem(new File(dir, basename + "." + type).toString());
+                    }
 
                     this.add(exportitem);
 
@@ -628,28 +667,37 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                             if (filetype.equals("...")) {
                                 filetype = filename.substring(0, 3).toLowerCase();
                                 JFileChooser chooser = new JFileChooser(directory);
-                                chooser.setFileFilter(new GenericFileFilter(filetype.toUpperCase() + " File", filetype));
+                                chooser.setFileFilter(
+                                        new GenericFileFilter(filetype.toUpperCase() + " File", filetype));
 
                                 if (chooser.showSaveDialog(ProjectExplorerTable.this) == JFileChooser.APPROVE_OPTION) {
                                     exportfile = chooser.getSelectedFile();
-                                } else return;
+                                } else {
+                                    return;
+                                }
 
-                            } else exportfile = new File(filename);
+                            } else {
+                                exportfile = new File(filename);
+                            }
 
                             // execute export
                             boolean ok = false;
-                            if (filetype.equals("dat")) ok = Project.loadProject(file).exportToDAT(exportfile);
-                            else if (filetype.equals("tdt")) ok = Project.loadProject(file).exportToTDT(exportfile);
-                            else if (filetype.equals("srm")) ok = Project.loadProject(file).exportToSRM(exportfile);
+                            if (filetype.equals("dat")) {
+                                ok = Project.loadProject(file).exportToDAT(exportfile);
+                            } else if (filetype.equals("tdt")) {
+                                ok = Project.loadProject(file).exportToTDT(exportfile);
+                            } else if (filetype.equals("srm")) ok = Project.loadProject(file).exportToSRM(exportfile);
 
                             // TODO: tell somehow, not with popup, if export was successful; statusbar perhaps?
                             Component c = ProjectExplorerTable.this;
                             while (c.getParent() != null) {
                                 c = c.getParent();
                             }
-                            if (!ok) JOptionPane.showMessageDialog(c,
-                                "Unable to write to " + exportfile,
-                                "Error exporting file", JOptionPane.ERROR_MESSAGE);
+                            if (!ok) {
+                                JOptionPane.showMessageDialog(c,
+                                        "Unable to write to " + exportfile,
+                                        "Error exporting file", JOptionPane.ERROR_MESSAGE);
+                            }
                         }
                     });
                 }

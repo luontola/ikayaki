@@ -22,14 +22,11 @@
 
 package ikayaki.gui;
 
-import ikayaki.Project;
-import ikayaki.Settings;
 import ikayaki.Ikayaki;
+import ikayaki.Project;
 
-import java.awt.*;
 import javax.swing.*;
-import javax.swing.event.TableModelListener;
-import javax.swing.event.TableModelEvent;
+import java.awt.*;
 import java.io.File;
 
 /**

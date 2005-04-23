@@ -22,7 +22,6 @@
 
 package ikayaki.gui;
 
-import ikayaki.Project;
 import ikayaki.Settings;
 
 import javax.swing.*;

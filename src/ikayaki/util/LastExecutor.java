@@ -217,7 +217,7 @@ public class LastExecutor implements Executor {
 
     /**
      * Wraps a Runnable object and sets the delay after which it should be executed by a worker thread.
-     * 
+     *
      * @author Esko Luontola
      */
     private class RunDelayed implements Delayed {

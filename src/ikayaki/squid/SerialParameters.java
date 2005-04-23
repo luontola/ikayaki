@@ -89,16 +89,10 @@ public class SerialParameters {
     }
 
     /**
-     * Creates a SerialParameter object with default Serial settings for serial port communication.
-     * Default settings are:
-     *  Baudrate: 1200
-     *  Flowcontrol in: None
-     *  Flowcontrol out: None
-     *  Databits: 8
-     *  Stopbits: 1
-     *  Parity: None
+     * Creates a SerialParameter object with default Serial settings for serial port communication. Default settings
+     * are: Baudrate: 1200 Flowcontrol in: None Flowcontrol out: None Databits: 8 Stopbits: 1 Parity: None
      *
-     * @param portName       The name of the serial port.
+     * @param portName The name of the serial port.
      */
     public SerialParameters(String portName) {
         this.portName = portName;

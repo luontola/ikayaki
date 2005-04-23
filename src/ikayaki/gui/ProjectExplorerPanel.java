@@ -27,10 +27,14 @@ import ikayaki.Project;
 import ikayaki.Settings;
 import ikayaki.util.LastExecutor;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
@@ -151,8 +155,11 @@ public class ProjectExplorerPanel extends ProjectComponent {
         this.add(newProjectPanel, BorderLayout.SOUTH);
 
         // set current directory to project dir or latest directory history dir
-        if (project != null) setDirectory(project.getFile().getParentFile());
-        else setDirectory(Settings.getLastDirectory());
+        if (project != null) {
+            setDirectory(project.getFile().getParentFile());
+        } else {
+            setDirectory(Settings.getLastDirectory());
+        }
 
         // scroll to the end of the combo box's text field (after setting directory) -- seems to happen anyway
         // setBrowserFieldCursorToEnd();
@@ -169,8 +176,9 @@ public class ProjectExplorerPanel extends ProjectComponent {
                 fc.setDialogTitle("Change directory");
                 fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-                if (fc.showOpenDialog(browseButton) == JFileChooser.APPROVE_OPTION)
+                if (fc.showOpenDialog(browseButton) == JFileChooser.APPROVE_OPTION) {
                     setDirectory(fc.getSelectedFile());
+                }
             }
         });
 
@@ -219,8 +227,11 @@ public class ProjectExplorerPanel extends ProjectComponent {
                 }
             }
 
-            public void popupMenuWillBecomeVisible(PopupMenuEvent e) { }
-            public void popupMenuCanceled(PopupMenuEvent e) { }
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+            }
+
+            public void popupMenuCanceled(PopupMenuEvent e) {
+            }
         });
 
         /**
@@ -236,7 +247,9 @@ public class ProjectExplorerPanel extends ProjectComponent {
                         // this deprecation is required for shift-tab to work
                         e.setModifiers(e.getModifiers() ^ KeyEvent.SHIFT_MASK);
                         e.setKeyCode(KeyEvent.VK_UP);
-                    } else e.setKeyCode(KeyEvent.VK_DOWN);
+                    } else {
+                        e.setKeyCode(KeyEvent.VK_DOWN);
+                    }
                 }
             }
 
@@ -245,8 +258,9 @@ public class ProjectExplorerPanel extends ProjectComponent {
                     browserField.setSelectedItem(directory);
                     // browserField.getEditor().selectAll();
                     return;
-                } else if (e.getKeyChar() == KeyEvent.VK_ENTER) return;
-                else if (e.getKeyChar() == KeyEvent.VK_TAB) return;
+                } else if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+                    return;
+                } else if (e.getKeyChar() == KeyEvent.VK_TAB) return;
 
                 if (e.getModifiers() == KeyEvent.CTRL_MASK && e.getKeyChar() == KeyEvent.VK_DELETE) {
                     // delete one directory name at a time
@@ -258,7 +272,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
                     browserFieldEditor.setText(textA + textB);
                     browserFieldEditor.setCaretPosition(textA.length());
 
-                } else if ( (e.getModifiers() & KeyEvent.ALT_MASK) != 0 || (e.getModifiers() & KeyEvent.CTRL_MASK) != 0) {
+                } else if ((e.getModifiers() & KeyEvent.ALT_MASK) != 0 || (e.getModifiers() & KeyEvent.CTRL_MASK) != 0) {
                     // avoid the popup menu from showing, when the Project Explorer tab is hidden with ALT+P
                     browserField.hidePopup();
                     return;
@@ -288,7 +302,9 @@ public class ProjectExplorerPanel extends ProjectComponent {
         // change directory, if not calibration project; in that case just update selected project in explorerTable
         if (project != null && project.getType() != Project.Type.CALIBRATION) {
             setDirectory(project.getFile().getParentFile());
-        } else explorerTable.setDirectory(directory);
+        } else {
+            explorerTable.setDirectory(directory);
+        }
 
         // add explorerTable as a ProjectListener so it can update current project's timestamps
         if (project != null) project.addProjectListener(explorerTable);
@@ -333,8 +349,9 @@ public class ProjectExplorerPanel extends ProjectComponent {
         File dir = dirfile.isDirectory() ? dirfile : dirfile.getParentFile();
 
         // protect against no-parent-null and invalid-dir-list-null
-        if (dir == null) dir = directory;
-        else if (!dir.isDirectory()) return new File[0];
+        if (dir == null) {
+            dir = directory;
+        } else if (!dir.isDirectory()) return new File[0];
 
         final String match = dirfile.isDirectory() ? "" : dirfile.getName();
 
@@ -454,8 +471,9 @@ public class ProjectExplorerPanel extends ProjectComponent {
             createNewProjectButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String name = newProjectName.getText();
-                    if (name.length() > 0 && !name.toLowerCase().endsWith(Ikayaki.FILE_TYPE))
+                    if (name.length() > 0 && !name.toLowerCase().endsWith(Ikayaki.FILE_TYPE)) {
                         name += Ikayaki.FILE_TYPE;
+                    }
 
                     Project.Type type = (Project.Type) newProjectType.getSelectedItem();
 

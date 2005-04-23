@@ -30,10 +30,9 @@ package ikayaki.squid;
 public class SerialIOException extends Exception {
 
     /**
-     * Constructs a <code>SerialIOException</code>
-     * with the specified detail message.
+     * Constructs a <code>SerialIOException</code> with the specified detail message.
      *
-     * @param   str   the detail message.
+     * @param str the detail message.
      */
     public SerialIOException(String str) {
         super(str);

@@ -24,7 +24,8 @@ package ikayaki.gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Timer used for flashing a JComponent background light red (or given color), for 100 ms (or given time).

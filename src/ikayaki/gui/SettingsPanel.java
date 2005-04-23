@@ -31,16 +31,16 @@ import javax.comm.CommPortIdentifier;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.Enumeration;
 import java.text.DecimalFormat;
-import javax.swing.text.NumberFormatter;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 
 /**
  * Creates its components and updats changes to Settings and saves them in Configuration file
@@ -49,264 +49,261 @@ import java.util.Collections;
  */
 
 public class SettingsPanel
-    extends JPanel {
-  /*
-       Event A: On Save Clicked - saves current configuration to Settings-singleton and closes
-       window
-   */
-  /*
-       Event B: On Cancel Clicked - closes window (discarding changes)
-   */
+        extends JPanel {
+    /*
+         Event A: On Save Clicked - saves current configuration to Settings-singleton and closes
+         window
+     */
+    /*
+         Event B: On Cancel Clicked - closes window (discarding changes)
+     */
 
-  /**
-   * COM port for magnetometer
-   */
-  private JComboBox magnetometerPort;
+    /**
+     * COM port for magnetometer
+     */
+    private JComboBox magnetometerPort;
 
-  /**
-   * COM port for demagnetizer, can be sharing same port with magnetometer
-   */
-  private JComboBox demagnetizerPort;
+    /**
+     * COM port for demagnetizer, can be sharing same port with magnetometer
+     */
+    private JComboBox demagnetizerPort;
 
-  /**
-   * COM port for sample handler
-   */
-  private JComboBox handlerPort;
+    /**
+     * COM port for sample handler
+     */
+    private JComboBox handlerPort;
 
-  /**
-   * Calibration constants with polarization (factory set?)
-   */
-  private JFormattedTextField xAxisCalibration;
+    /**
+     * Calibration constants with polarization (factory set?)
+     */
+    private JFormattedTextField xAxisCalibration;
 
-  /**
-   * Calibration constants with polarization (factory set?)
-   */
-  private JFormattedTextField yAxisCalibration;
+    /**
+     * Calibration constants with polarization (factory set?)
+     */
+    private JFormattedTextField yAxisCalibration;
 
-  /**
-   * Calibration constants with polarization (factory set?)
-   */
-  private JFormattedTextField zAxisCalibration;
+    /**
+     * Calibration constants with polarization (factory set?)
+     */
+    private JFormattedTextField zAxisCalibration;
 
-  /**
-   * how fast demagnetization goes
-   */
-  private JComboBox demagRamp;
+    /**
+     * how fast demagnetization goes
+     */
+    private JComboBox demagRamp;
 
-  /**
-   * ?
-   */
-  private JComboBox demagDelay;
+    /**
+     * ?
+     */
+    private JComboBox demagDelay;
 
-  /**
-   * Handler acceleration
-   */
-  private JFormattedTextField acceleration;
+    /**
+     * Handler acceleration
+     */
+    private JFormattedTextField acceleration;
 
-  /**
-   * Handler deceleration
-   */
-  private JFormattedTextField deceleration;
+    /**
+     * Handler deceleration
+     */
+    private JFormattedTextField deceleration;
 
-  /**
-   * Handler Max speed
-   */
-  private JFormattedTextField velocity;
+    /**
+     * Handler Max speed
+     */
+    private JFormattedTextField velocity;
 
-  /**
-   * speed in measurement, should be small
-   */
-  private JFormattedTextField measurementVelocity;
+    /**
+     * speed in measurement, should be small
+     */
+    private JFormattedTextField measurementVelocity;
 
-  /**
-   * AF demag position for transverse
-   */
-  private JFormattedTextField transverseYAFPosition;
+    /**
+     * AF demag position for transverse
+     */
+    private JFormattedTextField transverseYAFPosition;
 
-  /**
-   * axial AF demag position in steps, must be divisible by 10. Relative to Home.
-   */
-  private JFormattedTextField axialAFPosition;
+    /**
+     * axial AF demag position in steps, must be divisible by 10. Relative to Home.
+     */
+    private JFormattedTextField axialAFPosition;
 
-  /**
-   * Position in steps, must be divisible by 10. Relative to Home. (same as Home?)
-   */
-  private JFormattedTextField sampleLoadPosition;
+    /**
+     * Position in steps, must be divisible by 10. Relative to Home. (same as Home?)
+     */
+    private JFormattedTextField sampleLoadPosition;
 
-  /**
-   * Position in steps, must be divisible by 10. Relative to Home.
-   */
-  private JFormattedTextField backgroundPosition;
+    /**
+     * Position in steps, must be divisible by 10. Relative to Home.
+     */
+    private JFormattedTextField backgroundPosition;
 
-  /**
-   * Position in steps, must be divisible by 10. Relative to Home.
-   */
-  private JFormattedTextField measurementPosition;
+    /**
+     * Position in steps, must be divisible by 10. Relative to Home.
+     */
+    private JFormattedTextField measurementPosition;
 
-  /**
-   * steps to perform full rotation, must be clockwise, determined by sign
-   */
-  private JFormattedTextField rotation;
+    /**
+     * steps to perform full rotation, must be clockwise, determined by sign
+     */
+    private JFormattedTextField rotation;
 
-  /**
-   * rotation velocity
-   */
-  private JFormattedTextField rotationVelocity;
+    /**
+     * rotation velocity
+     */
+    private JFormattedTextField rotationVelocity;
 
-  /**
-   * rotation acceleration
-   */
-  private JFormattedTextField rotationAcc;
+    /**
+     * rotation acceleration
+     */
+    private JFormattedTextField rotationAcc;
 
-  /**
-   * rotation deceleration
-   */
-  private JFormattedTextField rotationDec;
+    /**
+     * rotation deceleration
+     */
+    private JFormattedTextField rotationDec;
 
-  /**
-   * Refers to right limit switch on translation axis. And usually sample holder motion toward right limit is
-   * posivitive direction (default).
-   */
-  private JComboBox handlerRightLimit;
+    /**
+     * Refers to right limit switch on translation axis. And usually sample holder motion toward right limit is
+     * posivitive direction (default).
+     */
+    private JComboBox handlerRightLimit;
 
-  /**
-   * Maximum field to allow for equipment
-   */
-  private JFormattedTextField maximumField;
+    /**
+     * Maximum field to allow for equipment
+     */
+    private JFormattedTextField maximumField;
 
-  private JCheckBox zAxis;
-  private JCheckBox yAxis;
-  private JCheckBox xAxis;
+    private JCheckBox zAxis;
+    private JCheckBox yAxis;
+    private JCheckBox xAxis;
 
-  /**
-   * Contains the layout.
-   */
-  private JPanel contentPane;
+    /**
+     * Contains the layout.
+     */
+    private JPanel contentPane;
 
-  private JButton saveButton;
-  private JButton cancelButton;
-  private Action saveAction;
-  private Action cancelAction;
+    private JButton saveButton;
+    private JButton cancelButton;
+    private Action saveAction;
+    private Action cancelAction;
 
-  SettingsDialog creator;
+    SettingsDialog creator;
 
-  /**
-   * Creates all components and puts them in right places. Labels are created only here (no global fields). Creates
-   * ActionListeners for buttons.
-   */
-  SettingsPanel(SettingsDialog creator) {
+    /**
+     * Creates all components and puts them in right places. Labels are created only here (no global fields). Creates
+     * ActionListeners for buttons.
+     */
+    SettingsPanel(SettingsDialog creator) {
 
-    this.creator = creator;
+        this.creator = creator;
 
-    $$$setupUI$$$();
-    setLayout(new BorderLayout());
-    add(contentPane, BorderLayout.CENTER);
+        $$$setupUI$$$();
+        setLayout(new BorderLayout());
+        add(contentPane, BorderLayout.CENTER);
 
-    this.acceleration.setValue(Settings.getHandlerAcceleration());
-    this.deceleration.setValue(Settings.getHandlerDeceleration());
-    this.axialAFPosition.setValue(Settings.getHandlerAxialAFPosition());
-    this.transverseYAFPosition.setValue(Settings.
-                                        getHandlerTransverseYAFPosition());
-    this.measurementPosition.setValue(Settings.
-                                      getHandlerMeasurementPosition());
-    this.velocity.setValue(Settings.getHandlerVelocity());
-    this.measurementVelocity.setValue(Settings.
-                                      getHandlerMeasurementVelocity());
-    this.xAxisCalibration.setValue(Settings.
-                                   getMagnetometerXAxisCalibration());
-    this.yAxisCalibration.setValue(Settings.
-                                   getMagnetometerYAxisCalibration());
-    this.zAxisCalibration.setValue(Settings.
-                                   getMagnetometerZAxisCalibration());
-    this.demagRamp.addItem(3);
-    this.demagRamp.addItem(5);
-    this.demagRamp.addItem(7);
-    this.demagRamp.addItem(9);
-    int rampValue = Settings.getDegausserRamp();
-    if (rampValue == 3) {
-      this.demagRamp.setSelectedIndex(0);
-    }
-    else if (rampValue == 5) {
-      this.demagRamp.setSelectedIndex(1);
-    }
-    if (rampValue == 7) {
-      this.demagRamp.setSelectedIndex(2);
-    }
-    else {
-      this.demagRamp.setSelectedIndex(3);
-    }
-    for (int i = 1; i < 10; i++) {
-      this.demagDelay.addItem(i);
-    }
-    this.demagRamp.setSelectedIndex(Settings.getDegausserDelay() - 1);
-    this.sampleLoadPosition.setValue(Settings.
-                                     getHandlerSampleLoadPosition());
-    this.backgroundPosition.setValue(Settings.
-                                     getHandlerBackgroundPosition());
-    this.rotation.setValue(Settings.getHandlerRotation());
-    this.rotationVelocity.setValue(Settings.getHandlerRotationVelocity());
-    this.rotationAcc.setValue(Settings.getHandlerAcceleration());
-    this.rotationDec.setValue(Settings.getHandlerDeceleration());
-    this.maximumField.setValue(Settings.getDegausserMaximumField());
-    this.handlerRightLimit.addItem("plus");
-    this.handlerRightLimit.addItem("minus");
-    this.handlerRightLimit.setSelectedIndex(Settings.
-                                            getHandlerRightLimit());
-
-    /* Number-only Text Fields */
-    MyFormatterFactory factory = new MyFormatterFactory();
-    acceleration.setFormatterFactory(factory);
-    deceleration.setFormatterFactory(factory);
-    velocity.setFormatterFactory(factory);
-    measurementVelocity.setFormatterFactory(factory);
-    transverseYAFPosition.setFormatterFactory(factory);
-    axialAFPosition.setFormatterFactory(factory);
-    sampleLoadPosition.setFormatterFactory(factory);
-    backgroundPosition.setFormatterFactory(factory);
-    measurementPosition.setFormatterFactory(factory);
-    rotation.setFormatterFactory(factory);
-    rotationVelocity.setFormatterFactory(factory);
-    rotationAcc.setFormatterFactory(factory);
-    rotationDec.setFormatterFactory(factory);
-    xAxisCalibration.setFormatterFactory(factory);
-    yAxisCalibration.setFormatterFactory(factory);
-    zAxisCalibration.setFormatterFactory(factory);
-    maximumField.setFormatterFactory(factory);
-
-    Enumeration ports = CommPortIdentifier.getPortIdentifiers();
-
-    ArrayList<String> portList = new ArrayList<String>();
-
-    if (!ports.hasMoreElements()) {
-      System.err.println("No comm ports found!");
-    }
-    else {
-      while (ports.hasMoreElements()) {
-        /*
-         *  Get the specific port
-         */
-
-        CommPortIdentifier portId = (CommPortIdentifier) ports.nextElement();
-
-        if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-          portList.add(portId.getName());
-          //this.magnetometerPort.addItem(portId.getName());
-          //this.handlerPort.addItem(portId.getName());
-          //this.demagnetizerPort.addItem(portId.getName());
+        this.acceleration.setValue(Settings.getHandlerAcceleration());
+        this.deceleration.setValue(Settings.getHandlerDeceleration());
+        this.axialAFPosition.setValue(Settings.getHandlerAxialAFPosition());
+        this.transverseYAFPosition.setValue(Settings.
+                getHandlerTransverseYAFPosition());
+        this.measurementPosition.setValue(Settings.
+                getHandlerMeasurementPosition());
+        this.velocity.setValue(Settings.getHandlerVelocity());
+        this.measurementVelocity.setValue(Settings.
+                getHandlerMeasurementVelocity());
+        this.xAxisCalibration.setValue(Settings.
+                getMagnetometerXAxisCalibration());
+        this.yAxisCalibration.setValue(Settings.
+                getMagnetometerYAxisCalibration());
+        this.zAxisCalibration.setValue(Settings.
+                getMagnetometerZAxisCalibration());
+        this.demagRamp.addItem(3);
+        this.demagRamp.addItem(5);
+        this.demagRamp.addItem(7);
+        this.demagRamp.addItem(9);
+        int rampValue = Settings.getDegausserRamp();
+        if (rampValue == 3) {
+            this.demagRamp.setSelectedIndex(0);
+        } else if (rampValue == 5) {
+            this.demagRamp.setSelectedIndex(1);
         }
-      }
-    }
-    Collections.sort(portList);
+        if (rampValue == 7) {
+            this.demagRamp.setSelectedIndex(2);
+        } else {
+            this.demagRamp.setSelectedIndex(3);
+        }
+        for (int i = 1; i < 10; i++) {
+            this.demagDelay.addItem(i);
+        }
+        this.demagRamp.setSelectedIndex(Settings.getDegausserDelay() - 1);
+        this.sampleLoadPosition.setValue(Settings.
+                getHandlerSampleLoadPosition());
+        this.backgroundPosition.setValue(Settings.
+                getHandlerBackgroundPosition());
+        this.rotation.setValue(Settings.getHandlerRotation());
+        this.rotationVelocity.setValue(Settings.getHandlerRotationVelocity());
+        this.rotationAcc.setValue(Settings.getHandlerAcceleration());
+        this.rotationDec.setValue(Settings.getHandlerDeceleration());
+        this.maximumField.setValue(Settings.getDegausserMaximumField());
+        this.handlerRightLimit.addItem("plus");
+        this.handlerRightLimit.addItem("minus");
+        this.handlerRightLimit.setSelectedIndex(Settings.
+                getHandlerRightLimit());
 
-    for(int i=0; i<portList.size(); i++) {
-      this.magnetometerPort.addItem(portList.get(i));
-      this.handlerPort.addItem(portList.get(i));
-      this.demagnetizerPort.addItem(portList.get(i));
-    }
+        /* Number-only Text Fields */
+        MyFormatterFactory factory = new MyFormatterFactory();
+        acceleration.setFormatterFactory(factory);
+        deceleration.setFormatterFactory(factory);
+        velocity.setFormatterFactory(factory);
+        measurementVelocity.setFormatterFactory(factory);
+        transverseYAFPosition.setFormatterFactory(factory);
+        axialAFPosition.setFormatterFactory(factory);
+        sampleLoadPosition.setFormatterFactory(factory);
+        backgroundPosition.setFormatterFactory(factory);
+        measurementPosition.setFormatterFactory(factory);
+        rotation.setFormatterFactory(factory);
+        rotationVelocity.setFormatterFactory(factory);
+        rotationAcc.setFormatterFactory(factory);
+        rotationDec.setFormatterFactory(factory);
+        xAxisCalibration.setFormatterFactory(factory);
+        yAxisCalibration.setFormatterFactory(factory);
+        zAxisCalibration.setFormatterFactory(factory);
+        maximumField.setFormatterFactory(factory);
 
-    this.magnetometerPort.setSelectedItem(Settings.getMagnetometerPort());
-    this.handlerPort.setSelectedItem(Settings.getHandlerPort());
-    this.demagnetizerPort.setSelectedItem(Settings.getDegausserPort());
+        Enumeration ports = CommPortIdentifier.getPortIdentifiers();
+
+        ArrayList<String> portList = new ArrayList<String>();
+
+        if (!ports.hasMoreElements()) {
+            System.err.println("No comm ports found!");
+        } else {
+            while (ports.hasMoreElements()) {
+                /*
+                 *  Get the specific port
+                 */
+
+                CommPortIdentifier portId = (CommPortIdentifier) ports.nextElement();
+
+                if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+                    portList.add(portId.getName());
+                    //this.magnetometerPort.addItem(portId.getName());
+                    //this.handlerPort.addItem(portId.getName());
+                    //this.demagnetizerPort.addItem(portId.getName());
+                }
+            }
+        }
+        Collections.sort(portList);
+
+        for (int i = 0; i < portList.size(); i++) {
+            this.magnetometerPort.addItem(portList.get(i));
+            this.handlerPort.addItem(portList.get(i));
+            this.demagnetizerPort.addItem(portList.get(i));
+        }
+
+        this.magnetometerPort.setSelectedItem(Settings.getMagnetometerPort());
+        this.handlerPort.setSelectedItem(Settings.getHandlerPort());
+        this.demagnetizerPort.setSelectedItem(Settings.getDegausserPort());
 
 
 /*
@@ -326,76 +323,73 @@ public class SettingsPanel
     this.pack();
 */
 
-    saveButton.setAction(this.getSaveAction());
-    getSaveAction().setEnabled(false);
-    cancelButton.setAction(this.getCancelAction());
+        saveButton.setAction(this.getSaveAction());
+        getSaveAction().setEnabled(false);
+        cancelButton.setAction(this.getCancelAction());
 
-    DocumentListener saveListener = new DocumentListener() {
-      public void insertUpdate(DocumentEvent e) {
-        if (correctValues()) {
-          getSaveAction().setEnabled(true);
-        }
-        else {
-          getSaveAction().setEnabled(false);
-        }
-      }
+        DocumentListener saveListener = new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                if (correctValues()) {
+                    getSaveAction().setEnabled(true);
+                } else {
+                    getSaveAction().setEnabled(false);
+                }
+            }
 
-      public void removeUpdate(DocumentEvent e) {
-        if (correctValues()) {
-          getSaveAction().setEnabled(true);
-        }
-        else {
-          getSaveAction().setEnabled(false);
-        }
-      }
+            public void removeUpdate(DocumentEvent e) {
+                if (correctValues()) {
+                    getSaveAction().setEnabled(true);
+                } else {
+                    getSaveAction().setEnabled(false);
+                }
+            }
 
-      public void changedUpdate(DocumentEvent e) {
-      }
-    };
+            public void changedUpdate(DocumentEvent e) {
+            }
+        };
 
-    ActionListener propertiesActionListener = new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        if (correctValues()) {
-          getSaveAction().setEnabled(true);
-        }
-        else {
-          getSaveAction().setEnabled(false);
-        }
-      }
-    };
+        ActionListener propertiesActionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (correctValues()) {
+                    getSaveAction().setEnabled(true);
+                } else {
+                    getSaveAction().setEnabled(false);
+                }
+            }
+        };
 
-    magnetometerPort.addActionListener(propertiesActionListener);
-    handlerPort.addActionListener(propertiesActionListener);
-    demagnetizerPort.addActionListener(propertiesActionListener);
-    demagRamp.addActionListener(propertiesActionListener);
-    demagDelay.addActionListener(propertiesActionListener);
-    acceleration.getDocument().addDocumentListener(saveListener);
-    deceleration.getDocument().addDocumentListener(saveListener);
-    velocity.getDocument().addDocumentListener(saveListener);
-    measurementVelocity.getDocument().addDocumentListener(saveListener);
-    transverseYAFPosition.getDocument().addDocumentListener(saveListener);
-    axialAFPosition.getDocument().addDocumentListener(saveListener);
-    sampleLoadPosition.getDocument().addDocumentListener(saveListener);
-    backgroundPosition.getDocument().addDocumentListener(saveListener);
-    measurementPosition.getDocument().addDocumentListener(saveListener);
-    rotation.getDocument().addDocumentListener(saveListener);
-    xAxisCalibration.getDocument().addDocumentListener(saveListener);
-    yAxisCalibration.getDocument().addDocumentListener(saveListener);
-    zAxisCalibration.getDocument().addDocumentListener(saveListener);
-    handlerRightLimit.addActionListener(propertiesActionListener);
-    rotationVelocity.addActionListener(propertiesActionListener);
-    rotationAcc.addActionListener(propertiesActionListener);
-    rotationDec.addActionListener(propertiesActionListener);
-    maximumField.addActionListener(propertiesActionListener);
+        magnetometerPort.addActionListener(propertiesActionListener);
+        handlerPort.addActionListener(propertiesActionListener);
+        demagnetizerPort.addActionListener(propertiesActionListener);
+        demagRamp.addActionListener(propertiesActionListener);
+        demagDelay.addActionListener(propertiesActionListener);
+        acceleration.getDocument().addDocumentListener(saveListener);
+        deceleration.getDocument().addDocumentListener(saveListener);
+        velocity.getDocument().addDocumentListener(saveListener);
+        measurementVelocity.getDocument().addDocumentListener(saveListener);
+        transverseYAFPosition.getDocument().addDocumentListener(saveListener);
+        axialAFPosition.getDocument().addDocumentListener(saveListener);
+        sampleLoadPosition.getDocument().addDocumentListener(saveListener);
+        backgroundPosition.getDocument().addDocumentListener(saveListener);
+        measurementPosition.getDocument().addDocumentListener(saveListener);
+        rotation.getDocument().addDocumentListener(saveListener);
+        xAxisCalibration.getDocument().addDocumentListener(saveListener);
+        yAxisCalibration.getDocument().addDocumentListener(saveListener);
+        zAxisCalibration.getDocument().addDocumentListener(saveListener);
+        handlerRightLimit.addActionListener(propertiesActionListener);
+        rotationVelocity.addActionListener(propertiesActionListener);
+        rotationAcc.addActionListener(propertiesActionListener);
+        rotationDec.addActionListener(propertiesActionListener);
+        maximumField.addActionListener(propertiesActionListener);
 
-  }
+    }
 
-  /**
-   * Closes window, no changes saved.
-   */
-  public void closeWindow() {
-    setVisible(false);
-  }
+    /**
+     * Closes window, no changes saved.
+     */
+    public void closeWindow() {
+        setVisible(false);
+    }
 
     /**
      * Saves all settings to Settings-singleton and calls closeWindow().
@@ -433,46 +427,45 @@ public class SettingsPanel
         }
     }
 
-  //TODO: check COM ports
-  private boolean correctValues() {
-    try {
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-      return false;
-    }
-    return true;
-  }
-
-  public Action getSaveAction() {
-    if (saveAction == null) {
-      saveAction = new AbstractAction() {
-        public void actionPerformed(ActionEvent e) {
-          saveSettings();
+    //TODO: check COM ports
+    private boolean correctValues() {
+        try {
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-      };
-      saveAction.putValue(Action.NAME, "Save");
+        return true;
     }
-    return saveAction;
-  }
 
-  public Action getCancelAction() {
-    if (cancelAction == null) {
-      cancelAction = new AbstractAction() {
-        public void actionPerformed(ActionEvent e) {
-          creator.closeWindow();
+    public Action getSaveAction() {
+        if (saveAction == null) {
+            saveAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    saveSettings();
+                }
+            };
+            saveAction.putValue(Action.NAME, "Save");
         }
-
-      };
-
-      cancelAction.putValue(Action.NAME, "Cancel");
-      cancelAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
-      // TODO: doesn't work
-      cancelAction.putValue(Action.ACCELERATOR_KEY,
-                            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+        return saveAction;
     }
-    return cancelAction;
-  }
+
+    public Action getCancelAction() {
+        if (cancelAction == null) {
+            cancelAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    creator.closeWindow();
+                }
+
+            };
+
+            cancelAction.putValue(Action.NAME, "Cancel");
+            cancelAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
+            // TODO: doesn't work
+            cancelAction.putValue(Action.ACCELERATOR_KEY,
+                    KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+        }
+        return cancelAction;
+    }
 
     {
 // GUI initializer generated by IntelliJ IDEA GUI Designer
@@ -874,71 +867,65 @@ public class SettingsPanel
     }
 
     /**
-   * Custom formatter factory for the JFormattedTextFields in this class.
-   */
-  private class MyFormatterFactory
-      extends JFormattedTextField.AbstractFormatterFactory {
-    /**
-     * Returns an <code>AbstractFormatter</code> that can handle formatting of the passed in
-     * <code>JFormattedTextField</code>.
-     *
-     * @param tf JFormattedTextField requesting AbstractFormatter
-     * @return AbstractFormatter to handle formatting duties, a null return value implies the JFormattedTextField
-     *         should behave like a normal JTextField
+     * Custom formatter factory for the JFormattedTextFields in this class.
      */
-    public JFormattedTextField.AbstractFormatter getFormatter(
-        JFormattedTextField tf) {
-      NumberFormatter formatter;
+    private class MyFormatterFactory
+            extends JFormattedTextField.AbstractFormatterFactory {
+        /**
+         * Returns an <code>AbstractFormatter</code> that can handle formatting of the passed in
+         * <code>JFormattedTextField</code>.
+         *
+         * @param tf JFormattedTextField requesting AbstractFormatter
+         * @return AbstractFormatter to handle formatting duties, a null return value implies the JFormattedTextField
+         *         should behave like a normal JTextField
+         */
+        public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf) {
+            NumberFormatter formatter;
 
-      if (tf == xAxisCalibration || tf == yAxisCalibration ||
-          tf == zAxisCalibration) {
-        // show all numbers
-        DecimalFormat format = new DecimalFormat();
-        format.setDecimalSeparatorAlwaysShown(true);
-        format.setGroupingUsed(true);
-        format.setMaximumFractionDigits(12);
-        formatter = new NumberFormatter(format);
-      }
-      else if(tf == maximumField) {
-        DecimalFormat format = new DecimalFormat();
-        format.setDecimalSeparatorAlwaysShown(true);
-        format.setGroupingUsed(true);
-        format.setMaximumFractionDigits(1);
-        formatter = new NumberFormatter(format);
+            if (tf == xAxisCalibration || tf == yAxisCalibration ||
+                    tf == zAxisCalibration) {
+                // show all numbers
+                DecimalFormat format = new DecimalFormat();
+                format.setDecimalSeparatorAlwaysShown(true);
+                format.setGroupingUsed(true);
+                format.setMaximumFractionDigits(12);
+                formatter = new NumberFormatter(format);
+            } else if (tf == maximumField) {
+                DecimalFormat format = new DecimalFormat();
+                format.setDecimalSeparatorAlwaysShown(true);
+                format.setGroupingUsed(true);
+                format.setMinimumFractionDigits(1);
+                format.setMaximumFractionDigits(1);
+                formatter = new NumberFormatter(format);
 
-      }
-      else {
-        // show Integer
-        NumberFormat format = NumberFormat.getIntegerInstance();
-        format.setGroupingUsed(true);
-        formatter = new NumberFormatter(format);
-      }
+            } else {
+                // show Integer
+                NumberFormat format = NumberFormat.getIntegerInstance();
+                format.setGroupingUsed(true);
+                formatter = new NumberFormatter(format);
+            }
 
-      // set value ranges
-      if (tf == acceleration || tf == deceleration || tf == rotationAcc || tf == rotationDec) {
-        formatter.setMinimum(new Integer(0));
-        formatter.setMaximum(new Integer(127));
-      }
-      else if (tf == velocity || tf == measurementVelocity || tf == rotationVelocity) {
-        formatter.setMinimum(new Integer(50));
-        formatter.setMaximum(new Integer(20000));
-      }
-      else if (tf == measurementPosition || tf == sampleLoadPosition ||
-               tf == backgroundPosition
-               || tf == axialAFPosition || tf == transverseYAFPosition ||
-               tf == measurementPosition) {
-        formatter.setMinimum(new Integer(0));
-        formatter.setMaximum(new Integer(16777215));
-      }
-      else if (tf == rotation) {
-        formatter.setMinimum(new Integer(Integer.MIN_VALUE));
-        formatter.setMaximum(new Integer(Integer.MAX_VALUE));
-      }
-      else if(tf == maximumField) {
-        formatter.setMinimum(new Double(1.1));
-        formatter.setMaximum(new Double(300.0));
-      }
-      return formatter;
+            // set value ranges
+            if (tf == acceleration || tf == deceleration || tf == rotationAcc || tf == rotationDec) {
+                formatter.setMinimum(new Integer(0));
+                formatter.setMaximum(new Integer(127));
+            } else if (tf == velocity || tf == measurementVelocity || tf == rotationVelocity) {
+                formatter.setMinimum(new Integer(50));
+                formatter.setMaximum(new Integer(20000));
+            } else if (tf == measurementPosition || tf == sampleLoadPosition ||
+                    tf == backgroundPosition
+                    || tf == axialAFPosition || tf == transverseYAFPosition ||
+                    tf == measurementPosition) {
+                formatter.setMinimum(new Integer(0));
+                formatter.setMaximum(new Integer(16777215));
+            } else if (tf == rotation) {
+                formatter.setMinimum(new Integer(Integer.MIN_VALUE));
+                formatter.setMaximum(new Integer(Integer.MAX_VALUE));
+            } else if (tf == maximumField) {
+                formatter.setMinimum(new Double(1.1));
+                formatter.setMaximum(new Double(300.0));
+            }
+            return formatter;
+        }
     }
-  }
 }

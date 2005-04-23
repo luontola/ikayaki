@@ -22,18 +22,22 @@
 
 package ikayaki.gui;
 
-import ikayaki.*;
-import ikayaki.squid.*;
+import ikayaki.MeasurementEvent;
+import ikayaki.MeasurementListener;
+import ikayaki.Project;
+import ikayaki.Settings;
+import ikayaki.squid.Handler;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.TreeMap;
 
 /**
  * Picture of current magnetometer status, with sample holder position and rotation. Status is updated according to
- * MeasurementEvents received by MeasurementControlsPanel. And, manual controls in ManualControlsPanel inner class.
- * Now that I got over myself and painfully merged the two classes.
+ * MeasurementEvents received by MeasurementControlsPanel. And, manual controls in ManualControlsPanel inner class. Now
+ * that I got over myself and painfully merged the two classes.
  *
  * @author Samuli Kaipiainen
  */
@@ -76,7 +80,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     /**
      * Sorted map for move-radiobuttons' positions.
      */
-    private TreeMap<Integer,JComponent> moveButtons = new TreeMap<Integer,JComponent>();
+    private TreeMap<Integer, JComponent> moveButtons = new TreeMap<Integer, JComponent>();
 
     /**
      * Sets magnetometer status to current position.
@@ -115,8 +119,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     }
 
     /**
-     * Reads handler positions from Settings, posLeft and posRight are hard-coded.
-     * Updates position->radiobutton -treemap.
+     * Reads handler positions from Settings, posLeft and posRight are hard-coded. Updates position->radiobutton
+     * -treemap.
      */
     private void updatePositions() {
         posHome = Settings.getHandlerSampleLoadPosition();
@@ -143,13 +147,9 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
      */
     private void updateButtonPositions() {
         maxposition = (int) (
-                Math.max(
-                    Math.max(posMove, posHome),
-                    Math.max(
-                        Math.max(posDemagZ, posDemagY),
-                        Math.max(posBG, posMeasure)
-                    )
-                ) * 1.2);
+                Math.max(Math.max(posMove, posHome),
+                        Math.max(Math.max(posDemagZ, posDemagY),
+                                Math.max(posBG, posMeasure))) * 1.2);
         maxposition = Math.max(1, maxposition);
 
         int height = getHeight(), nextpos = 0;
@@ -180,8 +180,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     }
 
     /**
-     * Updates magnetometer status picture and handler positions.
-     * Reads current handler position and rotation from Handler saved to this.handler.
+     * Updates magnetometer status picture and handler positions. Reads current handler position and rotation from
+     * Handler saved to this.handler.
      */
     public void updateStatus() {
         if (this.handler != null) {
@@ -194,8 +194,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     }
 
     /**
-     * Updates magnetometer status picture; called by MeasurementControlsPanel when it receives MeasurementEvent.
-     * Reads current handler position and rotation from Handler saved to this.handler.
+     * Updates magnetometer status picture; called by MeasurementControlsPanel when it receives MeasurementEvent. Reads
+     * current handler position and rotation from Handler saved to this.handler.
      */
     public void measurementUpdated(MeasurementEvent e) {
         // MeasurementEvent won't tell handler position and rotation; ask them from Handler
@@ -206,14 +206,18 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         }
 
         // null means that configuration might have changed :)
-        if (e == null) updatePositions();
+        if (e == null) {
+            updatePositions();
+        }
         // if stopped moving, stop animation
         else if (e.getType() == MeasurementEvent.Type.HANDLER_STOP) {
             this.position = pos;
             this.rotation = rotate;
             statusAnimator.gone();
-        // if started moving, start animation; Handler gave us target position and rotation
-        } else statusAnimator.going(pos, rotate);
+            // if started moving, start animation; Handler gave us target position and rotation
+        } else {
+            statusAnimator.going(pos, rotate);
+        }
 
         repaint();
     }
@@ -319,10 +323,10 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     /**
      * Draws the rotation arrow.
      *
-     * @param g2 marsu.
-     * @param x x-center.
-     * @param y y-center.
-     * @param length arrow length; arrow pointing lines' length will be length/4.
+     * @param g2       marsu.
+     * @param x        x-center.
+     * @param y        y-center.
+     * @param length   arrow length; arrow pointing lines' length will be length/4.
      * @param rotation rotation angle as 0..maxrotation (meaning 0..360 degrees).
      */
     private void drawArrow(Graphics2D g2, int x, int y, int length, int rotation) {
@@ -396,8 +400,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
                 long time = System.currentTimeMillis() - startTime;
 
                 // new speeds averaged with actual and guess
-                this.sps = ( (int) (posAmount * 1000L / time) + sps) / 2;
-                this.rps = ( (int) (rotateAmount * 1000L / time) + rps) / 2;
+                this.sps = ((int) (posAmount * 1000L / time) + sps) / 2;
+                this.rps = ((int) (rotateAmount * 1000L / time) + rps) / 2;
 
                 //System.out.println("animatorThread: sps " + sps + "  rps " + rps);
             }
@@ -411,7 +415,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
                 animatorThread.interrupt();
                 try {
                     animatorThread.join();
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException e) {
+                }
                 animatorThread = null;
             }
         }
@@ -420,7 +425,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             while (going) {
                 try {
                     Thread.sleep(updateDelay);
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException e) {
+                }
 
                 if (!going) break;
 
@@ -443,7 +449,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     }
 
     /**
-     * Magnetometer manual controls. MeasurementControlsPanel disables these whenever a normal measurement step is going.
+     * Magnetometer manual controls. MeasurementControlsPanel disables these whenever a normal measurement step is
+     * going.
      */
     public class ManualControlsPanel extends JPanel {
         /**
@@ -563,7 +570,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         private final JLabel demagLabel = new JLabel("Demagnetize");
 
         // don't say anything about this... well, it's like this 'cause the components are scattered all over
-        private final Component[] components = new Component[] {
+        private final Component[] components = new Component[]{
             moveLeft, moveHome, moveDemagZ, moveDemagY, moveBG, moveMeasure, moveRight,
             rotate0, rotate90, rotate180, rotate270,
             measureAllButton, resetAllButton, demagAmplitudeField, demagAmplitudeLabel, demagZButton, demagYButton,
@@ -706,10 +713,10 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
                 }
             });
 
-           /*
-             * Event B: On rotateXXX click - call project.doManualRotate(int) with clicked angle. If
-             * false is returned, show small error message.
-             */
+            /*
+              * Event B: On rotateXXX click - call project.doManualRotate(int) with clicked angle. If
+              * false is returned, show small error message.
+              */
 
             rotate0.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -771,8 +778,9 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             demagZButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     double amplitude = getDemagAmplitude();
-                    if (amplitude < 0) demagAmplitudeFieldError();
-                    else if (!project.doManualDemagZ(amplitude)) demagZButtonFlasher.flash();
+                    if (amplitude < 0) {
+                        demagAmplitudeFieldError();
+                    } else if (!project.doManualDemagZ(amplitude)) demagZButtonFlasher.flash();
                 }
             });
 
@@ -783,8 +791,9 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             demagYButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     double amplitude = getDemagAmplitude();
-                    if (amplitude < 0) demagAmplitudeFieldError();
-                    else if (!project.doManualDemagY(amplitude)) demagYButtonFlasher.flash();
+                    if (amplitude < 0) {
+                        demagAmplitudeFieldError();
+                    } else if (!project.doManualDemagY(amplitude)) demagYButtonFlasher.flash();
                 }
             });
         }
@@ -830,10 +839,18 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
                 if (c != null && c instanceof JRadioButton) ((JRadioButton) c).setSelected(true);
 
                 switch (rotation) {
-                    case 0: rotate0.setSelected(true); break;
-                    case 90: rotate90.setSelected(true); break;
-                    case 180: rotate180.setSelected(true); break;
-                    case 270: rotate270.setSelected(true); break;
+                case 0:
+                    rotate0.setSelected(true);
+                    break;
+                case 90:
+                    rotate90.setSelected(true);
+                    break;
+                case 180:
+                    rotate180.setSelected(true);
+                    break;
+                case 270:
+                    rotate270.setSelected(true);
+                    break;
                 }
             }
         }
@@ -853,8 +870,11 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         public void setProject(Project project) {
             this.project = project;
 
-            if (this.project == null) setEnabled(false);
-            else setEnabled(project.isManualControlEnabled());
+            if (this.project == null) {
+                setEnabled(false);
+            } else {
+                setEnabled(project.isManualControlEnabled());
+            }
         }
     }
 }

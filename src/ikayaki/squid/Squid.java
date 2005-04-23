@@ -25,8 +25,6 @@ package ikayaki.squid;
 import ikayaki.Project;
 
 import java.io.IOException;
-import javax.comm.*;
-import javax.comm.*;
 
 /**
  * Offers an interface for controlling the SQUID system. Reads settings from the Settings class. Creates instances of
@@ -65,8 +63,8 @@ public class Squid {
      * Returns a reference to the Squid. If it has not yet been created, will create one.
      */
     public static synchronized Squid instance() throws IOException {
-      if (instance == null) instance = new Squid();
-      return instance;
+        if (instance == null) instance = new Squid();
+        return instance;
     }
 
     /**
@@ -75,26 +73,23 @@ public class Squid {
     private Squid() throws IOException {
         owner = null;
         try {
-          degausser = new Degausser();
-        }
-        catch (SerialIOException ex) {
-          System.err.println("Cannot create degausser: " + ex);
-          throw new IOException("Cannot create degausser");
-        }
-        try {
-          handler = new Handler();
-          handler.setUp();
-        }
-        catch (SerialIOException ex) {
-          System.err.println("Cannot create handler: " + ex);
-          throw new IOException("Cannot create handler");
+            degausser = new Degausser();
+        } catch (SerialIOException ex) {
+            System.err.println("Cannot create degausser: " + ex);
+            throw new IOException("Cannot create degausser");
         }
         try {
-          magnetometer = new Magnetometer();
+            handler = new Handler();
+            handler.setUp();
+        } catch (SerialIOException ex) {
+            System.err.println("Cannot create handler: " + ex);
+            throw new IOException("Cannot create handler");
         }
-        catch (SerialIOException ex) {
-          System.err.println("Cannot create magnetometer: " + ex);
-          throw new IOException("Cannot create magnetometer");
+        try {
+            magnetometer = new Magnetometer();
+        } catch (SerialIOException ex) {
+            System.err.println("Cannot create magnetometer: " + ex);
+            throw new IOException("Cannot create magnetometer");
         }
     }
 

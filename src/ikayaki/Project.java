@@ -375,8 +375,8 @@ project listeners.
             project.closed = true;
             project.autosaveRunnable = new Runnable() {
                 public void run() {
-                    assert false : "This should never have been executed. Maybe something set the state to non-null?";
-                    throw new IllegalStateException("The project is closed");
+                    assert false;
+                    throw new IllegalStateException("Tried to save a closed project!");
                 }
             };
         }
@@ -524,7 +524,7 @@ project listeners.
                     try {
                         type = Type.valueOf(s);
                     } catch (IllegalArgumentException e) {
-                        throw new IllegalArgumentException("Unknown project type: " + s);
+                        throw new IllegalArgumentException("Unknown project type: " + s, e);
                     }
 
                     // get properties element
@@ -540,49 +540,49 @@ project listeners.
                     try {
                         strike = Double.parseDouble(s);
                     } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Invalid strike: " + s);
+                        throw new IllegalArgumentException("Invalid strike: " + s, e);
                     }
                     s = properties.getAttribute("dip");
                     try {
                         dip = Double.parseDouble(s);
                     } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Invalid dip: " + s);
+                        throw new IllegalArgumentException("Invalid dip: " + s, e);
                     }
                     s = properties.getAttribute("mass");
                     try {
                         mass = Double.parseDouble(s);
                     } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Invalid mass: " + s);
+                        throw new IllegalArgumentException("Invalid mass: " + s, e);
                     }
                     s = properties.getAttribute("volume");
                     try {
                         volume = Double.parseDouble(s);
                     } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Invalid volume: " + s);
+                        throw new IllegalArgumentException("Invalid volume: " + s, e);
                     }
                     s = properties.getAttribute("susceptibility");
                     try {
                         susceptibility = Double.parseDouble(s);
                     } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Invalid susceptibility: " + s);
+                        throw new IllegalArgumentException("Invalid susceptibility: " + s, e);
                     }
                     s = properties.getAttribute("sampletype");
                     try {
                         sampleType = SampleType.valueOf(s);
                     } catch (IllegalArgumentException e) {
-                        throw new IllegalArgumentException("Invalid sampletype: " + s);
+                        throw new IllegalArgumentException("Invalid sampletype: " + s, e);
                     }
                     s = properties.getAttribute("orientation");
                     try {
                         orientation = Orientation.valueOf(s);
                     } catch (IllegalArgumentException e) {
-                        throw new IllegalArgumentException("Invalid orientation: " + s);
+                        throw new IllegalArgumentException("Invalid orientation: " + s, e);
                     }
                     s = properties.getAttribute("normalization");
                     try {
                         normalization = Normalization.valueOf(s);
                     } catch (IllegalArgumentException e) {
-                        throw new IllegalArgumentException("Invalid normalization: " + s);
+                        throw new IllegalArgumentException("Invalid normalization: " + s, e);
                     }
 
                     // get custom properties
@@ -646,6 +646,14 @@ project listeners.
 
 //              } else if (version.equals("x.y")) {
 //                  ... importing of file version x.y ...
+                    /*
+                     * FUTURE IMPLEMENTATION NOTE:
+                     *
+                     * It is recommended to import old versions so that the Document object is first modified to the
+                     * format of the latest project file version, after which the importing of the latest version is
+                     * used. This avoids the need to change the importing of older versions.
+                     *
+                     */
                 } else {
                     throw new IllegalArgumentException("Unknown version: " + version);
                 }

@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Stack;
-import java.util.Date;
 
 /**
  * This class tries to emulate behavior of real squid-system. It starts 3 threads (handler,magnetometer,degausser),
@@ -40,18 +39,17 @@ import java.util.Date;
  * @author Aki Korpua
  */
 public class SquidEmulator {
-  public SquidEmulator() {
-    try {
-      jbInit();
+    public SquidEmulator() {
+        try {
+            jbInit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
-    catch (Exception ex) {
-      ex.printStackTrace();
-    }
-  }
 
-  /*
-  Event A: On New IO Message - reads message and puts it in Buffer
-  */
+    /*
+    Event A: On New IO Message - reads message and puts it in Buffer
+    */
 
     /**
      * indicates if system have been started
@@ -155,9 +153,9 @@ public class SquidEmulator {
     private static HandlerEmu handler;
     private static MagnetometerEmu magnetometer;
     private static DegausserEmu degausser;
-  private static boolean running;
+    private static boolean running;
 
-  /**
+    /**
      * send message to SerialIO to be sented.
      *
      * @param message any message reply we are sending back
@@ -205,7 +203,8 @@ public class SquidEmulator {
             System.out.println(e);
             return;
         } catch (Exception e) {
-            System.out.println("Usage \"java SquidEmulator (0:Magnetometer and Degausser use different ports, 1: Magnetometer and Degausser use same port) HandlerPort MagnetometerPort (optional)DegausserPort Log_filename\"");
+            System.out.println(
+                    "Usage \"java SquidEmulator (0:Magnetometer and Degausser use different ports, 1: Magnetometer and Degausser use same port) HandlerPort MagnetometerPort (optional)DegausserPort Log_filename\"");
             return;
         }
 
@@ -220,11 +219,10 @@ public class SquidEmulator {
 
         System.out.println("System running...");
         try {
-          logWriter.write("SESSION STARTED:\n");
-          logWriter.flush();
-        }
-        catch (IOException ex1) {
-          System.out.println("Writing error");
+            logWriter.write("SESSION STARTED:\n");
+            logWriter.flush();
+        } catch (IOException ex1) {
+            System.out.println("Writing error");
         }
 
         try {
@@ -235,9 +233,8 @@ public class SquidEmulator {
 
         SerialIO.closeAllPorts();
         try {
-          logWriter.close();
-        }
-        catch (IOException ex2) {
+            logWriter.close();
+        } catch (IOException ex2) {
         }
 
         running = false;
@@ -245,10 +242,10 @@ public class SquidEmulator {
         return;
     }
 
-  private void jbInit() throws Exception {
-  }
+    private void jbInit() throws Exception {
+    }
 
-  /**
+    /**
      * Runs handler emulation process. Process incoming messages and sends data back. When message comes, process it
      * (wait if needed for a while), updates own status and sends result back.
      */
@@ -268,37 +265,33 @@ public class SquidEmulator {
         }
 
         public void run() {
-            while(running) {
+            while (running) {
 
-              if(!commandStack.empty()) {
-                String command = commandStack.pop();
-                if(command.startsWith("V",0)) {
-                  writeMessage("100" + command, handlerPort);
+                if (!commandStack.empty()) {
+                    String command = commandStack.pop();
+                    if (command.startsWith("V", 0)) {
+                        writeMessage("100" + command, handlerPort);
+                    } else if (command.startsWith("F", 0) || command.startsWith("%", 0)) {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException ex1) {
+                        }
+                        writeMessage("perillä" + command, handlerPort);
+                    }
                 }
-                else if(command.startsWith("F",0) || command.startsWith("%",0)) {
-                  try {
-                    Thread.sleep(2000);
-                  }
-                  catch (InterruptedException ex1) {
-                  }
-                  writeMessage("perillä" + command, handlerPort);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
                 }
-              }
-              try {
-                Thread.sleep(100);
-              }
-              catch (InterruptedException ex) {
-              }
             }
         }
 
         public void serialIOEvent(SerialIOEvent event) {
             int i;
             try {
-              logWriter.write("HANDLER_RECIEVE:" + event.getCleanMessage() + "\n");
-              logWriter.flush();
-            }
-            catch (IOException ex) {
+                logWriter.write("HANDLER_RECIEVE:" + event.getCleanMessage() + "\n");
+                logWriter.flush();
+            } catch (IOException ex) {
             }
             commandStack.add(event.getCleanMessage());
             /*
@@ -324,50 +317,47 @@ public class SquidEmulator {
         private Stack<String> commandStack;
 
         public MagnetometerEmu() {
-           //Setlistener to port
-           magnetometerPort.addSerialIOListener(this);
-           commandStack = new Stack<String>();
-       }
+            //Setlistener to port
+            magnetometerPort.addSerialIOListener(this);
+            commandStack = new Stack<String>();
+        }
 
 
         public void run() {
-          while(running) {
+            while (running) {
 
-            if(!commandStack.empty()) {
-              String command = commandStack.pop();
-              if(command.startsWith("SD",1)) {
-                writeMessage("+" + Math.random(), magnetometerPort);
-              }
-              else if(command.startsWith("SC",1)) {
-                writeMessage("+" + (int)(Math.random()*100), magnetometerPort);
-              }
-              else
-                writeMessage("1", magnetometerPort);
-              /*
-              else if(command.startsWith("Y",0)) {
-                writeMessage("+" + Math.random(), magnetometerPort);
-              }
-              else if(command.startsWith("Z",0)) {
-                writeMessage("+" + Math.random(), magnetometerPort);
-              }
-*/
+                if (!commandStack.empty()) {
+                    String command = commandStack.pop();
+                    if (command.startsWith("SD", 1)) {
+                        writeMessage("+" + Math.random(), magnetometerPort);
+                    } else if (command.startsWith("SC", 1)) {
+                        writeMessage("+" + (int) (Math.random() * 100), magnetometerPort);
+                    } else {
+                        writeMessage("1", magnetometerPort);
+                    }
+                    /*
+                    else if(command.startsWith("Y",0)) {
+                      writeMessage("+" + Math.random(), magnetometerPort);
+                    }
+                    else if(command.startsWith("Z",0)) {
+                      writeMessage("+" + Math.random(), magnetometerPort);
+                    }
+      */
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                }
             }
-            try {
-              Thread.sleep(100);
-            }
-            catch (InterruptedException ex) {
-            }
-          }
 
         }
 
         public void serialIOEvent(SerialIOEvent event) {
-          try {
-            logWriter.write("MAGNETOMETER_RECIEVE:" + event.getCleanMessage() + "\n");
-            logWriter.flush();
-          }
-          catch (IOException ex) {
-          }
+            try {
+                logWriter.write("MAGNETOMETER_RECIEVE:" + event.getCleanMessage() + "\n");
+                logWriter.flush();
+            } catch (IOException ex) {
+            }
 
             String message = event.getCleanMessage();
             String[] commands = message.split("/r");
@@ -390,37 +380,35 @@ public class SquidEmulator {
         private Stack<String> commandStack;
 
         public DegausserEmu() {
-           //Setlistener to port
-           degausserPort.addSerialIOListener(this);
-           commandStack = new Stack<String>();
-       }
+            //Setlistener to port
+            degausserPort.addSerialIOListener(this);
+            commandStack = new Stack<String>();
+        }
 
 
         public void run() {
-          while(running) {
+            while (running) {
 
-            if(!commandStack.empty()) {
-              String command = commandStack.pop();
-              if(command.startsWith("D",0)) {
-                writeMessage("DONE", degausserPort);
-              }
+                if (!commandStack.empty()) {
+                    String command = commandStack.pop();
+                    if (command.startsWith("D", 0)) {
+                        writeMessage("DONE", degausserPort);
+                    }
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                }
             }
-            try {
-              Thread.sleep(100);
-            }
-            catch (InterruptedException ex) {
-            }
-          }
 
         }
 
         public void serialIOEvent(SerialIOEvent event) {
-          try {
-            logWriter.write("DEGAUSSER_RECIEVE:" + event.getCleanMessage() + "\n");
-            logWriter.flush();
-          }
-          catch (IOException ex) {
-          }
+            try {
+                logWriter.write("DEGAUSSER_RECIEVE:" + event.getCleanMessage() + "\n");
+                logWriter.flush();
+            } catch (IOException ex) {
+            }
 
             String message = event.getCleanMessage();
             String[] commands = message.split("/r");

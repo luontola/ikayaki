@@ -31,39 +31,39 @@ import java.awt.*;
  * @author Aki Korpua
  */
 public class SettingsDialog
-    extends JDialog {
+        extends JDialog {
 
-  private SettingsDialog(Frame owner, String message) {
-    super(owner, message, true);
-    if (owner != null) {
-      setLocationRelativeTo(owner);
+    private SettingsDialog(Frame owner, String message) {
+        super(owner, message, true);
+        if (owner != null) {
+            setLocationRelativeTo(owner);
+        }
     }
-  }
 
-  /**
-   * Creates all components and puts them in right places. Labels are created only here (no global fields). Creates
-   * ActionListeners for buttons.
-   */
-  protected void dialogInit() {
-    super.dialogInit();
+    /**
+     * Creates all components and puts them in right places. Labels are created only here (no global fields). Creates
+     * ActionListeners for buttons.
+     */
+    protected void dialogInit() {
+        super.dialogInit();
 
-    setResizable(false);
-    setLayout(new BorderLayout());
-    add(new SettingsPanel(this), BorderLayout.CENTER);
-    pack();
-  }
+        setResizable(false);
+        setLayout(new BorderLayout());
+        add(new SettingsPanel(this), BorderLayout.CENTER);
+        pack();
+    }
 
-  public static void showSettingsDialog(Frame owner, String message) {
-    SettingsDialog d = new SettingsDialog(owner, message);
-    d.setVisible(true);
-  }
+    public static void showSettingsDialog(Frame owner, String message) {
+        SettingsDialog d = new SettingsDialog(owner, message);
+        d.setVisible(true);
+    }
 
-  /**
-   * Closes window, no changes saved.
-   */
-  public void closeWindow() {
-    setVisible(false);
-  }
+    /**
+     * Closes window, no changes saved.
+     */
+    public void closeWindow() {
+        setVisible(false);
+    }
 
 }
 

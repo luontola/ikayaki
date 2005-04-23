@@ -109,30 +109,22 @@ public class MeasurementResult {
         }
 
         // get type
-        String type = element.getAttribute("type");
+        String s = element.getAttribute("type");
         try {
-            this.type = Type.valueOf(type);
+            this.type = Type.valueOf(s);
         } catch (IllegalArgumentException e) {
-            // TODO: import old versions
-            //throw new IllegalArgumentException("Invalid type: " + type);
-            if (type.equals("BG")) {
-                this.type = Type.NOISE;
-            } else {
-                this.type = Type.SAMPLE;
-            }
+            throw new IllegalArgumentException("Invalid type: " + s, e);
         }
 
         // get rotation
+        s = element.getAttribute("rotation");
         try {
-            this.rotation = Integer.parseInt(element.getAttribute("rotation")) % 360;
-        } catch (NumberFormatException e) {
-            // TODO: import old versions
-            //throw new IllegalArgumentException("Invalid rotation: " + e.getCleanMessage());
-            if (type.equals("BG")) {
-                this.rotation = 0;
-            } else {
-                this.rotation = Integer.parseInt(type);
+            this.rotation = Integer.parseInt(s) % 360;
+            while (this.rotation < 0) {
+                this.rotation += 360;
             }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid rotation: " + s, e);
         }
 
         // get x, y, z
@@ -141,7 +133,7 @@ public class MeasurementResult {
                     Double.parseDouble(element.getAttribute("y")),
                     Double.parseDouble(element.getAttribute("z")));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid x, y, z: " + e.getMessage());
+            throw new IllegalArgumentException("Invalid x, y or z: " + e.getMessage(), e);
         }
 
         // initialize sampleVector and geographicVector

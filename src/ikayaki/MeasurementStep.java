@@ -145,25 +145,25 @@ public class MeasurementStep {
         try {
             setStepValue(Double.parseDouble(s));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid stepvalue: " + s);
+            throw new IllegalArgumentException("Invalid stepvalue: " + s, e);
         }
         s = element.getAttribute("mass");
         try {
             setMass(Double.parseDouble(s));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid mass: " + s);
+            throw new IllegalArgumentException("Invalid mass: " + s, e);
         }
         s = element.getAttribute("volume");
         try {
             setVolume(Double.parseDouble(s));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid volume: " + s);
+            throw new IllegalArgumentException("Invalid volume: " + s, e);
         }
         s = element.getAttribute("susceptibility");
         try {
             setSusceptibility(Double.parseDouble(s));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid susceptibility: " + s);
+            throw new IllegalArgumentException("Invalid susceptibility: " + s, e);
         }
 
         // get results
@@ -188,7 +188,7 @@ public class MeasurementStep {
             try {
                 timestamp = new Date(Long.parseLong(s));
             } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid timestamp: " + s);
+                throw new IllegalArgumentException("Invalid timestamp: " + s, e);
             }
         }
 

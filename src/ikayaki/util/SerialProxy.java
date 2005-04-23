@@ -32,7 +32,7 @@ import java.util.Date;
 
 /**
  * Forwards commands sent between two serial ports and logs them.
- * 
+ *
  * @author Aki Korpua, Esko Luontola
  */
 public class SerialProxy {

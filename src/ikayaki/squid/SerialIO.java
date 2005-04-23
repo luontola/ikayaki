@@ -28,11 +28,11 @@ import javax.comm.*;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import java.io.*;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.TooManyListenersException;
 import java.util.Vector;
-import java.util.Date;
-import java.util.Calendar;
-import java.text.DateFormat;
 
 /**
  * This class represents hardware layer to serial port communications.
@@ -90,7 +90,9 @@ message from serial port is received.
     /**
      * Logwriter event type
      */
-    private enum LogEvent {SESSION_START, SEND, REVEIVE};
+    private enum LogEvent {
+        SESSION_START, SEND, REVEIVE
+    };
 
     /**
      * Creates an instance of SerialIO which represents one serial port.
@@ -285,8 +287,8 @@ message from serial port is received.
 //                    if (false && '\r' == (char) newData) {
 //                        //inputBuffer.append('\n'); // '\r' chars should be skipped I guess..
 //                    } else {
-                        newByte[0] = new Integer(newData).byteValue();
-                        inputBuffer.append(new String(newByte, "US-ASCII"));
+                    newByte[0] = new Integer(newData).byteValue();
+                    inputBuffer.append(new String(newByte, "US-ASCII"));
 //                    }
                 } catch (IOException ex) {
                     System.err.println(ex);
@@ -346,7 +348,7 @@ message from serial port is received.
     /**
      * Debug logger.
      *
-     * @param e LogEvent type.
+     * @param e       LogEvent type.
      * @param message String to write; portname if e==SESSION_START.
      */
     private void debug(LogEvent e, String message) {

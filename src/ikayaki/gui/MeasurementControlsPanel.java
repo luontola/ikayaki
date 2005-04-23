@@ -28,7 +28,9 @@ import ikayaki.ProjectEvent;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 /**
  * Has "Measure"/"Pause", "Single step" and "Stop now!" buttons for controlling measurements; "+z/-z" radiobuttons for
@@ -241,8 +243,8 @@ public class MeasurementControlsPanel extends ProjectComponent {
     /* Getters for Swing Actions */
 
     /**
-     * Event A: On measureButton click - call project.doAutoStep() or project.doPause(), depending
-     * on current button status. Show error message if false is returned.
+     * Event A: On measureButton click - call project.doAutoStep() or project.doPause(), depending on current button
+     * status. Show error message if false is returned.
      */
     public Action getAutoStepAction() {
         if (autoStepAction == null) {
@@ -253,7 +255,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
                             measureButtonFlasher.flash();
                         } else {
                             JOptionPane.showMessageDialog(getParentFrame(),
-                                "Unable to measure.", "Squid Error", JOptionPane.ERROR_MESSAGE);
+                                    "Unable to measure.", "Squid Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }
@@ -279,7 +281,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
                             stepButtonFlasher.flash();
                         } else {
                             JOptionPane.showMessageDialog(getParentFrame(),
-                                "Unable to single step.", "Squid Error", JOptionPane.ERROR_MESSAGE);
+                                    "Unable to single step.", "Squid Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }
@@ -303,7 +305,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
                             new ComponentFlasher((JComponent) e.getSource()).flash();
                         } else {
                             JOptionPane.showMessageDialog(getParentFrame(),
-                                "Unable to calibrate.", "Squid Error", JOptionPane.ERROR_MESSAGE);
+                                    "Unable to calibrate.", "Squid Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }
@@ -323,13 +325,13 @@ public class MeasurementControlsPanel extends ProjectComponent {
             pauseAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     if (!getProject().doPause()) {
-                        if (e.getSource() == pauseButton ) {
+                        if (e.getSource() == pauseButton) {
                             pauseButtonFlasher.flash();
-                        } else if (e.getSource() == measureButton ) {
+                        } else if (e.getSource() == measureButton) {
                             measureButtonFlasher.flash();
                         } else {
                             JOptionPane.showMessageDialog(getParentFrame(),
-                                "Unable to pause.", "Squid Error", JOptionPane.ERROR_MESSAGE);
+                                    "Unable to pause.", "Squid Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }
@@ -344,8 +346,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
     }
 
     /**
-     * Event C: On stopButton click - call project.doAbort(); show critical error message if false
-     * is returned.
+     * Event C: On stopButton click - call project.doAbort(); show critical error message if false is returned.
      */
     public Action getAbortAction() {
         if (abortAction == null) {
@@ -356,7 +357,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
                             abortButtonFlasher.flash();
                         } else {
                             JOptionPane.showMessageDialog(getParentFrame(),
-                                "Unable to abort!", "Squid Error", JOptionPane.ERROR_MESSAGE);
+                                    "Unable to abort!", "Squid Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }
