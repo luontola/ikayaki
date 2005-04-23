@@ -179,13 +179,13 @@ public class DeviceSettingsPanel extends JPanel {
     private Action saveAction;
     private Action cancelAction;
 
-    SettingsDialog creator;
+    private JDialog creator;
 
     /**
      * Creates all components and puts them in right places. Labels are created only here (no global fields). Creates
      * ActionListeners for buttons.
      */
-    public DeviceSettingsPanel(SettingsDialog creator) {
+    public DeviceSettingsPanel(JDialog creator) {
 
         this.creator = creator;
 
@@ -350,36 +350,41 @@ public class DeviceSettingsPanel extends JPanel {
         };
 
         magnetometerPort.addActionListener(propertiesActionListener);
-        handlerPort.addActionListener(propertiesActionListener);
         demagnetizerPort.addActionListener(propertiesActionListener);
+        handlerPort.addActionListener(propertiesActionListener);
+
+        xAxisCalibration.getDocument().addDocumentListener(saveListener);
+        yAxisCalibration.getDocument().addDocumentListener(saveListener);
+        zAxisCalibration.getDocument().addDocumentListener(saveListener);
+
         demagRamp.addActionListener(propertiesActionListener);
         demagDelay.addActionListener(propertiesActionListener);
+
         acceleration.getDocument().addDocumentListener(saveListener);
         deceleration.getDocument().addDocumentListener(saveListener);
         velocity.getDocument().addDocumentListener(saveListener);
         measurementVelocity.getDocument().addDocumentListener(saveListener);
+
         transverseYAFPosition.getDocument().addDocumentListener(saveListener);
         axialAFPosition.getDocument().addDocumentListener(saveListener);
         sampleLoadPosition.getDocument().addDocumentListener(saveListener);
         backgroundPosition.getDocument().addDocumentListener(saveListener);
         measurementPosition.getDocument().addDocumentListener(saveListener);
+
         rotation.getDocument().addDocumentListener(saveListener);
-        xAxisCalibration.getDocument().addDocumentListener(saveListener);
-        yAxisCalibration.getDocument().addDocumentListener(saveListener);
-        zAxisCalibration.getDocument().addDocumentListener(saveListener);
-        handlerRightLimit.addActionListener(propertiesActionListener);
         rotationVelocity.addActionListener(propertiesActionListener);
         rotationAcc.addActionListener(propertiesActionListener);
         rotationDec.addActionListener(propertiesActionListener);
+
+        handlerRightLimit.addActionListener(propertiesActionListener);
+
         maximumField.addActionListener(propertiesActionListener);
 
-    }
-
-    /**
-     * Closes window, no changes saved.
-     */
-    public void closeWindow() {
-        setVisible(false);
+        zAxis.addActionListener(propertiesActionListener);
+        yAxis.addActionListener(propertiesActionListener);
+        zAxis.addActionListener(propertiesActionListener);
+        
+        saveButton.setEnabled(correctValues());
     }
 
     /**
@@ -412,15 +417,15 @@ public class DeviceSettingsPanel extends JPanel {
             Settings.setMagnetometerXAxisCalibration(((Number) this.xAxisCalibration.getValue()).doubleValue());
             Settings.setMagnetometerYAxisCalibration(((Number) this.yAxisCalibration.getValue()).doubleValue());
             Settings.setMagnetometerZAxisCalibration(((Number) this.zAxisCalibration.getValue()).doubleValue());
-            creator.closeWindow();
+            creator.setVisible(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    //TODO: check COM ports
     private boolean correctValues() {
         try {
+            //TODO: check COM ports
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -444,9 +449,8 @@ public class DeviceSettingsPanel extends JPanel {
         if (cancelAction == null) {
             cancelAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    creator.closeWindow();
+                    creator.setVisible(false);
                 }
-
             };
 
             cancelAction.putValue(Action.NAME, "Cancel");
