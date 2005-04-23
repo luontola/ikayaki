@@ -823,6 +823,49 @@ public class Settings {
         setProperty("sequence.defaultcolumns", s);
     }
 
+    /* Calibration projects */
+
+    public static synchronized File[] getCalibrationProjectFiles() {
+        File[] files = Ikayaki.CALIBRATION_PROJECT_DIR.listFiles(new FileFilter() {
+            public boolean accept(File file) {
+                return file.isFile()
+                        && file.getName().endsWith(Ikayaki.FILE_TYPE)
+                        && Project.getType(file) == Project.Type.CALIBRATION;
+            }
+        });
+        if (files == null) {
+            return new File[0];
+        } else {
+            Arrays.sort(files);
+            return files;
+        }
+    }
+
+    public static synchronized File getHolderCalibrationFile() {
+        String s = getProperty("calibration.holder");
+        if (s == null) {
+            return null;
+        }
+        return new File(s).getAbsoluteFile();
+    }
+
+    public static synchronized void setHolderCalibrationFile(File file) {
+        if (file == null) {
+            throw new NullPointerException();
+        }
+        if (!file.exists()) {
+            throw new IllegalArgumentException("Does not exist: " + file);
+        }
+        File[] files = getCalibrationProjectFiles();
+        for (File f : files) {
+            if (f.equals(file)) {
+                setProperty("calibration.holder", file.getAbsolutePath());
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Not a calibration project: " + file);
+    }
+
     /* JTable styles */
 
     /**

@@ -84,6 +84,8 @@ public class MeasurementSequenceTableModel extends AbstractTableModel implements
             possibleColumns.add(column);
         }
 
+        // NOTE: here it would be possible to disable some columns depending on the project's type
+
         // show default columns
         visibleColumns.clear();
         List<SequenceColumn> defaultColumns = Settings.getDefaultColumns();
