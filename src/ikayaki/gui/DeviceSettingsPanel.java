@@ -173,6 +173,7 @@ public class DeviceSettingsPanel extends JPanel {
      * Contains the layout.
      */
     private JPanel contentPane;
+    private JLabel warningLabel;
 
     private JButton saveButton;
     private JButton cancelButton;
@@ -193,22 +194,19 @@ public class DeviceSettingsPanel extends JPanel {
         setLayout(new BorderLayout());
         add(contentPane, BorderLayout.CENTER);
 
+        warningLabel.setFont(warningLabel.getFont().deriveFont(Font.BOLD, 14.0F));
+        warningLabel.setForeground(Color.RED);
+
         this.acceleration.setValue(Settings.getHandlerAcceleration());
         this.deceleration.setValue(Settings.getHandlerDeceleration());
         this.axialAFPosition.setValue(Settings.getHandlerAxialAFPosition());
-        this.transverseYAFPosition.setValue(Settings.
-                getHandlerTransverseYAFPosition());
-        this.measurementPosition.setValue(Settings.
-                getHandlerMeasurementPosition());
+        this.transverseYAFPosition.setValue(Settings.getHandlerTransverseYAFPosition());
+        this.measurementPosition.setValue(Settings.getHandlerMeasurementPosition());
         this.velocity.setValue(Settings.getHandlerVelocity());
-        this.measurementVelocity.setValue(Settings.
-                getHandlerMeasurementVelocity());
-        this.xAxisCalibration.setValue(Settings.
-                getMagnetometerXAxisCalibration());
-        this.yAxisCalibration.setValue(Settings.
-                getMagnetometerYAxisCalibration());
-        this.zAxisCalibration.setValue(Settings.
-                getMagnetometerZAxisCalibration());
+        this.measurementVelocity.setValue(Settings.getHandlerMeasurementVelocity());
+        this.xAxisCalibration.setValue(Settings.getMagnetometerXAxisCalibration());
+        this.yAxisCalibration.setValue(Settings.getMagnetometerYAxisCalibration());
+        this.zAxisCalibration.setValue(Settings.getMagnetometerZAxisCalibration());
         this.demagRamp.addItem(3);
         this.demagRamp.addItem(5);
         this.demagRamp.addItem(7);
@@ -228,10 +226,8 @@ public class DeviceSettingsPanel extends JPanel {
             this.demagDelay.addItem(i);
         }
         this.demagRamp.setSelectedIndex(Settings.getDegausserDelay() - 1);
-        this.sampleLoadPosition.setValue(Settings.
-                getHandlerSampleLoadPosition());
-        this.backgroundPosition.setValue(Settings.
-                getHandlerBackgroundPosition());
+        this.sampleLoadPosition.setValue(Settings.getHandlerSampleLoadPosition());
+        this.backgroundPosition.setValue(Settings.getHandlerBackgroundPosition());
         this.rotation.setValue(Settings.getHandlerRotation());
         this.rotationVelocity.setValue(Settings.getHandlerRotationVelocity());
         this.rotationAcc.setValue(Settings.getHandlerAcceleration());
@@ -239,8 +235,7 @@ public class DeviceSettingsPanel extends JPanel {
         this.maximumField.setValue(Settings.getDegausserMaximumField());
         this.handlerRightLimit.addItem("plus");
         this.handlerRightLimit.addItem("minus");
-        this.handlerRightLimit.setSelectedIndex(Settings.
-                getHandlerRightLimit());
+        this.handlerRightLimit.setSelectedIndex(Settings.getHandlerRightLimit());
 
         /* Number-only Text Fields */
         MyFormatterFactory factory = new MyFormatterFactory();
@@ -475,11 +470,11 @@ public class DeviceSettingsPanel extends JPanel {
      */
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
+        contentPane.setLayout(new GridLayoutManager(3, 3, new Insets(11, 11, 11, 11), -1, -1));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 4, 4, 4), -1, -1));
         contentPane.add(panel1,
-                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
         panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Magnetometer"));
@@ -541,9 +536,9 @@ public class DeviceSettingsPanel extends JPanel {
                 new GridConstraints(6, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
                         GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null));
         final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 4, 4, 4), -1, -1));
         contentPane.add(panel3,
-                new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
         panel3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Demagnetizer"));
@@ -625,9 +620,9 @@ public class DeviceSettingsPanel extends JPanel {
                 new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JPanel panel6 = new JPanel();
-        panel6.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel6.setLayout(new GridLayoutManager(1, 1, new Insets(0, 4, 4, 4), -1, -1));
         contentPane.add(panel6,
-                new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
         panel6.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Handler"));
@@ -829,7 +824,7 @@ public class DeviceSettingsPanel extends JPanel {
         final JPanel panel11 = new JPanel();
         panel11.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel11,
-                new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
         panel11.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
@@ -859,6 +854,13 @@ public class DeviceSettingsPanel extends JPanel {
         panel12.add(spacer5,
                 new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
+        warningLabel = new JLabel();
+        warningLabel.setHorizontalAlignment(0);
+        warningLabel.setHorizontalTextPosition(0);
+        warningLabel.setText("WARNING! Incorrect configurations may damage the equipment");
+        contentPane.add(warningLabel,
+                new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
     }
 
     /**
