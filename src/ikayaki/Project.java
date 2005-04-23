@@ -1091,6 +1091,9 @@ project listeners.
      * setStrike(), setDip() and setSampleType() methods.
      */
     private synchronized void updateTransforms() {
+        
+        // TODO: this method might give wrong values. check the matrices.
+
         double d = getDip();
         double s = getStrike();
         if (sampleType == CORE) {

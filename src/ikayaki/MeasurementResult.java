@@ -43,12 +43,12 @@ public class MeasurementResult {
     /**
      * The type of this result.
      */
-    private Type type;  // TODO: make final, after the import code for old versions has been removed
+    private final Type type;
 
     /**
      * The rotation that the sample holder was in when this result was measured. The value is in range 0..360 degrees.
      */
-    private int rotation;   // TODO: make final, after the import code for old versions has been removed
+    private final int rotation;
 
     /**
      * The unmodified measurements recieved from the squid. Will not change after it has been once set.
@@ -119,10 +119,11 @@ public class MeasurementResult {
         // get rotation
         s = element.getAttribute("rotation");
         try {
-            this.rotation = Integer.parseInt(s) % 360;
-            while (this.rotation < 0) {
-                this.rotation += 360;
+            int rotation = Integer.parseInt(s) % 360;
+            while (rotation < 0) {
+                rotation += 360;
             }
+            this.rotation = rotation;
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid rotation: " + s, e);
         }
