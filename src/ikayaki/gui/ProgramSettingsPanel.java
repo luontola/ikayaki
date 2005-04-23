@@ -34,12 +34,12 @@ import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusListener;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.List;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
 /**
  * Controls for editing the program settings.
@@ -65,6 +65,9 @@ public class ProgramSettingsPanel extends JPanel {
         setLayout(new BorderLayout());
         add(contentPane, BorderLayout.CENTER);
 
+        System.out.println(getParent());
+
+
         /* Measurement Rotations */
 
         NumberFormatter format = new NumberFormatter();
@@ -79,7 +82,7 @@ public class ProgramSettingsPanel extends JPanel {
                 Settings.setMeasurementRotations(value);
             }
         });
-        
+
         measurementRotationsField.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {

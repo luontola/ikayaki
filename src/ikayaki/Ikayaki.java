@@ -39,11 +39,6 @@ import java.io.File;
  * @author Esko Luontola
  */
 public class Ikayaki extends JFrame {
-/*
-Event A: On window close - checks that no measurement is running. Saves all opened
-project files and settings. Closes the program, or notifies the user if the program may not
-be closed.
-*/
 
     /* Application information */
     public static final String APP_NAME = "Ikayaki";
