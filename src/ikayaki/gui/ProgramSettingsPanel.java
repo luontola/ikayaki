@@ -30,6 +30,8 @@ import ikayaki.MeasurementSequence;
 import ikayaki.Settings;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
@@ -128,7 +130,27 @@ public class ProgramSettingsPanel extends JPanel {
 
         /* Saved Sequences */
 
-        sequencesTable.setModel(new EditSequencesTableModel());
+        final EditSequencesTableModel tableModel = new EditSequencesTableModel();
+        sequencesTable.setModel(tableModel);
+        sequencesTable.setTableHeader(null);
+        sequencesTable.getParent().setBackground(sequencesTable.getBackground());
+        sequencesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        sequencesDeleteButton.setEnabled(false);
+        sequencesDeleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int index = sequencesTable.getSelectedRow();
+                if (index >= 0) {
+                    tableModel.deleteSequence(index);
+                }
+            }
+        });
+
+        sequencesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                sequencesDeleteButton.setEnabled(sequencesTable.getSelectedRow() >= 0);
+            }
+        });
 
         /* Default Columns */
 
@@ -304,15 +326,39 @@ public class ProgramSettingsPanel extends JPanel {
 
     private class EditSequencesTableModel extends AbstractTableModel {
 
-        private MeasurementSequence[] sequences;
+        private MeasurementSequence[] sequences = new MeasurementSequence[0];
 
         public EditSequencesTableModel() {
             updateSequences();
         }
 
+        /**
+         * Reads the saved sequences from the settings and fills the table with them. Restores the selected
+         * MeasurementSequence if the table contents has changed.
+         */
         private void updateSequences() {
+            
+            // save selection
+            MeasurementSequence selected = null;
+            int selectedRow = sequencesTable.getSelectedRow();
+            if (selectedRow >= 0) {
+                selected = sequences[selectedRow];
+            }
+
+            // update table data
             sequences = Settings.getSequences();
+            sequencesTable.getSelectionModel().clearSelection();
             fireTableDataChanged();
+
+            // restore selection
+            if (selected != null) {
+                for (int i = 0; i < sequences.length; i++) {
+                    if (sequences[i] == selected) {
+                        sequencesTable.getSelectionModel().setSelectionInterval(i, i);
+                        break;
+                    }
+                }
+            }
         }
 
         public int getRowCount() {
@@ -352,11 +398,19 @@ public class ProgramSettingsPanel extends JPanel {
                     return;
                 }
             }
-                
+
             // set the new name
             target.setName(name);
             Settings.fireSequencesModified();
+            updateSequences();
+        }
+
+        /**
+         * Deletes the saved sequence at the speficied row index.
+         */
+        public void deleteSequence(int rowIndex) {
+            Settings.removeSequence(sequences[rowIndex]);
+            updateSequences();
         }
     }
-
 }

@@ -267,7 +267,6 @@ public class MeasurementSequencePanel extends ProjectComponent {
         });
 
         // initialize with no project
-        updateLoadSequenceBox();
         setProject(null);
     }
 
@@ -284,7 +283,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
     /**
      * Rebuilds the contents of the loadSequenceBox combobox by getting the saved sequences from the settings.
      */
-    private void updateLoadSequenceBox() {
+    private void resetLoadSequenceBox() {
         // save old selection
         Object selected = loadSequenceBox.getSelectedItem();
         loadSequenceBox.removeAllItems();
@@ -500,6 +499,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
         loadSequenceBox.setSelectedItem(null);
         setEnabled(project != null);
         resetAddSequence();
+        resetLoadSequenceBox();
 
         // scroll the table so that as many measuments as possible are visible, plus a couple of empty rows
         SwingUtilities.invokeLater(new Runnable() {
@@ -780,7 +780,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
                     // save the sequence
                     sequence.setName(name);
                     Settings.addSequence(sequence);
-                    updateLoadSequenceBox();
+                    resetLoadSequenceBox();
                 }
             };
             action.putValue(Action.NAME, "Save Selected As...");
@@ -812,7 +812,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
                     // save the sequence
                     sequence.setName(name);
                     Settings.addSequence(sequence);
-                    updateLoadSequenceBox();
+                    resetLoadSequenceBox();
                 }
             };
             action.putValue(Action.NAME, "Save All As...");
