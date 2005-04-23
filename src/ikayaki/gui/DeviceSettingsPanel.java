@@ -1,5 +1,5 @@
 /*
- * SettingsDialog.java
+ * DeviceSettingsPanel.java
  *
  * Copyright (C) 2005 Project SQUID, http://www.cs.helsinki.fi/group/squid/
  *
@@ -47,16 +47,7 @@ import java.util.Enumeration;
  *
  * @author Aki Korpua
  */
-
-public class SettingsPanel
-        extends JPanel {
-    /*
-         Event A: On Save Clicked - saves current configuration to Settings-singleton and closes
-         window
-     */
-    /*
-         Event B: On Cancel Clicked - closes window (discarding changes)
-     */
+public class DeviceSettingsPanel extends JPanel {
 
     /**
      * COM port for magnetometer
@@ -194,7 +185,7 @@ public class SettingsPanel
      * Creates all components and puts them in right places. Labels are created only here (no global fields). Creates
      * ActionListeners for buttons.
      */
-    SettingsPanel(SettingsDialog creator) {
+    public DeviceSettingsPanel(SettingsDialog creator) {
 
         this.creator = creator;
 

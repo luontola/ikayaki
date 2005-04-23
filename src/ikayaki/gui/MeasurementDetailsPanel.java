@@ -105,6 +105,11 @@ public class MeasurementDetailsPanel extends ProjectComponent {
         this.setMinimumSize(new Dimension(0, 225));
     }
 
+    @Override public void setProject(Project project) {
+        super.setProject(project);
+        setStep(null);
+    }
+
     public MeasurementStep getStep() {
         return step;
     }

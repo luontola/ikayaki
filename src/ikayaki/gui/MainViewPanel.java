@@ -690,7 +690,7 @@ public class MainViewPanel extends ProjectComponent {
         if (configurationAction == null) {
             configurationAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    SettingsDialog.showSettingsDialog(getParentFrame(), "Configuration");
+                    SettingsDialog.showDeviceSettingsDialog(getParentFrame(), "Configuration");
                     // update magnetometer status picture since handler positions might have changed
                     getMeasurementControlsPanel().measurementUpdated(null);
                 }

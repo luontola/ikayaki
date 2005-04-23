@@ -26,18 +26,23 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Opens dialog and creates SettingsPanel
+ * Opens dialog and creates DeviceSettingsPanel
  *
  * @author Aki Korpua
  */
-public class SettingsDialog
-        extends JDialog {
+public class SettingsDialog extends JDialog {
 
-    private SettingsDialog(Frame owner, String message) {
+    private static final int DEVICE_SETTINGS = 0;
+    private static final int PROGRAM_SETTINGS = 1;
+
+    private int dialogType;
+
+    private SettingsDialog(Frame owner, String message, int dialogType) {
         super(owner, message, true);
         if (owner != null) {
             setLocationRelativeTo(owner);
         }
+        this.dialogType = dialogType;
     }
 
     /**
@@ -49,12 +54,21 @@ public class SettingsDialog
 
         setResizable(false);
         setLayout(new BorderLayout());
-        add(new SettingsPanel(this), BorderLayout.CENTER);
+        if (dialogType == DEVICE_SETTINGS) {
+            add(new DeviceSettingsPanel(this), BorderLayout.CENTER);
+        } else if (dialogType == PROGRAM_SETTINGS) {
+            add(new ProgramSettingsPanel(this), BorderLayout.CENTER);
+        }
         pack();
     }
 
-    public static void showSettingsDialog(Frame owner, String message) {
-        SettingsDialog d = new SettingsDialog(owner, message);
+    public static void showDeviceSettingsDialog(Frame owner, String message) {
+        SettingsDialog d = new SettingsDialog(owner, message, DEVICE_SETTINGS);
+        d.setVisible(true);
+    }
+
+    public static void showProgramSettingsDialog(Frame owner, String message) {
+        SettingsDialog d = new SettingsDialog(owner, message, PROGRAM_SETTINGS);
         d.setVisible(true);
     }
 

@@ -63,29 +63,7 @@ import static ikayaki.ProjectEvent.Type.*;
  */
 public class Project {
 
-    private static final boolean DEBUG = false;      // TODO: used for testing the measurements without a Squid
-
-/*
-Event A: On property change - Autosaving will be invoked and the project written to file
-after a short delay.
-*/
-/*
-Event B: On measurement started/ended/paused/aborted - ProjectEvent about the state
-change will be fired to all project listeners.
-*/
-/*
-Event C: On measurement subphase started/completed - MeasurementEvent will be fired
-to all measurement listeners.
-*/
-/*
-Event D: On strike/dip/volume etc. changed - The updated transformation matrix will be
-applied to all measurements and a ProjectEvent about the data change will be fired to all
-project listeners.
-*/
-/*
-Event E: On project file saved - ProjectEvent about the file saving will be fired to all
-project listeners.
-*/
+    private static final boolean DEBUG = true;      // TODO: used for testing the measurements without a Squid
 
     /**
      * Caches the created and loaded Project objects to make sure that no more than one object will be created for each
