@@ -29,8 +29,6 @@ import ikayaki.Ikayaki;
 import ikayaki.Settings;
 
 import javax.swing.*;
-import javax.swing.event.AncestorListener;
-import javax.swing.event.AncestorEvent;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
@@ -162,12 +160,15 @@ public class ProgramSettingsPanel extends JPanel {
             }
         });
 
+        // small hack to set the default button
         this.addHierarchyListener(new HierarchyListener() {
             public void hierarchyChanged(HierarchyEvent e) {
-                getRootPane().setDefaultButton(closeButton);
+                if (getRootPane().getDefaultButton() != closeButton) {
+                    getRootPane().setDefaultButton(closeButton);
+                }
             }
         });
-        
+
         // avoid the need to press enter twise in the measurementRotationsField to close the window
         measurementRotationsField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
