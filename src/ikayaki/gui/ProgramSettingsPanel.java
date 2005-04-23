@@ -22,18 +22,22 @@
 
 package ikayaki.gui;
 
-import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import ikayaki.Ikayaki;
+import ikayaki.Settings;
 
 import javax.swing.*;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.util.*;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.List;
-
-import ikayaki.Settings;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 /**
  * Controls for editing the program settings.
@@ -44,8 +48,8 @@ public class ProgramSettingsPanel extends JPanel {
 
     private JDialog creator;
 
-    private JComboBox holderCalibrationCombo;
     private JFormattedTextField measurementRotationsField;
+    private JComboBox holderCalibrationCombo;
     private JTable sequencesTable;
     private JButton sequencesDeleteButton;
     private JPanel defaultColumnsPane;
@@ -59,7 +63,47 @@ public class ProgramSettingsPanel extends JPanel {
         setLayout(new BorderLayout());
         add(contentPane, BorderLayout.CENTER);
 
-        /* Measurements */
+        /* Measurement Rotations */
+
+        NumberFormatter format = new NumberFormatter();
+        format.setMinimum(new Integer(0));
+        format.setMaximum(new Integer(999));
+        measurementRotationsField.setFormatterFactory(new DefaultFormatterFactory(format));
+        measurementRotationsField.setValue(new Integer(Settings.getMeasurementRotations()));
+        measurementRotationsField.addPropertyChangeListener("value", new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                int value = ((Number) measurementRotationsField.getValue()).intValue();
+                Settings.setMeasurementRotations(value);
+            }
+        });
+
+        /* Sample Holder Calibration */
+
+        final File[] calibrationFiles = Settings.getCalibrationProjectFiles();
+        File holderCalibrationFile = Settings.getHolderCalibrationFile();
+        holderCalibrationCombo.addItem("");     // option for selecting no file
+
+        for (int i = 0; i < calibrationFiles.length; i++) {
+            File file = calibrationFiles[i];
+            String name = file.getName().substring(0, file.getName().lastIndexOf(Ikayaki.FILE_TYPE));
+            holderCalibrationCombo.addItem(name);
+
+            if (file.equals(holderCalibrationFile)) {
+                holderCalibrationCombo.setSelectedIndex(holderCalibrationCombo.getItemCount() - 1);
+            }
+        }
+
+        holderCalibrationCombo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int index = holderCalibrationCombo.getSelectedIndex();
+                index--;
+                if (index >= 0 && index < calibrationFiles.length) {
+                    Settings.setHolderCalibrationFile(calibrationFiles[index]);
+                } else {
+                    Settings.setHolderCalibrationFile(null);
+                }
+            }
+        });
 
         /* Saved Sequences */
 
@@ -117,7 +161,7 @@ public class ProgramSettingsPanel extends JPanel {
         contentPane = new JPanel();
         contentPane.setLayout(new GridLayoutManager(3, 2, new Insets(11, 11, 11, 11), -1, -1));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new GridLayoutManager(2, 1, new Insets(0, 4, 4, 4), -1, -1));
         contentPane.add(panel1,
                 new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
@@ -149,7 +193,7 @@ public class ProgramSettingsPanel extends JPanel {
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel3.setLayout(new GridLayoutManager(2, 1, new Insets(0, 4, 4, 4), -1, -1));
         contentPane.add(panel3,
                 new GridConstraints(0, 1, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
@@ -165,7 +209,7 @@ public class ProgramSettingsPanel extends JPanel {
                 new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
                         GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null));
         final JPanel panel4 = new JPanel();
-        panel4.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel4.setLayout(new GridLayoutManager(1, 1, new Insets(0, 4, 4, 4), -1, -1));
         contentPane.add(panel4,
                 new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
@@ -179,26 +223,26 @@ public class ProgramSettingsPanel extends JPanel {
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
         holderCalibrationCombo = new JComboBox();
         panel5.add(holderCalibrationCombo,
-                new GridConstraints(0, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label1 = new JLabel();
-        label1.setText("Holder Calibration");
+        label1.setText("Sample Holder Calibration");
         panel5.add(label1,
-                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label2 = new JLabel();
         label2.setText("Measurement Rotations");
         panel5.add(label2,
-                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         measurementRotationsField = new JFormattedTextField();
         panel5.add(measurementRotationsField,
-                new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(50, -1),
                         null));
         final Spacer spacer3 = new Spacer();
         panel5.add(spacer3,
-                new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
         final JPanel panel6 = new JPanel();
         panel6.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));

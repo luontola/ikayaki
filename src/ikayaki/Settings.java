@@ -851,7 +851,8 @@ public class Settings {
 
     public static synchronized void setHolderCalibrationFile(File file) {
         if (file == null) {
-            throw new NullPointerException();
+            setProperty("calibration.holder", null);
+            return;
         }
         if (!file.exists()) {
             throw new IllegalArgumentException("Does not exist: " + file);
