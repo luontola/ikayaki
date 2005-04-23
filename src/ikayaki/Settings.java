@@ -388,6 +388,14 @@ public class Settings {
         return Double.parseDouble(getProperty("squid.degausser.maximumfield", "0.0"));
     }
 
+    public static synchronized double getDegausserMinimumField() {
+        return 1.1;
+    }
+
+    public static synchronized double getDegausserMinimumFieldIncrement() {
+        return 0.1;
+    }
+
     /* Sample handler */
 
     public static synchronized int getHandlerAcceleration() {

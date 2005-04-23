@@ -382,24 +382,27 @@ public class MeasurementSequencePanel extends ProjectComponent {
                 && sequenceStepField.getValue() == null
                 && sequenceStopField.getValue() == null) {
             // only start entered, add only one step
-            startVal = ((Number) sequenceStartField.getValue()).doubleValue();
-            stepVal = 1.0;
+            startVal = Math.max(((Number) sequenceStartField.getValue()).doubleValue(), 0.0);
+            startVal = Math.min(startVal, Settings.getDegausserMaximumField());
+            stepVal = Settings.getDegausserMinimumFieldIncrement();
             stopVal = startVal;
 
         } else if (sequenceStartField.getValue() != null
                 && sequenceStepField.getValue() != null
                 && sequenceStopField.getValue() != null) {
             // all values entered, check their sizes
-            startVal = ((Number) sequenceStartField.getValue()).doubleValue();
-            stepVal = ((Number) sequenceStepField.getValue()).doubleValue();
-            stopVal = ((Number) sequenceStopField.getValue()).doubleValue();
+            startVal = Math.max(((Number) sequenceStartField.getValue()).doubleValue(), 0.0);
+            stepVal = Math.max(((Number) sequenceStepField.getValue()).doubleValue(),
+                    Settings.getDegausserMinimumFieldIncrement());
+            stopVal = Math.min(((Number) sequenceStopField.getValue()).doubleValue(),
+                    Settings.getDegausserMaximumField());
 
             JTextField fixThisField = null;
             if (startVal > stopVal) {
                 sequenceStopFieldFlasher.flash();
                 fixThisField = sequenceStopField;
             }
-            if (stepVal <= 0.09) {
+            if (stepVal < Settings.getDegausserMinimumFieldIncrement()) {
                 sequenceStepFieldFlasher.flash();
                 fixThisField = sequenceStepField;
             }
@@ -434,12 +437,13 @@ public class MeasurementSequencePanel extends ProjectComponent {
         }
 
         // add the steps to the sequence
-        if (stepVal <= 0.09) {
-            return;
-        }
         MeasurementStep step = new MeasurementStep();
         for (double d = startVal; d <= stopVal; d += stepVal) {
-            if (Math.abs(d - getLastStepValue()) < 0.09) {
+            if (d > 0.0 && d < Settings.getDegausserMinimumField()) {
+                d = Settings.getDegausserMinimumField();
+            }
+            if (getProject().getSteps() > 0
+                    && Math.abs(d - getLastStepValue()) < Settings.getDegausserMinimumFieldIncrement()) {
                 continue;
             }
             step.setStepValue(d);
@@ -638,8 +642,12 @@ public class MeasurementSequencePanel extends ProjectComponent {
             format.setMaximumFractionDigits(1);
 
             NumberFormatter formatter = new NumberFormatter(format);
-            formatter.setMinimum(new Double(0.0));
-            formatter.setMaximum(new Double(9999.0));
+            if (tf == sequenceStepField) {
+                formatter.setMinimum(new Double(Settings.getDegausserMinimumFieldIncrement()));
+            } else {
+                formatter.setMinimum(new Double(0.0));
+            }
+            formatter.setMaximum(new Double(999.0));
             return formatter;
         }
     }
