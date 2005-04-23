@@ -139,7 +139,7 @@ public class ProgramSettingsPanel extends JPanel {
         sequencesTable.getParent().setBackground(sequencesTable.getBackground());
         sequencesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        sequencesDeleteButton.setEnabled(false);
+        // deleting of sequences
         sequencesDeleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int index = sequencesTable.getSelectedRow();
@@ -153,6 +153,8 @@ public class ProgramSettingsPanel extends JPanel {
             }
         });
 
+        // a sequence must be selected to be able to delete it
+        sequencesDeleteButton.setEnabled(false);
         sequencesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 sequencesDeleteButton.setEnabled(sequencesTable.getSelectedRow() >= 0);

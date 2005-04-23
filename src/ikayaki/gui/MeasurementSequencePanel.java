@@ -739,6 +739,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
                     while ((index = getLastIndex()) >= 0) {
                         getProject().removeStep(index);
                     }
+                    sequenceTable.clearSelection();
                 }
             };
             action.putValue(Action.NAME, "Delete Selected");
