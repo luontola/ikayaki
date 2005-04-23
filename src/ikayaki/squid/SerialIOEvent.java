@@ -82,7 +82,6 @@ public class SerialIOEvent extends EventObject {
             } else {
                 result += c;
             }
-
         }
         return result;
     }
