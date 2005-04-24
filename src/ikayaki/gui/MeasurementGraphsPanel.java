@@ -51,8 +51,9 @@ public class MeasurementGraphsPanel extends ProjectComponent implements ProjectL
 
         plots.add(intensityPlot);
         plots.add(stereoPlot);
-        //intensityPlot.setEnabled(false);
         //stereoPlot.setEnabled(true);
+        //intensityPlot.setEnabled(true);
+
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
