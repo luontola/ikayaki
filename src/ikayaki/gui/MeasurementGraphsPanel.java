@@ -84,7 +84,7 @@ public class MeasurementGraphsPanel extends ProjectComponent
         for (Plot plot : plots) {
             plot.reset();
             if (getProject() != null) {
-                for (int i = 0; i < getProject().getCompletedSteps(); i++) {
+                for (int i = 0; i < getProject().getSteps(); i++) {
                     plot.add(getProject().getStep(i));
                 }
             }

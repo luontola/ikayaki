@@ -88,7 +88,7 @@ public class IntensityPlot extends AbstractPlot {
 
         for (Point2D point : points) {
             yMax = Math.max(yMax, point.getY());
-            xMax = Math.max(xMax, point.getX());
+            xMax = Math.max(xMax, point.getX() * 1.1);
         }
 
         // pixels on y-area
