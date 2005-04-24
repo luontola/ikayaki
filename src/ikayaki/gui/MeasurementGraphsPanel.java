@@ -35,25 +35,20 @@ import java.util.Vector;
 /**
  * @author Aki Sysmäläinen
  */
-public class MeasurementGraphsPanel extends ProjectComponent
-        implements ProjectListener {
+public class MeasurementGraphsPanel extends ProjectComponent implements ProjectListener {
     /**
      * All plots in this panel
      */
     private Vector<Plot> plots = new Vector<Plot>();
 
     /**
-     * Intensity plot
-     */
-    private IntensityPlot intensityPlot;
-    private StereoPlot stereoPlot;
-
-    /**
      * Creates new panel for plots
      */
     public MeasurementGraphsPanel() {
 
-        intensityPlot = new IntensityPlot();
+        IntensityPlot intensityPlot = new IntensityPlot();
+        StereoPlot stereoPlot = new StereoPlot();
+
         plots.add(intensityPlot);
         plots.add(stereoPlot);
         //intensityPlot.setEnabled(false);
