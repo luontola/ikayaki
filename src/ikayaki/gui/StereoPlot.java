@@ -54,12 +54,14 @@ public class StereoPlot extends AbstractPlot {
         if (step.getProject() != null) {
             project = step.getProject();
         }
-        Double inc = MeasurementValue.INCLINATION.getValue(step);
-        Double dec = MeasurementValue.DECLINATION.getValue(step);
+        Double incValue = MeasurementValue.INCLINATION.getValue(step);
+        Double decValue = MeasurementValue.DECLINATION.getValue(step);
 
-        if (inc != null && dec != null) {
-            double x = 0.5 + ((0.5 - (0.5 / 90) * Math.abs(inc)) * Math.cos(dec - 90));
-            double y = 0.5 + ((0.5 - (0.5 / 90) * Math.abs(inc)) * Math.sin(dec + 90));
+        if (incValue != null && decValue != null) {
+            double inc = Math.toRadians(incValue);
+            double dec = Math.toRadians(decValue);
+            double x = 0.5 + ((0.5 - (0.5 / (Math.PI / 2.0)) * Math.abs(inc)) * Math.cos(dec - (Math.PI / 2.0)));
+            double y = 0.5 + ((0.5 - (0.5 / (Math.PI / 2.0)) * Math.abs(inc)) * Math.sin(dec + (Math.PI / 2.0)));
             if (inc >= 0) {
                 points.add(new Point2D.Double(x, y));
                 incSign.add(new Boolean(true));
