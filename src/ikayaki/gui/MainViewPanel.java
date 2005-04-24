@@ -756,7 +756,7 @@ public class MainViewPanel extends ProjectComponent {
             aboutAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     String message = Ikayaki.APP_NAME + " " + Ikayaki.APP_VERSION +
-                            " / " + Ikayaki.APP_VERSION_NAME + "\n" +
+                            /* " / " + Ikayaki.APP_VERSION_NAME + */ "\n" +
                             Ikayaki.APP_BUILD + "\n\n" +
                             Ikayaki.APP_HOME_PAGE + "\n\n";
                     for (String author : Ikayaki.AUTHORS) {
