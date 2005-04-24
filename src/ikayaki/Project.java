@@ -1079,15 +1079,15 @@ public class Project {
      * setStrike(), setDip() and setSampleType() methods.
      */
     private synchronized void updateTransforms() {
-        double d;
         double s;
+        double d;
         if (orientation == PLUS_Z) {
             // TODO: check that this is right
-            d = Math.toRadians(getDip());
             s = Math.toRadians(getStrike() + 180.0);
-        } else {
             d = Math.toRadians(getDip());
+        } else {
             s = Math.toRadians(getStrike());
+            d = Math.toRadians(getDip());
         }
 
         if (sampleType == CORE) {

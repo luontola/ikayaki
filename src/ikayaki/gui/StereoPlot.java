@@ -58,18 +58,16 @@ public class StereoPlot extends AbstractPlot {
         Double decValue = MeasurementValue.DECLINATION.getValue(step);
 
         if (incValue != null && decValue != null) {
-            if (incValue != null && decValue != null) {
-                double inc = Math.toRadians(incValue);
-                double dec = Math.toRadians(decValue);
-                double x = 0.5 + ((0.5 - (0.5 / (Math.PI / 2.0)) * Math.abs(inc)) * Math.cos(dec - (Math.PI / 2.0)));
-                double y = 0.5 + ((0.5 - (0.5 / (Math.PI / 2.0)) * Math.abs(inc)) * Math.sin(dec + (Math.PI / 2.0)));
-                if (incValue.doubleValue() >= 0) {
-                    points.add(new Point2D.Double(x, y));
-                    incSign.add(new Boolean(true));
-                } else {
-                    points.add(new Point2D.Double(x, y));
-                    incSign.add(new Boolean(false));
-                }
+            double inc = Math.toRadians(incValue);
+            double dec = Math.toRadians(decValue);
+            double x = 0.5 + ((0.5 - (0.5 / (Math.PI / 2.0)) * Math.abs(inc)) * Math.cos(dec - (Math.PI / 2.0)));
+            double y = 0.5 + ((0.5 - (0.5 / (Math.PI / 2.0)) * Math.abs(inc)) * Math.sin(dec + (Math.PI / 2.0)));
+            if (incValue.doubleValue() >= 0) {
+                points.add(new Point2D.Double(x, y));
+                incSign.add(new Boolean(true));
+            } else {
+                points.add(new Point2D.Double(x, y));
+                incSign.add(new Boolean(false));
             }
         }
     }
