@@ -85,10 +85,14 @@ public class MeasurementGraphsPanel extends ProjectComponent
         // plots to update all steps to them
         for (int i = 0; i < plots.size(); i++) {
             plots.elementAt(i).reset();
+            
             // add all steps to plot
-            //   for (int j=0; i < project.getSteps(); j++) {
-            //       plots.elementAt(j).measurements.eadd();
-            //   }
+            if (getProject() == null) {
+                continue;
+            }
+            for (int j = 0; j < getProject().getCompletedSteps(); j++) {
+                plots.elementAt(i).add(getProject().getStep(j));
+            }
         }
 
     }

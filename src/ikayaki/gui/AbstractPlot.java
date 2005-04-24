@@ -36,7 +36,9 @@ public abstract class AbstractPlot extends JPanel implements Plot {
     /**
      * Painter method
      */
-    @Override public void paint(Graphics g) {
+    @Override public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
         Dimension d = getSize();
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
