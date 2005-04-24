@@ -1092,7 +1092,7 @@ public class Project {
 
         if (sampleType == CORE) {
             // core sample: sample -> geographic
-            transform.setRow(0, sin(d) * cos(s), -sin(s), cos(s) * cos(d));
+            transform.setRow(0, sin(d) * cos(s), -sin(s), cos(s) * cos(d)); // TODO: verify that "-sin(s)" is right
             transform.setRow(1, sin(s) * sin(d), cos(s), cos(d) * sin(s));
             transform.setRow(2, -cos(d), 0, sin(d));
         } else if (sampleType == HAND) {
