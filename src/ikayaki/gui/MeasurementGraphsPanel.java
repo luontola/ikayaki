@@ -77,27 +77,16 @@ public class MeasurementGraphsPanel extends ProjectComponent
     }
 
     /**
-     * Updates plots when additional measurements are done. TODO Should this be done in own workerthread?
+     * Updates plots when additional measurements are done or the data has changed.
      */
     private void updatePlots() {
-        // TODO update all measurement steps to all plots
-        // get MeasurementSteps from the project and iterate thru all
-        // plots to update all steps to them
-        for (int i = 0; i < plots.size(); i++) {
-            plots.elementAt(i).reset();
-            // add all steps to all plots
+        // update all plots with the MeasurementSteps from the project
+        for (Plot plot : plots) {
+            plot.reset();
             if (getProject() != null) {
-                for (int j = 0; j < getProject().getCompletedSteps(); j++) {
-                    plots.elementAt(i).add(getProject().getStep(j));
+                for (int i = 0; i < getProject().getCompletedSteps(); i++) {
+                    plot.add(getProject().getStep(i));
                 }
-            }
-
-            // add all steps to plot
-            if (getProject() == null) {
-                continue;
-            }
-            for (int j = 0; j < getProject().getCompletedSteps(); j++) {
-                plots.elementAt(i).add(getProject().getStep(j));
             }
         }
     }
@@ -106,19 +95,8 @@ public class MeasurementGraphsPanel extends ProjectComponent
      * Listener to listen events if projects state is changed.
      */
     public void projectUpdated(ProjectEvent event) {
-        // TODO
-        if (event.getType() == ProjectEvent.Type.STATE_CHANGED) {
-            //updatePlots();
-            if (event.getType() == ProjectEvent.Type.STATE_CHANGED) {
-                updatePlots();
-                System.out.println("state event!");
-            } else if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
-                //updatePlots();
-            } else if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
-                updatePlots();
-                System.out.println("Data changed event!");
-            }
-            return;
+        if (event.getType() == ProjectEvent.Type.STATE_CHANGED || event.getType() == ProjectEvent.Type.DATA_CHANGED) {
+            updatePlots();
         }
     }
 
@@ -137,8 +115,6 @@ public class MeasurementGraphsPanel extends ProjectComponent
      */
     @Override public void setProject(Project project) {
         super.setProject(project);
-        updatePlots();
-        System.out.println("new project!");
         updatePlots();
     }
 
