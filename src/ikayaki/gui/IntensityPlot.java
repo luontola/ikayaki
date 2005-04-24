@@ -76,17 +76,13 @@ public class IntensityPlot extends AbstractPlot {
         // x-axis padding from arrow top to max values
         int xPad = 20;
         // maximum value of y-axis
-        double yMax = 0.0;
+        double yMax = 1.0;
         // maximum value of x-axis
-        double xMax = 0.0;
+        double xMax = 100.0;
 
-        for (int i = 0; i < points.size(); i++) {
-            if (yMax < points.elementAt(i).getY()) {
-                yMax = points.elementAt(i).getY();
-            }
-            if (xMax < points.elementAt(i).getX()) {
-                xMax = points.elementAt(i).getX();
-            }
+        for (Point2D point : points) {
+            yMax = Math.max(yMax, point.getY());
+            xMax = Math.max(xMax, point.getX());
         }
 
         // pixels on y-area
@@ -138,7 +134,5 @@ public class IntensityPlot extends AbstractPlot {
                 g2.drawLine(xFix + x1, yFix - y1, xFix + x2, yFix - y2);
             }
         }
-
-
     }
 }
