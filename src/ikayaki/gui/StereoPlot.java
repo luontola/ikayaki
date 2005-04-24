@@ -57,19 +57,16 @@ public class StereoPlot extends AbstractPlot {
         Double incValue = MeasurementValue.INCLINATION.getValue(step);
         Double decValue = MeasurementValue.DECLINATION.getValue(step);
 
-        <<<<<<<StereoPlot.java
         if (inc != null && dec != null) {
             double x = 0.5 + ((0.5 - (0.5 / 90) * Math.abs(inc.doubleValue())) * Math.cos(dec.doubleValue() - 90));
             double y = 0.5 + ((0.5 - (0.5 / 90) * Math.abs(inc.doubleValue())) * Math.sin(dec.doubleValue() + 90));
             if (inc.doubleValue() >= 0) {
-                =======
                 if (incValue != null && decValue != null) {
                     double inc = Math.toRadians(incValue);
                     double dec = Math.toRadians(decValue);
                     double x = 0.5 + ((0.5 - (0.5 / (Math.PI / 2.0)) * Math.abs(inc)) * Math.cos(dec - (Math.PI / 2.0)));
                     double y = 0.5 + ((0.5 - (0.5 / (Math.PI / 2.0)) * Math.abs(inc)) * Math.sin(dec + (Math.PI / 2.0)));
                     if (inc >= 0) {
-                        >>>>>>> 1.5
                         points.add(new Point2D.Double(x, y));
                         incSign.add(new Boolean(true));
                     } else {
@@ -78,54 +75,50 @@ public class StereoPlot extends AbstractPlot {
                     }
                 }
             }
+        }
+    }
 
-            public void reset
-            () {
-                points.clear();
-                repaint();
-            }
+    public void reset() {
+        points.clear();
+        repaint();
+    }
 
-            public int getNumMeasurements
-            () {
-                return points.size();
-            }
+    public int getNumMeasurements() {
+        return points.size();
+    }
 
-            public void render
-            (
-            int w,
-            int h, Graphics2D
-            g2) {
-                // margin
-                int m = 10;
-                // area for texts on edges
-                int txtArea = 10;
-                // minimum of w and h
-                int dim = Math.min(w, h);
-                // area for points in x and y direction = width = height of the actual plot
-                int area = dim - (2 * (m + txtArea));
-                // font for texts
-                g2.setFont(new Font("Arial", Font.PLAIN, 10));
+    public void render(int w, int h, Graphics2D g2) {
+        // margin
+        int m = 10;
+        // area for texts on edges
+        int txtArea = 10;
+        // minimum of w and h
+        int dim = Math.min(w, h);
+        // area for points in x and y direction = width = height of the actual plot
+        int area = dim - (2 * (m + txtArea));
+        // font for texts
+        g2.setFont(new Font("Arial", Font.PLAIN, 10));
 
-                // draw circle
-                g2.drawOval(m + txtArea, m + txtArea, area, area);
-                // draw ticks
+        // draw circle
+        g2.drawOval(m + txtArea, m + txtArea, area, area);
+        // draw ticks
 
-                // draw symbols
-                g2.drawString("N", m + txtArea + (area / 2), m + txtArea / 2);
-                g2.drawString("W", m + txtArea / 2, m + txtArea + (area / 2));
-                g2.drawString("E", m + txtArea + area + txtArea / 2, m + txtArea + (area / 2));
-                g2.drawString("S", m + txtArea + (area / 2), m + txtArea + area + txtArea / 2);
+        // draw symbols
+        g2.drawString("N", m + txtArea + (area / 2), m + txtArea / 2);
+        g2.drawString("W", m + txtArea / 2, m + txtArea + (area / 2));
+        g2.drawString("E", m + txtArea + area + txtArea / 2, m + txtArea + (area / 2));
+        g2.drawString("S", m + txtArea + (area / 2), m + txtArea + area + txtArea / 2);
 
-                // draw points
-                for (int i = 0; i < points.size(); i++) {
-                    int x = (m + txtArea) + new Double(points.elementAt(i).getX() * area).intValue();
-                    int y = (m + txtArea) + area - new Double(points.elementAt(i).getY() * area).intValue();
+        // draw points
+        for (int i = 0; i < points.size(); i++) {
+            int x = (m + txtArea) + new Double(points.elementAt(i).getX() * area).intValue();
+            int y = (m + txtArea) + area - new Double(points.elementAt(i).getY() * area).intValue();
 
-                    if (incSign.elementAt(i).booleanValue()) { // positive inclination
-                        g2.fillOval(x - 2, y - 2, 4, 4);
-                    } else { // negative inclination
-                        g2.drawOval(x - 2, y - 2, 4, 4);
-                    }
-                }
+            if (incSign.elementAt(i).booleanValue()) { // positive inclination
+                g2.fillOval(x - 2, y - 2, 4, 4);
+            } else { // negative inclination
+                g2.drawOval(x - 2, y - 2, 4, 4);
             }
         }
+    }
+}
