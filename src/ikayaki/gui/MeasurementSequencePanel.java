@@ -489,6 +489,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
      * edit controls and updates the table data.
      */
     public void setProject(final Project project) {
+        final boolean doSelect = getProject() != project;
         super.setProject(project);
         sequenceTableModel.setProject(project);
         loadSequenceBox.setSelectedItem(null);
@@ -496,18 +497,28 @@ public class MeasurementSequencePanel extends ProjectComponent {
         resetAddSequence();
         resetLoadSequenceBox();
 
-        // scroll the table so that as many measuments as possible are visible, plus a couple of empty rows
+        /* HACK:
+         * Must use invokeLater or otherwise the scrolling does not work at the start of the program, when the sizes
+         * of the components are not known. Causes the GUI to blink some.
+         */
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                /* HACK: Must use invokeLater or otherwise the scrolling
-                 * does not work at the start of the program, when the sizes
-                 * of the components are not known. Causes the GUI to blink some.
-                 */
+
+                // scroll the table so that as many measuments as possible are visible, plus a couple of empty rows
                 scrollToRow(0);
                 if (project != null) {
                     scrollToRow(Math.min(project.getCompletedSteps() + 5, sequenceTableModel.getRowCount() - 1));
                 } else {
                     scrollToRow(sequenceTableModel.getRowCount() - 1);
+                }
+
+                // automatically select the last completed step
+                if (doSelect && project != null) {
+                    int i = project.getCompletedSteps() - 1;
+                    if (i >= 0) {
+                        sequenceTable.getSelectionModel().clearSelection();
+                        sequenceTable.getSelectionModel().setSelectionInterval(i, i);
+                    }
                 }
             }
         });

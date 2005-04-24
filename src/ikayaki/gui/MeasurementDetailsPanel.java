@@ -164,8 +164,13 @@ public class MeasurementDetailsPanel extends ProjectComponent {
         }
 
         public int getRowCount() {
-            // the expected number of results based on measurement rotations
-            int expected = Math.max(1, 4 * Settings.getMeasurementRotations()) + 3;
+            
+            // calculate the expected number of results based on measurement rotations and project type
+            int nonSample = 3;
+            if (step != null && step.getProject().isHolderCalibration()) {
+                nonSample--;
+            }
+            int expected = Math.max(1, 4 * Settings.getMeasurementRotations()) + nonSample;
 
             if (step == null) {
                 return expected;
@@ -177,9 +182,9 @@ public class MeasurementDetailsPanel extends ProjectComponent {
             } else {
                 // try to estimate the number of steps
                 int count = step.getResults();
-                
+
                 // if the last step is not BG, there are more steps coming
-                if (count >= 3 && step.getResult(count - 1).getType() != MeasurementResult.Type.NOISE) {
+                if (count >= nonSample && step.getResult(count - 1).getType() != MeasurementResult.Type.NOISE) {
                     count++;
                 }
                 return Math.max(expected, count);
@@ -240,12 +245,16 @@ public class MeasurementDetailsPanel extends ProjectComponent {
 
                 // try to guess the values
                 if (columnIndex == HEADER_COLUMN) {
-                    if (rowIndex == 0) {
+                    int i = (step != null && step.getProject().isHolderCalibration())
+                            ? rowIndex + 1
+                            : rowIndex;
+
+                    if (i == 0) {
                         value = "Holder";
-                    } else if (rowIndex == 1 || rowIndex == getRowCount() - 1) {
+                    } else if (i == 1 || i == getRowCount() - 1) {
                         value = "BG";
                     } else {
-                        switch ((rowIndex - 2) % 4) {
+                        switch ((i - 2) % 4) {
                         case 0:
                             value = "0";
                             break;

@@ -62,7 +62,7 @@ import static ikayaki.ProjectEvent.Type.*;
  */
 public class Project {
 
-    private static final boolean DEBUG = false;      // TODO: used for testing the measurements without a Squid
+    private static final boolean DEBUG = true;      // TODO: used for testing the measurements without a Squid
 
     /**
      * Caches the created and loaded Project objects to make sure that no more than one object will be created for each
@@ -808,7 +808,7 @@ public class Project {
      * Returns true if this project file has been set as the Sample Holder Calibration project in the program settings.
      */
     public synchronized boolean isHolderCalibration() {
-        if (getType() == CALIBRATION && getFile() == Settings.getHolderCalibrationFile()) {
+        if (getType() == CALIBRATION && getFile().equals(Settings.getHolderCalibrationFile())) {
             return true;
         } else {
             return false;
