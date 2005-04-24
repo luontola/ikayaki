@@ -124,8 +124,19 @@ public class IntensityPlot extends AbstractPlot {
         for (int i = 0; i < points.size(); i++) {
             int x = new Double((points.elementAt(i).getX() / xMax) * xArea).intValue();
             int y = new Double((points.elementAt(i).getY() / yMax) * yArea).intValue();
-            g2.drawOval((m + aw) + x, (h - m) - y, 4, 4);
+            g2.fillOval((xFix + x) - 2, (yFix - y) - 2, 4, 4);
         }
+        if (points.size() > 2) {
+            for (int i = 1; i < points.size(); i++) {
+                int x1 = new Double((points.elementAt(i - 1).getX() / xMax) * xArea).intValue();
+                int y1 = new Double((points.elementAt(i - 1).getY() / yMax) * yArea).intValue();
+                int x2 = new Double((points.elementAt(i).getX() / xMax) * xArea).intValue();
+                int y2 = new Double((points.elementAt(i).getY() / yMax) * yArea).intValue();
+
+                g2.drawLine(xFix + x1, yFix - y1, xFix + x2, yFix - y2);
+            }
+        }
+
 
     }
 }
