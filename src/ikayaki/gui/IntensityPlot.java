@@ -42,8 +42,10 @@ public class IntensityPlot extends AbstractPlot {
     private Vector<Point2D> points = new Vector<Point2D>();
 
     public void add(MeasurementStep step) {
-        points.add(new Point2D.Double(step.getStepValue(),
-                MeasurementValue.RELATIVE_MAGNETIZATION.getValue(step)));
+        Double value = MeasurementValue.RELATIVE_MAGNETIZATION.getValue(step);
+        if (value != null) {
+            points.add(new Point2D.Double(Math.max(step.getStepValue(), 0.0), Math.max(value.doubleValue(), 0.0)));
+        }
     }
 
     public void reset() {
@@ -63,20 +65,21 @@ public class IntensityPlot extends AbstractPlot {
      * @param g2
      */
     public void render(int w, int h, Graphics2D g2) {
-        // marigin
-        int m = 10;
-        // arrow width
-        int aw = 4;
-        // arrow length
-        int al = 8;
-        // maximum value of y-axis
-        double yMax = 1.1;
-        // pixels on y-area
-        int yArea = getSize().height - ((2 * m) + aw);
-        // maximum value of x-axis
-        double xMax = 400;
-        // pixels on x-area
-        int xArea = getSize().width - ((2 * m) + aw);
+
+        int m = 10;     // margin
+        int aw = 4;     // arrow width
+        int al = 8;     // arrow length
+
+        double yMax = 1.1;      // maximum value of y-axis
+        double xMax = 100.0;    // maximum value of x-axis
+        for (Point2D point : points) {
+            yMax = Math.max(yMax, point.getY() * 1.1);
+            xMax = Math.max(xMax, point.getX() * 1.2);
+        }
+
+        int yArea = getSize().height - ((2 * m) + aw);      // pixels on y-area
+        int xArea = getSize().width - ((2 * m) + aw);       // pixels on x-area
+
         // font for texts
         g2.setFont(new Font("Arial", Font.PLAIN, 10));
         FontMetrics metrics = g2.getFontMetrics();
