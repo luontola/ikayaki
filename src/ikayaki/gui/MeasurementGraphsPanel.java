@@ -56,8 +56,8 @@ public class MeasurementGraphsPanel extends ProjectComponent
         intensityPlot = new IntensityPlot();
         plots.add(intensityPlot);
         plots.add(stereoPlot);
-        intensityPlot.setEnabled(false);
-        stereoPlot.setEnabled(true);
+        //intensityPlot.setEnabled(false);
+        //stereoPlot.setEnabled(true);
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -85,7 +85,9 @@ public class MeasurementGraphsPanel extends ProjectComponent
     private void updatePlots() {
         // update all plots with the MeasurementSteps from the project
         for (Plot plot : plots) {
-            plot.reset();
+            if (plot != null) {
+                plot.reset();
+            }
             if (getProject() != null) {
                 for (int i = 0; i < getProject().getSteps(); i++) {
                     plot.add(getProject().getStep(i));
