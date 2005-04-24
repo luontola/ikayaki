@@ -1226,7 +1226,7 @@ public class Project {
      *
      * @param type type of the event.
      */
-    private synchronized void fireProjectEvent(ProjectEvent.Type type) {
+    protected synchronized void fireProjectEvent(ProjectEvent.Type type) {
         final ProjectEvent event = new ProjectEvent(this, type);
         final ProjectListener[] listeners = listenerList.getListeners(ProjectListener.class);
         SwingUtilities.invokeLater(new Runnable() {
@@ -1266,7 +1266,7 @@ public class Project {
      * @param step the measurement step that has generated the event.
      * @param type the type of the event.
      */
-    private synchronized void fireMeasurementEvent(MeasurementStep step, MeasurementEvent.Type type) {
+    protected synchronized void fireMeasurementEvent(MeasurementStep step, MeasurementEvent.Type type) {
         final MeasurementEvent event = new MeasurementEvent(this, step, type);
         final MeasurementListener[] listeners = listenerList.getListeners(MeasurementListener.class);
         SwingUtilities.invokeLater(new Runnable() {

@@ -104,7 +104,9 @@ public class MeasurementGraphsPanel extends ProjectComponent
      * @param event MeasurementEvent received.
      */
     public void measurementUpdated(MeasurementEvent event) {
-        // DOES NOTHING
+        if (event.getType() == MeasurementEvent.Type.VALUE_MEASURED) {
+            updatePlots();
+        }
     }
 
     /**
