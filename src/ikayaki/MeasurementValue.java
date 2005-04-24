@@ -286,7 +286,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the magnetic intensity (or remanence) relative to the first measurement's magnetic intensity.
      */
     public static final MeasurementValue<Double> RELATIVE_MAGNETIZATION =
-            new MeasurementValue<Double>("J/J0", "", "Relative magnetic intensity") {
+            new MeasurementValue<Double>("J/Jo", "", "Relative magnetic intensity") {
                 public Double getValue(MeasurementStep step) {
                     Project project = step.getProject();
                     if (project == null) {

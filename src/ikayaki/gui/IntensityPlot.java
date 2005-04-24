@@ -24,6 +24,7 @@ package ikayaki.gui;
 
 import ikayaki.MeasurementStep;
 import ikayaki.MeasurementValue;
+import ikayaki.Project;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -41,7 +42,12 @@ public class IntensityPlot extends AbstractPlot {
      */
     private Vector<Point2D> points = new Vector<Point2D>();
 
+    private Project project = null;
+
     public void add(MeasurementStep step) {
+        if (step.getProject() != null) {
+            project = step.getProject();
+        }
         Double value = MeasurementValue.RELATIVE_MAGNETIZATION.getValue(step);
         if (value != null) {
             points.add(new Point2D.Double(Math.max(step.getStepValue(), 0.0), Math.max(value.doubleValue(), 0.0)));
@@ -112,10 +118,9 @@ public class IntensityPlot extends AbstractPlot {
         // y-axis ticks
         // x-axis ticks
         // y-axis unit
-        g2.drawString("J/Jo", m + 30, m + 10);
-        // x-axis unit when AF
-        // TODO Celsius here if Thermal project
-        g2.drawString("H(mT)", (w - m) - 30, h - (m + 30));
+        g2.drawString(SequenceColumn.RELATIVE_MAGNETIZATION.getColumnName(project), m + 30, m + 10);
+        // x-axis unit
+        g2.drawString(SequenceColumn.STEP.getColumnName(project), (w - m) - 30, h - (m + 30));
         // origo 0
 
         // draw points
