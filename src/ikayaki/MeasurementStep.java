@@ -410,7 +410,15 @@ public class MeasurementStep {
         if (state.isDone()) {
             throw new IllegalStateException("Unable to add results, state is: " + state);
         }
+
         setMeasuring();
+        if (results.size() == 0 && (getProject() == null || !getProject().isHolderCalibration())) {
+            // holder calibration value for all except the holder calibration project itself
+            MeasurementResult holder = Settings.getHolderCalibration();
+            if (holder != null) {
+                results.add(holder);
+            }
+        }
         results.add(result);
         timestamp = new Date();
         updateTransforms();
@@ -449,25 +457,31 @@ public class MeasurementStep {
     }
 
     /**
-     * Returns the average of the holder results (raw values). If there are no holder results, will return a zero-filled
-     * vector.
+     * Returns the average of the holder results (raw values). If there are no holder results or this is the holder
+     * calibration project itself, will return a zero-filled vector.
      */
     public synchronized Vector3d getHolder() {
         Vector3d v = new Vector3d();
         int count = 0;
+        if (getProject() != null && getProject().isHolderCalibration()) {
+            return v;
+        }
         for (MeasurementResult result : results) {
             if (result.getType() != MeasurementResult.Type.HOLDER) {
                 continue;
             }
-            v.x += result.getRawX();
-            v.y += result.getRawY();
-            v.z += result.getRawZ();
+            // all rotations are assumed to be 0
+            v.add(result.getRawVector());
+//            v.x += result.getRawX();
+//            v.y += result.getRawY();
+//            v.z += result.getRawZ();
             count++;
         }
         if (count > 0) {
-            v.x /= count;
-            v.y /= count;
-            v.z /= count;
+            v.scale(1.0 / count);
+//            v.x /= count;
+//            v.y /= count;
+//            v.z /= count;
         }
         return v;
     }
@@ -483,15 +497,18 @@ public class MeasurementStep {
             if (result.getType() != MeasurementResult.Type.NOISE) {
                 continue;
             }
-            v.x += result.getRawX();
-            v.y += result.getRawY();
-            v.z += result.getRawZ();
+            // all rotations are assumed to be 0
+            v.add(result.getRawVector());
+//            v.x += result.getRawX();
+//            v.y += result.getRawY();
+//            v.z += result.getRawZ();
             count++;
         }
         if (count > 0) {
-            v.x /= count;
-            v.y /= count;
-            v.z /= count;
+            v.scale(1.0 / count);
+//            v.x /= count;
+//            v.y /= count;
+//            v.z /= count;
         }
         return v;
     }

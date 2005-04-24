@@ -875,6 +875,29 @@ public class Settings {
         throw new IllegalArgumentException("Not a calibration project: " + file);
     }
 
+    public static synchronized MeasurementResult getHolderCalibration() {
+        File file = getHolderCalibrationFile();
+        if (file == null) {
+            return null;
+        }
+        Project project = Project.loadProject(file);
+        if (project == null || !project.isHolderCalibration()) {
+            return null;
+        }
+
+        int index = project.getCompletedSteps() - 1;
+        if (index < 0) {
+            return null;
+        }
+        Double x = project.getValue(index, MeasurementValue.SAMPLE_X);
+        Double y = project.getValue(index, MeasurementValue.SAMPLE_Y);
+        Double z = project.getValue(index, MeasurementValue.SAMPLE_Z);
+        if (x == null || y == null || z == null) {
+            return null;
+        }
+        return new MeasurementResult(MeasurementResult.Type.HOLDER, 0, x, y, z);
+    }
+
     /* JTable styles */
 
     /**

@@ -483,6 +483,10 @@ public enum SequenceColumn {
         this.numberFormat.setGroupingUsed(false);
     }
 
+    /**
+     * Returns all the columns supported by the program. The returned values are in the order that they should be shown
+     * in the measurement sequence table.
+     */
     public static SequenceColumn[] getAllColumns() {
         return new SequenceColumn[]{
             COUNT,

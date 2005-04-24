@@ -37,12 +37,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.util.*;
 
+import static ikayaki.MeasurementStep.State.READY;
 import static java.lang.Math.sin;
 import static java.lang.Math.cos;
 import static ikayaki.MeasurementEvent.Type.*;
 import static ikayaki.MeasurementResult.Type.*;
-import static ikayaki.MeasurementStep.State.DONE;
-import static ikayaki.MeasurementStep.State.DONE_RECENTLY;
 import static ikayaki.Project.Normalization.*;
 import static ikayaki.Project.Orientation.*;
 import static ikayaki.Project.State.*;
@@ -603,9 +602,9 @@ public class Project {
                             // the state of a just opened step can not be DONE_RECENTLY or MEASURING
                             throw new IllegalArgumentException("The state of step " + i + " is " + currentState);
                         case DONE:
-                            if (lastState == MeasurementStep.State.READY) {
+                            if (lastState == READY) {
                                 throw new IllegalArgumentException("The state of step " + i + " is "
-                                        + currentState + " after a " + MeasurementStep.State.READY);
+                                        + currentState + " after a " + READY);
                             }
                             break;
                         case READY:
@@ -803,6 +802,17 @@ public class Project {
      */
     public synchronized Type getType() {
         return type;
+    }
+
+    /**
+     * Returns true if this project file has been set as the Sample Holder Calibration project in the program settings.
+     */
+    public synchronized boolean isHolderCalibration() {
+        if (getType() == CALIBRATION && getFile() == Settings.getHolderCalibrationFile()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -1069,11 +1079,11 @@ public class Project {
      * setStrike(), setDip() and setSampleType() methods.
      */
     private synchronized void updateTransforms() {
-        
+
         // TODO: this method might give wrong values. check the matrices.
 
-        double d = getDip();
-        double s = getStrike();
+        double d = Math.toRadians(getDip());
+        double s = Math.toRadians(getStrike());
         if (sampleType == CORE) {
             // core sample: sample -> geographic
             transform.setRow(0, sin(d) * cos(s), -sin(s), cos(s) * cos(d));
@@ -1439,15 +1449,24 @@ public class Project {
      */
     public synchronized int getCompletedSteps() {
         int i;
-        for (i = 0; i < sequence.getSteps(); i++) {
+        for (i = sequence.getSteps() - 1; i >= 0; i--) {
             MeasurementStep.State state = sequence.getStep(i).getState();
-            if (state == DONE || state == DONE_RECENTLY) {
+            if (state == READY) {
                 continue;
             } else {
                 break;
             }
         }
-        return i;
+        return i + 1;
+//        for (i = 0; i < sequence.getSteps(); i++) {
+//            MeasurementStep.State state = sequence.getStep(i).getState();
+//            if (state == DONE || state == DONE_RECENTLY) {
+//                continue;
+//            } else {
+//                break;
+//            }
+//        }
+//        return i;
     }
 
     /**

@@ -38,8 +38,6 @@ import javax.vecmath.Vector3d;
  */
 public class MeasurementResult {
 
-    // TODO: getters for returning copies of the vectors?
-
     /**
      * The type of this result.
      */

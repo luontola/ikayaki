@@ -323,7 +323,7 @@ public abstract class MeasurementValue <T> {
                         sumX += r.getSampleX();
                         sumY += r.getSampleY();
                         sumZ += r.getSampleZ();
-                        sumLength += r.getSampleLength();
+                        sumLength += r.getSampleVector().length();
                         count++;
                     }
                     if (count < 2) {
