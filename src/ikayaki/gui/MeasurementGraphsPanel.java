@@ -85,15 +85,13 @@ public class MeasurementGraphsPanel extends ProjectComponent
         // plots to update all steps to them
         for (int i = 0; i < plots.size(); i++) {
             plots.elementAt(i).reset();
-            <<<<<<<MeasurementGraphsPanel.java
             // add all steps to all plots
             if (getProject() != null) {
                 for (int j = 0; j < getProject().getCompletedSteps(); j++) {
                     plots.elementAt(i).add(getProject().getStep(j));
                 }
             }
-            =======
-            
+
             // add all steps to plot
             if (getProject() == null) {
                 continue;
@@ -101,7 +99,6 @@ public class MeasurementGraphsPanel extends ProjectComponent
             for (int j = 0; j < getProject().getCompletedSteps(); j++) {
                 plots.elementAt(i).add(getProject().getStep(j));
             }
-            >>>>>>> 1.12
         }
     }
 
@@ -110,21 +107,15 @@ public class MeasurementGraphsPanel extends ProjectComponent
      */
     public void projectUpdated(ProjectEvent event) {
         // TODO
-        <<<<<<<MeasurementGraphsPanel.java
         if (event.getType() == ProjectEvent.Type.STATE_CHANGED) {
             //updatePlots();
-            =======
             if (event.getType() == ProjectEvent.Type.STATE_CHANGED) {
                 updatePlots();
-                >>>>>>> 1.12
                 System.out.println("state event!");
-                <<<<<<<MeasurementGraphsPanel.java
             } else if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
                 //updatePlots();
-                =======
             } else if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
                 updatePlots();
-                >>>>>>> 1.12
                 System.out.println("Data changed event!");
             }
             return;
@@ -149,12 +140,9 @@ public class MeasurementGraphsPanel extends ProjectComponent
         (Project
         project) {
             super.setProject(project);
-            <<<<<<<MeasurementGraphsPanel.java
-                    updatePlots();
-            System.out.println("new project!");
-            =======
             updatePlots();
-            >>>>>>> 1.12
+            System.out.println("new project!");
+            updatePlots();
         }
 
 
