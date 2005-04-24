@@ -58,13 +58,13 @@ public class MeasurementGraphsPanel extends ProjectComponent
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        tabbedPane.addTab("Intensity", intensityPlot);
+        tabbedPane.addTab("1: Intensity", intensityPlot);
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
-        tabbedPane.addTab("Stereo", new JPanel());
+        tabbedPane.addTab("2: Stereo", new JPanel());
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
-        tabbedPane.addTab("Zijderweld", new JPanel());
+        tabbedPane.addTab("3: Zijderweld", new JPanel());
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
         setLayout(new BorderLayout());
