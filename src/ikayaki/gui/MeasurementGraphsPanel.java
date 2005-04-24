@@ -29,6 +29,7 @@ import ikayaki.ProjectListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.Vector;
 
 /**
@@ -53,11 +54,21 @@ public class MeasurementGraphsPanel extends ProjectComponent
 
         this.intensityPlot = new IntensityPlot();
         plots.add(intensityPlot);
+        intensityPlot.setEnabled(false);
 
-        intensityPlot.setEnabled(false); // TODO setup
+        JTabbedPane tabbedPane = new JTabbedPane();
+
+        tabbedPane.addTab("Intensity", intensityPlot);
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
+
+        tabbedPane.addTab("Stereo", new JPanel());
+        tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
+
+        tabbedPane.addTab("Zijderweld", new JPanel());
+        tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
         setLayout(new BorderLayout());
-        add(intensityPlot, "Center");
+        add(tabbedPane, "Center");
 
         // initialize with no project
         setProject(null);
