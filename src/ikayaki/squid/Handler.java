@@ -556,20 +556,35 @@ public class Handler implements SerialIOListener {
         });
     }
 
+    /**
+     * Sets starting position for movement to calculate Estimated position
+     *
+     */
     public void setEstimatedMovement(int from) {
       currentStartingPoint = from;
       //currentFinishPoint = to;
     }
 
+    /**
+     * Starts movement, sets current time for calculating estimated position
+     */
     public void fireEstimatedMovement() {
       startingTime = System.nanoTime();
       moving = true;
     }
 
+    /**
+      * Stops calculating estimated current position
+      */
     public void stopEstimatedMovement() {
           moving = false;
     }
 
+    /**
+     * Used for graphics of squid, estimates from speed and starting time where handler is
+     *
+     * @return current Estimated position we are at if moving, other wise current position
+     */
     public int getEstimatedPosition() {
       if(!moving) return currentPosition;
       //in seconds
@@ -578,6 +593,11 @@ public class Handler implements SerialIOListener {
       return pos;
     }
 
+    /**
+     * Used for graphics of squid, estimates from speed and starting time where handler is
+     *
+     * @return current Estimated rotation we are at
+     */
     public int getEstimatedRotation() {
       return getEstimatedPosition() % Settings.getHandlerRotation();
     }
