@@ -57,10 +57,10 @@ public class StereoPlot extends AbstractPlot {
         Double incValue = MeasurementValue.INCLINATION.getValue(step);
         Double decValue = MeasurementValue.DECLINATION.getValue(step);
 
-        if (inc != null && dec != null) {
-            double x = 0.5 + ((0.5 - (0.5 / 90) * Math.abs(inc.doubleValue())) * Math.cos(dec.doubleValue() - 90));
-            double y = 0.5 + ((0.5 - (0.5 / 90) * Math.abs(inc.doubleValue())) * Math.sin(dec.doubleValue() + 90));
-            if (inc.doubleValue() >= 0) {
+        if (incValue != null && decValue != null) {
+            //double x = 0.5 + ((0.5 - (0.5 / 90) * Math.abs(incValue.doubleValue())) * Math.cos(decValue.doubleValue() - 90));
+            //double y = 0.5 + ((0.5 - (0.5 / 90) * Math.abs(incValue.doubleValue())) * Math.sin(decValue.doubleValue() + 90));
+            if (incValue.doubleValue() >= 0) {
                 if (incValue != null && decValue != null) {
                     double inc = Math.toRadians(incValue);
                     double dec = Math.toRadians(decValue);
@@ -91,23 +91,26 @@ public class StereoPlot extends AbstractPlot {
         // margin
         int m = 10;
         // area for texts on edges
-        int txtArea = 10;
+        int txtArea = 20;
         // minimum of w and h
         int dim = Math.min(w, h);
         // area for points in x and y direction = width = height of the actual plot
         int area = dim - (2 * (m + txtArea));
         // font for texts
         g2.setFont(new Font("Arial", Font.PLAIN, 10));
+        FontMetrics metrics = g2.getFontMetrics();
+        int txtW = metrics.stringWidth("N");
+        int txtH = metrics.getHeight();
 
         // draw circle
         g2.drawOval(m + txtArea, m + txtArea, area, area);
         // draw ticks
 
         // draw symbols
-        g2.drawString("N", m + txtArea + (area / 2), m + txtArea / 2);
-        g2.drawString("W", m + txtArea / 2, m + txtArea + (area / 2));
-        g2.drawString("E", m + txtArea + area + txtArea / 2, m + txtArea + (area / 2));
-        g2.drawString("S", m + txtArea + (area / 2), m + txtArea + area + txtArea / 2);
+        g2.drawString("N", m + txtArea + (area / 2) - (txtW / 2), m + (txtArea / 2) + (txtH / 2));
+        g2.drawString("W", m + txtArea / 2 - (txtW / 2), m + txtArea + (area / 2) + (txtH / 2));
+        g2.drawString("E", m + txtArea + area + (txtArea / 2) - (txtW / 2), m + txtArea + (area / 2) + (txtH / 2));
+        g2.drawString("S", m + txtArea + (area / 2) - (txtW / 2), m + txtArea + area + (txtArea / 2) + (txtH / 2));
 
         // draw points
         for (int i = 0; i < points.size(); i++) {
