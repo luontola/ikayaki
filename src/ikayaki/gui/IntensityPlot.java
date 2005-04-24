@@ -42,8 +42,10 @@ public class IntensityPlot extends AbstractPlot {
     private Vector<Point2D> points = new Vector<Point2D>();
 
     public void add(MeasurementStep step) {
-        points.add(new Point2D.Double(step.getStepValue(),
-                MeasurementValue.RELATIVE_MAGNETIZATION.getValue(step)));
+        Double value = MeasurementValue.RELATIVE_MAGNETIZATION.getValue(step);
+        if (value != null) {
+            points.add(new Point2D.Double(Math.max(step.getStepValue(), 0.0), Math.max(value.doubleValue(), 0.0)));
+        }
     }
 
     public void reset() {
@@ -70,9 +72,9 @@ public class IntensityPlot extends AbstractPlot {
         // arrow length
         int al = 8;
         // y-axis padding from arrow top to max values
-        int yPad = 50;
+        int yPad = 20;
         // x-axis padding from arrow top to max values
-        int xPad = 50;
+        int xPad = 20;
         // maximum value of y-axis
         double yMax = 0.0;
         // maximum value of x-axis
