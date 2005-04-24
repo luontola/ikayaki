@@ -1079,11 +1079,16 @@ public class Project {
      * setStrike(), setDip() and setSampleType() methods.
      */
     private synchronized void updateTransforms() {
+        double d;
+        double s;
+        if (orientation == PLUS_Z) {
+            d = Math.toRadians(getDip());
+            s = Math.toRadians(getStrike() + 180.0);
+        } else {
+            d = Math.toRadians(getDip());
+            s = Math.toRadians(getStrike());
+        }
 
-        // TODO: this method might give wrong values. check the matrices.
-
-        double d = Math.toRadians(getDip());
-        double s = Math.toRadians(getStrike());
         if (sampleType == CORE) {
             // core sample: sample -> geographic
             transform.setRow(0, sin(d) * cos(s), -sin(s), cos(s) * cos(d));
@@ -1097,17 +1102,32 @@ public class Project {
         } else {
             assert false;
         }
-        if (orientation == MINUS_Z) {
-            // +Z position -> -Z position
-            /*
-             *  transform multipied by
-             *   [[ 1  0  0 ]
-             *    [ 0 -1  0 ]
-             *    [ 0  0 -1 ]]
-             */
-            transform.setColumn(1, -transform.m01, -transform.m11, -transform.m21);
-            transform.setColumn(2, -transform.m02, -transform.m12, -transform.m22);
-        }
+//        System.out.println(transform.m00 + "\t" + transform.m01 + "\t" + transform.m02);
+//        System.out.println(transform.m10 + "\t" + transform.m11 + "\t" + transform.m12);
+//        System.out.println(transform.m20 + "\t" + transform.m21 + "\t" + transform.m22);
+//        System.out.println();
+//        if (orientation == PLUS_Z) {
+//            // TODO: this method might give wrong values. check the matrices. appears that the +/-Z is not working right.
+//            // +Z position -> -Z position
+//
+//            /*
+//             *  transform multipied by
+//             *   [[-1  0  0 ]
+//             *    [ 0 -1  0 ]
+//             *    [ 0  0  1 ]]
+//             */
+////            transform.setColumn(0, -transform.m00, -transform.m10, -transform.m20);
+////            transform.setColumn(1, -transform.m01, -transform.m11, -transform.m21);
+//
+//            /*
+//             *  transform multipied by
+//             *   [[ 1  0  0 ]
+//             *    [ 0 -1  0 ]
+//             *    [ 0  0 -1 ]]
+//             */
+////            transform.setColumn(1, -transform.m01, -transform.m11, -transform.m21);
+////            transform.setColumn(2, -transform.m02, -transform.m12, -transform.m22);
+//        }
         for (int i = 0; i < sequence.getSteps(); i++) {
             sequence.getStep(i).updateTransforms();
         }
