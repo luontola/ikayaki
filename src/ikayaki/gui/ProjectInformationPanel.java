@@ -36,7 +36,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Date;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 /**
  * Allows inserting and editing project information.
@@ -158,6 +161,11 @@ public class ProjectInformationPanel extends ProjectComponent {
                 initSaveProperties();
             }
         };
+        PropertyChangeListener propertiesPropertyChangeListener = new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                initSaveProperties();
+            }
+        };
 
         measurementTypeAuto.addActionListener(propertiesActionListener);
         measurementTypeManual.addActionListener(propertiesActionListener);
@@ -168,25 +176,17 @@ public class ProjectInformationPanel extends ProjectComponent {
         siteField.getDocument().addDocumentListener(propertiesDocumentListener);
         commentField.getDocument().addDocumentListener(propertiesDocumentListener);
 
-        latitudeField.getDocument().addDocumentListener(propertiesDocumentListener);
-        longitudeField.getDocument().addDocumentListener(propertiesDocumentListener);
+        latitudeField.addPropertyChangeListener("value", propertiesPropertyChangeListener);
+        longitudeField.addPropertyChangeListener("value", propertiesPropertyChangeListener);
 
         /* Listeners for parameters */
-        DocumentListener parametersDocumentListener = new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) {
-                initSaveParameters();
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                initSaveParameters();
-            }
-
-            public void changedUpdate(DocumentEvent e) {
+        ActionListener parametersActionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 initSaveParameters();
             }
         };
-        ActionListener parametersActionListener = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        PropertyChangeListener parametersPropertyChangeListener = new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
                 initSaveParameters();
             }
         };
@@ -196,11 +196,11 @@ public class ProjectInformationPanel extends ProjectComponent {
         normalizationVolume.addActionListener(parametersActionListener);
         normalizationMass.addActionListener(parametersActionListener);
 
-        strikeField.getDocument().addDocumentListener(parametersDocumentListener);
-        dipField.getDocument().addDocumentListener(parametersDocumentListener);
-        massField.getDocument().addDocumentListener(parametersDocumentListener);
-        volumeField.getDocument().addDocumentListener(parametersDocumentListener);
-        susceptibilityField.getDocument().addDocumentListener(parametersDocumentListener);
+        strikeField.addPropertyChangeListener("value", parametersPropertyChangeListener);
+        dipField.addPropertyChangeListener("value", parametersPropertyChangeListener);
+        massField.addPropertyChangeListener("value", parametersPropertyChangeListener);
+        volumeField.addPropertyChangeListener("value", parametersPropertyChangeListener);
+        susceptibilityField.addPropertyChangeListener("value", parametersPropertyChangeListener);
 
         /* Autosaving at regular intervals */
         Timer autosave = new Timer(500, new ActionListener() {
@@ -656,7 +656,7 @@ public class ProjectInformationPanel extends ProjectComponent {
          * @return AbstractFormatter to handle formatting duties, a null return value implies the JFormattedTextField
          *         should behave like a normal JTextField
          */
-        public JFormattedTextField.AbstractFormatter getFormatter(JFormattedTextField tf) {
+        public JFormattedTextField.AbstractFormatter getFormatter(final JFormattedTextField tf) {
             NumberFormatter formatter;
             DecimalFormat format;
 
@@ -682,6 +682,18 @@ public class ProjectInformationPanel extends ProjectComponent {
                 formatter.setMinimum(new Double(-90));
                 formatter.setMaximum(new Double(90));
             }
+
+            // commit changes when pressing enter
+            tf.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        tf.commitEdit();
+                    } catch (ParseException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            });
+
             return formatter;
         }
     }
