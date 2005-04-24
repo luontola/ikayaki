@@ -23,8 +23,10 @@
 package ikayaki.gui;
 
 import ikayaki.MeasurementStep;
+import ikayaki.MeasurementValue;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.Vector;
 
 /**
@@ -37,18 +39,20 @@ public class IntensityPlot extends AbstractPlot {
     /**
      * Contains all the data that is shown in this graph.
      */
-    private Vector<MeasurementStep> measurements = null;
+    private Vector<Point2D> points = new Vector<Point2D>();
 
-    public void add(MeasurementStep measurement) {
-        measurements.add(measurement);
+    public void add(MeasurementStep step) {
+        points.add(new Point2D.Double(step.getStepValue(),
+                MeasurementValue.RELATIVE_MAGNETIZATION.getValue(step)));
     }
 
     public void reset() {
-        measurements.clear();
+        points.clear();
+        repaint(0, 0, getWidth(), getHeight()); //TODO draws thrash now..
     }
 
     public int getNumMeasurements() {
-        return measurements.size();
+        return points.size();
     }
 
     /**
@@ -67,8 +71,12 @@ public class IntensityPlot extends AbstractPlot {
         int al = 8;
         // maximum value of y-axis
         double yMax = 1.1;
+        // pixels on y-area
+        int yArea = getSize().height - ((2 * m) + aw);
         // maximum value of x-axis
-        double xMax = 10;
+        double xMax = 400;
+        // pixels on x-area
+        int xArea = getSize().width - ((2 * m) + aw);
         // font for texts
         g2.setFont(new Font("Arial", Font.PLAIN, 10));
         FontMetrics metrics = g2.getFontMetrics();
@@ -88,10 +96,17 @@ public class IntensityPlot extends AbstractPlot {
         // x-axis ticks
         // y-axis unit
         g2.drawString("J/Jo", m + 30, m + 10);
-        // x-axis unit
+        // x-axis unit when AF
+        // TODO Celsius here if Thermal project
         g2.drawString("H(mT)", (w - m) - 30, h - (m + 30));
         // origo 0
 
+        // draw points
+        for (int i = 0; i < points.size(); i++) {
+            int x = new Double((points.elementAt(i).getX() / xMax) * xArea).intValue();
+            int y = new Double((points.elementAt(i).getY() / yMax) * yArea).intValue();
+            g2.drawOval((m + aw) + x, (h - m) - y, 4, 4);
+        }
 
     }
 }
