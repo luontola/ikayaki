@@ -80,9 +80,7 @@ public class MeasurementGraphsPanel extends ProjectComponent implements ProjectL
     private void updatePlots() {
         // update all plots with the MeasurementSteps from the project
         for (Plot plot : plots) {
-            if (plot != null) {
-                plot.reset();
-            }
+            plot.reset();
             if (getProject() != null) {
                 for (int i = 0; i < getProject().getSteps(); i++) {
                     plot.add(getProject().getStep(i));
