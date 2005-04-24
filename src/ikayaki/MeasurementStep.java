@@ -141,7 +141,15 @@ public class MeasurementStep {
         // get stepValue, mass, volume
         s = element.getAttribute("stepvalue");
         try {
-            setStepValue(Double.parseDouble(s));
+            double stepValue = Double.parseDouble(s);
+            if (element.getAttribute("done").equals("1")) {
+                if (stepValue < 0.0) {
+                    stepValue = -1.0;
+                }
+                this.stepValue = stepValue;     // for completed steps, bypass the degausser limits
+            } else {
+                setStepValue(stepValue);
+            }
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid stepvalue: " + s, e);
         }
