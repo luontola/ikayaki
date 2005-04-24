@@ -52,7 +52,7 @@ public class MeasurementGraphsPanel extends ProjectComponent
      */
     public MeasurementGraphsPanel() {
 
-        this.intensityPlot = new IntensityPlot();
+        intensityPlot = new IntensityPlot();
         plots.add(intensityPlot);
         intensityPlot.setEnabled(false);
 

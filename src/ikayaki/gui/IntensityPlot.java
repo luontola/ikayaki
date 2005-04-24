@@ -57,7 +57,6 @@ public class IntensityPlot extends AbstractPlot {
     public void reset() {
         points.clear();
         repaint();
-//        repaint(0, 0, getWidth(), getHeight()); //TODO draws thrash now..
     }
 
     public int getNumMeasurements() {

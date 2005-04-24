@@ -444,7 +444,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
                 i = imin;
             }
             if (getProject().getSteps() > 0
-                    && (i - (int) Math.round(getLastStepValue() / ratio)) < 1) {
+                    && Math.abs(i - (int) Math.round(getLastStepValue() / ratio)) < 1) {
                 continue;
             }
             step.setStepValue(i * ratio);
