@@ -77,10 +77,14 @@ public class MeasurementResult {
      * @param y        the measured Y coordinate value.
      * @param z        the measured Z coordinate value.
      * @throws NullPointerException if type is null.
+     * @throws IllegalArgumentException if the type is NOISE or HOLDER, but rotation is non-zero.
      */
     public MeasurementResult(Type type, int rotation, double x, double y, double z) {
         if (type == null) {
             throw new NullPointerException();
+        }
+        if ((type == Type.NOISE || type == Type.HOLDER) && rotation != 0) {
+            throw new IllegalArgumentException("type = " + type + ", rotation = " + rotation);
         }
         this.type = type;
         this.rotation = rotation % 360;
@@ -128,6 +132,11 @@ public class MeasurementResult {
             throw new IllegalArgumentException("Invalid rotation: " + s, e);
         }
 
+        // verify type and rotation
+        if ((type == Type.NOISE || type == Type.HOLDER) && rotation != 0) {
+            throw new IllegalArgumentException("type = " + type + ", rotation = " + rotation);
+        }
+
         // get x, y, z
         try {
             rawVector.set(Double.parseDouble(element.getAttribute("x")),
@@ -171,11 +180,13 @@ public class MeasurementResult {
 
         // apply holder and noise fixes
         if (step != null) {
-//            Vector3d holder = step.getHolder();
-//            Vector3d noise = step.getNoise();
+            Vector3d holder = step.getHolder();     // will be zero, if this project is the holder calibration project
+            Vector3d noise = step.getNoise();
 //            sampleVector.x = sampleVector.x - holder.x - noise.x;
 //            sampleVector.y = sampleVector.y - holder.y - noise.y;
 //            sampleVector.z = sampleVector.z - holder.z - noise.z;
+            sampleVector.sub(holder);
+            sampleVector.sub(noise);
         }
 
         // apply rotation fix
@@ -280,10 +291,11 @@ public class MeasurementResult {
     }
 
     /**
-     * Returns the length of the geographic vector. Should be always the same as the sample vector.
+     * Returns a pointer to the geographic vector. WARNING! No modification to the returned object should be made. They
+     * should be done on a copy of the object than the object itself.
      */
-    public double getGeographicLength() {
-        return geographicVector.length();
+    protected Vector3d getGeographicVector() {
+        return geographicVector;
     }
 
     /**
@@ -308,10 +320,11 @@ public class MeasurementResult {
     }
 
     /**
-     * Returns the length of the sample vector.
+     * Returns a pointer to the sample vector. WARNING! No modification to the returned object should be made. They
+     * should be done on a copy of the object than the object itself.
      */
-    public double getSampleLength() {
-        return sampleVector.length();
+    protected Vector3d getSampleVector() {
+        return sampleVector;
     }
 
     /**
@@ -336,10 +349,11 @@ public class MeasurementResult {
     }
 
     /**
-     * Returns the length of the raw vector.
+     * Returns a pointer to the raw vector. WARNING! No modification to the returned object should be made. They
+     * should be done on a copy of the object than the object itself.
      */
-    public double getRawLength() {
-        return rawVector.length();
+    protected Vector3d getRawVector() {
+        return rawVector;
     }
 
     public enum Type {
