@@ -98,13 +98,11 @@ public class MeasurementGraphsPanel extends ProjectComponent
      */
     public void projectUpdated(ProjectEvent event) {
         // TODO
-        if (event.getType() == ProjectEvent.Type.STATE_CHANGED)
-        //updatePlots();
-        {
+        if (event.getType() == ProjectEvent.Type.STATE_CHANGED) {
+            updatePlots();
             System.out.println("state event!");
-        } else if (event.getType() == ProjectEvent.Type.DATA_CHANGED)
-        //updatePlots();
-        {
+        } else if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
+            updatePlots();
             System.out.println("Data changed event!");
         }
 
@@ -125,7 +123,7 @@ public class MeasurementGraphsPanel extends ProjectComponent
      */
     public void setProject(Project project) {
         super.setProject(project);
-        //updatePlots();
+        updatePlots();
     }
 
 
