@@ -22,27 +22,109 @@
 
 package ikayaki.gui;
 
+import ikayaki.MeasurementEvent;
+import ikayaki.Project;
+import ikayaki.ProjectEvent;
+import ikayaki.ProjectListener;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.Vector;
 
 /**
- * @author
+ * @author Aki Sysmäläinen
  */
-public class MeasurementGraphsPanel extends ProjectComponent {
+public class MeasurementGraphsPanel extends ProjectComponent
+        implements ProjectListener {
+    /**
+     * All plots in this panel
+     */
+    private Vector<Plot> plots = new Vector<Plot>();
 
+    /**
+     * Intensity plot
+     */
+    private IntensityPlot intensityPlot;
+
+    /**
+     * Creates new panel for plots
+     */
     public MeasurementGraphsPanel() {
 
-        JLabel message = new JLabel("Not available");
-        message.setHorizontalAlignment(JLabel.CENTER);
-        message.setVerticalAlignment(JLabel.CENTER);
-        message.setEnabled(false);
+        this.intensityPlot = new IntensityPlot();
+        plots.add(intensityPlot);
+
+        intensityPlot.setEnabled(false); // TODO setup
 
         setLayout(new BorderLayout());
-        add(message, "Center");
+        add(intensityPlot, "Center");
 
         // initialize with no project
         setProject(null);
 
         return; // TODO
+    }
+
+    /**
+     * Updates plots when additional measurements are done. TODO Should this be done in own workerthread?
+     */
+    private void updatePlots() {
+        // TODO update all measurement steps to all plots
+        // get MeasurementSteps from the project and iterate thru all
+        // plots to update all steps to them
+        for (int i = 0; i < plots.size(); i++) {
+            plots.elementAt(i).reset();
+            // add all steps to plot
+            //   for (int j=0; i < project.getSteps(); j++) {
+            //       plots.elementAt(j).measurements.eadd();
+            //   }
+        }
+
+    }
+
+    /**
+     * Listener to listen events if projects state is changed.
+     */
+    public void projectUpdated(ProjectEvent event) {
+        // TODO
+        if (event.getType() == ProjectEvent.Type.STATE_CHANGED)
+        //updatePlots();
+        {
+            System.out.println("state event!");
+        } else if (event.getType() == ProjectEvent.Type.DATA_CHANGED)
+        //updatePlots();
+        {
+            System.out.println("Data changed event!");
+        }
+
+        return;
+    }
+
+    /**
+     * @param event MeasurementEvent received.
+     */
+    public void measurementUpdated(MeasurementEvent event) {
+        // DOES NOTHING
+    }
+
+    /**
+     * Sets the current project when changed and updates plots
+     *
+     * @param project
+     */
+    public void setProject(Project project) {
+        super.setProject(project);
+        //updatePlots();
+    }
+
+
+    public static void main(String args[]) {
+        JFrame f = new JFrame();
+        f.setLayout(new BorderLayout());
+        f.setContentPane(new MeasurementGraphsPanel());
+        f.setLocationByPlatform(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.pack();
+        f.setVisible(true);
     }
 }

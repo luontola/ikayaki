@@ -1,5 +1,5 @@
 /*
- * StereoPlot.java
+ * NullableDecimalFormat.java
  *
  * Copyright (C) 2005 Project SQUID, http://www.cs.helsinki.fi/group/squid/
  *
@@ -20,12 +20,35 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+
 package ikayaki.gui;
 
+import ikayaki.MeasurementStep;
+
 /**
- * Implements stereo graph plot.
+ * Interface for all the plots to implement
  *
- * @author
+ * @author Aki Sysmäläinen
  */
-public class StereoPlot extends AbstractPlot {
+public interface Plot {
+
+    /**
+     * Adds new measurement data to plot.
+     *
+     * @param measurement MeasurementStep to be added to this graph
+     */
+    public void add(MeasurementStep measurement);
+
+    /**
+     * Removes all measurements from the graph.
+     */
+    public void reset();
+
+    /**
+     * Returns the number of measurements in this graph.
+     *
+     * @return Number of measurements.
+     */
+    public int getNumMeasurements();
 }
+

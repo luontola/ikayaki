@@ -23,75 +23,36 @@
 package ikayaki.gui;
 
 import javax.swing.*;
-import java.util.Vector;
+import java.awt.*;
 
 /**
  * Abstract class that implements general construction of a graphical plot.
  *
- * @author
+ * @author Aki Sysmäläinen
  */
-public abstract class AbstractPlot extends JPanel {
+public abstract class AbstractPlot extends JPanel implements Plot {
+
 
     /**
-     * Contains all the data that is shown in this graph.
+     * Painter method
      */
-    private Vector<Measurement> measurement = null;
+    @Override public void paint(Graphics g) {
+        Dimension d = getSize();
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-    private class Measurement {
-        // TODO: maybe this class should not exist?
+        render(d.width, d.height, g2);
+        g2.dispose();
     }
 
     /**
-     * Adds new measurement data to plot.
+     * Classes extending this class must implement this
      *
-     * @param declination Declination coordinate of the measurement.
-     * @param inclination Inclination coordinate of the measurement.
+     * @param w
+     * @param h
+     * @param g2
      */
-    public void addMeasurement(int declination, int inclination) {
-        return; // TODO
-    }
+    public abstract void render(int w, int h, Graphics2D g2);
 
-    /**
-     * High lights measurement in plot in the given index.
-     *
-     * @param index Index of measurement to be highlighted.
-     * @throws IndexOutOfBoundsException If no such measurement existed.
-     */
-    public void highlightMeasurement(int index) {
-        return; // TODO
-    }
-
-    /**
-     * Highlights a set of measurements in given range.
-     *
-     * @param from Starting index of highlighted measurements.
-     * @param to   End index of highlighted meeasurements.
-     * @throws IndexOutOfBoundsException If one or both of the indices are out of bounds.
-     */
-    public void highlightMeasurementRange(int from, int to) {
-        return; // TODO
-    }
-
-    /**
-     * dehighlights all values in this graph.
-     */
-    public void unHighlightAll() {
-        return; // TODO
-    }
-
-    /**
-     * Removes all measurements from the graph.
-     */
-    public void resetGraph() {
-        return; // TODO
-    }
-
-    /**
-     * Returns the number of measurements in this graph.
-     *
-     * @return Number of measurements.
-     */
-    public int getNumMeasurements() {
-        return 0; // TODO
-    }
 }
