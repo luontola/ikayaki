@@ -46,6 +46,7 @@ public class MeasurementGraphsPanel extends ProjectComponent
      * Intensity plot
      */
     private IntensityPlot intensityPlot;
+    private StereoPlot stereoPlot;
 
     /**
      * Creates new panel for plots
@@ -54,14 +55,16 @@ public class MeasurementGraphsPanel extends ProjectComponent
 
         intensityPlot = new IntensityPlot();
         plots.add(intensityPlot);
+        plots.add(stereoPlot);
         intensityPlot.setEnabled(false);
+        stereoPlot.setEnabled(true);
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
         tabbedPane.addTab("1: Intensity", intensityPlot);
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
 
-        tabbedPane.addTab("2: Stereo", new JPanel());
+        tabbedPane.addTab("2: Stereo", stereoPlot);
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
         tabbedPane.addTab("3: Zijderweld", new JPanel());

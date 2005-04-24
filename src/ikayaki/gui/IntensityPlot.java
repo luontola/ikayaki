@@ -33,7 +33,7 @@ import java.util.Vector;
 /**
  * Implements intensity graph plot.
  *
- * @author
+ * @author Aki Sysmäläinen
  */
 public class IntensityPlot extends AbstractPlot {
 
@@ -97,31 +97,33 @@ public class IntensityPlot extends AbstractPlot {
         int xArea = getSize().width - ((2 * m) + xPad);
         // font for texts
         g2.setFont(new Font("Arial", Font.PLAIN, 10));
-        FontMetrics metrics = g2.getFontMetrics();
 
         // x-fix
         int xFix = m + aw;
         // y-fix
         int yFix = h - (m + aw);
 
-        // y-axis
-        g2.drawLine(m + aw, m, m + aw, (h - m) - aw);
-        // x-axis
-        g2.drawLine(m + aw, (h - m) - aw, w - m, (h - m) - aw);
-        // y-arrow
+        // draw y-axis
+        g2.drawLine(xFix, m, xFix, yFix);
+        // draw x-axis
+        g2.drawLine(xFix, yFix, w - m, yFix);
+        // draw y-arrow
         g2.drawLine(m, m + al, m + aw, m);
         g2.drawLine(m + (2 * aw), m + al, m + aw, m);
-        // x-arrow
+        // draw x-arrow
         g2.drawLine((w - m) - al, (h - m) - (2 * aw), w - m, (h - m) - aw);
         g2.drawLine((w - m) - al, h - m, w - m, (h - m) - aw);
 
         // y-axis ticks
+        // TODO draw ticks and numbers for y-axis
         // x-axis ticks
+        // TODO draw ticks and numbers for x-axis
         // y-axis unit
         g2.drawString(SequenceColumn.RELATIVE_MAGNETIZATION.getColumnName(project), m + 30, m + 10);
         // x-axis unit
         g2.drawString(SequenceColumn.STEP.getColumnName(project), (w - m) - 30, h - (m + 30));
         // origo 0
+        g2.drawString("0", m, h - m);
 
         // draw points
         for (int i = 0; i < points.size(); i++) {
@@ -139,5 +141,7 @@ public class IntensityPlot extends AbstractPlot {
                 g2.drawLine(xFix + x1, yFix - y1, xFix + x2, yFix - y2);
             }
         }
+
+
     }
 }
