@@ -180,9 +180,6 @@ public class MeasurementResult {
         if (step != null) {
             Vector3d holder = step.getHolder();     // will be zero, if this project is the holder calibration project
             Vector3d noise = step.getNoise();
-//            sampleVector.x = sampleVector.x - holder.x - noise.x;
-//            sampleVector.y = sampleVector.y - holder.y - noise.y;
-//            sampleVector.z = sampleVector.z - holder.z - noise.z;
             sampleVector.sub(holder);
             sampleVector.sub(noise);
         }

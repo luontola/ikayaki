@@ -42,14 +42,14 @@ public class Ikayaki extends JFrame {
 
     /* Application information */
     public static final String APP_NAME = "Ikayaki";
-    public static final String APP_VERSION = "0.1 CVS";
-    public static final String APP_VERSION_NAME = "purselo";
-    public static final String APP_BUILD = "2005-04-09";
+    public static final String APP_VERSION = "0.9 Demo";
+//    public static final String APP_VERSION_NAME = "purselo";
+    public static final String APP_BUILD = "2005-04-25";
     public static final String APP_HOME_PAGE = "http://www.cs.helsinki.fi/group/squid/";
 
     public static final String FILE_TYPE = ".ika";
-    public static final String FILE_DTD = "http://www.cs.helsinki.fi/group/squid/ikayaki10.dtd"; // TODO: create the DTD
-    public static final File FILE_DTD_FILE = new File("ikayaki10.dtd"); // TODO: use ClassLoader.getSystemResource
+//    public static final String FILE_DTD = "http://www.cs.helsinki.fi/group/squid/ikayaki10.dtd"; // TODO: create the DTD
+//    public static final File FILE_DTD_FILE = new File("ikayaki10.dtd"); // TODO: use ClassLoader.getSystemResource
     public static final String FILE_DESCRIPTION = "Measurement Project";
 
     public static final String HELP_PAGES = new File("manual/index.html").getAbsolutePath();

@@ -48,8 +48,6 @@ public class MeasurementStep {
 
     // TODO: make this class Iterable so that it would be easy to foreach all results
 
-    // TODO: how to add handler calibrations to this step? must make a global access point to the latest calibration through the Settings class. need a file chooser to the options dialog.
-
     /**
      * The project that owns this step, or null if there is no owner.
      */
@@ -472,16 +470,10 @@ public class MeasurementStep {
             }
             // all rotations are assumed to be 0
             v.add(result.getRawVector());
-//            v.x += result.getRawX();
-//            v.y += result.getRawY();
-//            v.z += result.getRawZ();
             count++;
         }
         if (count > 0) {
             v.scale(1.0 / count);
-//            v.x /= count;
-//            v.y /= count;
-//            v.z /= count;
         }
         return v;
     }
@@ -499,44 +491,13 @@ public class MeasurementStep {
             }
             // all rotations are assumed to be 0
             v.add(result.getRawVector());
-//            v.x += result.getRawX();
-//            v.y += result.getRawY();
-//            v.z += result.getRawZ();
             count++;
         }
         if (count > 0) {
             v.scale(1.0 / count);
-//            v.x /= count;
-//            v.y /= count;
-//            v.z /= count;
         }
         return v;
     }
-
-//    @Override public String toString() {
-//        StringBuffer sb = new StringBuffer();
-//
-//        sb.append("[step");
-//        sb.append(" state=" + state);
-//        sb.append(" timestamp=" + (timestamp == null ? "null" : "" + timestamp.getTime()));
-//        sb.append(" stepvalue=" + stepValue);
-//        sb.append(" mass=" + mass);
-//        sb.append(" volume=" + volume);
-//
-//        sb.append(" results=(");
-//        boolean first = true;
-//        for (MeasurementResult result : results) {
-//            if (!first) {
-//                sb.append(",");
-//            } else {
-//                first = false;
-//            }
-//            sb.append(result.toString());
-//        }
-//        sb.append(")]");
-//
-//        return sb.toString();
-//    }
 
     /**
      * The state of a measurement step.
