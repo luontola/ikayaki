@@ -120,41 +120,36 @@ public class MeasurementGraphsPanel extends ProjectComponent
             }
             return;
         }
-
-        /**
-         * @param event MeasurementEvent received.
-         */
-        public void measurementUpdated
-        (MeasurementEvent
-        event) {
-            // DOES NOTHING
-        }
-
-        /**
-         * Sets the project for this ProjectComponent. Unregisters MeasurementListener and ProjectListener from the old
-         * project, and registers them to the new project.
-         *
-         * @param project new active project, or null to make no project active.
-         */
-        @Override public void setProject
-        (Project
-        project) {
-            super.setProject(project);
-            updatePlots();
-            System.out.println("new project!");
-            updatePlots();
-        }
-
-
-        public static void main
-        (String
-        args[]) {
-            JFrame f = new JFrame();
-            f.setLayout(new BorderLayout());
-            f.setContentPane(new MeasurementGraphsPanel());
-            f.setLocationByPlatform(true);
-            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            f.pack();
-            f.setVisible(true);
-        }
     }
+
+    /**
+     * @param event MeasurementEvent received.
+     */
+    public void measurementUpdated(MeasurementEvent event) {
+        // DOES NOTHING
+    }
+
+    /**
+     * Sets the project for this ProjectComponent. Unregisters MeasurementListener and ProjectListener from the old
+     * project, and registers them to the new project.
+     *
+     * @param project new active project, or null to make no project active.
+     */
+    @Override public void setProject(Project project) {
+        super.setProject(project);
+        updatePlots();
+        System.out.println("new project!");
+        updatePlots();
+    }
+
+
+    public static void main(String args[]) {
+        JFrame f = new JFrame();
+        f.setLayout(new BorderLayout());
+        f.setContentPane(new MeasurementGraphsPanel());
+        f.setLocationByPlatform(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.pack();
+        f.setVisible(true);
+    }
+}
