@@ -85,6 +85,14 @@ public class MeasurementGraphsPanel extends ProjectComponent
         // plots to update all steps to them
         for (int i = 0; i < plots.size(); i++) {
             plots.elementAt(i).reset();
+            <<<<<<<MeasurementGraphsPanel.java
+            // add all steps to all plots
+            if (getProject() != null) {
+                for (int j = 0; j < getProject().getCompletedSteps(); j++) {
+                    plots.elementAt(i).add(getProject().getStep(j));
+                }
+            }
+            =======
             
             // add all steps to plot
             if (getProject() == null) {
@@ -93,8 +101,8 @@ public class MeasurementGraphsPanel extends ProjectComponent
             for (int j = 0; j < getProject().getCompletedSteps(); j++) {
                 plots.elementAt(i).add(getProject().getStep(j));
             }
+            >>>>>>> 1.12
         }
-
     }
 
     /**
@@ -102,42 +110,63 @@ public class MeasurementGraphsPanel extends ProjectComponent
      */
     public void projectUpdated(ProjectEvent event) {
         // TODO
+        <<<<<<<MeasurementGraphsPanel.java
         if (event.getType() == ProjectEvent.Type.STATE_CHANGED) {
-            updatePlots();
-            System.out.println("state event!");
-        } else if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
-            updatePlots();
-            System.out.println("Data changed event!");
+            //updatePlots();
+            =======
+            if (event.getType() == ProjectEvent.Type.STATE_CHANGED) {
+                updatePlots();
+                >>>>>>> 1.12
+                System.out.println("state event!");
+                <<<<<<<MeasurementGraphsPanel.java
+            } else if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
+                //updatePlots();
+                =======
+            } else if (event.getType() == ProjectEvent.Type.DATA_CHANGED) {
+                updatePlots();
+                >>>>>>> 1.12
+                System.out.println("Data changed event!");
+            }
+            return;
         }
 
-        return;
-    }
+        /**
+         * @param event MeasurementEvent received.
+         */
+        public void measurementUpdated
+        (MeasurementEvent
+        event) {
+            // DOES NOTHING
+        }
 
-    /**
-     * @param event MeasurementEvent received.
-     */
-    public void measurementUpdated(MeasurementEvent event) {
-        // DOES NOTHING
-    }
+        /**
+         * Sets the project for this ProjectComponent. Unregisters MeasurementListener and ProjectListener from the old
+         * project, and registers them to the new project.
+         *
+         * @param project new active project, or null to make no project active.
+         */
+        @Override public void setProject
+        (Project
+        project) {
+            super.setProject(project);
+            <<<<<<<MeasurementGraphsPanel.java
+                    updatePlots();
+            System.out.println("new project!");
+            =======
+            updatePlots();
+            >>>>>>> 1.12
+        }
 
-    /**
-     * Sets the current project when changed and updates plots
-     *
-     * @param project
-     */
-    public void setProject(Project project) {
-        super.setProject(project);
-        updatePlots();
-    }
 
-
-    public static void main(String args[]) {
-        JFrame f = new JFrame();
-        f.setLayout(new BorderLayout());
-        f.setContentPane(new MeasurementGraphsPanel());
-        f.setLocationByPlatform(true);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.pack();
-        f.setVisible(true);
+        public static void main
+        (String
+        args[]) {
+            JFrame f = new JFrame();
+            f.setLayout(new BorderLayout());
+            f.setContentPane(new MeasurementGraphsPanel());
+            f.setLocationByPlatform(true);
+            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            f.pack();
+            f.setVisible(true);
+        }
     }
-}

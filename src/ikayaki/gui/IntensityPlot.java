@@ -42,10 +42,8 @@ public class IntensityPlot extends AbstractPlot {
     private Vector<Point2D> points = new Vector<Point2D>();
 
     public void add(MeasurementStep step) {
-        Double value = MeasurementValue.RELATIVE_MAGNETIZATION.getValue(step);
-        if (value != null) {
-            points.add(new Point2D.Double(Math.max(step.getStepValue(), 0.0), Math.max(value.doubleValue(), 0.0)));
-        }
+        points.add(new Point2D.Double(step.getStepValue(),
+                MeasurementValue.RELATIVE_MAGNETIZATION.getValue(step)));
     }
 
     public void reset() {
@@ -65,24 +63,42 @@ public class IntensityPlot extends AbstractPlot {
      * @param g2
      */
     public void render(int w, int h, Graphics2D g2) {
+        // margin
+        int m = 10;
+        // arrow width
+        int aw = 4;
+        // arrow length
+        int al = 8;
+        // y-axis padding from arrow top to max values
+        int yPad = 50;
+        // x-axis padding from arrow top to max values
+        int xPad = 50;
+        // maximum value of y-axis
+        double yMax = 0.0;
+        // maximum value of x-axis
+        double xMax = 0.0;
 
-        int m = 10;     // margin
-        int aw = 4;     // arrow width
-        int al = 8;     // arrow length
-
-        double yMax = 1.1;      // maximum value of y-axis
-        double xMax = 100.0;    // maximum value of x-axis
-        for (Point2D point : points) {
-            yMax = Math.max(yMax, point.getY() * 1.1);
-            xMax = Math.max(xMax, point.getX() * 1.2);
+        for (int i = 0; i < points.size(); i++) {
+            if (yMax < points.elementAt(i).getY()) {
+                yMax = points.elementAt(i).getY();
+            }
+            if (xMax < points.elementAt(i).getX()) {
+                xMax = points.elementAt(i).getX();
+            }
         }
 
-        int yArea = getSize().height - ((2 * m) + aw);      // pixels on y-area
-        int xArea = getSize().width - ((2 * m) + aw);       // pixels on x-area
-
+        // pixels on y-area
+        int yArea = getSize().height - ((2 * m) + yPad);
+        // pixels on x-area
+        int xArea = getSize().width - ((2 * m) + xPad);
         // font for texts
         g2.setFont(new Font("Arial", Font.PLAIN, 10));
         FontMetrics metrics = g2.getFontMetrics();
+
+        // x-fix
+        int xFix = m + aw;
+        // y-fix
+        int yFix = h - (m + aw);
 
         // y-axis
         g2.drawLine(m + aw, m, m + aw, (h - m) - aw);
