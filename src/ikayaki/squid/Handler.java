@@ -588,7 +588,7 @@ public class Handler implements SerialIOListener {
     public int getEstimatedPosition() {
       if(!moving) return currentPosition;
       //in seconds
-      Double estimatedTime = new Long(System.nanoTime() - startingTime).doubleValue()/1000000.0;
+      Double estimatedTime = new Long(System.nanoTime() - startingTime).doubleValue()/1000000000.0;
       int pos = currentStartingPoint + (int)(currentVelocity*estimatedTime);
       return pos;
     }
