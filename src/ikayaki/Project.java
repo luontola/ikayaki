@@ -1083,8 +1083,8 @@ public class Project {
         double d;
         if (orientation == PLUS_Z) {
             // TODO: check that this is right
-            s = Math.toRadians(getStrike() + 180.0);
-            d = Math.toRadians(getDip());
+            s = Math.toRadians(getStrike());
+            d = Math.toRadians(getDip() + 180.0);
         } else {
             s = Math.toRadians(getStrike());
             d = Math.toRadians(getDip());
