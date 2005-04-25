@@ -344,6 +344,9 @@ public abstract class MeasurementValue <T> {
     public static final MeasurementValue<Double> SIGNAL_TO_NOISE =
             new MeasurementValue<Double>("caption", "unit", "description") {
                 public Double getValue(MeasurementStep step) {
+                    
+
+
                     return null;
                 }
             };
@@ -354,6 +357,12 @@ public abstract class MeasurementValue <T> {
     public static final MeasurementValue<Double> SIGNAL_TO_DRIFT =
             new MeasurementValue<Double>("caption", "unit", "description") {
                 public Double getValue(MeasurementStep step) {
+                    Double signal = MOMENT.getValue(step);
+                    if (signal == null) {
+                        return null;
+                    }
+
+
                     return null;
                 }
             };
@@ -364,6 +373,12 @@ public abstract class MeasurementValue <T> {
     public static final MeasurementValue<Double> SIGNAL_TO_HOLDER =
             new MeasurementValue<Double>("caption", "unit", "description") {
                 public Double getValue(MeasurementStep step) {
+                    Double signal = MOMENT.getValue(step);
+                    if (signal == null) {
+                        return null;
+                    }
+
+
                     return null;
                 }
             };

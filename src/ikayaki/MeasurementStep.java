@@ -30,6 +30,7 @@ import javax.vecmath.Matrix3d;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import static ikayaki.MeasurementStep.State.*;
@@ -44,7 +45,7 @@ import static ikayaki.MeasurementStep.State.*;
  *
  * @author Esko Luontola
  */
-public class MeasurementStep {
+public class MeasurementStep implements Iterable<MeasurementResult> {
 
     // TODO: make this class Iterable so that it would be easy to foreach all results
 
@@ -505,6 +506,27 @@ public class MeasurementStep {
             v.scale(1.0 / count);
         }
         return v;
+    }
+
+    public Iterator<MeasurementResult> iterator() {
+        final MeasurementStep step = this;
+
+        return new Iterator<MeasurementResult>() {
+
+            private int next = 0;
+
+            public boolean hasNext() {
+                return next < step.getResults();
+            }
+
+            public MeasurementResult next() {
+                return step.getResult(next++);
+            }
+
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
     /**
