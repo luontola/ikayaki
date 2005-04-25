@@ -24,10 +24,12 @@ package ikayaki.gui;
 
 import ikayaki.MeasurementStep;
 import ikayaki.MeasurementValue;
+import ikayaki.Project;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.Vector;
+
 
 /**
  * Implements stereographic plot
@@ -46,23 +48,35 @@ public class StereoPlot extends AbstractPlot {
      */
     private Vector<Boolean> incSign = new Vector<Boolean>();
 
+    private Project project = null;
+
     public void add(MeasurementStep step) {
+        if (step.getProject() != null) {
+            project = step.getProject();
+        }
         Double incValue = MeasurementValue.INCLINATION.getValue(step);
         Double decValue = MeasurementValue.DECLINATION.getValue(step);
 
         if (incValue != null && decValue != null) {
-            double inc = Math.toRadians(incValue);
-            double dec = Math.toRadians(decValue);
-            double x = 0.5 + ((0.5 - (0.5 / (Math.PI / 2.0)) * Math.abs(inc)) * Math.cos(dec - (Math.PI / 2.0)));
-            double y = 0.5 + ((0.5 - (0.5 / (Math.PI / 2.0)) * Math.abs(inc)) * Math.sin(dec + (Math.PI / 2.0)));
-            if (incValue.doubleValue() >= 0.0) {
-                points.add(new Point2D.Double(x, y));
-                incSign.add(new Boolean(true));
-            } else {
-                points.add(new Point2D.Double(x, y));
-                incSign.add(new Boolean(false));
+            if (incValue != null && decValue != null) {
+
+                if (incValue.doubleValue() >= 0) {
+                    points.add(toXY(decValue, incValue));
+                    incSign.add(new Boolean(true));
+                } else {
+                    points.add(toXY(decValue, incValue));
+                    incSign.add(new Boolean(false));
+                }
             }
         }
+    }
+
+    private Point2D.Double toXY(Double decValue, Double incValue) {
+        double inc = Math.toRadians(incValue);
+        double dec = Math.toRadians(decValue);
+        double x = 0.5 + ((0.5 - (0.5 / (Math.PI / 2.0)) * Math.abs(inc)) * Math.cos(dec - (Math.PI / 2.0)));
+        double y = 0.5 + ((0.5 - (0.5 / (Math.PI / 2.0)) * Math.abs(inc)) * Math.sin(dec + (Math.PI / 2.0)));
+        return new Point2D.Double(x, y);
     }
 
     public void reset() {
@@ -77,15 +91,15 @@ public class StereoPlot extends AbstractPlot {
 
     public void render(int w, int h, Graphics2D g2) {
         // margin
-        int m = 10;
+        int m = 5;
         // area for texts on edges
-        int txtArea = 20;
+        int txtArea = 10;
         // minimum of w and h
         int dim = Math.min(w, h);
         // area for points in x and y direction = width = height of the actual plot
         int area = dim - (2 * (m + txtArea));
         // font for texts
-        g2.setFont(new Font("Arial", Font.PLAIN, 10));
+        g2.setFont(new Font("Arial", Font.PLAIN, 8 + (area / 60)));
         FontMetrics metrics = g2.getFontMetrics();
         int txtW = metrics.stringWidth("N");
         int txtH = metrics.getHeight();
@@ -93,6 +107,55 @@ public class StereoPlot extends AbstractPlot {
         // draw circle
         g2.drawOval(m + txtArea, m + txtArea, area, area);
         // draw ticks
+        int tLength = 5; // tick length in degrees
+        int atLength = (area / 40) + 3; // axis tick length
+        for (int i = 0; i < 360; i = i + 10) {
+            int x1 = new Double(toXY(new Double(i), new Double(0)).getX() * area).intValue();
+            int y1 = new Double(toXY(new Double(i), new Double(0)).getY() * area).intValue();
+            int x2, y2;
+            if (i % 90 == 0) {
+                x2 = new Double(toXY(new Double(i), new Double(tLength * 2)).getX() * area).intValue();
+                y2 = new Double(toXY(new Double(i), new Double(tLength * 2)).getY() * area).intValue();
+            } else {
+                x2 = new Double(toXY(new Double(i), new Double(tLength)).getX() * area).intValue();
+                y2 = new Double(toXY(new Double(i), new Double(tLength)).getY() * area).intValue();
+            }
+            g2.drawLine((m + txtArea) + x1, (m + txtArea) + y1, (m + txtArea) + x2, (m + txtArea) + y2);
+        }
+
+        for (int i = 10; i <= 90; i = i + 10) {
+            int x1, y1, x2, y2;
+            x1 = (new Double(toXY(new Double(0), new Double(i)).getX() * area).intValue()) - (atLength / 2);
+            y1 = new Double(toXY(new Double(0), new Double(i)).getY() * area).intValue();
+            x2 = x1 + atLength;
+            y2 = y1;
+            g2.drawLine((m + txtArea) + x1, (m + txtArea) + y1, (m + txtArea) + x2, (m + txtArea) + y2);
+        }
+        for (int i = 10; i <= 90; i = i + 10) {
+            int x1, y1, x2, y2;
+            x1 = new Double(toXY(new Double(90), new Double(i)).getX() * area).intValue();
+            y1 = new Double(toXY(new Double(90), new Double(i)).getY() * area).intValue() - (atLength / 2);
+            x2 = x1;
+            y2 = y1 + atLength;
+            g2.drawLine((m + txtArea) + x1, (m + txtArea) + y1, (m + txtArea) + x2, (m + txtArea) + y2);
+        }
+        for (int i = 10; i <= 90; i = i + 10) {
+            int x1, y1, x2, y2;
+            x1 = (new Double(toXY(new Double(180), new Double(i)).getX() * area).intValue()) - (atLength / 2);
+            y1 = new Double(toXY(new Double(180), new Double(i)).getY() * area).intValue();
+            x2 = x1 + atLength;
+            y2 = y1;
+            g2.drawLine((m + txtArea) + x1, (m + txtArea) + y1, (m + txtArea) + x2, (m + txtArea) + y2);
+        }
+        for (int i = 10; i <= 90; i = i + 10) {
+            int x1, y1, x2, y2;
+            x1 = new Double(toXY(new Double(270), new Double(i)).getX() * area).intValue();
+            y1 = (new Double(toXY(new Double(270), new Double(i)).getY() * area).intValue() - (atLength / 2));
+            x2 = x1;
+            y2 = y1 + atLength;
+            g2.drawLine((m + txtArea) + x1, (m + txtArea) + y1, (m + txtArea) + x2, (m + txtArea) + y2);
+        }
+
 
         // draw symbols
         g2.drawString("N", m + txtArea + (area / 2) - (txtW / 2), m + (txtArea / 2) + (txtH / 2));
@@ -101,14 +164,31 @@ public class StereoPlot extends AbstractPlot {
         g2.drawString("S", m + txtArea + (area / 2) - (txtW / 2), m + txtArea + area + (txtArea / 2) + (txtH / 2));
 
         // draw points
+        int ps = (area / 60) + 4; // points size
         for (int i = 0; i < points.size(); i++) {
             int x = (m + txtArea) + new Double(points.elementAt(i).getX() * area).intValue();
             int y = (m + txtArea) + area - new Double(points.elementAt(i).getY() * area).intValue();
+            if (i == 0) {
+                g2.drawString("NRM", x + (area / 50), y - (area / 50));
+            }
 
             if (incSign.elementAt(i).booleanValue()) { // positive inclination
-                g2.fillOval(x - 2, y - 2, 4, 4);
+                g2.fillOval(x - (ps / 2), y - (ps / 2), ps, ps);
             } else { // negative inclination
-                g2.drawOval(x - 2, y - 2, 4, 4);
+                g2.drawOval(x - (ps / 2), y - (ps / 2), ps, ps);
+            }
+        }
+
+        // draw lines
+        if (points.size() >= 2) {
+            for (int i = 1; i < points.size(); i++) {
+                int x1 = new Double((points.elementAt(i - 1).getX() * area)).intValue();
+                int y1 = new Double((points.elementAt(i - 1).getY() * area)).intValue();
+                int x2 = new Double((points.elementAt(i).getX() * area)).intValue();
+                int y2 = new Double((points.elementAt(i).getY() * area)).intValue();
+
+                g2.drawLine((m + txtArea) + x1, (m + txtArea) + area - y1, (m + txtArea) + x2,
+                        (m + txtArea) + area - y2);
             }
         }
     }

@@ -29,6 +29,8 @@ import ikayaki.ProjectListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
 
@@ -54,8 +56,10 @@ public class MeasurementGraphsPanel extends ProjectComponent implements ProjectL
         //stereoPlot.setEnabled(true);
         //intensityPlot.setEnabled(true);
 
+        JButton bigGraphsButton = new JButton();
 
-        JTabbedPane tabbedPane = new JTabbedPane();
+
+        final JTabbedPane tabbedPane = new JTabbedPane();
 
         tabbedPane.addTab("1: Intensity", intensityPlot);
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
@@ -67,10 +71,23 @@ public class MeasurementGraphsPanel extends ProjectComponent implements ProjectL
         tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 
         setLayout(new BorderLayout());
+        add(bigGraphsButton, "North");
         add(tabbedPane, "Center");
 
         // initialize with no project
         setProject(null);
+
+
+        bigGraphsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JDialog gd = new JDialog(getParentFrame(), "Graphs", false);
+                MeasurementGraphsPanel mgp = new MeasurementGraphsPanel();
+                mgp.setProject(getProject());
+                gd.add(mgp, BorderLayout.CENTER);
+                gd.pack();
+                gd.setVisible(true);
+            }
+        });
 
         return; // TODO
     }

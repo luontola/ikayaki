@@ -96,7 +96,7 @@ public class IntensityPlot extends AbstractPlot {
         // pixels on x-area
         int xArea = getSize().width - ((2 * m) + xPad);
         // font for texts
-        g2.setFont(new Font("Arial", Font.PLAIN, 10));
+        g2.setFont(new Font("Arial", Font.PLAIN, 8 + (xArea / 60)));
 
         // x-fix
         int xFix = m + aw;
@@ -126,12 +126,13 @@ public class IntensityPlot extends AbstractPlot {
         g2.drawString("0", m, h - m);
 
         // draw points
+        int ps = (xArea / 60) + 4; // points size
         for (int i = 0; i < points.size(); i++) {
             int x = new Double((points.elementAt(i).getX() / xMax) * xArea).intValue();
             int y = new Double((points.elementAt(i).getY() / yMax) * yArea).intValue();
-            g2.fillOval((xFix + x) - 2, (yFix - y) - 2, 4, 4);
+            g2.fillOval((xFix + x) - (ps / 2), (yFix - y) - (ps / 2), ps, ps);
         }
-        if (points.size() > 2) {
+        if (points.size() >= 2) {
             for (int i = 1; i < points.size(); i++) {
                 int x1 = new Double((points.elementAt(i - 1).getX() / xMax) * xArea).intValue();
                 int y1 = new Double((points.elementAt(i - 1).getY() / yMax) * yArea).intValue();
