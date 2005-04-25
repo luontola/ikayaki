@@ -24,12 +24,10 @@ package ikayaki.gui;
 
 import ikayaki.MeasurementStep;
 import ikayaki.MeasurementValue;
-import ikayaki.Project;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.Vector;
-
 
 /**
  * Implements stereographic plot
@@ -48,12 +46,7 @@ public class StereoPlot extends AbstractPlot {
      */
     private Vector<Boolean> incSign = new Vector<Boolean>();
 
-    private Project project = null;
-
     public void add(MeasurementStep step) {
-        if (step.getProject() != null) {
-            project = step.getProject();
-        }
         Double incValue = MeasurementValue.INCLINATION.getValue(step);
         Double decValue = MeasurementValue.DECLINATION.getValue(step);
 
