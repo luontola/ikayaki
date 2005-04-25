@@ -313,11 +313,14 @@ public class MeasurementDetailsPanel extends ProjectComponent {
 
         private StyledWrapper defaultWrapper = new StyledWrapper();
         private StyledWrapper headerWrapper = new StyledWrapper();
+        private DecimalFormat numberFormat = new DecimalFormat();
 
         public ErrorsTableModel() {
             defaultWrapper.horizontalAlignment = SwingConstants.TRAILING;
             headerWrapper.horizontalAlignment = SwingConstants.TRAILING;
             headerWrapper.font = new JLabel("").getFont().deriveFont(Font.BOLD);
+            numberFormat.setMinimumFractionDigits(3);
+            numberFormat.setMaximumFractionDigits(3);
         }
 
         public MeasurementStep getStep() {
@@ -363,6 +366,10 @@ public class MeasurementDetailsPanel extends ProjectComponent {
             default:
                 value = null;
                 break;
+            }
+
+            if (value != null && value instanceof Number) {
+                value = numberFormat.format(((Number) value).doubleValue());
             }
             return wrap(value, rowIndex, columnIndex);
         }

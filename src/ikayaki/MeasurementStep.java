@@ -508,6 +508,9 @@ public class MeasurementStep implements Iterable<MeasurementResult> {
         return v;
     }
 
+    /**
+     * Returns an iterator for iterating through this step's measurement results.
+     */
     public Iterator<MeasurementResult> iterator() {
         final MeasurementStep step = this;
 
