@@ -34,12 +34,14 @@ import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Allows inserting and editing project information.
@@ -55,6 +57,7 @@ public class ProjectInformationPanel extends ProjectComponent {
     private static final String OPERATOR_PROPERTY = "operator";
     private static final String DATE_PROPERTY = "date";
     private static final String ROCK_TYPE_PROPERTY = "rockType";
+    private static final String LOCATION_PROPERTY = "location";
     private static final String SITE_PROPERTY = "site";
     private static final String COMMENT_PROPERTY = "comment";
     private static final String LATITUDE_PROPERTY = "latitude";
@@ -77,8 +80,9 @@ public class ProjectInformationPanel extends ProjectComponent {
     private JTextField operatorField;
     private JTextField dateField;
     private JTextField rockTypeField;
+    private JTextField locationField;
     private JTextField siteField;
-    private JTextField commentField;
+    private JTextArea commentArea;
 
     /* Number-only Text Fields */
     private JFormattedTextField latitudeField;
@@ -93,23 +97,6 @@ public class ProjectInformationPanel extends ProjectComponent {
 
     private boolean propertiesModified = false;
     private boolean parametersModified = false;
-
-    /* Labels */
-    private JLabel operatorLabel;
-    private JLabel dateLabel;
-    private JLabel measurementTypeLabel;
-    private JLabel rockTypeLabel;
-    private JLabel siteLabel;
-    private JLabel commentLabel;
-    private JLabel latitudeLabel;
-    private JLabel longitudeLabel;
-    private JLabel strikeLabel;
-    private JLabel dipLabel;
-    private JLabel volumeLabel;
-    private JLabel massLabel;
-    private JLabel susceptibilityLabel;
-    private JLabel sampleTypeLabel;
-    private JLabel normalizationLabel;
 
     /**
      * Creates default ProjectInformationPanel with no current project. Starts an autosaving thread.
@@ -173,8 +160,9 @@ public class ProjectInformationPanel extends ProjectComponent {
         operatorField.getDocument().addDocumentListener(propertiesDocumentListener);
         dateField.getDocument().addDocumentListener(propertiesDocumentListener);
         rockTypeField.getDocument().addDocumentListener(propertiesDocumentListener);
+        locationField.getDocument().addDocumentListener(propertiesDocumentListener);
         siteField.getDocument().addDocumentListener(propertiesDocumentListener);
-        commentField.getDocument().addDocumentListener(propertiesDocumentListener);
+        commentArea.getDocument().addDocumentListener(propertiesDocumentListener);
 
         latitudeField.addPropertyChangeListener("value", propertiesPropertyChangeListener);
         longitudeField.addPropertyChangeListener("value", propertiesPropertyChangeListener);
@@ -222,47 +210,19 @@ public class ProjectInformationPanel extends ProjectComponent {
      */
     @Override public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
-
-        /* Radio Button Groups */
-        measurementTypeAuto.setEnabled(enabled);
-        measurementTypeManual.setEnabled(enabled);
-        sampleTypeHand.setEnabled(enabled);
-        sampleTypeCore.setEnabled(enabled);
-        normalizationVolume.setEnabled(enabled);
-        normalizationMass.setEnabled(enabled);
-
-        /* Plain Text Fields */
-        operatorField.setEnabled(enabled);
-        dateField.setEnabled(enabled);
-        rockTypeField.setEnabled(enabled);
-        siteField.setEnabled(enabled);
-        commentField.setEnabled(enabled);
-
-        /* Number Fields */
-        latitudeField.setEnabled(enabled);
-        longitudeField.setEnabled(enabled);
-        strikeField.setEnabled(enabled);
-        dipField.setEnabled(enabled);
-        massField.setEnabled(enabled);
-        volumeField.setEnabled(enabled);
-        susceptibilityField.setEnabled(enabled);
-
-        /* Labels */
-        operatorLabel.setEnabled(enabled);
-        dateLabel.setEnabled(enabled);
-        measurementTypeLabel.setEnabled(enabled);
-        rockTypeLabel.setEnabled(enabled);
-        siteLabel.setEnabled(enabled);
-        commentLabel.setEnabled(enabled);
-        latitudeLabel.setEnabled(enabled);
-        longitudeLabel.setEnabled(enabled);
-        strikeLabel.setEnabled(enabled);
-        dipLabel.setEnabled(enabled);
-        volumeLabel.setEnabled(enabled);
-        massLabel.setEnabled(enabled);
-        susceptibilityLabel.setEnabled(enabled);
-        sampleTypeLabel.setEnabled(enabled);
-        normalizationLabel.setEnabled(enabled);
+        Queue<Component> components = new LinkedList<Component>();
+        for (Component c : getComponents()) {
+            components.add(c);
+        }
+        Component component = null;
+        while ((component = components.poll()) != null) {
+            component.setEnabled(enabled);
+            if (component instanceof Container) {
+                for (Component c : ((Container) component).getComponents()) {
+                    components.add(c);
+                }
+            }
+        }
     }
 
     /**
@@ -294,8 +254,9 @@ public class ProjectInformationPanel extends ProjectComponent {
             operatorField.setText(project.getProperty(OPERATOR_PROPERTY, ""));
             dateField.setText(project.getProperty(DATE_PROPERTY, DateFormat.getDateInstance().format(new Date())));
             rockTypeField.setText(project.getProperty(ROCK_TYPE_PROPERTY, ""));
+            locationField.setText(project.getProperty(LOCATION_PROPERTY, ""));
             siteField.setText(project.getProperty(SITE_PROPERTY, ""));
-            commentField.setText(project.getProperty(COMMENT_PROPERTY, ""));
+            commentArea.setText(project.getProperty(COMMENT_PROPERTY, ""));
 
             /* Number Fields */
             latitudeField.setText(project.getProperty(LATITUDE_PROPERTY, ""));
@@ -320,8 +281,9 @@ public class ProjectInformationPanel extends ProjectComponent {
             operatorField.setText("");
             dateField.setText("");
             rockTypeField.setText("");
+            locationField.setText("");
             siteField.setText("");
-            commentField.setText("");
+            commentArea.setText("");
 
             /* Number Fields */
             latitudeField.setValue(null);
@@ -376,8 +338,9 @@ public class ProjectInformationPanel extends ProjectComponent {
         getProject().setProperty(OPERATOR_PROPERTY, operatorField.getText());
         getProject().setProperty(DATE_PROPERTY, dateField.getText());
         getProject().setProperty(ROCK_TYPE_PROPERTY, rockTypeField.getText());
+        getProject().setProperty(LOCATION_PROPERTY, locationField.getText());
         getProject().setProperty(SITE_PROPERTY, siteField.getText());
-        getProject().setProperty(COMMENT_PROPERTY, commentField.getText());
+        getProject().setProperty(COMMENT_PROPERTY, commentArea.getText());
 
         /* Number Fields */
         getProject().setProperty(LATITUDE_PROPERTY, latitudeField.getText());
@@ -441,121 +404,21 @@ public class ProjectInformationPanel extends ProjectComponent {
      */
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(15, 2, new Insets(0, 0, 0, 0), -1, 2));
-        operatorLabel = new JLabel();
-        operatorLabel.setText("Operator");
-        contentPane.add(operatorLabel,
-                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        operatorField = new JTextField();
-        contentPane.add(operatorField,
-                new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(70, -1), null));
-        dateField = new JTextField();
-        contentPane.add(dateField,
-                new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(70, -1), null));
-        massLabel = new JLabel();
-        massLabel.setText("Mass (grams)");
-        contentPane.add(massLabel,
-                new GridConstraints(11, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        volumeLabel = new JLabel();
-        volumeLabel.setText("Volume (cm³)");
-        contentPane.add(volumeLabel,
-                new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        dipLabel = new JLabel();
-        dipLabel.setText("Dip");
-        contentPane.add(dipLabel,
-                new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        strikeLabel = new JLabel();
-        strikeLabel.setText("Strike");
-        contentPane.add(strikeLabel,
-                new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        longitudeLabel = new JLabel();
-        longitudeLabel.setText("Longitude");
-        contentPane.add(longitudeLabel,
-                new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        latitudeLabel = new JLabel();
-        latitudeLabel.setText("Latitude");
-        contentPane.add(latitudeLabel,
-                new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        commentLabel = new JLabel();
-        commentLabel.setText("Comment");
-        contentPane.add(commentLabel,
-                new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        siteLabel = new JLabel();
-        siteLabel.setText("Site");
-        contentPane.add(siteLabel,
-                new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        rockTypeLabel = new JLabel();
-        rockTypeLabel.setText("Rock type");
-        contentPane.add(rockTypeLabel,
-                new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        commentField = new JTextField();
-        contentPane.add(commentField,
-                new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(70, -1), null));
-        rockTypeField = new JTextField();
-        contentPane.add(rockTypeField,
-                new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(70, -1), null));
+        contentPane.setLayout(new GridLayoutManager(15, 5, new Insets(0, 0, 0, 0), 4, 4));
         siteField = new JTextField();
         contentPane.add(siteField,
-                new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                new GridConstraints(4, 1, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
                         new Dimension(70, -1), null));
-        dateLabel = new JLabel();
-        dateLabel.setText("Date");
-        contentPane.add(dateLabel,
-                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        latitudeField = new JFormattedTextField();
-        contentPane.add(latitudeField,
-                new GridConstraints(6, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(70, -1), null));
-        massField = new JFormattedTextField();
-        contentPane.add(massField,
-                new GridConstraints(11, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(70, -1), null));
-        volumeField = new JFormattedTextField();
-        contentPane.add(volumeField,
-                new GridConstraints(10, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(70, -1), null));
-        dipField = new JFormattedTextField();
-        contentPane.add(dipField,
-                new GridConstraints(9, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(70, -1), null));
-        longitudeField = new JFormattedTextField();
-        contentPane.add(longitudeField,
-                new GridConstraints(7, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(70, -1), null));
-        strikeField = new JFormattedTextField();
-        contentPane.add(strikeField,
-                new GridConstraints(8, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+        locationField = new JTextField();
+        contentPane.add(locationField,
+                new GridConstraints(3, 1, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
                         new Dimension(70, -1), null));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), 4, 4));
         contentPane.add(panel1,
-                new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                new GridConstraints(1, 1, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
         measurementTypeAuto = new JRadioButton();
         measurementTypeAuto.setText("Auto");
@@ -573,73 +436,211 @@ public class ProjectInformationPanel extends ProjectComponent {
         panel1.add(spacer1,
                 new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
-        measurementTypeLabel = new JLabel();
-        measurementTypeLabel.setText("Measurement type");
-        contentPane.add(measurementTypeLabel,
-                new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
-        contentPane.add(panel2,
-                new GridConstraints(13, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
         final Spacer spacer2 = new Spacer();
-        panel2.add(spacer2,
-                new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
-        sampleTypeCore = new JRadioButton();
-        sampleTypeCore.setText("Core");
-        panel2.add(sampleTypeCore,
-                new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        sampleTypeHand = new JRadioButton();
-        sampleTypeHand.setText("Hand");
-        panel2.add(sampleTypeHand,
-                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        sampleTypeLabel = new JLabel();
-        sampleTypeLabel.setText("Sample type");
-        contentPane.add(sampleTypeLabel,
-                new GridConstraints(13, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        susceptibilityLabel = new JLabel();
-        susceptibilityLabel.setText("Susceptibility");
-        contentPane.add(susceptibilityLabel,
-                new GridConstraints(12, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        susceptibilityField = new JFormattedTextField();
-        contentPane.add(susceptibilityField,
-                new GridConstraints(12, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
-                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
-                        new Dimension(70, -1), null));
-        normalizationLabel = new JLabel();
-        normalizationLabel.setText("Normalize by");
-        contentPane.add(normalizationLabel,
-                new GridConstraints(14, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
-        contentPane.add(panel3,
-                new GridConstraints(14, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+        contentPane.add(spacer2,
+                new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
+                        GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 15), null));
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), 4, 4));
+        contentPane.add(panel2,
+                new GridConstraints(12, 1, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
         final Spacer spacer3 = new Spacer();
-        panel3.add(spacer3,
+        panel2.add(spacer3,
                 new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
         normalizationMass = new JRadioButton();
         normalizationMass.setText("Mass");
-        panel3.add(normalizationMass,
+        panel2.add(normalizationMass,
                 new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         normalizationVolume = new JRadioButton();
         normalizationVolume.setText("Volume");
-        panel3.add(normalizationVolume,
+        panel2.add(normalizationVolume,
                 new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
                         GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        latitudeField = new JFormattedTextField();
+        contentPane.add(latitudeField,
+                new GridConstraints(8, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(40, -1), null));
+        longitudeField = new JFormattedTextField();
+        contentPane.add(longitudeField,
+                new GridConstraints(8, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(40, -1), null));
+        strikeField = new JFormattedTextField();
+        contentPane.add(strikeField,
+                new GridConstraints(9, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(40, -1), null));
+        final JLabel label1 = new JLabel();
+        label1.setText("Dip");
+        contentPane.add(label1,
+                new GridConstraints(9, 3, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        dipField = new JFormattedTextField();
+        contentPane.add(dipField,
+                new GridConstraints(9, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(40, -1), null));
+        volumeField = new JFormattedTextField();
+        contentPane.add(volumeField,
+                new GridConstraints(10, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(40, -1), null));
+        massField = new JFormattedTextField();
+        contentPane.add(massField,
+                new GridConstraints(10, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(40, -1), null));
+        susceptibilityField = new JFormattedTextField();
+        contentPane.add(susceptibilityField,
+                new GridConstraints(11, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(40, -1), null));
+        final Spacer spacer4 = new Spacer();
+        contentPane.add(spacer4,
+                new GridConstraints(13, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
+                        GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 15), null));
+        final JLabel label2 = new JLabel();
+        label2.setText("Volume (cm³)");
+        contentPane.add(label2,
+                new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label3 = new JLabel();
+        label3.setText("Susceptibility");
+        contentPane.add(label3,
+                new GridConstraints(11, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label4 = new JLabel();
+        label4.setText("Normalize by");
+        contentPane.add(label4,
+                new GridConstraints(12, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label5 = new JLabel();
+        label5.setText("Comments");
+        contentPane.add(label5,
+                new GridConstraints(14, 0, 1, 1, GridConstraints.ANCHOR_NORTHEAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label6 = new JLabel();
+        label6.setText("Longitude");
+        contentPane.add(label6,
+                new GridConstraints(8, 3, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label7 = new JLabel();
+        label7.setText("Operator / Date");
+        contentPane.add(label7,
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label8 = new JLabel();
+        label8.setText("Measurement type");
+        contentPane.add(label8,
+                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label9 = new JLabel();
+        label9.setText("Site");
+        contentPane.add(label9,
+                new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label10 = new JLabel();
+        label10.setText("Location");
+        contentPane.add(label10,
+                new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label11 = new JLabel();
+        label11.setText("Latitude");
+        contentPane.add(label11,
+                new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label12 = new JLabel();
+        label12.setText("Strike");
+        contentPane.add(label12,
+                new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label13 = new JLabel();
+        label13.setText("Mass (grams)");
+        contentPane.add(label13,
+                new GridConstraints(10, 3, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), 4, 0));
+        contentPane.add(panel3,
+                new GridConstraints(0, 1, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
+        operatorField = new JTextField();
+        panel3.add(operatorField,
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(70, -1), null));
+        dateField = new JTextField();
+        panel3.add(dateField,
+                new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(80, -1),
+                        null));
+        final JLabel label14 = new JLabel();
+        label14.setText("/");
+        panel3.add(label14,
+                new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JScrollPane scrollPane1 = new JScrollPane();
+        scrollPane1.setEnabled(true);
+        scrollPane1.setHorizontalScrollBarPolicy(31);
+        contentPane.add(scrollPane1,
+                new GridConstraints(14, 1, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
+                        new Dimension(-1, 50), null, null));
+        commentArea = new JTextArea();
+        commentArea.setLineWrap(true);
+        commentArea.setRows(3);
+        scrollPane1.setViewportView(commentArea);
+        rockTypeField = new JTextField();
+        contentPane.add(rockTypeField,
+                new GridConstraints(6, 1, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
+                        new Dimension(70, -1), null));
+        final JLabel label15 = new JLabel();
+        label15.setText("Rock type");
+        contentPane.add(label15,
+                new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label16 = new JLabel();
+        label16.setText("Sample type");
+        contentPane.add(label16,
+                new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JPanel panel4 = new JPanel();
+        panel4.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), 4, 4));
+        contentPane.add(panel4,
+                new GridConstraints(5, 1, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
+        final Spacer spacer5 = new Spacer();
+        panel4.add(spacer5,
+                new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
+        sampleTypeCore = new JRadioButton();
+        sampleTypeCore.setText("Core");
+        panel4.add(sampleTypeCore,
+                new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        sampleTypeHand = new JRadioButton();
+        sampleTypeHand.setText("Hand");
+        panel4.add(sampleTypeHand,
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final Spacer spacer6 = new Spacer();
+        contentPane.add(spacer6,
+                new GridConstraints(10, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_FIXED, 1, null, new Dimension(4, -1), null));
+        final Spacer spacer7 = new Spacer();
+        contentPane.add(spacer7,
+                new GridConstraints(7, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1,
+                        GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 15), null));
     }
 
     /**
