@@ -431,6 +431,10 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
                 position = handler.getEstimatedPosition();
                 rotation = handler.getEstimatedRotation();
 
+                // TODO: this wouldn't actually be needed if we get MeasurementEvent every time
+                // handler stops, but let's just make sure :)
+                if (!handler.isMoving()) going = false;
+
                 MagnetometerStatusPanel.this.repaint();
             }
         }

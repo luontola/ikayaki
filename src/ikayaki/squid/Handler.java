@@ -238,6 +238,15 @@ public class Handler implements SerialIOListener {
     }
 
     /**
+     * Tells whether handler is on the move.
+     *
+     * @return true if moving, false if not.
+     */
+    public boolean isMoving() {
+        return moving;
+    }
+
+    /**
      * Checks if the serial communication channel is open.
      *
      * @return true if ok.
