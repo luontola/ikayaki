@@ -372,6 +372,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
         /**
          * Starts to move...
+         * @deprecated handler positions estimated by Handler.
          */
         synchronized public void going(int posTo, int rotateTo) {
             // kill any running animator thread
@@ -416,8 +417,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
                 animatorThread.interrupt();
                 try {
                     animatorThread.join();
-                } catch (InterruptedException e) {
-                }
+                } catch (InterruptedException e) { }
                 animatorThread = null;
             }
         }
@@ -426,8 +426,23 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             while (going) {
                 try {
                     Thread.sleep(updateDelay);
-                } catch (InterruptedException e) {
-                }
+                } catch (InterruptedException e) { }
+
+                position = handler.getEstimatedPosition();
+                rotation = handler.getEstimatedRotation();
+
+                MagnetometerStatusPanel.this.repaint();
+            }
+        }
+
+        /**
+         * @deprecated handler positions now estimated by Handler.
+         */
+        public void run_old() {
+            while (going) {
+                try {
+                    Thread.sleep(updateDelay);
+                } catch (InterruptedException e) { }
 
                 if (!going) break;
 
