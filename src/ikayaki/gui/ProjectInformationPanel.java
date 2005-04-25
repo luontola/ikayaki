@@ -245,6 +245,7 @@ public class ProjectInformationPanel extends ProjectComponent {
             locationField.setText(project.getProperty(Project.LOCATION_PROPERTY, ""));
             siteField.setText(project.getProperty(Project.SITE_PROPERTY, ""));
             commentArea.setText(project.getProperty(Project.COMMENT_PROPERTY, ""));
+            commentArea.setCaretPosition(0);    // scroll the viewport to the top
 
             /* Number Fields */
             latitudeField.setText(project.getProperty(Project.LATITUDE_PROPERTY, ""));
