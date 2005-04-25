@@ -29,6 +29,8 @@ import static java.lang.Math.atan;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
+import javax.vecmath.Vector3d;
+
 /**
  * Algorithms for calculating values from the measurements. A MeasurementValue object will be passed to the getValue()
  * method of a project to retrieve the desired value.
@@ -339,47 +341,78 @@ public abstract class MeasurementValue <T> {
             };
 
     /**
-     * TODO
+     * TODO: enter description
      */
     public static final MeasurementValue<Double> SIGNAL_TO_NOISE =
             new MeasurementValue<Double>("caption", "unit", "description") {
                 public Double getValue(MeasurementStep step) {
-                    
+                    if (step == null) {
+                        return null;
+                    }
 
+                    // compute the average length of the vectors
+                    int count = 0;
+                    double lengthSum = 0.0;
+                    for (MeasurementResult r : step) {
+                        lengthSum += r.getSampleVector().length();
+                        count++;
+                    }
+                    if (count < 2) {
+                        return null;
+                    }
+                    double lengthAvg = lengthSum / count;
 
-                    return null;
+                    // compute the standard deviation
+                    double squareSum = 0.0;
+                    for (MeasurementResult r : step) {
+                        double d = r.getSampleVector().length() - lengthAvg;
+                        squareSum += (d * d);
+                    }
+                    double stdev = Math.sqrt(squareSum / (count - 1));
+
+                    return lengthAvg / stdev;
                 }
             };
 
     /**
-     * TODO
+     * TODO: enter description
      */
     public static final MeasurementValue<Double> SIGNAL_TO_DRIFT =
             new MeasurementValue<Double>("caption", "unit", "description") {
                 public Double getValue(MeasurementStep step) {
+                    if (step == null) {
+                        return null;
+                    }
                     Double signal = MOMENT.getValue(step);
                     if (signal == null) {
                         return null;
                     }
-
-
-                    return null;
+                    double d = step.getNoise().length();
+                    if (d == 0.0) {
+                        return null;
+                    }
+                    return signal.doubleValue() / d;
                 }
             };
 
     /**
-     * TODO
+     * TODO: enter description
      */
     public static final MeasurementValue<Double> SIGNAL_TO_HOLDER =
             new MeasurementValue<Double>("caption", "unit", "description") {
                 public Double getValue(MeasurementStep step) {
+                    if (step == null) {
+                        return null;
+                    }
                     Double signal = MOMENT.getValue(step);
                     if (signal == null) {
                         return null;
                     }
-
-
-                    return null;
+                    double d = step.getHolder().length();
+                    if (d == 0.0) {
+                        return null;
+                    }
+                    return signal.doubleValue() / d;
                 }
             };
 
