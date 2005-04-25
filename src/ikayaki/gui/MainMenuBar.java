@@ -49,8 +49,8 @@ public class MainMenuBar extends JMenuBar {
     private Action exportProjectToDAT;
     private Action exportProjectToDTD;
     private Action exportProjectToSRM;
-    private Action printPreview;
     private Action print;
+    private Action printPreview;
     private Action exit;
 
     private JMenu measurementMenu;
@@ -93,8 +93,8 @@ public class MainMenuBar extends JMenuBar {
         }
         fileMenu.add(exportProjectMenu);
         fileMenu.add(new JSeparator());
-        fileMenu.add(printPreview);
         fileMenu.add(print);
+        fileMenu.add(printPreview);
         fileMenu.add(new JSeparator());
         fileMenu.add(exit);
         add(fileMenu);
