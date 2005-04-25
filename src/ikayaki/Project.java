@@ -770,11 +770,14 @@ public class Project {
     /**
      * Writes the project to a file in DAT format. Will overwrite the file if it already exists.
      *
-     * @param file the file to save to.
+     * @param file the file to write to.
      * @return true if the file was successfully written, otherwise false.
      * @throws NullPointerException if file is null.
      */
     public boolean exportToDAT(File file) {
+        if (file == null) {
+            throw new NullPointerException();
+        }
         PrintStream out = null;
         try {
             out = new PrintStream(file, "ISO-8859-1");
@@ -990,22 +993,28 @@ public class Project {
     /**
      * Writes the project to a file in SRM format. Will overwrite the file if it already exists.
      *
-     * @param file the file to save to.
+     * @param file the file to write to.
      * @return true if the file was successfully written, otherwise false.
      * @throws NullPointerException if file is null.
      */
     public boolean exportToSRM(File file) {
+        if (file == null) {
+            throw new NullPointerException();
+        }
         return false; // TODO
     }
 
     /**
      * Writes the project to a file in TDT format. Will overwrite the file if it already exists.
      *
-     * @param file the file to save to.
+     * @param file the file to write to.
      * @return true if the file was successfully written, otherwise false.
      * @throws NullPointerException if file is null.
      */
     public boolean exportToTDT(File file) {
+        if (file == null) {
+            throw new NullPointerException();
+        }
         return false; // TODO
     }
 
