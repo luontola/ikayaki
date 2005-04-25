@@ -690,7 +690,7 @@ public class MainViewPanel extends ProjectComponent {
             printAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_X);
             printAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK));
         }
-        return exitAction;
+        return printAction;
     }
 
 
