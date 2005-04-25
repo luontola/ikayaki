@@ -34,8 +34,10 @@ public class SettingsDialog extends JDialog {
 
     private static final int DEVICE_SETTINGS = 1;
     private static final int PROGRAM_SETTINGS = 2;
-    
+    private static final int PRINT_PREVIEW = 3;
+
     private static int dialogType;
+    private MainViewPanel owner;
 
     private SettingsDialog(Frame owner, String message) {
         super(owner, message, true);
@@ -57,7 +59,10 @@ public class SettingsDialog extends JDialog {
             add(new DeviceSettingsPanel(this), BorderLayout.CENTER);
         } else if (dialogType == PROGRAM_SETTINGS) {
             add(new ProgramSettingsPanel(this), BorderLayout.CENTER);
-        } else {
+        } else if(dialogType == PRINT_PREVIEW) {
+            add(new PrintPanel(owner), BorderLayout.CENTER);
+        }
+        else {
             throw new IllegalArgumentException("dialogType = " + dialogType);
         }
         pack();
@@ -74,6 +79,14 @@ public class SettingsDialog extends JDialog {
         SettingsDialog d = new SettingsDialog(owner, message);
         d.setVisible(true);
     }
+
+    public static void showPrintPreview(Frame owner, String message,MainViewPanel mother) {
+        dialogType = PRINT_PREVIEW;
+        SettingsDialog d = new SettingsDialog(owner, message);
+        d.owner = mother;
+        d.setVisible(true);
+    }
+
 
     /**
      * Closes window, no changes saved.

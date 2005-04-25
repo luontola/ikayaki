@@ -697,6 +697,9 @@ public class MainViewPanel extends ProjectComponent {
                 }
             };
             printPreviewAction.putValue(Action.NAME, "Print Preview");
+            printAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_E);
+            printAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_MASK));
+
         }
         return printPreviewAction;
     }

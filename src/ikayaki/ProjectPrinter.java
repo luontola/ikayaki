@@ -27,6 +27,8 @@ import javax.swing.*;
 import java.awt.print.*;
 
 /**
+ * Offers methods to print Components
+ *
  * @author Aki Korpua
  */
 public class ProjectPrinter implements Printable {
