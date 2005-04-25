@@ -184,6 +184,8 @@ public class MeasurementResult {
             sampleVector.sub(noise);
         }
 
+        // TODO: in which order should the rotation, +-Z, holder and noise fixes be applied??
+
         // apply rotation fix
         if (rotation % 90 == 0) {
             // accurate and fast algorithm for trivial angles
@@ -210,6 +212,8 @@ public class MeasurementResult {
             rotate.rotZ(Math.toRadians(-rotation));
             rotate.transform(sampleVector);
         }
+        
+        // TODO: try applying the +-Z fix here
 
         // reset geographic vector
         setTransform(null);
