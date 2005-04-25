@@ -104,8 +104,9 @@ public class StereoPlot extends AbstractPlot {
         // draw circle
         g2.drawOval(m + txtArea, m + txtArea, area, area);
         // draw ticks
-        int tLength = 5; // tick length in degrees
-        int atLength = (area / 40) + 3; // axis tick length
+        int tLength = 5; // circle ticks length in degrees
+        int atLength = (area / 40) + 3; // horizontal and vertical ticks length
+
         for (int i = 0; i < 360; i = i + 10) {
             int x1 = new Double(toXY(new Double(i), new Double(0)).getX() * area).intValue();
             int y1 = new Double(toXY(new Double(i), new Double(0)).getY() * area).intValue();
