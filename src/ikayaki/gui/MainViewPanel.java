@@ -26,6 +26,7 @@ import ikayaki.Ikayaki;
 import ikayaki.Project;
 import ikayaki.ProjectEvent;
 import ikayaki.Settings;
+import ikayaki.ProjectPrinter;
 import ikayaki.squid.SerialIO;
 import ikayaki.squid.Squid;
 
@@ -89,6 +90,7 @@ public class MainViewPanel extends ProjectComponent {
     private Action deviceSettingsAction;
     private Action helpAction;
     private Action aboutAction;
+    private Action printAction;
 
     /**
      * Loads default view and creates all components and panels. Splitpanel between Calibration, Explorer, Information
@@ -304,6 +306,7 @@ public class MainViewPanel extends ProjectComponent {
             getExportProjectToDATAction().setEnabled(true);
             getExportProjectToTDTAction().setEnabled(true);
             getExportProjectToSRMAction().setEnabled(true);
+            getPrintAction().setEnabled(true);
         } else {
             // update GUI components
             Frame parent = getParentFrame();
@@ -314,6 +317,7 @@ public class MainViewPanel extends ProjectComponent {
             getExportProjectToDATAction().setEnabled(false);
             getExportProjectToTDTAction().setEnabled(false);
             getExportProjectToSRMAction().setEnabled(false);
+            getPrintAction().setEnabled(false);
         }
 
         // switch to the new project
@@ -673,6 +677,22 @@ public class MainViewPanel extends ProjectComponent {
         }
         return exportProjectToSRMAction;
     }
+
+    public Action getPrintAction() {
+        if (printAction == null) {
+            printAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    ProjectPrinter.printComponent(measurementSequencePanel.getSequenceTable());
+                    ProjectPrinter.printComponent(measurementGraphsPanel);
+                }
+            };
+            printAction.putValue(Action.NAME, "Exit");
+            printAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_X);
+            printAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK));
+        }
+        return exitAction;
+    }
+
 
     public Action getExitAction() {
         if (exitAction == null) {

@@ -50,6 +50,7 @@ public class MainMenuBar extends JMenuBar {
     private Action exportProjectToDTD;
     private Action exportProjectToSRM;
     private Action exit;
+    private Action print;
 
     private JMenu measurementMenu;
     private Action autoStep;
@@ -91,6 +92,8 @@ public class MainMenuBar extends JMenuBar {
         }
         fileMenu.add(exportProjectMenu);
         fileMenu.add(new JSeparator());
+        fileMenu.add(print);
+        fileMenu.add(new JSeparator());
         fileMenu.add(exit);
         add(fileMenu);
 
@@ -122,7 +125,7 @@ public class MainMenuBar extends JMenuBar {
                 exportProjectMenu.setEnabled(exportProjectToDAT.isEnabled()
                         || exportProjectToDTD.isEnabled()
                         || exportProjectToSRM.isEnabled());
-                
+
                 // rebuild project history
                 openRecentProjectMenu.removeAll();
                 File[] files = Settings.getProjectHistory();
@@ -173,6 +176,7 @@ public class MainMenuBar extends JMenuBar {
         exportProjectToDAT = main.getExportProjectToDATAction();
         exportProjectToDTD = main.getExportProjectToTDTAction();
         exportProjectToSRM = main.getExportProjectToSRMAction();
+        print = main.getPrintAction();
         exit = main.getExitAction();
 
         /* Measurement Menu */

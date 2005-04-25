@@ -552,6 +552,10 @@ public class MeasurementSequencePanel extends ProjectComponent {
         }
     }
 
+    public JTable getSequenceTable() {
+        return this.sequenceTable;
+    }
+
     public void measurementUpdated(MeasurementEvent event) {
         if (event.getType() == MeasurementEvent.Type.STEP_START) {
 
