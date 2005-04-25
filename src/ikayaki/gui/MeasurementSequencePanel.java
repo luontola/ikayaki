@@ -496,7 +496,11 @@ public class MeasurementSequencePanel extends ProjectComponent {
      * edit controls and updates the table data.
      */
     public void setProject(final Project project) {
-        final boolean doSelect = getProject() != project;
+
+        // either select the last row, or keep the old selection
+        final boolean autoSelect = getProject() != project;
+        final int[] selectedRows = sequenceTable.getSelectedRows();
+
         super.setProject(project);
         sequenceTableModel.setProject(project);
         loadSequenceBox.setSelectedItem(null);
@@ -519,12 +523,20 @@ public class MeasurementSequencePanel extends ProjectComponent {
                     scrollToRow(sequenceTableModel.getRowCount() - 1);
                 }
 
-                // automatically select the last completed step
-                if (doSelect && project != null) {
-                    int i = project.getCompletedSteps() - 1;
-                    if (i >= 0) {
+                if (project != null) {
+                    if (autoSelect) {
+                        // automatically select the last completed step
+                        int i = project.getCompletedSteps() - 1;
+                        if (i >= 0) {
+                            sequenceTable.getSelectionModel().clearSelection();
+                            sequenceTable.getSelectionModel().setSelectionInterval(i, i);
+                        }
+                    } else {
+                        // restore the old selection
                         sequenceTable.getSelectionModel().clearSelection();
-                        sequenceTable.getSelectionModel().setSelectionInterval(i, i);
+                        for (int i : selectedRows) {
+                            sequenceTable.getSelectionModel().addSelectionInterval(i, i);
+                        }
                     }
                 }
             }
