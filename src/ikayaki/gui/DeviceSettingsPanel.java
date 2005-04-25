@@ -376,10 +376,16 @@ public class DeviceSettingsPanel extends JPanel {
 
         maximumField.addActionListener(propertiesActionListener);
 
-        zAxis.addActionListener(propertiesActionListener);
+        xAxis.addActionListener(propertiesActionListener);
         yAxis.addActionListener(propertiesActionListener);
         zAxis.addActionListener(propertiesActionListener);
-        
+        xAxis.setSelected(true);    // these checkboxes are not used
+        yAxis.setSelected(true);
+        zAxis.setSelected(true);
+        xAxis.setEnabled(false);
+        yAxis.setEnabled(false);
+        zAxis.setEnabled(false);
+
         saveButton.setEnabled(correctValues());
     }
 
