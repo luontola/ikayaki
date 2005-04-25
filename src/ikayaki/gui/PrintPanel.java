@@ -46,7 +46,13 @@ public class PrintPanel
 
 
     public PrintPanel(MainViewPanel mother) {
+
+        //TODO: how we get current project?
         project = mother.getProject();
+
+        //TODO: print project information
+
+        //TODO: draw table of sequences
 
         IntensityPlot intensityPlot = new IntensityPlot();
         StereoPlot stereoPlot = new StereoPlot();
