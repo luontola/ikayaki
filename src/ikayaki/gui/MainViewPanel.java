@@ -22,22 +22,14 @@
 
 package ikayaki.gui;
 
-import ikayaki.Ikayaki;
-import ikayaki.Project;
-import ikayaki.ProjectEvent;
-import ikayaki.Settings;
-import ikayaki.ProjectPrinter;
-import ikayaki.squid.SerialIO;
-import ikayaki.squid.Squid;
+import java.io.*;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.awt.event.*;
+import javax.swing.*;
+
+import ikayaki.*;
+import ikayaki.squid.*;
 
 /**
  * Creates the main view panels (split panels) and Squid and Project components. It also tells everybody if the current
@@ -66,6 +58,8 @@ public class MainViewPanel extends ProjectComponent {
     private Project latestMeasuringProject = null;
 
     /* GUI Components */
+    protected MainViewPanel mother;
+
     private MainMenuBar menuBar;
     private MainStatusBar statusBar;
 
@@ -85,6 +79,7 @@ public class MainViewPanel extends ProjectComponent {
     private Action exportProjectToDATAction;
     private Action exportProjectToDTDAction;
     private Action exportProjectToSRMAction;
+    private Action printPreviewAction;
     private Action printAction;
     private Action exitAction;
     private Action programSettingsAction;
@@ -680,10 +675,10 @@ public class MainViewPanel extends ProjectComponent {
 
     public Action getPrintAction() {
         if (printAction == null) {
+            //final MainViewPanel mother = this;
             printAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    ProjectPrinter.printComponent(measurementSequencePanel.getSequenceTable());
-                    ProjectPrinter.printComponent(measurementGraphsPanel);
+                    ProjectPrinter.printComponent(mother);
                 }
             };
             printAction.putValue(Action.NAME, "Print");
@@ -692,6 +687,20 @@ public class MainViewPanel extends ProjectComponent {
         }
         return printAction;
     }
+
+    public Action getPrintPreviewAction() {
+        if (printPreviewAction == null) {
+            //final MainViewPanel mother = this;
+            printPreviewAction = new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    SettingsDialog.showPrintPreview(getParentFrame(), "Print Preview",mother);
+                }
+            };
+            printPreviewAction.putValue(Action.NAME, "Print Preview");
+        }
+        return printPreviewAction;
+    }
+
 
 
     public Action getExitAction() {
@@ -791,6 +800,14 @@ public class MainViewPanel extends ProjectComponent {
             aboutAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
         }
         return aboutAction;
+    }
+
+    /**
+     * setMother
+     *
+     * @param main MainViewPanel
+     */
+    public void setMother(MainViewPanel main) {
     }
 
     /**
