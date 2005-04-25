@@ -280,6 +280,13 @@ public class MeasurementSequencePanel extends ProjectComponent {
     }
 
     /**
+     * Returns the table containing all displayed measurement sequence data. 
+     */
+    public JTable getSequenceTable() {
+        return this.sequenceTable;
+    }
+
+    /**
      * Rebuilds the contents of the loadSequenceBox combobox by getting the saved sequences from the settings.
      */
     private void resetLoadSequenceBox() {
@@ -550,10 +557,6 @@ public class MeasurementSequencePanel extends ProjectComponent {
                 sequenceTable.getSelectionModel().addSelectionInterval(i, i);
             }
         }
-    }
-
-    public JTable getSequenceTable() {
-        return this.sequenceTable;
     }
 
     public void measurementUpdated(MeasurementEvent event) {

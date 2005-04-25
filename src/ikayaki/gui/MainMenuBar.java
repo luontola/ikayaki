@@ -91,7 +91,6 @@ public class MainMenuBar extends JMenuBar {
             exportProjectMenu.add(exportProjectToSRM);
         }
         fileMenu.add(exportProjectMenu);
-        fileMenu.add(new JSeparator());
         fileMenu.add(print);
         fileMenu.add(new JSeparator());
         fileMenu.add(exit);

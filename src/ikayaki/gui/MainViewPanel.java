@@ -85,12 +85,12 @@ public class MainViewPanel extends ProjectComponent {
     private Action exportProjectToDATAction;
     private Action exportProjectToDTDAction;
     private Action exportProjectToSRMAction;
+    private Action printAction;
     private Action exitAction;
     private Action programSettingsAction;
     private Action deviceSettingsAction;
     private Action helpAction;
     private Action aboutAction;
-    private Action printAction;
 
     /**
      * Loads default view and creates all components and panels. Splitpanel between Calibration, Explorer, Information
