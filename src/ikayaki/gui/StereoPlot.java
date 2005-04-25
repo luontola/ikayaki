@@ -58,15 +58,12 @@ public class StereoPlot extends AbstractPlot {
         Double decValue = MeasurementValue.DECLINATION.getValue(step);
 
         if (incValue != null && decValue != null) {
-            if (incValue != null && decValue != null) {
-
-                if (incValue.doubleValue() >= 0) {
-                    points.add(toXY(decValue, incValue));
-                    incSign.add(new Boolean(true));
-                } else {
-                    points.add(toXY(decValue, incValue));
-                    incSign.add(new Boolean(false));
-                }
+            if (incValue.doubleValue() >= 0) {
+                points.add(toXY(decValue, incValue));
+                incSign.add(new Boolean(true));
+            } else {
+                points.add(toXY(decValue, incValue));
+                incSign.add(new Boolean(false));
             }
         }
     }
