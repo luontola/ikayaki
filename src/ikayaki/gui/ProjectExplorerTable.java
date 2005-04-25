@@ -672,7 +672,8 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
             for (File dir : new File[] {null, directory, new File("A:/")}) {
                 for (String type : new String[] {"dat", "tdt", "srm"}) {
                     JMenuItem exportitem;
-                    if (dir == null) exportitem = new JMenuItem(type.toUpperCase() + " file...");
+                    if (dir == null) exportitem = new JMenuItem(type.toUpperCase() + " file" +
+                                                                (files.length > 1 ? "s" : "") + "...");
                     else exportitem = new JMenuItem(new File(dir, basename + "." + type).toString());
 
                     this.add(exportitem);
@@ -695,8 +696,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                                 if (files.length > 1) chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                                 else dirHasFile = true; // we have explicit export-filename in exportdir
 
-                                chooser.setFileFilter(
-                                        new GenericFileFilter(filetype.toUpperCase() + " File", filetype));
+                                chooser.setFileFilter(new GenericFileFilter(filetype.toUpperCase() + " File", filetype));
 
                                 if (chooser.showSaveDialog(ProjectExplorerTable.this) == JFileChooser.APPROVE_OPTION)
                                     exportdir = chooser.getSelectedFile();
