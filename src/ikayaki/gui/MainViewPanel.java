@@ -472,9 +472,11 @@ public class MainViewPanel extends ProjectComponent {
     }
 
     /**
-     * Opens a file chooser and exports the active project to a different file format.
+     * Opens a file chooser and exports the project to a different file format.
      *
-     * @param type the type of file to export from the current project.
+     * @param project the project to be exported.
+     * @param type    the type of file to export from the current project.
+     * @param output  the file to write to, or null to open a file chooser.
      * @throws NullPointerException     if type or the current project is null.
      * @throws IllegalArgumentException if type is not "dat", "tdt" or "srm".
      */

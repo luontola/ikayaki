@@ -406,7 +406,7 @@ public class Project {
                 return null;
             }
         }
-        // TODO: should the cache be emptied at some point? - I suppose not.
+        // NOTE: Should the cache be emptied at some point? I suppose not. In normal use it won't get very big.
 
         Type type = null;
         BufferedReader reader = null;
