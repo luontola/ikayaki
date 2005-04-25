@@ -49,8 +49,8 @@ public class MainMenuBar extends JMenuBar {
     private Action exportProjectToDAT;
     private Action exportProjectToDTD;
     private Action exportProjectToSRM;
-    private Action exit;
     private Action print;
+    private Action exit;
 
     private JMenu measurementMenu;
     private Action autoStep;
