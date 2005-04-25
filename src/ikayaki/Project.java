@@ -2149,6 +2149,25 @@ public class Project {
     }
 
     /**
+     * Marks the on-going manual measurement step as completed. If there is a manual measurement going on, the project
+     * has one on-going measurement step event though the project's state is IDLE. Calling this method when no other
+     * manual operation is active, will set that step completed.
+     *
+     * @return true if the operation was successful, in which case no measurement step is anymore on-going.
+     */
+    public synchronized boolean doManualStepDone() {
+        if (!isManualControlEnabled()) {
+            return false;
+        }
+        if (currentStep != null) {
+            currentStep.setDone();
+            fireMeasurementEvent(currentStep, STEP_END);
+            currentStep = null;
+        }
+        return true;
+    }
+
+    /**
      * The type of the project.
      */
     public enum Type {
