@@ -64,6 +64,19 @@ public class Project {
 
     private static final boolean DEBUG = false;      // TODO: used for testing the measurements without a Squid
 
+    /* Property names for saving values to Project */
+    public static final String MEASUREMENT_TYPE_PROPERTY = "measurementType";
+    public static final String MEASUREMENT_TYPE_AUTO_VALUE = "AUTO";
+    public static final String MEASUREMENT_TYPE_MANUAL_VALUE = "MANUAL";
+    public static final String OPERATOR_PROPERTY = "operator";
+    public static final String DATE_PROPERTY = "date";
+    public static final String ROCK_TYPE_PROPERTY = "rockType";
+    public static final String LOCATION_PROPERTY = "location";
+    public static final String SITE_PROPERTY = "site";
+    public static final String COMMENT_PROPERTY = "comment";
+    public static final String LATITUDE_PROPERTY = "latitude";
+    public static final String LONGITUDE_PROPERTY = "longitude";
+
     /**
      * Caches the created and loaded Project objects to make sure that no more than one object will be created for each
      * physical file.
@@ -734,12 +747,6 @@ public class Project {
         synchronized (this) {
             // clear any delaying autosave operations
             autosaveQueue.clear();
-//            try {
-//                System.out.println("1");
-//                autosaveQueue.join();   // make sure that we do not interrupt an operation in progress
-//                System.out.println("2");
-//            } catch (InterruptedException e) {
-//            }
 
             // do not save if this has already been saved
             if (!isModified()) {
@@ -765,7 +772,58 @@ public class Project {
      * @throws NullPointerException if file is null.
      */
     public boolean exportToDAT(File file) {
-        return false; // TODO: exporting to DAT has priority over SRM and TDT
+        // TODO: exporting to DAT has priority over SRM and TDT
+        PrintStream out = null;
+        try {
+            out = new PrintStream(file, "ISO-8859-1");
+
+            // print headers
+
+
+
+
+
+            // exporting finished
+            return true;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Adds spaces to a string until it is the right length.
+     *
+     * @param s         the string to be padded.
+     * @param length    the desired length for the result string.
+     * @param alignment alignmet of the text. -1 for left, 0 for center and 1 for right align.
+     * @return the input string appended with spaces. Its length is equal or greater to the specified length.
+     */
+    private static String pad(String s, int length, int alignment) {
+        while (s.length() < length) {
+            if (alignment < 0) {
+                // left align
+                s = s + " ";
+            } else if (alignment > 0) {
+                // right align
+                s = " " + s;
+            } else {
+                // center
+                if (s.length() % 2 == 0) {
+                    s = s + " ";
+                } else {
+                    s = " " + s;
+                }
+            }
+        }
+        return s;
     }
 
     /**
@@ -867,14 +925,6 @@ public class Project {
             }
         }
         return null;
-//        Date last = null;
-//        for (int i = 0; i < sequence.getSteps(); i++) {
-//            Date d = sequence.getStep(i).getTimestamp();
-//            if (d != null && (last == null || d.after(last))) {
-//                last = d;
-//            }
-//        }
-//        return last;
     }
 
     /**
@@ -1478,15 +1528,6 @@ public class Project {
             }
         }
         return i + 1;
-//        for (i = 0; i < sequence.getSteps(); i++) {
-//            MeasurementStep.State state = sequence.getStep(i).getState();
-//            if (state == DONE || state == DONE_RECENTLY) {
-//                continue;
-//            } else {
-//                break;
-//            }
-//        }
-//        return i;
     }
 
     /**
@@ -1590,17 +1631,11 @@ public class Project {
         if (getSquid() == null) {
             return false;
         }
-//        if (type == CALIBRATION) {
-//            return false;
-//        } else if (type == AF || type == THELLIER || type == THERMAL) {
         if (getState() == IDLE) {
             return true;
         } else {
             return false;
         }
-//        } else {
-//            return false;
-//        }
     }
 
     /**
@@ -2495,28 +2530,5 @@ public class Project {
 
             setState(IDLE);
         }
-    }
-
-    public static void main(String[] args) {
-        File file = new File("test.ika");
-        file.delete();
-
-        Project p;
-        p = Project.createThermalProject(file);
-        System.out.println("created");
-        System.out.println("load from cache: " + (p == Project.loadProject(file)));
-
-        p.setProperty("testProperty", "hulabaloo1");
-        p.setProperty("testProperty", "hulabaloo2");
-        p.setProperty("testProperty3", "hulabaloo3");
-
-        System.out.println("begin close");
-        Project.closeProject(p);
-        System.out.println("end close");
-
-        System.out.println("load from cache: " + (p == Project.loadProject(file)));
-
-        p = Project.loadProject(file);
-        p.saveNow();
     }
 }

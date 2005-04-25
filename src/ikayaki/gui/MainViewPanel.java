@@ -164,16 +164,28 @@ public class MainViewPanel extends ProjectComponent {
         gc.weightx = 0.0;
         gc.weighty = 1.0;
         right.add(getMeasurementControlsPanel(), gc);
-        gc.gridx = 0;
-        gc.gridy = 1;
-        gc.weightx = 1.0;
-        gc.weighty = 0.0;
-        right.add(getMeasurementDetailsPanel(), gc);
-        gc.gridx = 1;
-        gc.gridy = 1;
-        gc.weightx = 0.0;
-        gc.weighty = 0.0;
-        right.add(getMeasurementGraphsPanel(), gc);
+        if (false) {
+            gc.gridx = 0;
+            gc.gridy = 1;
+            gc.weightx = 1.0;
+            gc.weighty = 0.0;
+            right.add(getMeasurementDetailsPanel(), gc);
+            gc.gridx = 1;
+            gc.gridy = 1;
+            gc.weightx = 0.0;
+            gc.weighty = 0.0;
+            right.add(getMeasurementGraphsPanel(), gc);
+        } else {
+            JPanel bottom = new JPanel(new BorderLayout());
+            bottom.add(getMeasurementDetailsPanel(), BorderLayout.WEST);
+            bottom.add(getMeasurementGraphsPanel(), BorderLayout.CENTER);
+            gc.gridx = 0;
+            gc.gridy = 1;
+            gc.gridwidth = 2;
+            gc.weightx = 1.0;
+            gc.weighty = 0.0;
+            right.add(bottom, gc);
+        }
 
         // configure tabs
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);

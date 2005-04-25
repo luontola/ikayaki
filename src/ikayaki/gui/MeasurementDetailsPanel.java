@@ -103,7 +103,7 @@ public class MeasurementDetailsPanel extends ProjectComponent {
         this.setLayout(new BorderLayout());
         this.add(scrollPane);
         this.setMinimumSize(new Dimension(0, 225));
-        this.setPreferredSize(new Dimension(0, 225));
+        this.setPreferredSize(new Dimension(400, 225));
     }
 
     @Override public void setProject(Project project) {
