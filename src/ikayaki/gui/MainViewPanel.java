@@ -153,7 +153,6 @@ public class MainViewPanel extends ProjectComponent {
         left.add(getProjectInformationPanel(), gc);
 
         // build right tab
-        // TODO: more space for the graphs
         gc.gridx = 0;
         gc.gridy = 0;
         gc.weightx = 1.0;
@@ -176,6 +175,7 @@ public class MainViewPanel extends ProjectComponent {
             gc.weighty = 0.0;
             right.add(getMeasurementGraphsPanel(), gc);
         } else {
+            // more space for the graphs
             JPanel bottom = new JPanel(new BorderLayout());
             bottom.add(getMeasurementDetailsPanel(), BorderLayout.WEST);
             bottom.add(getMeasurementGraphsPanel(), BorderLayout.CENTER);

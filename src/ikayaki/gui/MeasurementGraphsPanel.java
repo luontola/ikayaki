@@ -69,8 +69,6 @@ public class MeasurementGraphsPanel extends ProjectComponent implements ProjectL
         setLayout(new BorderLayout());
         add(tabbedPane, "Center");
 
-        setMinimumSize(new Dimension(400, -1));
-
         // initialize with no project
         setProject(null);
 

@@ -50,19 +50,6 @@ import java.util.Queue;
  */
 public class ProjectInformationPanel extends ProjectComponent {
 
-    /* Property names for saving values to Project */
-    private static final String MEASUREMENT_TYPE_PROPERTY = "measurementType";
-    private static final String MEASUREMENT_TYPE_AUTO_VALUE = "AUTO";
-    private static final String MEASUREMENT_TYPE_MANUAL_VALUE = "MANUAL";
-    private static final String OPERATOR_PROPERTY = "operator";
-    private static final String DATE_PROPERTY = "date";
-    private static final String ROCK_TYPE_PROPERTY = "rockType";
-    private static final String LOCATION_PROPERTY = "location";
-    private static final String SITE_PROPERTY = "site";
-    private static final String COMMENT_PROPERTY = "comment";
-    private static final String LATITUDE_PROPERTY = "latitude";
-    private static final String LONGITUDE_PROPERTY = "longitude";
-
     /* Radio Button Groups */
     private ButtonGroup measurementType;
     private JRadioButton measurementTypeAuto;
@@ -241,26 +228,27 @@ public class ProjectInformationPanel extends ProjectComponent {
             // get values from the new project
 
             /* Radio Button Groups */
-            measurementTypeAuto.setSelected(project.getProperty(MEASUREMENT_TYPE_PROPERTY,
-                    MEASUREMENT_TYPE_AUTO_VALUE).equals(MEASUREMENT_TYPE_AUTO_VALUE));
-            measurementTypeManual.setSelected(project.getProperty(MEASUREMENT_TYPE_PROPERTY,
-                    MEASUREMENT_TYPE_AUTO_VALUE).equals(MEASUREMENT_TYPE_MANUAL_VALUE));
+            measurementTypeAuto.setSelected(project.getProperty(Project.MEASUREMENT_TYPE_PROPERTY,
+                    Project.MEASUREMENT_TYPE_AUTO_VALUE).equals(Project.MEASUREMENT_TYPE_AUTO_VALUE));
+            measurementTypeManual.setSelected(project.getProperty(Project.MEASUREMENT_TYPE_PROPERTY,
+                    Project.MEASUREMENT_TYPE_AUTO_VALUE).equals(Project.MEASUREMENT_TYPE_MANUAL_VALUE));
             sampleTypeHand.setSelected(project.getSampleType() == Project.SampleType.HAND);
             sampleTypeCore.setSelected(project.getSampleType() == Project.SampleType.CORE);
             normalizationVolume.setSelected(project.getNormalization() == Project.Normalization.VOLUME);
             normalizationMass.setSelected(project.getNormalization() == Project.Normalization.MASS);
 
             /* Plain Text Fields */
-            operatorField.setText(project.getProperty(OPERATOR_PROPERTY, ""));
-            dateField.setText(project.getProperty(DATE_PROPERTY, DateFormat.getDateInstance().format(new Date())));
-            rockTypeField.setText(project.getProperty(ROCK_TYPE_PROPERTY, ""));
-            locationField.setText(project.getProperty(LOCATION_PROPERTY, ""));
-            siteField.setText(project.getProperty(SITE_PROPERTY, ""));
-            commentArea.setText(project.getProperty(COMMENT_PROPERTY, ""));
+            operatorField.setText(project.getProperty(Project.OPERATOR_PROPERTY, ""));
+            dateField.setText(
+                    project.getProperty(Project.DATE_PROPERTY, DateFormat.getDateInstance().format(new Date())));
+            rockTypeField.setText(project.getProperty(Project.ROCK_TYPE_PROPERTY, ""));
+            locationField.setText(project.getProperty(Project.LOCATION_PROPERTY, ""));
+            siteField.setText(project.getProperty(Project.SITE_PROPERTY, ""));
+            commentArea.setText(project.getProperty(Project.COMMENT_PROPERTY, ""));
 
             /* Number Fields */
-            latitudeField.setText(project.getProperty(LATITUDE_PROPERTY, ""));
-            longitudeField.setText(project.getProperty(LONGITUDE_PROPERTY, ""));
+            latitudeField.setText(project.getProperty(Project.LATITUDE_PROPERTY, ""));
+            longitudeField.setText(project.getProperty(Project.LONGITUDE_PROPERTY, ""));
             strikeField.setValue(new Double(project.getStrike()));
             dipField.setValue(new Double(project.getDip()));
             massField.setValue(new Double(project.getMass()));
@@ -327,23 +315,23 @@ public class ProjectInformationPanel extends ProjectComponent {
 
         /* Radio Button Groups */
         if (measurementTypeAuto.isSelected()) {
-            getProject().setProperty(MEASUREMENT_TYPE_PROPERTY, MEASUREMENT_TYPE_AUTO_VALUE);
+            getProject().setProperty(Project.MEASUREMENT_TYPE_PROPERTY, Project.MEASUREMENT_TYPE_AUTO_VALUE);
         }
         if (measurementTypeManual.isSelected()) {
-            getProject().setProperty(MEASUREMENT_TYPE_PROPERTY, MEASUREMENT_TYPE_MANUAL_VALUE);
+            getProject().setProperty(Project.MEASUREMENT_TYPE_PROPERTY, Project.MEASUREMENT_TYPE_MANUAL_VALUE);
         }
 
         /* Plain Text Fields */
-        getProject().setProperty(OPERATOR_PROPERTY, operatorField.getText());
-        getProject().setProperty(DATE_PROPERTY, dateField.getText());
-        getProject().setProperty(ROCK_TYPE_PROPERTY, rockTypeField.getText());
-        getProject().setProperty(LOCATION_PROPERTY, locationField.getText());
-        getProject().setProperty(SITE_PROPERTY, siteField.getText());
-        getProject().setProperty(COMMENT_PROPERTY, commentArea.getText());
+        getProject().setProperty(Project.OPERATOR_PROPERTY, operatorField.getText());
+        getProject().setProperty(Project.DATE_PROPERTY, dateField.getText());
+        getProject().setProperty(Project.ROCK_TYPE_PROPERTY, rockTypeField.getText());
+        getProject().setProperty(Project.LOCATION_PROPERTY, locationField.getText());
+        getProject().setProperty(Project.SITE_PROPERTY, siteField.getText());
+        getProject().setProperty(Project.COMMENT_PROPERTY, commentArea.getText());
 
         /* Number Fields */
-        getProject().setProperty(LATITUDE_PROPERTY, latitudeField.getText());
-        getProject().setProperty(LONGITUDE_PROPERTY, longitudeField.getText());
+        getProject().setProperty(Project.LATITUDE_PROPERTY, latitudeField.getText());
+        getProject().setProperty(Project.LONGITUDE_PROPERTY, longitudeField.getText());
 
         propertiesModified = false;
     }
