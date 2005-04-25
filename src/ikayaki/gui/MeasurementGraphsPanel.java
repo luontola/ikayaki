@@ -85,6 +85,9 @@ public class MeasurementGraphsPanel extends ProjectComponent implements ProjectL
                 mgp.setProject(getProject());
                 gd.add(mgp, BorderLayout.CENTER);
                 gd.pack();
+                Rectangle maxBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+                gd.setSize((int) (maxBounds.width * 0.5), (int) (maxBounds.height * 0.5));
+                gd.setLocationRelativeTo(getParentFrame());
                 gd.setVisible(true);
             }
         });
