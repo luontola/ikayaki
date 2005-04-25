@@ -478,13 +478,25 @@ public class MainViewPanel extends ProjectComponent {
      * @throws NullPointerException     if type or the current project is null.
      * @throws IllegalArgumentException if type is not "dat", "tdt" or "srm".
      */
-    public void exportProject(String type) {
+    public void exportProject(Project project, String type, File output) {
+        if (project == null) {
+            throw new NullPointerException();
+        }
         type = type.toLowerCase();
         JFileChooser chooser = new JFileChooser(Settings.getLastDirectory());
         chooser.setFileFilter(new GenericFileFilter(type.toUpperCase() + " File", type));
 
         do {
-            int returnVal = chooser.showSaveDialog(MainViewPanel.this);
+            // open a file dialog (or emulate it, if an output file has been specified)
+            int returnVal;
+            if (output == null) {
+                returnVal = chooser.showSaveDialog(MainViewPanel.this);
+            } else {
+                chooser.setSelectedFile(output);
+                returnVal = JFileChooser.APPROVE_OPTION;
+                output = null;
+            }
+
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = chooser.getSelectedFile();
 
@@ -507,11 +519,11 @@ public class MainViewPanel extends ProjectComponent {
                 // write new file
                 boolean ok;
                 if (type.equals("dat")) {
-                    ok = getProject().exportToDAT(chooser.getSelectedFile());
+                    ok = project.exportToDAT(chooser.getSelectedFile());
                 } else if (type.equals("tdt")) {
-                    ok = getProject().exportToTDT(chooser.getSelectedFile());
+                    ok = project.exportToTDT(chooser.getSelectedFile());
                 } else if (type.equals("srm")) {
-                    ok = getProject().exportToSRM(chooser.getSelectedFile());
+                    ok = project.exportToSRM(chooser.getSelectedFile());
                 } else {
                     throw new IllegalArgumentException("Unkown export type: " + type);
                 }
@@ -651,7 +663,7 @@ public class MainViewPanel extends ProjectComponent {
         if (exportProjectToDATAction == null) {
             exportProjectToDATAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    exportProject("dat");
+                    exportProject(getProject(), "dat", null);
                 }
             };
             exportProjectToDATAction.putValue(Action.NAME, "DAT File...");
@@ -664,7 +676,7 @@ public class MainViewPanel extends ProjectComponent {
         if (exportProjectToDTDAction == null) {
             exportProjectToDTDAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    exportProject("tdt");
+                    exportProject(getProject(), "tdt", null);
                 }
             };
             exportProjectToDTDAction.putValue(Action.NAME, "TDT File...");
@@ -677,7 +689,7 @@ public class MainViewPanel extends ProjectComponent {
         if (exportProjectToSRMAction == null) {
             exportProjectToSRMAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    exportProject("srm");
+                    exportProject(getProject(), "srm", null);
                 }
             };
             exportProjectToSRMAction.putValue(Action.NAME, "SRM File...");
