@@ -557,6 +557,12 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         private final ComponentFlasher resetAllButtonFlasher = new ComponentFlasher(resetAllButton);
 
         /**
+         * Moves to next measurement line (in main table).
+         */
+        private final JButton nextLineButton = new JButton("Next line");
+        private final ComponentFlasher nextLineButtonFlasher = new ComponentFlasher(nextLineButton);
+
+        /**
          * Demagnetization amplitude in mT, used when demagZ/YButton is clicked.
          */
         private final JTextField demagAmplitudeField = new JTextField();
@@ -566,6 +572,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         /**
          * Demagnetizes in Z, X or Y, depending on current handler position and rotation.
          */
+        // TODO-todo, make this work...
         private final JButton demagButton = new JButton("Demag");
         private final String demagButtonBaseText = "Demag ";
         // TODO: add some action here
@@ -593,7 +600,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         private final Component[] components = new Component[]{
             moveLeft, moveHome, moveDemagZ, moveDemagY, moveBG, moveMeasure, moveRight,
             rotate0, rotate90, rotate180, rotate270,
-            measureAllButton, resetAllButton, demagAmplitudeField, demagAmplitudeLabel, demagZButton, demagYButton,
+            measureAllButton, resetAllButton, nextLineButton,
+            demagAmplitudeField, demagAmplitudeLabel, demagZButton, demagYButton,
             moveLabel, rotateLabel, measureLabel, demagLabel
         };
 
@@ -627,6 +635,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
             measureAllButton.setMargin(new Insets(1, 1, 1, 1));
             resetAllButton.setMargin(new Insets(1, 1, 1, 1));
+            nextLineButton.setMargin(new Insets(1, 1, 1, 1));
             demagZButton.setMargin(new Insets(1, 1, 1, 1));
             demagYButton.setMargin(new Insets(1, 1, 1, 1));
 
@@ -645,6 +654,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             JPanel measureButtonPanel = new JPanel(new GridLayout(3, 1, 0, 4));
             measureButtonPanel.add(measureAllButton);
             measureButtonPanel.add(resetAllButton);
+            measureButtonPanel.add(nextLineButton);
             measurePanel.add(measureLabel, BorderLayout.NORTH);
             measurePanel.add(measureButtonPanel, BorderLayout.CENTER);
 
@@ -741,32 +751,24 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             rotate0.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     project.doManualRotate(0);
-                    //statusAnimator.going(position, 0);
-                    //handler.rotateTo(0);
                 }
             });
 
             rotate90.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     project.doManualRotate(90);
-                    //statusAnimator.going(position, 90);
-                    //handler.rotateTo(90);
                 }
             });
 
             rotate180.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     project.doManualRotate(180);
-                    //statusAnimator.going(position, 180);
-                    //handler.rotateTo(180);
                 }
             });
 
             rotate270.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     project.doManualRotate(270);
-                    //statusAnimator.going(position, 270);
-                    //handler.rotateTo(270);
                 }
             });
 
@@ -788,6 +790,15 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
                 public void actionPerformed(ActionEvent e) {
                     // TODO: what to do?
                     //if (!project.doManualReset()) resetAllButtonFlasher.flash();
+                }
+            });
+
+            /*
+             * Bonus Event: Move to next measurement line (done with these details).
+             */
+            nextLineButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (!project.doManualStepDone()) nextLineButtonFlasher.flash();
                 }
             });
 
