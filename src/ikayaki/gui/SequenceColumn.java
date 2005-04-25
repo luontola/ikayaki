@@ -498,14 +498,14 @@ public enum SequenceColumn {
             INCLINATION,
             MAGNETIZATION,
             RELATIVE_MAGNETIZATION,
+            THETA63,
             MOMENT,
             GEOGRAPHIC_X,
             GEOGRAPHIC_Y,
             GEOGRAPHIC_Z,
             SAMPLE_X,
             SAMPLE_Y,
-            SAMPLE_Z,
-            THETA63
+            SAMPLE_Z
         };
     }
 

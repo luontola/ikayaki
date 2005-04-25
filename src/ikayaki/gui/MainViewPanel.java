@@ -154,6 +154,7 @@ public class MainViewPanel extends ProjectComponent {
         left.add(getProjectInformationPanel(), gc);
 
         // build right tab
+        // TODO: more space for the graphs
         gc.gridx = 0;
         gc.gridy = 0;
         gc.weightx = 1.0;
@@ -755,8 +756,7 @@ public class MainViewPanel extends ProjectComponent {
         if (aboutAction == null) {
             aboutAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    String message = Ikayaki.APP_NAME + " " + Ikayaki.APP_VERSION +
-                            /* " / " + Ikayaki.APP_VERSION_NAME + */ "\n" +
+                    String message = Ikayaki.APP_NAME + " " + Ikayaki.APP_VERSION + "\n" +
                             Ikayaki.APP_BUILD + "\n\n" +
                             Ikayaki.APP_HOME_PAGE + "\n\n";
                     for (String author : Ikayaki.AUTHORS) {
