@@ -132,8 +132,8 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         explorerTableModel = new ProjectExplorerTableModel();
         this.setModel(explorerTableModel);
 
-        // TODO: should be able to select and export multiple files at a time
-        this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        // allow multiple line selection for multi-file-export
+        // this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.getTableHeader().setReorderingAllowed(false);
         this.getTableHeader().setResizingAllowed(false);
         this.setShowGrid(false);
@@ -166,22 +166,20 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                  * so that if for some reason no row is selected and the currently open project is in this
                  * directory, select that project's file.
                  */
+                // - done, see below
 
                 // we only want the actually selected row, and don't want to react to an already selected line
                 // (which could also mean that we had a load error, and that selection was reverted)
                 if (e.getValueIsAdjusting() || getSelectedRow() == selectedFile) return;
-                if (getSelectedRow() == -1) return; // otherwise will crash the program upon loading a file
+                if (getSelectedRowCount() > 1) return; // do nothing if multiple files selected
 
-                Project project = Project.loadProject(files[getSelectedRow()]);
+                Project project = getSelectedRow() == -1 ? null : Project.loadProject(files[getSelectedRow()]);
 
-                // if load error, revert back to old selection
+                // if load error, or nothing selected, revert back to old selection
                 if (project == null) {
                     // TODO: flash selected row red for 100 ms, perhaps? - might require a custom cell renderer
-                    if (selectedFile == -1) {
-                        clearSelection();
-                    } else {
-                        setRowSelectionInterval(selectedFile, selectedFile);
-                    }
+                    if (selectedFile == -1) clearSelection();
+                    else setRowSelectionInterval(selectedFile, selectedFile);
                 } else {
                     ProjectExplorerTable.this.parent.setProject(project);
                 }
@@ -197,10 +195,16 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                 // only right-click brings popup menu
                 if (e.getButton() != MouseEvent.BUTTON3) return;
 
-                int row = rowAtPoint(e.getPoint());
+                int[] row;
+                if (getSelectedRowCount() > 1) row = getSelectedRows();
+                else row = new int[] { rowAtPoint(e.getPoint()) };
+
+                // copy files matching selected (or clicked) rows
+                File[] file = new File[row.length];
+                for (int n = 0; n < row.length; n++) file[n] = files[row[n]];
 
                 // construct a new popup menu for every click
-                ProjectExplorerPopupMenu explorerTablePopup = new ProjectExplorerPopupMenu(files[row]);
+                ProjectExplorerPopupMenu explorerTablePopup = new ProjectExplorerPopupMenu(file);
                 explorerTablePopup.show(ProjectExplorerTable.this, e.getX(), e.getY());
             }
         });
@@ -301,6 +305,8 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
 
     /**
      * Scrolls the table to show the specified row.
+     *
+     * @param rowIndex row to scroll to.
      */
     private void scrollToRow(int rowIndex) {
         scrollRectToVisible(getCellRect(rowIndex, rowIndex, true));
@@ -405,14 +411,19 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
              */
             new Timer(5 * 60 * 1000, new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    ProjectExplorerTable.this.setDirectory(directory);
+                    // don't want to mess with table selection, so just update all lines, as this
+                    // doesn't mess with table selection (unlike fireTableDataChanged), which is nice :)
+                    explorerTableModel.fireTableRowsUpdated(0, getRowCount() - 1);
+                    // ProjectExplorerTable.this.setDirectory(directory);
                 }
             }).start();
         }
 
         public String getColumnName(int column) {
             // translate visible column -> all columns for column_name, _not_ for sort column
-            return column_name[columns[column]] /* + (column == explorerTableSortColumn ? " *" : "") */; // TODO: does this look better without the "*"?
+            // TODO: does this look better without the "*"?
+            // - not to me, but don't really care anymore :)
+            return column_name[columns[column]] /* + (column == explorerTableSortColumn ? " *" : "") */;
         }
 
         public int getRowCount() {
@@ -624,33 +635,45 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
      */
     private class ProjectExplorerPopupMenu extends JPopupMenu {
 
+        /** files to export */
+        private File[] files;
+
+        /** directory where to export by default */
+        private File directory;
+
         /**
          * Builds the popup menu, but doesn't show it; use show(...) to do that.
          *
-         * @param file file to show export menu for.
+         * @param xfiles file(s) to show export menu for.
          */
-        public ProjectExplorerPopupMenu(final File file) {
-            final File directory = file.getParentFile();
-            String filename = file.getName();
-            String basename = filename;
-            if (filename.toLowerCase().endsWith(Ikayaki.FILE_TYPE)) {
-                basename = filename.substring(0, filename.length() - Ikayaki.FILE_TYPE.length());
+        public ProjectExplorerPopupMenu(File[] xfiles) {
+            if (xfiles == null || xfiles.length == 0) return; // stupid caller
+
+            this.files = xfiles;
+            this.directory = files[0].getParentFile();
+
+            String filename, basename;
+            if (files.length == 1) {
+                filename = files[0].getName();
+                basename = filename;
+                if (basename.toLowerCase().endsWith(Ikayaki.FILE_TYPE))
+                    basename = basename.substring(0, basename.length() - Ikayaki.FILE_TYPE.length());
+            } else {
+                filename = "selected " + files.length + " files";
+                basename = "*";
             }
 
-            JMenuItem export = new JMenuItem("Export '" + filename + "' to");
+            JMenuItem export = new JMenuItem("Export " + filename + " to");
             export.setFont(export.getFont().deriveFont(Font.BOLD));
             export.setEnabled(false);
             this.add(export);
 
             // TODO: some portable way to get a File for disk drive? Or maybe a Setting for export-dirs?
-            for (File dir : new File[]{null, directory, new File("A:/")}) {
-                for (String type : new String[]{"dat", "tdt", "srm"}) {
+            for (File dir : new File[] {null, directory, new File("A:/")}) {
+                for (String type : new String[] {"dat", "tdt", "srm"}) {
                     JMenuItem exportitem;
-                    if (dir == null) {
-                        exportitem = new JMenuItem(type.toUpperCase() + " file...");
-                    } else {
-                        exportitem = new JMenuItem(new File(dir, basename + "." + type).toString());
-                    }
+                    if (dir == null) exportitem = new JMenuItem(type.toUpperCase() + " file...");
+                    else exportitem = new JMenuItem(new File(dir, basename + "." + type).toString());
 
                     this.add(exportitem);
 
@@ -662,41 +685,56 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                         public void actionPerformed(ActionEvent e) {
                             String filename = e.getActionCommand();
                             String filetype = filename.substring(filename.length() - 3);
-                            File exportfile;
+                            File exportdir;
+                            boolean dirHasFile = false;
 
                             if (filetype.equals("...")) {
                                 filetype = filename.substring(0, 3).toLowerCase();
                                 JFileChooser chooser = new JFileChooser(directory);
+
+                                if (files.length > 1) chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                                else dirHasFile = true; // we have explicit export-filename in exportdir
+
                                 chooser.setFileFilter(
                                         new GenericFileFilter(filetype.toUpperCase() + " File", filetype));
 
-                                if (chooser.showSaveDialog(ProjectExplorerTable.this) == JFileChooser.APPROVE_OPTION) {
-                                    exportfile = chooser.getSelectedFile();
-                                } else {
-                                    return;
-                                }
+                                if (chooser.showSaveDialog(ProjectExplorerTable.this) == JFileChooser.APPROVE_OPTION)
+                                    exportdir = chooser.getSelectedFile();
+                                else return;
 
-                            } else {
-                                exportfile = new File(filename);
-                            }
+                            } else exportdir = new File(filename).getParentFile();
 
                             // execute export
-                            boolean ok = false;
-                            if (filetype.equals("dat")) {
-                                ok = Project.loadProject(file).exportToDAT(exportfile);
-                            } else if (filetype.equals("tdt")) {
-                                ok = Project.loadProject(file).exportToTDT(exportfile);
-                            } else if (filetype.equals("srm")) ok = Project.loadProject(file).exportToSRM(exportfile);
+                            for (File f : files) {
+                                File exportfile;
+                                if (dirHasFile) {
+                                    exportfile = exportdir;
+                                    if (!exportfile.getName().toLowerCase().endsWith("." + filetype))
+                                        exportfile = new File(exportfile.toString() + "." + filetype);
+                                } else {
+                                    String exportname = f.getName();
+                                    if (exportname.toLowerCase().endsWith(Ikayaki.FILE_TYPE))
+                                        exportname = exportname.substring(0,
+                                            exportname.length() - Ikayaki.FILE_TYPE.length());
+                                    exportname += "." + filetype;
+                                    exportfile = new File(exportdir, exportname);
+                                }
 
-                            // TODO: tell somehow, not with popup, if export was successful; statusbar perhaps?
-                            Component c = ProjectExplorerTable.this;
-                            while (c.getParent() != null) {
-                                c = c.getParent();
-                            }
-                            if (!ok) {
-                                JOptionPane.showMessageDialog(c,
-                                        "Unable to write to " + exportfile,
-                                        "Error exporting file", JOptionPane.ERROR_MESSAGE);
+                                System.out.print("Exporting " + exportfile + "... ");
+
+                                boolean ok = false;
+                                if (filetype.equals("dat")) ok = Project.loadProject(f).exportToDAT(exportfile);
+                                else if (filetype.equals("tdt")) ok = Project.loadProject(f).exportToTDT(exportfile);
+                                else if (filetype.equals("srm")) ok = Project.loadProject(f).exportToSRM(exportfile);
+
+                                System.out.println(ok ? "ok" : "ERROR");
+/*
+                                // TODO: tell somehow, not with popup, if export was successful; statusbar perhaps?
+                                Component c = ProjectExplorerTable.this;
+                                while (c.getParent() != null) c = c.getParent();
+                                if (!ok) JOptionPane.showMessageDialog(c, "Unable to write to " + exportfile,
+                                                                       "Error exporting files", JOptionPane.ERROR_MESSAGE);
+*/
                             }
                         }
                     });
