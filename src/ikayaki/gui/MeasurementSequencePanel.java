@@ -280,7 +280,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
     }
 
     /**
-     * Returns the table containing all displayed measurement sequence data. 
+     * Returns the table containing all displayed measurement sequence data.
      */
     public JTable getSequenceTable() {
         return this.sequenceTable;

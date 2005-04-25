@@ -686,9 +686,9 @@ public class MainViewPanel extends ProjectComponent {
                     ProjectPrinter.printComponent(measurementGraphsPanel);
                 }
             };
-            printAction.putValue(Action.NAME, "Exit");
-            printAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_X);
-            printAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK));
+            printAction.putValue(Action.NAME, "Print");
+            printAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_P);
+            printAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_MASK));
         }
         return printAction;
     }
