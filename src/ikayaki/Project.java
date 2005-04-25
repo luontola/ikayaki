@@ -37,6 +37,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.FieldPosition;
 import java.util.*;
 
 import static ikayaki.MeasurementStep.State.READY;
@@ -774,15 +775,28 @@ public class Project {
      * @throws NullPointerException if file is null.
      */
     public boolean exportToDAT(File file) {
-        // TODO: exporting to DAT has priority over SRM and TDT
         PrintStream out = null;
         try {
             out = new PrintStream(file, "ISO-8859-1");
+            double d;
+            Double dd;
+            String s;
 
             // locales and formatters for numbers
             Locale locale = new Locale("en");
             DecimalFormat format2Frac = new DecimalFormat("###0.00", new DecimalFormatSymbols(locale));
             DecimalFormat format3Frac = new DecimalFormat("##0.000", new DecimalFormatSymbols(locale));
+            DecimalFormat format5Numb = new DecimalFormat("###0.0000", new DecimalFormatSymbols(locale)) {
+                @Override public StringBuffer format(double number, StringBuffer result, FieldPosition fieldPosition) {
+                    StringBuffer sb = super.format(number, result, fieldPosition);
+                    if (number < 0) {
+                        sb.delete(7, sb.length());
+                    } else {
+                        sb.delete(6, sb.length());
+                    }
+                    return sb;
+                }
+            };
 
             // generic headers
             out.print(pad("SQUID", 11, -1));
@@ -798,9 +812,14 @@ public class Project {
 
             out.print(pad("Site", 10, -1));
             out.print(":");
-            out.println(getProperty(LOCATION_PROPERTY, "") + "/" + getProperty(SITE_PROPERTY, ""));
+            s = getProperty(LOCATION_PROPERTY, "");
+            if (s.length() > 0) {
+                s += "/";
+            }
+            s += getProperty(SITE_PROPERTY, "");
+            out.println(s);
 
-            out.print(pad("Rocktype", 10, -1));
+            out.print(pad("Sampletype", 10, -1));
             out.print(":");
             if (getSampleType() == CORE) {
                 out.println("core sample");
@@ -815,13 +834,20 @@ public class Project {
             // value headers
             String header = "";
             String values = "";
-            double d;
 
-            d = Double.parseDouble(getProperty(LATITUDE_PROPERTY, "0.0"));
+            try {
+                d = Double.parseDouble(getProperty(LATITUDE_PROPERTY, "0.0"));
+            } catch (NumberFormatException e) {
+                d = 0.0;
+            }
             header += pad("Lat ", 8, 1);
             values += pad(format2Frac.format(d), 8, 1);
 
-            d = Double.parseDouble(getProperty(LONGITUDE_PROPERTY, "0.0"));
+            try {
+                d = Double.parseDouble(getProperty(LONGITUDE_PROPERTY, "0.0"));
+            } catch (NumberFormatException e) {
+                d = 0.0;
+            }
             header += pad("Lon ", 8, 1);
             values += pad(format2Frac.format(d), 8, 1);
 
@@ -862,40 +888,61 @@ public class Project {
 
             for (int i = 0; i < getCompletedSteps(); i++) {
                 MeasurementStep step = getStep(i);
-                Double dd;
 
                 // AF/TF
-                out.print(pad("" + Math.max((int) Math.round(step.getStepValue()), 0), 4, 1));
+                s = "" + Math.max((int) Math.round(step.getStepValue()), 0);
+                out.print(pad(s, 4, 1));
 
                 // Dec
                 dd = MeasurementValue.DECLINATION.getValue(step);
                 d = dd != null ? dd : 0.0;
-                out.print(pad(format2Frac.format(d), 8, 1));
+                s = format2Frac.format(d);
+                out.print(pad(s, 8, 1));
 
                 // Inc
                 dd = MeasurementValue.INCLINATION.getValue(step);
                 d = dd != null ? dd : 0.0;
-                out.print(pad(format2Frac.format(d), 7, 1));
+                s = format2Frac.format(d);
+                out.print(pad(s, 7, 1));
 
                 // Int
-                out.print(pad("", 11, 1));
+                dd = MeasurementValue.MAGNETIZATION.getValue(step);
+                d = dd != null ? dd : 0.0;
+                s = format5Numb.format(d);
+                out.print(pad(s, 11, 1));
 
                 // Sus
-                out.print(pad("", 9, 1));
+                d = step.getSusceptibility();
+                d = d >= 0.0 ? d : Math.max(getSusceptibility(), 0.0);
+                s = format5Numb.format(d);
+                out.print(pad(s, 9, 1));
 
                 // T63
-                out.print(pad("", 7, 1));
+                dd = MeasurementValue.THETA63.getValue(step);
+                d = dd != null ? dd : 0.0;
+                s = format2Frac.format(d);
+                out.print(pad(s, 7, 1));
 
                 // Xkomp
-                out.print(pad("", 11, 1));
+                dd = MeasurementValue.SAMPLE_X.getValue(step);
+                d = dd != null ? dd : 0.0;
+                s = format5Numb.format(d);
+                out.print(pad(s, 11, 1));
 
                 // Ykomp
-                out.print(pad("", 11, 1));
+                dd = MeasurementValue.SAMPLE_Y.getValue(step);
+                d = dd != null ? dd : 0.0;
+                s = format5Numb.format(d);
+                out.print(pad(s, 11, 1));
 
                 // Zkomp
-                out.print(pad("", 11, 1));
-            }
+                dd = MeasurementValue.SAMPLE_Z.getValue(step);
+                d = dd != null ? dd : 0.0;
+                s = format5Numb.format(d);
+                out.print(pad(s, 11, 1));
 
+                out.println();
+            }
 
             // exporting finished
             return true;
