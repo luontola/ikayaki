@@ -2638,14 +2638,31 @@ public class Project {
                 throw new IllegalStateException();
             }
 
-            // TODO: add a measurement step
+            // select the first unfinished step or add a new one
+            if (currentStep == null) {
+                int i = getCompletedSteps();
+                if (i == getSteps()) {
+                    addStep(new MeasurementStep(Project.this));
+                }
+                currentStep = getStep(i);
+                currentStep.setMeasuring();
+                fireMeasurementEvent(currentStep, STEP_START);
+            }
 
             Double[] results = getSquid().getMagnetometer().readData();
 
-            //TODO: check where we are and change SAMPLE to something else.
-            currentStep.addResult(new MeasurementResult(SAMPLE, getSquid().getHandler().getRotation(),
+            // check where we are
+            MeasurementResult.Type resultType;
+            if (getSquid().getHandler().getPosition() == Settings.getHandlerMeasurementPosition()) {
+                resultType = SAMPLE;
+            } else {
+                resultType = NOISE;
+            }
+            currentStep.addResult(new MeasurementResult(resultType, getSquid().getHandler().getRotation(),
                     results[0], results[1], results[2]));
             fireMeasurementEvent(currentStep, VALUE_MEASURED);
+
+            // TODO: when should the step be marked as done?
 
             setState(IDLE);
         }
@@ -2666,24 +2683,43 @@ public class Project {
         private double amplitude;
 
         public ManualDemag(ManualDemagAxel axel, double amplitude) {
+            if (axel == null) {
+                throw new NullPointerException();
+            }
             this.axel = axel;
             this.amplitude = amplitude;
         }
 
         public void run() {
             if (getState() == IDLE) {
-                throw new IllegalStateException();
+                throw new IllegalStateException("getState() == IDLE");
             }
             if (getSquid() == null) {
-                throw new IllegalStateException();
+                throw new IllegalStateException("getSquid() == null");
             }
             if (!isDegaussingEnabled()) {
-                throw new IllegalStateException();
+                throw new IllegalStateException("!isDegaussingEnabled()");
             }
 
-            // TODO: add a measurement step
+            // finish any previous measurement
+            if (currentStep != null) {
+                currentStep.setDone();
+                fireMeasurementEvent(currentStep, STEP_END);
+                currentStep = null;
+            }
 
-            fireMeasurementEvent(null, DEMAGNETIZE_START);
+            // select the first unfinished step or add a new one
+            int i = getCompletedSteps();
+            if (i == getSteps()) {
+                addStep(new MeasurementStep(Project.this));
+            }
+            currentStep = getStep(i);
+            currentStep.setStepValue(amplitude);
+            currentStep.setMeasuring();
+            fireMeasurementEvent(currentStep, STEP_START);
+
+            // demagnetize the sample
+            fireMeasurementEvent(currentStep, DEMAGNETIZE_START);
             switch (axel) {
             case Y:
                 getSquid().getDegausser().demagnetizeY(amplitude);
@@ -2696,7 +2732,7 @@ public class Project {
                 assert false;
                 break;
             }
-            fireMeasurementEvent(null, DEMAGNETIZE_END);
+            fireMeasurementEvent(currentStep, DEMAGNETIZE_END);
 
             setState(IDLE);
         }
