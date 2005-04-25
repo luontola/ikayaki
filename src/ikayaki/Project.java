@@ -35,6 +35,8 @@ import javax.vecmath.Matrix3d;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.*;
 
 import static ikayaki.MeasurementStep.State.READY;
@@ -777,10 +779,122 @@ public class Project {
         try {
             out = new PrintStream(file, "ISO-8859-1");
 
-            // print headers
+            // locales and formatters for numbers
+            Locale locale = new Locale("en");
+            DecimalFormat format2Frac = new DecimalFormat("###0.00", new DecimalFormatSymbols(locale));
+            DecimalFormat format3Frac = new DecimalFormat("##0.000", new DecimalFormatSymbols(locale));
 
+            // generic headers
+            out.print(pad("SQUID", 11, -1));
+            out.println(Ikayaki.APP_NAME + " " + Ikayaki.APP_VERSION);
 
+            out.print(pad("Name", 10, -1));
+            out.print(":");
+            out.println(getName());
 
+            out.print(pad("Rocktype", 10, -1));
+            out.print(":");
+            out.println(getProperty(ROCK_TYPE_PROPERTY, ""));
+
+            out.print(pad("Site", 10, -1));
+            out.print(":");
+            out.println(getProperty(LOCATION_PROPERTY, "") + "/" + getProperty(SITE_PROPERTY, ""));
+
+            out.print(pad("Rocktype", 10, -1));
+            out.print(":");
+            if (getSampleType() == CORE) {
+                out.println("core sample");
+            } else {
+                out.println("hand sample");
+            }
+
+            out.print(pad("Comment", 10, -1));
+            out.print(":");
+            out.println(getProperty(COMMENT_PROPERTY, "").replaceAll("\\s", " "));
+
+            // value headers
+            String header = "";
+            String values = "";
+            double d;
+
+            d = Double.parseDouble(getProperty(LATITUDE_PROPERTY, "0.0"));
+            header += pad("Lat ", 8, 1);
+            values += pad(format2Frac.format(d), 8, 1);
+
+            d = Double.parseDouble(getProperty(LONGITUDE_PROPERTY, "0.0"));
+            header += pad("Lon ", 8, 1);
+            values += pad(format2Frac.format(d), 8, 1);
+
+            d = getStrike();
+            header += pad("Str ", 8, 1);
+            values += pad(format2Frac.format(d), 8, 1);
+
+            d = getDip();
+            header += pad("Dip ", 8, 1);
+            values += pad(format2Frac.format(d), 8, 1);
+
+            d = 0.0;
+            header += pad("Bstr", 8, 1);
+            values += pad(format2Frac.format(d), 8, 1);
+
+            d = 0.0;
+            header += pad("Bdip", 8, 1);
+            values += pad(format2Frac.format(d), 8, 1);
+
+            d = Math.min(getVolume(), 0.0);
+            header += pad("Vol  ", 8, 1);
+            values += pad(format3Frac.format(d), 8, 1);
+
+            d = Math.min(getMass(), 0.0);
+            header += pad("Mass ", 8, 1);
+            values += pad(format3Frac.format(d), 8, 1);
+
+            out.println(header);
+            out.println(values);
+
+            // measurement headers
+            if (getType() == THELLIER || getType() == THERMAL) {
+                out.print("TH");
+            } else {
+                out.print("AF");
+            }
+            out.println("      Dec    Inc       Int       Sus    T63       Xkomp      Ykomp      Zkomp");
+
+            for (int i = 0; i < getCompletedSteps(); i++) {
+                MeasurementStep step = getStep(i);
+                Double dd;
+
+                // AF/TF
+                out.print(pad("" + Math.max((int) Math.round(step.getStepValue()), 0), 4, 1));
+
+                // Dec
+                dd = MeasurementValue.DECLINATION.getValue(step);
+                d = dd != null ? dd : 0.0;
+                out.print(pad(format2Frac.format(d), 8, 1));
+
+                // Inc
+                dd = MeasurementValue.INCLINATION.getValue(step);
+                d = dd != null ? dd : 0.0;
+                out.print(pad(format2Frac.format(d), 7, 1));
+
+                // Int
+                out.print(pad("", 11, 1));
+
+                // Sus
+                out.print(pad("", 9, 1));
+
+                // T63
+                out.print(pad("", 7, 1));
+
+                // Xkomp
+                out.print(pad("", 11, 1));
+
+                // Ykomp
+                out.print(pad("", 11, 1));
+
+                // Zkomp
+                out.print(pad("", 11, 1));
+            }
 
 
             // exporting finished
