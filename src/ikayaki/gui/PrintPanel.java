@@ -90,7 +90,11 @@ public class PrintPanel
 
         $$$setupUI$$$();
 
+        /* White background */
+        printedPanel.setBackground(Color.WHITE);
+
         /* Project Information */
+        header.setText(project.getName() + " (" + project.getType() + " Project)");
         operator.setText(project.getProperty(Project.OPERATOR_PROPERTY, "") +
                          "/" +
                          project.getProperty(Project.DATE_PROPERTY,
@@ -207,6 +211,7 @@ public class PrintPanel
         printedPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.
             createEtchedBorder(), null));
         final JPanel panel1 = new JPanel();
+        panel1.setBackground(Color.WHITE);
         panel1.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1,
                                                -1));
         printedPanel.add(panel1,
@@ -236,6 +241,7 @@ public class PrintPanel
                                        GridConstraints.SIZEPOLICY_WANT_GROW, null,
                                        new Dimension(150, 50), null));
         final JPanel panel2 = new JPanel();
+        panel2.setBackground(Color.WHITE);
         panel2.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1,
                                                -1));
         panel1.add(panel2,
@@ -247,6 +253,7 @@ public class PrintPanel
                                        GridConstraints.SIZEPOLICY_CAN_SHRINK |
                                        GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
         plot1 = new IntensityPlot();
+        plot1.setBackground(Color.WHITE);
         panel2.add(plot1,
                    new GridConstraints(0, 0, 1, 1,
                                        GridConstraints.ANCHOR_CENTER,
@@ -256,6 +263,7 @@ public class PrintPanel
                                        GridConstraints.SIZEPOLICY_CAN_SHRINK |
                                        GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(150, 150), null, null));
         plot2 = new StereoPlot();
+        plot2.setBackground(Color.WHITE);
         panel2.add(plot2,
                    new GridConstraints(0, 1, 1, 1,
                                        GridConstraints.ANCHOR_CENTER,
@@ -265,6 +273,7 @@ public class PrintPanel
                                        GridConstraints.SIZEPOLICY_CAN_SHRINK |
                                        GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(150, 150), null, null));
         plot3 = new IntensityPlot();
+        plot3.setBackground(Color.WHITE);
         panel2.add(plot3,
                    new GridConstraints(1, 0, 1, 1,
                                        GridConstraints.ANCHOR_CENTER,
@@ -274,6 +283,7 @@ public class PrintPanel
                                        GridConstraints.SIZEPOLICY_CAN_SHRINK |
                                        GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(300, 150), null, null));
         final JPanel panel3 = new JPanel();
+        panel3.setBackground(Color.WHITE);
         panel3.setLayout(new GridLayoutManager(4, 6, new Insets(0, 0, 0, 0), -1,
                                                -1));
         panel1.add(panel3,
