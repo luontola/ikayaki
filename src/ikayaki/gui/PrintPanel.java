@@ -114,9 +114,13 @@ public class PrintPanel
         volume.setText("" + project.getVolume());
         susceptibility.setText("" + project.getSusceptibility());
 
-        /* sequence */
+        /* sequence Table */
         sequenceTableModel.setProject(project);
-
+        SequenceColumn[] columns = sequenceTableModel.getPossibleColumns();
+        for(int i = 0; i < columns.length ; i++) {
+            sequenceTableModel.setColumnVisible(columns[i], false);
+        }
+        sequenceTableModel.setColumnVisible(columns[1], true);
 
         /* plots */
         plot1 = new IntensityPlot();
@@ -222,11 +226,26 @@ public class PrintPanel
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         printedPanel.add(panel1,
-                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
-        sequenceTable = new JTable();
-        sequenceTable.setEnabled(false);
+                         new GridConstraints(0, 0, 1, 1,
+                                             GridConstraints.ANCHOR_CENTER,
+                                             GridConstraints.FILL_BOTH,
+                                             GridConstraints.
+                                             SIZEPOLICY_CAN_SHRINK |
+                                             GridConstraints.
+                                             SIZEPOLICY_CAN_GROW,
+                                             GridConstraints.
+                                             SIZEPOLICY_CAN_SHRINK |
+                                             GridConstraints.
+                                             SIZEPOLICY_CAN_GROW, null, null, null));
+        sequenceTable = new JTable(sequenceTableModel);
+        sequenceTable.getTableHeader().setReorderingAllowed(false);
+        sequenceTable.getTableHeader().setResizingAllowed(false);
+
+        sequenceTable.setDefaultRenderer(StyledWrapper.class,
+                                         new StyledTableCellRenderer());
+        sequenceTable.setDefaultEditor(StyledWrapper.class,
+                                       new StyledCellEditor(new JTextField()));
+
         panel1.add(sequenceTable,
                 new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null,
