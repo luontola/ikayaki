@@ -721,7 +721,6 @@ public class MainViewPanel extends ProjectComponent {
         if (printPreviewAction == null) {
             printPreviewAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    System.err.println("init:" + getProject() == null);
                     SettingsDialog.showPrintPreview(getParentFrame(), "Print Preview", getProject());
                 }
             };
