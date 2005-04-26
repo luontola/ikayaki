@@ -117,7 +117,6 @@ public class PrintPanel
         sequenceTable.getTableHeader().setReorderingAllowed(false);
         sequenceTable.getTableHeader().setResizingAllowed(false);
         sequenceTable.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
-        sequenceTable.setDefaultEditor(StyledWrapper.class, new StyledCellEditor(new JTextField()));
         updateColumns();
 
 //        SequenceColumn[] columns = sequenceTableModel.getPossibleColumns();
