@@ -38,7 +38,7 @@ public class SettingsDialog extends JDialog {
     private static final int PRINT_PREVIEW = 3;
 
     private static int dialogType;
-    private Project project;
+    private static Project project;
 
     private SettingsDialog(Frame owner, String message) {
         super(owner, message, true);
@@ -80,10 +80,10 @@ public class SettingsDialog extends JDialog {
         d.setVisible(true);
     }
 
-    public static void showPrintPreview(Frame owner, String message, Project project) {
+    public static void showPrintPreview(Frame owner, String message, Project projectGiven) {
         dialogType = PRINT_PREVIEW;
         SettingsDialog d = new SettingsDialog(owner, message);
-        d.project = project;
+        project = projectGiven;
         d.setVisible(true);
     }
 

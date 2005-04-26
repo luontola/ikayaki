@@ -705,7 +705,7 @@ public class MainViewPanel extends ProjectComponent {
         if (printAction == null) {
             printAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    ProjectPrinter.printComponent(new PrintPanel(getProject()));
+                    ProjectPrinter.printComponent(new PrintPanel(getProject()).getPrintedDocument());
                 }
             };
             printAction.putValue(Action.NAME, "Print");
