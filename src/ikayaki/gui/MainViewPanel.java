@@ -705,7 +705,7 @@ public class MainViewPanel extends ProjectComponent {
         if (printAction == null) {
             printAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    ProjectPrinter.printComponent(MainViewPanel.this);
+                    ProjectPrinter.printComponent(new PrintPanel(getProject()));
                 }
             };
             printAction.putValue(Action.NAME, "Print");
@@ -719,7 +719,7 @@ public class MainViewPanel extends ProjectComponent {
         if (printPreviewAction == null) {
             printPreviewAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    SettingsDialog.showPrintPreview(getParentFrame(), "Print Preview", MainViewPanel.this);
+                    SettingsDialog.showPrintPreview(getParentFrame(), "Print Preview", getProject());
                 }
             };
             printPreviewAction.putValue(Action.NAME, "Print Preview");

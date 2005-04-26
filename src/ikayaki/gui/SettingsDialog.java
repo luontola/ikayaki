@@ -24,6 +24,7 @@ package ikayaki.gui;
 
 import javax.swing.*;
 import java.awt.*;
+import ikayaki.Project;
 
 /**
  * Opens dialog and creates DeviceSettingsPanel
@@ -37,7 +38,7 @@ public class SettingsDialog extends JDialog {
     private static final int PRINT_PREVIEW = 3;
 
     private static int dialogType;
-    private MainViewPanel owner;
+    private Project project;
 
     private SettingsDialog(Frame owner, String message) {
         super(owner, message, true);
@@ -60,7 +61,7 @@ public class SettingsDialog extends JDialog {
         } else if (dialogType == PROGRAM_SETTINGS) {
             add(new ProgramSettingsPanel(this), BorderLayout.CENTER);
         } else if (dialogType == PRINT_PREVIEW) {
-            add(new PrintPanel(owner), BorderLayout.CENTER);
+            add(new PrintPanel(project), BorderLayout.CENTER);
         } else {
             throw new IllegalArgumentException("dialogType = " + dialogType);
         }
@@ -79,10 +80,10 @@ public class SettingsDialog extends JDialog {
         d.setVisible(true);
     }
 
-    public static void showPrintPreview(Frame owner, String message, MainViewPanel mother) {
+    public static void showPrintPreview(Frame owner, String message, Project project) {
         dialogType = PRINT_PREVIEW;
         SettingsDialog d = new SettingsDialog(owner, message);
-        d.owner = mother;
+        d.project = project;
         d.setVisible(true);
     }
 
