@@ -48,10 +48,10 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
      */
     final ManualControlsPanel manualControlsPanel;
 
-    /**
-     * Status picture animator.
-     */
-    private final MagnetometerStatusAnimator statusAnimator;
+//    /**
+//     * Status picture animator.
+//     */
+//    private final MagnetometerStatusAnimator statusAnimator;
 
     /**
      * Sample hanlder to read and command current position and rotation from/to. Is null if the current project does not
@@ -60,7 +60,9 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     private Handler handler;    // TODO: everywhere where the handler is used, check if it is null. or disable all controls when the project does not own the squid.
 
     // handler current position and rotation
-    private int position, rotation;
+    private int position = 0;
+    private int rotation = 0;
+    private boolean moving = false;
 
     // handler max position and max rotation for drawing
     // TODO: some way to get the actual max-position?
@@ -84,12 +86,13 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
     /**
      * Sets magnetometer status to current position.
+     * @deprecated use the estimated methods from the handler class
      */
     public MagnetometerStatusPanel() {
         this.setLayout(new OverlayLayout(this));
 
         this.manualControlsPanel = new ManualControlsPanel();
-        this.statusAnimator = new MagnetometerStatusAnimator();
+//        this.statusAnimator = new MagnetometerStatusAnimator();
 
         // move-radiobuttons come left from status picture
         add(manualControlsPanel.moveLabel);
@@ -105,6 +108,12 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         //setMinimumSize(new Dimension(150, 400));
 
         updateStatus();
+
+        new Timer(50, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateStatus();
+            }
+        }).start();
     }
 
     /**
@@ -164,32 +173,34 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         }
     }
 
-    /**
-     * Updates magnetometer status picture and handler positions.
-     *
-     * @param position sample holder position, from 1 to 16777215.
-     * @param rotation sample holder rotation, from 0 (angle 0) to 2000 (angle 360).
-     * @deprecated we read position and rotation ourself in updateStatus.
-     */
-    private void updateStatus(int position, int rotation) {
-        this.position = position;
-        this.rotation = rotation;
-        statusAnimator.gone();
-        updatePositions();
-        repaint();
-    }
+//    /**
+//     * Updates magnetometer status picture and handler positions.
+//     *
+//     * @param position sample holder position, from 1 to 16777215.
+//     * @param rotation sample holder rotation, from 0 (angle 0) to 2000 (angle 360).
+//     * @deprecated we read position and rotation ourself in updateStatus.
+//     */
+//    private void updateStatus(int position, int rotation) {
+//        this.position = position;
+//        this.rotation = rotation;
+//        statusAnimator.gone();
+//        updatePositions();
+//        repaint();
+//    }
 
     /**
      * Updates magnetometer status picture and handler positions. Reads current handler position and rotation from
      * Handler saved to this.handler.
      */
     public void updateStatus() {
-        if (this.handler != null) {
-            this.position = this.handler.getPosition();
-            this.rotation = this.handler.getRotation();
+        if (handler != null) {
+            position = handler.getEstimatedPosition();
+            rotation = handler.getEstimatedRotation();
+            moving = handler.isMoving();
         }
-        statusAnimator.gone();
+//        statusAnimator.gone();
         updatePositions();
+        updateButtonPositions();
         repaint();
     }
 
@@ -213,11 +224,11 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             // if stopped moving, stop animation
             this.position = pos;
             this.rotation = rotate;
-            statusAnimator.gone();
+//            statusAnimator.gone();
 
         } else {
             // if started moving, start animation; Handler gave us target position and rotation
-            statusAnimator.going(pos, rotate);
+//            statusAnimator.going(pos, rotate);
         }
 
         repaint();
@@ -231,10 +242,19 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     protected void paintComponent(Graphics g) {
         // must update radiobuttons' positions here, hope it's safe...
         // TODO: what would be the right place for this call?
-        updateButtonPositions();
+//        updateButtonPositions();
 
         // let Swing erase the background
         super.paintComponent(g);
+
+//        int position = 0;
+//        int rotation = 0;
+//        boolean moving = false;
+//        if (handler != null) {
+//            position = handler.getEstimatedPosition();
+//            rotation = handler.getEstimatedRotation();
+//            moving = handler.isMoving();
+//        }
 
         // use more sophisticated drawing methods
         Graphics2D g2 = (Graphics2D) g.create();
@@ -281,7 +301,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         g2.drawRect(basex - box2w / 2, box2y, box2w, h - box2y - 2);
 
         // "sample"
-        Color bg = statusAnimator.going ? new Color(0xccccff) : Color.WHITE;
+//        Color bg = statusAnimator.going ? new Color(0xccccff) : Color.WHITE;
+        Color bg = moving ? new Color(0xccccff) : Color.WHITE;
         drawFillOval(g2, bg, basex - samplew / 2, sampley - sampled, samplew, sampleh);
         drawFillSideRect(g2, bg, basex - samplew / 2, sampley - sampled + sampleh / 2, samplew, sampled);
         drawFillOval(g2, bg, basex - samplew / 2, sampley, samplew, sampleh);
@@ -375,6 +396,11 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
          * @deprecated handler positions estimated by Handler.
          */
         synchronized public void going(int posTo, int rotateTo) {
+            if (true) {
+                this.going = true;
+                return;
+            }
+
             // kill any running animator thread
             killAnimatorThread();
 
@@ -398,6 +424,11 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
          * ...And we're done; called by updateStatus.
          */
         synchronized public void gone() {
+            if (true) {
+                this.going = false;
+                return;
+            }
+
             if (animatorThread != null) {
                 long time = System.currentTimeMillis() - startTime;
 

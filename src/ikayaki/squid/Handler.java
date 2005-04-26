@@ -161,7 +161,7 @@ public class Handler implements SerialIOListener {
      */
     private int currentVelocity;
 
-  /**
+    /**
      * Creates a new handler interface. Opens connection to handler COM port and reads settings from the Settings
      * class.
      */
@@ -244,6 +244,36 @@ public class Handler implements SerialIOListener {
      */
     public boolean isMoving() {
         return moving;
+    }
+
+
+    /**
+     * Used for graphics of squid, estimates from speed and starting time where handler is
+     *
+     * @return current Estimated position we are at if moving, other wise current position
+     */
+    public int getEstimatedPosition() {
+        if (!isMoving()) {
+            return getPosition();
+        } else {
+            double timeSpent = (System.currentTimeMillis() - startingTime) / 1000.0;    // in seconds
+            int pos = currentStartingPoint + (int) (currentVelocity * timeSpent);
+            return pos;
+        }
+    }
+
+    /**
+     * Used for graphics of squid, estimates from speed and starting time where handler is
+     *
+     * @return current Estimated rotation we are at
+     */
+    public int getEstimatedRotation() {
+        if (!isMoving()) {
+            return getRotation();
+        } else {
+            double angle = (double) (getEstimatedPosition()) / Settings.getHandlerRotation() * 360.0;
+            return (int) (Math.round(angle)) % 360;
+        }
     }
 
     /**
@@ -547,7 +577,7 @@ public class Handler implements SerialIOListener {
                     } else {
                         int relativeSteps = steps - currentRotation;
                         while (relativeSteps < 0) {
-                            currentVelocity *= -1;
+//                            currentVelocity *= -1;
                             relativeSteps += Settings.getHandlerRotation();
                         }
                         fireEstimatedMovement();
@@ -567,50 +597,26 @@ public class Handler implements SerialIOListener {
 
     /**
      * Sets starting position for movement to calculate Estimated position
-     *
      */
     public void setEstimatedMovement(int from) {
-      currentStartingPoint = from;
-      //currentFinishPoint = to;
+        currentStartingPoint = from;
+        //currentFinishPoint = to;
     }
 
     /**
      * Starts movement, sets current time for calculating estimated position
      */
     public void fireEstimatedMovement() {
-      startingTime = System.nanoTime();
-      moving = true;
+        startingTime = System.currentTimeMillis();
+        moving = true;
     }
 
     /**
-      * Stops calculating estimated current position
-      */
+     * Stops calculating estimated current position
+     */
     public void stopEstimatedMovement() {
-          moving = false;
+        moving = false;
     }
-
-    /**
-     * Used for graphics of squid, estimates from speed and starting time where handler is
-     *
-     * @return current Estimated position we are at if moving, other wise current position
-     */
-    public int getEstimatedPosition() {
-      if(!moving) return currentPosition;
-      //in seconds
-      Double estimatedTime = new Long(System.nanoTime() - startingTime).doubleValue()/1000000000.0;
-      int pos = currentStartingPoint + (int)(currentVelocity*estimatedTime);
-      return pos;
-    }
-
-    /**
-     * Used for graphics of squid, estimates from speed and starting time where handler is
-     *
-     * @return current Estimated rotation we are at
-     */
-    public int getEstimatedRotation() {
-      return getEstimatedPosition() % Settings.getHandlerRotation();
-    }
-
 
     /**
      * Waits that all commands sent to the Handler have been executed.
