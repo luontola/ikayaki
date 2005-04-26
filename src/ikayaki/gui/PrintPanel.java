@@ -365,8 +365,7 @@ public class PrintPanel
         controlPanel.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 4, 0), -1, -1));
         contentPane.add(controlPanel,
                 new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null,
-                        null));
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
         print = new JButton();
         print.setText("Print");
         controlPanel.add(print,
