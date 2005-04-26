@@ -43,7 +43,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all X components in geographic coordinates.
      */
     public static final MeasurementValue<Double> GEOGRAPHIC_X =
-            new MeasurementValue<Double>("X'", "mA/m", "Mean X (geographic coordinates)") {
+            new MeasurementValue<Double>("X'", "Am\u00B2", "Mean X (geographic coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = 0;
@@ -67,7 +67,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all Y components in geographic coordinates.
      */
     public static final MeasurementValue<Double> GEOGRAPHIC_Y =
-            new MeasurementValue<Double>("Y'", "mA/m", "Mean Y (geographic coordinates)") {
+            new MeasurementValue<Double>("Y'", "Am\u00B2", "Mean Y (geographic coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = 0;
@@ -91,7 +91,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all Z components in geographic coordinates.
      */
     public static final MeasurementValue<Double> GEOGRAPHIC_Z =
-            new MeasurementValue<Double>("Z'", "mA/m", "Mean Z (geographic coordinates)") {
+            new MeasurementValue<Double>("Z'", "Am\u00B2", "Mean Z (geographic coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = 0;
@@ -115,7 +115,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all X components in sample coordinates.
      */
     public static final MeasurementValue<Double> SAMPLE_X =
-            new MeasurementValue<Double>("X", "mA/m", "Mean X (sample coordinates)") {
+            new MeasurementValue<Double>("X", "Am\u00B2", "Mean X (sample coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = 0;
@@ -139,7 +139,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all Y components in sample coordinates.
      */
     public static final MeasurementValue<Double> SAMPLE_Y =
-            new MeasurementValue<Double>("Y", "mA/m", "Mean Y (sample coordinates)") {
+            new MeasurementValue<Double>("Y", "Am\u00B2", "Mean Y (sample coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = 0;
@@ -163,7 +163,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all Z components in sample coordinates.
      */
     public static final MeasurementValue<Double> SAMPLE_Z =
-            new MeasurementValue<Double>("Z", "mA/m", "Mean Z (sample coordinates)") {
+            new MeasurementValue<Double>("Z", "Am\u00B2", "Mean Z (sample coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = 0;
@@ -260,12 +260,12 @@ public abstract class MeasurementValue <T> {
                     if (project.getNormalization() == Project.Normalization.VOLUME) {
                         normalizer = step.getVolume();
                         if (normalizer < 0.0) {
-                            normalizer = project.getVolume();
+                            normalizer = project.getVolume() / 1000000.0;
                         }
                     } else if (project.getNormalization() == Project.Normalization.MASS) {
                         normalizer = step.getMass();
                         if (normalizer < 0.0) {
-                            normalizer = project.getMass();
+                            normalizer = project.getMass() / 1000.0;
                         }
                     } else {
                         assert false;
