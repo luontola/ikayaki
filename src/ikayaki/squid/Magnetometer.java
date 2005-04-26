@@ -252,7 +252,7 @@ public class Magnetometer implements SerialIOListener {
      *
      * @return Returns 3 double values in following order: (x,y,z)
      */
-    public Double[] readData() {
+    public double[] readData() {
 
         // wait for magnetometer to settle down
         try {
@@ -264,20 +264,20 @@ public class Magnetometer implements SerialIOListener {
         latchCounter('A');
 
         //read all latched counter values
-        Double counterX = Double.parseDouble(getData('X', 'C', ""));
-        Double counterY = Double.parseDouble(getData('Y', 'C', ""));
-        Double counterZ = Double.parseDouble(getData('Z', 'C', ""));
+        double counterX = Double.parseDouble(getData('X', 'C', ""));
+        double counterY = Double.parseDouble(getData('Y', 'C', ""));
+        double counterZ = Double.parseDouble(getData('Z', 'C', ""));
 
         latchAnalog('A');
 
         //Maybe need to read many times and take mean value.
         //But we do it only ones (default for old software)
         //read all latched analog values
-        Double analogX = Double.parseDouble(getData('X', 'D', ""));
-        Double analogY = Double.parseDouble(getData('Y', 'D', ""));
-        Double analogZ = Double.parseDouble(getData('Z', 'D', ""));
+        double analogX = Double.parseDouble(getData('X', 'D', ""));
+        double analogY = Double.parseDouble(getData('Y', 'D', ""));
+        double analogZ = Double.parseDouble(getData('Z', 'D', ""));
 
-        Double[] result = new Double[3];
+        double[] result = new double[3];
 
         //when to use flux counting and when not? TODO
         result[0] = (counterX + analogX) * Settings.getMagnetometerXAxisCalibration();

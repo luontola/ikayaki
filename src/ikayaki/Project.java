@@ -2297,7 +2297,7 @@ public class Project {
                     // Begin by pulsing feedback loop for each axis And by clearing flux counter for each axis
                     getSquid().getMagnetometer().pulseReset('A');
                     getSquid().getMagnetometer().clearFlux('A');
-                    Double[] results = getSquid().getMagnetometer().readData();
+                    double[] results = getSquid().getMagnetometer().readData();
                     currentStep.addResult(new MeasurementResult(NOISE, 0, results[0], results[1], results[2]));
                     fireMeasurementEvent(currentStep, VALUE_MEASURED);
                     checkAborted();
@@ -2668,7 +2668,7 @@ public class Project {
                 fireMeasurementEvent(currentStep, STEP_START);
             }
 
-            Double[] results = getSquid().getMagnetometer().readData();
+            double[] results = getSquid().getMagnetometer().readData();
 
             // check where we are
             MeasurementResult.Type resultType;

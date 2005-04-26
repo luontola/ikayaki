@@ -584,7 +584,7 @@ public class SquidFront extends JFrame {
         this.mreadData.setAction(new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Double[] result = Squid.instance().getMagnetometer().readData();
+                    double[] result = Squid.instance().getMagnetometer().readData();
                     magnetometerLog.append("{" + result[0] + "," + result[1] + "," + result[2] + "}\r");
 
                 } catch (IOException ex) {
