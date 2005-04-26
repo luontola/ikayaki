@@ -30,7 +30,6 @@ import ikayaki.Project;
 import ikayaki.ProjectPrinter;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -114,7 +113,8 @@ public class PrintPanel
         sequenceTable.setModel(sequenceTableModel);
         sequenceTable.getTableHeader().setReorderingAllowed(false);
         sequenceTable.getTableHeader().setResizingAllowed(false);
-        sequenceTable.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 0, sequenceTable.getGridColor()));
+        sequenceTable.setBorder(BorderFactory.createMatteBorder(sequenceTable.getIntercellSpacing().height,
+                sequenceTable.getIntercellSpacing().width, 0, 0, sequenceTable.getGridColor()));
         updateColumns();
 
         /* Plots */
@@ -365,7 +365,8 @@ public class PrintPanel
         controlPanel.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 4, 0), -1, -1));
         contentPane.add(controlPanel,
                 new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null,
+                        null));
         print = new JButton();
         print.setText("Print");
         controlPanel.add(print,
@@ -386,6 +387,8 @@ public class PrintPanel
 
     /**
      * Shows the the data of a project in printable version. Uses the contents of the MeasurementSequenceTableModel.
+     *
+     * @author Esko Luontola
      */
     private class PrintSequenceTableModel extends AbstractTableModel {
 
