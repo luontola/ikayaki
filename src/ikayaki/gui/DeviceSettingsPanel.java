@@ -501,7 +501,7 @@ public class DeviceSettingsPanel extends JPanel {
                 new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label2 = new JLabel();
-        label2.setText("Calibration constant with polarity (Am²/flux count)");
+        label2.setText("Calibration constant with polarity (Am²/flux quantum)");
         panel2.add(label2,
                 new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));

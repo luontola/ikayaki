@@ -260,13 +260,15 @@ public abstract class MeasurementValue <T> {
                     if (project.getNormalization() == Project.Normalization.VOLUME) {
                         normalizer = step.getVolume();
                         if (normalizer < 0.0) {
-                            normalizer = project.getVolume() / 1000000.0;
+                            normalizer = project.getVolume();
                         }
+                        normalizer = normalizer / 1000000.0;    // convert cm^3 to m^3
                     } else if (project.getNormalization() == Project.Normalization.MASS) {
                         normalizer = step.getMass();
                         if (normalizer < 0.0) {
-                            normalizer = project.getMass() / 1000.0;
+                            normalizer = project.getMass();
                         }
+                        normalizer = normalizer / 1000.0;   // convert g to kg
                     } else {
                         assert false;
                         return null;
