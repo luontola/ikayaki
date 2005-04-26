@@ -346,6 +346,11 @@ public enum SequenceColumn {
             setNumberFormat(new DecimalFormat("0.000E0"));  // TODO: maybe make a new class that could show the format: 1.123e+05
         }
     },
+    GEOGRAPHIC_X_NORMALIZED(MeasurementValue.GEOGRAPHIC_X_NORMALIZED) {
+        {
+            setNumberFormat(new DecimalFormat("0.000E0"));
+        }
+    },
     GEOGRAPHIC_Y(MeasurementValue.GEOGRAPHIC_Y) {
         {
             setNumberFormat(new DecimalFormat("0.000E0"));
@@ -501,6 +506,7 @@ public enum SequenceColumn {
             THETA63,
             MOMENT,
             GEOGRAPHIC_X,
+            GEOGRAPHIC_X_NORMALIZED,
             GEOGRAPHIC_Y,
             GEOGRAPHIC_Z,
             SAMPLE_X,

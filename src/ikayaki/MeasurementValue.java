@@ -64,6 +64,49 @@ public abstract class MeasurementValue <T> {
             };
 
     /**
+     * Calculates the average of all X components in geographic coordinates.
+     */
+    public static final MeasurementValue<Double> GEOGRAPHIC_X_NORMALIZED =
+            new MeasurementValue<Double>("X'", "mA/m", "Normalized mean X (geographic coordinates)") {
+                public Double getValue(MeasurementStep step) {
+                    Project project = step.getProject();
+                    if (project == null) {
+                        return null;
+                    }
+
+                    double normalizer;
+                    if (project.getNormalization() == Project.Normalization.VOLUME) {
+                        normalizer = step.getVolume();
+                        if (normalizer < 0.0) {
+                            normalizer = project.getVolume();
+                        }
+                        normalizer = normalizer / 1000000.0;    // convert cm^3 to m^3
+
+                    } else if (project.getNormalization() == Project.Normalization.MASS) {
+                        normalizer = step.getMass();
+                        if (normalizer < 0.0) {
+                            normalizer = project.getMass();
+                        }
+                        normalizer = normalizer / 1000.0;   // convert g to kg
+
+                    } else {
+                        assert false;
+                        return null;
+                    }
+                    if (normalizer <= 0.0) {
+                        return null;
+                    }
+
+                    Double value = GEOGRAPHIC_X.getValue(step);
+                    if (value == null) {
+                        return null;
+                    } else {
+                        return (value * 1000.0) / normalizer;      // convert Am^2 to mAm^2
+                    }
+                }
+            };
+
+    /**
      * Calculates the average of all Y components in geographic coordinates.
      */
     public static final MeasurementValue<Double> GEOGRAPHIC_Y =
