@@ -30,6 +30,7 @@ import ikayaki.Project;
 import ikayaki.ProjectPrinter;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -113,8 +114,7 @@ public class PrintPanel
         sequenceTable.setModel(sequenceTableModel);
         sequenceTable.getTableHeader().setReorderingAllowed(false);
         sequenceTable.getTableHeader().setResizingAllowed(false);
-        sequenceTable.setBorder(BorderFactory.createMatteBorder(sequenceTable.getIntercellSpacing().height,
-                sequenceTable.getIntercellSpacing().width, 0, 0, sequenceTable.getGridColor()));
+        sequenceTable.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 0, sequenceTable.getGridColor()));
         updateColumns();
 
         /* Plots */
