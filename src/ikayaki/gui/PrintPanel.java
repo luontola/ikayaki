@@ -23,48 +23,48 @@
 
 package ikayaki.gui;
 
-import javax.swing.*;
-import ikayaki.Project;
-import java.util.Vector;
-import java.awt.*;
-import java.util.Date;
-import java.text.DateFormat;
-
-import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import ikayaki.Project;
+
+import javax.swing.*;
+import java.awt.*;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Vector;
 
 /**
  * Creates layout from MeasurementSequence and Plots to be printed
  *
  * @author Aki Korpua
  */
-public class PrintPanel
-    extends JPanel {
+public class PrintPanel extends JPanel {
 
-    Project project;
+    private JDialog creator;
+    private Project project;
 
-    JPanel contentPane;
-    JPanel printedPanel;
-    JPanel controlPanel;
-    JPanel plot1;
-    JPanel plot2;
-    JPanel plot3;
+    private JPanel contentPane;
+    private JPanel printedPanel;
+    private JPanel controlPanel;
+    private JPanel plot1;
+    private JPanel plot2;
+    private JPanel plot3;
 
-    JTable sequenceTable;
+    private JTable sequenceTable;
 
-    JLabel operator;
-    JLabel volume;
-    JLabel mass;
-    JLabel header;
-    JLabel latitude;
-    JLabel susceptibility;
-    JLabel longitude;
-    JLabel strike;
-    JLabel dip;
+    private JLabel operator;
+    private JLabel volume;
+    private JLabel mass;
+    private JLabel header;
+    private JLabel latitude;
+    private JLabel susceptibility;
+    private JLabel longitude;
+    private JLabel strike;
+    private JLabel dip;
 
-    JButton print;
-    JButton cancel;
+    private JButton print;
+    private JButton cancel;
 
     /**
      * All plots in this panel
@@ -72,61 +72,59 @@ public class PrintPanel
     private Vector<AbstractPlot> plots = new Vector<AbstractPlot>();
 
 
-    public PrintPanel(Project project) {
-
+    public PrintPanel(JDialog creator, Project project) {
+        if (project == null) {
+            throw new NullPointerException();
+        }
+        this.creator = creator;
+        this.project = project;
         $$$setupUI$$$();
 
-        this.project = project;
+        /* Plain Text Fields */
+        operator.setText(project.getProperty(Project.OPERATOR_PROPERTY, "") + "/" +
+                project.getProperty(Project.DATE_PROPERTY,
+                        DateFormat.
+                getDateInstance().format(new Date())));
 
-        System.err.println("print:" + project == null);
+        /* Number Fields */
+        latitude.setText(project.getProperty(Project.LATITUDE_PROPERTY, ""));
+        longitude.setText(project.getProperty(Project.LONGITUDE_PROPERTY, ""));
+        strike.setText("" + project.getStrike());
+        dip.setText("" + project.getDip());
+        mass.setText("" + project.getMass());
+        volume.setText("" + project.getVolume());
+        susceptibility.setText("" + project.getSusceptibility());
 
-        if(project != null) {
+        //TODO: draw table of sequences
 
-            /* Plain Text Fields */
-            operator.setText(project.getProperty(Project.OPERATOR_PROPERTY, "") + "/" +
-                             project.getProperty(Project.DATE_PROPERTY,
-                                                 DateFormat.
-                                                 getDateInstance().format(new Date())));
+        IntensityPlot intensityPlot = new IntensityPlot();
+        StereoPlot stereoPlot = new StereoPlot();
+        plot1 = intensityPlot;
+        plot2 = stereoPlot;
 
-            /* Number Fields */
-            latitude.setText(project.getProperty(Project.LATITUDE_PROPERTY, ""));
-            longitude.setText(project.getProperty(Project.LONGITUDE_PROPERTY, ""));
-            strike.setText("" + project.getStrike());
-            dip.setText("" + project.getDip());
-            mass.setText("" + project.getMass());
-            volume.setText("" + project.getVolume());
-            susceptibility.setText("" + project.getSusceptibility());
+        plots.add(intensityPlot);
+        plots.add(stereoPlot);
 
-            //TODO: draw table of sequences
-
-            IntensityPlot intensityPlot = new IntensityPlot();
-            StereoPlot stereoPlot = new StereoPlot();
-            plot1 = intensityPlot;
-            plot2 = stereoPlot;
-
-            plots.add(intensityPlot);
-            plots.add(stereoPlot);
-
-            for (Plot plot : plots) {
-                plot.reset();
-                if (project != null) {
-                    for (int i = 0; i < project.getSteps(); i++) {
-                        plot.add(project.getStep(i));
-                    }
+        for (Plot plot : plots) {
+            plot.reset();
+            if (project != null) {
+                for (int i = 0; i < project.getSteps(); i++) {
+                    plot.add(project.getStep(i));
                 }
             }
-            setLayout(new BorderLayout());
-            add(contentPane, BorderLayout.CENTER);
         }
-        else {
-            add(new Label("No Open Project"));
-            System.err.println("no project");
-        }
-
+        setLayout(new BorderLayout());
+        add(contentPane, BorderLayout.CENTER);
     }
 
     public JPanel getPrintedDocument() {
         return printedPanel;
+    }
+
+    private void closeDialog() {
+        if (creator != null) {
+            creator.setVisible(false);
+        }
     }
 
     {
