@@ -316,8 +316,9 @@ public class MainViewPanel extends ProjectComponent {
             getExportProjectToTDTAction().setEnabled(true);
             getExportProjectToSRMAction().setEnabled(true);
             getPrintAction().setEnabled(true);
+            getPrintPreviewAction().setEnabled(true);
         } else {
-            // update GUI components
+            // no project open, update GUI components
             Frame parent = getParentFrame();
             if (parent != null) {
                 getParentFrame().setTitle(null);
@@ -327,6 +328,7 @@ public class MainViewPanel extends ProjectComponent {
             getExportProjectToTDTAction().setEnabled(false);
             getExportProjectToSRMAction().setEnabled(false);
             getPrintAction().setEnabled(false);
+            getPrintPreviewAction().setEnabled(false);
         }
 
         // switch to the new project

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ikayaki.gui.PrintPanel">
   <grid id="53bbd" binding="contentPane" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-    <margin top="0" left="0" bottom="0" right="0"/>
+    <margin top="11" left="11" bottom="11" right="11"/>
     <constraints>
-      <xy x="18" y="9" width="584" height="738"/>
+      <xy x="18" y="9" width="606" height="738"/>
       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
     </constraints>
     <properties/>
@@ -12,7 +12,7 @@
       <grid id="423c1" binding="printedPanel" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <xy x="0" y="84" width="584" height="654"/>
+          <xy x="11" y="51" width="584" height="676"/>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
         </constraints>
         <properties/>
@@ -21,7 +21,7 @@
           <grid id="e5f55" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <xy x="2" y="2" width="580" height="650"/>
+              <xy x="2" y="2" width="580" height="672"/>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
             </constraints>
             <properties/>
@@ -29,7 +29,7 @@
             <children>
               <component id="691d9" class="javax.swing.JTable" binding="sequenceTable">
                 <constraints>
-                  <xy x="0" y="100" width="580" height="105"/>
+                  <xy x="0" y="100" width="580" height="127"/>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
                     <preferred-size width="150" height="50"/>
                   </grid>
@@ -41,7 +41,7 @@
               <grid id="5ed8" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
-                  <xy x="0" y="210" width="580" height="440"/>
+                  <xy x="0" y="232" width="580" height="440"/>
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3"/>
                 </constraints>
                 <properties/>
@@ -248,9 +248,9 @@
         </children>
       </grid>
       <grid id="1449f" binding="controlPanel" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
+        <margin top="0" left="0" bottom="4" right="0"/>
         <constraints>
-          <xy x="0" y="0" width="584" height="79"/>
+          <xy x="11" y="11" width="584" height="35"/>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="0" fill="3"/>
         </constraints>
         <properties/>
@@ -258,7 +258,7 @@
         <children>
           <component id="42fab" class="javax.swing.JButton" binding="print">
             <constraints>
-              <xy x="0" y="27" width="56" height="24"/>
+              <xy x="0" y="0" width="56" height="24"/>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
             </constraints>
             <properties>
@@ -267,7 +267,7 @@
           </component>
           <component id="25db4" class="javax.swing.JButton" binding="cancel">
             <constraints>
-              <xy x="518" y="27" width="66" height="24"/>
+              <xy x="518" y="0" width="66" height="24"/>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1"/>
             </constraints>
             <properties>
@@ -276,7 +276,7 @@
           </component>
           <hspacer id="f35ea">
             <constraints>
-              <xy x="66" y="34" width="452" height="11"/>
+              <xy x="66" y="6" width="452" height="11"/>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1"/>
             </constraints>
           </hspacer>

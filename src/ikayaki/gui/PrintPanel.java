@@ -30,6 +30,8 @@ import ikayaki.Project;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Vector;
@@ -82,9 +84,7 @@ public class PrintPanel extends JPanel {
 
         /* Plain Text Fields */
         operator.setText(project.getProperty(Project.OPERATOR_PROPERTY, "") + "/" +
-                project.getProperty(Project.DATE_PROPERTY,
-                        DateFormat.
-                getDateInstance().format(new Date())));
+                project.getProperty(Project.DATE_PROPERTY, DateFormat.getDateInstance().format(new Date())));
 
         /* Number Fields */
         latitude.setText(project.getProperty(Project.LATITUDE_PROPERTY, ""));
@@ -115,6 +115,12 @@ public class PrintPanel extends JPanel {
         }
         setLayout(new BorderLayout());
         add(contentPane, BorderLayout.CENTER);
+        
+        cancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                closeDialog();
+            }
+        });
     }
 
     public JPanel getPrintedDocument() {

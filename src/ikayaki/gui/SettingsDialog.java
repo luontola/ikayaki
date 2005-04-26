@@ -61,7 +61,7 @@ public class SettingsDialog extends JDialog {
         } else if (dialogType == PROGRAM_SETTINGS) {
             add(new ProgramSettingsPanel(this), BorderLayout.CENTER);
         } else if (dialogType == PRINT_PREVIEW) {
-            add(new PrintPanel(project), BorderLayout.CENTER);
+            add(new PrintPanel(this, project), BorderLayout.CENTER);
         } else {
             throw new IllegalArgumentException("dialogType = " + dialogType);
         }
