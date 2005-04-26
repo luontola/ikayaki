@@ -53,9 +53,14 @@ public class PrintPanel
     private JPanel contentPane;
     private JPanel printedPanel;
     private JPanel controlPanel;
+    private JPanel plot1Panel;
+    private JPanel plot2Panel;
+    private JPanel plot3Panel;
+    private JPanel plot4Panel;
     private AbstractPlot plot1;
     private AbstractPlot plot2;
     private AbstractPlot plot3;
+    private AbstractPlot plot4;
 
     private JTable sequenceTable;
     private MeasurementSequenceTableModel sequenceTableModel;
@@ -114,8 +119,20 @@ public class PrintPanel
 
 
         /* plots */
+        plot1 = new IntensityPlot();
+        plot2 = new StereoPlot();
         plots.add(plot1);
         plots.add(plot2);
+        plot1Panel.setLayout(new BorderLayout());
+        plot2Panel.setLayout(new BorderLayout());
+        plot3Panel.setLayout(new BorderLayout());
+        plot4Panel.setLayout(new BorderLayout());
+        plot1Panel.add(plot1, "Center");
+        plot2Panel.add(plot2, "Center");
+        //plot3Panel.add(plot3, "Center");
+        //plot4Panel.add(plot4, "Center");
+        plot1Panel.setPreferredSize(new Dimension(200, 200));
+        plot2Panel.setPreferredSize(new Dimension(200, 200));
 
         for (Plot plot : plots) {
             plot.reset();
@@ -134,6 +151,7 @@ public class PrintPanel
         /* listeners */
         print.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                closeDialog();
                 ProjectPrinter.printComponent(getPrintedDocument());
             }
         });
@@ -193,265 +211,163 @@ public class PrintPanel
      */
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(2, 1,
-            new Insets(11, 11, 11, 11), -1, -1));
+        contentPane.setLayout(new GridLayoutManager(2, 1, new Insets(11, 11, 11, 11), -1, -1));
         printedPanel = new JPanel();
-        printedPanel.setLayout(new GridLayoutManager(1, 1,
-            new Insets(0, 0, 0, 0), -1, -1));
+        printedPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(printedPanel,
-                        new GridConstraints(1, 0, 1, 1,
-                                            GridConstraints.ANCHOR_CENTER,
-                                            GridConstraints.FILL_BOTH,
-                                            GridConstraints.
-                                            SIZEPOLICY_CAN_SHRINK |
-                                            GridConstraints.SIZEPOLICY_CAN_GROW,
-                                            GridConstraints.
-                                            SIZEPOLICY_CAN_SHRINK |
-                                            GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
-        printedPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.
-            createEtchedBorder(), null));
+                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        printedPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
         final JPanel panel1 = new JPanel();
-        panel1.setBackground(Color.WHITE);
-        panel1.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1,
-                                               -1));
+        panel1.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         printedPanel.add(panel1,
-                         new GridConstraints(0, 0, 1, 1,
-                                             GridConstraints.ANCHOR_CENTER,
-                                             GridConstraints.FILL_BOTH,
-                                             GridConstraints.
-                                             SIZEPOLICY_CAN_SHRINK |
-                                             GridConstraints.
-                                             SIZEPOLICY_CAN_GROW,
-                                             GridConstraints.
-                                             SIZEPOLICY_CAN_SHRINK |
-                                             GridConstraints.
-                                             SIZEPOLICY_CAN_GROW, null, null, null));
-        sequenceTable = new JTable(sequenceTableModel);
-        sequenceTable.getTableHeader().setReorderingAllowed(false);
-        sequenceTable.getTableHeader().setResizingAllowed(false);
-        sequenceTable.setDefaultRenderer(StyledWrapper.class,
-                                         new StyledTableCellRenderer());
-        sequenceTable.setDefaultEditor(StyledWrapper.class,
-                                       new StyledCellEditor(new JTextField()));
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        sequenceTable = new JTable();
+        sequenceTable.setEnabled(false);
         panel1.add(sequenceTable,
-                   new GridConstraints(1, 0, 1, 1,
-                                       GridConstraints.ANCHOR_CENTER,
-                                       GridConstraints.FILL_BOTH,
-                                       GridConstraints.SIZEPOLICY_WANT_GROW,
-                                       GridConstraints.SIZEPOLICY_WANT_GROW, null,
-                                       new Dimension(150, 50), null));
+                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null,
+                        new Dimension(150, 50), null));
         final JPanel panel2 = new JPanel();
-        panel2.setBackground(Color.WHITE);
-        panel2.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1,
-                                               -1));
+        panel2.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panel2,
-                   new GridConstraints(2, 0, 1, 1,
-                                       GridConstraints.ANCHOR_CENTER,
-                                       GridConstraints.FILL_BOTH,
-                                       GridConstraints.SIZEPOLICY_CAN_SHRINK |
-                                       GridConstraints.SIZEPOLICY_CAN_GROW,
-                                       GridConstraints.SIZEPOLICY_CAN_SHRINK |
-                                       GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
-        plot1 = new IntensityPlot();
-        plot1.setBackground(Color.WHITE);
-        panel2.add(plot1,
-                   new GridConstraints(0, 0, 1, 1,
-                                       GridConstraints.ANCHOR_CENTER,
-                                       GridConstraints.FILL_BOTH,
-                                       GridConstraints.SIZEPOLICY_CAN_SHRINK |
-                                       GridConstraints.SIZEPOLICY_CAN_GROW,
-                                       GridConstraints.SIZEPOLICY_CAN_SHRINK |
-                                       GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(150, 150), null, null));
-        plot2 = new StereoPlot();
-        plot2.setBackground(Color.WHITE);
-        panel2.add(plot2,
-                   new GridConstraints(0, 1, 1, 1,
-                                       GridConstraints.ANCHOR_CENTER,
-                                       GridConstraints.FILL_BOTH,
-                                       GridConstraints.SIZEPOLICY_CAN_SHRINK |
-                                       GridConstraints.SIZEPOLICY_CAN_GROW,
-                                       GridConstraints.SIZEPOLICY_CAN_SHRINK |
-                                       GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(150, 150), null, null));
-        plot3 = new IntensityPlot();
-        plot3.setBackground(Color.WHITE);
-        panel2.add(plot3,
-                   new GridConstraints(1, 0, 1, 1,
-                                       GridConstraints.ANCHOR_CENTER,
-                                       GridConstraints.FILL_BOTH,
-                                       GridConstraints.SIZEPOLICY_CAN_SHRINK |
-                                       GridConstraints.SIZEPOLICY_CAN_GROW,
-                                       GridConstraints.SIZEPOLICY_CAN_SHRINK |
-                                       GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(300, 150), null, null));
+                new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        plot1Panel = new JPanel();
+        panel2.add(plot1Panel,
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        plot2Panel = new JPanel();
+        panel2.add(plot2Panel,
+                new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        plot3Panel = new JPanel();
+        panel2.add(plot3Panel,
+                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+        plot4Panel = new JPanel();
+        panel2.add(plot4Panel,
+                new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
         final JPanel panel3 = new JPanel();
-        panel3.setBackground(Color.WHITE);
-        panel3.setLayout(new GridLayoutManager(4, 6, new Insets(0, 0, 0, 0), -1,
-                                               -1));
+        panel3.setLayout(new GridLayoutManager(4, 6, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panel3,
-                   new GridConstraints(0, 0, 1, 1,
-                                       GridConstraints.ANCHOR_CENTER,
-                                       GridConstraints.FILL_BOTH,
-                                       GridConstraints.SIZEPOLICY_CAN_SHRINK |
-                                       GridConstraints.SIZEPOLICY_CAN_GROW,
-                                       GridConstraints.SIZEPOLICY_CAN_SHRINK |
-                                       GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
         final JLabel label1 = new JLabel();
         label1.setText("Operator / Date:");
         panel3.add(label1,
-                   new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_EAST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label2 = new JLabel();
         label2.setText("Mass (grams):");
         panel3.add(label2,
-                   new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_EAST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label3 = new JLabel();
         label3.setText("Volume (cm³):");
         panel3.add(label3,
-                   new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_EAST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         operator = new JLabel();
         operator.setText("N/A");
         panel3.add(operator,
-                   new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         volume = new JLabel();
         volume.setText("N/A");
         panel3.add(volume,
-                   new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         mass = new JLabel();
         mass.setText("N/A");
         panel3.add(mass,
-                   new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         header = new JLabel();
         header.setText("New Project");
         panel3.add(header,
-                   new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label4 = new JLabel();
         label4.setText("Longitude:");
         panel3.add(label4,
-                   new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_EAST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label5 = new JLabel();
         label5.setText("Strike:");
         panel3.add(label5,
-                   new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_EAST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         latitude = new JLabel();
         latitude.setText("N/A");
         panel3.add(latitude,
-                   new GridConstraints(2, 3, 1, 1, GridConstraints.ANCHOR_WEST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(2, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         susceptibility = new JLabel();
         susceptibility.setText("N/A");
         panel3.add(susceptibility,
-                   new GridConstraints(3, 3, 1, 1, GridConstraints.ANCHOR_WEST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(3, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         longitude = new JLabel();
         longitude.setText("N/A");
         panel3.add(longitude,
-                   new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_WEST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         strike = new JLabel();
         strike.setText("N/A");
         panel3.add(strike,
-                   new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_WEST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label6 = new JLabel();
         label6.setText("Dip:");
         panel3.add(label6,
-                   new GridConstraints(2, 4, 1, 1, GridConstraints.ANCHOR_EAST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(2, 4, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         dip = new JLabel();
         dip.setText("N/A");
         panel3.add(dip,
-                   new GridConstraints(2, 5, 1, 1, GridConstraints.ANCHOR_WEST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(2, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label7 = new JLabel();
         label7.setText("Latitude:");
         panel3.add(label7,
-                   new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_EAST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label8 = new JLabel();
         label8.setText("Susceptibility:");
         panel3.add(label8,
-                   new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_EAST,
-                                       GridConstraints.FILL_NONE,
-                                       GridConstraints.SIZEPOLICY_FIXED,
-                                       GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
+                        GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         controlPanel = new JPanel();
-        controlPanel.setLayout(new GridLayoutManager(1, 3,
-            new Insets(0, 0, 4, 0), -1, -1));
+        controlPanel.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 4, 0), -1, -1));
         contentPane.add(controlPanel,
-                        new GridConstraints(0, 0, 1, 1,
-                                            GridConstraints.ANCHOR_CENTER,
-                                            GridConstraints.FILL_BOTH,
-                                            GridConstraints.
-                                            SIZEPOLICY_CAN_SHRINK |
-                                            GridConstraints.SIZEPOLICY_CAN_GROW,
-                                            1, null, null, null));
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
         print = new JButton();
         print.setText("Print");
         controlPanel.add(print,
-                         new GridConstraints(0, 0, 1, 1,
-                                             GridConstraints.ANCHOR_CENTER,
-                                             GridConstraints.FILL_HORIZONTAL,
-                                             GridConstraints.
-                                             SIZEPOLICY_CAN_SHRINK |
-                                             GridConstraints.
-                                             SIZEPOLICY_CAN_GROW,
-                                             GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         cancel = new JButton();
         cancel.setText("Cancel");
         controlPanel.add(cancel,
-                         new GridConstraints(0, 2, 1, 1,
-                                             GridConstraints.ANCHOR_CENTER,
-                                             GridConstraints.FILL_HORIZONTAL,
-                                             GridConstraints.
-                                             SIZEPOLICY_CAN_SHRINK |
-                                             GridConstraints.
-                                             SIZEPOLICY_CAN_GROW,
-                                             GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+                new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                        GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final Spacer spacer1 = new Spacer();
         controlPanel.add(spacer1,
-                         new GridConstraints(0, 1, 1, 1,
-                                             GridConstraints.ANCHOR_CENTER,
-                                             GridConstraints.FILL_HORIZONTAL,
-                                             GridConstraints.
-                                             SIZEPOLICY_WANT_GROW, 1, null, null, null));
+                new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
+                        GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
     }
 }
