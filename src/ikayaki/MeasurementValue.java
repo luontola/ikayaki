@@ -263,12 +263,14 @@ public abstract class MeasurementValue <T> {
                             normalizer = project.getVolume();
                         }
                         normalizer = normalizer / 1000000.0;    // convert cm^3 to m^3
+
                     } else if (project.getNormalization() == Project.Normalization.MASS) {
                         normalizer = step.getMass();
                         if (normalizer < 0.0) {
                             normalizer = project.getMass();
                         }
                         normalizer = normalizer / 1000.0;   // convert g to kg
+
                     } else {
                         assert false;
                         return null;
@@ -281,7 +283,7 @@ public abstract class MeasurementValue <T> {
                     if (moment == null) {
                         return null;
                     } else {
-                        return moment / normalizer;
+                        return (moment / 1000.0) / normalizer;      // convert Am^2 to mAm^2
                     }
                 }
             };
