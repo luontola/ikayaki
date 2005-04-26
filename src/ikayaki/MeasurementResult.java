@@ -176,14 +176,6 @@ public class MeasurementResult {
     protected void applyFixes(MeasurementStep step) {
         sampleVector.set(rawVector);
 
-        // apply holder and noise fixes
-        if (step != null) {
-            Vector3d holder = step.getHolder();     // will be zero, if this project is the holder calibration project
-            Vector3d noise = step.getNoise();
-            sampleVector.sub(holder);
-            sampleVector.sub(noise);
-        }
-
         // TODO: in which order should the rotation, +-Z, holder and noise fixes be applied??
 
         // apply rotation fix
@@ -213,7 +205,20 @@ public class MeasurementResult {
             rotate.transform(sampleVector);
         }
         
-        // TODO: try applying the +-Z fix here
+        if (step != null) {
+            // apply the noise fix
+            Vector3d noise = step.getNoise();
+            sampleVector.sub(noise);
+
+            // apply the +/-Z fix
+            if (step.getProject() != null && step.getProject().getOrientation() == Project.Orientation.MINUS_Z) {
+                sampleVector.set(sampleVector.x, -sampleVector.y, -sampleVector.z);
+            }
+
+            // apply the sample holder fix
+            Vector3d holder = step.getHolder();     // will be zero, if this project is the holder calibration project
+            sampleVector.sub(holder);
+        }
 
         // reset geographic vector
         setTransform(null);

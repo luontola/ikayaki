@@ -1301,13 +1301,13 @@ public class Project {
     private synchronized void updateTransforms() {
         double s;
         double d;
-        if (orientation == MINUS_Z) {
-            s = Math.toRadians(getStrike());
-            d = Math.toRadians(getDip() + 180.0);
-        } else {
+//        if (orientation == MINUS_Z) {
+//            s = Math.toRadians(getStrike());
+//            d = Math.toRadians(getDip() + 180.0);   // TODO: this might be wrong. just flip the sign of Z and Y.
+//        } else {
             s = Math.toRadians(getStrike());
             d = Math.toRadians(getDip());
-        }
+//        }
 
         if (sampleType == CORE) {
             // core sample: sample -> geographic
