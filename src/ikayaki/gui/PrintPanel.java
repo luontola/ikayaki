@@ -42,8 +42,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Vector;
 
-import static ikayaki.gui.SequenceColumn.*;
-
 /**
  * Creates layout from MeasurementSequence and Plots to be printed
  *
@@ -58,7 +56,6 @@ public class PrintPanel
     private JPanel contentPane;
     private JPanel printedPanel;
     private JPanel controlPanel;
-    private JPanel infoPanel;
     private JPanel plot1Panel;
     private JPanel plot2Panel;
     private JPanel plot3Panel;
@@ -115,8 +112,6 @@ public class PrintPanel
         susceptibility.setText("" + project.getSusceptibility());
 
         /* Sequence Table */
-//        sequenceTableModel = new MeasurementSequenceTableModel();
-//        sequenceTableModel.setProject(project);
         sequenceTableModel = new PrintSequenceTableModel(project);
         sequenceTable.setModel(sequenceTableModel);
         sequenceTable.getTableHeader().setReorderingAllowed(false);
@@ -165,14 +160,13 @@ public class PrintPanel
         printedPanel.setOpaque(true);
         printedPanel.setBackground(Color.WHITE);
 
-        /* listeners */
+        /* Listeners */
         print.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 closeDialog();
                 ProjectPrinter.printComponent(getPrintedDocument());
             }
         });
-
         cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 closeDialog();
@@ -215,21 +209,15 @@ public class PrintPanel
     private void updateColumns() {
         TableColumnModel columnModel = sequenceTable.getColumnModel();
         for (int col = 0; col < columnModel.getColumnCount(); col++) {
-            if (columnModel.getColumn(col).getHeaderValue().equals(COUNT.getColumnName(null))) {
-
-                // find out the column's preferred width using the actual cell contents
-                int width = 20;
-                Component comp;
-                for (int row = 0; row < sequenceTable.getRowCount(); row++) {
-                    comp = sequenceTable.getCellRenderer(row, col).getTableCellRendererComponent(sequenceTable,
-                            sequenceTable.getValueAt(row, col), false, false, row, col);
-                    width = Math.max(width, comp.getPreferredSize().width);
-                }
-                width += 5;
-                columnModel.getColumn(col).setMinWidth(width);
-                columnModel.getColumn(col).setMaxWidth(width);
-                return;
+            // find out the column's preferred width using the actual cell contents
+            int width = 20;
+            Component comp;
+            for (int row = 0; row < sequenceTable.getRowCount(); row++) {
+                comp = sequenceTable.getCellRenderer(row, col).getTableCellRendererComponent(sequenceTable,
+                        sequenceTable.getValueAt(row, col), false, false, row, col);
+                width = Math.max(width, comp.getPreferredSize().width);
             }
+            columnModel.getColumn(col).setPreferredWidth(width);
         }
     }
 
@@ -406,7 +394,9 @@ public class PrintPanel
                         GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null));
     }
 
-
+    /**
+     * Shows the the data of a project in printable version. Uses the contents of the MeasurementSequenceTableModel.
+     */
     private class PrintSequenceTableModel extends AbstractTableModel {
 
         private MeasurementSequenceTableModel model;
@@ -441,5 +431,4 @@ public class PrintPanel
             }
         }
     }
-
 }
