@@ -193,6 +193,9 @@ public class MeasurementSequencePanel extends ProjectComponent {
         // drop down menu for adding preset sequences
         loadSequenceBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (getProject() == null || !getProject().isSequenceEditEnabled()) {
+                    return;
+                }
 
                 // append saved sequences when they are selected from the list
                 Object obj = loadSequenceBox.getSelectedItem();

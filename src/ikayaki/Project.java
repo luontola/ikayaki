@@ -1516,7 +1516,7 @@ public class Project {
             throw new NullPointerException();
         }
         if (!isSequenceEditEnabled()) {
-            return false;
+            return false;   // TODO: maybe its better to throw an exception
         }
         for (int i = 0; i < append.getSteps(); i++) {
             MeasurementStep step = new MeasurementStep(this);
@@ -1614,7 +1614,7 @@ public class Project {
             throw new IndexOutOfBoundsException();
         }
         if (!isSequenceEditEnabled()) {
-            return false;
+            return false;    // TODO: maybe its better to throw an exception
         }
         double stepValue = step.getStepValue();
         step = new MeasurementStep(this);
@@ -1641,7 +1641,7 @@ public class Project {
             throw new IndexOutOfBoundsException();
         }
         if (!isSequenceEditEnabled()) {
-            return false;
+            return false; // TODO: maybe its better to throw an exception
         }
         sequence.removeStep(index);
 
@@ -1666,7 +1666,7 @@ public class Project {
             throw new IndexOutOfBoundsException();
         }
         if (!isSequenceEditEnabled()) {
-            return false;
+            return false;   // TODO: maybe its better to throw an exception
         }
         for (int i = end; i >= start; i--) {
             sequence.removeStep(i);
@@ -2672,13 +2672,15 @@ public class Project {
 
             // check where we are
             MeasurementResult.Type resultType;
+            int rotation;
             if (getSquid().getHandler().getPosition() == Settings.getHandlerMeasurementPosition()) {
                 resultType = SAMPLE;
+                rotation = getSquid().getHandler().getRotation();
             } else {
                 resultType = NOISE;
+                rotation = 0;
             }
-            currentStep.addResult(new MeasurementResult(resultType, getSquid().getHandler().getRotation(),
-                    results[0], results[1], results[2]));
+            currentStep.addResult(new MeasurementResult(resultType, rotation, results[0], results[1], results[2]));
             fireMeasurementEvent(currentStep, VALUE_MEASURED);
 
             // TODO: when should the step be marked as done?
@@ -2719,6 +2721,9 @@ public class Project {
             if (!isDegaussingEnabled()) {
                 throw new IllegalStateException("!isDegaussingEnabled()");
             }
+
+            amplitude = Math.max(amplitude, Settings.getDegausserMinimumField());
+            amplitude = Math.min(amplitude, Settings.getDegausserMaximumField());
 
             // finish any previous measurement
             if (currentStep != null) {
