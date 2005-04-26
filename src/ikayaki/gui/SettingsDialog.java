@@ -86,13 +86,5 @@ public class SettingsDialog extends JDialog {
         SettingsDialog d = new SettingsDialog(owner, message);
         d.setVisible(true);
     }
-
-    /**
-     * Closes window, no changes saved.
-     */
-    public void closeWindow() {
-        setVisible(false);
-    }
-
 }
 
