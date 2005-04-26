@@ -47,8 +47,7 @@ import java.util.Vector;
  *
  * @author Aki Korpua
  */
-public class PrintPanel
-        extends JPanel {
+public class PrintPanel extends JPanel {
 
     private JDialog creator;
     private Project project;
