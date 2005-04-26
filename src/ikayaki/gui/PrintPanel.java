@@ -74,6 +74,8 @@ public class PrintPanel
 
         this.project = project;
 
+        System.err.println("print:" + project == null);
+
         if(project != null) {
 
             /* Plain Text Fields */
@@ -112,7 +114,10 @@ public class PrintPanel
             setLayout(new BorderLayout());
             add(contentPane, BorderLayout.CENTER);
         }
-        add(new JLabel("No Project selected"));
+        else {
+            add(new Label("No Open Project"));
+            System.err.println("no project");
+        }
 
     }
 

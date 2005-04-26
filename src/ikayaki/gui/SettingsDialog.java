@@ -61,6 +61,7 @@ public class SettingsDialog extends JDialog {
         } else if (dialogType == PROGRAM_SETTINGS) {
             add(new ProgramSettingsPanel(this), BorderLayout.CENTER);
         } else if (dialogType == PRINT_PREVIEW) {
+            System.err.println("toka:" + project== null);
             add(new PrintPanel(project), BorderLayout.CENTER);
         } else {
             throw new IllegalArgumentException("dialogType = " + dialogType);
@@ -83,6 +84,7 @@ public class SettingsDialog extends JDialog {
     public static void showPrintPreview(Frame owner, String message, Project projectGiven) {
         dialogType = PRINT_PREVIEW;
         SettingsDialog d = new SettingsDialog(owner, message);
+        System.err.println("eka:" + projectGiven == null);
         project = projectGiven;
         d.setVisible(true);
     }

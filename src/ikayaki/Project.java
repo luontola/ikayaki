@@ -65,7 +65,7 @@ import static ikayaki.ProjectEvent.Type.*;
  */
 public class Project {
 
-    private static final boolean DEBUG = false;      // TODO: used for testing the measurements without a Squid
+    private static final boolean DEBUG = true;      // TODO: used for testing the measurements without a Squid
 
     /* Property names for saving values to Project */
     public static final String MEASUREMENT_TYPE_PROPERTY = "measurementType";
