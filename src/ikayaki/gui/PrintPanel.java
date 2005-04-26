@@ -220,7 +220,7 @@ public class PrintPanel
                                              GridConstraints.
                                              SIZEPOLICY_CAN_SHRINK |
                                              GridConstraints.
-                                             SIZEPOLICY_CAN_GROW, new Dimension(600, 800), null, null));
+                                             SIZEPOLICY_CAN_GROW, null, null, null));
         sequenceTable = new JTable(sequenceTableModel);
         sequenceTable.getTableHeader().setReorderingAllowed(false);
         sequenceTable.getTableHeader().setResizingAllowed(false);
@@ -254,7 +254,7 @@ public class PrintPanel
                                        GridConstraints.SIZEPOLICY_CAN_SHRINK |
                                        GridConstraints.SIZEPOLICY_CAN_GROW,
                                        GridConstraints.SIZEPOLICY_CAN_SHRINK |
-                                       GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(100, 100), null, null));
+                                       GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(150, 150), null, null));
         plot2 = new StereoPlot();
         panel2.add(plot2,
                    new GridConstraints(0, 1, 1, 1,
@@ -263,8 +263,8 @@ public class PrintPanel
                                        GridConstraints.SIZEPOLICY_CAN_SHRINK |
                                        GridConstraints.SIZEPOLICY_CAN_GROW,
                                        GridConstraints.SIZEPOLICY_CAN_SHRINK |
-                                       GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(100, 100), null, null));
-        plot3 = new StereoPlot();
+                                       GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(150, 150), null, null));
+        plot3 = new IntensityPlot();
         panel2.add(plot3,
                    new GridConstraints(1, 0, 1, 1,
                                        GridConstraints.ANCHOR_CENTER,
@@ -272,7 +272,7 @@ public class PrintPanel
                                        GridConstraints.SIZEPOLICY_CAN_SHRINK |
                                        GridConstraints.SIZEPOLICY_CAN_GROW,
                                        GridConstraints.SIZEPOLICY_CAN_SHRINK |
-                                       GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(100, 100), null, null));
+                                       GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(300, 150), null, null));
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridLayoutManager(4, 6, new Insets(0, 0, 0, 0), -1,
                                                -1));
