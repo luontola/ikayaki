@@ -283,7 +283,7 @@ public abstract class MeasurementValue <T> {
                     if (moment == null) {
                         return null;
                     } else {
-                        return (moment / 1000.0) / normalizer;      // convert Am^2 to mAm^2
+                        return (moment * 1000.0) / normalizer;      // convert Am^2 to mAm^2
                     }
                 }
             };
