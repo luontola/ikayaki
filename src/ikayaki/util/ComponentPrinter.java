@@ -1,5 +1,5 @@
 /*
- * ProjectPrinter.java
+ * ComponentPrinter.java
  *
  * Copyright (C) 2005 Project SQUID, http://www.cs.helsinki.fi/group/squid/
  *
@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-package ikayaki;
+package ikayaki.util;
 
 import java.awt.*;
 import javax.swing.*;
@@ -31,15 +31,15 @@ import java.awt.print.*;
  *
  * @author Aki Korpua
  */
-public class ProjectPrinter implements Printable {
+public class ComponentPrinter implements Printable {
   private Component componentToBePrinted;
 
-  public ProjectPrinter(Component componentToBePrinted) {
+  public ComponentPrinter(Component componentToBePrinted) {
     this.componentToBePrinted = componentToBePrinted;
   }
 
   public static void printComponent(Component c) {
-  new ProjectPrinter(c).print();
+  new ComponentPrinter(c).print();
 }
 
   public void print() {

@@ -41,6 +41,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Vector;
+import ikayaki.util.ComponentPrinter;
 
 /**
  * Creates layout from MeasurementSequence and Plots to be printed
@@ -153,7 +154,7 @@ public class PrintPanel extends JPanel {
         print.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 closeDialog();
-                ProjectPrinter.printComponent(getPrintedDocument());
+                ComponentPrinter.printComponent(getPrintedDocument());
             }
         });
         cancel.addActionListener(new ActionListener() {

@@ -34,6 +34,7 @@ import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import ikayaki.util.ComponentPrinter;
 
 /**
  * Creates the main view panels (split panels) and Squid and Project components. It also tells everybody if the current
@@ -707,7 +708,7 @@ public class MainViewPanel extends ProjectComponent {
         if (printAction == null) {
             printAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    ProjectPrinter.printComponent(new PrintPanel(null, getProject()).getPrintedDocument());
+                    ComponentPrinter.printComponent(new PrintPanel(null, getProject()).getPrintedDocument());
                 }
             };
             printAction.putValue(Action.NAME, "Print");
