@@ -26,7 +26,7 @@ import ikayaki.MeasurementEvent;
 import ikayaki.MeasurementListener;
 import ikayaki.Project;
 import ikayaki.Settings;
-import ikayaki.squid.Handler;
+import ikayaki.squid.Squid;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,6 +43,11 @@ import java.util.TreeMap;
  */
 public class MagnetometerStatusPanel extends JPanel implements MeasurementListener {
 
+    public static final Color DEMAGNETIZING_COLOR = new Color(0xFFCCCC);
+    public static final Color MEASURING_COLOR = new Color(0xFFFFCC);
+    public static final Color MOVING_COLOR = new Color(0xCCCCFF);
+    public static final Color IDLE_COLOR = Color.WHITE;
+
     /**
      * ManualControlsPanel whose move-radiobuttons to show.
      */
@@ -54,15 +59,20 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 //    private final MagnetometerStatusAnimator statusAnimator;
 
     /**
-     * Sample hanlder to read and command current position and rotation from/to. Is null if the current project does not
-     * have access to the Squid.
+     * Squid to read the device's state and command the handler to move and rotateto. Is null if the current project
+     * does not have access to the Squid.
      */
-    private Handler handler;    // TODO: everywhere where the handler is used, check if it is null. or disable all controls when the project does not own the squid.
+    private Squid squid = null;
 
     // handler current position and rotation
     private int position = 0;
     private int rotation = 0;
     private boolean moving = false;
+    private boolean rotating = false;
+
+    // status of the degausser and magnetometer
+    private boolean demagnetizing = false;
+    private boolean measuring = false;
 
     // handler max position and max rotation for drawing
     // TODO: some way to get the actual max-position?
@@ -86,7 +96,6 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
     /**
      * Sets magnetometer status to current position.
-     * @deprecated use the estimated methods from the handler class
      */
     public MagnetometerStatusPanel() {
         this.setLayout(new OverlayLayout(this));
@@ -117,12 +126,11 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     }
 
     /**
-     * Sets our Handler to command; called by MainViewPanel.
-     *
-     * @param handler sample handler to read positions and command with move/rotate commands.
+     * Sets our Squid to command; called by MainViewPanel. Uses the sample handler to read positions and command with
+     * move/rotate commands. Degausser and magnetometer are used for displaying their status.
      */
-    public void setHandler(Handler handler) {
-        this.handler = handler;
+    public void setSquid(Squid squid) {
+        this.squid = squid;
         updateStatus();
         manualControlsPanel.setEnabled();
     }
@@ -193,10 +201,13 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
      * Handler saved to this.handler.
      */
     public void updateStatus() {
-        if (handler != null) {
-            position = handler.getEstimatedPosition();
-            rotation = handler.getEstimatedRotation();
-            moving = handler.isMoving();
+        if (squid != null) {
+            position = squid.getHandler().getEstimatedPosition();
+            rotation = squid.getHandler().getEstimatedRotation();
+            moving = squid.getHandler().isMoving();
+            rotating = squid.getHandler().isRotating();
+            measuring = squid.getMagnetometer().isMeasuring();
+            demagnetizing = squid.getDegausser().isDemagnetizing();
         }
 //        statusAnimator.gone();
         updatePositions();
@@ -211,9 +222,9 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     public void measurementUpdated(MeasurementEvent e) {
         // MeasurementEvent won't tell handler position and rotation; ask them from Handler
         int pos = 0, rotate = 0;
-        if (this.handler != null) {
-            pos = this.handler.getPosition();
-            rotate = this.handler.getRotation();
+        if (squid != null) {
+            pos = squid.getHandler().getPosition();
+            rotate = squid.getHandler().getRotation();
         }
 
         if (e == null) {
@@ -302,7 +313,16 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
         // "sample"
 //        Color bg = statusAnimator.going ? new Color(0xccccff) : Color.WHITE;
-        Color bg = moving ? new Color(0xccccff) : Color.WHITE;
+        Color bg;
+        if (demagnetizing) {
+            bg = DEMAGNETIZING_COLOR;
+        } else if (measuring) {
+            bg = MEASURING_COLOR;
+        } else if (moving || rotating) {
+            bg = MOVING_COLOR;
+        } else {
+            bg = IDLE_COLOR;
+        }
         drawFillOval(g2, bg, basex - samplew / 2, sampley - sampled, samplew, sampleh);
         drawFillSideRect(g2, bg, basex - samplew / 2, sampley - sampled + sampleh / 2, samplew, sampled);
         drawFillOval(g2, bg, basex - samplew / 2, sampley, samplew, sampleh);
@@ -364,6 +384,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
     /**
      * Animator-thread for updating magnetometer status pic.
+     *
+     * @deprecated use the estimated methods from the handler class
      */
     private class MagnetometerStatusAnimator implements Runnable {
         // drawing delay in ms (fps = 1000 / delay)
@@ -393,6 +415,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
         /**
          * Starts to move...
+         *
          * @deprecated handler positions estimated by Handler.
          */
         synchronized public void going(int posTo, int rotateTo) {
@@ -448,7 +471,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
                 animatorThread.interrupt();
                 try {
                     animatorThread.join();
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException e) {
+                }
                 animatorThread = null;
             }
         }
@@ -457,14 +481,15 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             while (going) {
                 try {
                     Thread.sleep(updateDelay);
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException e) {
+                }
 
-                position = handler.getEstimatedPosition();
-                rotation = handler.getEstimatedRotation();
+                position = squid.getHandler().getEstimatedPosition();
+                rotation = squid.getHandler().getEstimatedRotation();
 
                 // TODO: this wouldn't actually be needed if we get MeasurementEvent every time
                 // handler stops, but let's just make sure :)
-                if (!handler.isMoving()) going = false;
+                if (!squid.getHandler().isMoving()) going = false;
 
                 MagnetometerStatusPanel.this.repaint();
             }
@@ -477,7 +502,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             while (going) {
                 try {
                     Thread.sleep(updateDelay);
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException e) {
+                }
 
                 if (!going) break;
 
@@ -892,7 +918,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
          */
         public void setEnabled(boolean enabled) {
             super.setEnabled(enabled);
-            if (handler == null) enabled = false;
+            if (squid == null) enabled = false;
             for (Component component : components) component.setEnabled(enabled);
 
             // set selected radioboxes according to current handler status
