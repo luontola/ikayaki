@@ -54,16 +54,16 @@ public class ComponentPrinter implements Printable {
   }
 
   public int print(Graphics g, PageFormat pageFormat, int pageIndex) {
-    if (pageIndex > 1) {
-      return(NO_SUCH_PAGE);
-    } else {
-      Graphics2D g2d = (Graphics2D)g;
-      g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY() - 600*pageIndex);
+      Dimension dim = componentToBePrinted.getSize();
+      if (dim.getHeight() < (pageIndex * 695))
+          return (NO_SUCH_PAGE);
+      Graphics2D g2d = (Graphics2D) g;
+      g2d.translate(pageFormat.getImageableX(),
+                    pageFormat.getImageableY() - 695 * pageIndex);
       disableDoubleBuffering(componentToBePrinted);
       componentToBePrinted.paint(g2d);
       enableDoubleBuffering(componentToBePrinted);
-      return(PAGE_EXISTS);
-    }
+      return (PAGE_EXISTS);
   }
 
   public static void disableDoubleBuffering(Component c) {
