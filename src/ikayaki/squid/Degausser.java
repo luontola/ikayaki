@@ -67,6 +67,8 @@ public class Degausser implements SerialIOListener {
     private double minimumField;
     private double maximumField;
 
+    private boolean demagnetizing = false;
+
     /**
      * Creates a new degausser interface. Opens connection to degausser COM port (if not open yet) and reads settings
      * from the Setting class.
@@ -165,6 +167,7 @@ public class Degausser implements SerialIOListener {
      * Performs Ramp up. If this is used, make sure you Ramp down in less than 10 seconds because it can damage coil
      */
     protected void executeRampUp() {
+        demagnetizing = true;
         try {
             blockingWrite("DERU");
         } catch (SerialIOException e) {
@@ -181,17 +184,20 @@ public class Degausser implements SerialIOListener {
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
+        demagnetizing = false;
     }
 
     /**
      * Performs Ramp up and down.
      */
     protected void executeRampCycle() {
+        demagnetizing = true;
         try {
             blockingWrite("DERC");
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
+        demagnetizing = false;
     }
 
     protected void blockingWrite(String command) throws SerialIOException {
@@ -266,6 +272,10 @@ public class Degausser implements SerialIOListener {
         } else {
             return false;
         }
+    }
+
+    public boolean isDemagnetizing() {
+        return demagnetizing;
     }
 
     /**

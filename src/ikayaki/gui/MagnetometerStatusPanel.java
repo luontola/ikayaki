@@ -633,7 +633,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         private final JButton demagButton = new JButton("Demag");
         private final String demagButtonBaseText = "Demag ";
         // TODO: add some action here
-        private final ComponentFlasher demagButtonFlasher = new ComponentFlasher(demagButton);
+        private final ComponentFlasher demagButtonFlasher = new ComponentFlasher(demagButton);  // TODO: this field is never used. remove it?
 
         /**
          * Demagnetizes in Z (at current sample holder position) by calling project.doManualDemagZ(double).

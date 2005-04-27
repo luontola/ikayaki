@@ -53,6 +53,8 @@ public class Magnetometer implements SerialIOListener {
 
     private boolean waitingForMessage = false;
 
+    private boolean measuring = false;
+
 
     /**
      * Creates a new magnetometer interface. Opens connection to Magnetometer COM port (if its not open already) and
@@ -261,6 +263,7 @@ public class Magnetometer implements SerialIOListener {
             e.printStackTrace();
         }
 
+        measuring = true;
         latchCounter('A');
 
         //read all latched counter values
@@ -284,11 +287,16 @@ public class Magnetometer implements SerialIOListener {
         result[1] = (counterY + analogY) * Settings.getMagnetometerYAxisCalibration();
         result[2] = (counterZ + analogZ) * Settings.getMagnetometerZAxisCalibration();
 
+        measuring = false;
         return result;
     }
 
+    public boolean isMeasuring() {
+        return measuring;
+    }
+
     /**
-     * Returns filter configurations for all axis. Blocking.
+     * Returns filter configurations for all axis.
      *
      * @return return filter values for all axis in order (x,y,z). <br/>Values: <br/>"1" One Hertz Filter; 1 Hz <br/>"T"
      *         Ten Hertz Filter; 10 Hz <br/>"H" One hundred Hertz Filter; 100 Hz <br/>"W" Wide band filter; WB
@@ -309,7 +317,7 @@ public class Magnetometer implements SerialIOListener {
     }
 
     /**
-     * Returns range configurations for all axis. Blocking.
+     * Returns range configurations for all axis.
      *
      * @return return filter values for all axis in order (x,y,z). <br/>Values: <br/>"1" One time range; 1x <br/>"T" Ten
      *         times range; 10x <br/>"H" One hundred times range; 100x <br/>"E" Extended range; 1000x
@@ -331,7 +339,7 @@ public class Magnetometer implements SerialIOListener {
     }
 
     /**
-     * Returns Fast Slew options value. Blocking.
+     * Returns Fast Slew options value.
      *
      * @return true if Fast Slew is on, false if not. In order (x,y,z).
      */
@@ -351,7 +359,7 @@ public class Magnetometer implements SerialIOListener {
     }
 
     /**
-     * Returns if Loops have been opened on axes. Blocking.
+     * Returns if Loops have been opened on axes.
      *
      * @return return Loop status for all axis in order (x,y,z). Values true = on, false = off.
      */

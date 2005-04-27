@@ -149,7 +149,7 @@ public class Handler implements SerialIOListener {
     /**
      * True if we are moving
      */
-    private boolean moving;
+    private boolean moving = false;
 
     /**
      * Time in nanoseconds when we started movement
@@ -165,7 +165,7 @@ public class Handler implements SerialIOListener {
      * Velocity we are moving (negative and positive values accepted)
      */
     private int currentRotationVelocity;
-    private boolean rotating;
+    private boolean rotating = false;
 
     /**
      * Creates a new handler interface. Opens connection to handler COM port and reads settings from the Settings

@@ -172,7 +172,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
         if (project != null) {
             setOrientation(project.getOrientation());
             if (project.getSquid() != null) {
-                magnetometerStatusPanel.setHandler(project.getSquid().getHandler());
+                magnetometerStatusPanel.setSquid(project.getSquid());
             }
         }
         manualControlsPanel.setProject(project);
