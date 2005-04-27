@@ -162,6 +162,12 @@ public class Handler implements SerialIOListener {
     private int currentVelocity;
 
     /**
+     * Velocity we are moving (negative and positive values accepted)
+     */
+    private int currentRotationVelocity;
+    private boolean rotating;
+
+    /**
      * Creates a new handler interface. Opens connection to handler COM port and reads settings from the Settings
      * class.
      */
@@ -246,6 +252,16 @@ public class Handler implements SerialIOListener {
         return moving;
     }
 
+    /**
+     * Tells whether handler is on the move.
+     *
+     * @return true if moving, false if not.
+     */
+    public boolean isRotating() {
+        return rotating;
+    }
+
+
 
     /**
      * Used for graphics of squid, estimates from speed and starting time where handler is
@@ -258,6 +274,13 @@ public class Handler implements SerialIOListener {
         } else {
             double timeSpent = (System.currentTimeMillis() - startingTime) / 1000.0;    // in seconds
             int pos = currentStartingPoint + (int) (currentVelocity * timeSpent);
+            /* acceleration correction */
+            double accTime = (double)currentVelocity/(double)acceleration;
+            if(timeSpent>accTime) {
+                pos -=  (1050422 * (accTime * accTime)) / (acceleration);
+            } else {
+                pos = currentStartingPoint + (int)((1050422 * (timeSpent * timeSpent)) / (double)(acceleration));
+            }
             return pos;
         }
     }
@@ -268,10 +291,13 @@ public class Handler implements SerialIOListener {
      * @return current Estimated rotation we are at
      */
     public int getEstimatedRotation() {
-        if (!isMoving()) {
+        if (!isRotating()) {
             return getRotation();
         } else {
-            double angle = (double) (getEstimatedPosition()) / Settings.getHandlerRotation() * 360.0;
+            double timeSpent = (System.currentTimeMillis() - startingTime) / 1000.0;    // in seconds
+            int pos = currentStartingPoint + (int) (currentVelocity * timeSpent);
+            double angle = (double) (pos) / Settings.getHandlerRotation() * 360.0;
+            // no need to calculate acceleration, error minimal
             return (int) (Math.round(angle)) % 360;
         }
     }
@@ -320,9 +346,9 @@ public class Handler implements SerialIOListener {
             setAcceleration(rotationAcceleration);
             setDeceleration(rotationDeceleration);
             serialIO.writeMessage("+H1,");
-            fireEstimatedMovement();
+            fireEstimatedRotation();
             waitForMessage();
-            stopEstimatedMovement();
+            stopEstimatedRotation();
             currentRotation = 0;
 
         } catch (SerialIOException e) {
@@ -572,7 +598,7 @@ public class Handler implements SerialIOListener {
 
                     // re-seek home always rotating to zero, otherwise use the counter
                     if (angle == 0) {
-                        fireEstimatedMovement();
+                        fireEstimatedRotation();
                         serialIO.writeMessage("+H1,");
                     } else {
                         int relativeSteps = steps - currentRotation;
@@ -580,13 +606,13 @@ public class Handler implements SerialIOListener {
 //                            currentVelocity *= -1;
                             relativeSteps += Settings.getHandlerRotation();
                         }
-                        fireEstimatedMovement();
+                        fireEstimatedRotation();
                         relativeSteps = relativeSteps % Settings.getHandlerRotation();
                         serialIO.writeMessage("+N" + relativeSteps + "G,");
                     }
                     currentRotation = steps;
                     waitForMessage();
-                    stopEstimatedMovement();
+                    stopEstimatedRotation();
 
                 } catch (SerialIOException e) {
                     e.printStackTrace();
@@ -617,6 +643,22 @@ public class Handler implements SerialIOListener {
     public void stopEstimatedMovement() {
         moving = false;
     }
+
+    /**
+     * Starts movement, sets current time for calculating estimated position
+     */
+    public void fireEstimatedRotation() {
+        startingTime = System.currentTimeMillis();
+        rotating = true;
+    }
+
+    /**
+     * Stops calculating estimated current position
+     */
+    public void stopEstimatedRotation() {
+        rotating = false;
+    }
+
 
     /**
      * Waits that all commands sent to the Handler have been executed.
