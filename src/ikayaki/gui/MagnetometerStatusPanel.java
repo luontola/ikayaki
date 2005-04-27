@@ -220,13 +220,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
      * current handler position and rotation from Handler.
      */
     public void measurementUpdated(MeasurementEvent e) {
-        if (e == null) {
-            // null means that configuration might have changed :)
-            updatePositions();
-            repaint();
-        } else {
-            updateStatus();
-        }
+        updateStatus();
     }
 
     /**
