@@ -2683,8 +2683,6 @@ public class Project {
             currentStep.addResult(new MeasurementResult(resultType, rotation, results[0], results[1], results[2]));
             fireMeasurementEvent(currentStep, VALUE_MEASURED);
 
-            // TODO: when should the step be marked as done?
-
             setState(IDLE);
         }
     }

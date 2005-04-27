@@ -251,7 +251,7 @@ public class MeasurementDetailsPanel extends ProjectComponent {
 
                     if (i == 0) {
                         value = "Holder";
-                    } else if (i == 1 || i == getRowCount() - 1) {
+                    } else if (i == 1 || rowIndex == getRowCount() - 1) {
                         value = "BG";
                     } else {
                         switch ((i - 2) % 4) {
