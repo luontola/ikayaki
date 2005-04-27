@@ -217,32 +217,16 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
     /**
      * Updates magnetometer status picture; called by MeasurementControlsPanel when it receives MeasurementEvent. Reads
-     * current handler position and rotation from Handler saved to this.handler.
+     * current handler position and rotation from Handler.
      */
     public void measurementUpdated(MeasurementEvent e) {
-        // MeasurementEvent won't tell handler position and rotation; ask them from Handler
-        int pos = 0, rotate = 0;
-        if (squid != null) {
-            pos = squid.getHandler().getPosition();
-            rotate = squid.getHandler().getRotation();
-        }
-
         if (e == null) {
             // null means that configuration might have changed :)
             updatePositions();
-
-        } else if (e.getType() == MeasurementEvent.Type.HANDLER_STOP) {
-            // if stopped moving, stop animation
-            this.position = pos;
-            this.rotation = rotate;
-//            statusAnimator.gone();
-
+            repaint();
         } else {
-            // if started moving, start animation; Handler gave us target position and rotation
-//            statusAnimator.going(pos, rotate);
+            updateStatus();
         }
-
-        repaint();
     }
 
     /**

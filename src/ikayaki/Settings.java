@@ -172,10 +172,14 @@ public class Settings {
         measuringWrapper.selectedFocusBackground = new Color(0xFFCCFF);
 
         doneRecentlyWrapper.opaque = true;
-        doneRecentlyWrapper.background = new Color(0xBAEEBA);
-        doneRecentlyWrapper.selectedBackground = new Color(0xCCFFCC);
-        doneRecentlyWrapper.focusBackground = new Color(0xBAEEBA);
-        doneRecentlyWrapper.selectedFocusBackground = new Color(0xCCFFCC);
+//        doneRecentlyWrapper.background = new Color(0xBAEEBA);
+//        doneRecentlyWrapper.selectedBackground = new Color(0xCCFFCC);
+//        doneRecentlyWrapper.focusBackground = new Color(0xBAEEBA);
+//        doneRecentlyWrapper.selectedFocusBackground = new Color(0xCCFFCC);
+        doneRecentlyWrapper.background = new Color(0xE9FFE9);
+        doneRecentlyWrapper.selectedBackground = new Color(0xBAEEBA);
+        doneRecentlyWrapper.focusBackground = new Color(0xE9FFE9);
+        doneRecentlyWrapper.selectedFocusBackground = new Color(0xBAEEBA);
     }
 
     /**
