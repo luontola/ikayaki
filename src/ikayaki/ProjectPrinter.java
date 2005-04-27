@@ -54,11 +54,11 @@ public class ProjectPrinter implements Printable {
   }
 
   public int print(Graphics g, PageFormat pageFormat, int pageIndex) {
-    if (pageIndex > 0) {
+    if (pageIndex > 1) {
       return(NO_SUCH_PAGE);
     } else {
       Graphics2D g2d = (Graphics2D)g;
-      g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+      g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY() - 600*pageIndex);
       disableDoubleBuffering(componentToBePrinted);
       componentToBePrinted.paint(g2d);
       enableDoubleBuffering(componentToBePrinted);
