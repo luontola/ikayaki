@@ -306,6 +306,8 @@ public class SquidFront extends JFrame {
                     Squid.instance().getHandler().setAcceleration(Integer.parseInt(param1.getText()));
                 } catch (IOException ex) {
                     handlerLog.append("setAcceleration failed\r");
+                } catch (SerialIOException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
@@ -317,6 +319,8 @@ public class SquidFront extends JFrame {
                     Squid.instance().getHandler().setDeceleration(Integer.parseInt(param1.getText()));
                 } catch (IOException ex) {
                     handlerLog.append("setDeceleration failed\r");
+                } catch (SerialIOException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
@@ -328,6 +332,8 @@ public class SquidFront extends JFrame {
                     Squid.instance().getHandler().setVelocity(Integer.parseInt(param1.getText()));
                 } catch (IOException ex) {
                     handlerLog.append("setVelocity failed\r");
+                } catch (SerialIOException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
@@ -339,6 +345,8 @@ public class SquidFront extends JFrame {
                     Squid.instance().getHandler().setOnline();
                 } catch (IOException ex) {
                     handlerLog.append("setOnline failed\r");
+                } catch (SerialIOException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
@@ -363,6 +371,8 @@ public class SquidFront extends JFrame {
                     Squid.instance().getHandler().verify(param1.getText().charAt(0));
                 } catch (IOException ex) {
                     handlerLog.append("verify failed\r");
+                } catch (SerialIOException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
@@ -386,6 +396,8 @@ public class SquidFront extends JFrame {
                     Squid.instance().getHandler().setMotorNegative();
                 } catch (IOException ex) {
                     handlerLog.append("setMotorNegative failed\r");
+                } catch (SerialIOException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
@@ -397,6 +409,8 @@ public class SquidFront extends JFrame {
                     Squid.instance().getHandler().setMotorPositive();
                 } catch (IOException ex) {
                     handlerLog.append("setMotorPositive failed\r");
+                } catch (SerialIOException e1) {
+                    e1.printStackTrace();
                 }
             }
         });

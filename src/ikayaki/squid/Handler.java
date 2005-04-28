@@ -25,7 +25,6 @@ package ikayaki.squid;
 import ikayaki.Settings;
 import ikayaki.util.LastExecutor;
 
-import java.util.Stack;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -35,11 +34,6 @@ import java.util.concurrent.TimeUnit;
  * @author Aki Korpua
  */
 public class Handler implements SerialIOListener {
-
-    /**
-     * Buffer for incoming messages, readed when needed (never readed :)
-     */
-    private Stack<String> messageBuffer = new Stack<String>();
 
     /**
      * Synchronous queue for waiting result message from handler
@@ -87,11 +81,6 @@ public class Handler implements SerialIOListener {
     private int MEASUREMENT_VELOCITY;
 
     /**
-     * The position where the handler is currently, or where it is heading right now.
-     */
-    private int currentPosition;
-
-    /**
      * Value between 1 and 16,777,215. Relative to Home.
      */
     private int SAMPLE_LOAD_POSITION;
@@ -117,19 +106,9 @@ public class Handler implements SerialIOListener {
     private int MEASUREMENT_POSITION;
 
     /**
-     * Angles are between 0 (0) and 2000 (360).
-     */
-    private int currentRotation = 0;
-
-    /**
-     * Only one at time can be waiting for answer, works like semaphore for commanding handler
-     */
-    private boolean waitingForMessage = false;
-
-    /**
      * Value between 50 and 8500, but should be small
      */
-    private int ROTATION_SPEED;
+    private int ROTATION_VELOCITY;
 
     /**
      * Value between 0 and 127.
@@ -142,34 +121,46 @@ public class Handler implements SerialIOListener {
     private int ROTATION_DECELERATION;
 
     /**
+     * Currently selected motor to send the commands to.
+     */
+    private int currentMotor = -1;
+
+    /**
+     * The position where the handler is currently, or where it is heading right now. Integer.MIN_VALUE means the left
+     * limit, Integer.MAX_VALUE is the right limit.
+     */
+    private int currentPosition = 0;
+
+    /**
+     * Angles are between 0 (0) and 2000 (360).
+     */
+    private int currentRotation = 0;
+
+    /**
+     * Last set velocity. Negative for moving to left and positive for moving to right.
+     */
+    private int currentVelocity = 0;
+
+    /**
      * Starting point at start of movement
      */
-    private int currentStartingPoint;
+    private int estimatedPositionStart = 0;
 
     /**
-     * True if we are moving
+     * Time in milliseconds when we started movement
      */
-    private boolean moving = false;
+    private long estimatedPositionStartTime = 0;
+
+    private int estimatedPositionEnd = 0;
+
+    private int estimatedRotationStart = 0;
+    private long estimatedRotationStartTime = 0;
+    private int estimatedRotationEnd = 0;
 
     /**
-     * Time in nanoseconds when we started movement
+     * Only one at time can be waiting for answer, works like semaphore for commanding handler
      */
-    private long startingTime;
-
-    /**
-     * Velocity we are moving (negative and positive values accepted)
-     */
-    private int currentVelocity;
-
-    /**
-     * Velocity we are moving (negative and positive values accepted)
-     */
-    private int currentRotationVelocity;
-
-    /**
-     * True if we are rotating.
-     */
-    private boolean rotating = false;
+    private boolean waitingForMessage = false;
 
     /**
      * Creates a new handler interface. Opens connection to handler COM port and reads settings from the Settings
@@ -184,7 +175,7 @@ public class Handler implements SerialIOListener {
     /**
      * Starts up the handler and seeks the home position. Will wait until the handler is ready for operation.
      */
-    protected void setUp() {
+    protected void setUp() throws SerialIOException {
         // put the system online
         setOnline();
 
@@ -205,25 +196,34 @@ public class Handler implements SerialIOListener {
         MEASUREMENT_POSITION = Settings.getHandlerMeasurementPosition();
         MEASUREMENT_VELOCITY = Settings.getHandlerMeasurementVelocity();
         TRANSVERSE_YAF_POSITION = Settings.getHandlerTransverseYAFPosition();
-        ROTATION_SPEED = Settings.getHandlerRotationVelocity();
+        ROTATION_VELOCITY = Settings.getHandlerRotationVelocity();
         ROTATION_ACCELERATION = Settings.getHandlerRotationAcceleration();
         ROTATION_DECELERATION = Settings.getHandlerRotationDeceleration();
         VELOCITY = Settings.getHandlerVelocity();
-
-        //set all settings.. only three. Let's do it..! Rock'N'Roll
-        setAcceleration(ACCELERATION);
-        setVelocity(VELOCITY);
-        setDeceleration(DECELERATION);
     }
 
     /**
-     * Returns the position where the handler is currently, or where it is heading right now.
+     * Tells whether handler is moving right now.
+     */
+    public boolean isMoving() {
+        return estimatedPositionStart != estimatedPositionEnd;
+    }
+
+    /**
+     * Tells whether handler is rotating right now.
+     */
+    public boolean isRotating() {
+        return estimatedRotationStart != estimatedRotationEnd;
+    }
+
+    /**
+     * Returns the position where the handler is currently, or where it is heading right now. Integer.MAX_VALUE means
+     * the right limit and Integer.MIN_VALUE means the left limit.
      *
      * @return position relative to home.
      */
     public int getPosition() {
         return currentPosition;
-
     }
 
     /**
@@ -237,43 +237,82 @@ public class Handler implements SerialIOListener {
     }
 
     /**
-     * Tells whether handler is on the move.
-     *
-     * @return true if moving, false if not.
+     * Sets the position that we start heading to. Integer.MAX_VALUE means the right limit and Integer.MIN_VALUE means
+     * the left limit.
      */
-    public boolean isMoving() {
-        return moving;
+    protected void setPosition(int position) {
+        if (currentPosition == Integer.MAX_VALUE || currentPosition == Integer.MIN_VALUE) {
+            estimatedPositionStart = getEstimatedPosition();
+        } else {
+            estimatedPositionStart = currentPosition;
+        }
+        estimatedPositionStartTime = System.currentTimeMillis();
+        currentPosition = position;
+        estimatedPositionEnd = currentPosition;
     }
 
     /**
-     * Tells whether handler is on the move.
-     *
-     * @return true if moving, false if not.
+     * Sets the rotation that we start heading to. The value is in rotation steps and it will be automatically corrected
+     * to be in the right range.
      */
-    public boolean isRotating() {
-        return rotating;
+    protected void setRotation(int rotationSteps) {
+//        while (rotationSteps < 0) {
+//            rotationSteps += Settings.getHandlerRotation();
+//        }
+        estimatedPositionStart = currentRotation;
+        estimatedRotationStartTime = System.currentTimeMillis();
+//        currentRotation = rotationSteps % Settings.getHandlerRotation();
+        currentRotation = rotationSteps;
+        estimatedRotationEnd = currentRotation;
     }
 
+    /**
+     * Stops calculating estimated current position
+     */
+    private void fireMovementStopped() {
+        if (currentPosition == Integer.MAX_VALUE || currentPosition == Integer.MIN_VALUE) {
+            int pos = getEstimatedPosition();
+            estimatedPositionStart = pos;
+            estimatedPositionEnd = pos;
+        } else {
+            estimatedPositionStart = currentPosition;
+            estimatedPositionEnd = currentPosition;
+        }
+    }
 
     /**
-     * Used for graphics of squid, estimates from speed and starting time where handler is
+     * Stops calculating estimated current position
+     */
+    private void fireRotationStopped() {
+        estimatedRotationStart = currentRotation;
+        estimatedRotationEnd = currentRotation;
+    }
+
+    /**
+     * Returns an estimation that where handler is right now. Used for drawing graphics.
      *
-     * @return current Estimated position we are at if moving, other wise current position
+     * @return current the estimated position we are at, or current position if it is known.
      */
     public int getEstimatedPosition() {
         if (!isMoving()) {
-            return getPosition();
-        } else {
-            double timeSpent = (System.currentTimeMillis() - startingTime) / 1000.0;    // in seconds
-            int pos = currentStartingPoint + (int) (currentVelocity * timeSpent);
+            return estimatedPositionEnd;
+        }
 
-            /* acceleration correction */
-            double accTime = (double) currentVelocity / (double) ACCELERATION;
-            if (timeSpent > accTime) {
-                pos -= (1050422 * (accTime * accTime)) / (ACCELERATION);
-            } else {
-                pos = currentStartingPoint + (int) ((1050422 * (timeSpent * timeSpent)) / (double) (ACCELERATION));
-            }
+        double timeSpent = (System.currentTimeMillis() - estimatedPositionStartTime) / 1000.0;    // in seconds
+        int pos = estimatedPositionStart + (int) (currentVelocity * timeSpent);
+
+        /* acceleration correction */
+        double accTime = (double) currentVelocity / (double) ACCELERATION;
+        if (timeSpent > accTime) {
+            pos -= (1050422 * (accTime * accTime)) / (ACCELERATION);
+        } else {
+            pos = estimatedPositionStart + (int) ((1050422 * (timeSpent * timeSpent)) / (double) (ACCELERATION));
+        }
+
+        // prevent going over the end limit
+        if ((estimatedPositionStart < estimatedPositionEnd) != (estimatedPositionStart < pos)) {
+            return estimatedPositionEnd;
+        } else {
             return pos;
         }
     }
@@ -281,18 +320,24 @@ public class Handler implements SerialIOListener {
     /**
      * Used for graphics of squid, estimates from speed and starting time where handler is
      *
-     * @return current Estimated rotation we are at
+     * @return estimated rotation of where we are at in angles.
      */
     public int getEstimatedRotation() {
         if (!isRotating()) {
             return getRotation();
-        } else {
-            double timeSpent = (System.currentTimeMillis() - startingTime) / 1000.0;    // in seconds
-            int pos = currentStartingPoint + (int) (currentVelocity * timeSpent);
-            double angle = (double) (pos) / Settings.getHandlerRotation() * 360.0;
-            // no need to calculate acceleration, error minimal
-            return (int) (Math.round(angle)) % 360;
         }
+
+        double timeSpent = (System.currentTimeMillis() - estimatedRotationStartTime) / 1000.0;    // in seconds
+        int rotation = estimatedRotationStart + (int) (currentVelocity * timeSpent);
+
+        // prevent going over the end limit
+        if ((estimatedRotationStart < estimatedRotationEnd) != (estimatedRotationStart < rotation)) {
+            rotation = estimatedRotationEnd;
+        }
+
+        double angle = (double) (rotation) / Settings.getHandlerRotation() * 360.0;
+        // no need to calculate acceleration, error minimal
+        return (int) (Math.round(angle)) % 360;
     }
 
     /**
@@ -308,45 +353,27 @@ public class Handler implements SerialIOListener {
      * Commands the holder to seek home position and rotation. Waits for the home to be found and resets the home
      * position and rotation.
      */
-    protected void seekHome() {
-        try {
-            // seek home position
-            selectMovement();
-            setVelocity(VELOCITY);
-            setAcceleration(ACCELERATION);
-            setDeceleration(DECELERATION);
-            setEstimatedMovement(currentPosition);
-            if (currentPosition != Integer.MAX_VALUE) {
-                currentPosition = Integer.MAX_VALUE;
-                serialIO.writeMessage("+S,");
-                fireEstimatedMovement();
-                waitForMessage();
-                stopEstimatedMovement();
-                setEstimatedMovement(currentPosition);
-            }
+    protected void seekHome() throws SerialIOException {
 
-            currentVelocity *= -1;
-            serialIO.writeMessage("-H1,");
-            fireEstimatedMovement();
-            waitForMessage();
-            stopEstimatedMovement();
-            currentPosition = 0;
-
-            // seek home rotation
-            selectRotation();
-            setEstimatedMovement(currentRotation);
-            setVelocity(ROTATION_SPEED);
-            setAcceleration(ROTATION_ACCELERATION);
-            setDeceleration(ROTATION_DECELERATION);
-            serialIO.writeMessage("+H1,");
-            fireEstimatedRotation();
-            waitForMessage();
-            stopEstimatedRotation();
-            currentRotation = 0;
-
-        } catch (SerialIOException e) {
-            e.printStackTrace();
+        // seek home position
+        selectMovement();
+        if (currentPosition != Integer.MAX_VALUE) {
+            slewToLimit(true);
         }
+
+        setMotorNegative();
+        setPosition(0);
+        serialIO.writeMessage("H1,");
+        waitForMessage();
+        fireMovementStopped();
+
+        // seek home rotation
+        selectRotation();
+        setMotorPositive();
+        setRotation(0);
+        serialIO.writeMessage("H1,");
+        waitForMessage();
+        fireRotationStopped();
     }
 
     /**
@@ -356,7 +383,11 @@ public class Handler implements SerialIOListener {
     public void moveToSampleLoad() {
         workQueue.execute(new Runnable() {
             public void run() {
-                moveToPosition(SAMPLE_LOAD_POSITION);
+                try {
+                    moveToPosition(SAMPLE_LOAD_POSITION);
+                } catch (SerialIOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -367,7 +398,11 @@ public class Handler implements SerialIOListener {
     public void moveToDegausserZ() {
         workQueue.execute(new Runnable() {
             public void run() {
-                moveToPosition(AXIAL_AF_POSITION);
+                try {
+                    moveToPosition(AXIAL_AF_POSITION);
+                } catch (SerialIOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -379,7 +414,11 @@ public class Handler implements SerialIOListener {
     public void moveToDegausserY() {
         workQueue.execute(new Runnable() {
             public void run() {
-                moveToPosition(TRANSVERSE_YAF_POSITION);
+                try {
+                    moveToPosition(TRANSVERSE_YAF_POSITION);
+                } catch (SerialIOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -391,7 +430,11 @@ public class Handler implements SerialIOListener {
     public void moveToMeasurement() {
         workQueue.execute(new Runnable() {
             public void run() {
-                moveToPosition(MEASUREMENT_POSITION);
+                try {
+                    moveToPosition(MEASUREMENT_POSITION);
+                } catch (SerialIOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -402,7 +445,11 @@ public class Handler implements SerialIOListener {
     public void moveToBackground() {
         workQueue.execute(new Runnable() {
             public void run() {
-                moveToPosition(BACKGROUND_POSITION);
+                try {
+                    moveToPosition(BACKGROUND_POSITION);
+                } catch (SerialIOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -413,7 +460,11 @@ public class Handler implements SerialIOListener {
     public void moveToLeftLimit() {
         workQueue.execute(new Runnable() {
             public void run() {
-                moveToPosition(Integer.MIN_VALUE);
+                try {
+                    moveToPosition(Integer.MIN_VALUE);
+                } catch (SerialIOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -424,7 +475,11 @@ public class Handler implements SerialIOListener {
     public void moveToRightLimit() {
         workQueue.execute(new Runnable() {
             public void run() {
-                moveToPosition(Integer.MAX_VALUE);
+                try {
+                    moveToPosition(Integer.MAX_VALUE);
+                } catch (SerialIOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -436,99 +491,58 @@ public class Handler implements SerialIOListener {
      * @param position the position to move to, relative to home. If equal to Integer.MIN_VALUE, will go to left limit.
      *                 If equal to Integer.MAX_VALUE, will go to right limit.
      */
-    protected void moveToPosition(int position) {
+    protected void moveToPosition(int position) throws SerialIOException {
         selectMovement();
-        setEstimatedMovement(currentPosition);
 
-        if (currentPosition == position) {
-            // do not move if we are already there
-            return;
+        if (position == getPosition()) {
+            return;                 // do not move if we are already there
+
         } else if (position == Integer.MIN_VALUE) {
-            // slew to left limit
-            setVelocity(VELOCITY);
-            currentPosition = position;
-            setMotorNegative();
-            performSlew();
-            fireEstimatedMovement();
-            waitForMessage();
-            stopEstimatedMovement();
+            slewToLimit(false);     // slew to left limit
 
         } else if (position == Integer.MAX_VALUE) {
-            // slew to right limit
-            setVelocity(VELOCITY);
-            currentPosition = position;
-            setMotorPositive();
-            performSlew();
-            fireEstimatedMovement();
-            waitForMessage();
-            stopEstimatedMovement();
+            slewToLimit(true);      // slew to right limit
 
         } else {
 
             // if we are at a limit, we must recalibrate the home position
-            if (currentPosition == Integer.MIN_VALUE || currentPosition == Integer.MAX_VALUE) {
+            if (getPosition() == Integer.MIN_VALUE || getPosition() == Integer.MAX_VALUE) {
                 seekHome();
             }
 
             // obey speed limit and go to the specified position
-            if (currentPosition == BACKGROUND_POSITION) {
+            if (getPosition() == BACKGROUND_POSITION) {
 
                 // currently in background position - speed depends on where we are going
+                // move to the target position and stop there
                 if (position > BACKGROUND_POSITION) {
-                    setVelocity(MEASUREMENT_VELOCITY);
+                    moveSteps(position - getPosition(), MEASUREMENT_VELOCITY);
                 } else {
-                    setVelocity(VELOCITY);
+                    moveSteps(position - getPosition(), VELOCITY);
                 }
 
-                // move to the target position and stop there
-                moveSteps(position - currentPosition);
-                currentPosition = position;
-                fireEstimatedMovement();
-                waitForMessage();
-                stopEstimatedMovement();
-
-            } else if (currentPosition < BACKGROUND_POSITION) {
+            } else if (getPosition() < BACKGROUND_POSITION) {
 
                 // currently in fast speed area
-                setVelocity(VELOCITY);
-
                 if (position > BACKGROUND_POSITION) {
                     // must change the speed at BG position
-                    moveSteps(BACKGROUND_POSITION - currentPosition);
-                    currentPosition = BACKGROUND_POSITION;
-                    fireEstimatedMovement();
-                    waitForMessage();
-                    stopEstimatedMovement();
+                    moveSteps(BACKGROUND_POSITION - getPosition(), VELOCITY);
                     moveToPosition(position);   // continue movement from BG position
                 } else {
                     // keep the same speed all the way
-                    moveSteps(position - currentPosition);
-                    currentPosition = position;
-                    fireEstimatedMovement();
-                    waitForMessage();
-                    stopEstimatedMovement();
+                    moveSteps(position - getPosition(), VELOCITY);
                 }
 
-            } else if (currentPosition > BACKGROUND_POSITION) {
+            } else if (getPosition() > BACKGROUND_POSITION) {
 
                 // currently in slow speed area
-                setVelocity(MEASUREMENT_VELOCITY);
-
                 if (position < BACKGROUND_POSITION) {
                     // must change the speed at BG position
-                    moveSteps(BACKGROUND_POSITION - currentPosition);
-                    currentPosition = BACKGROUND_POSITION;
-                    fireEstimatedMovement();
-                    waitForMessage();
-                    stopEstimatedMovement();
+                    moveSteps(BACKGROUND_POSITION - getPosition(), MEASUREMENT_VELOCITY);
                     moveToPosition(position);   // continue movement from BG position
                 } else {
                     // keep the same speed all the way
-                    moveSteps(position - currentPosition);
-                    currentPosition = position;
-                    fireEstimatedMovement();
-                    waitForMessage();
-                    stopEstimatedMovement();
+                    moveSteps(position - getPosition(), MEASUREMENT_VELOCITY);
                 }
 
             } else {
@@ -544,35 +558,43 @@ public class Handler implements SerialIOListener {
      * @param steps the number of steps to move to.
      * @throws IllegalArgumentException if steps is not in range -16777215 to 16777215.
      */
-    protected void moveSteps(int steps) {
+    protected void moveSteps(int steps, int velocity) throws SerialIOException {
         if (steps < -16777215 || steps > 16777215) {
-            throw new IllegalArgumentException("steps is: " + steps);
+            throw new IllegalArgumentException("steps = " + steps);
         }
         selectMovement();
-
-        String direction;
+        setVelocity(velocity);
         if (steps >= 0) {
-            direction = "+";
+            setMotorPositive();
         } else {
-            currentVelocity *= -1;
-            direction = "-";
+            setMotorNegative();
         }
-        steps = Math.abs(steps);
 
-        setAcceleration(ACCELERATION);
-        setDeceleration(DECELERATION);
+        setPosition(getPosition() + steps);
+        serialIO.writeMessage("N" + Math.abs(steps));
+        go();
 
-        try {
-            serialIO.writeMessage(direction + "N" + steps);
-            go();
-        } catch (SerialIOException e) {
-            e.printStackTrace();
+        waitForMessage();
+        fireMovementStopped();
+    }
+
+    protected void slewToLimit(boolean toRight) throws SerialIOException {
+        setVelocity(VELOCITY);
+        if (toRight) {
+            setMotorPositive();
+            setPosition(Integer.MAX_VALUE);
+        } else {
+            setMotorNegative();
+            setPosition(Integer.MIN_VALUE);
         }
+        performSlew();
+        waitForMessage();
+        fireMovementStopped();
     }
 
     /**
      * Rotates the handler to the specified angle. If angle is over than 360 or lower than 0, it is divided by 360 and
-     * value is remainder. Blocking.
+     * value is remainder.
      *
      * @param rotationAngle the angle in degrees to rotate the handler to.
      */
@@ -581,31 +603,28 @@ public class Handler implements SerialIOListener {
             public void run() {
                 int angle = rotationAngle % 360;
                 int steps = (int) (((double) angle) / 360.0 * Settings.getHandlerRotation());
-                selectRotation();
 
                 try {
-                    setVelocity(ROTATION_SPEED);
-                    setAcceleration(ROTATION_ACCELERATION);
-                    setDeceleration(ROTATION_DECELERATION);
-                    setEstimatedMovement(currentRotation);
+                    selectRotation();
+                    setMotorPositive();
 
                     // re-seek home always rotating to zero, otherwise use the counter
                     if (angle == 0) {
-                        fireEstimatedRotation();
-                        serialIO.writeMessage("+H1,");
+                        setRotation(0);
+                        serialIO.writeMessage("H1,");
                     } else {
                         int relativeSteps = steps - currentRotation;
                         while (relativeSteps < 0) {
-//                            currentVelocity *= -1;
                             relativeSteps += Settings.getHandlerRotation();
                         }
-                        fireEstimatedRotation();
                         relativeSteps = relativeSteps % Settings.getHandlerRotation();
-                        serialIO.writeMessage("+N" + relativeSteps + "G,");
+
+                        setRotation(currentRotation + relativeSteps);
+                        serialIO.writeMessage("N" + relativeSteps);
+                        go();
                     }
-                    currentRotation = steps;
                     waitForMessage();
-                    stopEstimatedRotation();
+                    fireRotationStopped();
 
                 } catch (SerialIOException e) {
                     e.printStackTrace();
@@ -613,45 +632,6 @@ public class Handler implements SerialIOListener {
             }
         });
     }
-
-    /**
-     * Sets starting position for movement to calculate Estimated position
-     */
-    public void setEstimatedMovement(int from) {
-        currentStartingPoint = from;
-        //currentFinishPoint = to;
-    }
-
-    /**
-     * Starts movement, sets current time for calculating estimated position
-     */
-    public void fireEstimatedMovement() {
-        startingTime = System.currentTimeMillis();
-        moving = true;
-    }
-
-    /**
-     * Stops calculating estimated current position
-     */
-    public void stopEstimatedMovement() {
-        moving = false;
-    }
-
-    /**
-     * Starts movement, sets current time for calculating estimated position
-     */
-    public void fireEstimatedRotation() {
-        startingTime = System.currentTimeMillis();
-        rotating = true;
-    }
-
-    /**
-     * Stops calculating estimated current position
-     */
-    public void stopEstimatedRotation() {
-        rotating = false;
-    }
-
 
     /**
      * Waits that all commands sent to the Handler have been executed.
@@ -666,88 +646,81 @@ public class Handler implements SerialIOListener {
     /**
      * Sends message to handler go online (@0).
      */
-    protected void setOnline() {
-        try {
-            serialIO.writeMessage("@0,");
-        } catch (SerialIOException e) {
-            e.printStackTrace();
-        }
+    protected void setOnline() throws SerialIOException {
+        serialIO.writeMessage("@0,");
     }
 
     /**
-     * Selects the movement motor to recieve all commands.
+     * Selects the movement motor to recieve all commands. Sets the default velocity, acceleration and deceleration for
+     * the motor. If the movement motor is already selected, does nothing.
      */
-    protected void selectMovement() {
-        try {
-            serialIO.writeMessage("O1,0,");
-        } catch (SerialIOException e) {
-            e.printStackTrace();
+    protected void selectMovement() throws SerialIOException {
+        if (currentMotor == 0) {
+            return;
         }
+        currentMotor = 0;
+        serialIO.writeMessage("O1,0,");
+        setVelocity(VELOCITY);
+        setAcceleration(ACCELERATION);
+        setDeceleration(DECELERATION);
     }
 
     /**
-     * Selects the rotation motor to recieve all commands.
+     * Selects the rotation motor to recieve all commands. Sets the default velocity, acceleration and deceleration for
+     * the motor. If the rotation motor is already selected, does nothing.
      */
-    protected void selectRotation() {
-        try {
-            serialIO.writeMessage("O1,1,");
-        } catch (SerialIOException e) {
-            e.printStackTrace();
+    protected void selectRotation() throws SerialIOException {
+        if (currentMotor == 1) {
+            return;
         }
+        currentMotor = 1;
+        serialIO.writeMessage("O1,1,");
+        setVelocity(ROTATION_VELOCITY);
+        setAcceleration(ROTATION_ACCELERATION);
+        setDeceleration(ROTATION_DECELERATION);
     }
 
     /**
      * Sends message to handler to set acceleration (Aa).
      *
-     * @param a Acceleration is a number from 0 to 127
+     * @param acceleration Acceleration is a number from 0 to 127
      * @throws IllegalArgumentException if the parameter is not in range.
      */
-    protected void setAcceleration(int a) {
-        if (a >= 0 && a < 128) {
-            try {
-                serialIO.writeMessage("A" + a + ",");
-            } catch (SerialIOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            throw new IllegalArgumentException("a is : " + a);
+    protected void setAcceleration(int acceleration) throws SerialIOException {
+        if (acceleration < 0 || acceleration > 127) {
+            throw new IllegalArgumentException("acceleration = " + acceleration);
         }
+        serialIO.writeMessage("A" + acceleration + ",");
     }
 
     /**
      * Sends message to handler to set deceleration (Dd).
      *
-     * @param d Deceleration is a number from 0 to 127
+     * @param deceleration Deceleration is a number from 0 to 127
      * @throws IllegalArgumentException if the parameter is not in range.
      */
-    protected void setDeceleration(int d) {
-        if (d >= 0 && d < 128) {
-            try {
-                serialIO.writeMessage("D" + d + ",");
-            } catch (SerialIOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            throw new IllegalArgumentException("d is : " + d);
+    protected void setDeceleration(int deceleration) throws SerialIOException {
+        if (deceleration < 0 || deceleration > 127) {
+            throw new IllegalArgumentException("deceleration = " + deceleration);
         }
+        serialIO.writeMessage("D" + deceleration + ",");
     }
 
     /**
      * Sends message to handler to set maximum velocity (Mv).
      *
-     * @param v Velocity range is 50 to 8,500
+     * @param velocity Velocity range is 50 to 8,500
      * @throws IllegalArgumentException if the parameter is not in range.
      */
-    protected void setVelocity(int v) {
-        if (v >= 50 && v < 8501) {
-            try {
-                serialIO.writeMessage("M" + v + ",");
-                currentVelocity = v;
-            } catch (SerialIOException e) {
-                e.printStackTrace();
-            }
+    protected void setVelocity(int velocity) throws SerialIOException {
+        if (velocity < 50 || velocity > 8500) {
+            throw new IllegalArgumentException("velocity = " + velocity);
+        }
+        serialIO.writeMessage("M" + velocity + ",");
+        if (currentVelocity < 0) {
+            currentVelocity = -velocity;
         } else {
-            throw new IllegalArgumentException("v is : " + v);
+            currentVelocity = velocity;
         }
     }
 
@@ -755,58 +728,40 @@ public class Handler implements SerialIOListener {
      * This command stops execution of the internal program if it is used in the program. If the motor is indexing it
      * will ramp down and then stop. Use this command to stop the motor after issuing a slew command. (Q).
      */
-    protected void stopExecution() {
-        try {
-            serialIO.writeMessage("Q,");
-        } catch (SerialIOException e) {
-            e.printStackTrace();
-        }
+    protected void stopExecution() throws SerialIOException {
+        serialIO.writeMessage("Q,");
     }
 
     /**
      * Slew the motor up to maximum speed and continue until reaching a hard limit switch or receiving a quit (Q)
      * command. (S). Automatically runs selectMovement() before slewing.
      */
-    protected void performSlew() {
+    protected void performSlew() throws SerialIOException {
         selectMovement();
-        try {
-            serialIO.writeMessage("S,");
-        } catch (SerialIOException e) {
-            e.printStackTrace();
-        }
+        serialIO.writeMessage("S,");
     }
 
     /**
      * Set the motor direction of movement to positive. (+).
      */
-    protected void setMotorPositive() {
-        try {
-            serialIO.writeMessage("+");
-        } catch (SerialIOException e) {
-            e.printStackTrace();
-        }
+    protected void setMotorPositive() throws SerialIOException {
+        serialIO.writeMessage("+");
+        currentVelocity = Math.abs(currentVelocity);
     }
 
     /**
      * Set the motor direction of movement to negative. (-).
      */
-    protected void setMotorNegative() {
-        try {
-            serialIO.writeMessage("-");
-        } catch (SerialIOException e) {
-            e.printStackTrace();
-        }
+    protected void setMotorNegative() throws SerialIOException {
+        serialIO.writeMessage("-");
+        currentVelocity = -Math.abs(currentVelocity);
     }
 
     /**
      * Send handler on move (G).
      */
-    protected void go() {
-        try {
-            serialIO.writeMessage("G,");
-        } catch (SerialIOException e) {
-            e.printStackTrace();
-        }
+    protected void go() throws SerialIOException {
+        serialIO.writeMessage("G,");
     }
 
     /**
@@ -817,42 +772,35 @@ public class Handler implements SerialIOListener {
      * moving" message. Caution: If this command is used while the motor is executing a Slew command the only way to
      * stop is with a reset or a hard limit switch input.
      */
-    protected void waitForMessage() {
-        try {
-            //This blocks all messages for handler
-            serialIO.writeMessage("F%,");
-            //this just polls for messages, we might get old messages waiting there? Use take message.
-            //this.serialIO.writeMessage("%,");
-            waitingForMessage = true;
-            try {
-                answerQueue.take();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            waitingForMessage = false;
+    protected void waitForMessage() throws SerialIOException {
+        // blocks all messages for handler
+        serialIO.writeMessage("F%,");
 
-        } catch (SerialIOException e) {
+        // just polls for messages, we might get old messages waiting there? Use take message.
+        //this.serialIO.writeMessage("%,");
+        waitingForMessage = true;
+        try {
+            answerQueue.take();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        waitingForMessage = false;
     }
 
     /**
      * Gives result for wanted registery. (V v).
      *
-     * @param v A Acceleration <br/>B Base speed <br/>D Deceleration <br/>E Internal program <br/>G Steps remaining in
-     *          current move. Zero if not indexing. <br/>H Hold time <br/>I Input pins <br/>J Slow jog speed <br/>M
-     *          Maximum speed <br/>N Number of steps to index <br/>O Output pins <br/>P Position. If motor is indexing
-     *          this returns the position at the end of the index. <br/>R Internal program pointer used by trace (T) or
-     *          continue (X) commands. Also updated by enter (E) command. <br/>W Ticks remaining on wait counter <br/>X
-     *          Crystal frequency
-     * @return returns registery as string
+     * @param registry A Acceleration <br/>B Base speed <br/>D Deceleration <br/>E Internal program <br/>G Steps
+     *                 remaining in current move. Zero if not indexing. <br/>H Hold time <br/>I Input pins <br/>J Slow
+     *                 jog speed <br/>M Maximum speed <br/>N Number of steps to index <br/>O Output pins <br/>P
+     *                 Position. If motor is indexing this returns the position at the end of the index. <br/>R Internal
+     *                 program pointer used by trace (T) or continue (X) commands. Also updated by enter (E) command.
+     *                 <br/>W Ticks remaining on wait counter <br/>X Crystal frequency
+     * @return registery as a string
      */
-    protected String verify(char v) {
-        try {
-            serialIO.writeMessage("V" + v + ",");
-        } catch (SerialIOException e) {
-            e.printStackTrace();
-        }
+    protected String verify(char registry) throws SerialIOException {
+        serialIO.writeMessage("V" + registry + ",");
+
         waitingForMessage = true;
         String answer = null;
         try {
@@ -874,12 +822,9 @@ public class Handler implements SerialIOListener {
      *         limit <br/>8 End of program notice, internal program has completed <br/>G Motor is indexing and no other
      *         notice pending
      */
-    protected char takeMessage() {
-        try {
-            serialIO.writeMessage("%,");
-        } catch (SerialIOException e) {
-            e.printStackTrace();
-        }
+    protected char takeMessage() throws SerialIOException {
+        serialIO.writeMessage("%,");
+
         waitingForMessage = true;
         String answer = null;
         try {
@@ -893,19 +838,19 @@ public class Handler implements SerialIOListener {
 
     public void serialIOEvent(SerialIOEvent event) {
         String message = event.getCleanMessage();
-        if (message != null) {
-            if (waitingForMessage) {
-                try {
-                    answerQueue.put(message);
-                } catch (InterruptedException e) {
-                    System.err.println("Interrupted Handler message event");
-                    e.printStackTrace();
-                } catch (NullPointerException e) {
-                    System.err.println("Null from SerialEvent in Handler");
-                    e.printStackTrace();
-                }
-            }
-            messageBuffer.add(message);
+        if (!waitingForMessage) {
+            System.err.println("Recieved a message that nobody waited for: " + message);
+            return;
+        }
+
+        try {
+            answerQueue.put(message);
+        } catch (InterruptedException e) {
+            System.err.println("Interrupted Handler message event");
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            System.err.println("Null from SerialEvent in Handler");
+            e.printStackTrace();
         }
     }
 }
