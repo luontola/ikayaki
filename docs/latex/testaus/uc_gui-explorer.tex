@@ -1,10 +1,14 @@
 \beginTestedClass{ProjectExplorerPanel}
 
 \beginCase{Directory text field}
-\condition{Shows autocomplete popup when typing and typed text matches to one or more directory}\testResultTrue
-\condition{Shows directory history on down-arrow click}\testResultTrue
-\condition{Too long lines in popup are shortened}\testResultTrue
-\condition{Tries to change directory when on enter press or mouse-click to popupmenu (UC21)}\testResultTrue
+\condition{Shows autocomplete popup when typing and typed text matches to one or more directory}
+\testDescription{Typed different letters, worked fine. Funny results with '.' and it searched subdirectories with '..'}\testResultTrue
+\condition{Shows directory history on down-arrow click}
+\testDescription{Works fine, only down-arrow fires this when no autocomplete pop-up is active}\testResultTrue
+\condition{Too long lines in popup are shortened}
+\testDescription{Tried both pop-ups}\testResultTrue
+\condition{Tries to change directory when on enter press or mouse-click to popupmenu (UC21)}
+\testDescription{Mouse click on autocomplete pop-up didnt work, history ok}\testResultFailed
 \condition{Only allows correct and existing directories (flashes red on change-attempt if invalid)}\testResultTrue
 \closeCase
 

@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 public class Handler implements SerialIOListener {
 
     /**
-     * Buffer for incoming messages, readed when needed.
+     * Buffer for incoming messages, readed when needed (never readed :)
      */
     private Stack<String> messageBuffer = new Stack<String>();
 
@@ -53,7 +53,8 @@ public class Handler implements SerialIOListener {
     private LastExecutor workQueue = new LastExecutor(0, false);
 
     /**
-     * timeout how long we wait answer from Squid-system
+     * timeout how long we wait answer from Squid-system, debugging to prevent lock-ups if
+     * communication fails.
      */
     private int pollTimeout = 60;
 
@@ -120,6 +121,17 @@ public class Handler implements SerialIOListener {
      * Angles are between 0 (0) and 2000 (360).
      */
     private int currentRotation = 0;
+
+    /**
+     * guessed left Limit position, Relative to Home.
+     */
+    private int leftLimitPosition = -8000;
+
+    /**
+     * guessed right Limit position, Relative to Home.
+     */
+    private int rightLimitPosition = 40000;
+
 
     /**
      * Only one at time can be waiting for answer, works like semaphore for commanding handler
@@ -323,8 +335,8 @@ public class Handler implements SerialIOListener {
             setAcceleration(acceleration);
             setDeceleration(deceleration);
             setEstimatedMovement(currentPosition);
-            if (currentPosition != Integer.MAX_VALUE) {
-                currentPosition = Integer.MAX_VALUE;
+            if (currentPosition != rightLimitPosition) {
+                currentPosition = rightLimitPosition;
                 serialIO.writeMessage("+S,");
                 fireEstimatedMovement();
                 waitForMessage();
@@ -420,7 +432,7 @@ public class Handler implements SerialIOListener {
     public void moveToLeftLimit() {
         workQueue.execute(new Runnable() {
             public void run() {
-                moveToPosition(Integer.MIN_VALUE);
+                moveToPosition(leftLimitPosition);
             }
         });
     }
@@ -431,7 +443,7 @@ public class Handler implements SerialIOListener {
     public void moveToRightLimit() {
         workQueue.execute(new Runnable() {
             public void run() {
-                moveToPosition(Integer.MAX_VALUE);
+                moveToPosition(rightLimitPosition);
             }
         });
     }
@@ -450,7 +462,7 @@ public class Handler implements SerialIOListener {
         if (currentPosition == position) {
             // do not move if we are already there
             return;
-        } else if (position == Integer.MIN_VALUE) {
+        } else if (position == leftLimitPosition) {
             // slew to left limit
             setVelocity(velocity);
             currentPosition = position;
@@ -460,7 +472,7 @@ public class Handler implements SerialIOListener {
             waitForMessage();
             stopEstimatedMovement();
 
-        } else if (position == Integer.MAX_VALUE) {
+        } else if (position == rightLimitPosition) {
             // slew to right limit
             setVelocity(velocity);
             currentPosition = position;
@@ -473,7 +485,7 @@ public class Handler implements SerialIOListener {
         } else {
 
             // if we are at a limit, we must recalibrate the home position
-            if (currentPosition == Integer.MIN_VALUE || currentPosition == Integer.MAX_VALUE) {
+            if (currentPosition == leftLimitPosition || currentPosition == rightLimitPosition) {
                 seekHome();
             }
 
