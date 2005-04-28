@@ -58,14 +58,19 @@ public class SettingsDialog extends JDialog {
         setLayout(new BorderLayout());
         if (dialogType == DEVICE_SETTINGS) {
             add(new DeviceSettingsPanel(this), BorderLayout.CENTER);
+            pack();
         } else if (dialogType == PROGRAM_SETTINGS) {
             add(new ProgramSettingsPanel(this), BorderLayout.CENTER);
+            pack();
         } else if (dialogType == PRINT_PREVIEW) {
             add(new PrintPanel(this, project), BorderLayout.CENTER);
+            this.setSize(500,700);
+            //setMaximumSize(new Dimension(800,1000));
+            //setMinimumSize(new Dimension(800,1000));
+            //pack();
         } else {
             throw new IllegalArgumentException("dialogType = " + dialogType);
         }
-        pack();
     }
 
     public static void showDeviceSettingsDialog(Frame owner, String message) {

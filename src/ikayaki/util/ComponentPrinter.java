@@ -27,22 +27,45 @@ import javax.swing.*;
 import java.awt.print.*;
 
 /**
- * Offers methods to print Components
+ * Offers methods to print Components (only for PrintPanel actually)
  *
  * @author Aki Korpua
  */
 public class ComponentPrinter implements Printable {
-  private Component componentToBePrinted;
 
+    /**
+     * Component to be printed
+     */
+    private Component componentToBePrinted;
+
+    /**
+     * plots height
+     */
+    private final int plotHeight = 200;
+
+
+  /**
+   * Creates new printable "component"
+   *
+   * @param componentToBePrinted Component
+   */
   public ComponentPrinter(Component componentToBePrinted) {
     this.componentToBePrinted = componentToBePrinted;
   }
 
+  /**
+   * Static printing command
+   *
+   * @param c Component to be printed (use Only PrintPanel)
+   */
   public static void printComponent(Component c) {
   new ComponentPrinter(c).print();
 }
 
-  public void print() {
+    /**
+     * Opens printer dialog and start printing job if we get printer
+     */
+    public void print() {
     PrinterJob printJob = PrinterJob.getPrinterJob();
     printJob.setPrintable(this);
     if (printJob.printDialog())
@@ -53,18 +76,40 @@ public class ComponentPrinter implements Printable {
       }
   }
 
+  /**
+   * Absolutely chaotic printing mechanism. Spilts component in pages and prevents
+   * last 400 pixels on last page to split awfully (we only use this for PrintPanel
+   * and last 400 pixels are Plots, so DONT use this in any other component printing :)
+   *
+   * @param g Graphics
+   * @param pageFormat PageFormat
+   * @param pageIndex int
+   * @return int
+   */
   public int print(Graphics g, PageFormat pageFormat, int pageIndex) {
       Dimension dim = componentToBePrinted.getSize();
       if (dim.getHeight() < (pageIndex * 695))
           return (NO_SUCH_PAGE);
       Graphics2D g2d = (Graphics2D) g;
-      g2d.translate(pageFormat.getImageableX(),
-                    pageFormat.getImageableY() - 695 * pageIndex);
+      if (dim.getHeight() - (695 * (pageIndex)) < plotHeight) {
+          g2d.translate(pageFormat.getImageableX(),
+                        pageFormat.getImageableY() - 695 * pageIndex+(plotHeight-(dim.getHeight() - (695 * (pageIndex)))));
+      }
+      else {
+          g2d.translate(pageFormat.getImageableX(),
+                        pageFormat.getImageableY() - 695 * pageIndex);
+      }
       disableDoubleBuffering(componentToBePrinted);
       componentToBePrinted.paint(g2d);
+      if (dim.getHeight() - (695 * (pageIndex+1)) < plotHeight && dim.getHeight() - (695 * (pageIndex+1)) >0) {
+          System.err.println("lets print page " + (pageIndex+1));
+          g2d.setColor(Color.white);
+          g2d.fillRect(0,695 * (pageIndex+1)-(plotHeight - (int)dim.getHeight() + (695 * (pageIndex+1))),500,700);
+      }
       enableDoubleBuffering(componentToBePrinted);
       return (PAGE_EXISTS);
   }
+
 
   public static void disableDoubleBuffering(Component c) {
     RepaintManager currentManager = RepaintManager.currentManager(c);
