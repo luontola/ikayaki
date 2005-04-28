@@ -2,33 +2,37 @@
 
 \beginCase{Start, Step and Stop}
 \condition{Textfields only accept positive numbers}
-\testResultTrue
+\testDescription{"0"}\testResultTrue
+\testDescription{"bf"}\testResultTrue
+\testDescription{"-1"}\testResultTrue
 \condition{Minimum step value is 0,1}
 \testResultTrue
 \condition{Stop value must be higher than start}
-\testResultTrue
-\condition{Largest possible stop value cannot be higher than magnetometer can handle}
-\closeCase{}
+\testDescription{start "2,2", stop "2"}\testResultTrue
+\condition{Largest possible stop value cannot be higher than what magnetometer can handle (as set in Device Configuration)}
+\testDescription{"400"}\testResultTrue
+\closeCase
 
 \beginCase{Add Sequence-button}
 \condition{Sequences are added into projects}
 \testResultTrue
 \condition{Sequences cannot be added to calibration projects}
-\testResultTrue
-\closeCase{}
+\testResultTrue (but sequence components should be disabled)
+\closeCase
 
 \beginCase{Sequence selection combobox}
-\condition{Sequences are added into projects}
-\testResultTrue
-\condition{Sequences cannot be added to calibration projects}
-\testResultTrue
 \condition{Combobox cannot have two or more sequences with same name}
-\testResultFalse
+\testResultTrue (asks to overwrite)
 \condition{Sequences can be deleted from list}
-\testResultFalse
-\closeCase{}
+\testResultTrue (can be deleted from Options)
+\closeCase
 
 \beginCase{Sequence-table}
+\condition{Unmeasured AF/Temp column values can be edited and only accept valid numbers}
+\testDescription{0}\testResultTrue
+\testDescription{1}\testResultTrue (changes to 1,1)
+\testDescription{-1}\testResultFalse -> clears textbox and moves to table first row :)
+\testDescription{"f"}\testResultFalse -> NumberFormatException
 \condition{Data is displayed correctly}
 \testResultTrue
 \condition{New rows can be added to end of table}
@@ -37,31 +41,29 @@
 \testResultTrue
 \condition{Right-clicking table brings up general purpose popupmenu}
 \testResultTrue
-\closeCase{}
+\closeCase
 
 \beginCase{Column selection popupmenu}
 \condition{Selected or deselected columns are displayed or hidden correctly}
-\testResultTrue
-\closeCase{}
+\testDescription{Deselected and selected all}\testResultTrue
+\closeCase
 
 \beginCase{General purpose popupmenu}
-\condition{Allows inserting rows in anyplace in table}
-\testResultTrue
-\condition{Allows deleting rows}
-\testResultTrue
+\condition{Allows inserting rows to any place in table (except after last)}
+\testDescription{Before and after first, before and after last, random in the middle}\testResultTrue
+\condition{Allows deleting rows (except the last one)}
+\testDescription{Delete first, delete last, delete random, delete all}\testResultTrue
 \condition{Rows with measurement data cannot be deleted}
-\testResultTrue
-\condition{Allows saving selected rows as sequence into combobox}
-\testResultTrue
-\condition{Allows saving all rows as sequence into combobox}
-\testResultTrue
-\closeCase{}
+\testDescription{Select measured, overlap with unmeasured}\testResultTrue
+\condition{Allows saving rows as sequence into combobox}
+\testDescription{Save first, save one-before-last, save all}\testResultTrue
+\closeCase
 
 \beginCase{Project change}
 \condition{Table shows columns which where visible last time new project was closed}
 \testResultTrue
 \condition{Table shows information of the new project}
 \testResultTrue
-\closeCase{}
+\closeCase
 
 \closeTestedClass

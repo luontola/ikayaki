@@ -2,25 +2,25 @@
 
 \beginCase{MeasurementDetails-table}
 \condition{Shows measurement details in useful and readable form}
-\testResultTrue
+\testResultTrue (but whilst measuring, rows replace each other in a weird fashion)
 \condition{Numbers are correct for measurements}
-\testResultTrue
+\testResultTrue (hope so..)
 \condition{Shows right number of rows initially, defined by project}
 \testResultTrue
 \condition{Table extends as needed}
 \testResultTrue
-\closeCase{}
+\closeCase
 
 \beginCase{ErrorDetails-table}
 \condition{Shows error in useful and readable form}
 \testResultFalse
 \condition{Error is calculated correctly}
 \testResultFalse
-\closeCase{}
+\closeCase
 
 \beginCase{Project change}
 \condition{Tables show information of the new project}
 \testResultTrue
-\closeCase{}
+\closeCase
 
 \closeTestedClass
