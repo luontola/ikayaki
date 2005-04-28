@@ -905,17 +905,17 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             demagButton.setEnabled(project != null && project.isDegaussingEnabled());
             if (position == posDemagZ) {
                 demagButtonIsY = false;
+                demagButton.setText(demagButtonBaseText + "Z");
+            } else if (position == posDemagY) {
+                demagButtonIsY = true;
                 switch (rotation) {
                     case 0: case 180:
-                        demagButton.setText(demagButtonBaseText + "Z");
+                        demagButton.setText(demagButtonBaseText + "Y");
                         break;
                     case 90: case 270:
                         demagButton.setText(demagButtonBaseText + "X");
                         break;
                 }
-            } else if (position == posDemagY) {
-                demagButtonIsY = true;
-                demagButton.setText(demagButtonBaseText + "Y");
             } else {
                 demagButton.setText(demagButtonBaseText);
                 demagButton.setEnabled(false);
