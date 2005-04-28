@@ -263,6 +263,11 @@ public class Handler implements SerialIOListener {
         estimatedRotationStartTime = System.currentTimeMillis();
         currentRotation = rotationSteps;
         estimatedRotationEnd = currentRotation;
+
+        // rotations are always in the same direction, even when rotating back to 0
+        while (estimatedRotationEnd < estimatedPositionStart) {
+            estimatedRotationEnd += HANDLER_ROTATION;
+        }
     }
 
     /**
@@ -290,7 +295,7 @@ public class Handler implements SerialIOListener {
     /**
      * Returns an estimation that where handler is right now. Used for drawing graphics.
      *
-     * @return current the estimated position we are at, or current position if it is known.
+     * @return the estimated position we are at, or current position if it is known.
      */
     public int getEstimatedPosition() {
         if (!isMoving()) {
@@ -317,7 +322,7 @@ public class Handler implements SerialIOListener {
     }
 
     /**
-     * Used for graphics of squid, estimates from speed and starting time where handler is
+     * Used for graphics of squid, estimates from speed and starting time where handler is.
      *
      * @return estimated rotation of where we are at in angles.
      */
@@ -329,10 +334,10 @@ public class Handler implements SerialIOListener {
         double timeSpent = (System.currentTimeMillis() - estimatedRotationStartTime) / 1000.0;    // in seconds
         int rotation = estimatedRotationStart + (int) (currentVelocity * timeSpent);
 
-//        // prevent going over the end limit
-//        if ((estimatedRotationStart < estimatedRotationEnd) != (estimatedRotationStart < rotation)) {
-//            rotation = estimatedRotationEnd;
-//        }
+        // prevent going over the end limit
+        if (rotation > estimatedRotationEnd) {
+            rotation = estimatedRotationEnd;
+        }
 
         double angle = (double) (rotation) / HANDLER_ROTATION * 360.0;
         // no need to calculate acceleration, error minimal
