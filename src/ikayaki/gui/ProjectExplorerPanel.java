@@ -205,7 +205,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
 
                 // item is File if selected from list, String if written to text field
                 Object item = browserField.getEditor().getItem();
-                File dir = item instanceof File ? (File) item : new File((String) item);
+                File dir = item instanceof File ? (File) item : new File((String) item).getAbsoluteFile();
 
                 // try to set directory, flash browserField red if error
                 if (!setDirectory(dir)) browserFieldFlasher.flash();
