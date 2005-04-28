@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Offers an interface for controlling the sample handler.
  *
- * @author Aki Korpua
+ * @author Aki Korpua, Esko Luontola
  */
 public class Handler implements SerialIOListener {
 
@@ -120,6 +120,8 @@ public class Handler implements SerialIOListener {
      */
     private int ROTATION_DECELERATION;
 
+    private int HANDLER_ROTATION;
+
     /**
      * Currently selected motor to send the commands to.
      */
@@ -200,6 +202,7 @@ public class Handler implements SerialIOListener {
         ROTATION_ACCELERATION = Settings.getHandlerRotationAcceleration();
         ROTATION_DECELERATION = Settings.getHandlerRotationDeceleration();
         VELOCITY = Settings.getHandlerVelocity();
+        HANDLER_ROTATION = Settings.getHandlerRotation();
     }
 
     /**
@@ -232,7 +235,7 @@ public class Handler implements SerialIOListener {
      * @return rotation in range of 0 to 359 degrees
      */
     public int getRotation() {
-        double angle = (double) (currentRotation) / Settings.getHandlerRotation() * 360.0;
+        double angle = (double) (currentRotation) / HANDLER_ROTATION * 360.0;
         return (int) (Math.round(angle)) % 360;
     }
 
@@ -252,16 +255,12 @@ public class Handler implements SerialIOListener {
     }
 
     /**
-     * Sets the rotation that we start heading to. The value is in rotation steps and it will be automatically corrected
-     * to be in the right range.
+     * Sets the rotation that we start heading to. The value is in rotation steps and relative to the home position (no
+     * limit to how high the value can be).
      */
     protected void setRotation(int rotationSteps) {
-//        while (rotationSteps < 0) {
-//            rotationSteps += Settings.getHandlerRotation();
-//        }
         estimatedPositionStart = currentRotation;
         estimatedRotationStartTime = System.currentTimeMillis();
-//        currentRotation = rotationSteps % Settings.getHandlerRotation();
         currentRotation = rotationSteps;
         estimatedRotationEnd = currentRotation;
     }
@@ -330,12 +329,12 @@ public class Handler implements SerialIOListener {
         double timeSpent = (System.currentTimeMillis() - estimatedRotationStartTime) / 1000.0;    // in seconds
         int rotation = estimatedRotationStart + (int) (currentVelocity * timeSpent);
 
-        // prevent going over the end limit
-        if ((estimatedRotationStart < estimatedRotationEnd) != (estimatedRotationStart < rotation)) {
-            rotation = estimatedRotationEnd;
-        }
+//        // prevent going over the end limit
+//        if ((estimatedRotationStart < estimatedRotationEnd) != (estimatedRotationStart < rotation)) {
+//            rotation = estimatedRotationEnd;
+//        }
 
-        double angle = (double) (rotation) / Settings.getHandlerRotation() * 360.0;
+        double angle = (double) (rotation) / HANDLER_ROTATION * 360.0;
         // no need to calculate acceleration, error minimal
         return (int) (Math.round(angle)) % 360;
     }
@@ -602,7 +601,7 @@ public class Handler implements SerialIOListener {
         workQueue.execute(new Runnable() {
             public void run() {
                 int angle = rotationAngle % 360;
-                int steps = (int) (((double) angle) / 360.0 * Settings.getHandlerRotation());
+                int steps = (int) (((double) angle) / 360.0 * HANDLER_ROTATION);
 
                 try {
                     selectRotation();
@@ -615,9 +614,9 @@ public class Handler implements SerialIOListener {
                     } else {
                         int relativeSteps = steps - currentRotation;
                         while (relativeSteps < 0) {
-                            relativeSteps += Settings.getHandlerRotation();
+                            relativeSteps += HANDLER_ROTATION;
                         }
-                        relativeSteps = relativeSteps % Settings.getHandlerRotation();
+                        relativeSteps = relativeSteps % HANDLER_ROTATION;
 
                         setRotation(currentRotation + relativeSteps);
                         serialIO.writeMessage("N" + relativeSteps);
