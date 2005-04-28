@@ -185,7 +185,7 @@ public class MeasurementControlsPanel extends ProjectComponent {
      */
     @Override public void projectUpdated(ProjectEvent event) {
         updateActions();
-        manualControlsPanel.setEnabled(getProject().isManualControlEnabled());
+        manualControlsPanel.setEnabled();
     }
 
     /**

@@ -116,8 +116,10 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         setPreferredSize(new Dimension(150, 400));
         //setMinimumSize(new Dimension(150, 400));
 
+        updatePositions();
         updateStatus();
 
+        // let's needlesly redraw status picture even when nothing happens
         new Timer(50, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateStatus();
@@ -157,18 +159,27 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         moveButtons.put(posBG, manualControlsPanel.moveBG);
         moveButtons.put(posMeasure, manualControlsPanel.moveMeasure);
         moveButtons.put(posRight, manualControlsPanel.moveRight);
+
+        // TODO: only need to call updateButtonPositions here, but it won't work so now it's called
+        // every time in paintComponent
     }
 
     /**
      * Updates moveButtons' positions. Stacks 'em up nicely so that noone is on top of another or out of screen.
      */
     private void updateButtonPositions() {
+        maxposition = 1;
+        for (int n : new int[] {posMove, posHome, posDemagZ, posDemagY, posBG, posMeasure})
+            if (n > maxposition) maxposition = n;
+        maxposition *= 1.2;
+
+/*      // GRR x)
         maxposition = (int) (
                 Math.max(Math.max(posMove, posHome),
                         Math.max(Math.max(posDemagZ, posDemagY),
                                 Math.max(posBG, posMeasure))) * 1.2);
         maxposition = Math.max(1, maxposition);
-
+*/
         int height = getHeight(), nextpos = 0;
         for (int position : moveButtons.keySet()) {
             JComponent c = moveButtons.get(position);
@@ -181,24 +192,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         }
     }
 
-//    /**
-//     * Updates magnetometer status picture and handler positions.
-//     *
-//     * @param position sample holder position, from 1 to 16777215.
-//     * @param rotation sample holder rotation, from 0 (angle 0) to 2000 (angle 360).
-//     * @deprecated we read position and rotation ourself in updateStatus.
-//     */
-//    private void updateStatus(int position, int rotation) {
-//        this.position = position;
-//        this.rotation = rotation;
-//        statusAnimator.gone();
-//        updatePositions();
-//        repaint();
-//    }
-
     /**
-     * Updates magnetometer status picture and handler positions. Reads current handler position and rotation from
-     * Handler saved to this.handler.
+     * Updates magnetometer status picture. Reads current Squid status from Handler, Magnetometer and Degausser.
      */
     public void updateStatus() {
         if (squid != null) {
@@ -210,17 +205,20 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             demagnetizing = squid.getDegausser().isDemagnetizing();
         }
 //        statusAnimator.gone();
-        updatePositions();
-        updateButtonPositions();
         repaint();
     }
 
     /**
-     * Updates magnetometer status picture; called by MeasurementControlsPanel when it receives MeasurementEvent. Reads
-     * current handler position and rotation from Handler.
+     * Updates magnetometer status picture; called by MeasurementControlsPanel when it receives MeasurementEvent.
      */
     public void measurementUpdated(MeasurementEvent e) {
+        // null means handler positions might have changed
+        if (e == null) updatePositions();
+
         updateStatus();
+
+        // TODO: is this needed?
+        manualControlsPanel.setEnabled();
     }
 
     /**
@@ -231,19 +229,10 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     protected void paintComponent(Graphics g) {
         // must update radiobuttons' positions here, hope it's safe...
         // TODO: what would be the right place for this call?
-//        updateButtonPositions();
+        updateButtonPositions();
 
         // let Swing erase the background
         super.paintComponent(g);
-
-//        int position = 0;
-//        int rotation = 0;
-//        boolean moving = false;
-//        if (handler != null) {
-//            position = handler.getEstimatedPosition();
-//            rotation = handler.getEstimatedRotation();
-//            moving = handler.isMoving();
-//        }
 
         // use more sophisticated drawing methods
         Graphics2D g2 = (Graphics2D) g.create();
@@ -290,23 +279,17 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         g2.drawRect(basex - box2w / 2, box2y, box2w, h - box2y - 2);
 
         // "sample"
-//        Color bg = statusAnimator.going ? new Color(0xccccff) : Color.WHITE;
         Color bg;
-        if (demagnetizing) {
-            bg = DEMAGNETIZING_COLOR;
-        } else if (measuring) {
-            bg = MEASURING_COLOR;
-        } else if (moving || rotating) {
-            bg = MOVING_COLOR;
-        } else {
-            bg = IDLE_COLOR;
-        }
+        if (demagnetizing) bg = DEMAGNETIZING_COLOR;
+        else if (measuring) bg = MEASURING_COLOR;
+        else if (moving || rotating) bg = MOVING_COLOR;
+        else bg = IDLE_COLOR;
         drawFillOval(g2, bg, basex - samplew / 2, sampley - sampled, samplew, sampleh);
         drawFillSideRect(g2, bg, basex - samplew / 2, sampley - sampled + sampleh / 2, samplew, sampled);
         drawFillOval(g2, bg, basex - samplew / 2, sampley, samplew, sampleh);
 
         // sample rotation arrow
-        drawArrow(g2, basex, sampley + sampleh / 2, arrowlength, rotation);
+        drawArrow(g2, basex, sampley + sampleh / 2, arrowlength, -rotation);
 
         // handler information
         //g2.setColor(Color.BLUE);
@@ -363,7 +346,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     /**
      * Animator-thread for updating magnetometer status pic.
      *
-     * @deprecated use the estimated methods from the handler class
+     * @deprecated replaced by a simple Timer in constructor
      */
     private class MagnetometerStatusAnimator implements Runnable {
         // drawing delay in ms (fps = 1000 / delay)
@@ -587,8 +570,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         /**
          * Resets X, Y and Z by calling project.doManualReset()? Does what?
          */
-        private final JButton resetAllButton = new JButton("Reset XYZ?");
-        // TODO: add some action here
+        private final JButton resetAllButton = new JButton("Reset XYZ");
         private final ComponentFlasher resetAllButtonFlasher = new ComponentFlasher(resetAllButton);
 
         /**
@@ -607,20 +589,21 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         /**
          * Demagnetizes in Z, X or Y, depending on current handler position and rotation.
          */
-        // TODO-todo, make this work...
-        private final JButton demagButton = new JButton("Demag");
+        private final JButton demagButton = new JButton();
+        private final ComponentFlasher demagButtonFlasher = new ComponentFlasher(demagButton);
         private final String demagButtonBaseText = "Demag ";
-        // TODO: add some action here
-        private final ComponentFlasher demagButtonFlasher = new ComponentFlasher(demagButton);  // TODO: this field is never used. remove it?
+        private boolean demagButtonIsY = false;
 
         /**
          * Demagnetizes in Z (at current sample holder position) by calling project.doManualDemagZ(double).
+         * @deprecated use demagButton.
          */
         private final JButton demagZButton = new JButton("Demag in Z");
         private final ComponentFlasher demagZButtonFlasher = new ComponentFlasher(demagZButton);
 
         /**
          * Demagnetizes in Y (at current sample holder position) by calling project.doManualDemagY(double).
+         * @deprecated use demagButton.
          */
         private final JButton demagYButton = new JButton("Demag in Y");
         private final ComponentFlasher demagYButtonFlasher = new ComponentFlasher(demagYButton);
@@ -636,7 +619,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             moveLeft, moveHome, moveDemagZ, moveDemagY, moveBG, moveMeasure, moveRight,
             rotate0, rotate90, rotate180, rotate270,
             measureAllButton, resetAllButton, nextLineButton,
-            demagAmplitudeField, demagAmplitudeLabel, demagZButton, demagYButton,
+            demagAmplitudeField, demagAmplitudeLabel, demagButton, demagZButton, demagYButton,
             moveLabel, rotateLabel, measureLabel, demagLabel
         };
 
@@ -671,6 +654,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             measureAllButton.setMargin(new Insets(1, 1, 1, 1));
             resetAllButton.setMargin(new Insets(1, 1, 1, 1));
             nextLineButton.setMargin(new Insets(1, 1, 1, 1));
+            demagButton.setMargin(new Insets(1, 1, 1, 1));
             demagZButton.setMargin(new Insets(1, 1, 1, 1));
             demagYButton.setMargin(new Insets(1, 1, 1, 1));
 
@@ -694,14 +678,14 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             measurePanel.add(measureButtonPanel, BorderLayout.CENTER);
 
             JPanel demagPanel = new JPanel(new BorderLayout());
-            JPanel demagButtonPanel = new JPanel(new GridLayout(3, 1, 0, 4));
+            JPanel demagButtonPanel = new JPanel(new GridLayout(4, 1, 0, 4));
             JPanel demagAmplitudePanel = new JPanel(new BorderLayout(4, 0));
             demagAmplitudePanel.add(demagAmplitudeField, BorderLayout.CENTER);
             demagAmplitudePanel.add(demagAmplitudeLabel, BorderLayout.EAST);
             demagButtonPanel.add(demagAmplitudePanel);
+            demagButtonPanel.add(demagButton);
             demagButtonPanel.add(demagZButton);
             demagButtonPanel.add(demagYButton);
-            //demagButtonPanel.add(demagButton);
             demagPanel.add(demagLabel, BorderLayout.NORTH);
             demagPanel.add(demagButtonPanel, BorderLayout.CENTER);
 
@@ -723,58 +707,42 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             moveLeft.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     project.doManualMoveLeftLimit();
-                    //statusAnimator.going(posLeft, rotation);
-                    //handler.moveToPos(posLeft);
                 }
             });
 
             moveHome.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     project.doManualMoveHome();
-                    //statusAnimator.going(posHome, rotation);
-                    //handler.moveToSampleLoad();
                 }
             });
 
             moveDemagZ.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     project.doManualMoveDegausserZ();
-                    //statusAnimator.going(posDemagZ, rotation);
-                    //handler.moveToDegausserZ();
-                    demagButton.setText(demagButtonBaseText + (rotation == 0 || rotation == 180 ? "Z" : "X"));
                 }
             });
 
             moveDemagY.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     project.doManualMoveDegausserY();
-                    //statusAnimator.going(posDemagY, rotation);
-                    //handler.moveToDegausserY();
-                    demagButton.setText(demagButtonBaseText + "Y");
                 }
             });
 
             moveBG.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     project.doManualMoveBackground();
-                    //statusAnimator.going(posBG, rotation);
-                    //handler.moveToBackground();
                 }
             });
 
             moveMeasure.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     project.doManualMoveMeasurement();
-                    //statusAnimator.going(posMeasure, rotation);
-                    //handler.moveToMeasurement();
                 }
             });
 
             moveRight.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     project.doManualMoveRightLimit();
-                    //statusAnimator.going(posRight, rotation);
-                    //handler.moveToPos(posRight);
                 }
             });
 
@@ -823,8 +791,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
              */
             resetAllButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    // TODO: what to do?
-                    //if (!project.doManualReset()) resetAllButtonFlasher.flash();
+                    if (!project.doManualReset()) resetAllButtonFlasher.flash();
                 }
             });
 
@@ -838,15 +805,31 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             });
 
             /*
+             * Event E&F: On Demag?Button click - call project.doManualDemag?(double) with value
+             * from demagAmplitudeField. If false is returned, show small error message.
+             */
+            demagButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    double amplitude = getDemagAmplitude();
+                    if (amplitude < 0) {
+                        demagAmplitudeFieldError();
+                    } else if (demagButtonIsY) {
+                        if (!project.doManualDemagY(amplitude)) demagButtonFlasher.flash();
+                    } else {
+                        if (!project.doManualDemagZ(amplitude)) demagButtonFlasher.flash();
+                    }
+                }
+            });
+
+            /*
              * Event E: On DemagZButton click - call project.doManualDemagZ(double) with value
              * from demagAmplitudeField. If false is returned, show small error message.
              */
             demagZButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     double amplitude = getDemagAmplitude();
-                    if (amplitude < 0) {
-                        demagAmplitudeFieldError();
-                    } else if (!project.doManualDemagZ(amplitude)) demagZButtonFlasher.flash();
+                    if (amplitude < 0) demagAmplitudeFieldError();
+                    else if (!project.doManualDemagZ(amplitude)) demagZButtonFlasher.flash();
                 }
             });
 
@@ -857,9 +840,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             demagYButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     double amplitude = getDemagAmplitude();
-                    if (amplitude < 0) {
-                        demagAmplitudeFieldError();
-                    } else if (!project.doManualDemagY(amplitude)) demagYButtonFlasher.flash();
+                    if (amplitude < 0) demagAmplitudeFieldError();
+                    else if (!project.doManualDemagY(amplitude)) demagYButtonFlasher.flash();
                 }
             });
         }
@@ -890,7 +872,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         }
 
         /**
-         * Enables/disables all our components. If enabled, also sets selected radioboxes to current handler status.
+         * Enables/disables all our components.
+         * Also sets selected radioboxes and demag-button to current handler status.
          *
          * @param enabled true==enabled, false==disabled.
          */
@@ -899,25 +882,43 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             if (squid == null) enabled = false;
             for (Component component : components) component.setEnabled(enabled);
 
-            // set selected radioboxes according to current handler status
-            if (enabled) {
-                JComponent c = moveButtons.get(position);
-                if (c != null && c instanceof JRadioButton) ((JRadioButton) c).setSelected(true);
+            // set selected radioboxes and demag-button according to current handler status
 
+            JComponent c = moveButtons.get(position);
+            if (c != null && c instanceof JRadioButton) ((JRadioButton) c).setSelected(true);
+
+            switch (rotation) {
+            case 0:
+                rotate0.setSelected(true);
+                break;
+            case 90:
+                rotate90.setSelected(true);
+                break;
+            case 180:
+                rotate180.setSelected(true);
+                break;
+            case 270:
+                rotate270.setSelected(true);
+                break;
+            }
+
+            demagButton.setEnabled(project != null && project.isDegaussingEnabled());
+            if (position == posDemagZ) {
+                demagButtonIsY = false;
                 switch (rotation) {
-                case 0:
-                    rotate0.setSelected(true);
-                    break;
-                case 90:
-                    rotate90.setSelected(true);
-                    break;
-                case 180:
-                    rotate180.setSelected(true);
-                    break;
-                case 270:
-                    rotate270.setSelected(true);
-                    break;
+                    case 0: case 180:
+                        demagButton.setText(demagButtonBaseText + "Z");
+                        break;
+                    case 90: case 270:
+                        demagButton.setText(demagButtonBaseText + "X");
+                        break;
                 }
+            } else if (position == posDemagY) {
+                demagButtonIsY = true;
+                demagButton.setText(demagButtonBaseText + "Y");
+            } else {
+                demagButton.setText(demagButtonBaseText);
+                demagButton.setEnabled(false);
             }
         }
 
