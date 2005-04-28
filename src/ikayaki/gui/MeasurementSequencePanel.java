@@ -450,14 +450,14 @@ public class MeasurementSequencePanel extends ProjectComponent {
         // add the steps to the sequence
         MeasurementStep step = new MeasurementStep();
         for (int i = istartVal; i <= istopVal; i += istepVal) {
-            if (i > 0 && i < imin) {
-                i = imin;
+            int value = i;
+            if (value > 0 && value < imin) {
+                value = imin;
             }
-            if (getProject().getSteps() > 0
-                    && Math.abs(i - (int) Math.round(getLastStepValue() / ratio)) < 1) {
+            if (getLastStepValue() > 0 && Math.abs(value - (int) Math.round(getLastStepValue() / ratio)) < 1) {
                 continue;
             }
-            step.setStepValue(i * ratio);
+            step.setStepValue(value * ratio);
             getProject().addStep(step);
         }
 
