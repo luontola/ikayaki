@@ -2133,6 +2133,7 @@ public class Project {
                 // TODO: these should be in one Magnetometer method
                 getSquid().getMagnetometer().pulseReset('A');
                 getSquid().getMagnetometer().clearFlux('A');
+                setState(IDLE);
             }
         }).start();
         return true;
