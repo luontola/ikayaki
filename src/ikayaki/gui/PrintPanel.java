@@ -43,8 +43,8 @@ import java.util.Queue;
 import java.util.Vector;
 
 /**
- * Creates layout from MeasurementSequence and Plots to be printed. PrintedPanel
- * is preview of print and there is controls to print or cancel.
+ * Creates layout from MeasurementSequence and Plots to be printed. PrintedPanel is preview of print and there is
+ * controls to print or cancel.
  *
  * @author Aki Korpua
  */
@@ -119,6 +119,7 @@ public class PrintPanel extends JPanel {
         sequenceTable.setModel(sequenceTableModel);
         sequenceTable.getTableHeader().setReorderingAllowed(false);
         sequenceTable.getTableHeader().setResizingAllowed(false);
+        sequenceTable.setDefaultRenderer(StyledWrapper.class, new StyledTableCellRenderer());
         sequenceTable.setBorder(BorderFactory.createMatteBorder(sequenceTable.getIntercellSpacing().height,
                 sequenceTable.getIntercellSpacing().width, 0, 0, sequenceTable.getGridColor()));
         updateColumns();
@@ -151,7 +152,7 @@ public class PrintPanel extends JPanel {
         /* Layout */
         setLayout(new BorderLayout());
         add(contentPane, BorderLayout.CENTER);
-        setMinimumSize(new Dimension(500,700));
+        setMinimumSize(new Dimension(500, 700));
 
         /* White background */
         setOpaque(printedPanel, false);
@@ -411,11 +412,14 @@ public class PrintPanel extends JPanel {
      */
     private class PrintSequenceTableModel extends AbstractTableModel {
 
+        private StyledWrapper wrapper = new StyledWrapper();
+
         private MeasurementSequenceTableModel model;
 
         public PrintSequenceTableModel(Project project) {
             model = new MeasurementSequenceTableModel();
             model.setProject(project);
+            wrapper.horizontalAlignment = SwingConstants.TRAILING;
         }
 
         public int getRowCount() {
@@ -430,16 +434,22 @@ public class PrintPanel extends JPanel {
             return model.getColumnCount();
         }
 
+        @Override public Class<?> getColumnClass(int columnIndex) {
+            return StyledWrapper.class;
+        }
+
         public Object getValueAt(int rowIndex, int columnIndex) {
             if (rowIndex == 0) {
-                return model.getColumnName(columnIndex);
+                wrapper.value = model.getColumnName(columnIndex);
+                return wrapper;
             } else {
                 Object obj = model.getValueAt(rowIndex - 1, columnIndex);
                 if (obj instanceof StyledWrapper) {
                     StyledWrapper wrapper = (StyledWrapper) obj;
                     obj = wrapper.value;
                 }
-                return obj;
+                wrapper.value = obj;
+                return wrapper;
             }
         }
     }
