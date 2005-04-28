@@ -43,8 +43,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 
 /**
- * Creates its components and updates changes to Settings and saves them in Configuration file.
- * These settings are critical for SQUID to work.
+ * Creates its components and updates changes to Settings and saves them in Configuration file. These settings are
+ * critical for SQUID to work.
  *
  * @author Aki Korpua
  */
@@ -200,25 +200,20 @@ public class DeviceSettingsPanel extends JPanel {
         this.xAxisCalibration.setValue(Settings.getMagnetometerXAxisCalibration());
         this.yAxisCalibration.setValue(Settings.getMagnetometerYAxisCalibration());
         this.zAxisCalibration.setValue(Settings.getMagnetometerZAxisCalibration());
-        this.demagRamp.addItem(3);
-        this.demagRamp.addItem(5);
-        this.demagRamp.addItem(7);
-        this.demagRamp.addItem(9);
+        this.demagRamp.addItem(new Integer(3));
+        this.demagRamp.addItem(new Integer(5));
+        this.demagRamp.addItem(new Integer(7));
+        this.demagRamp.addItem(new Integer(9));
         int rampValue = Settings.getDegausserRamp();
-        if (rampValue == 3) {
-            this.demagRamp.setSelectedIndex(0);
-        } else if (rampValue == 5) {
-            this.demagRamp.setSelectedIndex(1);
-        }
-        if (rampValue == 7) {
-            this.demagRamp.setSelectedIndex(2);
+        if (rampValue == 3 || rampValue == 5 || rampValue == 7 || rampValue == 9) {
+            demagRamp.setSelectedItem(new Integer(rampValue));
         } else {
-            this.demagRamp.setSelectedIndex(3);
+            demagRamp.setSelectedItem(new Integer(3));
         }
         for (int i = 1; i < 10; i++) {
-            this.demagDelay.addItem(i);
+            this.demagDelay.addItem(new Integer(i));
         }
-        this.demagRamp.setSelectedIndex(Settings.getDegausserDelay() - 1);
+        this.demagDelay.setSelectedItem(new Integer(Settings.getDegausserDelay()));
         this.sampleLoadPosition.setValue(Settings.getHandlerSampleLoadPosition());
         this.backgroundPosition.setValue(Settings.getHandlerBackgroundPosition());
         this.rotation.setValue(Settings.getHandlerRotation());
