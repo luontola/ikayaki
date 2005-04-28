@@ -27,6 +27,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import ikayaki.Project;
+import ikayaki.util.ComponentPrinter;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -40,7 +41,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Vector;
-import ikayaki.util.ComponentPrinter;
 
 /**
  * Creates layout from MeasurementSequence and Plots to be printed
