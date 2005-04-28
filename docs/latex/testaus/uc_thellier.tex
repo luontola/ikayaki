@@ -2,39 +2,36 @@
 
 \beginCase{Open software}
 \condition{Last project is opened, if available.}
+\testResultTrue
 \condition{All components are in right place}
+\testResultTrue
 \closeCase
 
 \beginCase{Open existing Thellier project}
 \condition{Project is opened correctly in Information and Sequence}
+\testResultTrue
 \condition{Measure button is hidden, Single step enabled and Stop now Disabled}
+\testResultTrue
 \closeCase
 
 \beginCase{Add new line in sequence}
 \condition{It's inserted correctly.}
+\testResultTrue
 \closeCase
 
 \beginCase{Click Single Step button}
 \condition{Performs Next phase on Sequence}
+\testResultTrue
 \condition{Disables Single Step button, enables Stop Now!}
+\testResultTrue
 \condition{Rows are highlighted in Explorer and Sequence}
+\testResultTrue
 \condition{Picture of demagnetizer is up-to-date}
+\testResultFalse
 \condition{Plots are drawn}
+\testResultTrue
 \condition{updates Details and Sequence}
-\closeCase
-
-\beginCase{Select next Project}
-\condition{Opens project correctly}
-\condition{Adds same phase to sequence (as in last project added)}
-\closeCase
-
-\beginCase{Click Single Step button}
-\condition{Performs Next phase on Sequence}
-\condition{Disables Step button, enables Stop Now!}
-\condition{Rows are highlighted in Explorer and Sequence}
-\condition{Picture of demagnetizer is up-to-date}
-\condition{Plots are drawn}
-\condition{updates Details and Sequence}
+\testResultTrue
 \closeCase
 
 \closeTestedClass

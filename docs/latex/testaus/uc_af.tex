@@ -2,100 +2,146 @@
 
 \beginCase{Open software}
 \condition{Last project is opened, if available.}
+\testResultTrue
 \condition{All components are in right place}
+\testResultTrue
 \closeCase
 
 \beginCase{Select Sample holder calibration}
 \condition{opens Sample holder calibration project in Measurement Sequence and Information}
-\condition{disables Measurement Controls}
+\testResultTrue
+\condition{disables Measurement Controls, except single step}
+\testResultTrue
 \condition{enables calibrate button}
+\testResultTrue
 \condition{disables editing sequence}
+\testResultFalse fields/buttons not disabled, but adding sequence doesn't work
 \closeCase
 
 \beginCase{Click Calibration button}
 \condition{Adds new line in Sequence at bottom}
+\testResultTrue
 \condition{Starts calibration, progress shown on measurement controls}
+\testResultFalse progress is shown wrong, works otherwise
 \condition{Data is updated correctly in Measurement Details}
-\condition{Calibration button changed to stop button}
+\testResultFalse degrees shown initially in wrong order, works otherwise
+\condition{Stop button enabled}
+\testResultTrue
+\condition{New data added to Measurement Sequence}
+\testResultTrue
 \closeCase
 
 \beginCase{Calibration finished}
-\condition{New data added to Measurement Sequence}
-\condition{Stop button is changed to calibration button}
+\condition{Stop button is disabled}
+\testResultTrue
 \condition{Last modified is updated Sample Holder}
+\testResultTrue
 \closeCase
 
 \beginCase{Select standard sample}
 \condition{opens Standard Sample calibration project in Measurement Sequence}
+\testResultTrue
 \closeCase
 
 \beginCase{Click Calibration button}
 \condition{Adds new line in Sequence at bottom}
+\testResultTrue
 \condition{Starts calibration, progress shown on measurement controls}
+\testResultFalse progress is shown wrong, works otherwise
 \condition{Data is updated correctly in Measurement Details}
-\condition{Calibration button changed to stop button}
+\testResultTrue
+\condition{Stop button enabled}
+\testResultTrue
+\condition{New data added to Measurement Sequence}
+\testResultTrue
 \closeCase
 
 \beginCase{Calibration finished}
-\condition{New data added to Measurement Sequence}
-\condition{stop button is changed to calibration button}
+\condition{Stop button is disabled}
+\testResultTrue
 \condition{Last modified is updated in Standard Sample}
+\testResultTrue
 \closeCase
 
 \beginCase{Create new AF project}
 \condition{Calibration project is closed}
+\testResultTrue
 \condition{new AF project is opened with given name (ProjectInfo,MeasurementSequence)}
-\condition{Measurement Controls has enabled buttons Measure,Single Step and disable Stop Now!}
+\testResultTrue
+\condition{Measurement Controls has enabled buttons Measure,Single Step and disable Pause,Stop Now!}
+\testResultTrue
 \closeCase
 
 \beginCase{Add project Information}
 \condition{All data is accepted}
+\testResultTrue
 \closeCase
 
 \beginCase{Load Set}
 \condition{Loaded set is correctly added to Sequence}
+\testResultTrue
 \closeCase
 
 \beginCase{Click Measure}
-\condition{Measure button changed to Pause, disables Single Step, enables Stop Now!}
+\condition{Disables Measure,Single Step, enables Pause,Stop Now!}
+\testResultTrue
 \condition{Rows are highlighted in Explorer and Sequence}
+\testResultTrue
 \condition{Starts measuring first phase correctly (no demag now)}
+\testResultTrue
 \condition{Picture of demagnetizer is up-to-date}
-\condition{Plots are drawn when one phase is over}
+\testResultFalse
+\condition{Plots are drawn during phase}
+\testResultTrue
 \condition{Continues on next phase and does demag first}
-\condition{updates Details and Sequence}
-\condition{any sequence cannot be changed}
+\testResultTrue
+\condition{Updates Details and Sequence}
+\testResultTrue
+\condition{Measured sequence cannot be changed}
+\testResultTrue
 \closeCase
 
 \beginCase{Pause button}
 \condition{Finish current measure and stops after that}
-\condition{Pause button changed to Measure button}
-\condition{When finished disables Stop Now!}
+\testResultTrue
+\condition{Disables Pause button}
+\testResultTrue
+\condition{When finished disables Stop Now! and enables Measure,Single Step}
+\testResultTrue
 \closeCase
 
 \beginCase{Sequence edit}
 \condition{Steps not yet measured, can be changed}
+\testResultTrue
 \closeCase
 
 \beginCase{Single step button}
 \condition{Performs Next phase on measure}
+\testResultTrue
 \condition{Disables Measure button and Single Step button, enables Stop Now!}
+\testResultTrue
 \closeCase
 
 \beginCase{Measure button}
-\condition{Measure button changed to Pause, disables Single Step, enables Stop Now!}
+\condition{Disables Meausre,Single Step, enables Pause,Stop Now!}
+\testResultTrue
 \condition{Rows are highlighted in Explorer and Sequence}
+\testResultTrue
 \condition{Continues from Next phase}
+\testResultTrue
 \condition{Picture of demagnetizer is up-to-date}
-\condition{Plots are drawn when one phase is over}
+\testResultTrue
+\condition{Plots are drawn during phase}
+\testResultTrue
 \condition{Continues on next phase}
+\testResultTrue
 \condition{updates Details and Sequence}
+\testResultTrue
 \closeCase
 
 \beginCase{Stop Now! button}
 \condition{Stops measurement immediatelly}
-\condition{Disables buttons and enables Manual Control}
-\condition{What now? Is project Manual or is this only temporary?}
+\testResultTrue or as fast as machine can be stopped
 \closeCase
 
 \closeTestedClass

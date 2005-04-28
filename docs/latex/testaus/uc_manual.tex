@@ -2,42 +2,58 @@
 
 \beginCase{Open software}
 \condition{Last project is opened, if available.}
+\testResultTrue
 \condition{All components are in right place}
+\testResultTrue
 \closeCase
 
 \beginCase{Create new AF/Thellier project}
 \condition{new AF/thellier project is opened with given name (ProjectInfo,MeasurementSequence)}
-\condition{Measurement Controls has enabled buttons (Measure,) Single Step and disable Stop Now!}
+\testResultTrue
+\condition{Measurement Controls has enabled buttons Measure,Single Step and disables Pause,Stop Now!}
+\testResultTrue
 \closeCase
 
 \beginCase{Adding project data and selecting manual}
 \condition{Data is accepted correctly}
+\testResultTrue
 \condition{Manual is enabled}
+\testResultTrue
 \closeCase
 
 \beginCase{Rotate handler}
 \condition{Rotation changes on image of squid}
+\testResultTrue
 \condition{Squid-system rotates}
+\testResultTrue
 \closeCase
 
 \beginCase{Move handler to specific place}
 \condition{Image of squid animates correctly and stops on right position}
+\testResultFalse stops in right position, but animation is wrong
 \condition{Squid-system moves to exact place}
+\testResultTrue
 \closeCase
 
 \beginCase{Demagnetize}
 \condition{Demagnetization is shown on squid image}
+\testResultFalse
 \condition{Squid-system demagnetizes}
+\testResultTrue
 \closeCase
 
 \beginCase{Measure-all}
 \condition{Measuring is shown on squid image}
-\condition{Data is added to Details correctly (right rotation, background)}
-\condition{Data is added to Sequence (only if all degrees done?)}
+\testResultFalse
+\condition{Data is added to Details correctly}
+\testResultTrue
+\condition{Data is added to Sequence}
+\testResultTrue
 \closeCase
 
 \beginCase{Reset measure}
 \condition{Nothing shown, Magnetometer is reseted.}
+\testResultTrue does not reset magnetometer atm
 \closeCase
 
 \closeTestedClass
