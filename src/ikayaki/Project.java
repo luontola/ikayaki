@@ -2112,6 +2112,32 @@ public class Project {
         return true;
     }
 
+    // TODO: is this comment even close?
+    /**
+     * Resets the X, Y and Z of the sample. Will do nothing if isManualControlEnabled() is false.
+     * <p/>
+     * The operation will run in its own thread, and this method will not wait for it to finish.
+     *
+     * @return true if the operation was started, otherwise false.
+     */
+    public synchronized boolean doManualReset() {
+        if (!isManualControlEnabled()) {
+            return false;
+        }
+        setState(PAUSED);
+        new Thread(new Runnable() {
+            public void run() {
+                if (getSquid() == null) {
+                    throw new IllegalStateException();
+                }
+                // TODO: these should be in one Magnetometer method
+                getSquid().getMagnetometer().pulseReset('A');
+                getSquid().getMagnetometer().clearFlux('A');
+            }
+        }).start();
+        return true;
+    }
+
     /**
      * Demagnetizes the sample in Z direction with the specified amplitude. Will do nothing if isManualControlEnabled()
      * is false.
@@ -2295,6 +2321,7 @@ public class Project {
                     fireMeasurementEvent(currentStep, HANDLER_STOP);
                     checkAborted();
                     // Begin by pulsing feedback loop for each axis And by clearing flux counter for each axis
+                    // TODO: these should be in one Magnetometer method
                     getSquid().getMagnetometer().pulseReset('A');
                     getSquid().getMagnetometer().clearFlux('A');
                     double[] results = getSquid().getMagnetometer().readData();
