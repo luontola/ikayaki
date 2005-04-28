@@ -9,30 +9,43 @@
 \testDescription{Tried both pop-ups}\testResultTrue
 \condition{Tries to change directory when on enter press or mouse-click to popupmenu (UC21)}
 \testDescription{Mouse click on autocomplete pop-up didnt work, history ok}\testResultFailed
-\condition{Only allows correct and existing directories (flashes red on change-attempt if invalid)}\testResultTrue
+\condition{Only allows correct and existing directories (flashes red on change-attempt if invalid)}
+\testDescription{Tried existing and non-existing directories, ok. But with '.' and '..' it tries to open those. Strange.}\testResultTrue
 \closeCase
 
 \beginCase{Browse-button}
-\condition{Opens a dir chooser dialog}\testResultTrue
-\condition{Changes to chosen directory if "Open" selected; updates text field (UC21)}\testResultTrue
+\condition{Opens a dir chooser dialog}
+\testDescription{Tried with different values on Directory text field. Opened last good directory in dialog.}\testResultTrue
+\condition{Changes to chosen directory if "Open" selected; updates text field (UC21)}
+\testDescription{Opens only if directory exists}\testResultTrue
 \closeCase
 
 \beginCase{Project file table}
-\condition{Shows project files in current directory}\testResultTrue
-\condition{Only shows project files (.ika and Calibration/AF/Thellier/Thermal)}\testResultTrue
-\condition{Hilights open project}\testResultTrue
-\condition{Hilights (with different color) currently measuring project}\testResultTrue
-\condition{Loads project on project file mouseclick (UC20)}\testResultTrue
-\condition{Show export menu for clicked file on right-click}\testResultTrue
-\condition{Export to selected file if any chosen (UC13-UC15)}\testResultTrue
-\condition{Sorts data on header click}\testResultTrue
-\condition{Updates data if changed (modifield-column, that is)}\testResultTrue
+\condition{Shows project files in current directory}
+\testDescription{Updates on the fly while changing directories}\testResultTrue
+\condition{Only shows project files (.ika and Calibration/AF/Thellier/Thermal)}
+\testDescription{Tried various directories}\testResultTrue
+\condition{Hilights open project}
+\testDescription{Changed project with mouse and keyboard}\testResultTrue
+\condition{Hilights (with different color) currently measuring project}
+\testDescription{Colors work fine combined with open-measure, multiple selections.}\testResultTrue
+\condition{Loads project on project file mouseclick (UC20)}
+\testDescription{Opens on left-mouse click only}\testResultTrue
+\condition{Show export menu for clicked file on right-click}
+\testDescription{Works both single and multiple selections and dont open if no selections}\testResultTrue
+\condition{Export to selected file if any chosen (UC13-UC15)}
+\testDescription{Single and multiple exports fine, only dat is supported?}\testResultTrue
+\condition{Sorts data on header click}
+\testDescription{Tested all three choices in all combinations}\testResultTrue
+\condition{Updates data if changed (modifield-column, that is)}
+\testDescription{Tested changing between two directories}\testResultTrue
 \closeCase
 
 \beginCase{"Create New" -components}
 \condition{Only allows correct, non-existing files; flashes red if invalid}
-\testDescription{/ or $\backslash$}\testResultFalse
-\condition{If valid filename, creates it, updates table with created file selected (UC19)}\testResultTrue
+\testDescription{$\backslash$ don't work. Checks name for all differend projects, cannot have same named project in AF and Thellier for example}\testResultFalse
+\condition{If valid filename, creates it, updates table with created file selected (UC19)}
+\testDescription{Tested with various new Projects, AF, Thellier and Thermal}\testResultTrue
 \closeCase
 
 \closeTestedClass

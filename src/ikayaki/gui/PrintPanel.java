@@ -43,7 +43,8 @@ import java.util.Queue;
 import java.util.Vector;
 
 /**
- * Creates layout from MeasurementSequence and Plots to be printed
+ * Creates layout from MeasurementSequence and Plots to be printed. PrintedPanel
+ * is preview of print and there is controls to print or cancel.
  *
  * @author Aki Korpua
  */
@@ -53,7 +54,12 @@ public class PrintPanel extends JPanel {
     private Project project;
 
     private JPanel contentPane;
+
+    /**
+     * Panel to be printed with ComponentPrinter
+     */
     private JPanel printedPanel;
+
     private JPanel controlPanel;
     private JPanel plot1Panel;
     private JPanel plot2Panel;
@@ -184,10 +190,19 @@ public class PrintPanel extends JPanel {
         }
     }
 
+    /**
+     * Gets container which is meant to be printed
+     *
+     * @return JPanel
+     */
     public JPanel getPrintedDocument() {
         return printedPanel;
     }
 
+
+    /**
+     * Closes this window
+     */
     private void closeDialog() {
         if (creator != null) {
             creator.setVisible(false);
