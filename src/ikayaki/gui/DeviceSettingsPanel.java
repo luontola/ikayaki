@@ -156,12 +156,6 @@ public class DeviceSettingsPanel extends JPanel {
     private JFormattedTextField rotationDec;
 
     /**
-     * Refers to right limit switch on translation axis. And usually sample holder motion toward right limit is
-     * posivitive direction (default).
-     */
-    private JComboBox handlerRightLimit;
-
-    /**
      * Maximum field to allow for equipment
      */
     private JFormattedTextField maximumField;
@@ -232,9 +226,6 @@ public class DeviceSettingsPanel extends JPanel {
         this.rotationAcc.setValue(Settings.getHandlerAcceleration());
         this.rotationDec.setValue(Settings.getHandlerDeceleration());
         this.maximumField.setValue(Settings.getDegausserMaximumField());
-        this.handlerRightLimit.addItem("plus");
-        this.handlerRightLimit.addItem("minus");
-        this.handlerRightLimit.setSelectedIndex(Settings.getHandlerRightLimit());
 
         /* Format Number-only Text Fields */
         MyFormatterFactory factory = new MyFormatterFactory();
@@ -355,8 +346,6 @@ public class DeviceSettingsPanel extends JPanel {
         rotationAcc.addActionListener(propertiesActionListener);
         rotationDec.addActionListener(propertiesActionListener);
 
-        handlerRightLimit.addActionListener(propertiesActionListener);
-
         maximumField.addActionListener(propertiesActionListener);
 
         saveButton.setEnabled(correctValues());
@@ -378,7 +367,6 @@ public class DeviceSettingsPanel extends JPanel {
             Settings.setHandlerDeceleration(((Number) this.deceleration.getValue()).intValue());
             Settings.setHandlerMeasurementPosition(((Number) this.measurementPosition.getValue()).intValue());
             Settings.setHandlerMeasurementVelocity(((Number) this.measurementVelocity.getValue()).intValue());
-            Settings.setHandlerRightLimit(this.handlerRightLimit.getSelectedIndex());
             Settings.setHandlerRotation(((Number) this.rotation.getValue()).intValue());
             Settings.setHandlerSampleLoadPosition(((Number) this.sampleLoadPosition.getValue()).intValue());
             Settings.setHandlerTransverseYAFPosition(((Number) this.transverseYAFPosition.getValue()).intValue());
@@ -596,11 +584,6 @@ public class DeviceSettingsPanel extends JPanel {
         measurementPosition = new JFormattedTextField();
         measurementPosition.setHorizontalAlignment(4);
         panel10.add(measurementPosition, new com.intellij.uiDesigner.core.GridConstraints(10, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null));
-        final JLabel label19 = new JLabel();
-        label19.setText("Right Limit");
-        panel10.add(label19, new com.intellij.uiDesigner.core.GridConstraints(11, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        handlerRightLimit = new JComboBox();
-        panel10.add(handlerRightLimit, new com.intellij.uiDesigner.core.GridConstraints(11, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         rotationAcc = new JFormattedTextField();
         rotationAcc.setHorizontalAlignment(4);
         panel10.add(rotationAcc, new com.intellij.uiDesigner.core.GridConstraints(13, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null));
@@ -611,29 +594,29 @@ public class DeviceSettingsPanel extends JPanel {
         rotationDec = new JFormattedTextField();
         rotationDec.setHorizontalAlignment(4);
         panel10.add(rotationDec, new com.intellij.uiDesigner.core.GridConstraints(14, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null));
+        final JLabel label19 = new JLabel();
+        label19.setText("Rotation acc.");
+        panel10.add(label19, new com.intellij.uiDesigner.core.GridConstraints(13, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label20 = new JLabel();
-        label20.setText("Rotation acc.");
-        panel10.add(label20, new com.intellij.uiDesigner.core.GridConstraints(13, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        label20.setText("Rotation velocity");
+        panel10.add(label20, new com.intellij.uiDesigner.core.GridConstraints(12, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label21 = new JLabel();
-        label21.setText("Rotation velocity");
-        panel10.add(label21, new com.intellij.uiDesigner.core.GridConstraints(12, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        label21.setText("Rotation dec.");
+        panel10.add(label21, new com.intellij.uiDesigner.core.GridConstraints(14, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label22 = new JLabel();
-        label22.setText("Rotation dec.");
-        panel10.add(label22, new com.intellij.uiDesigner.core.GridConstraints(14, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label23 = new JLabel();
-        label23.setText("COM port:");
-        panel10.add(label23, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        label22.setText("COM port:");
+        panel10.add(label22, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         handlerPort = new JComboBox();
         panel10.add(handlerPort, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label24 = new JLabel();
-        label24.setText("Acceleration");
-        panel10.add(label24, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label23 = new JLabel();
+        label23.setText("Acceleration");
+        panel10.add(label23, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         acceleration = new JFormattedTextField();
         acceleration.setHorizontalAlignment(4);
         panel10.add(acceleration, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null));
-        final JLabel label25 = new JLabel();
-        label25.setText("Deceleration");
-        panel10.add(label25, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label24 = new JLabel();
+        label24.setText("Deceleration");
+        panel10.add(label24, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JPanel panel11 = new JPanel();
         panel11.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel11, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 3, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null));
