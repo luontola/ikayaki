@@ -1,0 +1,17 @@
+\beginTestedClass{Ikayaki/MainViewPanel}
+
+\beginCase{Starting the program}
+
+These have been tested with \texttt{test-ikayaki.bat}.
+
+\condition{Starts up correctly, everything works as supposed}
+\testDescription{No parameters...}\testResultTrue
+\testDescription{Parameter "*/?" (which doesn't exist)...}\testResultTrue
+\testDescription{Parameter "projects/test.ika" (which exists, should open it)...}\testResultTrue
+\testDescription{No parameters and without config file...}\testResultTrue
+\testDescription{No parameters, with config file left from previous...}\testResultTrue
+\testDescription{Parameter "projects/test.ika" (which exists, should open it), and without config file...}\testResultTrue
+
+\closeCase
+
+\closeTestedClass
