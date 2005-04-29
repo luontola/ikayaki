@@ -167,7 +167,6 @@ public class Degausser implements SerialIOListener {
      * Performs Ramp up. If this is used, make sure you Ramp down in less than 10 seconds because it can damage coil
      */
     protected void executeRampUp() {
-        demagnetizing = true;
         try {
             blockingWrite("DERU");
         } catch (SerialIOException e) {
@@ -184,20 +183,17 @@ public class Degausser implements SerialIOListener {
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
-        demagnetizing = false;
     }
 
     /**
      * Performs Ramp up and down.
      */
     protected void executeRampCycle() {
-        demagnetizing = true;
         try {
             blockingWrite("DERC");
         } catch (SerialIOException e) {
             e.printStackTrace();
         }
-        demagnetizing = false;
     }
 
     protected void blockingWrite(String command) throws SerialIOException {
@@ -230,8 +226,10 @@ public class Degausser implements SerialIOListener {
     public boolean demagnetizeZ(double amp) {
         setAmplitude(amp);
         setCoil('Z');
+        demagnetizing = true;
         executeRampCycle();
-        //we need to take for DONE message or TRACK ERROR message
+
+        // need to wait for DONE message or TRACK ERROR message
         waitingForMessage = true;
         String answer = null;
         try {
@@ -240,6 +238,8 @@ public class Degausser implements SerialIOListener {
             e.printStackTrace();
         }
         waitingForMessage = false;
+        demagnetizing = false;
+
         if (answer.equals("DONE")) {
             return true;
         } else {
@@ -257,8 +257,10 @@ public class Degausser implements SerialIOListener {
     public boolean demagnetizeY(double amp) {
         setAmplitude(amp);
         setCoil('Y');
+        demagnetizing = true;
         executeRampCycle();
-        //we need to take for DONE message or TRACK ERROR message
+
+        // need to wait for DONE message or TRACK ERROR message
         waitingForMessage = true;
         String answer = null;
         try {
@@ -267,6 +269,8 @@ public class Degausser implements SerialIOListener {
             e.printStackTrace();
         }
         waitingForMessage = false;
+        demagnetizing = false;
+
         if (answer.equals("DONE")) {
             return true;
         } else {

@@ -44,7 +44,7 @@ import java.util.TreeMap;
 public class MagnetometerStatusPanel extends JPanel implements MeasurementListener {
 
     public static final Color DEMAGNETIZING_COLOR = new Color(0xFFCCCC);
-    public static final Color MEASURING_COLOR = new Color(0xFFFFCC);
+    public static final Color MEASURING_COLOR = new Color(0xFFFF99);
     public static final Color MOVING_COLOR = new Color(0xCCCCFF);
     public static final Color IDLE_COLOR = Color.WHITE;
 
