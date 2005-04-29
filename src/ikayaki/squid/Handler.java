@@ -311,12 +311,14 @@ public class Handler implements SerialIOListener {
         int pos = estimatedPositionStart + (int) (currentVelocity * timeSpent);
 
         /* acceleration correction */
+        /*
         double accTime = (double) currentVelocity / (double) ACCELERATION;
         if (timeSpent > accTime) {
             pos -= (1050422 * (accTime * accTime)) / (ACCELERATION);
         } else {
             pos = estimatedPositionStart + (int) ((1050422 * (timeSpent * timeSpent)) / (double) (ACCELERATION));
         }
+*/
 
         // prevent going over the end limit
         if ((estimatedPositionStart < estimatedPositionEnd) != (estimatedPositionStart < pos)) {

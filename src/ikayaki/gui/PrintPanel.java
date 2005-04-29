@@ -41,6 +41,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Vector;
+import ikayaki.MeasurementValue;
 
 /**
  * Creates layout from MeasurementSequence and Plots to be printed. PrintedPanel is preview of print and there is
@@ -120,11 +121,12 @@ public class PrintPanel extends JPanel {
 
         /* first step should be with none-demagnetization so its Intensity is NRM */
         if(project.getStep(0) != null) {
-            double q = 25.13 * project.getStep(0).getResults()/project.getSusceptibility();
-            qValue.setText("" + q);
+            double q = 25.13 * project.getValue(0,MeasurementValue.MAGNETIZATION)/project.getSusceptibility();
+            qValue.setText("" + (int) (q * 100) / 100.0 );
         }
         if(project.getVolume() != 0) {
-            density.setText("" + project.getMass() / project.getVolume());
+            double d = project.getMass() / project.getVolume();
+            density.setText("" + (int) (d * 100) / 100.0);
         }
         /* Sequence Table */
         sequenceTableModel = new PrintSequenceTableModel(project);
@@ -329,18 +331,18 @@ public class PrintPanel extends JPanel {
         final JLabel label8 = new JLabel();
         label8.setText("Q:");
         panel5.add(label8, new com.intellij.uiDesigner.core.GridConstraints(4, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        qValue = new JLabel();
+        qValue.setText("N/A");
+        panel5.add(qValue, new com.intellij.uiDesigner.core.GridConstraints(4, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label9 = new JLabel();
-        label9.setText("N/A");
-        panel5.add(label9, new com.intellij.uiDesigner.core.GridConstraints(4, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label10 = new JLabel();
-        label10.setText("Strike:");
-        panel5.add(label10, new com.intellij.uiDesigner.core.GridConstraints(1, 5, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        label9.setText("Strike:");
+        panel5.add(label9, new com.intellij.uiDesigner.core.GridConstraints(1, 5, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         strike = new JLabel();
         strike.setText("N/A");
         panel5.add(strike, new com.intellij.uiDesigner.core.GridConstraints(1, 6, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
-        final JLabel label11 = new JLabel();
-        label11.setText("Dip:");
-        panel5.add(label11, new com.intellij.uiDesigner.core.GridConstraints(2, 5, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+        final JLabel label10 = new JLabel();
+        label10.setText("Dip:");
+        panel5.add(label10, new com.intellij.uiDesigner.core.GridConstraints(2, 5, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         dip = new JLabel();
         dip.setText("N/A");
         panel5.add(dip, new com.intellij.uiDesigner.core.GridConstraints(2, 6, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null));
