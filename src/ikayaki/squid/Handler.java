@@ -333,7 +333,7 @@ public class Handler implements SerialIOListener {
      */
     public int getEstimatedRotation() {
         System.out.println("ROTATION:" +
-                "\tisMoving=" + isMoving() +
+                "\tisRotating=" + isRotating() +
                 "\tstartTime=" + estimatedRotationStartTime +
                 "\tstart=" + estimatedRotationStart +
                 "\tend=" + estimatedRotationEnd);

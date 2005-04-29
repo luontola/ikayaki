@@ -177,19 +177,25 @@ public class Ikayaki extends JFrame {
             }
         }
 
-        // redirect System.err to a file
+        // redirect a copy of System.err to a file
         try {
-            PrintStream err = new PrintStream(new FileOutputStream(DEBUG_LOG_FILE, true)) {
+            final PrintStream screen = System.err;
+            PrintStream debugLog = new PrintStream(new FileOutputStream(DEBUG_LOG_FILE, true)) {
 
                 DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 
                 @Override public void println(String x) {
-                    super.print(dateFormat.format(new Date()) + " -- ");
+                    String timestamp = dateFormat.format(new Date()) + " -- ";
+                    screen.print(timestamp);
+                    screen.println();
+                    super.print(timestamp);
                     super.println(x);
                 }
             };
-            System.setErr(err);
+
+            System.setErr(debugLog);
             System.err.println("\n\n----- Program started on " + new Date().toString() + " -----");
+
         } catch (FileNotFoundException e) {
             System.err.println("Unable to write to: " + DEBUG_LOG_FILE);
         }

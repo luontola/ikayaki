@@ -29,6 +29,7 @@ import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import java.io.*;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TooManyListenersException;
@@ -46,6 +47,7 @@ message from serial port is received.
 */
 
     private static final boolean DEBUG = true; // Writes log-file
+    private static final DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 
     /**
      * All opened serial ports
@@ -380,7 +382,7 @@ message from serial port is received.
         if (logWriter == null) return;
 
         // OK, now write the log message...
-        String time = DateFormat.getTimeInstance().format(new Date());
+        String time = dateFormat.format(new Date());
         try {
             logWriter.write(time + " " + e + ": " + message);
             logWriter.newLine();
