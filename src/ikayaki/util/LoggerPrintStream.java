@@ -21,19 +21,40 @@ public class LoggerPrintStream extends PrintStream {
     private PrintStream screen;
 
     /**
-     * Creates a new LoggerPrintStream.
+     * Creates a timestamped print stream directed to one output.
      *
-     * @param message a message to be printed at the creaton of this print stream, or null to show no message. This will
-     *                not be timestamped.
-     * @param screen  a PrintStream to direct all output with timestamps.
-     * @param file    an OutputStream to direct all output with timestamps.
+     * @param out an OutputStream to direct all output with timestamps.
      */
-    public LoggerPrintStream(PrintStream screen, OutputStream file, String message) {
-        super(file);
+    public LoggerPrintStream(OutputStream out) {
+        this(out, null, null);
+    }
+
+    /**
+     * Creates a timestamped print stream directed to two outputs.
+     *
+     * @param out    an OutputStream to direct all output with timestamps.
+     * @param screen a PrintStream to direct all output with timestamps. Will be ignored if null.
+     */
+    public LoggerPrintStream(OutputStream out, PrintStream screen) {
+        this(out, screen, null);
+    }
+
+    /**
+     * Creates a timestamped print stream directed to two outputs with a startup message.
+     *
+     * @param out     an OutputStream to direct all output with timestamps.
+     * @param screen  a PrintStream to direct all output with timestamps. Will be ignored if null.
+     * @param message a message to be printed at the creaton of this print stream. This will not be timestamped. Will be
+     *                ignored if null.
+     */
+    public LoggerPrintStream(OutputStream out, PrintStream screen, String message) {
+        super(out);
         this.screen = screen;
         if (message != null) {
-            screen.print(message);
-            screen.println();
+            if (screen != null) {
+                screen.print(message);
+                screen.println();
+            }
             super.print(message);
             super.println();
         }
@@ -42,7 +63,9 @@ public class LoggerPrintStream extends PrintStream {
     private void timestamp() {
         if (lineStart) {
             String timestamp = dateFormat.format(new Date()) + " -- ";
-            screen.print(timestamp);
+            if (screen != null) {
+                screen.print(timestamp);
+            }
             super.print(timestamp);
         }
         lineStart = false;
@@ -50,18 +73,24 @@ public class LoggerPrintStream extends PrintStream {
 
     @Override public void print(Object obj) {
         timestamp();
-        screen.print(obj);
+        if (screen != null) {
+            screen.print(obj);
+        }
         super.print(obj);
     }
 
     @Override public void print(String s) {
         timestamp();
-        screen.print(s);
+        if (screen != null) {
+            screen.print(s);
+        }
         super.print(s);
     }
 
     @Override public void println() {
-        screen.println();
+        if (screen != null) {
+            screen.println();
+        }
         super.println();
         lineStart = true;
     }

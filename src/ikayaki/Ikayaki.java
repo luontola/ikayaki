@@ -180,7 +180,7 @@ public class Ikayaki extends JFrame {
         try {
             String message = "\n\n----- " + APP_NAME + " " + APP_VERSION
                     + " started on " + new Date().toString() + " -----";
-            PrintStream logger = new LoggerPrintStream(System.err, new FileOutputStream(DEBUG_LOG_FILE, true), message);
+            PrintStream logger = new LoggerPrintStream(new FileOutputStream(DEBUG_LOG_FILE, true), System.err, message);
             System.setErr(logger);
 
         } catch (FileNotFoundException e) {
