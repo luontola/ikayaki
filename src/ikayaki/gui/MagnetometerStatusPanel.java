@@ -169,8 +169,9 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
      */
     private void updateButtonPositions() {
         maxposition = 1;
-        for (int n : new int[] {posMove, posHome, posDemagZ, posDemagY, posBG, posMeasure})
+        for (int n : new int[]{posMove, posHome, posDemagZ, posDemagY, posBG, posMeasure}) {
             if (n > maxposition) maxposition = n;
+        }
         maxposition *= 1.2;
 
 /*      // GRR x)
@@ -280,10 +281,15 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
         // "sample"
         Color bg;
-        if (demagnetizing) bg = DEMAGNETIZING_COLOR;
-        else if (measuring) bg = MEASURING_COLOR;
-        else if (moving || rotating) bg = MOVING_COLOR;
-        else bg = IDLE_COLOR;
+        if (demagnetizing) {
+            bg = DEMAGNETIZING_COLOR;
+        } else if (measuring) {
+            bg = MEASURING_COLOR;
+        } else if (moving || rotating) {
+            bg = MOVING_COLOR;
+        } else {
+            bg = IDLE_COLOR;
+        }
         drawFillOval(g2, bg, basex - samplew / 2, sampley - sampled, samplew, sampleh);
         drawFillSideRect(g2, bg, basex - samplew / 2, sampley - sampled + sampleh / 2, samplew, sampled);
         drawFillOval(g2, bg, basex - samplew / 2, sampley, samplew, sampleh);
@@ -596,14 +602,12 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
         /**
          * Demagnetizes in Z (at current sample holder position) by calling project.doManualDemagZ(double).
-         * @deprecated use demagButton.
          */
         private final JButton demagZButton = new JButton("Demag in Z");
         private final ComponentFlasher demagZButtonFlasher = new ComponentFlasher(demagZButton);
 
         /**
          * Demagnetizes in Y (at current sample holder position) by calling project.doManualDemagY(double).
-         * @deprecated use demagButton.
          */
         private final JButton demagYButton = new JButton("Demag in Y");
         private final ComponentFlasher demagYButtonFlasher = new ComponentFlasher(demagYButton);
@@ -684,8 +688,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             demagAmplitudePanel.add(demagAmplitudeLabel, BorderLayout.EAST);
             demagButtonPanel.add(demagAmplitudePanel);
             demagButtonPanel.add(demagButton);
-            demagButtonPanel.add(demagZButton);
-            demagButtonPanel.add(demagYButton);
+//            demagButtonPanel.add(demagZButton);
+//            demagButtonPanel.add(demagYButton);
             demagPanel.add(demagLabel, BorderLayout.NORTH);
             demagPanel.add(demagButtonPanel, BorderLayout.CENTER);
 
@@ -828,8 +832,9 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             demagZButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     double amplitude = getDemagAmplitude();
-                    if (amplitude < 0) demagAmplitudeFieldError();
-                    else if (!project.doManualDemagZ(amplitude)) demagZButtonFlasher.flash();
+                    if (amplitude < 0) {
+                        demagAmplitudeFieldError();
+                    } else if (!project.doManualDemagZ(amplitude)) demagZButtonFlasher.flash();
                 }
             });
 
@@ -840,8 +845,9 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             demagYButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     double amplitude = getDemagAmplitude();
-                    if (amplitude < 0) demagAmplitudeFieldError();
-                    else if (!project.doManualDemagY(amplitude)) demagYButtonFlasher.flash();
+                    if (amplitude < 0) {
+                        demagAmplitudeFieldError();
+                    } else if (!project.doManualDemagY(amplitude)) demagYButtonFlasher.flash();
                 }
             });
         }
@@ -872,8 +878,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         }
 
         /**
-         * Enables/disables all our components.
-         * Also sets selected radioboxes and demag-button to current handler status.
+         * Enables/disables all our components. Also sets selected radioboxes and demag-button to current handler
+         * status.
          *
          * @param enabled true==enabled, false==disabled.
          */
@@ -884,12 +890,20 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
             // set selected radioboxes and demag-button according to current handler status
 
-            int selectedPosition = 0;
+            int currentPosition = 0;
             if (squid != null) {
-                selectedPosition = squid.getHandler().getPosition();
+                currentPosition = squid.getHandler().getPosition();
             }
-            JComponent c = moveButtons.get(new Integer(selectedPosition));
-            if (c != null && c instanceof JRadioButton) ((JRadioButton) c).setSelected(true);
+            if (currentPosition == Integer.MIN_VALUE) {
+                moveLeft.setSelected(true);
+            } else if (currentPosition == Integer.MAX_VALUE) {
+                moveRight.setSelected(true);
+            } else {
+                JComponent c = moveButtons.get(new Integer(currentPosition));
+                if (c != null && c instanceof JRadioButton) {
+                    ((JRadioButton) c).setSelected(true);
+                }
+            }
 
             switch (rotation) {
             case 0:
@@ -913,12 +927,14 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             } else if (position == posDemagY) {
                 demagButtonIsY = true;
                 switch (rotation) {
-                    case 0: case 180:
-                        demagButton.setText(demagButtonBaseText + "Y");
-                        break;
-                    case 90: case 270:
-                        demagButton.setText(demagButtonBaseText + "X");
-                        break;
+                case 0:
+                case 180:
+                    demagButton.setText(demagButtonBaseText + "Y");
+                    break;
+                case 90:
+                case 270:
+                    demagButton.setText(demagButtonBaseText + "X");
+                    break;
                 }
             } else {
                 demagButton.setText(demagButtonBaseText);
