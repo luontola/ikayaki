@@ -36,6 +36,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * Starts the program. Lays out MainViewPanel, MainMenuBar and MainStatusBar in a JFrame.
@@ -174,10 +176,18 @@ public class Ikayaki extends JFrame {
                 project = Project.loadProject(file);
             }
         }
-        
+
         // redirect System.err to a file
         try {
-            PrintStream err = new PrintStream(new FileOutputStream(DEBUG_LOG_FILE, true));
+            PrintStream err = new PrintStream(new FileOutputStream(DEBUG_LOG_FILE, true)) {
+
+                DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
+
+                @Override public void println(String x) {
+                    super.print(dateFormat.format(new Date()) + " -- ");
+                    super.println(x);
+                }
+            };
             System.setErr(err);
             System.err.println("\n\n----- Program started on " + new Date().toString() + " -----");
         } catch (FileNotFoundException e) {
