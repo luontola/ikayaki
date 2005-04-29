@@ -26,6 +26,7 @@ import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyBlue;
 import ikayaki.gui.MainViewPanel;
+import ikayaki.util.LoggerPrintStream;
 import jutil.JUtil;
 
 import javax.swing.*;
@@ -35,8 +36,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -179,39 +178,10 @@ public class Ikayaki extends JFrame {
 
         // redirect a copy of System.err to a file
         try {
-            final PrintStream screen = System.err;
-            PrintStream debugLog = new PrintStream(new FileOutputStream(DEBUG_LOG_FILE, true)) {
-
-                DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
-
-                {
-                    String startup = "\n\n----- " + APP_NAME + " " + APP_VERSION
-                            + " started on " + new Date().toString() + " -----";
-                    screen.println(startup);
-                    super.println(startup);
-                }
-
-                @Override public void print(Object obj) {
-                    super.print(obj);
-                }
-
-                @Override public void print(String s) {
-                    super.print(s);
-                }
-
-                @Override public void println(String x) {
-                    String timestamp = dateFormat.format(new Date()) + " -- ";
-                    screen.print(timestamp);
-                    screen.println(x);
-                    super.print(timestamp);
-                    super.println(x);
-                }
-
-                @Override public void println(Object x) {
-                    println(String.valueOf(x));
-                }
-            };
-            System.setErr(debugLog);
+            String message = "\n\n----- " + APP_NAME + " " + APP_VERSION
+                    + " started on " + new Date().toString() + " -----";
+            PrintStream logger = new LoggerPrintStream(System.err, new FileOutputStream(DEBUG_LOG_FILE, true), message);
+            System.setErr(logger);
 
         } catch (FileNotFoundException e) {
             System.err.println("Unable to write to: " + DEBUG_LOG_FILE);
@@ -222,7 +192,6 @@ public class Ikayaki extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new Ikayaki(p);
-                throw new NullPointerException("testi");
             }
         });
     }
