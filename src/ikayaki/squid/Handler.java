@@ -299,10 +299,10 @@ public class Handler implements SerialIOListener {
      */
     public int getEstimatedPosition() {
         System.out.println("MOVE:" +
-                "\tisMoving=" + isMoving() +
-                "\tstartTime=" + estimatedPositionStartTime +
-                "\tstart=" + estimatedPositionStart +
-                "\tend=" + estimatedPositionEnd);
+                "\t  isMoving=" + isMoving() +
+                " \tstartTime=" + estimatedPositionStartTime +
+                " \tstart=" + estimatedPositionStart +
+                " \tend=" + estimatedPositionEnd);
         if (!isMoving()) {
             return estimatedPositionEnd;
         }
@@ -334,9 +334,9 @@ public class Handler implements SerialIOListener {
     public int getEstimatedRotation() {
         System.out.println("ROTATE:" +
                 "\tisRotating=" + isRotating() +
-                "\tstartTime=" + estimatedRotationStartTime +
-                "\tstart=" + estimatedRotationStart +
-                "\tend=" + estimatedRotationEnd);
+                " \tstartTime=" + estimatedRotationStartTime +
+                " \tstart=" + estimatedRotationStart +
+                " \tend=" + estimatedRotationEnd);
         if (!isRotating()) {
             return getRotation();
         }
