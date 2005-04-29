@@ -138,8 +138,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
     }
 
     /**
-     * Reads handler positions from Settings, posLeft and posRight are hard-coded. Updates position->radiobutton
-     * -treemap.
+     * Reads handler positions from Settings, posLeft and posRight are hard-coded. Updates maxposition and
+     * position->radiobutton -treemap.
      */
     private void updatePositions() {
         posHome = Settings.getHandlerSampleLoadPosition();
@@ -147,6 +147,12 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         posDemagY = Settings.getHandlerTransverseYAFPosition();
         posBG = Settings.getHandlerBackgroundPosition();
         posMeasure = Settings.getHandlerMeasurementPosition();
+
+        maxposition = 1;
+        for (int pos : new int[]{posHome, posDemagZ, posDemagY, posBG, posMeasure}) {
+            if (pos > maxposition) maxposition = pos;
+        }
+        maxposition *= 1.2;
 
         // stack move-radiobuttons into a sorted map
         // TODO: WARNING: if two positions are the same, previous one gets replaced
@@ -168,12 +174,6 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
      * Updates moveButtons' positions. Stacks 'em up nicely so that noone is on top of another or out of screen.
      */
     private void updateButtonPositions() {
-        maxposition = 1;
-        for (int n : new int[]{posHome, posDemagZ, posDemagY, posBG, posMeasure}) {
-            if (n > maxposition) maxposition = n;
-        }
-        maxposition *= 1.2;
-
         int height = getHeight(), nextpos = 0;
         for (Integer position : moveButtons.keySet()) {
             JComponent c = moveButtons.get(position);
@@ -563,8 +563,9 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         /**
          * Measures X, Y and Z (at current sample holder position) by calling project.doManualMeasure().
          */
-        private final JButton measureAllButton = new JButton("Measure XYZ");
+        private final JButton measureAllButton = new JButton();
         private final ComponentFlasher measureAllButtonFlasher = new ComponentFlasher(measureAllButton);
+        private final String measureAllButtonBaseText = "Measure ";
 
         /**
          * Resets X, Y and Z by calling project.doManualReset()? Does what?
@@ -660,9 +661,9 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             rotate0.setHorizontalAlignment(JRadioButton.CENTER);
             rotate180.setHorizontalAlignment(JRadioButton.CENTER);
             rotateButtonPanel.add(rotate0, BorderLayout.NORTH);
-            rotateButtonPanel.add(rotate90, BorderLayout.EAST);
+            rotateButtonPanel.add(rotate90, BorderLayout.WEST);
             rotateButtonPanel.add(rotate180, BorderLayout.SOUTH);
-            rotateButtonPanel.add(rotate270, BorderLayout.WEST);
+            rotateButtonPanel.add(rotate270, BorderLayout.EAST);
             rotatePanel.add(rotateLabel, BorderLayout.NORTH);
             rotatePanel.add(rotateButtonPanel, BorderLayout.CENTER);
 
@@ -675,7 +676,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             measurePanel.add(measureButtonPanel, BorderLayout.CENTER);
 
             JPanel demagPanel = new JPanel(new BorderLayout());
-            JPanel demagButtonPanel = new JPanel(new GridLayout(4, 1, 0, 4));
+            JPanel demagButtonPanel = new JPanel(new GridLayout(3, 1, 0, 4));
             JPanel demagAmplitudePanel = new JPanel(new BorderLayout(4, 0));
             demagAmplitudePanel.add(demagAmplitudeField, BorderLayout.CENTER);
             demagAmplitudePanel.add(demagAmplitudeLabel, BorderLayout.EAST);
@@ -881,8 +882,9 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             if (squid == null) enabled = false;
             for (Component component : components) component.setEnabled(enabled);
 
-            // set selected radioboxes and demag-button according to current handler status
+            // set selected radioboxes and buttons according to current handler status
 
+            // move-radiobuttons
             int currentPosition = 0;
             if (squid != null) {
                 currentPosition = squid.getHandler().getPosition();
@@ -898,6 +900,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
                 }
             }
 
+            // rotate-radiobuttons
             switch (rotation) {
             case 0:
                 rotate0.setSelected(true);
@@ -913,7 +916,15 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
                 break;
             }
 
-            demagButton.setEnabled(project != null && project.isDegaussingEnabled());
+            // measure-button text
+            if (position == posMeasure) {
+                measureAllButton.setText(measureAllButtonBaseText + "XYZ");
+            } else {
+                measureAllButton.setText(measureAllButtonBaseText + "BG");
+            }
+
+            // demag-button text and enabled status
+            demagButton.setEnabled(enabled && project != null && project.isDegaussingEnabled());
             if (position == posDemagZ) {
                 demagButtonIsY = false;
                 demagButton.setText(demagButtonBaseText + "Z");
