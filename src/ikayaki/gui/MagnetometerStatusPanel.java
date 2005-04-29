@@ -120,7 +120,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         updateStatus();
 
         // let's needlesly redraw status picture even when nothing happens
-        new Timer(500, new ActionListener() {
+        new Timer(50, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateStatus();
             }
