@@ -259,13 +259,13 @@ public class Handler implements SerialIOListener {
      * limit to how high the value can be).
      */
     protected void setRotation(int rotationSteps) {
-        estimatedPositionStart = currentRotation;
+        estimatedRotationStart = currentRotation;
         estimatedRotationStartTime = System.currentTimeMillis();
         currentRotation = rotationSteps;
         estimatedRotationEnd = currentRotation;
 
         // rotations are always in the same direction, even when rotating back to 0
-        while (estimatedRotationEnd < estimatedPositionStart) {
+        while (estimatedRotationEnd < estimatedRotationStart) {
             estimatedRotationEnd += HANDLER_ROTATION;
         }
     }

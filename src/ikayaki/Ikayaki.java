@@ -35,9 +35,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Starts the program. Lays out MainViewPanel, MainMenuBar and MainStatusBar in a JFrame.
@@ -184,17 +184,34 @@ public class Ikayaki extends JFrame {
 
                 DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 
+                {
+                    String startup = "\n\n----- " + APP_NAME + " " + APP_VERSION
+                            + " started on " + new Date().toString() + " -----";
+                    screen.println(startup);
+                    super.println(startup);
+                }
+
+                @Override public void print(Object obj) {
+                    super.print(obj);
+                }
+
+                @Override public void print(String s) {
+                    super.print(s);
+                }
+
                 @Override public void println(String x) {
                     String timestamp = dateFormat.format(new Date()) + " -- ";
                     screen.print(timestamp);
-                    screen.println();
+                    screen.println(x);
                     super.print(timestamp);
                     super.println(x);
                 }
-            };
 
+                @Override public void println(Object x) {
+                    println(String.valueOf(x));
+                }
+            };
             System.setErr(debugLog);
-            System.err.println("\n\n----- Program started on " + new Date().toString() + " -----");
 
         } catch (FileNotFoundException e) {
             System.err.println("Unable to write to: " + DEBUG_LOG_FILE);
@@ -205,6 +222,7 @@ public class Ikayaki extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new Ikayaki(p);
+                throw new NullPointerException("testi");
             }
         });
     }
