@@ -32,6 +32,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.Date;
 
 /**
  * Starts the program. Lays out MainViewPanel, MainMenuBar and MainStatusBar in a JFrame.
@@ -64,6 +68,7 @@ public class Ikayaki extends JFrame {
     public static final File SEQUENCES_FILE = new File("ikayaki.sequences").getAbsoluteFile();
     public static final File CALIBRATION_PROJECT_DIR = new File("calibration").getAbsoluteFile();
     public static final File DEBUG_LOG_DIR = new File("logs").getAbsoluteFile();
+    public static final File DEBUG_LOG_FILE = new File("debug.log").getAbsoluteFile();
 
     /**
      * Starts the program Ikayaki.
@@ -72,6 +77,8 @@ public class Ikayaki extends JFrame {
      * @throws HeadlessException if GraphicsEnvironment.isHeadless() returns true.
      */
     public Ikayaki(Project project) throws HeadlessException {
+
+        // set look and feel
         PlasticLookAndFeel.setMyCurrentTheme(new SkyBlue());
         try {
             UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
@@ -79,8 +86,8 @@ public class Ikayaki extends JFrame {
             System.err.println(e);
         }
 
+        // do layout
         final MainViewPanel main = new MainViewPanel(project);
-
         setTitle(null);
         setIconImage(new ImageIcon(ClassLoader.getSystemResource("resources/icon.png")).getImage());
         setLayout(new BorderLayout());
@@ -158,12 +165,23 @@ public class Ikayaki extends JFrame {
      * @param args command line parameters.
      */
     public static void main(String[] args) {
+
+        // read input parameters and load the optional project file
         Project project = null;
         if (args.length > 0) {
             File file = new File(args[0]);
             if (file.exists() && file.isFile()) {
                 project = Project.loadProject(file);
             }
+        }
+        
+        // redirect System.err to a file
+        try {
+            PrintStream err = new PrintStream(new FileOutputStream(DEBUG_LOG_FILE, true));
+            System.setErr(err);
+            System.err.println("\n\n----- Program started on " + new Date().toString() + " -----");
+        } catch (FileNotFoundException e) {
+            System.err.println("Unable to write to: " + DEBUG_LOG_FILE);
         }
 
         // the program must be started in the event dispatch thread
