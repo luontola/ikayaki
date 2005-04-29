@@ -298,7 +298,7 @@ public class Handler implements SerialIOListener {
      * @return the estimated position we are at, or current position if it is known.
      */
     public int getEstimatedPosition() {
-        System.out.println("POSITION:" +
+        System.out.println("MOVE:" +
                 "\tisMoving=" + isMoving() +
                 "\tstartTime=" + estimatedPositionStartTime +
                 "\tstart=" + estimatedPositionStart +
@@ -332,7 +332,7 @@ public class Handler implements SerialIOListener {
      * @return estimated rotation of where we are at in angles.
      */
     public int getEstimatedRotation() {
-        System.out.println("ROTATION:" +
+        System.out.println("ROTATE:" +
                 "\tisRotating=" + isRotating() +
                 "\tstartTime=" + estimatedRotationStartTime +
                 "\tstart=" + estimatedRotationStart +
