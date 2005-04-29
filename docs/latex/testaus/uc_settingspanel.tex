@@ -2,96 +2,114 @@
 
 \beginCase{Magnetometer, Handler and Degausser COM-port combobox}
 \condition{Shows all COM-ports on system in alphabetical order}
-\testResultTrue{}
+\testResultTrue
 \condition{Loads correct COM port from Settings}
-\testResultTrue{}
+\testResultTrue
 \condition{Doesn't allow same value as in Handler and Magnetometer/Degausser COM-port comboboxes}
-\testResultFalse{}
-\closeCase{}
+\testResultFalse
+\closeCase
 
-%\testResultFalse{}
 
 \beginCase{Save button}
 \condition{Only available if changes are made and values are permissible}
-\testResultTrue{}
+\testResultFalse always available
 \condition{Unavailable on start}
-\testResultTrue{}
+\testResultFalse
 \condition{On click closes window and saved data correctly}
-\testResultTrue{}
-\closeCase{}
+\testResultTrue
+\closeCase
 
 \beginCase{Cancel button}
 \condition{On click closes window and doesnt save changes}
-\testResultTrue{}
+\testResultTrue
 \condition{Always available}
-\testResultTrue{}
-\closeCase{}
+\testResultTrue
+\closeCase
 
 \beginCase{Calibration constants}
 \condition{Loads data correctly from Settings}
-\testResultTrue{}
+\testResultTrue
 \condition{Accepts positive and negative decimal numbers}
 \testDescription{-0.430002}
-\testResultTrue{}
-\closeCase{}
+\testResultTrue
+\closeCase
 
 \beginCase{Degausser ramp}
 \condition{Loads data correctly from Settings}
-\testResultTrue{}
+\testResultTrue
 \condition{Has only elements: 3,5,7,9}
-\testResultTrue{}
-\closeCase{}
+\testResultTrue
+\closeCase
 
 \beginCase{Degausser delay}
 \condition{Loads data correctly from Settings}
-\testResultTrue{}
+\testResultTrue
 \condition{Has only elements: 1..9}
-\testResultTrue{}
-\closeCase{}
+\testResultTrue
+\closeCase
 
 \beginCase{Acceleration and deceleration fields}
 \condition{Loads data correctly from Settings}
-\testResultTrue{}
+\testResultTrue
 \condition{Accepts only values in range of Integers 0..127}
 \testDescription{1000}
-\testResultTrue{}
+\testResultTrue
 \testDescription{-10}
-\testResultTrue{}
-\closeCase{}
+\testResultTrue
+\testDescription{-1}
+\testResultTrue
+\testDescription{0}
+\testResultTrue
+\testDescription{1}
+\testResultTrue
+\testDescription{54}
+\testResultTrue
+\testDescription{127}
+\testResultTrue
+\testDescription{128}
+\testResultTrue
+\closeCase
 
 \beginCase{Velocity and velocity in measurement fields}
 \condition{Loads data correctly from Settings}
-\testResultTrue{}
+\testResultTrue values of over 8500 are not saved
 \condition{Accepts only values in range of Integers 50..20000}
 \testDescription{0}
-\testResultTrue{}
+\testResultTrue 0 is initial value to which cannot be returned after changing to value 50..8500
 \testDescription{2001}
-\testResultTrue{}
-\closeCase{}
+\testResultTrue
+\testDescription{-1}
+\testResultTrue
+\testDescription{1}
+\testResultTrue
+\testDescription{8500}
+\testResultTrue
+\testDescription{10000}
+\testResultTrue
+\testDescription{20000}
+\testResultTrue
+\testDescription{20001}
+\testResultTrue
+\closeCase
 
 \beginCase{Translation positions fields}
 \condition{Loads data correctly from Settings}
-\testResultTrue{}
-\condition{Accepts only values in range of Integers 0..16777215}
+\testResultFalse rotation velocity behaves like velocity and velocity measurement
+\condition{Tranverse T AF..Measurement accept only values in range of Integers 0..16777215}
 \testDescription{-1}
-\testResultTrue{}
-\closeCase{}
-
-\beginCase{Right limit}
-\condition{Loads data correctly from Settings}
-\testResultTrue{}
-\condition{Has only elements: plus, minus}
-\testResultTrue{}
-\closeCase{}
-
-\beginCase{Rotation field}
-\condition{Loads data correctly from Settings}
-\testResultTrue{}
-\condition{Accepts positive and negative Integer numbers}
-\testDescription{-1}
-\testResultTrue{}
-\testDescription{0.1}
-\testResultTrue{}
-\closeCase{}
+\testResultTrue
+\testDescription{0}
+\testResultTrue
+\testDescription{1}
+\testResultTrue
+\testDescription{16777215}
+\testResultTrue
+\testDescription{167772156}
+\testResultTrue
+\condition{Rotation acc. and dec. accepts values from 0..127}
+\testResultFalse only accepts values from 0..127, but always loads with initial 127 or 54 respectively
+\condition{Rotation counts behaves correctly}
+\testResultFalse behaves strangely with very large or small numbers (what should this accept?)
+\closeCase
 
 \closeTestedClass

@@ -37,14 +37,14 @@
 
 \beginCase{Demagnetize}
 \condition{Demagnetization is shown on squid image}
-\testResultFalse
+\testResultTrue
 \condition{Squid-system demagnetizes}
 \testResultTrue
 \closeCase
 
 \beginCase{Measure-all}
 \condition{Measuring is shown on squid image}
-\testResultFalse
+\testResultTrue
 \condition{Data is added to Details correctly}
 \testResultTrue
 \condition{Data is added to Sequence}
@@ -53,7 +53,7 @@
 
 \beginCase{Reset measure}
 \condition{Nothing shown, Magnetometer is reseted.}
-\testResultTrue does not reset magnetometer atm
+\testResultTrue
 \closeCase
 
 \closeTestedClass

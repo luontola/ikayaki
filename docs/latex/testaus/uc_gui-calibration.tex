@@ -1,13 +1,20 @@
 \beginTestedClass{CalibrationPanel}
 
 \beginCase{Calibration project table}
-\condition{Shows (and only shows) calibration project files in current directory}\testResultTrue
-\condition{Hilights open project}\testResultTrue
-\condition{Hilights (with different color) currently measuring project}\testResultTrue
-\condition{Loads project on project file mouseclick (UC20)}\testResultTrue
-\condition{Doesn't show export menu for clicked file on right-click}\testResultFalse :)
-\condition{Sorts data on header click}\testResultTrue
-\condition{Updates data if changed (measured- and elapsed-columns, that is)}\testResultTrue
+\condition{Shows (and only shows) calibration project files in current directory}
+\testResultTrue
+\condition{Hilights open project}
+\testResultTrue
+\condition{Hilights (with different color) currently measuring project}
+\testResultTrue
+\condition{Loads project on project file mouseclick (UC20)}
+\testResultTrue
+\condition{Doesn't show export menu for clicked file on right-click}
+\testResultFalse 
+\condition{Sorts data on header click}
+\testResultTrue would be better if always in same order
+\condition{Updates data if changed (measured- and elapsed-columns, that is)}
+\testResultTrue
 \closeCase
 
 \beginCase{"Calibrate" -button}
