@@ -151,14 +151,14 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         // stack move-radiobuttons into a sorted map
         // TODO: WARNING: if two positions are the same, previous one gets replaced
         moveButtons.clear();
-        moveButtons.put(posMove, manualControlsPanel.moveLabel);
-        moveButtons.put(posLeft, manualControlsPanel.moveLeft);
-        moveButtons.put(posHome, manualControlsPanel.moveHome);
-        moveButtons.put(posDemagZ, manualControlsPanel.moveDemagZ);
-        moveButtons.put(posDemagY, manualControlsPanel.moveDemagY);
-        moveButtons.put(posBG, manualControlsPanel.moveBG);
-        moveButtons.put(posMeasure, manualControlsPanel.moveMeasure);
-        moveButtons.put(posRight, manualControlsPanel.moveRight);
+        moveButtons.put(new Integer(posMove), manualControlsPanel.moveLabel);
+        moveButtons.put(new Integer(posLeft), manualControlsPanel.moveLeft);
+        moveButtons.put(new Integer(posHome), manualControlsPanel.moveHome);
+        moveButtons.put(new Integer(posDemagZ), manualControlsPanel.moveDemagZ);
+        moveButtons.put(new Integer(posDemagY), manualControlsPanel.moveDemagY);
+        moveButtons.put(new Integer(posBG), manualControlsPanel.moveBG);
+        moveButtons.put(new Integer(posMeasure), manualControlsPanel.moveMeasure);
+        moveButtons.put(new Integer(posRight), manualControlsPanel.moveRight);
 
         // TODO: only need to call updateButtonPositions here, but it won't work so now it's called
         // every time in paintComponent
@@ -181,7 +181,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         maxposition = Math.max(1, maxposition);
 */
         int height = getHeight(), nextpos = 0;
-        for (int position : moveButtons.keySet()) {
+        for (Integer position : moveButtons.keySet()) {
             JComponent c = moveButtons.get(position);
             int cheight = c.getHeight();
             int pos = (int) ((long) height * position / maxposition);
@@ -884,7 +884,11 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
             // set selected radioboxes and demag-button according to current handler status
 
-            JComponent c = moveButtons.get(position);
+            int selectedPosition = 0;
+            if (squid != null) {
+                selectedPosition = squid.getHandler().getPosition();
+            }
+            JComponent c = moveButtons.get(new Integer(selectedPosition));
             if (c != null && c instanceof JRadioButton) ((JRadioButton) c).setSelected(true);
 
             switch (rotation) {
