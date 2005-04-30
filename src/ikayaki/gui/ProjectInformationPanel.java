@@ -67,7 +67,7 @@ public class ProjectInformationPanel extends ProjectComponent {
     private JTextField operatorField;
     private JTextField dateField;
     private JTextField rockTypeField;
-    private JTextField locationField;
+    private JTextField areaField;
     private JTextField siteField;
     private JTextArea commentArea;
 
@@ -147,7 +147,7 @@ public class ProjectInformationPanel extends ProjectComponent {
         operatorField.getDocument().addDocumentListener(propertiesDocumentListener);
         dateField.getDocument().addDocumentListener(propertiesDocumentListener);
         rockTypeField.getDocument().addDocumentListener(propertiesDocumentListener);
-        locationField.getDocument().addDocumentListener(propertiesDocumentListener);
+        areaField.getDocument().addDocumentListener(propertiesDocumentListener);
         siteField.getDocument().addDocumentListener(propertiesDocumentListener);
         commentArea.getDocument().addDocumentListener(propertiesDocumentListener);
 
@@ -242,7 +242,7 @@ public class ProjectInformationPanel extends ProjectComponent {
             dateField.setText(
                     project.getProperty(Project.DATE_PROPERTY, DateFormat.getDateInstance().format(new Date())));
             rockTypeField.setText(project.getProperty(Project.ROCK_TYPE_PROPERTY, ""));
-            locationField.setText(project.getProperty(Project.LOCATION_PROPERTY, ""));
+            areaField.setText(project.getProperty(Project.AREA_PROPERTY, ""));
             siteField.setText(project.getProperty(Project.SITE_PROPERTY, ""));
             commentArea.setText(project.getProperty(Project.COMMENT_PROPERTY, ""));
             commentArea.setCaretPosition(0);    // scroll the viewport to the top
@@ -270,7 +270,7 @@ public class ProjectInformationPanel extends ProjectComponent {
             operatorField.setText("");
             dateField.setText("");
             rockTypeField.setText("");
-            locationField.setText("");
+            areaField.setText("");
             siteField.setText("");
             commentArea.setText("");
 
@@ -326,7 +326,7 @@ public class ProjectInformationPanel extends ProjectComponent {
         getProject().setProperty(Project.OPERATOR_PROPERTY, operatorField.getText());
         getProject().setProperty(Project.DATE_PROPERTY, dateField.getText());
         getProject().setProperty(Project.ROCK_TYPE_PROPERTY, rockTypeField.getText());
-        getProject().setProperty(Project.LOCATION_PROPERTY, locationField.getText());
+        getProject().setProperty(Project.AREA_PROPERTY, areaField.getText());
         getProject().setProperty(Project.SITE_PROPERTY, siteField.getText());
         getProject().setProperty(Project.COMMENT_PROPERTY, commentArea.getText());
 
@@ -397,8 +397,8 @@ public class ProjectInformationPanel extends ProjectComponent {
                 new GridConstraints(4, 1, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
                         new Dimension(70, -1), null));
-        locationField = new JTextField();
-        contentPane.add(locationField,
+        areaField = new JTextField();
+        contentPane.add(areaField,
                 new GridConstraints(3, 1, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
                         GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null,
                         new Dimension(70, -1), null));

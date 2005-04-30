@@ -74,7 +74,7 @@ public class Project {
     public static final String OPERATOR_PROPERTY = "operator";
     public static final String DATE_PROPERTY = "date";
     public static final String ROCK_TYPE_PROPERTY = "rockType";
-    public static final String LOCATION_PROPERTY = "location";
+    public static final String AREA_PROPERTY = "area";
     public static final String SITE_PROPERTY = "site";
     public static final String COMMENT_PROPERTY = "comment";
     public static final String LATITUDE_PROPERTY = "latitude";
@@ -815,7 +815,7 @@ public class Project {
 
             out.print(pad("Site", 10, -1));
             out.print(":");
-            s = getProperty(LOCATION_PROPERTY, "");
+            s = getProperty(AREA_PROPERTY, "");
             if (s.length() > 0) {
                 s += "/";
             }

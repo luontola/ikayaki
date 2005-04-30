@@ -18,7 +18,7 @@
         </constraints>
         <properties/>
       </component>
-      <component id="213a4" class="javax.swing.JTextField" binding="locationField">
+      <component id="213a4" class="javax.swing.JTextField" binding="areaField">
         <constraints>
           <xy x="94" y="71" width="244" height="21"/>
           <grid row="3" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
@@ -259,11 +259,11 @@
       </component>
       <component id="7b88d" class="javax.swing.JLabel">
         <constraints>
-          <xy x="50" y="74" width="40" height="14"/>
+          <xy x="67" y="74" width="23" height="14"/>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0"/>
         </constraints>
         <properties>
-          <text value="Location"/>
+          <text value="Area"/>
         </properties>
       </component>
       <component id="2c522" class="javax.swing.JLabel">
