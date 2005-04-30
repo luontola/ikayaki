@@ -766,6 +766,14 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
 
                             // execute export
                             for (File f : files) {
+
+                                /* TODO: This overwrites existing files without asking!
+                                 * Get a pointer to MainViewPanel and use the method
+                                 * MainViewPanel.exportProject(Project,String,File)
+                                 * because it prompts the user if the file exists, and
+                                 * offers the option to change the output file name.
+                                 */
+
                                 File exportfile;
                                 if (dirHasFile) {
                                     exportfile = exportdir;
@@ -782,7 +790,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                                     exportfile = new File(exportdir, exportname);
                                 }
 
-                                System.out.print("Exporting " + exportfile + "... ");
+//                                System.out.print("Exporting " + exportfile + "... ");
 
                                 boolean ok = false;
                                 if (filetype.equals("dat")) {
@@ -791,7 +799,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                                     ok = Project.loadProject(f).exportToTDT(exportfile);
                                 } else if (filetype.equals("srm")) ok = Project.loadProject(f).exportToSRM(exportfile);
 
-                                System.out.println(ok ? "ok" : "ERROR");
+//                                System.out.println(ok ? "ok" : "ERROR");
 /*
                                 // TODO: tell somehow, not with popup, if export was successful; statusbar perhaps?
                                 Component c = ProjectExplorerTable.this;
