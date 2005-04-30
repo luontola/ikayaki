@@ -94,7 +94,8 @@ public enum SequenceColumn {
                     try {
                         data = getNumberFormat().parse(data.toString());
                     } catch (ParseException e) {
-                        throw new NumberFormatException("For input string: \"" + data.toString() + "\"");
+//                        throw new NumberFormatException("For input string: \"" + data.toString() + "\"");
+                        return;
                     }
                 }
             }
@@ -211,7 +212,8 @@ public enum SequenceColumn {
                     try {
                         data = getNumberFormat().parse(data.toString());
                     } catch (ParseException e) {
-                        throw new NumberFormatException("For input string: \"" + data.toString() + "\"");
+//                        throw new NumberFormatException("For input string: \"" + data.toString() + "\"");
+                        return;
                     }
                 }
             }
@@ -265,7 +267,8 @@ public enum SequenceColumn {
                     try {
                         data = getNumberFormat().parse(data.toString());
                     } catch (ParseException e) {
-                        throw new NumberFormatException("For input string: \"" + data.toString() + "\"");
+//                        throw new NumberFormatException("For input string: \"" + data.toString() + "\"");
+                        return;
                     }
                 }
             }
@@ -319,7 +322,8 @@ public enum SequenceColumn {
                     try {
                         data = getNumberFormat().parse(data.toString());
                     } catch (ParseException e) {
-                        throw new NumberFormatException("For input string: \"" + data.toString() + "\"");
+//                        throw new NumberFormatException("For input string: \"" + data.toString() + "\"");
+                        return;
                     }
                 }
             }
