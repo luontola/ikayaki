@@ -15,56 +15,76 @@
 
 <h2>Squid Device Configuration</h2>
 
-WARNING: this configuration should be only used by squid maintaince team who know what they are doing. These values should be set only when system is installed or changes are made to System. <br>
+<p>WARNING: this configuration should be only used by squid maintaince team who know what they are doing. These values should be set only when system is installed or changes are made to System. </p>
+
+<img src="DeviceConfiguration.png">
 
 <h3> Magnetometer </h3>
 
-COM-port: serial port which Magnetometer is connected. Should be different than Handler, but can be same as Degausser.<br>
-<br>
-Calibration constants: These values are important for getting right values from magnetometer. Accepts values in maximum of 12 decimals.<br>
-<br>
+<p><b>COM-port</b>: serial port which Magnetometer is connected. Should be different than Handler, but can be same as Degausser.</p>
+
+<p><b>Calibration constants</b>: These values are important for getting right values from magnetometer. Accepts values in maximum of 12 decimals.</p>
+
 
 <h3> Degausser </h3>
 
-COM-port: serial port which Degausser is connected. Should be different than Handler, but can be same as Magnetometer.<br>
-<br>
-Maximum field: This value is maximum field value, in mT, Degausser can go. Minimum is always 1.1 mT. Be careful not to put too big value here as it can damage equipment. Maximum value is 300mT.<br>
-<br>
-Ramp: This tells how fast Degausser ramps up the field. This can be set higher if needed.<br>
-<br>
-Delay: Ramp delay.<br>
-<br>
+<p><b>COM-port</b>: serial port which Degausser is connected. Should be different than Handler, but can be same as Magnetometer.</p>
 
-<h3 Handler </h3>
+<p><b>Maximum field</b>: This value is maximum field value, in mT, Degausser can go. Minimum is always 1.1 mT. Be careful not to put too big value here as it can damage equipment. Maximum value is 300mT.</p>
 
-COM-port: serial port which Handler is connected. Should be different than Magnetometer and Degausser.<br>
-<br>
-Acceleration: Indicates how fast Handler accelerates to its velocity. Value is between 0...127.<br>
-<br>
-Deceleration: Indicates how fast Handler decelerates from its velocity. Value is between 0...127.<br>
-<br>
-Velocity: Maximum velocity handler moves. Value is between 50...8500<br>
-<br>
-Velocity Meas.: Maximum velocity in Magnetometer handler moves, should be small. Value is between 50...8500<br>
-<br>
-Transverse Y AF: Position relative to home where is Degausser Y coil (X is demagnetized there too). Value in steps.<br>
-<br>
-Axial AF: Position relative to home where is Degausser Z coil. Value in steps.<br>
-<br>
-Sample Load: Position relative to home where is sample load position. Value in steps.<br>
-<br>
-Background: Position relative to home where Handler is when Magnetometer measures background. Value in steps.<br>
-<br>
-Measurement: Position relative to home where Handler is when Magnetometer measures sample . Value in steps.<br>
-<br>
-Rotation Velocity: Indicates how fast Handlers rotation accelerates to its velocity. Value is between 0...127.<br>
-<br>
-Rotation Acc.: Indicates how fast Handlers rotation accelerates to its velocity. Value is between 0...127.<br>
-<br>
-Rotation Dec.: Indicates how fast Handlers rotation decelerates from its velocity. Value is between 0...127.<br>
-<br>
-Rotation counts: Tells how many steps is one full round (360 degree). Can be negative when direction is changed.<br>
-<br>
+<p><b>Ramp</b>: This tells how fast Degausser ramps up the field. This can be set higher if needed.</p>
+
+<p><b>Delay</b>: Ramp delay.</p>
+
+
+<h3> Handler </h3>
+
+<p><b>COM-port</b>: serial port which Handler is connected. Should be different than Magnetometer and Degausser.</p>
+
+<p><b>Acceleration</b>: Indicates how fast Handler accelerates to its velocity. Value is between 0...127.</p>
+
+<p><b>Deceleration</b>: Indicates how fast Handler decelerates from its velocity. Value is between 0...127.</p>
+
+<p><b>Velocity</b>: Maximum velocity handler moves. Value is between 50...8500</p>
+
+<p><b>Velocity Meas.</b>: Maximum velocity in Magnetometer handler moves, should be small. Value is between 50...8500</p>
+
+<p><b>Transverse Y AF</b>: Position relative to home where is Degausser Y coil (X is demagnetized there too). Value in steps.</p>
+
+<p><b>Axial AF</b>: Position relative to home where is Degausser Z coil. Value in steps.</p>
+
+<p><b>Sample Load</b>: Position relative to home where is sample load position. Value in steps.</p>
+
+<p><b>Background</b>: Position relative to home where Handler is when Magnetometer measures background. Value in steps.</p>
+
+<p><b>Measurement</b>: Position relative to home where Handler is when Magnetometer measures sample . Value in steps.</p>
+
+<p><b>Rotation Velocity</b>: Indicates how fast Handlers rotation accelerates to its velocity. Value is between 0...127.</p>
+
+<p><b>Rotation Acc.</b>: Indicates how fast Handlers rotation accelerates to its velocity. Value is between 0...127.</p>
+
+<p><b>Rotation Dec.</b>: Indicates how fast Handlers rotation decelerates from its velocity. Value is between 0...127.</p>
+
+<p><b>Rotation counts</b>: Tells how many steps is one full round (360 degree). Can be negative when direction is changed.</p>
+
+
+<h2>Options</h2>
+
+<p>This settings change behavior of the software and can be used to modify defaults.</p>
+
+<img src="options.png">
+
+<h3> Measurement </h3>
+
+<p>This changes how sample is measured. <b>Measurement Rotations</b> indicates how many times sample is measured and then taken mean value. Default is 1. <b>Sample Holder Calibration</b> is selected from all calibration projects. Its value is then noticed in measurement.</p>
+
+<h3> Saved Sequence </h3>
+
+<p> Here you can see all saved sequences. You can change sequences names by double-clicking it and typing new name and pressing enter to confirm change. If there is some old or not used sequences you can select one and delete it. Ones deleted, it cant be undeleted, so be careful.</p>
+
+<h3> Default Columns </h3>
+
+<p> Here you can select default columns which are shown on Measurement Sequence at start. This only affects new projects as all projects has their own columns and they can be changed from <a href="../sequence/sequence_panel.html">Measurement Sequence</a> when project is open.</p>
 
 </body>
 </html>
