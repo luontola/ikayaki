@@ -768,10 +768,14 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                             for (File f : files) {
 
                                 /* TODO: This overwrites existing files without asking!
+                                 *
                                  * Get a pointer to MainViewPanel and use the method
                                  * MainViewPanel.exportProject(Project,String,File)
                                  * because it prompts the user if the file exists, and
                                  * offers the option to change the output file name.
+                                 *
+                                 * Another option is to automatically rename the new file
+                                 * to file.0.dat, file.1.dat and so on.
                                  */
 
                                 File exportfile;
