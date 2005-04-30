@@ -40,6 +40,7 @@ public class SettingsDialog extends JDialog {
 
     private static int dialogType;
     private static Project project;
+    private static boolean printDirectly;
 
     private SettingsDialog(Frame owner, String message) {
         super(owner, message, true);
@@ -64,7 +65,7 @@ public class SettingsDialog extends JDialog {
             add(new ProgramSettingsPanel(this), BorderLayout.CENTER);
             pack();
         } else if (dialogType == PRINT_PREVIEW) {
-            add(new PrintPanel(this, project), BorderLayout.CENTER);
+            add(new PrintPanel(this, project, printDirectly), BorderLayout.CENTER);
             this.setSize(500, 700);
             //setMaximumSize(new Dimension(800,1000));
             //setMinimumSize(new Dimension(800,1000));
@@ -86,9 +87,10 @@ public class SettingsDialog extends JDialog {
         d.setVisible(true);
     }
 
-    public static void showPrintPreview(Frame owner, String message, Project project) {
+    public static void showPrintPreview(Frame owner, String message, Project project, boolean printDirectly) {
         dialogType = PRINT_PREVIEW;
         SettingsDialog.project = project;
+        SettingsDialog.printDirectly = printDirectly;
         SettingsDialog d = new SettingsDialog(owner, message);
         d.setVisible(true);
     }

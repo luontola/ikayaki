@@ -95,7 +95,7 @@ public class PrintPanel extends JPanel {
      */
     private Vector<AbstractPlot> plots = new Vector<AbstractPlot>();
 
-    public PrintPanel(JDialog creator, Project project) {
+    public PrintPanel(JDialog creator, Project project, boolean printDirectly) {
         if (project == null) {
             throw new NullPointerException();
         }
@@ -176,7 +176,7 @@ public class PrintPanel extends JPanel {
         print.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 closeDialog();
-                ComponentPrinter.printComponent(getPrintedDocument());
+                ComponentPrinter.printComponent(getPrintedDocument(), PrintPanel.this.project.getName());
             }
         });
         cancel.addActionListener(new ActionListener() {
@@ -184,6 +184,15 @@ public class PrintPanel extends JPanel {
                 closeDialog();
             }
         });
+
+        // HACK: for some reason printing without preview does not work
+        if (printDirectly) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    print.doClick();
+                }
+            });
+        }
     }
 
     /**
@@ -213,7 +222,6 @@ public class PrintPanel extends JPanel {
     public JPanel getPrintedDocument() {
         return printedPanel;
     }
-
 
     /**
      * Closes this window

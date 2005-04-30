@@ -62,15 +62,30 @@ public class ComponentPrinter implements Printable {
      * @param c Component to be printed (use Only PrintPanel)
      */
     public static void printComponent(Component c) {
-        new ComponentPrinter(c).print();
+        new ComponentPrinter(c).print(null);
+    }
+
+    /**
+     * Static printing command
+     *
+     * @param c       Component to be printed (use Only PrintPanel)
+     * @param jobName name for the printing job
+     */
+    public static void printComponent(Component c, String jobName) {
+        new ComponentPrinter(c).print(jobName);
     }
 
     /**
      * Opens printer dialog and start printing job if we get printer
      */
-    public void print() {
+    public void print(String jobName) {
+        if (jobName == null) {
+            jobName = "Java Printing";
+        }
         PrinterJob printJob = PrinterJob.getPrinterJob();
         printJob.setPrintable(this);
+        System.out.println(printJob.getJobName());
+        printJob.setJobName(jobName);
         if (printJob.printDialog()) {
             try {
                 printJob.print();

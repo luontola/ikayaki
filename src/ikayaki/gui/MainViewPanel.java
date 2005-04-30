@@ -711,7 +711,10 @@ public class MainViewPanel extends ProjectComponent {
         if (printAction == null) {
             printAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    ComponentPrinter.printComponent(new PrintPanel(null, getProject()).getPrintedDocument());
+//                    PrintPanel printPanel = new PrintPanel(null, getProject());
+//                    ComponentPrinter.printComponent(printPanel.getPrintedDocument(), getProject().getName());
+                    // HACK: for some reason printing without preview does not work
+                    SettingsDialog.showPrintPreview(getParentFrame(), "Print Preview", getProject(), true);
                 }
             };
             printAction.putValue(Action.NAME, "Print");
@@ -725,7 +728,7 @@ public class MainViewPanel extends ProjectComponent {
         if (printPreviewAction == null) {
             printPreviewAction = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    SettingsDialog.showPrintPreview(getParentFrame(), "Print Preview", getProject());
+                    SettingsDialog.showPrintPreview(getParentFrame(), "Print Preview", getProject(), false);
                 }
             };
             printPreviewAction.putValue(Action.NAME, "Print Preview");
