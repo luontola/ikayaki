@@ -74,7 +74,7 @@ public class MeasurementResult {
      * @param x        the measured X coordinate value.
      * @param y        the measured Y coordinate value.
      * @param z        the measured Z coordinate value.
-     * @throws NullPointerException if type is null.
+     * @throws NullPointerException     if type is null.
      * @throws IllegalArgumentException if the type is NOISE or HOLDER, but rotation is non-zero.
      */
     public MeasurementResult(Type type, int rotation, double x, double y, double z) {
@@ -204,7 +204,7 @@ public class MeasurementResult {
             rotate.rotZ(Math.toRadians(-rotation));
             rotate.transform(sampleVector);
         }
-        
+
         if (step != null) {
             // apply the noise fix
             Vector3d noise = step.getNoise();
@@ -353,8 +353,8 @@ public class MeasurementResult {
     }
 
     /**
-     * Returns a pointer to the raw vector. WARNING! No modification to the returned object should be made. They
-     * should be done on a copy of the object than the object itself.
+     * Returns a pointer to the raw vector. WARNING! No modification to the returned object should be made. They should
+     * be done on a copy of the object than the object itself.
      */
     protected Vector3d getRawVector() {
         return rawVector;

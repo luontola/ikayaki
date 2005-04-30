@@ -29,8 +29,6 @@ import static java.lang.Math.atan;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
-import javax.vecmath.Vector3d;
-
 /**
  * Algorithms for calculating values from the measurements. A MeasurementValue object will be passed to the getValue()
  * method of a project to retrieve the desired value.

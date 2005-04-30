@@ -22,9 +22,10 @@
 
 package ikayaki.gui;
 
+import ikayaki.Project;
+
 import javax.swing.*;
 import java.awt.*;
-import ikayaki.Project;
 
 /**
  * Opens dialog and creates DeviceSettingsPanel
@@ -64,7 +65,7 @@ public class SettingsDialog extends JDialog {
             pack();
         } else if (dialogType == PRINT_PREVIEW) {
             add(new PrintPanel(this, project), BorderLayout.CENTER);
-            this.setSize(500,700);
+            this.setSize(500, 700);
             //setMaximumSize(new Dimension(800,1000));
             //setMinimumSize(new Dimension(800,1000));
             //pack();

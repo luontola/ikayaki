@@ -178,8 +178,11 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                 // if load error, or nothing selected, revert back to old selection
                 if (project == null) {
                     // TODO: flash selected row red for 100 ms, perhaps? - might require a custom cell renderer
-                    if (selectedFile == -1) clearSelection();
-                    else setRowSelectionInterval(selectedFile, selectedFile);
+                    if (selectedFile == -1) {
+                        clearSelection();
+                    } else {
+                        setRowSelectionInterval(selectedFile, selectedFile);
+                    }
                 } else {
                     ProjectExplorerTable.this.parent.setProject(project);
                 }
@@ -196,8 +199,11 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                 if (e.getButton() != MouseEvent.BUTTON3) return;
 
                 int[] row;
-                if (getSelectedRowCount() > 1) row = getSelectedRows();
-                else row = new int[] { rowAtPoint(e.getPoint()) };
+                if (getSelectedRowCount() > 1) {
+                    row = getSelectedRows();
+                } else {
+                    row = new int[]{rowAtPoint(e.getPoint())};
+                }
 
                 // copy files matching selected (or clicked) rows
                 File[] file = new File[row.length];
@@ -635,10 +641,14 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
      */
     private class ProjectExplorerPopupMenu extends JPopupMenu {
 
-        /** files to export */
+        /**
+         * files to export
+         */
         private File[] files;
 
-        /** directory where to export by default */
+        /**
+         * directory where to export by default
+         */
         private File directory;
 
         /**
@@ -656,8 +666,9 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
             if (files.length == 1) {
                 filename = files[0].getName();
                 basename = filename;
-                if (basename.toLowerCase().endsWith(Ikayaki.FILE_TYPE))
+                if (basename.toLowerCase().endsWith(Ikayaki.FILE_TYPE)) {
                     basename = basename.substring(0, basename.length() - Ikayaki.FILE_TYPE.length());
+                }
             } else {
                 filename = "selected " + files.length + " files";
                 basename = "*";
@@ -669,12 +680,15 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
             this.add(export);
 
             // TODO: some portable way to get a File for disk drive? Or maybe a Setting for export-dirs?
-            for (File dir : new File[] {null, directory, new File("A:/")}) {
-                for (String type : new String[] {"dat", "tdt", "srm"}) {
+            for (File dir : new File[]{null, directory, new File("A:/")}) {
+                for (String type : new String[]{"dat", "tdt", "srm"}) {
                     JMenuItem exportitem;
-                    if (dir == null) exportitem = new JMenuItem(type.toUpperCase() + " file" +
-                                                                (files.length > 1 ? "s" : "") + "...");
-                    else exportitem = new JMenuItem(new File(dir, basename + "." + type).toString());
+                    if (dir == null) {
+                        exportitem = new JMenuItem(type.toUpperCase() + " file" +
+                                (files.length > 1 ? "s" : "") + "...");
+                    } else {
+                        exportitem = new JMenuItem(new File(dir, basename + "." + type).toString());
+                    }
 
                     this.add(exportitem);
 
@@ -693,29 +707,39 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                                 filetype = filename.substring(0, 3).toLowerCase();
                                 JFileChooser chooser = new JFileChooser(directory);
 
-                                if (files.length > 1) chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                                else dirHasFile = true; // we have explicit export-filename in exportdir
+                                if (files.length > 1) {
+                                    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                                } else {
+                                    dirHasFile = true; // we have explicit export-filename in exportdir
+                                }
 
-                                chooser.setFileFilter(new GenericFileFilter(filetype.toUpperCase() + " File", filetype));
+                                chooser.setFileFilter(
+                                        new GenericFileFilter(filetype.toUpperCase() + " File", filetype));
 
-                                if (chooser.showSaveDialog(ProjectExplorerTable.this) == JFileChooser.APPROVE_OPTION)
+                                if (chooser.showSaveDialog(ProjectExplorerTable.this) == JFileChooser.APPROVE_OPTION) {
                                     exportdir = chooser.getSelectedFile();
-                                else return;
+                                } else {
+                                    return;
+                                }
 
-                            } else exportdir = new File(filename).getParentFile();
+                            } else {
+                                exportdir = new File(filename).getParentFile();
+                            }
 
                             // execute export
                             for (File f : files) {
                                 File exportfile;
                                 if (dirHasFile) {
                                     exportfile = exportdir;
-                                    if (!exportfile.getName().toLowerCase().endsWith("." + filetype))
+                                    if (!exportfile.getName().toLowerCase().endsWith("." + filetype)) {
                                         exportfile = new File(exportfile.toString() + "." + filetype);
+                                    }
                                 } else {
                                     String exportname = f.getName();
-                                    if (exportname.toLowerCase().endsWith(Ikayaki.FILE_TYPE))
+                                    if (exportname.toLowerCase().endsWith(Ikayaki.FILE_TYPE)) {
                                         exportname = exportname.substring(0,
-                                            exportname.length() - Ikayaki.FILE_TYPE.length());
+                                                exportname.length() - Ikayaki.FILE_TYPE.length());
+                                    }
                                     exportname += "." + filetype;
                                     exportfile = new File(exportdir, exportname);
                                 }
@@ -723,9 +747,11 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                                 System.out.print("Exporting " + exportfile + "... ");
 
                                 boolean ok = false;
-                                if (filetype.equals("dat")) ok = Project.loadProject(f).exportToDAT(exportfile);
-                                else if (filetype.equals("tdt")) ok = Project.loadProject(f).exportToTDT(exportfile);
-                                else if (filetype.equals("srm")) ok = Project.loadProject(f).exportToSRM(exportfile);
+                                if (filetype.equals("dat")) {
+                                    ok = Project.loadProject(f).exportToDAT(exportfile);
+                                } else if (filetype.equals("tdt")) {
+                                    ok = Project.loadProject(f).exportToTDT(exportfile);
+                                } else if (filetype.equals("srm")) ok = Project.loadProject(f).exportToSRM(exportfile);
 
                                 System.out.println(ok ? "ok" : "ERROR");
 /*

@@ -164,7 +164,7 @@ public class MeasurementDetailsPanel extends ProjectComponent {
         }
 
         public int getRowCount() {
-            
+
             // calculate the expected number of results based on measurement rotations and project type
             int nonSample = 3;
             if (step != null && step.getProject().isHolderCalibration()) {

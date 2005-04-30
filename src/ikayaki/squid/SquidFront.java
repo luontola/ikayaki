@@ -496,9 +496,8 @@ public class SquidFront extends JFrame {
         this.mgetData.setAction(new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    magnetometerLog.append(
-                            Squid.instance().getMagnetometer().getData(param1.getText().charAt(0),
-                                    param2.getText().charAt(0), param3.getText()) + "\r");
+                    magnetometerLog.append(Squid.instance().getMagnetometer().getData(param1.getText().charAt(0),
+                            param2.getText().charAt(0), param3.getText()) + "\r");
                 } catch (IOException ex) {
                     magnetometerLog.append("getDAta failed\r");
                 }

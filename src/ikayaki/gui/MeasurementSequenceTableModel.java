@@ -28,8 +28,6 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ikayaki.gui.SequenceColumn.*;
-
 /**
  * Handles the showing and editing of a project's measurement sequence. The columns that are being shown can be selected
  * on a per project basis, and the selections are remembered even after the project has been closed.

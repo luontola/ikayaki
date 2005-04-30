@@ -1305,8 +1305,8 @@ public class Project {
 //            s = Math.toRadians(getStrike());
 //            d = Math.toRadians(getDip() + 180.0);   // TODO: this might be wrong. just flip the sign of Z and Y.
 //        } else {
-            s = Math.toRadians(getStrike());
-            d = Math.toRadians(getDip());
+        s = Math.toRadians(getStrike());
+        d = Math.toRadians(getDip());
 //        }
 
         if (sampleType == CORE) {

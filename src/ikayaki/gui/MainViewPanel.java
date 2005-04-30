@@ -22,9 +22,13 @@
 
 package ikayaki.gui;
 
-import ikayaki.*;
+import ikayaki.Ikayaki;
+import ikayaki.Project;
+import ikayaki.ProjectEvent;
+import ikayaki.Settings;
 import ikayaki.squid.SerialIO;
 import ikayaki.squid.Squid;
+import ikayaki.util.ComponentPrinter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +38,6 @@ import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
-import ikayaki.util.ComponentPrinter;
 
 /**
  * Creates the main view panels (split panels) and Squid and Project components. It also tells everybody if the current
