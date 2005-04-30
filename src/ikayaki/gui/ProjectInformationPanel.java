@@ -533,7 +533,7 @@ public class ProjectInformationPanel extends ProjectComponent {
                 new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
         final JLabel label10 = new JLabel();
-        label10.setText("Location");
+        label10.setText("Area");
         contentPane.add(label10,
                 new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE,
                         GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null));
