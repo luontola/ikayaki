@@ -730,6 +730,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
                     for (int i = 0; i < steps.length; i++) {
                         getProject().addStep(index, new MeasurementStep());
                     }
+                    // the new steps are get automatically selected, if we just leave the selection untouched
                 }
             };
             action.putValue(Action.NAME, "Insert Before");
@@ -751,6 +752,8 @@ public class MeasurementSequencePanel extends ProjectComponent {
                     for (int i = 0; i < steps.length; i++) {
                         getProject().addStep(index, new MeasurementStep());
                     }
+                    sequenceTable.clearSelection();
+                    sequenceTable.getSelectionModel().addSelectionInterval(index, index + steps.length - 1);
                 }
             };
             action.putValue(Action.NAME, "Insert After");
