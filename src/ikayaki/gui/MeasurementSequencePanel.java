@@ -577,18 +577,19 @@ public class MeasurementSequencePanel extends ProjectComponent {
     public void measurementUpdated(MeasurementEvent event) {
         if (event.getType() == MeasurementEvent.Type.STEP_START) {
 
-            // scroll the row visible
+            // scroll the row visible, and select it to show the measurement's details
             for (int i = getProject().getSteps() - 1; i >= 0; i--) {
                 if (getProject().getStep(i) == event.getStep()) {
+                    sequenceTable.getSelectionModel().setSelectionInterval(i, i);
                     scrollToRow(i);
                     scrollToRow(Math.min(i + 2, sequenceTableModel.getRowCount() - 1));
                     break;
                 }
             }
-        } else if (event.getType() == MeasurementEvent.Type.VALUE_MEASURED) {
-
-            // show the details of the latest measurement
-            getDetailsPanel().setStep(event.getStep());
+//        } else if (event.getType() == MeasurementEvent.Type.VALUE_MEASURED) {
+//
+//            // show the details of the latest measurement
+//            getDetailsPanel().setStep(event.getStep());
         }
     }
 
