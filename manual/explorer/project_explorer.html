@@ -4,6 +4,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<meta name="Feeling-of-the-day" content="Rising from the ground, growing smaller, seeing all the blue, knowing life can't hurt."/>
 <link rel="stylesheet" type="text/css" href="../tyyli.css"/>
 <title></title>
 </head>
@@ -13,8 +14,49 @@
 
 <h1>Project explorer</h1>
 
-<h2>Example header</h2>
+<comment>TODO: add image here.</comment>
+
+<h2>Changing current directory</h2>
+
+<p>Three ways for doing this:</p>
+
+<comment>TODO: here a picture showing all three click choices. Maybe a collage showing also 1) dir-chooser-dialog, 2) dir-history-popup and 3) autocomplete-popup.</comment>
+
+<ol>
+<li>Click <code>Browse...</code>, use the opening standard directory chooser dialog to select directory to change to.</li>
+<li>Click the down-arrow next to text field showing the current directory; click desired directory from appearing directory history.</li>
+Directory history shows recently visited directories, where project files were opened. Last visited directory is shown on the top.
+<li>Click into the text field showing current directory; write the new directory there.</li>
+Use <kbd>down</kbd>- and <kbd>up</kbd>-arrows, or <kbd>tabulator</kbd> and <kbd>shift-tabulator</kbd> to cycle through appearing autocomplete list. Press <kbd>enter</kbd> to change the directory. If the directory does not exist, text field is flashed red for error and directory is not changed. While typing a new directory, press <kbd>esc</kbd> to cancel and revert the text field back to current directory.
+</ol>
+
+<h2>Opening a project</h2>
+
+<p>Click desired project from file list; clicked project will open.</p>
+
+<h2>Creating a new project</h2>
+
+<comment>TODO: add image here showing where to initially click.</comment>
+
+<p>Click into the empty text field below project file list; write the name for new project. Click <code>AF</code> combobox to change project type as <code>Thellier</code> or <code>Thermal</code>, if needed. Click <code>Create New</code>, or press <kbd>enter</kbd>, to create the new project into current directory. If a project with the same name exists, or project filename has errors, text field is flashed red and the project is not created.</p>
+
+<h2>Measuring selected project</h2>
+
+<p>See <a href="../af/af.html">AF</a> or <a href="../thellier/thellier.html">Thellier</a> measuring sequence. The project being measured is shown with a purple background, and just-measured with a green one.</p>
+
+<h2>Project list headers</h2>
+
+<p><code>Name</code>-columnd shows the project file name (without <code>.ika</code> extension).<br>
+<code>Type</code>-column indicates project type: <code>AF</code>, <code>Thellier</code> or <code>Thermal</code>.<br>
+<code>Modified</code>-columnd holds the last modification time of the project. Any change to project's state modifies and saves the project, such as executing a measuring step or changing project information fields.</p>
+
+<h2>Sorting the project list</h2>
+
+<p>Project list can be sorted with any of the column headers (<code>Name</code>, <code>Type</code> or <code>Modified</code>) by clicking that header.</p>
+
+<h2>Exporting project(s) as DAT, TDT or SRM files</h2>
+
+<p>Right-click project file to export, or, <kbd>shift</kbd>-click, <kbd>ctrl</kbd>-click or drag mouse to select multiple files and right-click on the selection. Chooce desired export format and location from appearing popup menu. If any of the first choices with no location is selected, a file- or directory-chooser dialog appears; use it to specify filename (for single file export) or directory (for multiple file export) where to export.</p>
 
 </body>
 </html>
-
