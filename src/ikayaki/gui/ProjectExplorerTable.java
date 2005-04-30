@@ -250,7 +250,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         // StructureChanged resets columns' PreferredWidths, so they must be set again...
         explorerTableModel.fireTableStructureChanged();
 
-        // TODO: set column sizes somehow automatically, according to table contents? look at the example in MeasurementSequencePanel method updateColumns()
+        // set column default widths. if these are not wide enough, fitColumnWidths() will make them wider.
         for (int col = 0; col < this.columns.length; col++) {
             TableColumn column = this.getColumnModel().getColumn(col);
             switch (this.columns[col]) {
