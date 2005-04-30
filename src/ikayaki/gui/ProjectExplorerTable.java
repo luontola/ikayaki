@@ -268,7 +268,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
             case COLUMN_LASTMEASURE:
                 column.setMinWidth(100);
                 column.setMaxWidth(100);
-                break;   // should be wide enough for dates like "22.12.2005 22:22"
+                break;   // should be wide enough for dates like "22.12.2005 22:22" with bold font
             case COLUMN_UNMEASURED:
                 column.setMinWidth(45);
                 column.setMaxWidth(45);
