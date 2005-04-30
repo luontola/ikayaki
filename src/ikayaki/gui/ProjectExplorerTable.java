@@ -278,6 +278,41 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
     }
 
     /**
+     * Makes sure that all data fits in their columns (excluding the COLUMN_FILENAME column). Renders every cell of the
+     * table to find out their preferred width, and makes the column wider if the contents does not fit the column.
+     * <p/>
+     * If rendering all cells in the table (such as the project type) will take a long time, it might be good to run
+     * this in a separate thread.
+     */
+    public void fitColumnWidths() {
+        for (int col = 0; col < columns.length; col++) {
+            if (columns[col] != COLUMN_FILENAME) {
+
+                // find out the column's preferred width using the actual cell contents
+                int width = 0;
+                Component comp;
+                for (int row = 0; row < getRowCount(); row++) {
+                    comp = getCellRenderer(row, col).getTableCellRendererComponent(this,
+                            getValueAt(row, col), false, false, row, col);
+                    width = Math.max(width, comp.getPreferredSize().width);
+                }
+                width += 5;
+                if (columnModel.getColumn(col).getMaxWidth() < width) {
+                    // setting min and max width must be done in the event thread
+                    final TableColumn c = columnModel.getColumn(col);
+                    final int w = width;
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            c.setMaxWidth(w); // must set max first to avoid "min > max"
+                            c.setMinWidth(w);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    /**
      * Updates table contents, sets selectedFile index and table selection to selected project file, or -1.
      *
      * @param directory directory whose project files to display, or null to just update the table.
@@ -354,6 +389,9 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                 for (File file : cacheFiles) {
                     if (Thread.interrupted()) return;
                     if (file.canRead()) Project.getType(file);
+
+                    // when everything is cached, resize the columns if all data does not fit
+                    fitColumnWidths();
                 }
             }
         });
