@@ -307,6 +307,7 @@ public class Handler implements SerialIOListener {
             return estimatedPositionEnd;
         }
 
+        // TODO: maybe currentVelocity is not in steps per second?
         double timeSpent = (System.currentTimeMillis() - estimatedPositionStartTime) / 1000.0;    // in seconds
         int pos = estimatedPositionStart + (int) (currentVelocity * timeSpent);
 
@@ -343,6 +344,7 @@ public class Handler implements SerialIOListener {
             return getRotation();
         }
 
+        // TODO: maybe currentVelocity is not in steps per second?
         double timeSpent = (System.currentTimeMillis() - estimatedRotationStartTime) / 1000.0;    // in seconds
         int rotation = estimatedRotationStart + (int) (currentVelocity * timeSpent);
 
