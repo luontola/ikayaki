@@ -167,7 +167,8 @@ public class MeasurementDetailsPanel extends ProjectComponent {
 
             // calculate the expected number of results based on measurement rotations and project type
             int nonSample = 3;
-            if (step != null && step.getProject().isHolderCalibration()) {
+            if (Settings.getHolderCalibration() == null
+                    || (step != null && step.getProject().isHolderCalibration())) {
                 nonSample--;
             }
             int expected = Math.max(1, 4 * Settings.getMeasurementRotations()) + nonSample;
@@ -245,7 +246,8 @@ public class MeasurementDetailsPanel extends ProjectComponent {
 
                 // try to guess the values
                 if (columnIndex == HEADER_COLUMN) {
-                    int i = (step != null && step.getProject().isHolderCalibration())
+                    int i = (Settings.getHolderCalibration() == null
+                            || (step != null && step.getProject().isHolderCalibration()))
                             ? rowIndex + 1
                             : rowIndex;
 
