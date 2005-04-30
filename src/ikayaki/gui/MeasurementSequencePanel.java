@@ -507,7 +507,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
         super.setProject(project);
         sequenceTableModel.setProject(project);
         loadSequenceBox.setSelectedItem(null);
-        setEnabled(project != null);
+        setEnabled(project != null && project.isSequenceEditEnabled());
         resetAddSequence();
         resetLoadSequenceBox();
 
@@ -739,7 +739,9 @@ public class MeasurementSequencePanel extends ProjectComponent {
                     "in front of the selected steps.");
             action.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_I);
 
-            if (steps.length == 0 || getFirstIndex() < getProject().getCompletedSteps()) {
+            if (getProject() == null || !getProject().isSequenceEditEnabled()) {
+                action.setEnabled(false);
+            } else if (steps.length == 0 || getFirstIndex() < getProject().getCompletedSteps()) {
                 action.setEnabled(false);
             }
             return action;
@@ -762,7 +764,9 @@ public class MeasurementSequencePanel extends ProjectComponent {
                     "after the selected steps.");
             action.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
 
-            if (steps.length == 0 || getLastIndex() < getProject().getCompletedSteps() - 1) {
+            if (getProject() == null || !getProject().isSequenceEditEnabled()) {
+                action.setEnabled(false);
+            } else if (steps.length == 0 || getLastIndex() < getProject().getCompletedSteps() - 1) {
                 action.setEnabled(false);
             }
             return action;
@@ -784,7 +788,9 @@ public class MeasurementSequencePanel extends ProjectComponent {
                     "Removes the selected steps from the sequence.");
             action.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_D);
 
-            if (steps.length == 0 || getFirstIndex() < getProject().getCompletedSteps()) {
+            if (getProject() == null || !getProject().isSequenceEditEnabled()) {
+                action.setEnabled(false);
+            } else if (steps.length == 0 || getFirstIndex() < getProject().getCompletedSteps()) {
                 action.setEnabled(false);
             }
             return action;
@@ -849,7 +855,7 @@ public class MeasurementSequencePanel extends ProjectComponent {
                     "Saves all of the steps as a new preset sequence.");
             action.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
 
-            if (getProject().getSteps() == 0) {
+            if (getProject() == null || getProject().getSteps() == 0) {
                 action.setEnabled(false);
             }
             return action;
