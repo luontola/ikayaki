@@ -321,8 +321,8 @@ public class Handler implements SerialIOListener {
         }
 */
 
-        // prevent going over the end limit
-        if ((estimatedPositionStart < estimatedPositionEnd) != (estimatedPositionStart < pos)) {
+        // we started from PositionStart and if we are already on the other side of PositionEnd, stop at PositionEnd  
+        if ((estimatedPositionStart < estimatedPositionEnd) != (pos < estimatedPositionEnd)) {
             return estimatedPositionEnd;
         } else {
             return pos;
