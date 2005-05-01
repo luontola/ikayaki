@@ -46,6 +46,7 @@ import java.util.Date;
 public class Ikayaki extends JFrame {
 
     /* Application information */
+
     public static final String APP_NAME = "Ikayaki";
     public static final String APP_VERSION = "0.92";
     public static final String APP_BUILD = "2005-04-xx";
@@ -53,8 +54,6 @@ public class Ikayaki extends JFrame {
 
     public static final String FILE_TYPE = ".ika";
     public static final String FILE_DESCRIPTION = "Measurement Project";
-
-    public static final String HELP_PAGES = new File("manual/index.html").getAbsolutePath();
 
     public static final String[] AUTHORS = new String[]{
         "Mikko Jormalainen",
@@ -65,11 +64,30 @@ public class Ikayaki extends JFrame {
     };
 
     /* Application files and directories */
+
+    public static final File STARTUP_DIRECTORY = new File(System.getProperty("user.dir")).getAbsoluteFile();
+    public static final String PROGRAM_JAR_NAME = "ikayaki.jar";
+
+    static {
+        // change to the program directory if it was started somewhere else
+        String[] paths = System.getProperty("java.class.path").split(System.getProperty("path.separator"));
+        for (String s : paths) {
+            File file = new File(s);
+            if (file.getName().equals(PROGRAM_JAR_NAME)) {
+                file = file.getAbsoluteFile();
+                System.setProperty("user.dir", file.getParent());
+                break;
+            }
+        }
+    }
+
     public static final File PROPERTIES_FILE = new File("ikayaki.config").getAbsoluteFile();
     public static final File SEQUENCES_FILE = new File("ikayaki.sequences").getAbsoluteFile();
     public static final File CALIBRATION_PROJECT_DIR = new File("calibration").getAbsoluteFile();
     public static final File DEBUG_LOG_DIR = new File("logs").getAbsoluteFile();
     public static final File DEBUG_LOG_FILE = new File("debug.log").getAbsoluteFile();
+    public static final String HELP_PAGES = new File("manual/index.html").getAbsolutePath();
+
 
     /**
      * Starts the program Ikayaki.
@@ -172,9 +190,12 @@ public class Ikayaki extends JFrame {
         if (args.length > 0) {
             File file = new File(args[0]);
             if (file.exists() && file.isFile()) {
-                project = Project.loadProject(file);
+                project = Project.loadProject(file.getAbsoluteFile());
             }
         }
+
+        System.out.println(DEBUG_LOG_DIR);
+        if (true) return;
 
         // redirect a copy of System.err to a file
         try {
@@ -186,9 +207,6 @@ public class Ikayaki extends JFrame {
         } catch (FileNotFoundException e) {
             System.err.println("Unable to write to: " + DEBUG_LOG_FILE);
         }
-
-        // change to the program directory
-        String path = System.getProperty("java.class.path"); // find the absolute location of ikayaki.jar from the path
 
         // the program must be started in the event dispatch thread
         final Project p = project;

@@ -14,7 +14,6 @@
 <classPath>lib\junit.jar</classPath>
 <classPath>lib\looks.jar</classPath>
 <classPath>lib\vecmath.jar</classPath>
-<currentDirectory>.</currentDirectory>
 <embeddedJar>false</embeddedJar>
 <executableName>ikayaki-debug.exe</executableName>
 <iconLocation>..\resources\ikayaki.ico</iconLocation>

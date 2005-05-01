@@ -6,7 +6,6 @@
 <JVMSearchPath>jdkpath</JVMSearchPath>
 <JVMSearchPath>exepath</JVMSearchPath>
 <JVMSearchPath>jview</JVMSearchPath>
-<arguments></arguments>
 <bundledJVMPath>jre</bundledJVMPath>
 <classPath>ikayaki.jar</classPath>
 <classPath>lib\comm.jar</classPath>
@@ -14,7 +13,6 @@
 <classPath>lib\junit.jar</classPath>
 <classPath>lib\looks.jar</classPath>
 <classPath>lib\vecmath.jar</classPath>
-<currentDirectory>.</currentDirectory>
 <embeddedJar>false</embeddedJar>
 <executableName>ikayaki.exe</executableName>
 <iconLocation>..\resources\ikayaki.ico</iconLocation>
