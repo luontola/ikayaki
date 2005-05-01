@@ -185,15 +185,6 @@ public class Ikayaki extends JFrame {
      */
     public static void main(String[] args) {
 
-        // read input parameters and load the optional project file
-        Project project = null;
-        if (args.length > 0) {
-            File file = new File(args[0]);
-            if (file.exists() && file.isFile()) {
-                project = Project.loadProject(file.getAbsoluteFile());
-            }
-        }
-
         // redirect a copy of System.err to a file
         try {
             String message = "\n\n----- " + APP_NAME + " " + APP_VERSION
@@ -203,6 +194,18 @@ public class Ikayaki extends JFrame {
 
         } catch (FileNotFoundException e) {
             System.err.println("Unable to write to: " + DEBUG_LOG_FILE);
+        }
+
+        // read input parameters and load the optional project file
+        Project project = null;
+        if (args.length > 0) {
+            File file = new File(args[0]);
+            if (!file.isAbsolute()) {
+                file = new File(STARTUP_DIRECTORY, file.getPath());
+            }
+            if (file.exists() && file.isFile()) {
+                project = Project.loadProject(file.getAbsoluteFile());
+            }
         }
 
         // the program must be started in the event dispatch thread

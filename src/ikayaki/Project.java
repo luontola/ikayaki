@@ -262,9 +262,12 @@ public class Project {
             throw new NullPointerException();
         }
 
-        // must use only absolute file paths. otherwise the cache could include the same file twise.
-        if (!file.isAbsolute()) {
-            file = file.getAbsoluteFile();
+        // must use only canonical file paths. otherwise the cache could include the same file twise.
+        try {
+            file = file.getCanonicalFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
 
         // create a new file, do not overwrite an old one
@@ -302,9 +305,12 @@ public class Project {
             return null;
         }
 
-        // must use only absolute file paths. otherwise the cache could include the same file twise.
-        if (!file.isAbsolute()) {
-            file = file.getAbsoluteFile();
+        // must use only canonical file paths. otherwise the cache could include the same file twise.
+        try {
+            file = file.getCanonicalFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
 
         // check cache
