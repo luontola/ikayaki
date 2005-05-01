@@ -121,8 +121,11 @@ public class PrintPanel extends JPanel {
 
         /* first step should be with none-demagnetization so its Intensity is NRM */
         if (project.getStep(0) != null) {
-            double q = 25.13 * project.getValue(0, MeasurementValue.MAGNETIZATION) / project.getSusceptibility();
-            qValue.setText("" + (int) (q * 100) / 100.0);
+            Double mag = project.getValue(0, MeasurementValue.MAGNETIZATION);
+            if (mag != null) {
+                double q = 25.13 * mag / project.getSusceptibility();
+                qValue.setText("" + (int) (q * 100) / 100.0);
+            }
         }
         if (project.getVolume() != 0) {
             double d = project.getMass() / project.getVolume();

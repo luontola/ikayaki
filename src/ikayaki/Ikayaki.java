@@ -187,6 +187,9 @@ public class Ikayaki extends JFrame {
             System.err.println("Unable to write to: " + DEBUG_LOG_FILE);
         }
 
+        // change to the program directory
+        String path = System.getProperty("java.class.path"); // find the absolute location of ikayaki.jar from the path
+
         // the program must be started in the event dispatch thread
         final Project p = project;
         SwingUtilities.invokeLater(new Runnable() {
