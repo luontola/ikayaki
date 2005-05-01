@@ -194,9 +194,6 @@ public class Ikayaki extends JFrame {
             }
         }
 
-        System.out.println(DEBUG_LOG_DIR);
-        if (true) return;
-
         // redirect a copy of System.err to a file
         try {
             String message = "\n\n----- " + APP_NAME + " " + APP_VERSION
