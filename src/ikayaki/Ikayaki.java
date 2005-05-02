@@ -88,9 +88,48 @@ public class Ikayaki extends JFrame {
     public static final File DEBUG_LOG_FILE = new File("debug.log").getAbsoluteFile();
     public static final String HELP_PAGES = new File("manual/index.html").getAbsolutePath();
 
+    /**
+     * Starts the program with the provided command line parameters. If the location of a project file is given as a
+     * parameter, the program will try to load it.
+     *
+     * @param args command line parameters.
+     */
+    public static void main(String[] args) {
+
+        // redirect a copy of System.err to a file
+        try {
+            String message = "\n\n----- " + APP_NAME + " " + APP_VERSION
+                    + " started on " + new Date().toString() + " -----";
+            PrintStream logger = new LoggerPrintStream(new FileOutputStream(DEBUG_LOG_FILE, true), System.err, message);
+            System.setErr(logger);
+
+        } catch (FileNotFoundException e) {
+            System.err.println("Unable to write to: " + DEBUG_LOG_FILE);
+        }
+
+        // read input parameters and load the optional project file
+        Project project = null;
+        if (args.length > 0) {
+            File file = new File(args[0]);
+            if (!file.isAbsolute()) {
+                file = new File(STARTUP_DIRECTORY, file.getPath());
+            }
+            if (file.exists() && file.isFile()) {
+                project = Project.loadProject(file.getAbsoluteFile());
+            }
+        }
+
+        // the program must be started in the event dispatch thread
+        final Project p = project;
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new Ikayaki(p);
+            }
+        });
+    }
 
     /**
-     * Starts the program Ikayaki.
+     * Starts the user interface of the program.
      *
      * @param project a project to be opened when the program starts, or null to open no project.
      * @throws HeadlessException if GraphicsEnvironment.isHeadless() returns true.
@@ -175,45 +214,5 @@ public class Ikayaki extends JFrame {
         } else {
             super.setTitle(APP_NAME + " " + APP_VERSION);
         }
-    }
-
-    /**
-     * Starts the program with the provided command line parameters. If the location of a project file is given as a
-     * parameter, the program will try to load it.
-     *
-     * @param args command line parameters.
-     */
-    public static void main(String[] args) {
-
-        // redirect a copy of System.err to a file
-        try {
-            String message = "\n\n----- " + APP_NAME + " " + APP_VERSION
-                    + " started on " + new Date().toString() + " -----";
-            PrintStream logger = new LoggerPrintStream(new FileOutputStream(DEBUG_LOG_FILE, true), System.err, message);
-            System.setErr(logger);
-
-        } catch (FileNotFoundException e) {
-            System.err.println("Unable to write to: " + DEBUG_LOG_FILE);
-        }
-
-        // read input parameters and load the optional project file
-        Project project = null;
-        if (args.length > 0) {
-            File file = new File(args[0]);
-            if (!file.isAbsolute()) {
-                file = new File(STARTUP_DIRECTORY, file.getPath());
-            }
-            if (file.exists() && file.isFile()) {
-                project = Project.loadProject(file.getAbsoluteFile());
-            }
-        }
-
-        // the program must be started in the event dispatch thread
-        final Project p = project;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new Ikayaki(p);
-            }
-        });
     }
 }
