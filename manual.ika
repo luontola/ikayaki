@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project type="AF" version="1.0">
+  <properties dip="0.0" mass="1.0" normalization="VOLUME" orientation="MINUS_Z" sampletype="HAND" strike="0.0" susceptibility="1.0" volume="1.0">
+    <property key="longitude" value=""/>
+    <property key="site" value=""/>
+    <property key="operator" value=""/>
+    <property key="measurementType" value="MANUAL"/>
+    <property key="date" value="27.4.2005"/>
+    <property key="comment" value=""/>
+    <property key="visibleColumns" value="VOLUME+"/>
+    <property key="latitude" value=""/>
+    <property key="rockType" value=""/>
+    <property key="location" value=""/>
+  </properties>
+  <sequence name="">
+    <step done="1" mass="-1.0" stepvalue="1.1" susceptibility="-1.0" timestamp="1114703644999" volume="-1.0">
+      <result rotation="0" type="NOISE" x="5.604341847074454E-7" y="1.0394808894427343E-7" z="1.0868827376552791E-7"/>
+      <result rotation="0" type="SAMPLE" x="9.411686556973725E-5" y="2.08879965865604E-5" z="2.0120698892410782E-5"/>
+      <result rotation="90" type="SAMPLE" x="7.363868735214554E-5" y="1.284561550085861E-5" z="8.789379536585747E-5"/>
+      <result rotation="180" type="SAMPLE" x="7.82703370431945E-5" y="6.615881141974875E-5" z="3.8307298040796034E-5"/>
+      <result rotation="270" type="SAMPLE" x="7.011207875122774E-5" y="1.7215538055565804E-5" z="1.0010805212146057E-5"/>
+    </step>
+  </sequence>
+</project>

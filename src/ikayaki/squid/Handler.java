@@ -252,6 +252,11 @@ public class Handler implements SerialIOListener {
         estimatedPositionStartTime = System.currentTimeMillis();
         currentPosition = position;
         estimatedPositionEnd = currentPosition;
+        System.err.println("Start Move:" +
+                           " \tstartTime=" + estimatedPositionStartTime +
+                           " \tstart=" + estimatedPositionStart +
+                           " \tend=" + estimatedPositionEnd);
+
     }
 
     /**
@@ -268,12 +273,21 @@ public class Handler implements SerialIOListener {
         while (estimatedRotationEnd < estimatedRotationStart) {
             estimatedRotationEnd += HANDLER_ROTATION;
         }
+        System.err.println("Start Rotate:" +
+                           " \tstartTime=" + estimatedPositionStartTime +
+                           " \tstart=" + estimatedPositionStart +
+                           " \tend=" + estimatedPositionEnd);
+
     }
 
     /**
      * Stops calculating estimated current position
      */
     private void fireMovementStopped() {
+        System.err.println("Stop Move:" +
+                           " \ttravel Time=" + (System.currentTimeMillis()- estimatedPositionStartTime) +
+                           " \tstart=" + estimatedPositionStart +
+                           " \tend=" + estimatedPositionEnd);
         if (currentPosition == Integer.MAX_VALUE || currentPosition == Integer.MIN_VALUE) {
             int pos = getEstimatedPosition();
             estimatedPositionStart = pos;
@@ -282,12 +296,18 @@ public class Handler implements SerialIOListener {
             estimatedPositionStart = currentPosition;
             estimatedPositionEnd = currentPosition;
         }
+
+
     }
 
     /**
      * Stops calculating estimated current position
      */
     private void fireRotationStopped() {
+        System.err.println("Stop Rotate:" +
+                           " \ttravel Time=" + (System.currentTimeMillis()- estimatedPositionStartTime) +
+                           " \tstart=" + estimatedPositionStart +
+                           " \tend=" + estimatedPositionEnd);
         estimatedRotationStart = currentRotation;
         estimatedRotationEnd = currentRotation;
     }
@@ -321,7 +341,7 @@ public class Handler implements SerialIOListener {
         }
 */
 
-        // we started from PositionStart and if we are already on the other side of PositionEnd, stop at PositionEnd  
+        // we started from PositionStart and if we are already on the other side of PositionEnd, stop at PositionEnd
         if ((estimatedPositionStart < estimatedPositionEnd) != (pos < estimatedPositionEnd)) {
             return estimatedPositionEnd;
         } else {
