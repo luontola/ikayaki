@@ -162,7 +162,7 @@ public class Ikayaki extends JFrame {
     }
 
     /**
-     * Removes from the specified directory all files which are old enough.
+     * Removes all old files from the specified directory.
      *
      * @param directory the directory from which the old files will be removed.
      * @param maxDays   the maximum age for the files in days.
