@@ -96,6 +96,10 @@ public class Ikayaki extends JFrame {
      */
     public static void main(String[] args) {
 
+        // clean up log files
+        logFileCleanup(DEBUG_LOG_FILE, 1024 * 1024, 5);
+        logDirCleanup(DEBUG_LOG_DIR, 30);
+
         // redirect a copy of System.err to a file
         try {
             String message = "\n\n----- " + APP_NAME + " " + APP_VERSION
@@ -126,6 +130,39 @@ public class Ikayaki extends JFrame {
                 new Ikayaki(p);
             }
         });
+    }
+
+    /**
+     * Removes old entries from a log file. When the maximum size for the current log file is reached, it will be
+     * renamed to file.1, file.2 and so on.
+     *
+     * @param logFile   the log file to be cleaned.
+     * @param maxLength maximum size in bytes for an individual log file.
+     * @param maxFiles  maximum number of log files. When the number is reached, the oldest file will be deleted.
+     */
+    private static void logFileCleanup(File logFile, long maxLength, int maxFiles) {
+        if (!logFile.isFile() || logFile.length() <= maxLength) {
+            return;
+        }
+
+        // rename the files to file.1, file.2 and so on
+        for (int i = maxFiles - 1; i >= 0; i--) {
+            File from = new File(logFile.getAbsolutePath() + (i == 0 ? "" : "." + i));
+            File to = new File(logFile.getAbsolutePath() + "." + (i + 1));
+            if (from.isFile() && !to.exists()) {
+                from.renameTo(to);
+            }
+        }
+
+        // delete the oldest file
+        File f = new File(logFile.getAbsolutePath() + "." + maxFiles);
+        if (f.isFile()) {
+            f.delete();
+        }
+    }
+
+    private static void logDirCleanup(File directory, int maxDays) {
+
     }
 
     /**
