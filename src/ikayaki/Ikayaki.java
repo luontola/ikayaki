@@ -133,7 +133,7 @@ public class Ikayaki extends JFrame {
     }
 
     /**
-     * Removes old entries from a log file. When the maximum size for the current log file is reached, it will be
+     * Removes the old entries of a log file. When the maximum size for the current log file is reached, it will be
      * renamed to file.1, file.2 and so on.
      *
      * @param logFile   the log file to be cleaned.
@@ -161,8 +161,28 @@ public class Ikayaki extends JFrame {
         }
     }
 
+    /**
+     * Removes from the specified directory all files which are old enough.
+     *
+     * @param directory the directory from which the old files will be removed.
+     * @param maxDays   the maximum age for the files in days.
+     */
     private static void logDirCleanup(File directory, int maxDays) {
+        if (!directory.isDirectory()) {
+            return;
+        }
 
+        // get the directory contents and set time limits
+        File[] files = directory.listFiles();
+        long now = System.currentTimeMillis();
+        long maxTime = (long) (maxDays) * 24 * 3600 * 1000;
+
+        // delete all files which are more than maxDays old
+        for (File file : files) {
+            if (file.isFile() && (now - file.lastModified()) > maxTime) {
+                file.delete();
+            }
+        }
     }
 
     /**
