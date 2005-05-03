@@ -274,9 +274,9 @@ public class Handler implements SerialIOListener {
             estimatedRotationEnd += HANDLER_ROTATION;
         }
         System.err.println("Start Rotate:" +
-                           " \tstartTime=" + estimatedPositionStartTime +
-                           " \tstart=" + estimatedPositionStart +
-                           " \tend=" + estimatedPositionEnd);
+                           " \tstartTime=" + estimatedRotationStartTime +
+                           " \tstart=" + estimatedRotationStart +
+                           " \tend=" + estimatedRotationEnd);
 
     }
 
@@ -305,9 +305,9 @@ public class Handler implements SerialIOListener {
      */
     private void fireRotationStopped() {
         System.err.println("Stop Rotate:" +
-                           " \ttravel Time=" + (System.currentTimeMillis()- estimatedPositionStartTime) +
-                           " \tstart=" + estimatedPositionStart +
-                           " \tend=" + estimatedPositionEnd);
+                           " \ttravel Time=" + (System.currentTimeMillis()- estimatedRotationStartTime) +
+                           " \tstart=" + estimatedRotationStart +
+                           " \tend=" + estimatedRotationEnd);
         estimatedRotationStart = currentRotation;
         estimatedRotationEnd = currentRotation;
     }
@@ -366,7 +366,7 @@ public class Handler implements SerialIOListener {
 
         // TODO: maybe currentVelocity is not in steps per second?
         double timeSpent = (System.currentTimeMillis() - estimatedRotationStartTime) / 1000.0;    // in seconds
-        int rotation = estimatedRotationStart + (int) (currentVelocity * timeSpent);
+        int rotation = estimatedRotationStart + (int) ((20*currentVelocity) * timeSpent);
 
         // prevent going over the end limit
         if (rotation > estimatedRotationEnd) {
