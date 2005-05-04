@@ -28,7 +28,6 @@ import ikayaki.ProjectEvent;
 import ikayaki.Settings;
 import ikayaki.squid.SerialIO;
 import ikayaki.squid.Squid;
-import ikayaki.util.ComponentPrinter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -243,7 +242,7 @@ public class MainViewPanel extends ProjectComponent {
         add(tabControls, "West");
         setBackground(new Color(247, 243, 239));
 
-//        // TODO: testing... initialize with no project
+//        // TESTING: initialize with no project
 //        setProject(null);
 
         /* Initialize everything with the loaded project or null */

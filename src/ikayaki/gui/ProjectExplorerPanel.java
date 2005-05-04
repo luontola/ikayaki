@@ -476,11 +476,7 @@ public class ProjectExplorerPanel extends ProjectComponent {
                     }
 
                     Project.Type type = (Project.Type) newProjectType.getSelectedItem();
-
                     File file = new File(directory, name);
-
-                    // TODO: should we check here if the file is legitimate? or does Project.createProject check it already?
-
                     Project created = Project.createProject(file, type);
 
                     if (created == null) {

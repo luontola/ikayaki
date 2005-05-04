@@ -38,7 +38,8 @@ import java.io.IOException;
 /**
  * Graphical front-end for using the SQUID Interface's protocol level commands.
  *
- * @author Esko Luontola
+ * @author Esko Luontola, Aki Korpua
+ * @deprecated This class is not up to date. It is not recommended to use this.
  */
 public class SquidFront extends JFrame {
 

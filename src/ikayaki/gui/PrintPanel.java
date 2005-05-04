@@ -135,7 +135,8 @@ public class PrintPanel extends JPanel {
         volume.setText(project.getVolume() > 0 ? nf.format(project.getVolume()) + " cm\u00B3" : "");
         nf.setMinimumFractionDigits(0);
         nf.setMaximumFractionDigits(0);
-        susceptibility.setText(project.getSusceptibility() > 0 ? nf.format(project.getSusceptibility()) + "E-6 SI" : "");
+        susceptibility.setText(
+                project.getSusceptibility() > 0 ? nf.format(project.getSusceptibility()) + "E-6 SI" : "");
 
         /* calculate Density and Q (what ever it is, hehe) */
 

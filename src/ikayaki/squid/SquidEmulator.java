@@ -37,6 +37,8 @@ import java.util.Stack;
  * behaves same way.
  *
  * @author Aki Korpua
+ * @deprecated This emulator is no up to date and behaves differently from the real machine. Test the program with the
+ *             real machine instead.
  */
 public class SquidEmulator {
     public SquidEmulator() {
