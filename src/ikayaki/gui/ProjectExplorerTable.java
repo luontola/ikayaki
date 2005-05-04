@@ -479,108 +479,109 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
         }
 
         public Object getValueAt(int row, int column) {
-            Object value = null;
-            try {
-                File file = files[row];
-//                Object value;
+//            Object value = null;
+//            try {
+            File file = files[row];
+            Object value;
 
-                switch (columns[column]) { // translate visible column -> all columns
-                case COLUMN_FILENAME:
-                    String filename = file.getName();
-                    value = filename.substring(0, filename.length() - Ikayaki.FILE_TYPE.length());
-                    break;
+            switch (columns[column]) { // translate visible column -> all columns
+            case COLUMN_FILENAME:
+                String filename = file.getName();
+                value = filename.substring(0, filename.length() - Ikayaki.FILE_TYPE.length());
+                break;
 
-                case COLUMN_TYPE:
-                    Project.Type type = Project.getType(file);
-                    if (type != null) {
-                        value = type.toString();
-                    } else {
-                        value = null;
-                    }
-                    break;
+            case COLUMN_TYPE:
+                Project.Type type = Project.getType(file);
+                if (type != null) {
+                    value = type.toString();
+                } else {
+                    value = null;
+                }
+                break;
 
-                case COLUMN_LASTMOD:
-                    value = DateFormat.getInstance().format(file.lastModified());
+            case COLUMN_LASTMOD:
+                value = DateFormat.getInstance().format(file.lastModified());
 //                    value = "22.12.2005 22:22"; // testing if this fits to the table
-                    break;
+                break;
 
-                case COLUMN_LASTMEASURE:
-                    Project p = Project.loadProject(file);
-                    if (p == null) {
-                        value = null;
-                        break;
-                    }
-                    Date date = p.getTimestamp();
-//                    date = new Date(105, 11, 22, 22, 22, 22); // testing if this fits to the table
-                    if (date == null) {
-                        value = null;
-                    } else {
-                        value = DateFormat.getInstance().format(date);
-                    }
-                    break;
-
-                case COLUMN_UNMEASURED:
-                    p = Project.loadProject(file);
-                    if (p == null) {
-                        value = null;
-                        break;
-                    }
-                    date = p.getTimestamp();
-                    if (date == null) {
-                        value = null;
-                    } else {
-                        value = (new Date().getTime() - date.getTime()) / 3600000 + " h";
-                    }
-                    break;
-
-                default:
-                    assert false;
+            case COLUMN_LASTMEASURE:
+                Project p = Project.loadProject(file);
+                if (p == null) {
                     value = null;
                     break;
                 }
-
-                // choose the style according to the project's state
-                StyledWrapper wrapper;
-                if (file.equals(measuringProjectFile)) {
-                    wrapper = measuringWrapper;
-                } else if (file.equals(doneRecentlyProjectFile)) {
-                    wrapper = doneRecentlyWrapper;
+                Date date = p.getTimestamp();
+//                    date = new Date(105, 11, 22, 22, 22, 22); // testing if this fits to the table
+                if (date == null) {
+                    value = null;
                 } else {
-                    wrapper = defaultWrapper;
+                    value = DateFormat.getInstance().format(date);
                 }
-                wrapper.font = null;        // reset calibration notice font
+                break;
 
-                // styles for the calibration panel
-                if (isCalibration) {
-                    Project p = Project.loadProject(file);
-                    if (p == null) {
-                        return null;
-                    }
-                    Date date = p.getTimestamp();
-                    if (date == null) {
+            case COLUMN_UNMEASURED:
+                p = Project.loadProject(file);
+                if (p == null) {
+                    value = null;
+                    break;
+                }
+                date = p.getTimestamp();
+                if (date == null) {
+                    value = null;
+                } else {
+                    value = (new Date().getTime() - date.getTime()) / 3600000 + " h";
+                }
+                break;
+
+            default:
+                assert false;
+                value = null;
+                break;
+            }
+
+            // choose the style according to the project's state
+            StyledWrapper wrapper;
+            if (file.equals(measuringProjectFile)) {
+                wrapper = measuringWrapper;
+            } else if (file.equals(doneRecentlyProjectFile)) {
+                wrapper = doneRecentlyWrapper;
+            } else {
+                wrapper = defaultWrapper;
+            }
+            wrapper.font = null;        // reset calibration notice font
+
+            // styles for the calibration panel
+            if (isCalibration) {
+                Project p = Project.loadProject(file);
+                if (p == null) {
+                    return null;
+                }
+                Date date = p.getTimestamp();
+                if (date == null) {
+                    wrapper.font = calibrationNoticeFont;
+                } else {
+                    // alert the user if the calibration has not been done today
+                    int hoursElapsed = (int) (new Date().getTime() - date.getTime()) / 3600000;
+                    if (hoursElapsed >= 18) {
                         wrapper.font = calibrationNoticeFont;
-                    } else {
-                        // alert the user if the calibration has not been done today
-                        int hoursElapsed = (int) (new Date().getTime() - date.getTime()) / 3600000;
-                        if (hoursElapsed >= 18) {
-                            wrapper.font = calibrationNoticeFont;
-                        }
                     }
-                }
-
-                // return the wrapped value
-                wrapper.value = value;
-                return wrapper;
-            } finally {
-                if (!isCalibration) {
-                    System.err.print(column + " " + row + "\t");
-                    System.err.print("'" + value + "'");
-                    for (int i : columns) {
-                        System.err.print("\t" + i);
-                    }
-                    System.err.println();
                 }
             }
+
+            // return the wrapped value
+            wrapper.value = value;
+            return wrapper;
+            
+//            } finally {
+//                if (!isCalibration) {
+//                    System.err.print(column + " " + row + "\t");
+//                    System.err.print("'" + value + "'");
+//                    for (int i : columns) {
+//                        System.err.print("\t" + i);
+//                    }
+//                    System.err.println();
+//                }
+//            }
         }
 
         @Override public Class<?> getColumnClass(int columnIndex) {
