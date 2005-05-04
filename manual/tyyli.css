@@ -35,4 +35,5 @@ a {
 comment {
 	font-variant: small-caps;
 	color: grey;
+	display: block;
 }
