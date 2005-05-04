@@ -879,7 +879,14 @@ public class Settings {
         throw new IllegalArgumentException("Not a calibration project: " + file);
     }
 
-    public static synchronized MeasurementResult getHolderCalibration() {
+    public static MeasurementResult getHolderCalibration() {
+        /* NOTE:
+         * Making this method synchronized causes sometimes deadlock
+         * when this method tries to aquire a lock on Project class,
+         * while another tread is loading a project file and tries
+         * to aquire a lock on Settings class in Project.isHolderCalibration().
+         */
+
         File file = getHolderCalibrationFile();
         if (file == null) {
             return null;

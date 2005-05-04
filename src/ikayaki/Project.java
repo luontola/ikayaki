@@ -135,7 +135,7 @@ public class Project {
     private double strike = 0.0;
 
     /**
-     * Dip of the sample. Will be used to create the transform matrix. The unit is degrees (-90 to 90).
+     * Dip of the sample. Will be used to create the transform matrix. The unit is degrees (0 to 180).
      */
     private double dip = 0.0;
 
@@ -1210,14 +1210,14 @@ public class Project {
     }
 
     /**
-     * Returns the dip of the sample. The unit is degrees (-90 to 90).
+     * Returns the dip of the sample. The unit is degrees (0 to 180).
      */
     public synchronized double getDip() {
         return dip;
     }
 
     /**
-     * Sets the dip of the sample and calls updateTransforms(). The unit is degrees (-90 to 90).
+     * Sets the dip of the sample and calls updateTransforms(). The unit is degrees (0 to 180).
      */
     public synchronized void setDip(double dip) {
         this.dip = dip;
@@ -1311,13 +1311,8 @@ public class Project {
     private synchronized void updateTransforms() {
         double s;
         double d;
-//        if (orientation == MINUS_Z) {
-//            s = Math.toRadians(getStrike());
-//            d = Math.toRadians(getDip() + 180.0);   // TODO: this might be wrong. just flip the sign of Z and Y.
-//        } else {
         s = Math.toRadians(getStrike());
         d = Math.toRadians(getDip());
-//        }
 
         if (sampleType == CORE) {
             // core sample: sample -> geographic
@@ -1332,32 +1327,7 @@ public class Project {
         } else {
             assert false;
         }
-//        System.out.println(transform.m00 + "\t" + transform.m01 + "\t" + transform.m02);
-//        System.out.println(transform.m10 + "\t" + transform.m11 + "\t" + transform.m12);
-//        System.out.println(transform.m20 + "\t" + transform.m21 + "\t" + transform.m22);
-//        System.out.println();
-//        if (orientation == PLUS_Z) {
-//            // TODO: this method might give wrong values. check the matrices. appears that the +/-Z is not working right.
-//            // +Z position -> -Z position
-//
-//            /*
-//             *  transform multipied by
-//             *   [[-1  0  0 ]
-//             *    [ 0 -1  0 ]
-//             *    [ 0  0  1 ]]
-//             */
-////            transform.setColumn(0, -transform.m00, -transform.m10, -transform.m20);
-////            transform.setColumn(1, -transform.m01, -transform.m11, -transform.m21);
-//
-//            /*
-//             *  transform multipied by
-//             *   [[ 1  0  0 ]
-//             *    [ 0 -1  0 ]
-//             *    [ 0  0 -1 ]]
-//             */
-////            transform.setColumn(1, -transform.m01, -transform.m11, -transform.m21);
-////            transform.setColumn(2, -transform.m02, -transform.m12, -transform.m22);
-//        }
+
         for (int i = 0; i < sequence.getSteps(); i++) {
             sequence.getStep(i).updateTransforms();
         }
