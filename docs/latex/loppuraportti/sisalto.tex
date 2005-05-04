@@ -6,6 +6,8 @@
 
 This document tells how the student project at the Department of Computer Science of University of Helsinki for building a new user interface for the SQUID magnetometer at the Department of Geophysics of the University of Helsinki went. The clients were Lauri Pesonen with his assistants Fabio Donadini and Tomas Kohout from the Department of Geophysics.
 
+The Department of Geophysics uses a SQUID magnetometer for measuring the magnetism of rocks and meteorites. There was already a program for using the machine, but it had bad usability and the work process included the use of many external tools and Excel sheets to convert the measurement results to the desired format. The goal of this project was to make a better user interface for controlling the SQUID.
+
 The name of the produced program is Ikayaki. The name comes from a japanese seafood - dried, grilled squid.
 
 The project took place from 25.1.2005 to 6.5.2005.
@@ -37,7 +39,65 @@ Jenni Valorinta		& Instructor			& valorint@cs.helsinki.fi
 \end{figure}
 
 
-\section{Amount of Work}
+\section{Project}
+
+This section discusses the progress of the project from its beginning to the end.
+
+
+\subsection{Work Flow}
+
+In this project was used the waterfall process model, where the stages were Project Plan, Definition, Design, Production, Testing and Installing. Here is how each of the stages went.
+
+
+\subsubsection{Project Plan}
+
+The project plan was written at the beginning of the project by the project manager (Esko Luontola), while others were working on the definition part of the project. The project plan was completed in two weeks without any problems. Right after that Esko wrote the HourParser program for managing the team's work hours, and the hours lists were up and running in a couple of days.
+
+
+\subsubsection{Definition}
+
+The project was started with a meeting with the client. They introduced to the project team the problem that they were having and gave the source code to the old program. The client had made some suggestions, how the old program could be improved, but it was right away understood by the team that the old program was totally fubar. Esko and Aki K were assigned to have a look at the source code.
+
+The next meeting was held at the client's laboratory where they demonstrated the SQUID magnetometer. At this point the team had only a very faint idea of how the machine is being used. It might have been better to have a private meeting with the project team only before or between these meetings with the client, because during the next couple of meetings there were awfully many things that had to be went through, and it maybe slowed down the beginning of the project.
+
+It was decided that the definition stage would include the creation of a user interface prototype, which made the stage longer than in usual projects, but on the other hand reduced the work in the design stage. The process model for designing the user interface was GUIDe (http://www.cs.helsinki.fi/u/salaakso/). There were held about three user observations with the client, and based on those was designed the user interface and three prototypes based on three goal-based use cases.
+
+The user observations and initial UI designs were done primarily by Samuli, Aki K and Mikko. Aki S was sick for some weeks. It was agreed to have weekly work hours where everybody would work together in designing the UI. This was a successful arrangement. The final versions of the prototypes were made with Powerpoint and they were demonstrated to the client. The client had some problems in understanding the importance of the prototypes and why so much time was spent on making them. The team tried to explain that it is not possible to start writing code without making careful plans, or the end result will not be what the client wants. It would have been better, if the team had prepared better to demonstrate how the UI decisions made by the team were better than those that the client had suggested.
+
+At the end of the definition stage had been produced three UI prototype use cases and written the requirements document. The programming language was decided to be Java instead of C (the project manager managed to push his will through :). There were plans to reuse parts of the old C code and link them to Java with Java Native Interface, but the old code was too incomprehensible. Late in the definition stage it was found out, that there were protocol specifications for the SQUID devices. When those were found, it was easy to dump the reuse of the old program code completely, especially so after Aki S had studied (in design stage) how to do serial communication in Java.
+
+
+\subsubsection{Design}
+
+The program was divided into subsystems and they were assigned for different persons to design. Esko designed the program architecture and Project Data classes, Samuli did the Project Explorer and Manual Controls, Aki K the SQUID Interface and Emulator and Device Configuration and Main Window components, Mikko the Measurement Sequence and Project Info and Details, Aki S the Serial Communication and Graphs. The file format for the program's project files was decided to be XML. The use of IntelliJ IDEA for generating Java GUI code was introduced.
+
+The design document was written so that it would be easy to generate source code with Javadocs from it by using Latex macros. At the end of the design stage, there was held a FTR (Final Technical Review) for the design document.
+
+
+\subsubsection{Production}
+
+The production stage was started with a week of easter holiday. Some work was done during the holiday (Esko), but the coding started in full speed after that. Primarily everybody wrote the code for those parts that they had personally designed. In some cases it was necessary to share the work with others, so that the programming would be completed in time. 
+
+CVS proved to be an invaluable tool. IRC has been especially useful when writing and testing code, because there it is quick to ask for others to help. When creating the Java GUI, in some cases it was possible to use IntelliJ IDEA, with which it was easy to make complex gridbag-layouts in minutes.
+
+The production stage became much longer than initially expected. Reasons for that could have been that the program was much larger than it was told to the team that typical student projects would be. Also some of the team members were not giving their full time to the project. Otherwise the production stage went according to plans without any unremovable obstacles.
+
+
+\subsubsection{Testing}
+
+At first the program was tested without the real SQUID machine. However, the use of an emulator was not successful, because the protocol documentation was not up to date with the reality. The documentation was inaccurate and there had been made some changes to the hardware after writing the documentation. What proved most beneficial in testing the controlling of the SQUID, was the monitoring of how the old program does things. A SerialProxy class was created to log the communication between the old program and the hardware, and between the new program and the hardware.
+
+It had been planned, that JUnit would be used in testing the program. There was not enough time for doing that, so apparently only one JUnit test class was made (for the serial communication). It would be good if the program would be tested completely in the future. JUnit should be used to test the project data classes and the mathematical algorithms. More real measurement data is needed to be able to test that the measurements and calculations are working correctly.
+
+During the testing stage the client gave some extra requirements, that were not included in the requirements document. It was possible to produce most of them, but it was time away from the testing. It would have been best to be able to test with the real machine every day some. The most beneficial way to work was, when changes to the program were made at the laboratory, so that they could be tested right away.
+
+
+\subsubsection{Installing}
+
+The program and its source code was handed to the client at the end of the project. The final version of the program was installed onto their computer. It was not necessary to teach them how to use it, because at least one of the clients had been using the program in the testing stage.
+
+
+\subsection{Amount of Work}
 
 The amount of work that the team did is shown in Figure~\ref{fig:workhours}.
 
