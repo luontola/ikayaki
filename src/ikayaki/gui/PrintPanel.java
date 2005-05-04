@@ -138,8 +138,8 @@ public class PrintPanel extends JPanel {
 
         /* calculate Density and Q (what ever it is, hehe) */
 
-        /* first step should be with none-demagnetization so its Intensity is NRM */
         if (project.getStep(0) != null) {
+            // first step should be with none-demagnetization so its Intensity is NRM
             Double mag = project.getValue(0, MeasurementValue.MAGNETIZATION);
             if (mag != null) {
                 nf.setMinimumFractionDigits(2);
