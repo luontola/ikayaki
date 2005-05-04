@@ -113,9 +113,9 @@ public class PrintPanel extends JPanel {
         longitude.setText(project.getProperty(Project.LONGITUDE_PROPERTY, ""));
         strike.setText("" + project.getStrike());
         dip.setText("" + project.getDip());
-        mass.setText("" + project.getMass());
-        volume.setText("" + project.getVolume());
-        susceptibility.setText("" + project.getSusceptibility());
+        mass.setText(project.getMass() > 0 ? "" + project.getMass() : "");
+        volume.setText(project.getVolume() > 0 ? "" + project.getVolume() : "");
+        susceptibility.setText(project.getSusceptibility() > 0 ? "" + project.getSusceptibility() : "");
 
         /* calculate Density and Q (what ever it is, hehe) */
 
@@ -125,11 +125,15 @@ public class PrintPanel extends JPanel {
             if (mag != null) {
                 double q = 25.13 * mag / project.getSusceptibility();
                 qValue.setText("" + (int) (q * 100) / 100.0);
+            } else {
+                qValue.setText("");
             }
         }
-        if (project.getVolume() != 0) {
+        if (project.getMass() > 0 && project.getVolume() > 0) {
             double d = project.getMass() / project.getVolume();
             density.setText("" + (int) (d * 100) / 100.0);
+        } else {
+            density.setText("");
         }
         /* Sequence Table */
         sequenceTableModel = new PrintSequenceTableModel(project);
