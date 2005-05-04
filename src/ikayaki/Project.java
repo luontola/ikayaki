@@ -774,6 +774,34 @@ public class Project {
     }
 
     /**
+     * Adds spaces to a string until it is the right length. Used when exporting to different file formats.
+     *
+     * @param s         the string to be padded.
+     * @param length    the desired length for the result string.
+     * @param alignment alignmet of the text. -1 for left, 0 for center and 1 for right align.
+     * @return the input string appended with spaces. Its length is equal or greater to the specified length.
+     */
+    private static String pad(String s, int length, int alignment) {
+        while (s.length() < length) {
+            if (alignment < 0) {
+                // left align
+                s = s + " ";
+            } else if (alignment > 0) {
+                // right align
+                s = " " + s;
+            } else {
+                // center
+                if (s.length() % 2 == 0) {
+                    s = s + " ";
+                } else {
+                    s = " " + s;
+                }
+            }
+        }
+        return s;
+    }
+
+    /**
      * Writes the project to a file in DAT format. Will overwrite the file if it already exists.
      *
      * @param file the file to write to.
@@ -970,34 +998,6 @@ public class Project {
             }
         }
         return false;
-    }
-
-    /**
-     * Adds spaces to a string until it is the right length.
-     *
-     * @param s         the string to be padded.
-     * @param length    the desired length for the result string.
-     * @param alignment alignmet of the text. -1 for left, 0 for center and 1 for right align.
-     * @return the input string appended with spaces. Its length is equal or greater to the specified length.
-     */
-    private static String pad(String s, int length, int alignment) {
-        while (s.length() < length) {
-            if (alignment < 0) {
-                // left align
-                s = s + " ";
-            } else if (alignment > 0) {
-                // right align
-                s = " " + s;
-            } else {
-                // center
-                if (s.length() % 2 == 0) {
-                    s = s + " ";
-                } else {
-                    s = " " + s;
-                }
-            }
-        }
-        return s;
     }
 
     /**

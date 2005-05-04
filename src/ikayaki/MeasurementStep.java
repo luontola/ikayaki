@@ -489,7 +489,6 @@ public class MeasurementStep implements Iterable<MeasurementResult> {
                 continue;
             }
             // all rotations are assumed to be 0
-            // TODO: find out where and when the holder's noise fix is done. it should be before we can return from this method.
             v.add(result.getRawVector());
             count++;
         }

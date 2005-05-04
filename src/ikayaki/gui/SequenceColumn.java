@@ -87,10 +87,11 @@ public enum SequenceColumn {
             if (project == null) {
                 return;
             } else if (project.getType() == Project.Type.THELLIER) {
+                // with Thellier the decimals are ".00", ".11", ".12", ".13" or ".14"
                 getNumberFormat().setMinimumFractionDigits(2);
                 getNumberFormat().setMaximumFractionDigits(2);
             } else if (project.getType() == Project.Type.THERMAL) {
-                // Thermal is otherwise the same as Thellier, but the decimals are always ".00"
+                // with Thermal the decimals are always ".00"
                 getNumberFormat().setMinimumFractionDigits(0);
                 getNumberFormat().setMaximumFractionDigits(0);
             } else {
