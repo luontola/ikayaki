@@ -350,11 +350,6 @@ public enum SequenceColumn {
             setNumberFormat(new DecimalFormat("0.000E0"));  // TODO: maybe make a new class that could show the format: 1.123e+05
         }
     },
-    GEOGRAPHIC_X_NORMALIZED(MeasurementValue.GEOGRAPHIC_X_NORMALIZED) {
-        {
-            setNumberFormat(new DecimalFormat("0.000E0"));
-        }
-    },
     GEOGRAPHIC_Y(MeasurementValue.GEOGRAPHIC_Y) {
         {
             setNumberFormat(new DecimalFormat("0.000E0"));
@@ -376,6 +371,36 @@ public enum SequenceColumn {
         }
     },
     SAMPLE_Z(MeasurementValue.SAMPLE_Z) {
+        {
+            setNumberFormat(new DecimalFormat("0.000E0"));
+        }
+    },
+    GEOGRAPHIC_X_NORMALIZED(MeasurementValue.GEOGRAPHIC_X_NORMALIZED) {
+        {
+            setNumberFormat(new DecimalFormat("0.000E0"));
+        }
+    },
+    GEOGRAPHIC_Y_NORMALIZED(MeasurementValue.GEOGRAPHIC_Y_NORMALIZED) {
+        {
+            setNumberFormat(new DecimalFormat("0.000E0"));
+        }
+    },
+    GEOGRAPHIC_Z_NORMALIZED(MeasurementValue.GEOGRAPHIC_Z_NORMALIZED) {
+        {
+            setNumberFormat(new DecimalFormat("0.000E0"));
+        }
+    },
+    SAMPLE_X_NORMALIZED(MeasurementValue.SAMPLE_X_NORMALIZED) {
+        {
+            setNumberFormat(new DecimalFormat("0.000E0"));
+        }
+    },
+    SAMPLE_Y_NORMALIZED(MeasurementValue.SAMPLE_Y_NORMALIZED) {
+        {
+            setNumberFormat(new DecimalFormat("0.000E0"));
+        }
+    },
+    SAMPLE_Z_NORMALIZED(MeasurementValue.SAMPLE_Z_NORMALIZED) {
         {
             setNumberFormat(new DecimalFormat("0.000E0"));
         }
@@ -508,14 +533,19 @@ public enum SequenceColumn {
             MAGNETIZATION,
             RELATIVE_MAGNETIZATION,
             THETA63,
+            GEOGRAPHIC_X_NORMALIZED,
+            GEOGRAPHIC_Y_NORMALIZED,
+            GEOGRAPHIC_Z_NORMALIZED,
+            SAMPLE_X_NORMALIZED,
+            SAMPLE_Y_NORMALIZED,
+            SAMPLE_Z_NORMALIZED,
             MOMENT,
             GEOGRAPHIC_X,
-            GEOGRAPHIC_X_NORMALIZED,
             GEOGRAPHIC_Y,
             GEOGRAPHIC_Z,
             SAMPLE_X,
             SAMPLE_Y,
-            SAMPLE_Z
+            SAMPLE_Z,
         };
     }
 

@@ -802,7 +802,8 @@ public class Settings {
 
     public static synchronized List<SequenceColumn> getDefaultColumns() {
         String s = getProperty("sequence.defaultcolumns",
-                "COUNT,STEP,DECLINATION,INCLINATION,RELATIVE_MAGNETIZATION,SAMPLE_X,SAMPLE_Y,SAMPLE_Z,THETA63");
+                "COUNT,STEP,DECLINATION,INCLINATION,RELATIVE_MAGNETIZATION,THETA63," +
+                "SAMPLE_X_NORMALIZED,SAMPLE_Y_NORMALIZED,SAMPLE_Z_NORMALIZED");
         String[] columnNames = s.split(",");
         List<SequenceColumn> columns = new ArrayList<SequenceColumn>(columnNames.length);
         for (String name : columnNames) {

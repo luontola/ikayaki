@@ -38,10 +38,54 @@ import static java.lang.Math.sqrt;
 public abstract class MeasurementValue <T> {
 
     /**
+     * Normalizes a value by mass or volume, as specified in the project or step.
+     *
+     * @param step  the step whose value is being normalized.
+     * @param value the value to be normalised. The unit is Am^2.
+     * @return the normalized value if the mass/volume was specified, otherwise null. The unit is mAm^2 divided by m^3
+     *         or kg depending on the used normalization.
+     */
+    private static Double normalize(MeasurementStep step, Double value) {
+        Project project = step.getProject();
+        if (project == null) {
+            return null;
+        }
+
+        double normalizer;
+        if (project.getNormalization() == Project.Normalization.VOLUME) {
+            normalizer = step.getVolume();
+            if (normalizer < 0.0) {
+                normalizer = project.getVolume();
+            }
+            normalizer = normalizer / 1000000.0;    // convert cm^3 to m^3
+
+        } else if (project.getNormalization() == Project.Normalization.MASS) {
+            normalizer = step.getMass();
+            if (normalizer < 0.0) {
+                normalizer = project.getMass();
+            }
+            normalizer = normalizer / 1000.0;       // convert g to kg
+
+        } else {
+            assert false;
+            return null;
+        }
+        if (normalizer <= 0.0) {
+            return null;
+        }
+
+        if (value == null) {
+            return null;
+        } else {
+            return (value * 1000.0) / normalizer;   // convert Am^2 to mAm^2
+        }
+    }
+
+    /**
      * Calculates the average of all X components in geographic coordinates.
      */
     public static final MeasurementValue<Double> GEOGRAPHIC_X =
-            new MeasurementValue<Double>("X'", "Am\u00B2", "Mean X (geographic coordinates)") {
+            new MeasurementValue<Double>("X'", "Am\u00B2", "Average X (geographic coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = 0;
@@ -62,53 +106,10 @@ public abstract class MeasurementValue <T> {
             };
 
     /**
-     * Calculates the average of all X components in geographic coordinates.
-     */
-    public static final MeasurementValue<Double> GEOGRAPHIC_X_NORMALIZED =
-            new MeasurementValue<Double>("X'", "mA/m", "Normalized mean X (geographic coordinates)") {
-                public Double getValue(MeasurementStep step) {
-                    Project project = step.getProject();
-                    if (project == null) {
-                        return null;
-                    }
-
-                    double normalizer;
-                    if (project.getNormalization() == Project.Normalization.VOLUME) {
-                        normalizer = step.getVolume();
-                        if (normalizer < 0.0) {
-                            normalizer = project.getVolume();
-                        }
-                        normalizer = normalizer / 1000000.0;    // convert cm^3 to m^3
-
-                    } else if (project.getNormalization() == Project.Normalization.MASS) {
-                        normalizer = step.getMass();
-                        if (normalizer < 0.0) {
-                            normalizer = project.getMass();
-                        }
-                        normalizer = normalizer / 1000.0;   // convert g to kg
-
-                    } else {
-                        assert false;
-                        return null;
-                    }
-                    if (normalizer <= 0.0) {
-                        return null;
-                    }
-
-                    Double value = GEOGRAPHIC_X.getValue(step);
-                    if (value == null) {
-                        return null;
-                    } else {
-                        return (value * 1000.0) / normalizer;      // convert Am^2 to mAm^2
-                    }
-                }
-            };
-
-    /**
      * Calculates the average of all Y components in geographic coordinates.
      */
     public static final MeasurementValue<Double> GEOGRAPHIC_Y =
-            new MeasurementValue<Double>("Y'", "Am\u00B2", "Mean Y (geographic coordinates)") {
+            new MeasurementValue<Double>("Y'", "Am\u00B2", "Average Y (geographic coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = 0;
@@ -132,7 +133,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all Z components in geographic coordinates.
      */
     public static final MeasurementValue<Double> GEOGRAPHIC_Z =
-            new MeasurementValue<Double>("Z'", "Am\u00B2", "Mean Z (geographic coordinates)") {
+            new MeasurementValue<Double>("Z'", "Am\u00B2", "Average Z (geographic coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = 0;
@@ -156,7 +157,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all X components in sample coordinates.
      */
     public static final MeasurementValue<Double> SAMPLE_X =
-            new MeasurementValue<Double>("X", "Am\u00B2", "Mean X (sample coordinates)") {
+            new MeasurementValue<Double>("X", "Am\u00B2", "Average X (sample coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = 0;
@@ -180,7 +181,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all Y components in sample coordinates.
      */
     public static final MeasurementValue<Double> SAMPLE_Y =
-            new MeasurementValue<Double>("Y", "Am\u00B2", "Mean Y (sample coordinates)") {
+            new MeasurementValue<Double>("Y", "Am\u00B2", "Average Y (sample coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = 0;
@@ -204,7 +205,7 @@ public abstract class MeasurementValue <T> {
      * Calculates the average of all Z components in sample coordinates.
      */
     public static final MeasurementValue<Double> SAMPLE_Z =
-            new MeasurementValue<Double>("Z", "Am\u00B2", "Mean Z (sample coordinates)") {
+            new MeasurementValue<Double>("Z", "Am\u00B2", "Average Z (sample coordinates)") {
                 public Double getValue(MeasurementStep step) {
                     double sum = 0.0;
                     int count = 0;
@@ -221,6 +222,66 @@ public abstract class MeasurementValue <T> {
                     } else {
                         return null;
                     }
+                }
+            };
+
+    /**
+     * Calculates the normalized average of all X components in geographic coordinates.
+     */
+    public static final MeasurementValue<Double> GEOGRAPHIC_X_NORMALIZED =
+            new MeasurementValue<Double>("X'", "mA/m", "Normalized average X (geographic coordinates)") {
+                public Double getValue(MeasurementStep step) {
+                    return normalize(step, GEOGRAPHIC_X.getValue(step));
+                }
+            };
+
+    /**
+     * Calculates the normalized average of all Y components in geographic coordinates.
+     */
+    public static final MeasurementValue<Double> GEOGRAPHIC_Y_NORMALIZED =
+            new MeasurementValue<Double>("Y'", "mA/m", "Normalized average Y (geographic coordinates)") {
+                public Double getValue(MeasurementStep step) {
+                    return normalize(step, GEOGRAPHIC_Y.getValue(step));
+                }
+            };
+
+    /**
+     * Calculates the normalized average of all Z components in geographic coordinates.
+     */
+    public static final MeasurementValue<Double> GEOGRAPHIC_Z_NORMALIZED =
+            new MeasurementValue<Double>("Z'", "mA/m", "Normalized average Z (geographic coordinates)") {
+                public Double getValue(MeasurementStep step) {
+                    return normalize(step, GEOGRAPHIC_Z.getValue(step));
+                }
+            };
+
+    /**
+     * Calculates the normalized average of all X components in sample coordinates.
+     */
+    public static final MeasurementValue<Double> SAMPLE_X_NORMALIZED =
+            new MeasurementValue<Double>("X", "mA/m", "Normalized average X (sample coordinates)") {
+                public Double getValue(MeasurementStep step) {
+                    return normalize(step, SAMPLE_X.getValue(step));
+                }
+            };
+
+    /**
+     * Calculates the normalized average of all Y components in sample coordinates.
+     */
+    public static final MeasurementValue<Double> SAMPLE_Y_NORMALIZED =
+            new MeasurementValue<Double>("Y", "mA/m", "Normalized average Y (sample coordinates)") {
+                public Double getValue(MeasurementStep step) {
+                    return normalize(step, SAMPLE_Y.getValue(step));
+                }
+            };
+
+    /**
+     * Calculates the normalized average of all Z components in sample coordinates.
+     */
+    public static final MeasurementValue<Double> SAMPLE_Z_NORMALIZED =
+            new MeasurementValue<Double>("Z", "mA/m", "Normalized average Z (sample coordinates)") {
+                public Double getValue(MeasurementStep step) {
+                    return normalize(step, SAMPLE_Z.getValue(step));
                 }
             };
 
@@ -292,40 +353,42 @@ public abstract class MeasurementValue <T> {
     public static final MeasurementValue<Double> MAGNETIZATION =
             new MeasurementValue<Double>("J", "mA/m,Am\u00B2/kg", "Magnetic intensity") { // J=M/volume or J=M/mass
                 public Double getValue(MeasurementStep step) {
-                    Project project = step.getProject();
-                    if (project == null) {
-                        return null;
-                    }
+                    return normalize(step, MOMENT.getValue(step));
 
-                    double normalizer;
-                    if (project.getNormalization() == Project.Normalization.VOLUME) {
-                        normalizer = step.getVolume();
-                        if (normalizer < 0.0) {
-                            normalizer = project.getVolume();
-                        }
-                        normalizer = normalizer / 1000000.0;    // convert cm^3 to m^3
-
-                    } else if (project.getNormalization() == Project.Normalization.MASS) {
-                        normalizer = step.getMass();
-                        if (normalizer < 0.0) {
-                            normalizer = project.getMass();
-                        }
-                        normalizer = normalizer / 1000.0;   // convert g to kg
-
-                    } else {
-                        assert false;
-                        return null;
-                    }
-                    if (normalizer <= 0.0) {
-                        return null;
-                    }
-
-                    Double moment = MOMENT.getValue(step);
-                    if (moment == null) {
-                        return null;
-                    } else {
-                        return (moment * 1000.0) / normalizer;      // convert Am^2 to mAm^2
-                    }
+//                    Project project = step.getProject();
+//                    if (project == null) {
+//                        return null;
+//                    }
+//
+//                    double normalizer;
+//                    if (project.getNormalization() == Project.Normalization.VOLUME) {
+//                        normalizer = step.getVolume();
+//                        if (normalizer < 0.0) {
+//                            normalizer = project.getVolume();
+//                        }
+//                        normalizer = normalizer / 1000000.0;    // convert cm^3 to m^3
+//
+//                    } else if (project.getNormalization() == Project.Normalization.MASS) {
+//                        normalizer = step.getMass();
+//                        if (normalizer < 0.0) {
+//                            normalizer = project.getMass();
+//                        }
+//                        normalizer = normalizer / 1000.0;   // convert g to kg
+//
+//                    } else {
+//                        assert false;
+//                        return null;
+//                    }
+//                    if (normalizer <= 0.0) {
+//                        return null;
+//                    }
+//
+//                    Double moment = MOMENT.getValue(step);
+//                    if (moment == null) {
+//                        return null;
+//                    } else {
+//                        return (moment * 1000.0) / normalizer;      // convert Am^2 to mAm^2
+//                    }
                 }
             };
 
@@ -461,6 +524,8 @@ public abstract class MeasurementValue <T> {
                 }
             };
 
+
+    /*    Begin instance declaration    */
 
     /**
      * A short name for the value.
