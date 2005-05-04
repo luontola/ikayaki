@@ -281,8 +281,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
      * Makes sure that all data fits in their columns (excluding the COLUMN_FILENAME column). Renders every cell of the
      * table to find out their preferred width, and makes the column wider if the contents does not fit the column.
      * <p/>
-     * If rendering all cells in the table (such as the project type) will take a long time, it might be good to run
-     * this in a separate thread.
+     * This method must be run in the event thread.
      */
     public void fitColumnWidths() {
         for (int col = 0; col < columns.length; col++) {
@@ -299,14 +298,9 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                 width += 5;
                 if (columnModel.getColumn(col).getMaxWidth() < width) {
                     // setting min and max width must be done in the event thread
-                    final TableColumn c = columnModel.getColumn(col);
-                    final int w = width;
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            c.setMaxWidth(w); // must set max first to avoid "min > max"
-                            c.setMinWidth(w);
-                        }
-                    });
+                    TableColumn c = columnModel.getColumn(col);
+                    c.setMaxWidth(width); // must set max first to avoid "min > max"
+                    c.setMinWidth(width);
                 }
             }
         }
@@ -391,7 +385,11 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
                     if (file.canRead()) Project.getType(file);
 
                     // when everything is cached, resize the columns if all data does not fit
-                    fitColumnWidths();
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            fitColumnWidths();
+                        }
+                    });
                 }
             }
         });
@@ -571,7 +569,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
             // return the wrapped value
             wrapper.value = value;
             return wrapper;
-            
+
 //            } finally {
 //                if (!isCalibration) {
 //                    System.err.print(column + " " + row + "\t");
