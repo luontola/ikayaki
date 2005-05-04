@@ -310,41 +310,6 @@ public abstract class MeasurementValue <T> {
             new NormalizedValue("J", "Magnetic intensity") { // J=M/volume or J=M/mass
                 protected Double getValue0(MeasurementStep step) {
                     return MOMENT.getValue(step);
-
-//                    Project project = step.getProject();
-//                    if (project == null) {
-//                        return null;
-//                    }
-//
-//                    double normalizer;
-//                    if (project.getNormalization() == Project.Normalization.VOLUME) {
-//                        normalizer = step.getVolume();
-//                        if (normalizer < 0.0) {
-//                            normalizer = project.getVolume();
-//                        }
-//                        normalizer = normalizer / 1000000.0;    // convert cm^3 to m^3
-//
-//                    } else if (project.getNormalization() == Project.Normalization.MASS) {
-//                        normalizer = step.getMass();
-//                        if (normalizer < 0.0) {
-//                            normalizer = project.getMass();
-//                        }
-//                        normalizer = normalizer / 1000.0;   // convert g to kg
-//
-//                    } else {
-//                        assert false;
-//                        return null;
-//                    }
-//                    if (normalizer <= 0.0) {
-//                        return null;
-//                    }
-//
-//                    Double moment = MOMENT.getValue(step);
-//                    if (moment == null) {
-//                        return null;
-//                    } else {
-//                        return (moment * 1000.0) / normalizer;      // convert Am^2 to mAm^2
-//                    }
                 }
             };
 
@@ -587,6 +552,9 @@ abstract class NormalizedValue extends MeasurementValue<Double> {
      */
     protected abstract Double getValue0(MeasurementStep step);
 
+    /**
+     * Returns mA/m or Am^2/kg depending on the normalization that the project uses.
+     */
     @Override public String getUnit(Project project) {
         if (project == null) {
             return "mA/m";

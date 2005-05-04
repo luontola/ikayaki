@@ -428,20 +428,6 @@ public enum SequenceColumn {
         {
             setNumberFormat(new DecimalFormat("0.000E0"));
         }
-
-//        @Override public String getColumnName(Project project) {
-//            return value.getCaption(project) + " (" + value.getUnit(project) + ")";
-//
-//            String[] units = value.getUnit().split(",");
-//            if (project == null || project.getNormalization() == Project.Normalization.VOLUME) {
-//                return value.getCaption() + " (" + units[0] + ")";
-//            } else if (project.getNormalization() == Project.Normalization.MASS) {
-//                return value.getCaption() + " (" + units[1] + ")";
-//            } else {
-//                assert false;
-//                return null;
-//            }
-//        }
     },
     RELATIVE_MAGNETIZATION(MeasurementValue.RELATIVE_MAGNETIZATION) {
         {
