@@ -71,12 +71,60 @@ public class LoggerPrintStream extends PrintStream {
         lineStart = false;
     }
 
-    @Override public void print(Object obj) {
+    @Override public void print(boolean b) {
         timestamp();
         if (screen != null) {
-            screen.print(obj);
+            screen.print(b);
         }
-        super.print(obj);
+        super.print(b);
+    }
+
+    @Override public void print(char c) {
+        timestamp();
+        if (screen != null) {
+            screen.print(c);
+        }
+        super.print(c);
+    }
+
+    @Override public void print(int i) {
+        timestamp();
+        if (screen != null) {
+            screen.print(i);
+        }
+        super.print(i);
+    }
+
+    @Override public void print(long l) {
+        timestamp();
+        if (screen != null) {
+            screen.print(l);
+        }
+        super.print(l);
+    }
+
+    @Override public void print(float f) {
+        timestamp();
+        if (screen != null) {
+            screen.print(f);
+        }
+        super.print(f);
+    }
+
+    @Override public void print(double d) {
+        timestamp();
+        if (screen != null) {
+            screen.print(d);
+        }
+        super.print(d);
+    }
+
+    @Override public void print(char s[]) {
+        timestamp();
+        if (screen != null) {
+            screen.print(s);
+        }
+        super.print(s);
     }
 
     @Override public void print(String s) {
@@ -87,6 +135,14 @@ public class LoggerPrintStream extends PrintStream {
         super.print(s);
     }
 
+    @Override public void print(Object obj) {
+        timestamp();
+        if (screen != null) {
+            screen.print(obj);
+        }
+        super.print(obj);
+    }
+
     @Override public void println() {
         if (screen != null) {
             screen.println();
@@ -95,14 +151,48 @@ public class LoggerPrintStream extends PrintStream {
         lineStart = true;
     }
 
-    @Override public void println(Object obj) {
-        this.print(obj);
+    @Override public void println(boolean x) {
+        this.println(x);
         this.println();
     }
 
-    @Override public void println(String s) {
-        this.print(s);
+    @Override public void println(char x) {
+        this.println(x);
         this.println();
     }
 
+    @Override public void println(int x) {
+        this.println(x);
+        this.println();
+    }
+
+    @Override public void println(long x) {
+        this.println(x);
+        this.println();
+    }
+
+    @Override public void println(float x) {
+        this.println(x);
+        this.println();
+    }
+
+    @Override public void println(double x) {
+        this.println(x);
+        this.println();
+    }
+
+    @Override public void println(char x[]) {
+        this.println(x);
+        this.println();
+    }
+
+    @Override public void println(String x) {
+        this.print(x);
+        this.println();
+    }
+
+    @Override public void println(Object x) {
+        this.print(x);
+        this.println();
+    }
 }
