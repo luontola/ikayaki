@@ -292,8 +292,8 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
 
         // handler information
         //g2.setColor(Color.BLUE);
-        g2.drawString("position: " + position, 0, 12);
-        g2.drawString("rotation: " + rotation, 0, 24);
+        g2.drawString("position: " + position, basex - box2w / 2 + 6, h - 18);
+        g2.drawString("rotation: " + rotation, basex - box2w / 2 + 6, h - 6);
 
         // restore original Graphics
         g2.dispose();
@@ -576,7 +576,7 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
         /**
          * Moves to next measurement line (in main table).
          */
-        private final JButton nextLineButton = new JButton("Next line");
+        private final JButton nextLineButton = new JButton("Next Line");
         private final ComponentFlasher nextLineButtonFlasher = new ComponentFlasher(nextLineButton);
 
         /**
@@ -917,10 +917,12 @@ public class MagnetometerStatusPanel extends JPanel implements MeasurementListen
             }
 
             // measure-button text
+            // TODO: as this is the biggest button is measurePanel, changing its text changes whole panel width,
+            // and, in the end, whole MagnetometerStatusPanel width; should prevent that from happening
             if (position == posMeasure) {
                 measureAllButton.setText(measureAllButtonBaseText + "XYZ");
             } else {
-                measureAllButton.setText(measureAllButtonBaseText + "BG");
+                measureAllButton.setText(measureAllButtonBaseText + "BG ");
             }
 
             // demag-button text and enabled status
