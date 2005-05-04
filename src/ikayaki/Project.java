@@ -1042,13 +1042,16 @@ public class Project {
             out.println("Thellier-tdt");
 
             // the applied field value in mT
-            out.print(pad(format3Frac.format(0.0), Math.max(getName().length(), 8), 1));      // TODO: how should this be calculated?
+            s = format3Frac.format(0.0);
+            out.print(pad(s, Math.max(getName().length(), 8), 1));      // TODO: how should this be calculated?
 
             // strike
-            out.print(pad(format2Frac.format(getStrike()), 8, 1));
+            s = format2Frac.format(getStrike());
+            out.print(pad(" " + s, 8, 1));
 
             // dip
-            out.print(pad(format2Frac.format(getDip()), 8, 1));
+            s = format2Frac.format(getDip());
+            out.print(pad(" " + s, 8, 1));
 
             // latitude
             try {
@@ -1056,7 +1059,8 @@ public class Project {
             } catch (NumberFormatException e) {
                 d = 0.0;
             }
-            out.print(pad(format2Frac.format(d), 8, 1));
+            s = format2Frac.format(d);
+            out.print(pad(" " + s, 8, 1));
 
             // longitude
             try {
@@ -1082,25 +1086,25 @@ public class Project {
                     // with Thermal the decimals are always ".00"
                     s = format0Frac.format(d) + ".00";
                 }
-                out.print(pad(s, 8, 1));
+                out.print(pad(" " + s, 8, 1));
 
                 // intensity
                 dd = MeasurementValue.MAGNETIZATION.getValue(step);
                 d = dd != null ? dd : 0.0;
                 s = format0Frac.format(d);
-                out.print(pad(s, 8, 1));
+                out.print(pad(" " + s, 8, 1));
 
                 // declination
                 dd = MeasurementValue.DECLINATION.getValue(step);
                 d = dd != null ? dd : 0.0;
                 s = format0Frac.format(d);
-                out.print(pad(s, 8, 1));
+                out.print(pad(" " + s, 8, 1));
 
                 // inclination
                 dd = MeasurementValue.INCLINATION.getValue(step);
                 d = dd != null ? dd : 0.0;
                 s = format0Frac.format(d);
-                out.print(pad(s, 8, 1));
+                out.print(pad(" " + s, 8, 1));
 
                 out.println();
             }
