@@ -106,6 +106,7 @@ public class PrintPanel extends JPanel {
         $$$setupUI$$$();
 
         NumberFormat nf = NumberFormat.getInstance();
+        nf.setGroupingUsed(false);
 
         /* Project Information */
         header.setText(project.getName() + " (" + project.getType() + " Project)");
@@ -134,7 +135,7 @@ public class PrintPanel extends JPanel {
         volume.setText(project.getVolume() > 0 ? nf.format(project.getVolume()) + " cm\u00B3" : "");
         nf.setMinimumFractionDigits(0);
         nf.setMaximumFractionDigits(0);
-        susceptibility.setText(project.getSusceptibility() > 0 ? nf.format(project.getSusceptibility()) : "");
+        susceptibility.setText(project.getSusceptibility() > 0 ? nf.format(project.getSusceptibility()) + "E-6 SI" : "");
 
         /* calculate Density and Q (what ever it is, hehe) */
 
@@ -158,7 +159,7 @@ public class PrintPanel extends JPanel {
         } else {
             density.setText("");
         }
-        
+
         /* Sequence Table */
         sequenceTableModel = new PrintSequenceTableModel(project);
         sequenceTable.setModel(sequenceTableModel);

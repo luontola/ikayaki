@@ -80,8 +80,8 @@ public class MeasurementStep implements Iterable<MeasurementResult> {
     private double volume = -1.0;
 
     /**
-     * The susceptibility of this step's sample, or a negative number to use the project's default volume.
-     * Susceptibility has no unit.
+     * The susceptibility of this step's sample, or a negative number to use the project's default volume. The unit is
+     * 10^-6 SI.
      */
     private double susceptibility = -1.0;
 
@@ -347,14 +347,14 @@ public class MeasurementStep implements Iterable<MeasurementResult> {
 
     /**
      * Returns the susceptibility of this step's sample, or a negative number to use the project's default
-     * susceptibility. Susceptibility has no unit.
+     * susceptibility. The unit is 10^-6 SI.
      */
     public synchronized double getSusceptibility() {
         return susceptibility;
     }
 
     /**
-     * Sets the susceptibility of this step's sample. A negative value will clear it. Susceptibility has no unit.
+     * Sets the susceptibility of this step's sample. A negative value will clear it. The unit is 10^-6 SI.
      */
     public synchronized void setSusceptibility(double susceptibility) {
         if (susceptibility < 0.0) {

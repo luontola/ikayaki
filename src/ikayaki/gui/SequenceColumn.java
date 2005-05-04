@@ -290,11 +290,11 @@ public enum SequenceColumn {
     /**
      * Showing and editing the susceptibility of the measurement step.
      */
-    SUSCEPTIBILITY("Susceptibility"){ // has no unit
+    SUSCEPTIBILITY("Susceptibility"){ // unit is 10^-6 SI
         {
             // usually no decimals are needed
             getNumberFormat().setMaximumFractionDigits(6);
-            toolTipText = "Susceptibility of the sample";
+            toolTipText = "Susceptibility of the sample (10^-6 SI)";
         }
 
         @Override public StyledWrapper getValue(int rowIndex, Project project) {

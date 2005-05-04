@@ -171,7 +171,7 @@ public class Project {
     private double volume = -1.0;
 
     /**
-     * Susceptibility of the sample, or a negative value if no susceptibility is defined. Susceptibility has no unit.
+     * Susceptibility of the sample, or a negative value if no susceptibility is defined. The unit is 10^-6 SI.
      */
     private double susceptibility = -1.0;
 
@@ -899,7 +899,11 @@ public class Project {
                 MeasurementStep step = getStep(i);
 
                 // AF/TF
-                s = "" + Math.max((int) Math.round(step.getStepValue()), 0);
+                if (getType() == THELLIER || getType() == THERMAL) {
+                    s = "" + Math.max((int) Math.round(step.getStepValue()), 0);
+                } else {
+                    s = "" + Math.max((int) Math.round(step.getStepValue() * 10), 0);
+                }
                 out.print(pad(s, 4, 1));
 
                 // Dec
@@ -1406,7 +1410,7 @@ public class Project {
     }
 
     /**
-     * Returns the susceptibility of the sample. Susceptibility has no unit.
+     * Returns the susceptibility of the sample. The unit is 10^-6 SI.
      *
      * @return susceptibility of the sample, or a negative number if no susceptibility is specified.
      */
@@ -1415,7 +1419,7 @@ public class Project {
     }
 
     /**
-     * Sets the susceptibility of the sample. Susceptibility has no unit.
+     * Sets the susceptibility of the sample. The unit is 10^-6 SI.
      *
      * @param susceptibility susceptibility of the sample, or a negative number to clear it.
      */
