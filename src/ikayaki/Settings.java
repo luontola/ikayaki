@@ -883,8 +883,8 @@ public class Settings {
         /* NOTE:
          * Making this method synchronized causes sometimes deadlock
          * when this method tries to aquire a lock on Project class,
-         * while another tread is loading a project file and tries
-         * to aquire a lock on Settings class in Project.isHolderCalibration().
+         * while another tread is loading a project file and tries to
+         * aquire a lock on Settings class in Project.isHolderCalibration().
          */
 
         File file = getHolderCalibrationFile();

@@ -667,8 +667,8 @@ public class ProjectInformationPanel extends ProjectComponent {
                 formatter.setMinimum(new Double(0));
                 formatter.setMaximum(new Double(360));
             } else if (tf == dipField) {
-                formatter.setMinimum(new Double(-90));
-                formatter.setMaximum(new Double(90));
+                formatter.setMinimum(new Double(0));
+                formatter.setMaximum(new Double(180));
             }
 
             // commit changes when pressing enter

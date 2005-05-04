@@ -331,6 +331,7 @@ public class Handler implements SerialIOListener {
         double timeSpent = (System.currentTimeMillis() - estimatedPositionStartTime) / 1000.0;    // in seconds
         int pos = estimatedPositionStart + (int) (currentVelocity * timeSpent);
 
+        // TODO: calculate the acceleration and deceleration corrections
         /* acceleration correction */
         /*
         double accTime = (double) currentVelocity / (double) ACCELERATION;

@@ -1496,7 +1496,8 @@ public class Project {
             throw new NullPointerException();
         }
         if (!isSequenceEditEnabled()) {
-            return false;   // TODO: maybe its better to throw an exception
+            assert false;
+            return false;   // TODO: maybe its better to throw an exception, so that it would be easier to find bugs
         }
         for (int i = 0; i < append.getSteps(); i++) {
             MeasurementStep step = new MeasurementStep(this);
@@ -1594,7 +1595,8 @@ public class Project {
             throw new IndexOutOfBoundsException();
         }
         if (!isSequenceEditEnabled()) {
-            return false;    // TODO: maybe its better to throw an exception
+            assert false;
+            return false;    // TODO: maybe its better to throw an exception, so that it would be easier to find bugs
         }
         double stepValue = step.getStepValue();
         step = new MeasurementStep(this);
@@ -1621,7 +1623,8 @@ public class Project {
             throw new IndexOutOfBoundsException();
         }
         if (!isSequenceEditEnabled()) {
-            return false; // TODO: maybe its better to throw an exception
+            assert false;
+            return false; // TODO: maybe its better to throw an exception, so that it would be easier to find bugs
         }
         sequence.removeStep(index);
 
@@ -1646,7 +1649,8 @@ public class Project {
             throw new IndexOutOfBoundsException();
         }
         if (!isSequenceEditEnabled()) {
-            return false;   // TODO: maybe its better to throw an exception
+            assert false;
+            return false;   // TODO: maybe its better to throw an exception, so that it would be easier to find bugs
         }
         for (int i = end; i >= start; i--) {
             sequence.removeStep(i);

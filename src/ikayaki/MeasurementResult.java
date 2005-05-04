@@ -176,8 +176,6 @@ public class MeasurementResult {
     protected void applyFixes(MeasurementStep step) {
         sampleVector.set(rawVector);
 
-        // TODO: in which order should the rotation, +-Z, holder and noise fixes be applied??
-
         // apply rotation fix
         if (rotation % 90 == 0) {
             // accurate and fast algorithm for trivial angles
