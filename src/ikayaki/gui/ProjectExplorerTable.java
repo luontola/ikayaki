@@ -281,7 +281,8 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
      * Makes sure that all data fits in their columns (excluding the COLUMN_FILENAME column). Renders every cell of the
      * table to find out their preferred width, and makes the column wider if the contents does not fit the column.
      * <p/>
-     * This method must be run in the event thread.
+     * This method must be run in the event thread. It is recommendable to cache the project type column's data before
+     * calling this method, since this method needs to render every cell of the table.
      */
     public void fitColumnWidths() {
         for (int col = 0; col < columns.length; col++) {
