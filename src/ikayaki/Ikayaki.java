@@ -48,8 +48,8 @@ public class Ikayaki extends JFrame {
     /* Application information */
 
     public static final String APP_NAME = "Ikayaki";
-    public static final String APP_VERSION = "0.92";
-    public static final String APP_BUILD = "2005-04-xx";
+    public static final String APP_VERSION = "0.93";
+    public static final String APP_BUILD = "2005-05-04";
     public static final String APP_HOME_PAGE = "http://www.cs.helsinki.fi/group/squid/";
 
     public static final String FILE_TYPE = ".ika";
@@ -208,7 +208,7 @@ public class Ikayaki extends JFrame {
         setLayout(new BorderLayout());
         setJMenuBar(main.getMenuBar());
         add(main, "Center");
-        add(main.getStatusBar(), "South");
+        //add(main.getStatusBar(), "South");    // TODO: there is no status bar
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         pack();

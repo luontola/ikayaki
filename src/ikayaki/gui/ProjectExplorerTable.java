@@ -744,7 +744,7 @@ public class ProjectExplorerTable extends JTable implements ProjectListener {
 
             // TODO: some portable way to get a File for disk drive? Or maybe a Setting for export-dirs?
             for (File dir : new File[]{null, directory, new File("A:/")}) {
-                for (String type : new String[]{"dat", "tdt", "srm"}) {
+                for (String type : new String[]{"dat", "tdt" /*, "srm" */}) {   // TODO: support for SRM files is missing
                     JMenuItem exportitem;
                     if (dir == null) {
                         exportitem = new JMenuItem(type.toUpperCase() + " file" +

@@ -89,7 +89,7 @@ public class MainMenuBar extends JMenuBar {
             exportProjectMenu.setMnemonic(KeyEvent.VK_E);
             exportProjectMenu.add(exportProjectToDAT);
             exportProjectMenu.add(exportProjectToDTD);
-            exportProjectMenu.add(exportProjectToSRM);
+            //exportProjectMenu.add(exportProjectToSRM);    // TODO: support for SRM files is missing
         }
         fileMenu.add(exportProjectMenu);
         fileMenu.add(new JSeparator());
