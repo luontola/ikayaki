@@ -429,17 +429,19 @@ public enum SequenceColumn {
             setNumberFormat(new DecimalFormat("0.000E0"));
         }
 
-        @Override public String getColumnName(Project project) {
-            String[] units = value.getUnit().split(",");
-            if (project == null || project.getNormalization() == Project.Normalization.VOLUME) {
-                return value.getCaption() + " (" + units[0] + ")";
-            } else if (project.getNormalization() == Project.Normalization.MASS) {
-                return value.getCaption() + " (" + units[1] + ")";
-            } else {
-                assert false;
-                return null;
-            }
-        }
+//        @Override public String getColumnName(Project project) {
+//            return value.getCaption(project) + " (" + value.getUnit(project) + ")";
+//
+//            String[] units = value.getUnit().split(",");
+//            if (project == null || project.getNormalization() == Project.Normalization.VOLUME) {
+//                return value.getCaption() + " (" + units[0] + ")";
+//            } else if (project.getNormalization() == Project.Normalization.MASS) {
+//                return value.getCaption() + " (" + units[1] + ")";
+//            } else {
+//                assert false;
+//                return null;
+//            }
+//        }
     },
     RELATIVE_MAGNETIZATION(MeasurementValue.RELATIVE_MAGNETIZATION) {
         {
@@ -454,6 +456,38 @@ public enum SequenceColumn {
             getNumberFormat().setMaximumFractionDigits(1);
         }
     };
+
+    /**
+     * Returns all the columns supported by the program. The returned values are in the order that they should be shown
+     * in the measurement sequence table.
+     */
+    public static SequenceColumn[] getAllColumns() {
+        return new SequenceColumn[]{
+            COUNT,
+            STEP,
+            VOLUME,
+            MASS,
+            SUSCEPTIBILITY,
+            DECLINATION,
+            INCLINATION,
+            MAGNETIZATION,
+            RELATIVE_MAGNETIZATION,
+            THETA63,
+            GEOGRAPHIC_X_NORMALIZED,
+            GEOGRAPHIC_Y_NORMALIZED,
+            GEOGRAPHIC_Z_NORMALIZED,
+            SAMPLE_X_NORMALIZED,
+            SAMPLE_Y_NORMALIZED,
+            SAMPLE_Z_NORMALIZED,
+            MOMENT,
+            GEOGRAPHIC_X,
+            GEOGRAPHIC_Y,
+            GEOGRAPHIC_Z,
+            SAMPLE_X,
+            SAMPLE_Y,
+            SAMPLE_Z,
+        };
+    }
 
     /* Styles for the cell renderer */
 
@@ -506,47 +540,11 @@ public enum SequenceColumn {
     }
 
     private SequenceColumn(MeasurementValue value) {
-        if (value.getUnit().equals("")) {
-            this.columnName = value.getCaption();
-        } else {
-            this.columnName = value.getCaption() + " (" + value.getUnit() + ")";
-        }
-        this.toolTipText = value.getDescription();
+        this.columnName = null;
+        this.toolTipText = null;
         this.value = value;
         this.numberFormat = NumberFormat.getNumberInstance();
         this.numberFormat.setGroupingUsed(false);
-    }
-
-    /**
-     * Returns all the columns supported by the program. The returned values are in the order that they should be shown
-     * in the measurement sequence table.
-     */
-    public static SequenceColumn[] getAllColumns() {
-        return new SequenceColumn[]{
-            COUNT,
-            STEP,
-            VOLUME,
-            MASS,
-            SUSCEPTIBILITY,
-            DECLINATION,
-            INCLINATION,
-            MAGNETIZATION,
-            RELATIVE_MAGNETIZATION,
-            THETA63,
-            GEOGRAPHIC_X_NORMALIZED,
-            GEOGRAPHIC_Y_NORMALIZED,
-            GEOGRAPHIC_Z_NORMALIZED,
-            SAMPLE_X_NORMALIZED,
-            SAMPLE_Y_NORMALIZED,
-            SAMPLE_Z_NORMALIZED,
-            MOMENT,
-            GEOGRAPHIC_X,
-            GEOGRAPHIC_Y,
-            GEOGRAPHIC_Z,
-            SAMPLE_X,
-            SAMPLE_Y,
-            SAMPLE_Z,
-        };
     }
 
     /**
@@ -664,7 +662,13 @@ public enum SequenceColumn {
      * @param project the open project or null if no project is active.
      */
     public String getColumnName(Project project) {
-        return columnName;
+        if (value == null) {
+            return columnName;
+        } else if (value.getUnit(project).equals("")) {
+            return value.getCaption(project);
+        } else {
+            return value.getCaption(project) + " (" + value.getUnit(project) + ")";
+        }
     }
 
     /**
@@ -675,7 +679,11 @@ public enum SequenceColumn {
      * @return the tooltip text or null if none is set.
      */
     public String getToolTipText(Project project) {
-        return toolTipText;
+        if (value == null) {
+            return toolTipText;
+        } else {
+            return value.getDescription(project);
+        }
     }
 
     /**
