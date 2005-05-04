@@ -74,20 +74,25 @@ public enum SequenceColumn {
 
         // TODO: remove the need for this hack
         /**
-         * HACK: In the exported TDT files the two decimals contain information about the type of the measurement step.
-         * That's why in Thellier and Thermal projects it is needed to use two decimals.
+         * Changes the number of decimals that are shown in the sequence table.
          * <p/>
-         * A better way to do this would be add one more column to the sequence table, where the user could select the
-         * type of the TH step (maybe about 4 options in a dropdown menu).
+         * HACK: In the exported TDT files the two decimals contain information about the type of the measurement step.
+         * That's why in Thellier projects it is needed to use two decimals. A better way to do this would be to add one
+         * more column to the sequence table, where the user could select the type of the Thellier step (maybe about
+         * five options in a dropdown menu).
          *
          * @param project
          */
         private void updateNumberFormat(Project project) {
             if (project == null) {
                 return;
-            } else if (project.getType() == Project.Type.THELLIER || project.getType() == Project.Type.THERMAL) {
+            } else if (project.getType() == Project.Type.THELLIER) {
                 getNumberFormat().setMinimumFractionDigits(2);
                 getNumberFormat().setMaximumFractionDigits(2);
+            } else if (project.getType() == Project.Type.THERMAL) {
+                // Thermal is otherwise the same as Thellier, but the decimals are always ".00"
+                getNumberFormat().setMinimumFractionDigits(0);
+                getNumberFormat().setMaximumFractionDigits(0);
             } else {
                 getNumberFormat().setMinimumFractionDigits(0);
                 getNumberFormat().setMaximumFractionDigits(1);
