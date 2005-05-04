@@ -158,6 +158,7 @@ public class PrintPanel extends JPanel {
         } else {
             density.setText("");
         }
+        
         /* Sequence Table */
         sequenceTableModel = new PrintSequenceTableModel(project);
         sequenceTable.setModel(sequenceTableModel);
