@@ -68,11 +68,35 @@ public enum SequenceColumn {
      */
     STEP("Step Value"){
         {
-            // one decimal is the maximum presision
+            // one decimal is the maximum presision for AF
             getNumberFormat().setMaximumFractionDigits(1);
         }
 
+        // TODO: remove the need for this hack
+        /**
+         * HACK: In the exported TDT files the two decimals contain information about the type of the measurement step.
+         * That's why in Thellier and Thermal projects it is needed to use two decimals.
+         * <p/>
+         * A better way to do this would be add one more column to the sequence table, where the user could select the
+         * type of the TH step (maybe about 4 options in a dropdown menu).
+         *
+         * @param project
+         */
+        private void updateNumberFormat(Project project) {
+            if (project == null) {
+                return;
+            } else if (project.getType() == Project.Type.THELLIER || project.getType() == Project.Type.THERMAL) {
+                getNumberFormat().setMinimumFractionDigits(2);
+                getNumberFormat().setMaximumFractionDigits(2);
+            } else {
+                getNumberFormat().setMinimumFractionDigits(0);
+                getNumberFormat().setMaximumFractionDigits(1);
+            }
+        }
+
         @Override public StyledWrapper getValue(int rowIndex, Project project) {
+            updateNumberFormat(project);    // HACK
+
             if (rowIndex >= project.getSteps()) {
                 return wrap(null, rowIndex, project);
             }
@@ -84,6 +108,8 @@ public enum SequenceColumn {
         }
 
         @Override public void setValue(Object data, int rowIndex, Project project) {
+            updateNumberFormat(project);    // HACK
+
             if (project == null) {
                 return;
             }

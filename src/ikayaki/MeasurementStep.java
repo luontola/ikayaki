@@ -287,6 +287,8 @@ public class MeasurementStep implements Iterable<MeasurementResult> {
     /**
      * Sets the value of this step. A negative value will clear it. The unit is millitesla (when AF) or Celcius (when
      * thermal).
+     * <p/>
+     * If this step is part of an AF project, the stepValue will be adjusted to be the closest correct value.
      *
      * @throws IllegalStateException if the step's state is not READY.
      */
@@ -298,9 +300,20 @@ public class MeasurementStep implements Iterable<MeasurementResult> {
             stepValue = -1.0;
         }
         if (getProject() != null && getProject().getType() == Project.Type.AF) {
+
+            // positive values must be equal or greater to DegausserMinimumField
             if (stepValue > 0.0 && stepValue < Settings.getDegausserMinimumField()) {
                 stepValue = Settings.getDegausserMinimumField();
             }
+
+            // there must not be more decimals than DegausserMinimumFieldIncrement allows
+            if (stepValue > 0.0) {
+                double inc = Settings.getDegausserMinimumFieldIncrement();
+                stepValue = stepValue / inc;
+                stepValue = (int) (Math.round(stepValue)) * inc;
+            }
+
+            // the value must be less or equal to DegausserMaximumField
             stepValue = Math.min(stepValue, Settings.getDegausserMaximumField());
         }
         this.stepValue = stepValue;
