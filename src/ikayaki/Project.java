@@ -878,7 +878,7 @@ public class Project {
                 d = 0.0;
             }
             header += pad("Lat ", 8, 1);
-            values += pad(format2Frac.format(d), 8, 1);
+            values += pad(" " + format2Frac.format(d), 8, 1);
 
             try {
                 d = Double.parseDouble(getProperty(LONGITUDE_PROPERTY, "0.0"));
@@ -886,31 +886,31 @@ public class Project {
                 d = 0.0;
             }
             header += pad("Lon ", 8, 1);
-            values += pad(format2Frac.format(d), 8, 1);
+            values += pad(" " + format2Frac.format(d), 8, 1);
 
             d = getStrike();
             header += pad("Str ", 8, 1);
-            values += pad(format2Frac.format(d), 8, 1);
+            values += pad(" " + format2Frac.format(d), 8, 1);
 
             d = getDip();
             header += pad("Dip ", 8, 1);
-            values += pad(format2Frac.format(d), 8, 1);
+            values += pad(" " + format2Frac.format(d), 8, 1);
 
             d = 0.0;
             header += pad("Bstr", 8, 1);
-            values += pad(format2Frac.format(d), 8, 1);
+            values += pad(" " + format2Frac.format(d), 8, 1);
 
             d = 0.0;
             header += pad("Bdip", 8, 1);
-            values += pad(format2Frac.format(d), 8, 1);
+            values += pad(" " + format2Frac.format(d), 8, 1);
 
             d = Math.min(getVolume(), 0.0);
             header += pad("Vol  ", 8, 1);
-            values += pad(format3Frac.format(d), 8, 1);
+            values += pad(" " + format3Frac.format(d), 8, 1);
 
             d = Math.min(getMass(), 0.0);
             header += pad("Mass ", 8, 1);
-            values += pad(format3Frac.format(d), 8, 1);
+            values += pad(" " + format3Frac.format(d), 8, 1);
 
             out.println(header);
             out.println(values);
@@ -938,49 +938,49 @@ public class Project {
                 dd = MeasurementValue.DECLINATION.getValue(step);
                 d = dd != null ? dd : 0.0;
                 s = format2Frac.format(d);
-                out.print(pad(s, 8, 1));
+                out.print(pad(" " + s, 8, 1));
 
                 // Inc
                 dd = MeasurementValue.INCLINATION.getValue(step);
                 d = dd != null ? dd : 0.0;
                 s = format2Frac.format(d);
-                out.print(pad(s, 7, 1));
+                out.print(pad(" " + s, 7, 1));
 
                 // Int
                 dd = MeasurementValue.MAGNETIZATION.getValue(step);
                 d = dd != null ? dd : 0.0;
                 s = format5Numb.format(d);
-                out.print(pad(s, 11, 1));
+                out.print(pad(" " + s, 11, 1));
 
                 // Sus
                 d = step.getSusceptibility();
                 d = d >= 0.0 ? d : Math.max(getSusceptibility(), 0.0);
                 s = format5Numb.format(d);
-                out.print(pad(s, 9, 1));
+                out.print(pad(" " + s, 9, 1));
 
                 // T63
                 dd = MeasurementValue.THETA63.getValue(step);
                 d = dd != null ? dd : 0.0;
                 s = format2Frac.format(d);
-                out.print(pad(s, 7, 1));
+                out.print(pad(" " + s, 7, 1));
 
                 // Xkomp
                 dd = MeasurementValue.SAMPLE_X.getValue(step);
                 d = dd != null ? dd : 0.0;
                 s = format5Numb.format(d);
-                out.print(pad(s, 11, 1));
+                out.print(pad(" " + s, 11, 1));
 
                 // Ykomp
                 dd = MeasurementValue.SAMPLE_Y.getValue(step);
                 d = dd != null ? dd : 0.0;
                 s = format5Numb.format(d);
-                out.print(pad(s, 11, 1));
+                out.print(pad(" " + s, 11, 1));
 
                 // Zkomp
                 dd = MeasurementValue.SAMPLE_Z.getValue(step);
                 d = dd != null ? dd : 0.0;
                 s = format5Numb.format(d);
-                out.print(pad(s, 11, 1));
+                out.print(pad(" " + s, 11, 1));
 
                 out.println();
             }
