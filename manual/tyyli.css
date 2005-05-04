@@ -24,8 +24,8 @@ h1 {
 	clear: both
 }
 
-p {
-
+p, li {
+	width: 700px;
 } 
 
 a {
