@@ -38,6 +38,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -104,18 +105,36 @@ public class PrintPanel extends JPanel {
 
         $$$setupUI$$$();
 
+        NumberFormat nf = NumberFormat.getInstance();
+
         /* Project Information */
         header.setText(project.getName() + " (" + project.getType() + " Project)");
         header.setFont(header.getFont().deriveFont(Font.BOLD));
         operator.setText(project.getProperty(Project.OPERATOR_PROPERTY, "") + " / " +
                 project.getProperty(Project.DATE_PROPERTY, DateFormat.getDateInstance().format(new Date())));
-        latitude.setText(project.getProperty(Project.LATITUDE_PROPERTY, ""));
-        longitude.setText(project.getProperty(Project.LONGITUDE_PROPERTY, ""));
-        strike.setText("" + project.getStrike());
-        dip.setText("" + project.getDip());
-        mass.setText(project.getMass() > 0 ? "" + project.getMass() : "");
-        volume.setText(project.getVolume() > 0 ? "" + project.getVolume() : "");
-        susceptibility.setText(project.getSusceptibility() > 0 ? "" + project.getSusceptibility() : "");
+        nf.setMaximumFractionDigits(1);
+        nf.setMinimumFractionDigits(1);
+        try {
+            double d = Double.parseDouble(project.getProperty(Project.LATITUDE_PROPERTY, "0.0"));
+            latitude.setText(nf.format(d));
+        } catch (NumberFormatException e) {
+            latitude.setText("");
+        }
+        try {
+            double d = Double.parseDouble(project.getProperty(Project.LONGITUDE_PROPERTY, "0.0"));
+            longitude.setText(nf.format(d));
+        } catch (NumberFormatException e) {
+            longitude.setText("");
+        }
+        strike.setText(nf.format(project.getStrike()));
+        dip.setText(nf.format(project.getDip()));
+        nf.setMinimumFractionDigits(3);
+        nf.setMaximumFractionDigits(3);
+        mass.setText(project.getMass() > 0 ? nf.format(project.getMass()) + " g" : "");
+        volume.setText(project.getVolume() > 0 ? nf.format(project.getVolume()) + " cm\u00B3" : "");
+        nf.setMinimumFractionDigits(0);
+        nf.setMaximumFractionDigits(0);
+        susceptibility.setText(project.getSusceptibility() > 0 ? nf.format(project.getSusceptibility()) : "");
 
         /* calculate Density and Q (what ever it is, hehe) */
 
@@ -123,15 +142,19 @@ public class PrintPanel extends JPanel {
         if (project.getStep(0) != null) {
             Double mag = project.getValue(0, MeasurementValue.MAGNETIZATION);
             if (mag != null) {
+                nf.setMinimumFractionDigits(2);
+                nf.setMaximumFractionDigits(2);
                 double q = 25.13 * mag / project.getSusceptibility();
-                qValue.setText("" + (int) (q * 100) / 100.0);
+                qValue.setText(nf.format(q));
             } else {
                 qValue.setText("");
             }
         }
         if (project.getMass() > 0 && project.getVolume() > 0) {
+            nf.setMinimumFractionDigits(3);
+            nf.setMaximumFractionDigits(3);
             double d = project.getMass() / project.getVolume();
-            density.setText("" + (int) (d * 100) / 100.0);
+            density.setText(nf.format(d) + " g/cm\u00B3");
         } else {
             density.setText("");
         }
