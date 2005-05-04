@@ -1025,7 +1025,99 @@ public class Project {
         if (file == null) {
             throw new NullPointerException();
         }
-        return false; // TODO
+        PrintStream out = null;
+        try {
+            out = new PrintStream(file, "ISO-8859-1");
+            double d;
+            Double dd;
+            String s;
+
+            // locales and formatters for numbers
+            Locale locale = new Locale("en");
+            DecimalFormat format0Frac = new DecimalFormat("######0", new DecimalFormatSymbols(locale));
+            DecimalFormat format2Frac = new DecimalFormat("###0.00", new DecimalFormatSymbols(locale));
+            DecimalFormat format3Frac = new DecimalFormat("##0.000", new DecimalFormatSymbols(locale));
+
+            // begin header
+            out.println("Thellier-tdt");
+
+            // the applied field value in mT
+            out.print(pad(format3Frac.format(0.0), Math.max(getName().length(), 8), 1));      // TODO: how should this be calculated?
+
+            // strike
+            out.print(pad(format2Frac.format(getStrike()), 8, 1));
+
+            // dip
+            out.print(pad(format2Frac.format(getDip()), 8, 1));
+
+            // latitude
+            try {
+                d = Double.parseDouble(getProperty(LATITUDE_PROPERTY, "0.0"));
+            } catch (NumberFormatException e) {
+                d = 0.0;
+            }
+            out.print(pad(format2Frac.format(d), 8, 1));
+
+            // longitude
+            try {
+                d = Double.parseDouble(getProperty(LONGITUDE_PROPERTY, "0.0"));
+            } catch (NumberFormatException e) {
+                d = 0.0;
+            }
+            out.print(pad(format2Frac.format(d), 8, 1));
+            out.println();      // end header
+
+            for (int i = 0; i < getCompletedSteps(); i++) {
+                MeasurementStep step = getStep(i);
+
+                // specimen name
+                out.print(pad(getName(), 8, -1));
+
+                // temperatures and steps (magnetizing vs. demagnetizing)
+                d = Math.max(step.getStepValue(), 0.0);
+                if (getType() == THELLIER) {
+                    // with Thellier the decimals are ".00", ".11", ".12", ".13" or ".14"
+                    s = format2Frac.format(d);
+                } else {
+                    // with Thermal the decimals are always ".00"
+                    s = format0Frac.format(d) + ".00";
+                }
+                out.print(pad(s, 8, 1));
+
+                // intensity
+                dd = MeasurementValue.MAGNETIZATION.getValue(step);
+                d = dd != null ? dd : 0.0;
+                s = format0Frac.format(d);
+                out.print(pad(s, 8, 1));
+
+                // declination
+                dd = MeasurementValue.DECLINATION.getValue(step);
+                d = dd != null ? dd : 0.0;
+                s = format0Frac.format(d);
+                out.print(pad(s, 8, 1));
+
+                // inclination
+                dd = MeasurementValue.INCLINATION.getValue(step);
+                d = dd != null ? dd : 0.0;
+                s = format0Frac.format(d);
+                out.print(pad(s, 8, 1));
+
+                out.println();
+            }
+
+            // exporting finished
+            return true;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
+        return false;
     }
 
     /**
