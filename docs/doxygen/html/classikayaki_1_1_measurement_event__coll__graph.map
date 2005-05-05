@@ -1,9 +1,0 @@
-base referer
-rect $classikayaki_1_1_measurement_step.html 8,8 184,34
-rect $classikayaki_1_1_project.html 145,98 254,125
-rect $classikayaki_1_1squid_1_1_squid.html 305,189 441,216
-rect $classikayaki_1_1_measurement_sequence.html 208,8 416,34
-rect $classikayaki_1_1squid_1_1_magnetometer.html 278,98 468,125
-rect $classikayaki_1_1squid_1_1_handler.html 492,98 641,125
-rect $classikayaki_1_1util_1_1_last_executor.html 441,8 606,34
-rect $classikayaki_1_1squid_1_1_degausser.html 665,98 830,125

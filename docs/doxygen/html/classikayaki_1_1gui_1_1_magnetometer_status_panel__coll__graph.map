@@ -1,6 +1,0 @@
-base referer
-rect $interfaceikayaki_1_1_measurement_listener.html 8,194 202,221
-rect $classikayaki_1_1gui_1_1_magnetometer_status_panel_1_1_manual_controls_panel.html 226,194 605,221
-rect $classikayaki_1_1gui_1_1_component_flasher.html 281,8 484,34
-rect $classikayaki_1_1_project.html 606,8 716,34
-rect $classikayaki_1_1squid_1_1_squid.html 629,194 765,221

@@ -1,7 +1,0 @@
-base referer
-rect $interfaceikayaki_1_1_project_listener.html 296,8 450,34
-rect $classikayaki_1_1gui_1_1_project_component.html 465,130 665,157
-rect $classikayaki_1_1gui_1_1_project_explorer_table_1_1_project_explorer_table_model.html 8,130 384,157
-rect $interfaceikayaki_1_1_measurement_listener.html 474,8 669,34
-rect $classikayaki_1_1_project.html 693,8 802,34
-rect $classikayaki_1_1gui_1_1_styled_wrapper.html 93,8 272,34

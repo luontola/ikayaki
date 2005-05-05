@@ -1,6 +1,0 @@
-base referer
-rect $classikayaki_1_1gui_1_1_measurement_graphs_panel.html 640,85 888,112
-rect $classikayaki_1_1gui_1_1_measurement_sequence_table_model.html 253,85 552,112
-rect $classikayaki_1_1gui_1_1_project_component.html 302,136 502,162
-rect $classikayaki_1_1gui_1_1_project_explorer_table.html 296,186 509,213
-rect $classikayaki_1_1gui_1_1_project_explorer_table_1_1_project_explorer_table_model.html 214,237 590,264

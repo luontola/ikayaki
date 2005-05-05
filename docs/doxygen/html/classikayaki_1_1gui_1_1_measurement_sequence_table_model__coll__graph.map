@@ -1,8 +1,0 @@
-base referer
-rect $interfaceikayaki_1_1_project_listener.html 8,98 162,125
-rect $interfaceikayaki_1_1_measurement_listener.html 186,98 381,125
-rect $classikayaki_1_1_project.html 506,98 616,125
-rect $classikayaki_1_1squid_1_1_squid.html 425,189 561,216
-rect $classikayaki_1_1_measurement_step.html 660,189 836,216
-rect $classikayaki_1_1_measurement_sequence.html 352,8 560,34
-rect $classikayaki_1_1util_1_1_last_executor.html 584,8 749,34
