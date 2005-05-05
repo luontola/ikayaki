@@ -1,0 +1,14 @@
+#! /bin/bash
+
+# Generates todo-list from source code
+# Samuli Kaipiainen, 2005-05-05
+
+srcpath=../../../src/ikayaki
+
+for file in $srcpath/**/*.java; do
+	echo \\subsection{${file/#$srcpath\/}}
+	grep -A 4 TODO $file | grep //
+	echo
+	# todos=$(grep TODO $file)
+	# echo ${todos//\/\/ TODO: /$'\n'\\\\}
+done

@@ -68,21 +68,15 @@ Separate window which is opened from menubar and it updates settings for Squid i
 
 \subsubsection{Project Explorer}
 
-Located at middle left side of main window.
+Nothing much here; some internal private field renames. Oh and a lot more stuff than planning suggests :)
 
-ProjectExplorerPanel handles loading existing projects and creating new ones. Shows a listing of project files in current directory, which can be changed by typing new directory into ComboBox text field, or using the browse-button and a standard directory chooser dialog (JFileChooser). ComboBox also holds directory history, and, when typing text into its text field, automatically shows autocomplete results.
+ProjectExplorerTable is now its own class (as Calibration uses it too), and ProjectExplorerPopupMenu is its inner class. Also has inner class ProjectExplorerTableModel, which, unlike normally (as in the standard way), is quite empty and most of the stuff is in ProjectExplorerTable. Uses StyledWrapper for table row background colors (and Calibration boldface-reminder).
 
-NewProjectPanel has components for creating a new project.
-
-ProjectExplorerTable is a JTable with the project file listing, including "filename", "type" and "last modified" columns.
-
-ProjectExplorerPopupMenu has options for exporting project files into different formats.
+NewProjectPanel is inner class of ProjectExplorerPanel.
 
 \subsubsection{Calibration}
 
-Located at upper left corner of main window.
-
-CalibrationPanel holds predefined "Holder noise" and "Standard sample" projects for calibration in a similar table as Project Explorer. Also has a "Calibrate" button, which executes selected calibration project, similarly to clicking "Single step" in normal projects.
+Uses ProjectExplorerTable, which makes Calibration.java really short.
 
 \subsubsection{Project information}
 
@@ -113,19 +107,25 @@ finished next steps details are shown.
 
 \subsubsection{Measurement controls}
 
-Located at upper right corner of main window.
+Sadly, ManualControlsPanel had to go into MagnetometerStatusPanel as an inner class, since they share some data and move-radiobuttons.
 
-MeasurementControlsPanel holds the buttons for controlling measurements, a help picture for sample inserting, radiobuttons for changing +z/-z orientation of sample, magnetometer status picture and manual controlling components.
+MagnetometerStatusPanel's updateStatus takes no parameters, as it asks position and rotation directly from Handler. Also, status image is updated at all times once in 50 ms (positions asked with getEstimatedPosition and getEstimatedRotation in Handler).
 
-MagnetometerStatusPanel shows an image of current magnetometer status, as in sample holder position and rotation. Image is updated according to MeasurementEvents received.
+Here too, a lot more stuff than what planning imply.
 
-ManualControlsPanel has controls for fully manual measuring, which are enabled when no "normal" measurements are happening.
+ManualControlsPanel's manual control components are disabled whenever there's \textit{any} Squid action, to keep those fragile equipments from messing up.
 
 \subsubsection{Graphs}
 
 Located at lower right corner of main window.
 
 Graph panels visualize the measurement data. MeasurementGraphsPanel listens to MeasurementEvents to update the measurement data in plots. AbstractPlot is an abstract class which implements all the general features of graph plots. IntensityPlot and StereoPlot extend the functionality of AbstractPlot and implement their special drawing features accordingly.
+
+
+\section{TODO-list from source code}
+\label{sec:todo}
+
+\input{todolist}
 
 
 \section{Improvement suggestions}

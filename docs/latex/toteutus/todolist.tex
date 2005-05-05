@@ -1,0 +1,88 @@
+\subsection{gui/DeviceSettingsPanel.java}
+            //TODO: check COM ports
+            // TODO: doesn't work
+
+\subsection{gui/IntensityPlot.java}
+        // TODO draw ticks and numbers for y-axis
+        // x-axis ticks
+        // TODO draw ticks and numbers for x-axis
+        // y-axis unit
+        // x-axis unit
+
+\subsection{gui/MagnetometerStatusPanel.java}
+    // TODO: some way to get the actual max-position?
+    // handler positions, read from Settings
+    // WARNING: all of these must differ or we have trouble...
+        // TODO: WARNING: if two positions are the same, previous one gets replaced
+        // TODO: only need to call updateButtonPositions here, but it won't work so now it's called
+        // every time in paintComponent
+        // TODO: is this needed?
+        // TODO: what would be the right place for this call?
+        // let Swing erase the background
+                // TODO: this wouldn't actually be needed if we get MeasurementEvent every time
+                // handler stops, but let's just make sure :)
+                // TODO: different speed in measurement zone
+            // TODO: as this is the biggest button is measurePanel, changing its text changes whole panel width,
+            // and, in the end, whole MagnetometerStatusPanel width; should prevent that from happening
+
+\subsection{gui/MainMenuBar.java}
+            //exportProjectMenu.add(exportProjectToSRM);    // TODO: support for SRM files is missing
+
+\subsection{gui/MainViewPanel.java}
+                    // TODO: what should be done now? give error message?
+                    //e.printStackTrace();
+        // TODO: make this as an Action?
+
+\subsection{gui/MeasurementSequencePanel.java}
+        // TODO: Put these same actions to the program's main menu. Each action might then need to find out the selected rows itself and monitor the ListSelectionModel.
+
+\subsection{gui/ProjectExplorerPanel.java}
+                // TODO: cycling through popup menu list with up/down keys changes directory;
+                // it shouldn't, but can't recognize those changed-events from mouse clicks
+                // item is File if selected from list, String if written to text field
+                    // TODO: when mouseclicking autocomplete list item, textfield gets cleared because of this
+                    //Object item = browserField.getSelectedItem();
+                    //browserField.setSelectedItem(item);
+
+\subsection{gui/ProjectExplorerTable.java}
+        // TODO: what should be here anyway?
+        // this.setPreferredScrollableViewportSize(new Dimension(280, 400));
+        // set the right visible columns for table type
+                    // TODO: flash selected row red for 100 ms, perhaps? - might require a custom cell renderer
+            // TODO: does this look better without the "*"?
+            // - not to me, but don't really care anymore :)
+            // TODO: some portable way to get a File for disk drive? Or maybe a Setting for export-dirs?
+                for (String type : new String[]{"dat", "tdt" /*, "srm" */}) {   // TODO: support for SRM files is missing
+                                // TODO: tell somehow, not with popup, if export was successful; statusbar perhaps?
+
+\subsection{gui/SequenceColumn.java}
+        // TODO: remove the need for this hack
+            setNumberFormat(new DecimalFormat("0.000E0"));  // TODO: maybe make a new class that could show the format: 1.123e+05
+
+\subsection{gui/StyledWrapper.java}
+//        public Insets insets = null; // TODO: is this also necessary?
+
+\subsection{squid/Degausser.java}
+        //needs to call new functions setDelay() and setRamp(). TODO
+        //TODO: do we need to check values? (original does)
+        //TODO: problem when Degausser and Magnetometer uses same port :/
+
+\subsection{squid/Handler.java}
+        // TODO: maybe currentVelocity is not in steps per second?
+        double timeSpent = (System.currentTimeMillis() - estimatedPositionStartTime) / 1000.0;    // in seconds
+        // TODO: calculate the acceleration and deceleration corrections
+        // TODO: maybe currentVelocity is not in steps per second?
+        double timeSpent = (System.currentTimeMillis() - estimatedRotationStartTime) / 1000.0;    // in seconds
+        // prevent going over the end limit
+
+\subsection{squid/Magnetometer.java}
+            //Original sets range and filter to 1x and disable fast-slew, TODO: check if right, do we need status confirm?
+        //when to use flux counting and when not? TODO
+        //TODO: problem when Degausser and Magnetometer uses same port :/
+
+\subsection{squid/SquidEmulator.java}
+            //Only writing, TODO:switch to reading option
+
+\subsection{squid/SquidFront.java}
+                    // TODO: what should be done now? give error message?
+                    //e.printStackTrace();
