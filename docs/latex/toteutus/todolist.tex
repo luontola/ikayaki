@@ -62,7 +62,7 @@ Window cannot be closed with ESC-key as we wanted.
 
 \subsection{gui/MagnetometerStatusPanel.java}
 
-If any two handler positions (read from Settings) are the same, the corresponding move-radiobuttons won't be moved correctly, as they are dumped into a TreeMap. There are now same positions in current lab setup, and don't know if there ever could be, so this won't matter; however, Device Configuration doesn't check what is inputted there, so let's just hope noone messes with those.
+If any two handler positions (read from Settings) are the same, the corresponding move-radiobuttons won't be moved correctly, as they are dumped into a TreeMap. There are no same positions in current lab setup, and don't know if there ever could be, so this won't matter. However, Device Configuration doesn't check what is inputted there, so let's just hope noone messes with those.
 
 Call for updateButtonPositions(...) is in paintComponent, as otherwise the button positions won't stick; don't know what's the right place then for that method call.
 
