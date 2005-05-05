@@ -324,9 +324,9 @@ public class Report {
                 // find out which of the codes started collecting hours first
                 for (int i = 0; i < hours1.size() && i < hours2.size(); i++) {
                     Double d1 = hours1.get(i);
-                    Double d2 = hours1.get(i);
-                    if (d1.compareTo(d2) != 0) {
-                        return d1.compareTo(d2);
+                    Double d2 = hours2.get(i);
+                    if (d2.compareTo(d1) != 0) {
+                        return d2.compareTo(d1);
                     }
                 }
                 return 0;
