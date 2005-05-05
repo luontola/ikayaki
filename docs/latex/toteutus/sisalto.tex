@@ -54,6 +54,61 @@ Squid Interface offers the Project class an interface to safely control the SQUI
 
 Classes are Squid, Handler, Magnetometer, Degausser.
 
+These were not desinged well because it was hard to know how exactly we should use Squid at the time. Lots of changes were made and many methods were removed and added. Private status String is not used in any class and messageBuffer is not used like vise. Messages are catch on private SynchronousQueue<String> answerQueue = new SynchronousQueue<String>() variable and there is private boolean waitingForMessage variable indicating are we waiting any message from equipment.
+
+Handler: Biggest change here is that we use WorkingQueue here. And EstimatedMovement are calculated here too. Many of the methods are change and most are removed or not used like planned.
+
+Methods not used or removed:
+
+poll(take)Message()
+
+setPositionRegister(int r)
+
+setPosition(int p)
+
+setSteps(int s)
+
+stop()
+
+setBaseSpeed(int b)
+
+setHoldTime(int h)
+
+setCrystalFrequence(int cf)
+
+getStatus()
+
+Methods added or modified:
+
+public int getEstimatedPosition() : return where is handler.
+
+public int getEstimatedRotation() : return rotation of handler.
+
+public boolean isMoving() : tells if we are moving.
+
+public boolean isRotating() : tells if we are rotating.
+
+public void moveToLeftLimit() : starts moving to left limit.
+
+public void moveToRightLimit() : starts moving to right limit.
+
+protected void moveSteps(int steps, int velocity) throws SerialIOException : moves steps as commanded.
+
+protected void moveToPosition(int position) throws SerialIOException : moves handler to position, relative to home.
+
+protected void seekHome() throws SerialIOException : seeks home position.
+
+protected void selectMovement() throws SerialIOException : sets Handler on moving phase.
+
+protected void selectRotation() throws SerialIOException : sets Handler on rotating phase.
+
+protected void setPosition(int position) : sets position for EstimatedMovement.
+
+protected void setRotation(int rotationSteps) : sets  rotation for EstimatedMovement.
+
+protected void setUp() : sets Handler online.
+
+protected void slewToLimit(boolean toRight) throws SerialIOException : sets Handler to go limit.
 
 \subsubsection{Squid emulator}
 
