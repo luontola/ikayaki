@@ -40,7 +40,7 @@ Class diagram of data classes is in Figure~\ref{fig:core}.
 
 \subsubsection{Project data}
 
-\insertdia{project_graph}.
+\insertdia{project-graph}
 
 Responsible for holding all the measurement data and controlling the SQUID. Most of the GUI classes use the Project class. When the state of the project changes, the Project class fires ProjectEvents and MeasurementEvents to the GUI classes, which in turn will call the Project class to get the changed information.
 
@@ -77,7 +77,7 @@ ProjectComponent, a generic gui base class which handles registering Project- an
 
 \subsubsection{Main window}
 
-\insertdia{main_view_panel_graph}
+\insertdia{main-view-panel-graph}
 
 Creates main view for GUI. Menubar at top, Statusbar at bottom and makes panels and splitpanels for other GUI components to middle. This also tells other GUI components if someone changes project file.
 
