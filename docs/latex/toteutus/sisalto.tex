@@ -233,5 +233,14 @@ There are a couple of things that need to be taken care of, if the program is ev
 - Serial communication will at least require the OS-specific version of javax.comm, or maybe it needs to be done in some another way.
 
 
-\subsection{...}
+\subsection{Warning Signal for Degausser}
 
+As mentioned in the requirements document, the client wants that the program will make an alarm signal, if the degausser for some reason does not ramp down in time. The protocol specifications of the degausser says that it will automatically prevent that from happening, so this feature was dumped because there was no easy way to do it and it seemed unnecessary because of the hardware specifications.
+
+Apparently Matti Leino has made such a system previously, so try to find out more from him.
+
+Quote from Lauri Pesonen:
+
+\textit{Siitä ambulanssivaroitussignaalista jos ramp down ei tapahdu.}
+
+\textit{Matti leino odottaa vietiä "done" noin 1 minnutin. Jos käskyä ei tule niin kelojen virtaan ERIKSEEN asennettu mikrokytkin kytkee virran pois jotta kelat eivät pala. Tämän voitte kertoa raportsissa mutta varsinainen homma tehdään syksyllä uuden ryhmän kanssa. Eli nyt tuskin ehditte mutta näin se on tehty. Soittakaa Matti Leino 0 205 50 2272 (GTK) ja hän kuvaa kuinka hän teki. Olisi tärkeätä että kirjaatte kuitenkin tuon Matti Leinon tekniikan ylös!}
