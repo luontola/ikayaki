@@ -1,6 +1,21 @@
 % est‰mme ihme "underfull \hbox (badness 10000)" -varoitukset (ei hajua mist‰ tulevat)
 \hbadness=10000
 
+% nopsa pikkuluokkakaavioiden lis‰ysmakro
+% pois figuren sis‰lt‰ niin kuvat tulee minne pit‰‰kin, feikataan kuvanumerointi ja kuvateksti
+\newcommand{\insertdia}[1] {
+	% \begin{figure}[h!]
+	\begin{center}
+	\includegraphics[scale=0.33]{dia/#1.eps}
+	% \caption{#1}
+	\refstepcounter{figure}
+	\label{fig:#1}
+	\nopagebreak \\ \medskip Figure \arabic{figure}: #1 \\
+	\addcontentsline{lof}{figure}{#1}
+	\end{center}
+	% \end{figure}
+}
+
 \section{Introduction}
 \label{sec:intro}
 
@@ -25,7 +40,7 @@ Class diagram of data classes is in Figure~\ref{fig:core}.
 
 \subsubsection{Project data}
 
-Figure~\ref{project_graph:core}.
+\insertdia{project_graph}.
 
 Responsible for holding all the measurement data and controlling the SQUID. Most of the GUI classes use the Project class. When the state of the project changes, the Project class fires ProjectEvents and MeasurementEvents to the GUI classes, which in turn will call the Project class to get the changed information.
 
@@ -62,7 +77,7 @@ ProjectComponent, a generic gui base class which handles registering Project- an
 
 \subsubsection{Main window}
 
-Figure~\ref{main_view_panel_graph:core}.
+\insertdia{main_view_panel_graph}
 
 Creates main view for GUI. Menubar at top, Statusbar at bottom and makes panels and splitpanels for other GUI components to middle. This also tells other GUI components if someone changes project file.
 
