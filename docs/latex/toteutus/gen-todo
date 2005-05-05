@@ -5,7 +5,7 @@
 
 srcpath=../../../src/ikayaki
 
-for file in $srcpath/**/*.java; do
+for file in $srcpath/*.java $srcpath/**/*.java; do
 	echo \\subsection{${file/#$srcpath\/}}
 	grep -A 4 TODO $file | grep //
 	echo
