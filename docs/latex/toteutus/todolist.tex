@@ -61,20 +61,12 @@ Window cannot be closed with ESC-key as we wanted.
         // x-axis unit
 
 \subsection{gui/MagnetometerStatusPanel.java}
-    // TODO: some way to get the actual max-position?
-    // handler positions, read from Settings
-    // WARNING: all of these must differ or we have trouble...
-        // TODO: WARNING: if two positions are the same, previous one gets replaced
-        // TODO: only need to call updateButtonPositions here, but it won't work so now it's called
-        // every time in paintComponent
-        // TODO: is this needed?
-        // TODO: what would be the right place for this call?
-        // let Swing erase the background
-                // TODO: this wouldn't actually be needed if we get MeasurementEvent every time
-                // handler stops, but let's just make sure :)
-                // TODO: different speed in measurement zone
-            // TODO: as this is the biggest button is measurePanel, changing its text changes whole panel width,
-            // and, in the end, whole MagnetometerStatusPanel width; should prevent that from happening
+
+If any two handler positions (read from Settings) are the same, the corresponding move-radiobuttons won't be moved correctly, as they are dumped into a TreeMap. There are now same positions in current lab setup, and don't know if there ever could be, so this won't matter; however, Device Configuration doesn't check what is inputted there, so let's just hope noone messes with those.
+
+Call for updateButtonPositions(...) is in paintComponent, as otherwise the button positions won't stick; don't know what's the right place then for that method call.
+
+Changing the "Measure BG"/"Measure XYZ" button text changes whole MagnetometerStatusPanel width; should prevent that somehow.
 
 \subsection{gui/MainMenuBar.java}
             //exportProjectMenu.add(exportProjectToSRM);    // TODO: support for SRM files is missing
@@ -179,7 +171,7 @@ There is no functionality for UpdateSettings(), so when settings are changed pro
 
 \subsection{squid/SquidEmulator.java}
 
- No further development needed. Was only little help on testing and wad dumped soon after testing in laboratorium.
+No further development needed. Was only little help on testing and wad dumped soon after testing in laboratorium.
 
 \subsection{squid/SquidFront.java}
 
