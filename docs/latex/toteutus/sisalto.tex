@@ -25,6 +25,8 @@ Class diagram of data classes is in Figure~\ref{fig:core}.
 
 \subsubsection{Project data}
 
+Figure~\ref{project_graph:core}.
+
 Responsible for holding all the measurement data and controlling the SQUID. Most of the GUI classes use the Project class. When the state of the project changes, the Project class fires ProjectEvents and MeasurementEvents to the GUI classes, which in turn will call the Project class to get the changed information.
 
 \subsubsection{Squid interface}
@@ -59,6 +61,8 @@ Class diagram of gui classes is in Figure~\ref{fig:gui}. This section is divided
 ProjectComponent, a generic gui base class which handles registering Project- and MeasurementListeners to new projects, and which every project-dependant gui component subclasses. See Figure~\ref{fig:gui}.
 
 \subsubsection{Main window}
+
+Figure~\ref{main_view_panel_graph:core}.
 
 Creates main view for GUI. Menubar at top, Statusbar at bottom and makes panels and splitpanels for other GUI components to middle. This also tells other GUI components if someone changes project file.
 
