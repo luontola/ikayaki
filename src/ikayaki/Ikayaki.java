@@ -48,8 +48,8 @@ public class Ikayaki extends JFrame {
     /* Application information */
 
     public static final String APP_NAME = "Ikayaki";
-    public static final String APP_VERSION = "0.93";
-    public static final String APP_BUILD = "2005-05-04";
+    public static final String APP_VERSION = "1.0";
+    public static final String APP_BUILD = "2005-05-06";
     public static final String APP_HOME_PAGE = "http://www.cs.helsinki.fi/group/squid/";
 
     public static final String FILE_TYPE = ".ika";

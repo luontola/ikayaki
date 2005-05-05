@@ -1,0 +1,12 @@
+
+The following things are needed to be able to compile Ikayaki.
+
+- JDK 1.5.0 or greater
+- javax.comm package (lib\comm.jar)
+- javax.vecmath package (lib\vecmath.jar)
+- com.intellij.uiDesigner package (lib\forms_rt.jar)
+- com.jgoodies.looks package (lib\looks.jar)
+
+The .form files that are in package ikayaki.gui are for the UI Designer of 
+IntelliJ IDEA. You will need to get IDEA from http://www.jetbrains.com/idea/ to 
+be able to modify and compile them.
