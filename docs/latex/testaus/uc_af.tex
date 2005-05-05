@@ -15,14 +15,14 @@
 \condition{enables calibrate button}
 \testResultTrue
 \condition{disables editing sequence}
-\testResultFalse fields/buttons not disabled, but adding sequence doesn't work
+\testResultTrue
 \closeCase
 
 \beginCase{Click Calibration button}
 \condition{Adds new line in Sequence at bottom}
 \testResultTrue
 \condition{Starts calibration, progress shown on measurement controls}
-\testResultFalse progress is shown wrong, works otherwise
+\testResultTrue
 \condition{Data is updated correctly in Measurement Details}
 \testResultTrue
 \condition{Stop button enabled}
@@ -47,7 +47,7 @@
 \condition{Adds new line in Sequence at bottom}
 \testResultTrue
 \condition{Starts calibration, progress shown on measurement controls}
-\testResultFalse progress is shown wrong, works otherwise
+\testResultTrue
 \condition{Data is updated correctly in Measurement Details}
 \testResultTrue
 \condition{Stop button enabled}
@@ -140,8 +140,8 @@
 \closeCase
 
 \beginCase{Stop Now! button}
-\condition{Stops measurement immediatelly}
-\testResultTrue or as fast as machine can be stopped
+\condition{Stops measurement immediatelly or as fast as machine can be stopped}
+\testResultTrue 
 \closeCase
 
 \closeTestedClass
