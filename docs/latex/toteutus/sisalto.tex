@@ -221,7 +221,7 @@ The algorithms for the measurement's mathematical calculations are spead around 
 - MeasurementResult.applyFixes(MeasurementStep) rotates the sample to 0 angle and applies noise, +/-Z and sample holder fixes. This is the sampleVector. \\
 - MeasurementResult.setTransform(Matrix3d) applies the transformation matrix for rotating the sample coordinates to geographic coordinates. This is the geographicVector. \\
 - MeasurementValue classes contain the algorithms for calculating all kinds of mathematical numbers. \\
-- SequenceColumn classes contain the information that how those numbers should be shown in the MeasurementSequenceTable. New columns are added to the table by listing them in SequenceColumn.getAllColumns(). Default columns are defined in Settings.getDefaultColumns(). \\
+- SequenceColumn classes contain the information that how those numbers should be shown in the MeasurementSequenceTable. New columns are added to the table by listing them in SequenceColumn.getAllColumns(). Default columns are defined in Settings.getDefaultColumns().
 
 
 \subsection{Porting to linux}
@@ -230,7 +230,7 @@ There are a couple of things that need to be taken care of, if the program is ev
 
 - Maximizing the program window (in Ikayaki's constructor) requires some native code, because Java does not have a way for doing it. \\
 - Opening the user manual from the Help menu needs some OS-specific instructions to open the web browser. \\
-- Serial communication will at least require the OS-specific version of javax.comm, or maybe it needs to be done in some another way. \\
+- Serial communication will at least require the OS-specific version of javax.comm, or maybe it needs to be done in some another way.
 
 
 \subsection{...}
