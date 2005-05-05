@@ -27,7 +27,7 @@ import javax.swing.*;
 /**
  * Creates its components and listens project events on status change and calculates estimated time for measurement
  *
- * @author
+ * @author -
  */
 public class MainStatusBar extends ProjectComponent {
 /*
