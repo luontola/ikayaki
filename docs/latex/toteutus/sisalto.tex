@@ -1,0 +1,132 @@
+% estämme ihme "underfull \hbox (badness 10000)" -varoitukset (ei hajua mistä tulevat)
+\hbadness=10000
+
+\section{Introduction}
+\label{sec:intro}
+
+Blablabla balalaalllblaaaaaaa aaaaarrggrgghh.
+
+
+\section{Changes from Design document}
+\label{sec:changes}
+
+Here we describe how the implementation/production differs from that planned in Design document.
+
+
+\subsection{Data classes and methods}
+
+Class diagram of data classes is in Figure~\ref{fig:core}.
+
+\subsubsection{Project data}
+
+Responsible for holding all the measurement data and controlling the SQUID. Most of the GUI classes use the Project class. When the state of the project changes, the Project class fires ProjectEvents and MeasurementEvents to the GUI classes, which in turn will call the Project class to get the changed information.
+
+\subsubsection{Squid interface}
+
+Squid Interface offers the Project class an interface to safely control the SQUID magnetometer. The Squid class holds three classes that handle communication to to three separate parts of the SQUID (Handler, Degausser and Magnetometer).
+
+Classes are Squid, Handler, Magnetometer, Degausser.
+
+\subsubsection{Squid emulator}
+
+Squid Emulator is separate from the rest of the program and it is used only for testing that the Squid Interface works correctly.
+
+\subsubsection{Serial communication}
+
+SerialIO and classes related to it takes care of the harware layer of serial communication. Using these classes the program communicates with the Degausser, Samplehandler and Magnetometer. SerialIO represents one serial port and when it's created it reserves the port to itself. SerialProperties class includes all the configuration data for the serial port.
+
+\subsubsection{Global settings}
+
+Global properties that are used all around the program. The Settings class provides a global point for retrieving and modifying the properties.
+
+\subsubsection{Utilities}
+
+Utility classes that are used in the program, but do not fit any of the other packages. At the moment includes only the LastExecutor class for thread management, but more classes can be added as necessary.
+
+
+\subsection{GUI classes and methods}
+
+Class diagram of gui classes is in Figure~\ref{fig:gui}. This section is divided into sections by gui components, each of which has one or more classes.
+
+\subsubsection{Generic GUI components}
+
+ProjectComponent, a generic gui base class which handles registering Project- and MeasurementListeners to new projects, and which every project-dependant gui component subclasses. See Figure~\ref{fig:gui}.
+
+\subsubsection{Main window}
+
+Creates main view for GUI. Menubar at top, Statusbar at bottom and makes panels and splitpanels for other GUI components to middle. This also tells other GUI components if someone changes project file.
+
+\subsubsection{Configuration window}
+
+Separate window which is opened from menubar and it updates settings for Squid interface. Used usually only when system is installed to setup it.
+
+\subsubsection{Project Explorer}
+
+Located at middle left side of main window.
+
+ProjectExplorerPanel handles loading existing projects and creating new ones. Shows a listing of project files in current directory, which can be changed by typing new directory into ComboBox text field, or using the browse-button and a standard directory chooser dialog (JFileChooser). ComboBox also holds directory history, and, when typing text into its text field, automatically shows autocomplete results.
+
+NewProjectPanel has components for creating a new project.
+
+ProjectExplorerTable is a JTable with the project file listing, including "filename", "type" and "last modified" columns.
+
+ProjectExplorerPopupMenu has options for exporting project files into different formats.
+
+\subsubsection{Calibration}
+
+Located at upper left corner of main window.
+
+CalibrationPanel holds predefined "Holder noise" and "Standard sample" projects for calibration in a similar table as Project Explorer. Also has a "Calibrate" button, which executes selected calibration project, similarly to clicking "Single step" in normal projects.
+
+\subsubsection{Project information}
+
+Located at lower left corner of main window.
+
+Contains and allows editing of basic information of sample. Includes
+such fields as volume, strike and dip, which are used to make
+calculations. Includes also fields whose information is only for users
+benefit.
+
+\subsubsection{Sequence and measurement data}
+
+Located at center of main window.
+
+Contains and allows editing of measurement sequence. Whenever
+measurement step is finished its data is added here. This data is also
+recalculated whenever some field affecting it in project infromation is
+changed.
+
+\subsubsection{Measurement details}
+
+Located at middle bottom of main window.
+
+Contains details of ongoing measurement or of row selected in measrurement
+sequence. If details of ongoing measurement is shown, they are updated
+whenever new measurement data is received and when measurement step is
+finished next steps details are shown.
+
+\subsubsection{Measurement controls}
+
+Located at upper right corner of main window.
+
+MeasurementControlsPanel holds the buttons for controlling measurements, a help picture for sample inserting, radiobuttons for changing +z/-z orientation of sample, magnetometer status picture and manual controlling components.
+
+MagnetometerStatusPanel shows an image of current magnetometer status, as in sample holder position and rotation. Image is updated according to MeasurementEvents received.
+
+ManualControlsPanel has controls for fully manual measuring, which are enabled when no "normal" measurements are happening.
+
+\subsubsection{Graphs}
+
+Located at lower right corner of main window.
+
+Graph panels visualize the measurement data. MeasurementGraphsPanel listens to MeasurementEvents to update the measurement data in plots. AbstractPlot is an abstract class which implements all the general features of graph plots. IntensityPlot and StereoPlot extend the functionality of AbstractPlot and implement their special drawing features accordingly.
+
+
+\section{Improvement suggestions}
+\label{sec:improv}
+
+What's left for the program to make it perfect :)
+
+\subsection{...}
+
+\subsection{Porting to linux}
