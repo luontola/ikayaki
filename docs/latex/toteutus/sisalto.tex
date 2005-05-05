@@ -56,7 +56,7 @@ Classes are Squid, Handler, Magnetometer, Degausser.
 
 These were not desinged well because it was hard to know how exactly we should use Squid at the time. Lots of changes were made and many methods were removed and added. Private status String is not used in any class and messageBuffer is not used like vise. Messages are catch on private SynchronousQueue<String> answerQueue = new SynchronousQueue<String>() variable and there is private boolean waitingForMessage variable indicating are we waiting any message from equipment.
 
-Handler: Biggest change here is that we use WorkingQueue here. And EstimatedMovement are calculated here too. Many of the methods are change and most are removed or not used like planned.
+\textbf{Handler): Biggest change here is that we use WorkingQueue here. And EstimatedMovement are calculated here too. Many of the methods are change and most are removed or not used like planned.
 
 \textbf{Methods not used or removed}:
 
@@ -110,6 +110,9 @@ protected void setUp() : sets Handler online.
 
 protected void slewToLimit(boolean toRight) throws SerialIOException : sets Handler to go limit.
 
+\textbf{Degausser}: Pretty much the same as planned. There is added blockingWrite(String command) that waits that command is sended, which is known when degausser answers it back.
+
+\textbf{Magnetometer}: Pretty much the same but getter commands are not used.
 
 \subsubsection{Squid emulator}
 
@@ -150,7 +153,7 @@ Basically the same as was designed, but there were many methods added.
 
 \subsubsection{Configuration window}
 
-Separate window which is opened from menubar and it updates settings for Squid interface. Used usually only when system is installed to setup it.
+Separate window which is opened from menubar and it updates settings for Squid interface. Used usually only when system is installed to setup it. If there is something changed, program should be restarted as there is no quarantee that they affect directly.
 
 
 \subsubsection{Project Explorer}
