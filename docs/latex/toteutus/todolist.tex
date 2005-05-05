@@ -46,7 +46,8 @@
 There are many settings in Squid that apparently are not needed. So there is now only those which seems only to be needed.
 
 There is no check if all systems have same port, only degausser and magnetometer can have same port.
-            // TODO: doesn't work
+
+Window cannot be closed with ESC-key as we wanted.
 
 \subsection{gui/FittedComboBoxRenderer.java}
 
@@ -151,22 +152,16 @@ There are no messages telling if exporting was succesful or not (as I didn't wan
 //        public Insets insets = null; // TODO: is this also necessary?
 
 \subsection{squid/Degausser.java}
-        //needs to call new functions setDelay() and setRamp(). TODO
-        //TODO: do we need to check values? (original does)
-        //TODO: problem when Degausser and Magnetometer uses same port :/
+
+This class seems to work alright, but there is some issues which are uncertain. It have not been tested so that Degausser and Magnetometer are in same port, more likely there will be many problems. This class trusts that everything goes alright, would be good to confirm status sometimes and check that everything is going well. ExecuteRampUp() and executeRampDown() are not used because there is risk that ramp stays up, executeRampCycle is only used.
 
 \subsection{squid/Handler.java}
-        // TODO: maybe currentVelocity is not in steps per second?
-        double timeSpent = (System.currentTimeMillis() - estimatedPositionStartTime) / 1000.0;    // in seconds
-        // TODO: calculate the acceleration and deceleration corrections
-        // TODO: maybe currentVelocity is not in steps per second?
-        double timeSpent = (System.currentTimeMillis() - estimatedRotationStartTime) / 1000.0;    // in seconds
-        // prevent going over the end limit
+
+Estimated movement does not calculate acceleration so its not exactly correct, but works well enough.
 
 \subsection{squid/Magnetometer.java}
-            //Original sets range and filter to 1x and disable fast-slew, TODO: check if right, do we need status confirm?
-        //when to use flux counting and when not? TODO
-        //TODO: problem when Degausser and Magnetometer uses same port :/
+
+This class seems to work alright, but there is some issues which are uncertain. It have not been tested so that Degausser and Magnetometer are in same port, more likely there will be many problems. We only use filter 1x and range 1x and disable fast-slew, no idea if other options are needed for these. And we do not check status from magnetometer, we just hope all goes well. In measuring we do not Never use flux counting, never be needed tough.
 
 \subsection{squid/SerialIO.java}
 
@@ -179,10 +174,13 @@ There are no messages telling if exporting was succesful or not (as I didn't wan
 \subsection{squid/SerialParameters.java}
 
 \subsection{squid/Squid.java}
-        // TODO
+
+There is no functionality for UpdateSettings(), so when settings are changed program needs to be restarted. This should be corrected as it was planned. And there is no call from DeviceSettings for this.
 
 \subsection{squid/SquidEmulator.java}
-            No further development needed. Was only little help on testing and wad dumped soon after testing in laboratorium.
+
+ No further development needed. Was only little help on testing and wad dumped soon after testing in laboratorium.
 
 \subsection{squid/SquidFront.java}
-	No further development needed. Have been used for testing some commands, but human control is too risky as we noticed.
+
+No further development needed. Have been used for testing some commands, but human control is too risky as we noticed.
