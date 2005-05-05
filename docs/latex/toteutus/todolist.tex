@@ -117,14 +117,14 @@ There is no check if all systems have same port, only degausser and magnetometer
 
 Cycling through popup menu list with up/down keys changes directory; it shouldn't, but can't recognize those changed-events from mouse clicks.
 
-When mouseclicking autocomplete list item, textfield gets cleared because of \texttt{setBrowserFieldPopup(...)}; no easy way around this, as other ways tried cause more other problems.
+When mouseclicking autocomplete list item, textfield gets cleared because of setBrowserFieldPopup(...); no easy way around this, as other ways tried cause more other problems.
 
 Many problems here arise from the fact that JComboBox isn't designed for recklessly changing popup menu contents (as we swap between directory history and autocomplete results). It might have been better to make an own component here, instead of using JComboBox, as now the whole thing has a lot of bubblegun stitching. But, it's good enough now.
 
 
 \subsection{gui/ProjectExplorerTable.java}
 
-Table columns have no indication for sort column, as Esko didn't like the "*" :)
+Table columns have no indication for sort column, as Esko didn't like the *-indicator :)
 	    
 ProjectExplorerPopupMenu uses new File("A:/") for disk drive; should be changed for any linux/etc porting.
 
