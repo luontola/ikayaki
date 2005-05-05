@@ -38,11 +38,13 @@ Here we describe how the implementation/production differs from that planned in 
 
 Class diagram of data classes is in Figure~\ref{fig:core}.
 
+
 \subsubsection{Project data}
 
 \insertdia{project-graph}
 
 Responsible for holding all the measurement data and controlling the SQUID. Most of the GUI classes use the Project class. When the state of the project changes, the Project class fires ProjectEvents and MeasurementEvents to the GUI classes, which in turn will call the Project class to get the changed information.
+
 
 \subsubsection{Squid interface}
 
@@ -52,17 +54,21 @@ Squid Interface offers the Project class an interface to safely control the SQUI
 
 Classes are Squid, Handler, Magnetometer, Degausser.
 
+
 \subsubsection{Squid emulator}
 
 Squid Emulator is separate from the rest of the program and it is used only for testing that the Squid Interface works correctly. Biggest change was that this wasnt developed much and its not working as planned. Mainly was used to test that commands are sended correctly and Squid Interface gets answers.
+
 
 \subsubsection{Serial communication}
 
 SerialIO and classes related to it takes care of the harware layer of serial communication. Using these classes the program communicates with the Degausser, Samplehandler and Magnetometer. SerialIO represents one serial port and when it's created it reserves the port to itself. SerialProperties class includes all the configuration data for the serial port.
 
+
 \subsubsection{Global settings}
 
 Global properties that are used all around the program. The Settings class provides a global point for retrieving and modifying the properties.
+
 
 \subsubsection{Utilities}
 
@@ -73,9 +79,11 @@ Utility classes that are used in the program, but do not fit any of the other pa
 
 Class diagram of gui classes is in Figure~\ref{fig:gui}. This section is divided into sections by gui components, each of which has one or more classes.
 
+
 \subsubsection{Generic GUI components}
 
 ProjectComponent, a generic gui base class which handles registering Project- and MeasurementListeners to new projects, and which every project-dependant gui component subclasses. See Figure~\ref{fig:gui}.
+
 
 \subsubsection{Main window}
 
@@ -83,9 +91,11 @@ ProjectComponent, a generic gui base class which handles registering Project- an
 
 Creates main view for GUI. Menubar at top, Statusbar at bottom and makes panels and splitpanels for other GUI components to middle. This also tells other GUI components if someone changes project file.
 
+
 \subsubsection{Configuration window}
 
 Separate window which is opened from menubar and it updates settings for Squid interface. Used usually only when system is installed to setup it.
+
 
 \subsubsection{Project Explorer}
 
@@ -95,9 +105,11 @@ ProjectExplorerTable is now its own class (as Calibration uses it too), and Proj
 
 NewProjectPanel is inner class of ProjectExplorerPanel.
 
+
 \subsubsection{Calibration}
 
 Uses ProjectExplorerTable, which makes Calibration.java really short.
+
 
 \subsubsection{Project information}
 
@@ -108,6 +120,7 @@ such fields as volume, strike and dip, which are used to make
 calculations. Includes also fields whose information is only for users
 benefit.
 
+
 \subsubsection{Sequence and measurement data}
 
 Located at center of main window.
@@ -116,6 +129,7 @@ Contains and allows editing of measurement sequence. Whenever
 measurement step is finished its data is added here. This data is also
 recalculated whenever some field affecting it in project infromation is
 changed.
+
 
 \subsubsection{Measurement details}
 
@@ -126,6 +140,7 @@ sequence. If details of ongoing measurement is shown, they are updated
 whenever new measurement data is received and when measurement step is
 finished next steps details are shown.
 
+
 \subsubsection{Measurement controls}
 
 Sadly, ManualControlsPanel had to go into MagnetometerStatusPanel as an inner class, since they share some data and move-radiobuttons.
@@ -135,6 +150,7 @@ MagnetometerStatusPanel's updateStatus takes no parameters, as it asks position 
 Here too, a lot more stuff than what planning imply.
 
 ManualControlsPanel's manual control components are disabled whenever there's \textit{any} Squid action, to keep those fragile equipments from messing up.
+
 
 \subsubsection{Graphs}
 
@@ -154,6 +170,8 @@ Graph panels visualize the measurement data. MeasurementGraphsPanel listens to M
 
 What's left for the program to make it perfect :)
 
+
 \subsection{...}
+
 
 \subsection{Porting to linux}
