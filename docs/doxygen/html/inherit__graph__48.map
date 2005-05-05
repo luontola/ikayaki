@@ -1,0 +1,9 @@
+base referer
+rect $interfaceikayaki_1_1squid_1_1_serial_i_o_listener.html 9,160 206,186
+rect $classikayaki_1_1squid_1_1_degausser.html 327,8 493,34
+rect $classikayaki_1_1squid_1_1_handler.html 335,58 485,85
+rect $classikayaki_1_1squid_1_1_magnetometer.html 315,109 505,136
+rect $classikayaki_1_1squid_1_1_squid_emulator_1_1_degausser_emu.html 267,160 553,186
+rect $classikayaki_1_1squid_1_1_squid_emulator_1_1_handler_emu.html 275,210 545,237
+rect $classikayaki_1_1squid_1_1_squid_emulator_1_1_magnetometer_emu.html 257,261 563,288
+rect $classikayaki_1_1util_1_1_serial_proxy_1_1_forwarder.html 299,312 521,338

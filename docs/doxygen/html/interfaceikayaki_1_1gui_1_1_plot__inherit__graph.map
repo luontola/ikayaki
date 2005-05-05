@@ -1,0 +1,4 @@
+base referer
+rect $classikayaki_1_1gui_1_1_abstract_plot.html 100,82 260,109
+rect $classikayaki_1_1gui_1_1_intensity_plot.html 8,157 170,184
+rect $classikayaki_1_1gui_1_1_stereo_plot.html 194,157 346,184

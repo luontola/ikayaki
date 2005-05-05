@@ -1,0 +1,5 @@
+base referer
+rect $classikayaki_1_1gui_1_1_project_component.html 8,8 208,34
+rect $classikayaki_1_1gui_1_1_measurement_details_panel.html 97,85 342,112
+rect $classikayaki_1_1gui_1_1_component_flasher.html 366,85 569,112
+rect $classikayaki_1_1gui_1_1_measurement_sequence_table_model.html 593,85 892,112

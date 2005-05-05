@@ -1,0 +1,13 @@
+base referer
+rect $classikayaki_1_1gui_1_1_abstract_plot.html 7,98 167,125
+rect $interfaceikayaki_1_1gui_1_1_plot.html 29,8 141,34
+rect $classikayaki_1_1_project.html 267,98 377,125
+rect $classikayaki_1_1squid_1_1_squid.html 457,189 593,216
+rect $classikayaki_1_1_measurement_step.html 217,189 393,216
+rect $classikayaki_1_1_measurement_sequence.html 165,8 373,34
+rect $classikayaki_1_1squid_1_1_magnetometer.html 594,98 783,125
+rect $interfaceikayaki_1_1squid_1_1_serial_i_o_listener.html 586,8 783,34
+rect $classikayaki_1_1squid_1_1_handler.html 421,98 570,125
+rect $classikayaki_1_1squid_1_1_degausser.html 807,98 973,125
+rect $classikayaki_1_1squid_1_1_serial_i_o.html 807,8 959,34
+rect $classikayaki_1_1util_1_1_last_executor.html 397,8 562,34

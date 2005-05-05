@@ -1,0 +1,12 @@
+base referer
+rect $classikayaki_1_1gui_1_1_calibration_panel.html 541,8 728,34
+rect $classikayaki_1_1gui_1_1_main_status_bar.html 546,58 722,85
+rect $classikayaki_1_1gui_1_1_main_view_panel.html 544,109 725,136
+rect $classikayaki_1_1gui_1_1_measurement_controls_panel.html 508,160 761,186
+rect $classikayaki_1_1gui_1_1_measurement_details_panel.html 512,210 757,237
+rect $classikayaki_1_1gui_1_1_measurement_graphs_panel.html 510,261 758,288
+rect $classikayaki_1_1gui_1_1_measurement_sequence_panel.html 502,312 766,338
+rect $classikayaki_1_1gui_1_1_project_explorer_panel.html 526,362 742,389
+rect $classikayaki_1_1gui_1_1_project_information_panel.html 518,413 750,440
+rect $interfaceikayaki_1_1_project_listener.html 29,185 184,212
+rect $interfaceikayaki_1_1_measurement_listener.html 9,236 204,262

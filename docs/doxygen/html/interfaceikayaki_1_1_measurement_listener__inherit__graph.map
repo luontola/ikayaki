@@ -1,0 +1,4 @@
+base referer
+rect $classikayaki_1_1gui_1_1_magnetometer_status_panel.html 8,82 256,109
+rect $classikayaki_1_1gui_1_1_measurement_sequence_table_model.html 280,82 578,109
+rect $classikayaki_1_1gui_1_1_project_component.html 602,82 802,109
