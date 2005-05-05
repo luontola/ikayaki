@@ -1,5 +1,7 @@
 \subsection{Ikayaki.java}
-        //add(main.getStatusBar(), "South");    // TODO: there is no status bar
+
+The MainStatusBar is not implemented, but when it is ready, it should be added to the JFrame in this class. For now that part of the code is commented out.
+
 
 \subsection{MeasurementEvent.java}
 
@@ -12,28 +14,43 @@
 \subsection{MeasurementStep.java}
 
 \subsection{MeasurementValue.java}
-                        // TODO: should there be the full vectors, or normalized vectors (length=1)?
+
+In the calculation of THETA63 it was a bit unclear, if the length of the full vectors should be summed (like it is now), or if the vectors should be normalized first (length=1). Fabio said that the way it is right now should be OK, but I understood it differently when reading the documents that Lauri gave.
+
+The algorithms SIGNAL_TO_NOISE, SIGNAL_TO_DRIFT and SIGNAL_TO_HOLDER are missing descriptions. Right now they are used only in the MeasurementDetailsPanel, but it would be nicer to be able to show a tooltip with explanations for them. They could also be added as columns to the measurement sequence table.
+
 
 \subsection{Project.java}
-    private static final boolean DEBUG = false;      // TODO: used for testing the measurements without a Squid
-        // TODO: use a DTD for the document
-        // create document's root element
-        return false; // TODO
-            out.print(pad(s, Math.max(getName().length(), 8), 1));      // TODO: how should this be calculated?
-            // strike
-            return false;   // TODO: maybe its better to throw an exception, so that it would be easier to find bugs
-            return false;    // TODO: maybe its better to throw an exception, so that it would be easier to find bugs
-            return false; // TODO: maybe its better to throw an exception, so that it would be easier to find bugs
-            return false;   // TODO: maybe its better to throw an exception, so that it would be easier to find bugs
-    // TODO: is this comment even close?
-                // TODO: these should be in one Magnetometer method
-                    // TODO: these should be in one Magnetometer method
+
+The DEBUG field is for bypassing the SQUID hardware and running dummy measurements which generate random data. Useful for testing the user interface without the need to go to the laboratory. The program has crashed lately a couple of times when running the dummy measurement, but there was no need and time to fix it, because the real measurements are working fine.
+
+It would be nice to create a DTD for the XML documents written by the Project class. Especially when there comes the need to make improvements to the file format, having a DTD for each file format version will be useful in testing.
+
+When changes to the project file format are made, the constructor Project(File,Document) should be made so, that when it encounters an old version, it will modify the Document object that was given as a parameter. When it has been modified to the new file format, the algorithms for the latest version will be used to create an instance of the Project class. This avoids the need to change the importing of older versions when new versions are made.
+
+Exporting to a .SRM file is not implemented. There were no specifications as to what the file format is. It is not even sure, whether such a file format even exists or not.
+
+In exportToTDT-method it is a bit unclear that how "the applied field value in mT" should be calculated. I have got the understanding that this program will not demagnetize the sample, so how will it then find out the "applied field value"?
+
+In methods addSequence, addStep, removeStep and removeStep it might be better, that instead of returning a boolean value, they would throw an exception when somebody tries to modify the sequence when it is not allowed. This would help in finding bugs from the program, because nobody should call these methods in the first place when it is not allowed.
+
+About the method doManualReset: it is not clear as to what it means to "reset the magnetometer". Find out what it means and make the method's documentation more detailed.
+
+In doManualReset-method and Measurement-class there are some notes, that two methods in the Magnetometer class would be better when combined to just one method.
+
 
 \subsection{ProjectEvent.java}
 
 \subsection{ProjectListener.java}
 
 \subsection{Settings.java}
+
+Many of the methods are undocumented, especially in the case of device settings. Write better documentation for those.
+
+About the handler's positions: it should be possible to allow also negative values, because the Handler class should be smart enough (it calculates the relative positions itself and tells the handler only that how many steps to move).
+
+If any changes are made to the Settings class, special care should be made to go through every place where those properties are used. Especially the ranges of acceptable values need to be checked, because the user interface already does some checking on them.
+
 
 \subsection{gui/AbstractPlot.java}
 
@@ -48,6 +65,7 @@ There are many settings in Squid that apparently are not needed. So there is now
 There is no check if all systems have same port, only degausser and magnetometer can have same port.
 
 Window cannot be closed with ESC-key as we wanted.
+
 
 \subsection{gui/FittedComboBoxRenderer.java}
 
@@ -68,22 +86,32 @@ Call for updateButtonPositions(...) is in paintComponent, as otherwise the butto
 
 Changing the "Measure BG"/"Measure XYZ" button text changes whole MagnetometerStatusPanel width; should prevent that somehow.
 
+
 \subsection{gui/MainMenuBar.java}
-            //exportProjectMenu.add(exportProjectToSRM);    // TODO: support for SRM files is missing
+
+The code for exporting SRM files is commented out, because there is not yet support for it in the Project class.
+
 
 \subsection{gui/MainStatusBar.java}
-        return; // TODO
-        return; // TODO
-        return; // TODO
+
+This class has not been implemented. It could be used for displaying error messages and telling how many minutes the measurements will take (has also a progress bar). Tooltips and other help text could also be shown there.
+
+One way might be to add a method to the Settings class, so that it would be easy to fire error messages from anywhere in the program, and they would be forwarded to the status bar. Use GUIDe to design the best way to use the status bar, if it is needed.
+
 
 \subsection{gui/MainViewPanel.java}
-                    // TODO: what should be done now? give error message?
-                    //e.printStackTrace();
-        // TODO: make this as an Action?
+
+There are no error messages created when communication with the SQUID can not be reached. Some message in status bar might be good. The old program gives a huge pile of popups, keep away from that anti-pattern. ;)
+
+The button that is being used for hiding the project explorer tab, could be refactored to be an Action, so that it could be added to the MainMenuBar as a menu item.
+
 
 \subsection{gui/MeasurementControlsPanel.java}
 
 \subsection{gui/MeasurementDetailsPanel.java}
+
+Make tooltips for the table headers. Look at how they were done in MeasurementSequencePanel.
+
 
 \subsection{gui/MeasurementGraphsPanel.java}
         return; // TODO
