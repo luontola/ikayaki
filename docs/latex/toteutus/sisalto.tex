@@ -43,7 +43,7 @@ Class diagram of data classes is in Figure~\ref{fig:core}.
 
 \insertdia{project-graph}
 
-Responsible for holding all the measurement data and controlling the SQUID. Most of the GUI classes use the Project class. When the state of the project changes, the Project class fires ProjectEvents and MeasurementEvents to the GUI classes, which in turn will call the Project class to get the changed information.
+Responsible for holding all the measurement data and controlling the SQUID. All of these classes were produced according to plans and there were no significant changes. Things such as susceptibility and some other data from the measurements was added. The way that the mathematical calculations are made, had some changes, such as the holder and background noise corrections.
 
 
 \subsubsection{Squid interface}
@@ -110,6 +110,7 @@ protected void setUp() : sets Handler online.
 
 protected void slewToLimit(boolean toRight) throws SerialIOException : sets Handler to go limit.
 
+
 \subsubsection{Squid emulator}
 
 Squid Emulator is separate from the rest of the program and it is used only for testing that the Squid Interface works correctly. Biggest change was that this wasnt developed much and its not working as planned. Mainly was used to test that commands are sended correctly and Squid Interface gets answers.
@@ -122,12 +123,12 @@ SerialIO and classes related to it takes care of the harware layer of serial com
 
 \subsubsection{Global settings}
 
-Global properties that are used all around the program. The Settings class provides a global point for retrieving and modifying the properties.
+Global properties that are used all around the program. There were many properties added to the Settings class. Not all of the methods are documented, so that should be done. All methods were converted to be static.
 
 
 \subsubsection{Utilities}
 
-Utility classes that are used in the program, but do not fit any of the other packages. At the moment includes only the LastExecutor class for thread management, but more classes can be added as necessary.
+Utility classes that are used in the program, but do not fit any of the other packages. There were a couple of classes added to the ikayaki.util package. The new classes are ComponentPrinter for printing, DocumentUtilities for reading and writing XML, LoggerPrintStream for adding timestamps to System.err and copying the output to a file, SerialProxy for monitoring the communication between two serial ports (use virtual serial ports to redirect the old program's communication through SerialProxy this way: Program -> Virtual COM -> SerialProxy -> Real COM -> SQUID Hardware).
 
 
 \subsection{GUI classes and methods}
@@ -137,14 +138,14 @@ Class diagram of gui classes is in Figure~\ref{fig:gui}. This section is divided
 
 \subsubsection{Generic GUI components}
 
-ProjectComponent, a generic gui base class which handles registering Project- and MeasurementListeners to new projects, and which every project-dependant gui component subclasses. See Figure~\ref{fig:gui}.
+There were no changes to ProjectComponent.
 
 
 \subsubsection{Main window}
 
 \insertdia{main-view-panel-graph}
 
-Creates main view for GUI. Menubar at top, Statusbar at bottom and makes panels and splitpanels for other GUI components to middle. This also tells other GUI components if someone changes project file.
+Basically the same as was designed, but there were many methods added.
 
 
 \subsubsection{Configuration window}
@@ -168,32 +169,17 @@ Uses ProjectExplorerTable, which makes Calibration.java really short.
 
 \subsubsection{Project information}
 
-Located at lower left corner of main window.
-
-Contains and allows editing of basic information of sample. Includes
-such fields as volume, strike and dip, which are used to make
-calculations. Includes also fields whose information is only for users
-benefit.
+Contains and allows the editing of the basic information of a sample. All plans were dumped and the classes were programmed XP-style.
 
 
 \subsubsection{Sequence and measurement data}
 
-Located at center of main window.
-
-Contains and allows editing of measurement sequence. Whenever
-measurement step is finished its data is added here. This data is also
-recalculated whenever some field affecting it in project infromation is
-changed.
+Contains and allows the editing of the measurement sequence. All plans were dumped and the classes were programmed XP-style.
 
 
 \subsubsection{Measurement details}
 
-Located at middle bottom of main window.
-
-Contains details of ongoing measurement or of row selected in measrurement
-sequence. If details of ongoing measurement is shown, they are updated
-whenever new measurement data is received and when measurement step is
-finished next steps details are shown.
+Contains the details of the selected row in the measurement sequence. All plans were dumped and the classes were programmed XP-style.
 
 
 \subsubsection{Measurement controls}
@@ -208,8 +194,6 @@ ManualControlsPanel's manual control components are disabled whenever there's \t
 
 
 \subsubsection{Graphs}
-
-Located at lower right corner of main window.
 
 Graph panels visualize the measurement data. MeasurementGraphsPanel listens to MeasurementEvents to update the measurement data in plots. AbstractPlot is an abstract class which implements all the general features of graph plots. IntensityPlot and StereoPlot extend the functionality of AbstractPlot and implement their special drawing features accordingly.
 
