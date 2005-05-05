@@ -174,7 +174,7 @@ Installing		& 28.4.2005	& 5.5.2005	& 7	& 7	& 0 \\
 
 These are the features that were mentioned in the Requirements Document (version 1.1) but were not produced.
 
-{\bf Feature:} Exporting to .SRM file format (UC15) \\
+{\bf Feature:} Exporting to .SRM file format (UC15, R11) \\
 {\bf Reason:} There were no specifications as to what the file format is.
 
 {\bf Feature:} Error handling in exporting (UC13-15)\\
@@ -193,10 +193,10 @@ These are the features that were mentioned in the Requirements Document (version
 {\bf Reason:} There were problems in getting the menu to stay open when right-clicked. The renaming and deleting in the Options dialog is good enough for now.
 
 {\bf Feature:} Warning signal (R4) \\
-{\bf Reason:} It was not clear as to how this could be done. It was found out that somebody had done such a system by using a static timer (1 minute) and an external device for shutting down the degausser. More details in the Realization Document.
+{\bf Reason:} It was not clear as to how this could be done. This was dumped because the protocol did not make it possible in any easy way. Besides, according to the protocol specification the degausser device will take care by itself that if the target field is not reached, it will automatically put the field down. It was found out that somebody had done such a system by using a static timer (1 minute) and an external device for shutting down the degausser. More details in the Realization Document.
 
-{\bf Feature:} \\
-{\bf Reason:}
+{\bf Feature:} Changing hotkeys (R20) \\
+{\bf Reason:} This feature was decided to be unnecessary. Besides, if every use would be changing the hotkeys all the time, nobody could learn what the keys are.
 
 
 \section{Debriefing}
