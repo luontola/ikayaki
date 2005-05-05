@@ -30,7 +30,8 @@
 \condition{Loads data correctly from Settings}
 \testResultTrue
 \condition{Accepts positive and negative decimal numbers}
-\testDescription{-0.430002} \testResultTrue
+\testDescription{-0.430002}
+\testResultTrue
 \closeCase
 
 \beginCase{Degausser ramp}
@@ -51,14 +52,22 @@
 \condition{Loads data correctly from Settings}
 \testResultTrue
 \condition{Accepts only values in range of Integers 0..127}
-\testDescription{1000} \testResultTrue
-\testDescription{-10} \testResultTrue
-\testDescription{-1} \testResultTrue
-\testDescription{0} \testResultTrue
-\testDescription{1} \testResultTrue
-\testDescription{54} \testResultTrue
-\testDescription{127} \testResultTrue
-\testDescription{128} \testResultTrue
+\testDescription{1000}
+\testResultTrue
+\testDescription{-10}
+\testResultTrue
+\testDescription{-1}
+\testResultTrue
+\testDescription{0}
+\testResultTrue
+\testDescription{1}
+\testResultTrue
+\testDescription{54}
+\testResultTrue
+\testDescription{127}
+\testResultTrue
+\testDescription{128}
+\testResultTrue
 \closeCase
 
 \beginCase{Velocity and velocity in measurement fields}
@@ -67,24 +76,36 @@
 \condition{Accepts only values in range of Integers 50..20000}
 \testDescription{0}
 \testResultTrue 0 is initial value to which cannot be returned after changing to value 50..8500
-\testDescription{2001} \testResultTrue
-\testDescription{-1} \testResultTrue
-\testDescription{1} \testResultTrue
-\testDescription{8500} \testResultTrue
-\testDescription{10000} \testResultTrue
-\testDescription{20000} \testResultTrue
-\testDescription{20001} \testResultTrue
+\testDescription{2001}
+\testResultTrue
+\testDescription{-1}
+\testResultTrue
+\testDescription{1}
+\testResultTrue
+\testDescription{8500}
+\testResultTrue
+\testDescription{10000}
+\testResultTrue
+\testDescription{20000}
+\testResultTrue
+\testDescription{20001}
+\testResultTrue
 \closeCase
 
 \beginCase{Translation positions fields}
 \condition{Loads data correctly from Settings}
 \testResultFalse rotation velocity behaves like velocity and velocity measurement
 \condition{Tranverse T AF..Measurement accept only values in range of Integers 0..16777215}
-\testDescription{-1} \testResultTrue
-\testDescription{0} \testResultTrue
-\testDescription{1} \testResultTrue
-\testDescription{16777215} \testResultTrue
-\testDescription{16777216} \testResultTrue
+\testDescription{-1}
+\testResultTrue
+\testDescription{0}
+\testResultTrue
+\testDescription{1}
+\testResultTrue
+\testDescription{16777215}
+\testResultTrue
+\testDescription{16777216}
+\testResultTrue
 \condition{Rotation acc. and dec. accepts values from 0..127}
 \testResultFalse only accepts values from 0..127, but always loads with initial 127 or 54 respectively
 \condition{Rotation counts behaves correctly}
