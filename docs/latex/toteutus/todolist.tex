@@ -20,7 +20,7 @@ For Thellier projects it would be necessary to store the notes for each measurem
 
 In the calculation of THETA63 it was a bit unclear, if the length of the full vectors should be summed (like it is now), or if the vectors should be normalized first (length=1). Fabio said that the way it is right now should be OK, but I understood it differently when reading the documents that Lauri gave.
 
-The algorithms SIGNAL_TO_NOISE, SIGNAL_TO_DRIFT and SIGNAL_TO_HOLDER are missing descriptions. Right now they are used only in the MeasurementDetailsPanel, but it would be nicer to be able to show a tooltip with explanations for them. They could also be added as columns to the measurement sequence table.
+The algorithms SIGNAL\_TO\_NOISE, SIGNAL\_TO\_DRIFT and SIGNAL\_TO\_HOLDER are missing descriptions. Right now they are used only in the MeasurementDetailsPanel, but it would be nicer to be able to show a tooltip with explanations for them. They could also be added as columns to the measurement sequence table.
 
 
 \subsection{Project.java}
@@ -117,7 +117,9 @@ Make tooltips for the table headers. Look at how they were done in MeasurementSe
 
 
 \subsection{gui/MeasurementGraphsPanel.java}
-        return; // TODO
+
+Make the button for opening a large version of the graphs look nicer. Maybe a small icon of a magnifying glass with a plus sign in the corner of the graphs panel.
+
 
 \subsection{gui/MeasurementSequencePanel.java}
 
@@ -132,12 +134,18 @@ The actions in SequencePopupMenu should be refactored. They should be made so, t
 
 \subsection{gui/PositiveDecimalFormat.java}
 
-\subsection{gui/PrintPanel.java}
+\subsection{gui/PrintPanel.java, util/ComponentPrinter.java}
+
+The way that it is decided, where to split the page when the print will not fit on one page, could be made more generic. The algorithm could be something like this: \\
+- Go through all components in the panel with the help of Container.findComponentAt(int x, int y). Start from the upper left corner (x=0, y=0) and find out the lower right corner of the component at that position and save it somewhere. Make a note that everything that is from that point towards up and left has been "printed". \\
+- Now look for the next component in order, which is closest to the top and has not been "printed", and do the same tricks for finding out its bottom right corner. \\
+- This way you can iterate through the whole container, and find out where the bottom edges of the components are. When you find out that one component will not fit to the current page to be printed, write down somewhere that the page break will be set right above that component, so that the component will fit on the next page.
+- When you have gone through the panel to be printed, and have written down where the page breaks should be, rest of the printing will be easy. Just cut the pages at the right points.
+
 
 \subsection{gui/ProgramSettingsPanel.java}
 
 \subsection{gui/ProjectComponent.java}
-
 
 \subsection{gui/ProjectExplorerPanel.java}
 
@@ -162,8 +170,11 @@ There are no messages telling if exporting was succesful or not (as I didn't wan
 \subsection{gui/ProjectInformationPanel.java}
 
 \subsection{gui/SequenceColumn.java}
-        // TODO: remove the need for this hack
-            setNumberFormat(new DecimalFormat("0.000E0"));  // TODO: maybe make a new class that could show the format: 1.123e+05
+
+Remove the hack for Thellier files. See the TODO-list of MeasurementStep.java in this document.
+
+Ask the client how they like to number format "0.000E0" and change it if necessary. It might be necessary to write a custom NumberFormat class, if Java's standard libraries are not enough (let's say that you want to have a "+" sign for positive exponents, and have the "E" as lowercase "e").
+
 
 \subsection{gui/SettingsDialog.java}
 
@@ -174,19 +185,24 @@ There are no messages telling if exporting was succesful or not (as I didn't wan
 \subsection{gui/StyledTableCellRenderer.java}
 
 \subsection{gui/StyledWrapper.java}
-//        public Insets insets = null; // TODO: is this also necessary?
+
+It is possible to add more properties to be modified. Insets might be useful for some.
+
 
 \subsection{squid/Degausser.java}
 
 This class seems to work alright, but there is some issues which are uncertain. It have not been tested so that Degausser and Magnetometer are in same port, more likely there will be many problems. This class trusts that everything goes alright, would be good to confirm status sometimes and check that everything is going well. ExecuteRampUp() and executeRampDown() are not used because there is risk that ramp stays up, executeRampCycle is only used.
 
+
 \subsection{squid/Handler.java}
 
 Estimated movement does not calculate acceleration so its not exactly correct, but works well enough.
 
+
 \subsection{squid/Magnetometer.java}
 
 This class seems to work alright, but there is some issues which are uncertain. It have not been tested so that Degausser and Magnetometer are in same port, more likely there will be many problems. We only use filter 1x and range 1x and disable fast-slew, no idea if other options are needed for these. And we do not check status from magnetometer, we just hope all goes well. In measuring we do not Never use flux counting, never be needed tough.
+
 
 \subsection{squid/SerialIO.java}
 
@@ -202,9 +218,11 @@ This class seems to work alright, but there is some issues which are uncertain. 
 
 There is no functionality for UpdateSettings(), so when settings are changed program needs to be restarted. This should be corrected as it was planned. And there is no call from DeviceSettings for this.
 
+
 \subsection{squid/SquidEmulator.java}
 
 No further development needed. Was only little help on testing and wad dumped soon after testing in laboratorium.
+
 
 \subsection{squid/SquidFront.java}
 
