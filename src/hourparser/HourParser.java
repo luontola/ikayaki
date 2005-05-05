@@ -62,7 +62,7 @@ public class HourParser {
     /**
      * Starts the program from command line.
      *
-     * @param args Command line parameters
+     * @param args command line parameters.
      */
     public static void main(String[] args) {
         // parse the command line parameters

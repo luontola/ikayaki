@@ -25,6 +25,8 @@ package hourparser;
 import java.io.*;
 import java.util.Date;
 import java.util.Vector;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Represents a person who has a personal log file.
@@ -51,8 +53,8 @@ public class Person {
     /**
      * Constructs a new person by reading the data from a log file.
      *
-     * @param file The log file of the person
-     * @throws IOException Reading the log file fails
+     * @param file the log file of the person.
+     * @throws IOException if reading the log file fails.
      */
     public Person(File file) throws IOException {
         if (!file.exists()) {
@@ -67,7 +69,7 @@ public class Person {
     /**
      * Reads all the information from the the log file of this person.
      *
-     * @throws IOException Reading the log file fails
+     * @throws IOException if reading the log file fails.
      */
     private void readFile() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -96,7 +98,7 @@ public class Person {
     /**
      * Returns the name of this person as defined in the first row of the log file.
      *
-     * @return The name of this person or <code>null</code> if no name is set
+     * @return the name of this person or <code>null</code> if no name is set.
      */
     public String getName() {
         return name;
@@ -105,9 +107,9 @@ public class Person {
     /**
      * Returns the entries the person has made during a time period.
      *
-     * @param start The beginning of the time period. Results are <code>&gt;= start</code>
-     * @param end   The end of the time period. Results are <code>&lt; end</code>
-     * @return Total hours of work during the time period
+     * @param start the beginning of the time period. Results are <code>&gt;= start</code>.
+     * @param end   the end of the time period. Results are <code>&lt; end</code>.
+     * @return total hours of work during the time period.
      */
     public Entry[] getEntries(Date start, Date end) {
         Vector<Entry> result = new Vector<Entry>();
@@ -122,9 +124,9 @@ public class Person {
     /**
      * Returns how many hours in total the person has made during a time period.
      *
-     * @param start The beginning of the time period. Results are <code>&gt;= start</code>
-     * @param end   The end of the time period. Results are <code>&lt; end</code>
-     * @return Total hours of work during the time period
+     * @param start the beginning of the time period. Results are <code>&gt;= start</code>.
+     * @param end   the end of the time period. Results are <code>&lt; end</code>.
+     * @return total hours of work during the time period.
      */
     public double getHours(Date start, Date end) {
         Entry[] entries = getEntries(start, end);
@@ -138,10 +140,10 @@ public class Person {
     /**
      * Returns how many hours of a specific work the person has made during a time period.
      *
-     * @param start The beginning of the time period. Results are <code>&gt;= start</code>
-     * @param end   The end of the time period. Results are <code>&lt; end</code>
-     * @param code  The code of the work type to be included or <code>null</code> to include all
-     * @return Total hours of work during the time period
+     * @param start the beginning of the time period. Results are <code>&gt;= start</code>.
+     * @param end   the end of the time period. Results are <code>&lt; end</code>.
+     * @param code  the code of the work type to be included or <code>null</code> to include all.
+     * @return total hours of work during the time period.
      */
     public double getHours(Date start, Date end, String code) {
         if (code == null) {
@@ -158,9 +160,25 @@ public class Person {
     }
 
     /**
+     * Returns an array of all different codes used during the specified time period.
+     *
+     * @param start the beginning of the time period. Results are <code>&gt;= start</code>.
+     * @param end   the end of the time period. Results are <code>&lt; end</code>.
+     * @return total hours of work during the time period.
+     */
+    public String[] getCodes(Date start, Date end) {
+        Entry[] entries = getEntries(start, end);
+        Set<String> codes =  new HashSet<String>();
+        for (Entry e : entries) {
+            codes.add(e.getCode());
+        }
+        return codes.toArray(new String[codes.size()]);
+    }
+
+    /**
      * Returns the time of the first record this person has.
      *
-     * @return The time of the first record, or the current time if there are no records
+     * @return the time of the first record, or the current time if there are no records.
      */
     public Date getStart() {
         if (records.size() == 0) {
@@ -179,7 +197,7 @@ public class Person {
     /**
      * Returns the time of the last record this person has.
      *
-     * @return The time of the last record, or the current time if there are no records
+     * @return the time of the last record, or the current time if there are no records.
      */
     public Date getEnd() {
         if (records.size() == 0) {
@@ -194,5 +212,4 @@ public class Person {
             return last;
         }
     }
-
 }

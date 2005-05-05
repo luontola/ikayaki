@@ -22,9 +22,7 @@
 
 package hourparser;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Formats the data of persons to HTML format.
@@ -34,7 +32,7 @@ import java.util.Vector;
 public class Report {
 
     /**
-     * Index of the index page for <code>getPage()</code> and <code>getPageName()</code>
+     * Index of the index page for <code>getPage()</code> and <code>getPageName()</code>.
      */
     public static final int INDEX_PAGE_NUMBER = 0;
 
@@ -44,9 +42,14 @@ public class Report {
     private final Person[] persons;
 
     /**
-     * How many hours each person has made per week. The data format is <code>hours[personsIndex].get(weeksIndex)</code>.
+     * How many hours each person has made per week. The data format is <code>personHours[personsIndex].get(weeksIndex)</code>.
      */
-    private final Vector<Double>[] hours;
+    private final Vector<Double>[] personHours;
+
+    /**
+     * How many hours of each work code has made per week. The data format is <code>codeHours.get(code).get(weeksIndex)</code>.
+     */
+    private final HashMap<String, Vector<Double>> codeHours;
 
     /**
      * The beginnings of each week.
@@ -60,7 +63,7 @@ public class Report {
     /**
      * Creates a report from a Vector of Persons.
      *
-     * @param persons Persons to be included in the report; must be at least one
+     * @param persons persons to be included in the report; must be at least one.
      */
     public Report(Vector<Person> persons) {
         this(persons.toArray(new Person[persons.size()]));
@@ -69,7 +72,7 @@ public class Report {
     /**
      * Creates a report from an array of Persons.
      *
-     * @param persons Persons to be included in the report; must be at least one
+     * @param persons persons to be included in the report; must be at least one.
      */
     public Report(Person[] persons) {
         if (persons.length == 0) {
@@ -77,10 +80,11 @@ public class Report {
         }
         this.persons = persons;
         weeks = new Vector<Date>();
-        hours = new Vector[persons.length];
-        for (int i = 0; i < hours.length; i++) {
-            hours[i] = new Vector<Double>();
+        personHours = new Vector[persons.length];
+        for (int i = 0; i < personHours.length; i++) {
+            personHours[i] = new Vector<Double>();
         }
+        codeHours = new HashMap<String, Vector<Double>>();
         process();
     }
 
@@ -127,22 +131,51 @@ public class Report {
     /**
      * Collects the data from the persons for one week and saves it for later use in the reports.
      *
-     * @param weekStart The beginning of the week, must this week's first day at 00:00:00
-     * @param weekEnd   The end of the week, must be <em>next</em> week's first day at 00:00:00
+     * @param weekStart the beginning of the week, must this week's first day at 00:00:00.
+     * @param weekEnd   the end of the week, must be <em>next</em> week's first day at 00:00:00.
      */
     private void processWeek(Date weekStart, Date weekEnd) {
         weeks.add(weekStart);
+
         for (int i = 0; i < persons.length; i++) {
             Person person = persons[i];
+
+            // count hours per person per week
             double d = person.getHours(weekStart, weekEnd);
-            hours[i].add(d);
+            personHours[i].add(d);
+
+            // initialize hours per code per week
+            String[] codes = person.getCodes(weekStart, weekEnd);
+            for (String code : codes) {
+                // make sure that the code exists
+                if (!codeHours.containsKey(code)) {
+                    codeHours.put(code, new Vector<Double>());
+                }
+            }
+        }
+
+        // add weeks for each code
+        for (Vector<Double> codeWeeks : codeHours.values()) {
+            while (codeWeeks.size() < weeks.size()) {
+                codeWeeks.add(0.0);
+            }
+        }
+
+        for (int i = 0; i < persons.length; i++) {
+            Person person = persons[i];
+
+            // count hours per code per week
+            String[] codes = person.getCodes(weekStart, weekEnd);
+            for (String code : codes) {
+                double d = person.getHours(weekStart, weekEnd, code);
+                d = d + codeHours.get(code).get(weeks.size() - 1);
+                codeHours.get(code).set(weeks.size() - 1, d);
+            }
         }
     }
 
     /**
      * Returns how many pages this report will generate.
-     *
-     * @return Number of pages
      */
     public int getPages() {
         return persons.length + 1;
@@ -151,15 +184,15 @@ public class Report {
     /**
      * Returns the HTML code for the given page.
      *
-     * @param page Index of the page, from <code>0</code> to <code>getPages()-1</code>
-     * @return HTML code for the page, including the header and footer
+     * @param page index of the page, from <code>0</code> to <code>getPages()-1</code>.
+     * @return HTML code for the page, including the header and footer.
      */
     public String getPage(int page) {
         if (page == INDEX_PAGE_NUMBER) {
             if (HourParser.isPlainIndex()) {
-                return getIndexPage();
+                return getIndexPage() + "\n<br />\n" + getSummaryPage();
             } else {
-                return getHeader() + getIndexPage() + getFooter();
+                return getHeader() + getIndexPage() + "\n<br />\n" + getSummaryPage() + getFooter();
             }
         } else {
             return getHeader() + getPersonPage(page - 1) + getFooter();
@@ -169,8 +202,8 @@ public class Report {
     /**
      * Returns the file name for the given page.
      *
-     * @param page Index of the page, from <code>0</code> to <code>getPages()-1</code>
-     * @return File name for the page
+     * @param page index of the page, from <code>0</code> to <code>getPages()-1</code>.
+     * @return file name for the page.
      */
     public String getPageName(int page) {
         if (page == INDEX_PAGE_NUMBER) {
@@ -186,17 +219,15 @@ public class Report {
 
     /**
      * Returns the file name for the index page.
-     *
-     * @return File name for the page
      */
     private String getIndexPageName() {
         return HourParser.getNamePrefix() + HourParser.getNameSuffix();
     }
 
     /**
-     * Returns the HTML code for the index page.
+     * Returns the HTML code for the page with the hours listed by person and week.
      *
-     * @return HTML code for the page. Does not include the header or footer
+     * @return HTML code for the page. Does not include the header or footer.
      */
     private String getIndexPage() {
         StringBuffer html = new StringBuffer();
@@ -225,11 +256,11 @@ public class Report {
                     + persons[row].getName() + "</a></td>\n");
 
             double totalSum = 0.0;
-            for (int i = 0; i < hours[row].size(); i++) {
+            for (int i = 0; i < personHours[row].size(); i++) {
                 html.append("   <td align=\"center\"><a href=\""
                         + HourParser.getBaseUrl() + getPageName(row + 1) + "#" + i + "\">"
-                        + HourParser.getNumberFormat().format(hours[row].get(i)) + "</a></td>\n");
-                totalSum += hours[row].get(i);
+                        + HourParser.getNumberFormat().format(personHours[row].get(i)) + "</a></td>\n");
+                totalSum += personHours[row].get(i);
             }
             html.append("   <td align=\"center\">" + HourParser.getNumberFormat().format(totalSum) + "&nbsp;h</td>\n");
             html.append("</tr>\n");
@@ -247,8 +278,95 @@ public class Report {
             double totalSum = 0.0;
             for (int i = 0; i < weeks.size(); i++) {
                 double weekSum = 0.0;
-                for (Vector<Double> personHours : hours) {
-                    weekSum += personHours.get(i);
+                for (Vector<Double> h : personHours) {
+                    weekSum += h.get(i);
+                }
+                html.append(
+                        "   <td align=\"center\"><b>" + HourParser.getNumberFormat().format(weekSum) + "</b></td>\n");
+                totalSum += weekSum;
+            }
+            html.append(
+                    "   <td align=\"center\"><b>" + HourParser.getNumberFormat().format(totalSum) + "&nbsp;h</b></td>\n");
+            html.append("</tr>\n");
+        }
+
+        html.append("</table>\n");
+        return html.toString();
+    }
+
+    /**
+     * Returns the HTML code for the page with the hours listed by code and week.
+     *
+     * @return HTML code for the page. Does not include the header or footer.
+     */
+    private String getSummaryPage() {
+        StringBuffer html = new StringBuffer();
+        Calendar cal = Calendar.getInstance();
+
+        // table header
+        html.append("<table border=\"0\">\n");
+        html.append("<tr>\n");
+        html.append("   <th style=\"padding: 0ex 3ex 0ex 3ex;\">Code / Week</th>\n");
+        for (Date week : weeks) {
+            cal.setTime(week);
+            html.append("   <th style=\"width: 5ex;\">" + cal.get(Calendar.WEEK_OF_YEAR) + "</th>\n");
+        }
+        html.append("   <th style=\"padding: 0ex 1ex 0ex 1ex;\">Total</th>\n");
+        html.append("</tr>\n");
+
+        // sort the codes by order of appearance
+        String[] codes = codeHours.keySet().toArray(new String[0]);
+        Arrays.<String>sort(codes, new Comparator<String>() {
+            public int compare(String s, String s1) {
+                Vector<Double> hours1 = codeHours.get(s);
+                Vector<Double> hours2 = codeHours.get(s1);
+
+                // find out which of the codes started collecting hours first
+                for (int i = 0; i < hours1.size() && i < hours2.size(); i++) {
+                    Double d1 = hours1.get(i);
+                    Double d2 = hours1.get(i);
+                    if (d1.compareTo(d2) != 0) {
+                        return d1.compareTo(d2);
+                    }
+                }
+                return 0;
+            }
+        });
+
+        // each code's total hours for every week
+        int row;
+        for (row = 0; row < codes.length; row++) {
+            if (row % 2 == 0) {
+                html.append("<tr style=\"background-color: #DDDDDD;\">\n");
+            } else {
+                html.append("<tr style=\"background-color: #EEEEEE;\">\n");
+            }
+            html.append("   <td>" + codes[row] + "</td>\n");
+
+            double totalSum = 0.0;
+            for (int i = 0; i < codeHours.get(codes[row]).size(); i++) {
+                html.append("   <td align=\"center\">"
+                        + HourParser.getNumberFormat().format(codeHours.get(codes[row]).get(i)) + "</td>\n");
+                totalSum += codeHours.get(codes[row]).get(i);
+            }
+            html.append("   <td align=\"center\">" + HourParser.getNumberFormat().format(totalSum) + "&nbsp;h</td>\n");
+            html.append("</tr>\n");
+        }
+
+        // weekly total hours
+        {
+            if (row % 2 == 0) {
+                html.append("<tr style=\"background-color: #DDDDDD;\">\n");
+            } else {
+                html.append("<tr style=\"background-color: #EEEEEE;\">\n");
+            }
+            html.append("   <th align=\"left\">Total</th>\n");
+
+            double totalSum = 0.0;
+            for (int i = 0; i < weeks.size(); i++) {
+                double weekSum = 0.0;
+                for (Vector<Double> h : codeHours.values()) {
+                    weekSum += h.get(i);
                 }
                 html.append(
                         "   <td align=\"center\"><b>" + HourParser.getNumberFormat().format(weekSum) + "</b></td>\n");
@@ -266,8 +384,8 @@ public class Report {
     /**
      * Returns the HTML code for a person's summary page.
      *
-     * @param person Index of the person
-     * @return HTML code for the page. Does not include the header or footer
+     * @param person index of the person
+     * @return HTML code for the page. Does not include the header or footer.
      */
     private String getPersonPage(int person) {
         StringBuffer html = new StringBuffer();
@@ -300,7 +418,8 @@ public class Report {
                 html.append("<tr>\n");
                 html.append("   <td valign=\"top\">" + HourParser.getDateFormat().format(entry.getDate()) + "</td>\n");
                 html.append("   <td valign=\"top\">" + entry.getCode() + "</td>\n");
-                html.append("   <td valign=\"top\">" + HourParser.getNumberFormat().format(entry.getHours()) + "</td>\n");
+                html.append(
+                        "   <td valign=\"top\">" + HourParser.getNumberFormat().format(entry.getHours()) + "</td>\n");
                 html.append("   <td valign=\"top\">" + entry.getComment() + "</td>\n");
                 html.append("</tr>\n");
                 weekSum += entry.getHours();

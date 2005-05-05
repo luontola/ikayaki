@@ -57,7 +57,7 @@ public class Entry {
     /**
      * Parses a row from a log file.
      *
-     * @param row One row from a log file
+     * @param row one row from a log file.
      */
     public Entry(String row) {
         Scanner sc = new Scanner(row);
@@ -128,27 +128,27 @@ public class Entry {
     }
 
     /**
-     * Is this entry an empty line or a comment
+     * Is this entry an empty line or a comment.
      *
-     * @return <code>true</code> if is empty or a comment, <code>false</code> otherwise
+     * @return <code>true</code> if is empty or a comment, otherwise <code>false</code>.
      */
     public boolean isEmpty() {
         return state == State.EMPTY;
     }
 
     /**
-     * Is this entry the name of the person
+     * Is this entry the name of the person.
      *
-     * @return <code>true</code> if is a name, <code>false</code> otherwise
+     * @return <code>true</code> if is a name, otherwise <code>false</code>.
      */
     public boolean isName() {
         return state == State.NAME;
     }
 
     /**
-     * Is this entry a record of work
+     * Is this entry a record of work.
      *
-     * @return <code>true</code> if is a record, <code>false</code> otherwise
+     * @return <code>true</code> if is a record, otherwise <code>false</code>.
      */
     public boolean isRecord() {
         return state == State.RECORD;
