@@ -13,6 +13,9 @@ The MainStatusBar is not implemented, but when it is ready, it should be added t
 
 \subsection{MeasurementStep.java}
 
+For Thellier projects it would be necessary to store the notes for each measurement step in a better way. Now the decimals of a stepValue are used to convey information about the current measurement. Get rid of that ugly hack and add a proper property to store the information. Have a look at SequenceColumn.STEP, where this solution is explained in more detail.
+
+
 \subsection{MeasurementValue.java}
 
 In the calculation of THETA63 it was a bit unclear, if the length of the full vectors should be summed (like it is now), or if the vectors should be normalized first (length=1). Fabio said that the way it is right now should be OK, but I understood it differently when reading the documents that Lauri gave.
@@ -117,7 +120,9 @@ Make tooltips for the table headers. Look at how they were done in MeasurementSe
         return; // TODO
 
 \subsection{gui/MeasurementSequencePanel.java}
-        // TODO: Put these same actions to the program's main menu. Each action might then need to find out the selected rows itself and monitor the ListSelectionModel.
+
+The actions in SequencePopupMenu should be refactored. They should be made so, that they do not depend on the parameters given to SequencePopupMenu, but instead they will themselves find out which of the rows are selected in the sequence table. They will need to listen to the ListSelectionModel of the sequence table, and enable/disable themselves whenever the operation is or is not permitted. The goal is to add these actions to the MainMenuBar and assign hotkeys for them, so that it would be possible to insert and remove rows from the sequence without the mouse.
+
 
 \subsection{gui/MeasurementSequenceTableModel.java}
 

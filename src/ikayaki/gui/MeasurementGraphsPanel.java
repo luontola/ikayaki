@@ -43,6 +43,8 @@ public class MeasurementGraphsPanel extends ProjectComponent implements ProjectL
      */
     private Vector<Plot> plots = new Vector<Plot>();
 
+    private JTabbedPane tabs;
+
     /**
      * Creates new panel for plots
      */
@@ -58,32 +60,27 @@ public class MeasurementGraphsPanel extends ProjectComponent implements ProjectL
 
         JButton bigGraphsButton = new JButton();
 
+        tabs = new JTabbedPane();
 
-        final JTabbedPane tabbedPane = new JTabbedPane();
+        Box b = new Box(BoxLayout.X_AXIS);
+        b.add(intensityPlot);
+        b.add(stereoPlot);
+        tabs.addTab("1: Intensity & Stereo", b);
+        tabs.setMnemonicAt(0, KeyEvent.VK_1);
 
-        tabbedPane.addTab("1: Intensity", intensityPlot);
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
-
-        tabbedPane.addTab("2: Stereo", stereoPlot);
-        tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
-
-        tabbedPane.addTab("3: Zijderweld", new JPanel());
-        tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
+        tabs.addTab("2: Zijderweld", new JPanel());
+        tabs.setMnemonicAt(1, KeyEvent.VK_2);
 
         setLayout(new BorderLayout());
-        add(bigGraphsButton, "North");
-        add(tabbedPane, "Center");
-
-        // initialize with no project
-        setProject(null);
-
+        add(bigGraphsButton, "North"); // TODO: make this button look nicer
+        add(tabs, "Center");
 
         bigGraphsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JDialog gd = new JDialog(getParentFrame(), "Graphs", false);
                 MeasurementGraphsPanel mgp = new MeasurementGraphsPanel();
                 mgp.setProject(getProject());
-                gd.add(mgp, BorderLayout.CENTER);
+                gd.add(mgp.tabs, BorderLayout.CENTER);
                 gd.pack();
                 Rectangle maxBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
                 gd.setSize((int) (maxBounds.width * 0.5), (int) (maxBounds.height * 0.5));
@@ -92,7 +89,8 @@ public class MeasurementGraphsPanel extends ProjectComponent implements ProjectL
             }
         });
 
-        return; // TODO
+        // initialize with no project
+        setProject(null);
     }
 
     /**
