@@ -99,44 +99,104 @@ The program and its source code was handed to the client at the end of the proje
 
 \subsection{Amount of Work}
 
-The amount of work that the team did is shown in Figure~\ref{fig:workhours}.
-
-\begin{figure}
-\includegraphics[width=22cm,angle=90]{workhours.eps}
-\caption{How many hours of work the team members did.}
-\label{fig:workhours}
-\end{figure}
-
 The estimated size of the program was a maximum of 13000 lines of code. The final size of the program is some 21500 lines of code. So the estimation that was made at the very beginning of the project (before the team even understood what they were doing ;) was more than 65\% too low.
 
 During the project was also produced HourParser, a program for managing the team's work hours. Its size is 1000 lines of code.
 
-The final schedule for the project is in Figure~\ref{fig:schedule}.
+The project plan was completed ahead of time. The definition and production were both about one week longer than it was originally planned. As a result, the time left for testing was only 50\% of what it was supposed to be.
 
+The amount of work that the team did is shown in Figure~\ref{fig:workhours}. The distribution of work hours by the type of work is shown in Figures \ref{fig:hoursdistribution} and \ref{fig:hoursgraph}. The final schedule for the project is shown in Figures \ref{fig:schedule} and \ref{fig:schedulegantt}. 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=22cm,angle=90]{workhours.eps}
+\caption{How many hours of work the team members did.}
+\label{fig:workhours}
+\end{center}
+\end{figure}
 
 \begin{figure}[h]
-\begin{tabular}{llll}
-{\bf Task} & {\bf Start} & {\bf End} & {\bf Days} \\
+\begin{tabular}{lrr}
+{\bf Type} 		& {\bf Hours}	& {\bf Percentage} \\
 \hline
-Project Plan		& 25.1.2005	& 8.2.2005	& 14 \\
-HourParser		& 8.2.2005	& 9.2.2005	& 1 \\
-Definition		& 25.1.2005	& 1.3.2005	& 35 \\
-- Prototype		&		& 24.2.2005	& \\
-- Requirements Document	&		& 2.3.2005	& \\
-Design			& 1.3.2005	& 22.3.2005	& 21  \\
-- Design Document	&		& 22.3.2005	& \\
-Production		& 22.3.2005	& 14.4.2005	& 23 \\
-Testing			& 14.4.2005	& 28.4.2005	& 14 \\
-- Testing Plan		&		& 22.4.2005	& \\
-- Testing Report	&		& 29.4.2005	& \\
-Installing		& 28.4.2005	& 5.5.2005	& 7 \\
-- Final Report		&		& 3.5.2005	& \\
-- User Manual		&		& xx.5.2005	& \\
-- Realization Document	&		& xx.5.2005	& \\
+(PS) Project Plan		& 19 h		& 1,5 \% \\
+(VA) Definition			& 230,4 h	& 17,8 \% \\
+(SU) Design			& 234,5 h	& 18,1 \% \\
+(TO) Production			& 386,5 h	& 29,9 \% \\
+(TE) Testing			& 123,5 h	& 9,6 \% \\
+(KO) Installing			& 10 h		& 0,8 \% \\
+(LR) Final Report		& 4 h		& 0,3 \% \\
+(MU) Meetings and Others	& 282,1 h	& 21,8 \% \\
+{\bf Total}			& 1 293 h	& 100 \% \\
+\end{tabular}
+\caption{The distribution of hours by the type of work}
+\label{fig:hoursdistribution}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=15cm]{hoursgraph.eps}
+\caption{The distribution of hours by the type of work as a graph}
+\label{fig:hoursgraph}
+\end{figure}
+
+\begin{figure}[h]
+\begin{tabular}{lrrrrr}
+{\bf Task} & {\bf Start} & {\bf End} & {\bf Days} & {\bf Plan} & {\bf Change} \\
+\hline
+Project Plan		& 25.1.2005	& 8.2.2005	& 14	& 21	& -7 \\
+HourParser		& 8.2.2005	& 9.2.2005	& 1	& 	& \\
+Definition		& 25.1.2005	& 1.3.2005	& 35	& 28	& +7 \\
+- Prototype		&		& 24.2.2005	& 	& 	& \\
+- Requirements Document	&		& 2.3.2005	& 	& 	& \\
+Design			& 1.3.2005	& 22.3.2005	& 21	& 21	& 0 \\
+- Design Document	&		& 22.3.2005	& 	& 	& \\
+Production		& 22.3.2005	& 14.4.2005	& 23	& 14	& +9 \\
+Testing			& 14.4.2005	& 28.4.2005	& 14	& 28	& -14 \\
+- Testing Plan		&		& 22.4.2005	& 	& 	& \\
+- Testing Report	&		& 29.4.2005	& 	& 	& \\
+Installing		& 28.4.2005	& 5.5.2005	& 7	& 7	& 0 \\
+- Final Report		&		& 5.5.2005	& 	& 	& \\
+- User Manual		&		& xx.5.2005	& 	& 	& \\
+- Realization Document	&		& xx.5.2005	& 	& 	& \\
 \end{tabular}
 \caption{Final project schedule}
 \label{fig:schedule}
 \end{figure}
+
+\begin{figure}
+\includegraphics[width=15cm]{aikataulu.eps}
+\caption{Final project schedule as a GANTT diagram}
+\label{fig:schedulegantt}
+\end{figure}
+
+
+\subsection{Features Unaccounted For}
+
+These are the features that were mentioned in the Requirements Document (version 1.1) but were not produced.
+
+{\bf Feature:} Exporting to .SRM file format (UC15) \\
+{\bf Reason:} There were no specifications as to what the file format is.
+
+{\bf Feature:} Error handling in exporting (UC13-15)\\
+{\bf Reason:} The error handling in ProjectExplorerPopupMenu is incomplete (no message as to if the export failed or not). The error handling in MainViewPanel (File > Export -menu) works, though.
+
+{\bf Feature:} Hotkeys for deleting (and inserting) steps in a sequence (UC25) \\
+{\bf Reason:} This would require some refactoring to the actions used in SequencePopupMenu. Now the actions depend on the parameters given to SequencePopupMenu, but a better way would be for them to find out themselves which of the rows are selected in the table. Selection listeners should listen to the selected rows in the sequence table, and enable/disable the right actions depending on the current selection. The actions would need be are added to MainMenuBar and hotkeys assigned to them.
+
+{\bf Feature:} Drag and drop for steps in a sequence (UC26) \\
+{\bf Reason:} Would have required too much time and effort to produce. The insert and delete actions are good enough for now.
+
+{\bf Feature:} Editing stored sequences (UC28 scenario B) \\
+{\bf Reason:} Not worth the effort. Scenario A whould be good enough, because the sequences are not edited on a regular basis.
+
+{\bf Feature:} Right-clicking in the load sequence set menu (UC29, UC30) \\
+{\bf Reason:} There were problems in getting the menu to stay open when right-clicked. The renaming and deleting in the Options dialog is good enough for now.
+
+{\bf Feature:} Warning signal (R4) \\
+{\bf Reason:} It was not clear as to how this could be done. It was found out that somebody had done such a system by using a static timer (1 minute) and an external device for shutting down the degausser. More details in the 
+
+{\bf Feature:} \\
+{\bf Reason:}
 
 
 \section{Debriefing}
