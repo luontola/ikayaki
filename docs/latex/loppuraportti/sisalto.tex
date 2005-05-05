@@ -99,13 +99,93 @@ The program and its source code was handed to the client at the end of the proje
 
 \subsection{Amount of Work}
 
-The estimated size of the program was a maximum of 13000 lines of code. The final size of the program is some 21500 lines of code. So the estimation that was made at the very beginning of the project (before the team even understood what they were doing ;) was more than 65\% too low.
-
-During the project was also produced HourParser, a program for managing the team's work hours. Its size is 1000 lines of code.
+The estimated size of the program was a maximum of 13000 lines of code. The final size of the program is some 22000 lines of code. So the estimation that was made at the very beginning of the project (before the team even understood what they were doing ;) was more than 65\% too low. During the project was also produced HourParser, a program for managing the team's work hours. Its size is 1200 lines of code. The source code files that were written and who wrote them, are listed in Figures \ref{fig:linesofcode1} and \ref{fig:linesofcode2}
 
 The project plan was completed ahead of time. The definition and production were both about one week longer than it was originally planned. As a result, the time left for testing was only 50\% of what it was supposed to be.
 
 The amount of work that the team did is shown in Figure~\ref{fig:workhours}. The distribution of work hours by the type of work is shown in Figures \ref{fig:hoursdistribution} and \ref{fig:hoursgraph}. The final schedule for the project is shown in Figures \ref{fig:schedule} and \ref{fig:schedulegantt}. 
+
+\begin{figure}
+\begin{tabular}{rll}
+{\bf Lines} & {\bf File} & {\bf Author} \\
+\hline
+   213 & hourparser/Entry.java				& Esko Luontola \\
+   344 & hourparser/HourParser.java			& Esko Luontola \\
+   215 & hourparser/Person.java				& Esko Luontola \\
+   456 & hourparser/Report.java				& Esko Luontola \\
+   275 & ikayaki/Ikayaki.java				& Esko Luontola \\
+   101 & ikayaki/MeasurementEvent.java			& Esko Luontola \\
+    39 & ikayaki/MeasurementListener.java		& Esko Luontola \\
+   363 & ikayaki/MeasurementResult.java			& Esko Luontola \\
+   216 & ikayaki/MeasurementSequence.java		& Esko Luontola \\
+   564 & ikayaki/MeasurementStep.java			& Esko Luontola \\
+   613 & ikayaki/MeasurementValue.java			& Esko Luontola \\
+  2870 & ikayaki/Project.java				& Esko Luontola \\
+    78 & ikayaki/ProjectEvent.java			& Esko Luontola \\
+    39 & ikayaki/ProjectListener.java			& Esko Luontola \\
+   935 & ikayaki/Settings.java				& Esko Luontola \\
+    59 & ikayaki/gui/AbstractPlot.java			& Aki Sysmäläinen \\
+   124 & ikayaki/gui/CalibrationPanel.java		& Samuli Kaipiainen \\
+    72 & ikayaki/gui/ComponentFlasher.java		& Samuli Kaipiainen \\
+   863 & ikayaki/gui/DeviceSettingsPanel.java		& Aki Korpua \\
+   182 & ikayaki/gui/FittedComboBoxRenderer.java	& Esko Luontola \\
+   120 & ikayaki/gui/GenericFileFilter.java		& Esko Luontola \\
+   147 & ikayaki/gui/IntensityPlot.java			& Aki Sysmäläinen \\
+   973 & ikayaki/gui/MagnetometerStatusPanel.java	& Samuli Kaipiainen \\
+   199 & ikayaki/gui/MainMenuBar.java			& Esko Luontola \\
+    78 & ikayaki/gui/MainStatusBar.java			& \\
+   881 & ikayaki/gui/MainViewPanel.java			& Esko Luontola \\
+   372 & ikayaki/gui/MeasurementControlsPanel.java	& Samuli Kaipiainen \\
+   394 & ikayaki/gui/MeasurementDetailsPanel.java	& Esko Luontola \\
+   152 & ikayaki/gui/MeasurementGraphsPanel.java	& Aki Sysmäläinen \\
+   976 & ikayaki/gui/MeasurementSequencePanel.java	& Esko Luontola \\
+   376 & ikayaki/gui/MeasurementSequenceTableModel.java	& Esko Luontola \\
+    44 & ikayaki/gui/NullableDecimalFormat.java		& Esko Luontola \\
+    54 & ikayaki/gui/Plot.java				& Aki Sysmäläinen \\
+    56 & ikayaki/gui/PositiveDecimalFormat.java		& Esko Luontola \\
+   532 & ikayaki/gui/PrintPanel.java			& Aki Korpua \\
+   425 & ikayaki/gui/ProgramSettingsPanel.java		& Esko Luontola \\
+   109 & ikayaki/gui/ProjectComponent.java		& Esko Luontola \\
+   502 & ikayaki/gui/ProjectExplorerPanel.java		& Samuli Kaipiainen \\
+   846 & ikayaki/gui/ProjectExplorerTable.java		& Samuli Kaipiainen \\
+   686 & ikayaki/gui/ProjectInformationPanel.java	& Esko Luontola \\
+   733 & ikayaki/gui/SequenceColumn.java		& Esko Luontola \\
+    98 & ikayaki/gui/SettingsDialog.java		& Aki Korpua \\
+   193 & ikayaki/gui/StereoPlot.java			& Aki Sysmäläinen \\
+   128 & ikayaki/gui/StyledCellEditor.java		& Esko Luontola \\
+    84 & ikayaki/gui/StyledTableCellRenderer.java	& Esko Luontola \\
+   127 & ikayaki/gui/StyledWrapper.java			& Esko Luontola \\
+\end{tabular}
+\caption{How many lines of code there is and who primarily wrote those classes.}
+\label{fig:linesofcode1}
+\end{figure}
+
+
+\begin{figure}
+\begin{tabular}{rll}
+{\bf Lines} & {\bf File} & {\bf Author} \\
+\hline
+   425 & ikayaki/squid/Degausser.java			& Aki Korpua \\
+   895 & ikayaki/squid/Handler.java			& Aki Korpua, Esko Luontola \\
+   409 & ikayaki/squid/Magnetometer.java		& Aki Korpua \\
+   408 & ikayaki/squid/SerialIO.java			& Aki Sysmäläinen, Aki Korpua \\
+    87 & ikayaki/squid/SerialIOEvent.java		& Aki Sysmäläinen \\
+    40 & ikayaki/squid/SerialIOException.java		& Aki Sysmäläinen \\
+    37 & ikayaki/squid/SerialIOListener.java		& Aki Sysmäläinen \\
+   134 & ikayaki/squid/SerialParameters.java		& Aki Sysmäläinen \\
+   173 & ikayaki/squid/Squid.java			& Aki Korpua \\
+   423 & ikayaki/squid/SquidEmulator.java		& Aki Korpua \\
+  1436 & ikayaki/squid/SquidFront.java			& Esko Luontola, Aki Korpua \\
+   143 & ikayaki/util/ComponentPrinter.java		& Aki Korpua \\
+   154 & ikayaki/util/DocumentUtilities.java		& Esko Luontola \\
+   338 & ikayaki/util/LastExecutor.java			& Esko Luontola \\
+   198 & ikayaki/util/LoggerPrintStream.java		& Esko Luontola \\
+    98 & ikayaki/util/SerialProxy.java			& Aki Korpua, Esko Luontola \\
+ 23304 total & & \\
+\end{tabular}
+\caption{How many lines of code there is and who primarily wrote those classes.}
+\label{fig:linesofcode2}
+\end{figure}
 
 \begin{figure}
 \begin{center}

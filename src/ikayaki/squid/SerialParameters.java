@@ -27,7 +27,7 @@ import javax.comm.SerialPort;
 /**
  * Contains all the serial communication parameters which SerialIO uses when opening the port.
  *
- * @author
+ * @author Aki Sysmäläinen
  */
 public class SerialParameters {
 
