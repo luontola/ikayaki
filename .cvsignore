@@ -11,7 +11,6 @@ javap.bat
 docs
 comm.library
 looks.library
-copy_resources.bat
 ikayaki
 projects
 lib.library

@@ -1,5 +1,5 @@
 xcopy /y /s /exclude:excluded.txt resources build\tmp\resources\
-xcopy /y /s /exclude:excluded.txt manual build\manual\
+xcopy /y /s /exclude:excluded.txt docs\manual build\manual\
 xcopy /y /s /exclude:excluded.txt classes\ikayaki build\tmp\ikayaki\
 xcopy /y /s /exclude:excluded.txt classes\jutil build\tmp\jutil\
 xcopy /y src\IKAYAKI.MF build\tmp\META-INF\MANIFEST.MF
