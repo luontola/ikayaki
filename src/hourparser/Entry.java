@@ -102,7 +102,7 @@ public class Entry {
 
             // parse code
             try {
-                code = sc.next();
+                code = sc.next().toUpperCase();
             } catch (Exception e) {
                 System.err.println("Error in reading the code in row: " + row);
                 state = null;

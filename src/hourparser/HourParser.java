@@ -213,6 +213,23 @@ public class HourParser {
     private static void printVersion() {
         System.out.println(APP_NAME + " " + APP_VERSION + " <" + APP_HOME_PAGE + ">");
         System.out.println("Written by Esko Luontola <http://www.orfjackal.net/>");
+        System.out.println(
+                "\n" +
+                "Copyright (C) 2005 Project SQUID\n" +
+                "\n" +
+                "HourParser is free software; you can redistribute it and/or modify\n" +
+                "it under the terms of the GNU General Public License as published by\n" +
+                "the Free Software Foundation; either version 2 of the License, or\n" +
+                "(at your option) any later version.\n" +
+                "\n" +
+                "HourParser is distributed in the hope that it will be useful,\n" +
+                "but WITHOUT ANY WARRANTY; without even the implied warranty of\n" +
+                "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the\n" +
+                "GNU General Public License for more details.\n" +
+                "\n" +
+                "You should have received a copy of the GNU General Public License\n" +
+                "along with HourParser; if not, write to the Free Software\n" +
+                "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA");
     }
 
     public static File getHeaderFile() {
