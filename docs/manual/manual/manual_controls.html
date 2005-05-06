@@ -27,7 +27,69 @@
 
 <h1>Manual Controls</h1>
 
-<h2>Example header</h2>
+<img src="man01.png" alt="Overview of manual controls"/>
+
+
+<h3>Handler movement controls</h3>
+
+<ul>
+	<li><b>Left limit</b><br>
+		Moves the handler to left until it reaches the left limiter.
+	</li>
+	<li><b>Home</b><br>
+		Seeks the home position.
+	</li>
+	<li><b>Demag Z</b><br>
+		Moves the handler to demagnetizing position for Z-axis.
+	</li>
+	<li><b>Demag Y</b><br>
+		Moves the handler to demagnetizing position for Y-axis and X-axis.
+	</li>
+	<li><b>BG</b><br>
+		Moves the handler to background noise measurement position.
+	</li>
+	<li><b>Measure</b><br>
+		Moves the handler to magnetometer measurement position.
+	</li>
+	<li><b>Right limit</b><br>
+		Moves the handler to right until it reaches the right limiter.
+	</li>
+</ul>
+
+
+<h3>Handler rotation controls</h3>
+	Rotation of the handler is choosed by selecting the corresponding degree.
+
+<h3>Handler status display</h3>
+<p>Shows the current location of the hanlder in steps and rotation in degrees.</p>
+
+
+<h3>Sample status display</h3>
+<p>Shows the current location and rotation of the sample.</p>
+
+<h3>Magnetometer measurement controls</h3>
+	<p>NOTE: These controls are available only when the handler is in BG- or Measure-positions<br></p>
+
+	<ul>
+	<li><b>Measure BG / Measure XYZ</b><br>
+		Measures the background noise or the XYZ-values depending from the handler position.
+	</li>
+	<li><b>Reset</b><br>
+		Resets the magnetometer.
+	</li>
+	<li><b>Next line</b><br>
+		Locks the current measurement and adds a new line to sequence.
+	</li>
+	</ul>
+
+
+<h3>Demagnetizer controls</h3>
+	<p>NOTE: These controls are available only when the handler is in demag Z- or demag Y -position.<br>
+		Sample is demagnetized by writing the preferred demagnetation field in mT:s to textfield and then pressing
+		Demag-button. If the given value is out of range the field will flash red.
+	</p>
+
+
 
 </div>
 
