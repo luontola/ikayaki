@@ -18,7 +18,12 @@ InstallDir $PROGRAMFILES\Ikayaki
 SetCompressor lzma
 
 ;--------------------------------
+;Definitions
 
+!define SHCNE_ASSOCCHANGED 0x8000000
+!define SHCNF_IDLIST 0
+
+;--------------------------------
 ; Pages
 
 Page components
@@ -29,8 +34,8 @@ UninstPage uninstConfirm
 UninstPage instfiles
 
 ;--------------------------------
-
 ; The stuff to install
+
 Section "!Ikayaki (required)"
 
   SectionIn RO
@@ -45,9 +50,22 @@ Section "!Ikayaki (required)"
   SetOutPath $INSTDIR
   File "ikayaki.exe"
   File "ikayaki.jar"
+  File "LICENCE"
   File /r "lib"
   File /r "jre"
   File /r "manual"
+  
+  ; File type associations
+  WriteRegStr HKCR ".ika" "" "Ikayaki.Project"
+  WriteRegStr HKCR "Ikayaki.Project" "" "Ikayaki Project File"
+  WriteRegStr HKCR "Ikayaki.Project\DefaultIcon" "" "$INSTDIR\ikayaki.exe,0"
+  ReadRegStr $R0 HKCR "Ikayaki.Project\shell\open\command" ""
+  StrCmp $R0 "" 0 no_ikaopen
+    WriteRegStr HKCR "Ikayaki.Project\shell" "" "open"
+    WriteRegStr HKCR "Ikayaki.Project\shell\open\command" "" '$INSTDIR\ikayaki.exe "%1"'
+  no_ikaopen:
+  
+  System::Call 'Shell32::SHChangeNotify(i ${SHCNE_ASSOCCHANGED}, i ${SHCNF_IDLIST}, i 0, i 0)'
   
   ; Write the uninstall keys for Windows
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Ikayaki" "DisplayName" "Ikayaki"
@@ -87,8 +105,19 @@ Section "Uninstall"
   RMDir /r /REBOOTOK "$INSTDIR\manual"
   RMDir /r /REBOOTOK "$INSTDIR\jre"
   RMDir /r /REBOOTOK "$INSTDIR\lib"
+  Delete /REBOOTOK "$INSTDIR\LICENCE"
   Delete /REBOOTOK "$INSTDIR\ikayaki.jar"
   Delete /REBOOTOK "$INSTDIR\ikayaki.exe"
+  
+  ; Remove file type associations
+  ReadRegStr $R0 HKCR ".ika" ""
+  StrCmp $R0 "Ikayaki.Project" 0 +2
+    DeleteRegKey HKCR ".ika"
+  
+  DeleteRegKey HKCR "Ikayaki.Project"
+  
+  System::Call 'Shell32::SHChangeNotify(i ${SHCNE_ASSOCCHANGED}, i ${SHCNF_IDLIST}, i 0, i 0)'
+  
   
   ; Remove registry keys
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Ikayaki"
