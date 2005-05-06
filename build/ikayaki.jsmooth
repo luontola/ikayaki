@@ -6,11 +6,11 @@
 <JVMSearchPath>jdkpath</JVMSearchPath>
 <JVMSearchPath>exepath</JVMSearchPath>
 <JVMSearchPath>jview</JVMSearchPath>
+<arguments></arguments>
 <bundledJVMPath>jre</bundledJVMPath>
 <classPath>ikayaki.jar</classPath>
 <classPath>lib\comm.jar</classPath>
 <classPath>lib\forms_rt.jar</classPath>
-<classPath>lib\junit.jar</classPath>
 <classPath>lib\looks.jar</classPath>
 <classPath>lib\vecmath.jar</classPath>
 <embeddedJar>false</embeddedJar>
