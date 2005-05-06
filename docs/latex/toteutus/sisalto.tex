@@ -4,16 +4,16 @@
 % nopsa pikkuluokkakaavioiden lis‰ysmakro
 % pois figuren sis‰lt‰ niin kuvat tulee minne pit‰‰kin, feikataan kuvanumerointi ja kuvateksti
 \newcommand{\insertdia}[1] {
-	% \begin{figure}[h!]
-	\begin{center}
-	\includegraphics[scale=0.33]{dia/#1.eps}
-	% \caption{#1}
-	\refstepcounter{figure}
-	\label{fig:#1}
-	\nopagebreak \\ \medskip Figure \arabic{figure}: #1 \\
-	\addcontentsline{lof}{figure}{#1}
-	\end{center}
-	% \end{figure}
+    % \begin{figure}[h!]
+    \begin{center}
+    \includegraphics[scale=0.33]{dia/#1.eps}
+    % \caption{#1}
+    \refstepcounter{figure}
+    \label{fig:#1}
+    \nopagebreak \\ \medskip Figure \arabic{figure}: #1 \\
+    \addcontentsline{lof}{figure}{#1}
+    \end{center}
+    % \end{figure}
 }
 
 \section{Introduction}
@@ -213,7 +213,7 @@ What's left for the program to make it perfect :)
 
 \subsection{Adding more calculations}
 
-The algorithms for the measurement's mathematical calculations are spead around the program code in a perverted way. Look for these places when you want to change or add something:
+The algorithms for the measurement's mathematical calculations are spread around the program code in a perverted way. Look for these places when you want to change or add something:
 
 - Magnetometer.readData() reads the raw measurement data from the SQUID. \\
 - Project.Measurement.run() contains the routine for a measurement step. Project.ManualMeasure.run() is the same for manual measurements. \\
@@ -259,6 +259,11 @@ The structure of some parts of the source code is more or less messy. Refactor t
 \subsection{Accuracy of the Measurements}
 
 There appears to the some inaccuracy in either the measurements or then the calculations are not right. For some reason the measured Z values are accurate, but X and Y are not. It might be necessary to see more closely that how the old program does the measurements. The use of SerialProxy is recommended. The timing of the protocol commands might also be critical.
+
+\subsection{Graphs}
+
+Current graphs need some fixing. The stereo plot is now drawn with linear scale as it should be biased so that
+points are more packed together in the middle. The ratio is unknown. Zijderweld plots should be implemented as well.
 
 
 \section{TODO-list from source code}
