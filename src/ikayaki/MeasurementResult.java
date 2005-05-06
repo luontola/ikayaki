@@ -176,6 +176,12 @@ public class MeasurementResult {
     protected void applyFixes(MeasurementStep step) {
         sampleVector.set(rawVector);
 
+        if (step != null) {
+            // apply the noise fix
+            Vector3d noise = step.getNoise();
+            sampleVector.sub(noise);
+        }
+
         // apply rotation fix
         if (rotation % 90 == 0) {
             // accurate and fast algorithm for trivial angles
@@ -204,10 +210,6 @@ public class MeasurementResult {
         }
 
         if (step != null) {
-            // apply the noise fix
-            Vector3d noise = step.getNoise();
-            sampleVector.sub(noise);
-
             // apply the +/-Z fix
             if (step.getProject() != null && step.getProject().getOrientation() == Project.Orientation.MINUS_Z) {
                 sampleVector.set(sampleVector.x, -sampleVector.y, -sampleVector.z);
