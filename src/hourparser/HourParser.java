@@ -213,8 +213,7 @@ public class HourParser {
     private static void printVersion() {
         System.out.println(APP_NAME + " " + APP_VERSION + " <" + APP_HOME_PAGE + ">");
         System.out.println("Written by Esko Luontola <http://www.orfjackal.net/>");
-        System.out.println(
-                "\n" +
+        System.out.println("\n" +
                 "Copyright (C) 2005 Project SQUID\n" +
                 "\n" +
                 "HourParser is free software; you can redistribute it and/or modify\n" +

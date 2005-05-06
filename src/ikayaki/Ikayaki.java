@@ -53,7 +53,7 @@ public class Ikayaki extends JFrame {
     public static final String APP_HOME_PAGE = "http://www.cs.helsinki.fi/group/squid/";
 
     public static final String FILE_TYPE = ".ika";
-    public static final String FILE_DESCRIPTION = "Measurement Project";
+    public static final String FILE_DESCRIPTION = "Ikayaki Project File";
 
     public static final String[] AUTHORS = new String[]{
         "Mikko Jormalainen",

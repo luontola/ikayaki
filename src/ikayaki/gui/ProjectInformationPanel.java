@@ -406,7 +406,8 @@ public class ProjectInformationPanel extends ProjectComponent {
         panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), 4, 4));
         contentPane.add(panel1,
                 new GridConstraints(1, 1, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null,
+                        null));
         measurementTypeAuto = new JRadioButton();
         measurementTypeAuto.setText("Auto");
         panel1.add(measurementTypeAuto,
@@ -431,7 +432,8 @@ public class ProjectInformationPanel extends ProjectComponent {
         panel2.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), 4, 4));
         contentPane.add(panel2,
                 new GridConstraints(12, 1, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null,
+                        null));
         final Spacer spacer3 = new Spacer();
         panel2.add(spacer3,
                 new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,
@@ -556,7 +558,8 @@ public class ProjectInformationPanel extends ProjectComponent {
         panel3.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), 4, 0));
         contentPane.add(panel3,
                 new GridConstraints(0, 1, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null,
+                        null));
         operatorField = new JTextField();
         panel3.add(operatorField,
                 new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL,
@@ -603,7 +606,8 @@ public class ProjectInformationPanel extends ProjectComponent {
         panel4.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), 4, 4));
         contentPane.add(panel4,
                 new GridConstraints(5, 1, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH,
-                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null));
+                        GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null,
+                        null));
         final Spacer spacer5 = new Spacer();
         panel4.add(spacer5,
                 new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL,

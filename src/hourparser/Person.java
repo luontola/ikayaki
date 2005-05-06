@@ -24,9 +24,9 @@ package hourparser;
 
 import java.io.*;
 import java.util.Date;
-import java.util.Vector;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * Represents a person who has a personal log file.
@@ -168,7 +168,7 @@ public class Person {
      */
     public String[] getCodes(Date start, Date end) {
         Entry[] entries = getEntries(start, end);
-        Set<String> codes =  new HashSet<String>();
+        Set<String> codes = new HashSet<String>();
         for (Entry e : entries) {
             codes.add(e.getCode());
         }

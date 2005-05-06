@@ -38,7 +38,7 @@ import java.util.Vector;
 /**
  * This class represents hardware layer to serial port communications.
  *
- * @author Aki Sysmäläinen, Aki Korpua (co)
+ * @author Aki Sysmäläinen, Aki Korpua
  */
 public class SerialIO implements SerialPortEventListener {
 /*
