@@ -7,6 +7,7 @@ mkdir build\lib
 mkdir build\jre\bin
 mkdir build\jre\lib
 copy /y lib\*.jar build\lib\
+del build\lib\junit.jar
 copy /y lib\*.dll build\jre\bin\
 copy /y lib\*.properties build\jre\lib\
 pause
