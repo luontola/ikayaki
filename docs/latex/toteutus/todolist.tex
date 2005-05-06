@@ -3,14 +3,6 @@
 The MainStatusBar is not implemented, but when it is ready, it should be added to the JFrame in this class. For now that part of the code is commented out.
 
 
-\subsection{MeasurementEvent.java}
-
-\subsection{MeasurementListener.java}
-
-\subsection{MeasurementResult.java}
-
-\subsection{MeasurementSequence.java}
-
 \subsection{MeasurementStep.java}
 
 For Thellier projects it would be necessary to store the notes for each measurement step in a better way. Now the decimals of a stepValue are used to convey information about the current measurement. Get rid of that ugly hack and add a proper property to store the information. Have a look at SequenceColumn.STEP, where this solution is explained in more detail.
@@ -42,10 +34,6 @@ About the method doManualReset: it is not clear as to what it means to "reset th
 In doManualReset-method and Measurement-class there are some notes, that two methods in the Magnetometer class would be better when combined to just one method.
 
 
-\subsection{ProjectEvent.java}
-
-\subsection{ProjectListener.java}
-
 \subsection{Settings.java}
 
 Many of the methods are undocumented, especially in the case of device settings. Write better documentation for those.
@@ -54,12 +42,6 @@ About the handler's positions: it should be possible to allow also negative valu
 
 If any changes are made to the Settings class, special care should be made to go through every place where those properties are used. Especially the ranges of acceptable values need to be checked, because the user interface already does some checking on them.
 
-
-\subsection{gui/AbstractPlot.java}
-
-\subsection{gui/CalibrationPanel.java}
-
-\subsection{gui/ComponentFlasher.java}
 
 \subsection{gui/DeviceSettingsPanel.java}
 
@@ -70,16 +52,10 @@ There is no check if all systems have same port, only degausser and magnetometer
 Window cannot be closed with ESC-key as we wanted.
 
 
-\subsection{gui/FittedComboBoxRenderer.java}
-
-\subsection{gui/GenericFileFilter.java}
-
 \subsection{gui/IntensityPlot.java}
-        // TODO draw ticks and numbers for y-axis
-        // x-axis ticks
-        // TODO draw ticks and numbers for x-axis
-        // y-axis unit
-        // x-axis unit
+
+X and Y axes have no ticks nor numbers.
+
 
 \subsection{gui/MagnetometerStatusPanel.java}
 
@@ -109,8 +85,6 @@ There are no error messages created when communication with the SQUID can not be
 The button that is being used for hiding the project explorer tab, could be refactored to be an Action, so that it could be added to the MainMenuBar as a menu item.
 
 
-\subsection{gui/MeasurementControlsPanel.java}
-
 \subsection{gui/MeasurementDetailsPanel.java}
 
 Make tooltips for the table headers. Look at how they were done in MeasurementSequencePanel.
@@ -126,14 +100,6 @@ Make the button for opening a large version of the graphs look nicer. Maybe a sm
 The actions in SequencePopupMenu should be refactored. They should be made so, that they do not depend on the parameters given to SequencePopupMenu, but instead they will themselves find out which of the rows are selected in the sequence table. They will need to listen to the ListSelectionModel of the sequence table, and enable/disable themselves whenever the operation is or is not permitted. The goal is to add these actions to the MainMenuBar and assign hotkeys for them, so that it would be possible to insert and remove rows from the sequence without the mouse.
 
 
-\subsection{gui/MeasurementSequenceTableModel.java}
-
-\subsection{gui/NullableDecimalFormat.java}
-
-\subsection{gui/Plot.java}
-
-\subsection{gui/PositiveDecimalFormat.java}
-
 \subsection{gui/PrintPanel.java, util/ComponentPrinter.java}
 
 The way that it is decided, where to split the page when the print will not fit on one page, could be made more generic. The algorithm could be something like this: \\
@@ -142,10 +108,6 @@ The way that it is decided, where to split the page when the print will not fit 
 - This way you can iterate through the whole container, and find out where the bottom edges of the components are. When you find out that one component will not fit to the current page to be printed, write down somewhere that the page break will be set right above that component, so that the component will fit on the next page.
 - When you have gone through the panel to be printed, and have written down where the page breaks should be, rest of the printing will be easy. Just cut the pages at the right points.
 
-
-\subsection{gui/ProgramSettingsPanel.java}
-
-\subsection{gui/ProjectComponent.java}
 
 \subsection{gui/ProjectExplorerPanel.java}
 
@@ -166,8 +128,8 @@ SRM export is commented out, as it's not supported (in Project).
 
 There are no messages telling if exporting was succesful or not (as I didn't want any popups for it)... Also, exporting overwrites any previous files with the same name; this might be just what the user wants, but it could also cause an unhappy surprise.
 
+Also, \textit{for some reason}, table selection for CalibrationPanel didn't work in the Squid lab last time we tried; it works everywhere else, so can't really say what's the problem. Could be related to US locale in lab computer. The calibration project is opened fine, but then someone clears table selection. Finally, don't know if it was a temporary bug, and now everything works fine, but even so there's something weird that could break it in the future.
 
-\subsection{gui/ProjectInformationPanel.java}
 
 \subsection{gui/SequenceColumn.java}
 
@@ -175,14 +137,6 @@ Remove the hack for Thellier files. See the TODO-list of MeasurementStep.java in
 
 Ask the client how they like to number format "0.000E0" and change it if necessary. It might be necessary to write a custom NumberFormat class, if Java's standard libraries are not enough (let's say that you want to have a "+" sign for positive exponents, and have the "E" as lowercase "e").
 
-
-\subsection{gui/SettingsDialog.java}
-
-\subsection{gui/StereoPlot.java}
-
-\subsection{gui/StyledCellEditor.java}
-
-\subsection{gui/StyledTableCellRenderer.java}
 
 \subsection{gui/StyledWrapper.java}
 
@@ -203,16 +157,6 @@ Estimated movement does not calculate acceleration so its not exactly correct, b
 
 This class seems to work alright, but there is some issues which are uncertain. It have not been tested so that Degausser and Magnetometer are in same port, more likely there will be many problems. We only use filter 1x and range 1x and disable fast-slew, no idea if other options are needed for these. And we do not check status from magnetometer, we just hope all goes well. In measuring we do not Never use flux counting, never be needed tough.
 
-
-\subsection{squid/SerialIO.java}
-
-\subsection{squid/SerialIOEvent.java}
-
-\subsection{squid/SerialIOException.java}
-
-\subsection{squid/SerialIOListener.java}
-
-\subsection{squid/SerialParameters.java}
 
 \subsection{squid/Squid.java}
 

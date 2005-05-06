@@ -19,22 +19,26 @@
 \section{Introduction}
 \label{sec:intro}
 
-Blablabla balalaalllblaaaaaaa aaaaarrggrgghh.
+This document describes the changes from design to production (section~\ref{sec:changes}), improvement suggestions for the program (section~\ref{sec:improv}), as well as a TODO-list based on comments in source code (section~\ref{sec:todo}).
 
 
-\section{Overview of changes from Design document}
-\label{sec:overview}
+% \section{Overview of changes from Design document}
+% \label{sec:overview}
 
-The big picture.
+% The big picture. Killed. -Samuli
 
 
-\section{Specific changes from Design document}
+\section{Changes from Design document}
 \label{sec:changes}
 
-Here we describe how the implementation/production differs from that planned in Design document.
+Here we describe how the implementation/production of the software differs from that planned in Design document.
 
 
-\subsection{Data classes and methods}
+\subsection{Data classes}
+
+Data classes are in packages ikayaki, ikayaki.squid and ikayaki.util.
+
+Package ikayaki holds generic data classes, ikayaki.squid holds classes loosely related to the squid interface, and ikayaki.util has utilities.
 
 
 \subsubsection{Project data}
@@ -132,7 +136,11 @@ Global properties that are used all around the program. There were many properti
 Utility classes that are used in the program, but do not fit any of the other packages. There were a couple of classes added to the ikayaki.util package. The new classes are ComponentPrinter for printing, DocumentUtilities for reading and writing XML, LoggerPrintStream for adding timestamps to System.err and copying the output to a file, SerialProxy for monitoring the communication between two serial ports (use virtual serial ports to redirect the old program's communication through SerialProxy this way: Program -> Virtual COM -> SerialProxy -> Real COM -> SQUID Hardware).
 
 
-\subsection{GUI classes and methods}
+\subsection{GUI classes}
+
+This section is divided into subsections by gui components, each of which has one or more classes.
+
+All gui classes are in package ikayaki.gui.
 
 
 \subsubsection{Generic GUI components}
@@ -163,7 +171,7 @@ NewProjectPanel is inner class of ProjectExplorerPanel.
 
 \subsubsection{Calibration}
 
-Uses ProjectExplorerTable, which makes Calibration.java really short.
+Uses ProjectExplorerTable, which makes CalibrationPanel.java really short.
 
 
 \subsubsection{Project information}
@@ -197,12 +205,6 @@ ManualControlsPanel's manual control components are disabled whenever there's \t
 Graph panels visualize the measurement data. MeasurementGraphsPanel listens to MeasurementEvents to update the measurement data in plots. AbstractPlot is an abstract class which implements all the general features of graph plots. IntensityPlot and StereoPlot extend the functionality of AbstractPlot and implement their special drawing features accordingly.
 
 
-\section{TODO-list from source code}
-\label{sec:todo}
-
-\input{todolist}
-
-
 \section{Improvement suggestions}
 \label{sec:improv}
 
@@ -224,13 +226,14 @@ The algorithms for the measurement's mathematical calculations are spead around 
 - SequenceColumn classes contain the information that how those numbers should be shown in the MeasurementSequenceTable. New columns are added to the table by listing them in SequenceColumn.getAllColumns(). Default columns are defined in Settings.getDefaultColumns().
 
 
-\subsection{Porting to linux}
+\subsection{Porting to Linux}
 
 There are a couple of things that need to be taken care of, if the program is ever ported to Linux or some other OS:
 
 - Maximizing the program window (in Ikayaki's constructor) requires some native code, because Java does not have a way for doing it. \\
 - Opening the user manual from the Help menu needs some OS-specific instructions to open the web browser. \\
-- Serial communication will at least require the OS-specific version of javax.comm, or maybe it needs to be done in some another way.
+- Serial communication will at least require the OS-specific version of javax.comm, or maybe it needs to be done in some another way. \\
+- Export-popup-menu (ProjectExplorerPopupMenu in ProjectExplorerPanel) uses new File("A:/") for disk drive.
 
 
 \subsection{Warning Signal for Degausser}
@@ -244,3 +247,9 @@ Quote from Lauri Pesonen:
 \textit{Siitä ambulanssivaroitussignaalista jos ramp down ei tapahdu.}
 
 \textit{Matti leino odottaa vietiä "done" noin 1 minnutin. Jos käskyä ei tule niin kelojen virtaan ERIKSEEN asennettu mikrokytkin kytkee virran pois jotta kelat eivät pala. Tämän voitte kertoa raportsissa mutta varsinainen homma tehdään syksyllä uuden ryhmän kanssa. Eli nyt tuskin ehditte mutta näin se on tehty. Soittakaa Matti Leino 0 205 50 2272 (GTK) ja hän kuvaa kuinka hän teki. Olisi tärkeätä että kirjaatte kuitenkin tuon Matti Leinon tekniikan ylös!}
+
+
+\section{TODO-list from source code}
+\label{sec:todo}
+
+\input{todolist}
