@@ -58,11 +58,11 @@ Section "!Ikayaki (required)"
   ; File type associations
   WriteRegStr HKCR ".ika" "" "Ikayaki.Project"
   WriteRegStr HKCR "Ikayaki.Project" "" "Ikayaki Project File"
-  WriteRegStr HKCR "Ikayaki.Project\DefaultIcon" "" "$INSTDIR\ikayaki.exe,0"
+  WriteRegStr HKCR "Ikayaki.Project\DefaultIcon" "" '"$INSTDIR\ikayaki.exe",0'
   ReadRegStr $R0 HKCR "Ikayaki.Project\shell\open\command" ""
   StrCmp $R0 "" 0 no_ikaopen
     WriteRegStr HKCR "Ikayaki.Project\shell" "" "open"
-    WriteRegStr HKCR "Ikayaki.Project\shell\open\command" "" '$INSTDIR\ikayaki.exe "%1"'
+    WriteRegStr HKCR "Ikayaki.Project\shell\open\command" "" '"$INSTDIR\ikayaki.exe" "%1"'
   no_ikaopen:
   
   System::Call 'Shell32::SHChangeNotify(i ${SHCNE_ASSOCCHANGED}, i ${SHCNF_IDLIST}, i 0, i 0)'
