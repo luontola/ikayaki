@@ -44,6 +44,9 @@ public class IntensityPlot extends AbstractPlot {
 
     private Project project = null;
 
+    /**
+     * Adds one measurement step to this graph and converts the data to x- and y- coordinates
+     */
     public void add(MeasurementStep step) {
         if (step.getProject() != null) {
             project = step.getProject();
@@ -54,11 +57,19 @@ public class IntensityPlot extends AbstractPlot {
         }
     }
 
+    /**
+     * Resets the graph data and repaints its contents.
+     */
     public void reset() {
         points.clear();
         repaint();
     }
 
+    /**
+     * Returns the number of points in this graph.
+     *
+     * @return the number of points in this graph
+     */
     public int getNumMeasurements() {
         return points.size();
     }
@@ -66,13 +77,13 @@ public class IntensityPlot extends AbstractPlot {
     /**
      * Draws the contents of the plot
      *
-     * @param w
-     * @param h
-     * @param g2
+     * @param w  Width of the drawable area
+     * @param h  Height of the drawable area
+     * @param g2 Graphics context
      */
     public void render(int w, int h, Graphics2D g2) {
         // margin
-        int m = 10;
+        int m = 20;
         // arrow width
         int aw = 4;
         // arrow length
@@ -81,14 +92,14 @@ public class IntensityPlot extends AbstractPlot {
         int yPad = 20;
         // x-axis padding from arrow top to max values
         int xPad = 20;
-        // maximum value of y-axis
-        double yMax = 1.0;
-        // maximum value of x-axis
+        // minimum max value of y-axis
+        double yMax = 1.1;
+        // minimum max value of x-axis
         double xMax = 100.0;
 
         for (Point2D point : points) {
-            yMax = Math.max(yMax, point.getY());
-            xMax = Math.max(xMax, point.getX() * 1.1);
+            //yMax = Math.max(yMax, Math.min(point.getY(),yMax));
+            xMax = Math.max(xMax, point.getX());
         }
 
         // pixels on y-area
@@ -97,6 +108,11 @@ public class IntensityPlot extends AbstractPlot {
         int xArea = getSize().width - ((2 * m) + xPad);
         // font for texts
         g2.setFont(new Font("Arial", Font.PLAIN, 8 + (Math.min(xArea, yArea) / 60)));
+        FontMetrics metrics = g2.getFontMetrics();
+        // text height
+        int txtH = metrics.getHeight();
+        // text width
+        int txtW = 0;
 
         // x-fix
         int xFix = m + aw;
@@ -115,15 +131,37 @@ public class IntensityPlot extends AbstractPlot {
         g2.drawLine((w - m) - al, h - m, w - m, (h - m) - aw);
 
         // y-axis ticks
-        // TODO draw ticks and numbers for y-axis
-        // x-axis ticks
-        // TODO draw ticks and numbers for x-axis
+
+        // 1.0 tick
+        int tick1_x1 = xFix;
+        int tick1_y1 = yFix - new Double((1.0 / yMax) * yArea).intValue();
+        int tick1_x2 = xFix + new Double(5 + 0.02 * xArea).intValue();
+        int tick1_y2 = tick1_y1;
+        g2.drawLine(tick1_x1, tick1_y1, tick1_x2, tick1_y2);
+        // 1.0 number
+        txtW = metrics.stringWidth("1.0");
+        g2.drawString("1.0", m - (txtW), tick1_y1 + (txtH / 2));
+
+        // x-axis max value
+        int tickX_x1 = xFix + new Double(1.0 * xArea).intValue();
+        int tickX_y1 = yFix;
+        int tickX_x2 = tickX_x1;
+        int tickX_y2 = yFix - new Double(5 + 0.02 * yArea).intValue();
+        g2.drawLine(tickX_x1, tickX_y1, tickX_x2, tickX_y2);
+        // max value
+        String maxValStr = new Double(xMax).toString();
+        txtW = metrics.stringWidth(maxValStr);
+        g2.drawString(maxValStr, tickX_x1 - (txtW / 2), yFix + (m / 2) + (txtH / 2));
+
+
+
         // y-axis unit
-        g2.drawString(SequenceColumn.RELATIVE_MAGNETIZATION.getColumnName(project), m + 30, m + 10);
+        g2.drawString(SequenceColumn.RELATIVE_MAGNETIZATION.getColumnName(project), m + 20, m + 10);
         // x-axis unit
-        g2.drawString(SequenceColumn.STEP.getColumnName(project), (w - m) - 30, h - (m + 30));
+        g2.drawString(SequenceColumn.STEP.getColumnName(project), (w - m) - 30, h - (m + 20));
         // origo 0
-        g2.drawString("0", m, h - m);
+        txtW = metrics.stringWidth("0");
+        g2.drawString("0", m / 2 - txtW, yFix + (m / 2) + (txtH / 2));
 
         // draw points
         int ps = (Math.min(xArea, yArea) / 60) + 4; // points size
@@ -142,7 +180,6 @@ public class IntensityPlot extends AbstractPlot {
                 g2.drawLine(xFix + x1, yFix - y1, xFix + x2, yFix - y2);
             }
         }
-
 
     }
 }

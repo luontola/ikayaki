@@ -50,6 +50,9 @@ public class StereoPlot extends AbstractPlot {
 
     private Project project = null;
 
+    /**
+     * Adds one measurement step to this graph and converts the data to x- and y- coordinates
+     */
     public void add(MeasurementStep step) {
         if (step.getProject() != null) {
             project = step.getProject();
@@ -68,6 +71,15 @@ public class StereoPlot extends AbstractPlot {
         }
     }
 
+    /**
+     * Does the stereoplot projection for given declination and inclination values.
+     *
+     * @param decValue declination
+     * @param incValue inclination
+     * @return a stereoplot projected point in XY-coordinates
+     */
+
+    // TODO Now the projection is linear. It should be biased but how much?
     private Point2D.Double toXY(Double decValue, Double incValue) {
         double inc = Math.toRadians(incValue);
         double dec = Math.toRadians(decValue);
@@ -76,29 +88,46 @@ public class StereoPlot extends AbstractPlot {
         return new Point2D.Double(x, y);
     }
 
+    /**
+     * Resets and repaints this plot.
+     */
     public void reset() {
         points.clear();
         incSign.clear();
         repaint();
     }
 
+    /**
+     * Returns the number of points in this graph.
+     *
+     * @return the number of points in this graph
+     */
     public int getNumMeasurements() {
         return points.size();
     }
 
+    /**
+     * Draws the contents of the plot
+     *
+     * @param w  Width of the drawable area
+     * @param h  Height of the drawable area
+     * @param g2 Graphics context
+     */
     public void render(int w, int h, Graphics2D g2) {
         // margin
         int m = 5;
         // area for texts on edges
         int txtArea = 10;
-        // minimum of w and h
+        // minimum dimension of the plot
         int dim = Math.min(w, h);
         // area for points in x and y direction = width = height of the actual plot
         int area = dim - (2 * (m + txtArea));
         // font for texts
         g2.setFont(new Font("Arial", Font.PLAIN, 8 + (area / 60)));
         FontMetrics metrics = g2.getFontMetrics();
-        int txtW = metrics.stringWidth("N");
+        // text width for letter W
+        int txtW = 0;
+        // text height
         int txtH = metrics.getHeight();
 
         // draw circle
@@ -156,9 +185,13 @@ public class StereoPlot extends AbstractPlot {
 
 
         // draw symbols
-        g2.drawString("N", m + txtArea + (area / 2) - (txtW / 2), m + (txtArea / 2) + (txtH / 2));
-        g2.drawString("W", m + txtArea / 2 - (txtW / 2), m + txtArea + (area / 2) + (txtH / 2));
-        g2.drawString("E", m + txtArea + area + (txtArea / 2) - (txtW / 2), m + txtArea + (area / 2) + (txtH / 2));
+        txtW = metrics.stringWidth("N");
+        g2.drawString("N", m + txtArea + (area / 2) - (txtW / 2), m + (txtArea / 2));
+        txtW = metrics.stringWidth("W");
+        g2.drawString("W", m + (txtArea / 2) - txtW, m + txtArea + (area / 2) + (txtH / 2));
+        txtW = metrics.stringWidth("E");
+        g2.drawString("E", m + txtArea + area + (txtArea / 2), m + txtArea + (area / 2) + (txtH / 2));
+        txtW = metrics.stringWidth("S");
         g2.drawString("S", m + txtArea + (area / 2) - (txtW / 2), m + txtArea + area + (txtArea / 2) + (txtH / 2));
 
         // draw points

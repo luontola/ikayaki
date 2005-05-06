@@ -161,9 +161,6 @@ message from serial port is received.
         // Set notifyOnDataAvailable to true to allow event driven input.
         sPort.notifyOnDataAvailable(true);
 
-        // Set notifyOnBreakInterrup to allow event driven break handling. //Unneccessary?
-        //sPort.notifyOnBreakInterrupt(true);
-
         // Set receive timeout to allow breaking out of polling loop during
         // input handling.
         try {
@@ -286,12 +283,9 @@ message from serial port is received.
                     if (newData == -1) {
                         break;
                     }
-//                    if (false && '\r' == (char) newData) {
-//                        //inputBuffer.append('\n'); // '\r' chars should be skipped I guess..
-//                    } else {
                     newByte[0] = new Integer(newData).byteValue();
                     inputBuffer.append(new String(newByte, "US-ASCII"));
-//                    }
+
                 } catch (IOException ex) {
                     System.err.println(ex);
                     return;

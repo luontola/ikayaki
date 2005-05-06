@@ -68,8 +68,9 @@ public class MeasurementGraphsPanel extends ProjectComponent implements ProjectL
         tabs.addTab("1: Intensity & Stereo", b);
         tabs.setMnemonicAt(0, KeyEvent.VK_1);
 
-        tabs.addTab("2: Zijderweld", new JPanel());
-        tabs.setMnemonicAt(1, KeyEvent.VK_2);
+        // TODO Add Zijderweld plot here
+        //tabs.addTab("2: Zijderweld", new JPanel());
+        //tabs.setMnemonicAt(1, KeyEvent.VK_2);
 
         setLayout(new BorderLayout());
         add(bigGraphsButton, "North"); // TODO: make this button look nicer
