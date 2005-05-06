@@ -56,6 +56,31 @@ a:visited {
 	color : #9999BB; 
 } 
 
+a.navitem {
+	color: #000000;
+}
+
+a.navitem:visited {
+	color: #000000;
+}
+
+a.navitem:hover {
+	color: #CC9999;
+}
+
+a.navitemopen {
+	color: #000000;
+	font-weight: bold;
+}
+
+a.navitemopen:visited {
+	color: #000000;
+}
+
+a.navitemopen:hover {
+	color: #CC9999;
+}
+
 comment {
 	font-variant: small-caps;
 	color: grey;
