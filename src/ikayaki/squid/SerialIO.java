@@ -46,7 +46,7 @@ Event A: On new SerialPortEvent - generates new SerialMessageArrivedEvent if a d
 message from serial port is received.
 */
 
-    private static final boolean DEBUG = true; // Writes log-file
+    private static final boolean DEBUG = false; // Writes log-file
     private static final DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 
     /**
